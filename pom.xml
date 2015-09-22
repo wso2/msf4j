@@ -167,7 +167,8 @@
     </properties>
 
     <modules>
-        <module>components</module>
+        <module>carbon-mss/components/org.wso2.carbon.mss</module>
+        <!--<module>carbon-mss/features/org.wso2.carbon.mss.feature</module>-->
         <module>samples/example</module>
         <module>samples/example2</module>
     </modules>

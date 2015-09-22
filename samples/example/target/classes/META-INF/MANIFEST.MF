@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1442905409211
+Bnd-LastModified: 1442920851732
 Build-Jdk: 1.8.0_51
 Built-By: azeez
 Bundle-Activator: org.wso2.carbon.mss.example.internal.StockQuoteActivat
