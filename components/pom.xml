@@ -261,7 +261,7 @@
                         <instructions>
                             <Bundle-Vendor>WSO2</Bundle-Vendor>
                             <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-                            <Private-Package>org.wso2.carbon.mss.internal</Private-Package>
+                            <Private-Package>org.wso2.carbon.mss.internal.*</Private-Package>
                             <Export-Package>
                                 !org.wso2.carbon.mss.internal.*,
                                 org.wso2.carbon.mss*;version="1.0.0"
