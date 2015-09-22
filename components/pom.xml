@@ -267,15 +267,19 @@
                                 org.wso2.carbon.mss*;version="1.0.0"
                             </Export-Package>
                             <Import-Package>
-                                io.netty.*,
+                                io.netty.util.*,
+                                io.netty.channel.*,
+                                io.netty.handler.codec.http.*,
                                 com.google.gson.*,
                                 com.google.common.*,
                                 javax.ws.rs.*,
                                 org.slf4j.*,
                                 javax.net.ssl.*,
-                                org.apache.commons.beanutils.*
+                                org.apache.commons.beanutils.*,
+                                org.osgi.framework.*;version="${osgi.framework.import.version.range}",
+                                org.osgi.util.tracker; version="${osgi.service.tracker.import.version.range}",
+                                org.wso2.carbon.transport.http.netty.listener.*,
                             </Import-Package>
-                            <!--<Embed-Dependency>netty-http</Embed-Dependency>-->
                             <_dsannotations>*</_dsannotations>
                         </instructions>
                     </configuration>
