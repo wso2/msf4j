@@ -267,9 +267,7 @@
                                 org.wso2.carbon.mss*;version="1.0.0"
                             </Export-Package>
                             <Import-Package>
-                                io.netty.util.*,
-                                io.netty.channel.*,
-                                io.netty.handler.codec.http.*,
+                                io.netty.*,
                                 com.google.gson.*,
                                 com.google.common.*,
                                 javax.ws.rs.*,
