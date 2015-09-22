@@ -1,20 +1,23 @@
 /*
- * Copyright © 2014 Cask Data, Inc.
+ *  Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
  */
 
-package org.wso2.carbon.mss.internal.router;
+package org.wso2.carbon.mss;
 
 import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
@@ -111,7 +114,7 @@ public interface HttpResponder {
 
     /**
      * Respond to the client saying the response will be in chunks. The response body can be sent in chunks
-     * using the {@link org.wso2.carbon.mss.internal.router.ChunkResponder} returned.
+     * using the {@link ChunkResponder} returned.
      *
      * @param status  the status code to respond with
      * @param headers additional headers to send with the response. May be null.

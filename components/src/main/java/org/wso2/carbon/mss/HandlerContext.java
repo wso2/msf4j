@@ -16,23 +16,27 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.mss.example.internal;
 
-import org.osgi.framework.BundleActivator;
-import org.osgi.framework.BundleContext;
-import org.wso2.carbon.mss.example.StockQuoteService;
-import org.wso2.carbon.mss.HttpHandler;
+package org.wso2.carbon.mss;
+
+import org.wso2.carbon.mss.internal.router.HttpResourceHandler;
+
+import java.util.Map;
 
 /**
- * TODO: class level comment
+ * Place holder for information about the environment. Will be passed in during lifecycle management calls of
+ * HttpHandlers. Currently has methods to get RunTimeArguments.
  */
-public class StockQuoteActivator implements BundleActivator {
-    public void start(BundleContext bundleContext) throws Exception {
-        bundleContext.registerService(HttpHandler.class, new StockQuoteService(), null);
-        System.out.println("Registered StockQuoteService");
-    }
+public interface HandlerContext {
 
-    public void stop(BundleContext bundleContext) throws Exception {
+    /**
+     * @return Key Value pairs of runtime arguments.
+     */
+    Map<String, String> getRuntimeArguments();
 
-    }
+    /**
+     * @return the {@link org.wso2.carbon.mss.internal.router.HttpResourceHandler} associated with this context,
+     * used to let one handler call another internally.
+     */
+    HttpResourceHandler getHttpResourceHandler();
 }

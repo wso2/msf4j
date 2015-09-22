@@ -1,11 +1,10 @@
 package org.wso2.carbon.mss.example2;
 
-import co.cask.http.AbstractHttpHandler;
-import co.cask.http.HttpResponder;
 import com.google.gson.JsonObject;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
-import org.osgi.service.component.annotations.Component;
+import org.wso2.carbon.mss.AbstractHttpHandler;
+import org.wso2.carbon.mss.HttpResponder;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;

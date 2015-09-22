@@ -1,11 +1,10 @@
 package org.wso2.carbon.mss.example;
 
-import co.cask.http.AbstractHttpHandler;
-import co.cask.http.BodyConsumer;
-import co.cask.http.HttpResponder;
 import com.google.gson.JsonObject;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
+import org.wso2.carbon.mss.AbstractHttpHandler;
+import org.wso2.carbon.mss.HttpResponder;
 
 import javax.ws.rs.*;
 import java.util.HashMap;

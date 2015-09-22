@@ -17,13 +17,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>co.cask.http</groupId>
-    <artifactId>netty-http</artifactId>
-    <version>0.12.0-SNAPSHOT</version>
+    
+    <parent>
+        <groupId>org.wso2.carbon</groupId>
+        <artifactId>org.wso2.carbon.mss.parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>org.wso2.carbon.mss</artifactId>
     <packaging>bundle</packaging>
+
     <name>Netty based path router</name>
     <description>Netty based path router</description>
-    <url>https://github.com/caskdata/netty-http</url>
+    <url>https://github.com/wso2/product-mss</url>
 
     <licenses>
         <license>
@@ -34,17 +41,17 @@
 
     <developers>
         <developer>
-            <name>Cask</name>
-            <email>netty-http-dev@googlegroups.com</email>
-            <organization>Cask</organization>
-            <organizationUrl>https://github.com/caskdata/netty-http</organizationUrl>
+            <name>WSO2</name>
+            <email>architecture@wso2.org</email>
+            <organization>WSO2 Inc</organization>
+            <organizationUrl>https://github.com/wso2/product-mss</organizationUrl>
         </developer>
     </developers>
 
     <scm>
         <connection>scm:git:git@github.com:caskdata/netty-http.git</connection>
-        <url>scm:git:git://github.com/caskdata/netty-http.git</url>
-        <developerConnection>scm:git:git@github.com:caskdata/netty-http.git</developerConnection>
+        <url>scm:git:git://github.com/wso2/product-mss.git</url>
+        <developerConnection>scm:git:git@github.com:wso2/product-mss.git</developerConnection>
     </scm>
 
     <distributionManagement>
@@ -72,92 +79,19 @@
         <logback.version>1.0.9</logback.version>
     </properties>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>javax.ws.rs</groupId>
-                <artifactId>javax.ws.rs-api</artifactId>
-                <version>${rs-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-common</artifactId>
-                <version>${netty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-buffer</artifactId>
-                <version>${netty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-transport</artifactId>
-                <version>${netty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-handler</artifactId>
-                <version>${netty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-codec</artifactId>
-                <version>${netty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-codec-http</artifactId>
-                <version>${netty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>${slf4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.code.gson</groupId>
-                <artifactId>gson</artifactId>
-                <version>${gson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>13.0.1</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.code.findbugs</groupId>
-                <artifactId>jsr305</artifactId>
-                <version>${findbugs.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-beanutils</groupId>
-                <artifactId>commons-beanutils-core</artifactId>
-                <version>${beanutils.version}</version>
-            </dependency>
-
-            <!-- Test dependencies -->
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${junit.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-core</artifactId>
-                <version>${logback.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>${logback.version}</version>
-                <scope>test</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <dependencies>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.transport.http.netty</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.osgi</groupId>
+            <artifactId>org.eclipse.osgi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.osgi</groupId>
+            <artifactId>org.eclipse.osgi.services</artifactId>
+        </dependency>
         <dependency>
             <groupId>javax.ws.rs</groupId>
             <artifactId>javax.ws.rs-api</artifactId>
@@ -325,9 +259,13 @@
                     <extensions>true</extensions>
                     <configuration>
                         <instructions>
-                            <Bundle-Vendor>Cask</Bundle-Vendor>
+                            <Bundle-Vendor>WSO2</Bundle-Vendor>
                             <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-                            <Export-Package>co.cask.http.*;version="1.0.0"</Export-Package>
+                            <Private-Package>org.wso2.carbon.mss.internal</Private-Package>
+                            <Export-Package>
+                                !org.wso2.carbon.mss.internal.*,
+                                org.wso2.carbon.mss*;version="1.0.0"
+                            </Export-Package>
                             <Import-Package>
                                 io.netty.*,
                                 com.google.gson.*,
@@ -337,7 +275,7 @@
                                 javax.net.ssl.*,
                                 org.apache.commons.beanutils.*
                             </Import-Package>
-                            <Embed-Dependency>netty-http</Embed-Dependency>
+                            <!--<Embed-Dependency>netty-http</Embed-Dependency>-->
                             <_dsannotations>*</_dsannotations>
                         </instructions>
                     </configuration>
@@ -464,7 +402,7 @@
                                 </links>
                                 <excludePackageNames>*.internal.*</excludePackageNames>
                                 <bottom>
-                                    <![CDATA[Copyright {currentYear} Cask, Inc. <a href="http://www.apache.org/licenses/LICENSE-2.0">Licensed under the Apache License, Version 2.0</a>]]>
+                                    <![CDATA[Copyright {currentYear} WSO2, Inc. <a href="http://www.apache.org/licenses/LICENSE-2.0">Licensed under the Apache License, Version 2.0</a>]]>
                                 </bottom>
                             </configuration>
                             <executions>

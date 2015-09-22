@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1441774836798
+Bnd-LastModified: 1442905409667
 Build-Jdk: 1.8.0_51
 Built-By: azeez
 Bundle-Activator: org.wso2.carbon.mss.example2.internal.StockQuoteActiva
@@ -10,11 +10,12 @@ Bundle-SymbolicName: jaxrs-sample2
 Bundle-Vendor: WSO2 Inc
 Bundle-Version: 1.0.0.SNAPSHOT
 Created-By: Apache Maven Bundle Plugin
-Export-Package: org.wso2.carbon.mss.example2;version="1.0.0";uses:="co.c
- ask.http,io.netty.handler.codec.http,javax.ws.rs"
+Export-Package: org.wso2.carbon.mss.example2;version="1.0.0";uses:="io.n
+ etty.handler.codec.http,javax.ws.rs,org.wso2.carbon.mss"
 Import-Package: org.osgi.framework;version="[1.7.0,1.8.0)",io.netty.hand
- ler.codec.http;version="[4.0,5)",co.cask.http;version="[1.0,2)",com.goo
- gle.gson;version="[2.2,3)",javax.ws.rs;version="[2.0,3)"
+ ler.codec.http;version="[4.0,5)",org.wso2.carbon.mss,org.wso2.carbon.ms
+ s.example2;version="[1.0,2)",com.google.gson;version="[2.2,3)",javax.ws
+ .rs;version="[2.0,3)"
 JAXRS-Services: 1
 Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.7))"
 Tool: Bnd-2.4.1.201501161923

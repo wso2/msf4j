@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -18,10 +18,6 @@
  */
 package org.wso2.carbon.mss.internal;
 
-import co.cask.http.HandlerHook;
-import co.cask.http.HttpHandler;
-import co.cask.http.HttpResourceHandler;
-import co.cask.http.RequestRouter;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.HttpContentCompressor;
@@ -38,6 +34,10 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.mss.internal.router.HandlerHook;
+import org.wso2.carbon.mss.HttpHandler;
+import org.wso2.carbon.mss.internal.router.HttpResourceHandler;
+import org.wso2.carbon.mss.internal.router.RequestRouter;
 import org.wso2.carbon.transport.http.netty.listener.CarbonNettyServerInitializer;
 
 import java.util.ArrayList;

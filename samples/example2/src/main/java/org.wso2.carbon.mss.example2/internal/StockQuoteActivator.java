@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -18,10 +18,10 @@
  */
 package org.wso2.carbon.mss.example2.internal;
 
-import co.cask.http.HttpHandler;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.wso2.carbon.mss.example2.StockQuoteService;
+import org.wso2.carbon.mss.HttpHandler;
 
 /**
  * TODO: class level comment

@@ -1,3 +1,2 @@
-org/wso2/carbon/mss/example/Tester.class
-org/wso2/carbon/mss/example/StockQuoteService.class
 org/wso2/carbon/mss/example/internal/StockQuoteActivator.class
+org/wso2/carbon/mss/example/StockQuoteService.class
