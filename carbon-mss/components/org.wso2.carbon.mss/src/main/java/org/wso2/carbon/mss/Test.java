@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -16,23 +16,15 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.mss.example.internal;
-
-import org.osgi.framework.BundleActivator;
-import org.osgi.framework.BundleContext;
-import org.wso2.carbon.mss.HttpHandler;
-import org.wso2.carbon.mss.example.StockQuoteService;
+package org.wso2.carbon.mss;
 
 /**
  * TODO: class level comment
  */
-public class StockQuoteActivator implements BundleActivator {
-    public void start(BundleContext bundleContext) throws Exception {
-        bundleContext.registerService(HttpHandler.class, new StockQuoteService(), null);
-        System.out.println("Registered StockQuoteService");
-    }
-
-    public void stop(BundleContext bundleContext) throws Exception {
-
+public class Test {
+    public static void main(String[] args) {
+        long start = System.currentTimeMillis();
+        new MicroservicesRunner().deploy(new TestHandler()).start();
+        System.out.println("Microservices server started in " + (System.currentTimeMillis() - start) + "ms");
     }
 }

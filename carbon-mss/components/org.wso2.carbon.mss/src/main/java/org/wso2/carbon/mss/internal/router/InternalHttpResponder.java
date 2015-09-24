@@ -28,11 +28,11 @@ import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.wso2.carbon.mss.ChunkResponder;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import javax.annotation.Nullable;
 
 /**
  * InternalHttpResponder is used when a handler is being called internally by some other handler, and thus there

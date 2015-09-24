@@ -45,15 +45,15 @@ public final class PatternPathRouterWithGroups<T> {
 
     private final List<ImmutablePair<Pattern, RouteDestinationWithGroups>> patternRouteList;
 
-    public static <T> PatternPathRouterWithGroups<T> create() {
-        return new PatternPathRouterWithGroups<>();
-    }
-
     /**
      * Initialize PatternPathRouterWithGroups.
      */
     public PatternPathRouterWithGroups() {
         this.patternRouteList = Lists.newArrayList();
+    }
+
+    public static <T> PatternPathRouterWithGroups<T> create() {
+        return new PatternPathRouterWithGroups<>();
     }
 
     /**
@@ -127,28 +127,6 @@ public final class PatternPathRouterWithGroups<T> {
     }
 
     /**
-     * Helper class to store the groupNames and Destination.
-     */
-    private final class RouteDestinationWithGroups {
-
-        private final T destination;
-        private final List<String> groupNames;
-
-        public RouteDestinationWithGroups(T destination, List<String> groupNames) {
-            this.destination = destination;
-            this.groupNames = groupNames;
-        }
-
-        public T getDestination() {
-            return destination;
-        }
-
-        public List<String> getGroupNames() {
-            return groupNames;
-        }
-    }
-
-    /**
      * Represents a matched destination.
      *
      * @param <T> Type of destination.
@@ -189,6 +167,28 @@ public final class PatternPathRouterWithGroups<T> {
                     .add("destination", destination)
                     .add("groupNameValues", groupNameValues)
                     .toString();
+        }
+    }
+
+    /**
+     * Helper class to store the groupNames and Destination.
+     */
+    private final class RouteDestinationWithGroups {
+
+        private final T destination;
+        private final List<String> groupNames;
+
+        public RouteDestinationWithGroups(T destination, List<String> groupNames) {
+            this.destination = destination;
+            this.groupNames = groupNames;
+        }
+
+        public T getDestination() {
+            return destination;
+        }
+
+        public List<String> getGroupNames() {
+            return groupNames;
         }
     }
 }

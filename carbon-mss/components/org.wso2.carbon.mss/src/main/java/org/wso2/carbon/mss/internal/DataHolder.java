@@ -32,18 +32,17 @@ import java.util.Set;
 public class DataHolder {
 
     private static final Logger LOG = LoggerFactory.getLogger(DataHolder.class);
-    private volatile Set<HttpHandler> httpServices = new HashSet<>();
-
     private static DataHolder instance = new DataHolder();
+    private volatile Set<HttpHandler> httpServices = new HashSet<>();
 
     private DataHolder() {
     }
 
-    static DataHolder getInstance() {
+    public static DataHolder getInstance() {
         return instance;
     }
 
-    void addHttpService(HttpHandler httpHandler) {
+    public void addHttpService(HttpHandler httpHandler) {
         httpServices.add(httpHandler);
         LOG.info("Added HTTP Service: " + httpHandler);
     }

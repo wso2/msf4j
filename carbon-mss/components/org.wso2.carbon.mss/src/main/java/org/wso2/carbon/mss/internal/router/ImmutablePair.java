@@ -43,10 +43,6 @@ final class ImmutablePair<A, B> {
     private final A first;
     private final B second;
 
-    public static <A, B> ImmutablePair<A, B> of(A first, B second) {
-        return new ImmutablePair<>(first, second);
-    }
-
     /**
      * Constructs a Immutable Pair.
      *
@@ -56,6 +52,10 @@ final class ImmutablePair<A, B> {
     private ImmutablePair(A first, B second) {
         this.first = first;
         this.second = second;
+    }
+
+    public static <A, B> ImmutablePair<A, B> of(A first, B second) {
+        return new ImmutablePair<>(first, second);
     }
 
     /**

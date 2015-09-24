@@ -143,6 +143,10 @@ public final class NettyHttpService extends AbstractIdleService {
         this.sslHandlerFactory = sslHandlerFactory;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     /**
      * Bootstrap the pipeline.
      * <ul>
@@ -186,10 +190,6 @@ public final class NettyHttpService extends AbstractIdleService {
         };
         bootstrap.childHandler(new ServerInitializer(eventExecutor, httpChunkLimit, sslHandlerFactory,
                 resourceHandler, pipelineModifier));
-    }
-
-    public static Builder builder() {
-        return new Builder();
     }
 
     @Override

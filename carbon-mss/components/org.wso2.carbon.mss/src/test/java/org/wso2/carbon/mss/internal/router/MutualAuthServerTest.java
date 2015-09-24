@@ -36,33 +36,33 @@ import java.util.List;
  */
 public class MutualAuthServerTest extends HttpsServerTest {
 
-  @BeforeClass
-  public static void setup() throws Exception {
-    List<HttpHandler> handlers = Lists.newArrayList();
-    handlers.add(new TestHandler());
+    @BeforeClass
+    public static void setup() throws Exception {
+        List<HttpHandler> handlers = Lists.newArrayList();
+        handlers.add(new TestHandler());
 
-    NettyHttpService.Builder builder = createBaseNettyHttpServiceBuilder();
+        NettyHttpService.Builder builder = createBaseNettyHttpServiceBuilder();
 
-    File keyStore = tmpFolder.newFile();
-    ByteStreams.copy(Resources.newInputStreamSupplier(Resources.getResource("cert.jks")),
-                     Files.newOutputStreamSupplier(keyStore));
-    File trustKeyStore = tmpFolder.newFile();
-    ByteStreams.copy(Resources.newInputStreamSupplier(Resources.getResource("client.jks")),
-                     Files.newOutputStreamSupplier(trustKeyStore));
+        File keyStore = tmpFolder.newFile();
+        ByteStreams.copy(Resources.newInputStreamSupplier(Resources.getResource("cert.jks")),
+                Files.newOutputStreamSupplier(keyStore));
+        File trustKeyStore = tmpFolder.newFile();
+        ByteStreams.copy(Resources.newInputStreamSupplier(Resources.getResource("client.jks")),
+                Files.newOutputStreamSupplier(trustKeyStore));
 
-    String keyStorePassword = "secret";
-    String trustKeyStorePassword = "password";
-    builder.enableSSL(SSLConfig.builder(keyStore, keyStorePassword).setTrustKeyStore(trustKeyStore)
-                        .setTrustKeyStorePassword(trustKeyStorePassword)
-                        .build());
+        String keyStorePassword = "secret";
+        String trustKeyStorePassword = "password";
+        builder.enableSSL(SSLConfig.builder(keyStore, keyStorePassword).setTrustKeyStore(trustKeyStore)
+                .setTrustKeyStorePassword(trustKeyStorePassword)
+                .build());
 
-    setSslClientContext(new SSLClientContext(trustKeyStore, trustKeyStorePassword));
-    service = builder.build();
-    service.startAndWait();
-    Service.State state = service.state();
-    Assert.assertEquals(Service.State.RUNNING, state);
+        setSslClientContext(new SSLClientContext(trustKeyStore, trustKeyStorePassword));
+        service = builder.build();
+        service.startAndWait();
+        Service.State state = service.state();
+        Assert.assertEquals(Service.State.RUNNING, state);
 
-    int port = service.getBindAddress().getPort();
-    baseURI = URI.create(String.format("https://localhost:%d", port));
-  }
+        int port = service.getBindAddress().getPort();
+        baseURI = URI.create(String.format("https://localhost:%d", port));
+    }
 }

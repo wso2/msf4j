@@ -33,40 +33,39 @@ import java.io.File;
  * Tests SSL KeyStore behaviour
  */
 public class SSLKeyStoreTest {
-  private static File keyStore;
+    @ClassRule
+    public static TemporaryFolder tmpFolder = new TemporaryFolder();
+    private static File keyStore;
 
-  @ClassRule
-  public static TemporaryFolder tmpFolder = new TemporaryFolder();
+    @BeforeClass
+    public static void setup() throws Exception {
+        keyStore = tmpFolder.newFile();
+        ByteStreams.copy(Resources.newInputStreamSupplier(Resources.getResource("cert.jks")),
+                Files.newOutputStreamSupplier(keyStore));
+    }
 
-  @BeforeClass
-  public static void setup() throws Exception {
-    keyStore = tmpFolder.newFile();
-    ByteStreams.copy(Resources.newInputStreamSupplier(Resources.getResource("cert.jks")),
-                     Files.newOutputStreamSupplier(keyStore));
-  }
+    @Test(expected = IllegalArgumentException.class)
+    public void testSslCertPathConfiguration1() throws IllegalArgumentException {
+        //Bad Certificate Path
+        new SSLHandlerFactory(SSLConfig.builder(new File("badCertificate"), "secret").setCertificatePassword("secret")
+                .build());
+    }
 
-  @Test (expected = IllegalArgumentException.class)
-  public void testSslCertPathConfiguration1() throws IllegalArgumentException {
-    //Bad Certificate Path
-    new SSLHandlerFactory(SSLConfig.builder(new File("badCertificate"), "secret").setCertificatePassword("secret")
-                            .build());
-  }
+    @Test(expected = IllegalArgumentException.class)
+    public void testSslCertPathConfiguration2() throws IllegalArgumentException {
+        //Null Certificate Path
+        new SSLHandlerFactory(SSLConfig.builder(null, "secret").setCertificatePassword("secret").build());
+    }
 
-  @Test (expected = IllegalArgumentException.class)
-  public void testSslCertPathConfiguration2() throws IllegalArgumentException {
-    //Null Certificate Path
-    new SSLHandlerFactory(SSLConfig.builder(null, "secret").setCertificatePassword("secret").build());
-  }
+    @Test(expected = IllegalArgumentException.class)
+    public void testSslKeyStorePassConfiguration2() throws IllegalArgumentException {
+        //Missing Key Pass
+        new SSLHandlerFactory(SSLConfig.builder(keyStore, null).setCertificatePassword("secret").build());
+    }
 
-  @Test (expected = IllegalArgumentException.class)
-  public void testSslKeyStorePassConfiguration2() throws IllegalArgumentException {
-    //Missing Key Pass
-    new SSLHandlerFactory(SSLConfig.builder(keyStore, null).setCertificatePassword("secret").build());
-  }
-
-  @Test
-  public void testSslCertPassConfiguration() throws IllegalArgumentException {
-    //Bad Cert Pass
-    new SSLHandlerFactory(SSLConfig.builder(keyStore, "secret").build());
-  }
+    @Test
+    public void testSslCertPassConfiguration() throws IllegalArgumentException {
+        //Bad Cert Pass
+        new SSLHandlerFactory(SSLConfig.builder(keyStore, "secret").build());
+    }
 }

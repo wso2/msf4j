@@ -46,16 +46,16 @@ import javax.net.ssl.SSLSession;
  */
 public class HttpsServerTest extends HttpServerTest {
 
-  private static SSLClientContext sslClientContext;
+    private static SSLClientContext sslClientContext;
 
-  @BeforeClass
-  public static void setup() throws Exception {
-    List<HttpHandler> handlers = Lists.newArrayList();
-    handlers.add(new TestHandler());
+    @BeforeClass
+    public static void setup() throws Exception {
+        List<HttpHandler> handlers = Lists.newArrayList();
+        handlers.add(new TestHandler());
 
-    File keyStore = tmpFolder.newFile();
-    ByteStreams.copy(Resources.newInputStreamSupplier(Resources.getResource("cert.jks")),
-                     Files.newOutputStreamSupplier(keyStore));
+        File keyStore = tmpFolder.newFile();
+        ByteStreams.copy(Resources.newInputStreamSupplier(Resources.getResource("cert.jks")),
+                Files.newOutputStreamSupplier(keyStore));
 
     /* IMPORTANT
      * Provide Certificate Configuration Here * *
@@ -65,49 +65,49 @@ public class HttpsServerTest extends HttpServerTest {
      * CertificatePassword : Certificate password if different from Key Store password or null
     */
 
-    NettyHttpService.Builder builder = createBaseNettyHttpServiceBuilder();
-    builder.enableSSL(SSLConfig.builder(keyStore, "secret").setCertificatePassword("secret")
-                        .build());
+        NettyHttpService.Builder builder = createBaseNettyHttpServiceBuilder();
+        builder.enableSSL(SSLConfig.builder(keyStore, "secret").setCertificatePassword("secret")
+                .build());
 
-    sslClientContext = new SSLClientContext();
-    service = builder.build();
-    service.startAndWait();
-    Service.State state = service.state();
-    Assert.assertEquals(Service.State.RUNNING, state);
+        sslClientContext = new SSLClientContext();
+        service = builder.build();
+        service.startAndWait();
+        Service.State state = service.state();
+        Assert.assertEquals(Service.State.RUNNING, state);
 
-    int port = service.getBindAddress().getPort();
-    baseURI = URI.create(String.format("https://localhost:%d", port));
-  }
-
-  @Override
-  protected HttpURLConnection request(String path, HttpMethod method, boolean keepAlive) throws IOException {
-    URL url = baseURI.resolve(path).toURL();
-    HttpsURLConnection.setDefaultSSLSocketFactory(sslClientContext.getClientContext().getSocketFactory());
-    HostnameVerifier allHostsValid = new HostnameVerifier() {
-      public boolean verify(String hostname, SSLSession session) {
-        return true;
-      }
-    };
-
-    // Install the all-trusting host verifier
-    HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
-    HttpsURLConnection urlConn = (HttpsURLConnection) url.openConnection();
-    if (method == HttpMethod.POST || method == HttpMethod.PUT) {
-      urlConn.setDoOutput(true);
+        int port = service.getBindAddress().getPort();
+        baseURI = URI.create(String.format("https://localhost:%d", port));
     }
-    urlConn.setRequestMethod(method.name());
-    if (!keepAlive) {
-      urlConn.setRequestProperty(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
+
+    public static void setSslClientContext(SSLClientContext sslClientContext) {
+        HttpsServerTest.sslClientContext = sslClientContext;
     }
-    return urlConn;
-  }
 
-  @Override
-  protected Socket createRawSocket(URL url) throws IOException {
-    return sslClientContext.getClientContext().getSocketFactory().createSocket(url.getHost(), url.getPort());
-  }
+    @Override
+    protected HttpURLConnection request(String path, HttpMethod method, boolean keepAlive) throws IOException {
+        URL url = baseURI.resolve(path).toURL();
+        HttpsURLConnection.setDefaultSSLSocketFactory(sslClientContext.getClientContext().getSocketFactory());
+        HostnameVerifier allHostsValid = new HostnameVerifier() {
+            public boolean verify(String hostname, SSLSession session) {
+                return true;
+            }
+        };
 
-  public static void setSslClientContext(SSLClientContext sslClientContext) {
-    HttpsServerTest.sslClientContext = sslClientContext;
-  }
+        // Install the all-trusting host verifier
+        HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+        HttpsURLConnection urlConn = (HttpsURLConnection) url.openConnection();
+        if (method == HttpMethod.POST || method == HttpMethod.PUT) {
+            urlConn.setDoOutput(true);
+        }
+        urlConn.setRequestMethod(method.name());
+        if (!keepAlive) {
+            urlConn.setRequestProperty(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
+        }
+        return urlConn;
+    }
+
+    @Override
+    protected Socket createRawSocket(URL url) throws IOException {
+        return sslClientContext.getClientContext().getSocketFactory().createSocket(url.getHost(), url.getPort());
+    }
 }

@@ -18,13 +18,6 @@
  */
 package org.wso2.carbon.mss.internal;
 
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.codec.http.HttpContentCompressor;
-import io.netty.handler.codec.http.HttpObjectAggregator;
-import io.netty.handler.codec.http.HttpRequestDecoder;
-import io.netty.handler.codec.http.HttpResponseEncoder;
-import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
@@ -34,15 +27,10 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.mss.internal.router.HandlerHook;
 import org.wso2.carbon.mss.HttpHandler;
-import org.wso2.carbon.mss.internal.router.HttpResourceHandler;
-import org.wso2.carbon.mss.internal.router.RequestRouter;
 import org.wso2.carbon.transport.http.netty.listener.CarbonNettyServerInitializer;
 
-import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Component(
@@ -51,9 +39,8 @@ import java.util.concurrent.TimeUnit;
 )
 @SuppressWarnings("unused")
 public class MicroServicesServerSC {
-    private static final Logger LOG = LoggerFactory.getLogger(MicroServicesServerSC.class);
     public static final String CHANNEL_ID_KEY = "channel.id";
-
+    private static final Logger LOG = LoggerFactory.getLogger(MicroServicesServerSC.class);
     private final DataHolder dataHolder = DataHolder.getInstance();
 
     private BundleContext bundleContext;
@@ -79,12 +66,12 @@ public class MicroServicesServerSC {
                             Hashtable<String, String> httpInitParams = new Hashtable<>();
                             httpInitParams.put(CHANNEL_ID_KEY, "netty-jaxrs-http");
                             bundleContext.registerService(CarbonNettyServerInitializer.class,
-                                    new JaxrsCarbonNettyInitializer(), httpInitParams);
+                                    new JaxrsNettyServerInitializer(), httpInitParams);
 
                             Hashtable<String, String> httpsInitParams = new Hashtable<>();
                             httpsInitParams.put(CHANNEL_ID_KEY, "netty-jaxrs-https");
                             bundleContext.registerService(CarbonNettyServerInitializer.class,
-                                    new JaxrsCarbonNettyInitializer(), httpsInitParams);
+                                    new JaxrsNettyServerInitializer(), httpsInitParams);
 
                             LOG.info("Micro services server started");
                             break;
@@ -102,33 +89,6 @@ public class MicroServicesServerSC {
         }
     }
 
-    private class JaxrsCarbonNettyInitializer implements CarbonNettyServerInitializer {
-
-        private DefaultEventExecutorGroup eventExecutorGroup;
-
-        @Override
-        public void setup(Map<String, String> map) {
-            eventExecutorGroup = new DefaultEventExecutorGroup(200);
-        }
-
-        public void initChannel(SocketChannel channel) {
-            ChannelPipeline pipeline = channel.pipeline();
-            //        pipeline.addLast("tracker", connectionTracker);
-            pipeline.addLast("decoder", new HttpRequestDecoder());
-            pipeline.addLast("aggregator", new HttpObjectAggregator(Integer.MAX_VALUE));  //TODO: fix
-            pipeline.addLast("encoder", new HttpResponseEncoder());
-            pipeline.addLast("compressor", new HttpContentCompressor());
-
-            HttpResourceHandler resourceHandler = new HttpResourceHandler(dataHolder.getHttpServices(),
-                    new ArrayList<HandlerHook>(), null, null);
-            pipeline.addLast(eventExecutorGroup, "router", new RequestRouter(resourceHandler, 0)); //TODO: remove limit
-
-            //TODO: see what can be done
-            /*if (pipelineModifier != null) {
-                pipelineModifier.apply(pipeline);
-            }*/
-        }
-    }
 
     private void countJaxrsServices() {
         Bundle[] bundles = bundleContext.getBundles();

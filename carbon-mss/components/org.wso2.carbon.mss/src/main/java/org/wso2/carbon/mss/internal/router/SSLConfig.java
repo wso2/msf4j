@@ -41,6 +41,13 @@ public class SSLConfig {
     }
 
     /**
+     * @return instance of {@code Builder}
+     */
+    public static Builder builder(File keyStore, String keyStorePassword) {
+        return new Builder(keyStore, keyStorePassword);
+    }
+
+    /**
      * @return KeyStore file
      */
     public File getKeyStore() {
@@ -73,13 +80,6 @@ public class SSLConfig {
      */
     public String getTrustKeyStorePassword() {
         return trustKeyStorePassword;
-    }
-
-    /**
-     * @return instance of {@code Builder}
-     */
-    public static Builder builder(File keyStore, String keyStorePassword) {
-        return new Builder(keyStore, keyStorePassword);
     }
 
     /**

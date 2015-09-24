@@ -29,11 +29,11 @@ import org.slf4j.LoggerFactory;
 import org.wso2.carbon.mss.ChunkResponder;
 import org.wso2.carbon.mss.HttpResponder;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
+import javax.annotation.Nullable;
 
 /**
  * Wrap HttpResponder to call post handler hook.

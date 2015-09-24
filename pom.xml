@@ -215,5 +215,6 @@
         <module>carbon-mss/features/org.wso2.carbon.mss.feature</module>
         <module>samples/example</module>
         <module>samples/example2</module>
+        <module>product</module>
     </modules>
 </project>

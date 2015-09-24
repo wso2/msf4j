@@ -24,10 +24,10 @@ import com.google.gson.Gson;
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.HttpResponseStatus;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
+import javax.annotation.Nullable;
 
 /**
  * HttpResponder is used to send response back to clients.

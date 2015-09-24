@@ -18,25 +18,41 @@
  */
 package org.wso2.carbon.mss;
 
-import org.wso2.carbon.mss.internal.router.ServerInitializer;
+import org.wso2.carbon.mss.internal.DataHolder;
+import org.wso2.carbon.mss.internal.JaxrsNettyServerInitializer;
+import org.wso2.carbon.transport.http.netty.internal.NettyTransportDataHolder;
+import org.wso2.carbon.transport.http.netty.internal.config.ListenerConfiguration;
+import org.wso2.carbon.transport.http.netty.internal.config.TransportConfigurationBuilder;
+import org.wso2.carbon.transport.http.netty.internal.config.TransportsConfiguration;
 import org.wso2.carbon.transport.http.netty.listener.NettyListener;
+import org.wso2.carbon.transports.TransportManager;
+
+import java.util.Set;
 
 /**
  * TODO: class level comment
  */
 public class MicroservicesRunner {
 
-    public static void run(Object microservice) {
+    private TransportManager transportManager = new TransportManager();
 
+    public MicroservicesRunner deploy(HttpHandler microservice) {
 
-//        NettyListener listener = new NettyListener();
-        // for all defined netty listeners, create NettyListener instance
-        // add the ServerInitializer to the NettyListeners
+        TransportsConfiguration trpConfig = TransportConfigurationBuilder.build();
+        Set<ListenerConfiguration> listenerConfigurations = trpConfig.getListenerConfigurations();
+        for (ListenerConfiguration listenerConfiguration : listenerConfigurations) {
+            NettyListener listener = new NettyListener(listenerConfiguration);
+            transportManager.registerTransport(listener);
+        }
 
+        NettyTransportDataHolder nettyTransportDataHolder = NettyTransportDataHolder.getInstance();
+        nettyTransportDataHolder.
+                addNettyChannelInitializer(ListenerConfiguration.DEFAULT_KEY, new JaxrsNettyServerInitializer());
+        DataHolder.getInstance().addHttpService(microservice);
+        return this;
+    }
 
-        //TODO: impl
-//        ServerInitializer initializer = new ServerInitializer();
-
-        // Start the NettyListeners
+    public void start() {
+        transportManager.startTransports();
     }
 }

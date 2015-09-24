@@ -20,8 +20,8 @@ package org.wso2.carbon.mss.example2.internal;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.wso2.carbon.mss.example2.StockQuoteService;
 import org.wso2.carbon.mss.HttpHandler;
+import org.wso2.carbon.mss.example2.StockQuoteService;
 
 /**
  * TODO: class level comment

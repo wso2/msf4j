@@ -19,9 +19,9 @@
 
 package org.wso2.carbon.mss.internal.router;
 
-import org.wso2.carbon.mss.HttpResponder;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
+import org.wso2.carbon.mss.HttpResponder;
 
 /**
  * Interface that needs to be implemented to intercept handler method calls.

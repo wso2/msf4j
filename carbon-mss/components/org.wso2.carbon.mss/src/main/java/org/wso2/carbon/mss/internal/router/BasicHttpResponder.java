@@ -19,7 +19,6 @@
 
 package org.wso2.carbon.mss.internal.router;
 
-import org.wso2.carbon.mss.ChunkResponder;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Multimap;
@@ -35,8 +34,8 @@ import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
+import org.wso2.carbon.mss.ChunkResponder;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -44,6 +43,7 @@ import java.nio.channels.FileChannel;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import javax.annotation.Nullable;
 
 /**
  * HttpResponder responds back to the client that initiated the request. Caller can use sendJson method to respond

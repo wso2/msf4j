@@ -33,43 +33,43 @@ import javax.net.ssl.X509TrustManager;
  */
 public class TrustManagerFactory extends TrustManagerFactorySpi {
 
-  private static final TrustManager DUMMY_TRUST_MANAGER = new X509TrustManager() {
-    public X509Certificate[] getAcceptedIssuers() {
-      return new X509Certificate[0];
+    private static final TrustManager DUMMY_TRUST_MANAGER = new X509TrustManager() {
+        public X509Certificate[] getAcceptedIssuers() {
+            return new X509Certificate[0];
+        }
+
+        public void checkClientTrusted(X509Certificate[] chain, String authType) {
+            // This example always trusts the incoming certificate.
+            // Perform certificate inspection and invalid certificate check here
+            System.err.println(
+                    "UNKNOWN CLIENT CERTIFICATE: " + chain[0].getSubjectDN());
+        }
+
+        public void checkServerTrusted(X509Certificate[] chain, String authType) {
+            // Always trust - it is an example.
+            // You should do something in the real world.
+            System.err.println(
+                    "UNKNOWN SERVER CERTIFICATE: " + chain[0].getSubjectDN());
+        }
+    };
+
+    public static TrustManager[] getTrustManagers() {
+        return new TrustManager[]{DUMMY_TRUST_MANAGER};
     }
 
-    public void checkClientTrusted(X509Certificate[] chain, String authType) {
-      // This example always trusts the incoming certificate.
-      // Perform certificate inspection and invalid certificate check here
-      System.err.println(
-        "UNKNOWN CLIENT CERTIFICATE: " + chain[0].getSubjectDN());
+    @Override
+    protected TrustManager[] engineGetTrustManagers() {
+        return getTrustManagers();
     }
 
-    public void checkServerTrusted(X509Certificate[] chain, String authType) {
-      // Always trust - it is an example.
-      // You should do something in the real world.
-      System.err.println(
-        "UNKNOWN SERVER CERTIFICATE: " + chain[0].getSubjectDN());
+    @Override
+    protected void engineInit(KeyStore keystore) throws KeyStoreException {
+        // Unused
     }
-  };
 
-  public static TrustManager[] getTrustManagers() {
-    return new TrustManager[] { DUMMY_TRUST_MANAGER };
-  }
-
-  @Override
-  protected TrustManager[] engineGetTrustManagers() {
-    return getTrustManagers();
-  }
-
-  @Override
-  protected void engineInit(KeyStore keystore) throws KeyStoreException {
-    // Unused
-  }
-
-  @Override
-  protected void engineInit(ManagerFactoryParameters managerFactoryParameters)
-    throws InvalidAlgorithmParameterException {
-    // Unused
-  }
+    @Override
+    protected void engineInit(ManagerFactoryParameters managerFactoryParameters)
+            throws InvalidAlgorithmParameterException {
+        // Unused
+    }
 }

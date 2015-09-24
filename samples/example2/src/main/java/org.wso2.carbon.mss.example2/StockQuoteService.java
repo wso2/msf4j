@@ -6,13 +6,13 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import org.wso2.carbon.mss.AbstractHttpHandler;
 import org.wso2.carbon.mss.HttpResponder;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import java.util.HashMap;
-import java.util.Map;
 
 @Path("/SimpleStockQuote")
 public class StockQuoteService extends AbstractHttpHandler {

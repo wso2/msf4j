@@ -10,7 +10,7 @@
                 workerThreadPoolSize="250"
                 execHandlerThreadPoolSize="60"/>
 
-        <listener
+        <!--listener
                 id="netty-jaxrs-https"
                 host="127.0.0.1"
                 port="8888"
@@ -20,7 +20,7 @@
                 scheme="https"
                 keyStoreFile="repository/resources/security/cert.jks"
                 keyStorePass="secret"
-                certPass="secret"/>
+                certPass="secret"/-->
     </listeners>
 
     <senders>

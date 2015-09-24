@@ -33,11 +33,6 @@ import io.netty.handler.codec.http.QueryStringDecoder;
 import org.wso2.carbon.mss.HttpHandler;
 import org.wso2.carbon.mss.HttpResponder;
 
-import javax.annotation.Nullable;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -45,6 +40,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.Nullable;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 
 /**
  * HttpResourceModel contains information needed to handle Http call for a given path. Used as a destination in
@@ -264,13 +264,13 @@ public final class HttpResourceModel {
         private final Annotation annotation;
         private final Function<T, Object> converter;
 
-        static <V> ParameterInfo<V> create(Annotation annotation, @Nullable Function<V, Object> converter) {
-            return new ParameterInfo<>(annotation, converter);
-        }
-
         private ParameterInfo(Annotation annotation, @Nullable Function<T, Object> converter) {
             this.annotation = annotation;
             this.converter = converter;
+        }
+
+        static <V> ParameterInfo<V> create(Annotation annotation, @Nullable Function<V, Object> converter) {
+            return new ParameterInfo<>(annotation, converter);
         }
 
         @SuppressWarnings("unchecked")

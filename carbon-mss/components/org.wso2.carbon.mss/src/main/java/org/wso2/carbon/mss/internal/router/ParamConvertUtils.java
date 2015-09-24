@@ -31,10 +31,6 @@ import com.google.common.primitives.Primitives;
 import com.google.common.reflect.TypeToken;
 import org.apache.commons.beanutils.ConvertUtils;
 
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.ext.ParamConverterProvider;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -43,6 +39,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.ext.ParamConverterProvider;
 
 /**
  * Util class to convert request parameters.
@@ -63,6 +63,9 @@ public final class ParamConvertUtils {
         }
 
         PRIMITIVES_PARSE_METHODS = methods;
+    }
+
+    private ParamConvertUtils() {
     }
 
     /**
@@ -154,7 +157,6 @@ public final class ParamConvertUtils {
         throw new IllegalArgumentException("Unsupported type " + typeToken);
     }
 
-
     /**
      * Creates a converter function that converts value into primitive type.
      *
@@ -186,7 +188,6 @@ public final class ParamConvertUtils {
             }
         };
     }
-
 
     /**
      * Creates a converter function that converts value using a constructor that accepts a single String argument.
@@ -327,8 +328,5 @@ public final class ParamConvertUtils {
         }
 
         protected abstract Object convert(String value) throws Exception;
-    }
-
-    private ParamConvertUtils() {
     }
 }
