@@ -42,6 +42,22 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.launcher</artifactId>
+                <version>${carbon.kernel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.mss.feature</artifactId>
+                <version>${carbon.mss.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>wso2carbon-kernel</artifactId>
+                <version>${carbon.kernel.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>javax.ws.rs</groupId>
                 <artifactId>javax.ws.rs-api</artifactId>
                 <version>${rs-api.version}</version>
@@ -80,6 +96,12 @@
                 <groupId>io.netty</groupId>
                 <artifactId>netty-codec-http</artifactId>
                 <version>${netty.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.core</artifactId>
+                <version>${osgi.api.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.osgi</groupId>
@@ -159,6 +181,10 @@
     </build>
 
     <properties>
+        <carbon.kernel.version>5.0.0-SNAPSHOT</carbon.kernel.version>
+        <carbon.mss.version>1.0.0-SNAPSHOT</carbon.mss.version>
+
+        <osgi.api.version>5.0.0</osgi.api.version>
         <equinox.osgi.version>3.9.1.v20130814-1242</equinox.osgi.version>
         <equinox.osgi.services.version>3.3.100.v20130513-1956</equinox.osgi.services.version>
         <rs-api.version>2.0</rs-api.version>
