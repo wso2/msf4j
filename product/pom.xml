@@ -85,7 +85,7 @@
             </plugin>
             <plugin>
                 <groupId>org.wso2.maven</groupId>
-                <artifactId>carbon-p2-plugin</artifactId>5.0.0-SNAPSHOT
+                <artifactId>carbon-p2-plugin</artifactId>
                 <version>${carbon.p2.plugin.version}</version>
                 <executions>
                     <execution>
