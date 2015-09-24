@@ -9,7 +9,7 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>jaxrs-sample2</artifactId>
+    <artifactId>SimpleStockQuoteBundle</artifactId>
     <packaging>bundle</packaging>
 
     <name>jaxrs-sample Maven Webapp</name>

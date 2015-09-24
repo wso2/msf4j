@@ -5,6 +5,7 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.wso2.carbon.mss.AbstractHttpHandler;
 import org.wso2.carbon.mss.HttpResponder;
+import org.wso2.carbon.mss.MicroservicesRunner;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -138,5 +139,11 @@ public class StockQuoteService extends AbstractHttpHandler {
     @Override
     public String toString() {
         return "StockQuoteService{}";
+    }
+
+    public static void main(String[] args) {
+        long start = System.currentTimeMillis();
+        new MicroservicesRunner().deploy(new StockQuoteService()).start();
+        System.out.println("Microservices server started in " + (System.currentTimeMillis() - start) + "ms");
     }
 }
