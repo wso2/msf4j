@@ -48,13 +48,19 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.mss.feature</artifactId>
+                <artifactId>wso2carbon-kernel</artifactId>
+                <version>${carbon.kernel.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.mss</artifactId>
                 <version>${carbon.mss.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
-                <artifactId>wso2carbon-kernel</artifactId>
-                <version>${carbon.kernel.version}</version>
+                <artifactId>org.wso2.carbon.mss.feature</artifactId>
+                <version>${carbon.mss.version}</version>
             </dependency>
 
             <dependency>
