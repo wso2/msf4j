@@ -28,6 +28,7 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.LastHttpContent;
 import org.wso2.carbon.mss.HttpHandler;
+import org.wso2.carbon.mss.HttpHandlerWrapper;
 import org.wso2.carbon.mss.HttpResponder;
 
 import java.lang.reflect.InvocationTargetException;
@@ -93,7 +94,11 @@ class HttpMethodInfo {
             // Actually <T> would be void
             bodyConsumer = null;
             try {
-                method.invoke(handler, args);
+                if (HttpHandlerWrapper.class.isInstance(handler)) {
+                    method.invoke(((HttpHandlerWrapper) handler).getService(), args);
+                } else {
+                    method.invoke(handler, args);
+                }
             } catch (InvocationTargetException e) {
                 exceptionHandler.handle(e.getTargetException(), request, responder);
             }
