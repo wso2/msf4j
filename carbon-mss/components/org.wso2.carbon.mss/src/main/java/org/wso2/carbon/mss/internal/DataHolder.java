@@ -20,7 +20,6 @@ package org.wso2.carbon.mss.internal;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.mss.HttpHandler;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -33,7 +32,7 @@ public class DataHolder {
 
     private static final Logger LOG = LoggerFactory.getLogger(DataHolder.class);
     private static DataHolder instance = new DataHolder();
-    private volatile Set<HttpHandler> httpServices = new HashSet<>();
+    private volatile Set<Object> httpServices = new HashSet<>();
 
     private DataHolder() {
     }
@@ -42,16 +41,16 @@ public class DataHolder {
         return instance;
     }
 
-    public void addHttpService(HttpHandler httpHandler) {
+    public void addHttpService(Object httpHandler) {
         httpServices.add(httpHandler);
         LOG.info("Added HTTP Service: " + httpHandler);
     }
 
-    void removeHttpService(HttpHandler httpService) {
+    void removeHttpService(Object httpService) {
         httpServices.remove(httpService);
     }
 
-    Set<HttpHandler> getHttpServices() {
+    Set<Object> getHttpServices() {
         return Collections.unmodifiableSet(httpServices);
     }
 }

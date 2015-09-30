@@ -27,7 +27,6 @@ import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.LastHttpContent;
-import org.wso2.carbon.mss.HttpHandler;
 import org.wso2.carbon.mss.HttpResponder;
 
 import java.lang.reflect.InvocationTargetException;
@@ -41,7 +40,7 @@ import java.lang.reflect.Method;
 class HttpMethodInfo {
 
     private final Method method;
-    private final HttpHandler handler;
+    private final Object handler;
     private final boolean isChunkedRequest;
     private final ByteBuf requestContent;
     private final HttpRequest request;
@@ -52,7 +51,7 @@ class HttpMethodInfo {
 
     private BodyConsumer bodyConsumer;
 
-    HttpMethodInfo(Method method, HttpHandler handler, HttpRequest request, HttpResponder responder, Object[] args,
+    HttpMethodInfo(Method method, Object handler, HttpRequest request, HttpResponder responder, Object[] args,
                    ExceptionHandler exceptionHandler) {
         this.method = method;
         this.handler = handler;

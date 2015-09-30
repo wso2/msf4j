@@ -55,7 +55,7 @@ public final class HttpResourceHandler implements HttpHandler {
     private static final Logger LOG = LoggerFactory.getLogger(HttpResourceHandler.class);
 
     private final PatternPathRouterWithGroups<HttpResourceModel> patternRouter = PatternPathRouterWithGroups.create();
-    private final Iterable<HttpHandler> handlers;
+    private final Iterable<Object> handlers;
     private final Iterable<HandlerHook> handlerHooks;
     private final URLRewriter urlRewriter;
 
@@ -68,14 +68,14 @@ public final class HttpResourceHandler implements HttpHandler {
      * @param urlRewriter      URL re-writer.
      * @param exceptionHandler Exception handler
      */
-    public HttpResourceHandler(Iterable<? extends HttpHandler> handlers, Iterable<? extends HandlerHook> handlerHooks,
+    public HttpResourceHandler(Iterable<? extends Object> handlers, Iterable<? extends HandlerHook> handlerHooks,
                                URLRewriter urlRewriter, ExceptionHandler exceptionHandler) {
         //Store the handlers to call init and destroy on all handlers.
         this.handlers = ImmutableList.copyOf(handlers);
         this.handlerHooks = ImmutableList.copyOf(handlerHooks);
         this.urlRewriter = urlRewriter;
 
-        for (HttpHandler handler : handlers) {
+        for (Object handler : handlers) {
             String basePath = "";
             if (handler.getClass().isAnnotationPresent(Path.class)) {
                 basePath = handler.getClass().getAnnotation(Path.class).value();
@@ -351,15 +351,19 @@ public final class HttpResourceHandler implements HttpHandler {
 
     @Override
     public void init(HandlerContext context) {
-        for (HttpHandler handler : handlers) {
-            handler.init(context);
+        for (Object handler : handlers) {
+            if (handler instanceof HttpHandler) {
+                ((HttpHandler) handler).init(context);
+            }
         }
     }
 
     @Override
     public void destroy(HandlerContext context) {
-        for (HttpHandler handler : handlers) {
-            handler.destroy(context);
+        for (Object handler : handlers) {
+            if (handler instanceof HttpHandler) {
+                ((HttpHandler) handler).destroy(context);
+            }
         }
     }
 }

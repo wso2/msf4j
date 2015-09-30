@@ -36,7 +36,7 @@ public class MicroservicesRunner {
 
     private TransportManager transportManager = new TransportManager();
 
-    public MicroservicesRunner deploy(HttpHandler microservice) {
+    public MicroservicesRunner deploy(Object microservice) {
 
         TransportsConfiguration trpConfig = TransportConfigurationBuilder.build();
         Set<ListenerConfiguration> listenerConfigurations = trpConfig.getListenerConfigurations();

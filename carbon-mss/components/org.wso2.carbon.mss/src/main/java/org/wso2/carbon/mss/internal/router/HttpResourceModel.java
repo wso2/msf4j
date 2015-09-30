@@ -30,7 +30,6 @@ import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.QueryStringDecoder;
-import org.wso2.carbon.mss.HttpHandler;
 import org.wso2.carbon.mss.HttpResponder;
 
 import java.lang.annotation.Annotation;
@@ -58,7 +57,7 @@ public final class HttpResourceModel {
     private final Set<HttpMethod> httpMethods;
     private final String path;
     private final Method method;
-    private final HttpHandler handler;
+    private final Object handler;
     private final List<Map<Class<? extends Annotation>, ParameterInfo<?>>> paramsInfo;
     private final ExceptionHandler exceptionHandler;
 
@@ -70,7 +69,7 @@ public final class HttpResourceModel {
      * @param method      handler that handles the http request.
      * @param handler     instance {@code HttpHandler}.
      */
-    public HttpResourceModel(Set<HttpMethod> httpMethods, String path, Method method, HttpHandler handler,
+    public HttpResourceModel(Set<HttpMethod> httpMethods, String path, Method method, Object handler,
                              ExceptionHandler exceptionHandler) {
         this.httpMethods = httpMethods;
         this.path = path;
@@ -104,7 +103,7 @@ public final class HttpResourceModel {
     /**
      * @return instance of {@code HttpHandler}.
      */
-    public HttpHandler getHttpHandler() {
+    public Object getHttpHandler() {
         return handler;
     }
 
