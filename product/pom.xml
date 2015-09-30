@@ -186,7 +186,8 @@
                         <phase>package</phase>
                         <configuration>
                             <tasks>
-                                <replace token="false" value="true" dir="target/wso2carbon-kernel-${carbon.kernel.version}/repository/components">
+                                <replace token="false" value="true"
+                                         dir="target/wso2carbon-kernel-${carbon.kernel.version}/repository/components">
                                     <include name="**/bundles.info"/>
                                 </replace>
                             </tasks>

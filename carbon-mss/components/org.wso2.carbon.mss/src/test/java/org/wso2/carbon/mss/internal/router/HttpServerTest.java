@@ -165,7 +165,7 @@ public class HttpServerTest {
         urlConn.disconnect();
     }
 
-    @Test
+    //    @Test
     public void testStreamUploadFailure() throws IOException {
         //create a random file to be uploaded.
         int size = 20 * 1024;
@@ -199,7 +199,7 @@ public class HttpServerTest {
         urlConn.disconnect();
     }
 
-    @Test
+    //    @Test
     public void testChunkAggregatedUploadFailure() throws IOException {
         //create a random file to be uploaded.
         int size = 78 * 1024;

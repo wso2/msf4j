@@ -188,7 +188,9 @@ public final class HttpResourceModel {
         String headerName = headerParam.value();
         List<String> headers = request.headers().getAll(headerParam.value());
 
-        return (request.headers().contains(headerName)) ? info.convert(headers) : info.convert(defaultValue(annotations));
+        return (request.headers().contains(headerName)) ?
+                info.convert(headers) :
+                info.convert(defaultValue(annotations));
     }
 
     /**

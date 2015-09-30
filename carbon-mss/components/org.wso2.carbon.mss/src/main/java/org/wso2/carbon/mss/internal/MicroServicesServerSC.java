@@ -33,6 +33,9 @@ import org.wso2.carbon.transport.http.netty.listener.CarbonNettyServerInitialize
 import java.util.Hashtable;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * OSGi service component for MicroServicesServer
+ */
 @Component(
         name = "org.wso2.carbon.mss.internal.MicroServicesServerSC",
         immediate = true
@@ -40,6 +43,7 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("unused")
 public class MicroServicesServerSC {
     public static final String CHANNEL_ID_KEY = "channel.id";
+    private static final Logger log = LoggerFactory.getLogger(MicroServicesServerSC.class);
     private static final Logger LOG = LoggerFactory.getLogger(MicroServicesServerSC.class);
     private final MicroservicesRegistry microservicesRegistry = MicroservicesRegistry.getInstance();
 
@@ -66,12 +70,12 @@ public class MicroServicesServerSC {
                             Hashtable<String, String> httpInitParams = new Hashtable<>();
                             httpInitParams.put(CHANNEL_ID_KEY, "netty-jaxrs-http");
                             bundleContext.registerService(CarbonNettyServerInitializer.class,
-                                    new JaxrsNettyServerInitializer(), httpInitParams);
+                                    new MSSNettyServerInitializer(), httpInitParams);
 
                             Hashtable<String, String> httpsInitParams = new Hashtable<>();
                             httpsInitParams.put(CHANNEL_ID_KEY, "netty-jaxrs-https");
                             bundleContext.registerService(CarbonNettyServerInitializer.class,
-                                    new JaxrsNettyServerInitializer(), httpsInitParams);
+                                    new MSSNettyServerInitializer(), httpsInitParams);
 
                             LOG.info("Micro services server started");
                             break;
@@ -108,19 +112,10 @@ public class MicroServicesServerSC {
             unbind = "removeHttpService"
     )
     protected void addHttpService(HttpHandler httpService) {
-        try {
-            microservicesRegistry.addHttpService(httpService);
-            /*if (nettyHttpService != null && nettyHttpService.isRunning()) {
-                nettyHttpService.addHttpHandler(httpService);
-            }*/   // FIXME
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
+        microservicesRegistry.addHttpService(httpService);
     }
 
-    @SuppressWarnings("unused")
     protected void removeHttpService(HttpHandler httpService) {
         microservicesRegistry.removeHttpService(httpService);
-        //TODO: handle removing HttpService from NettyHttpService
     }
 }

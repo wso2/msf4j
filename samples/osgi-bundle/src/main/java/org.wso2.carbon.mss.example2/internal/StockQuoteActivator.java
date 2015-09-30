@@ -20,16 +20,20 @@ package org.wso2.carbon.mss.example2.internal;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wso2.carbon.mss.HttpHandler;
 import org.wso2.carbon.mss.example2.StockQuoteService;
 
 /**
- * TODO: class level comment
+ * BundleActivator which registers the StockQuote OSGi service
  */
 public class StockQuoteActivator implements BundleActivator {
+    private static final Logger log = LoggerFactory.getLogger(StockQuoteActivator.class);
+
     public void start(BundleContext bundleContext) throws Exception {
         bundleContext.registerService(HttpHandler.class, new StockQuoteService(), null);
-        System.out.println("Registered StockQuoteService2");
+        log.info("Registered StockQuoteService2");
     }
 
     public void stop(BundleContext bundleContext) throws Exception {

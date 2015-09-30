@@ -113,8 +113,8 @@ public class InternalHttpResponderTest {
         if (expectedData != null) {
             // read it twice to make sure the input supplier gives the full stream more than once.
             for (int i = 0; i < 2; i++) {
-                try (
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(response.getInputSupplier().getInput()))
+                try (BufferedReader reader =
+                                new BufferedReader(new InputStreamReader(response.getInputSupplier().getInput()))
                 ) {
                     String data = reader.readLine();
                     Assert.assertEquals(expectedData, data);

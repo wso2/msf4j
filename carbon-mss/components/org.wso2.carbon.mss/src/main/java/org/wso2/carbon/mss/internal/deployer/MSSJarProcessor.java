@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.Attributes;
@@ -54,29 +56,34 @@ public class MSSJarProcessor {
      */
     public MSSJarProcessor process() {
         String jarPath = file.getAbsolutePath();
-        String[] mssClassNames = readMSSManifestEntry(jarPath);
-        URLClassLoader classLoader;
-        try {
-            //Parent class loader is required to provide classes that are outside of the jar
-            //A Privileged Block is not required to initialise class loader since this code is internal
-            classLoader = new URLClassLoader(new URL[]{file.toURI().toURL()}, this.getClass().getClassLoader());
-        } catch (MalformedURLException e) {
-            log.error("Path to jar is invalid");
-            return this;
-        }
-        for (String className : mssClassNames) {
-            try {
-                Class classToLoad = classLoader.loadClass(className);
-                resourceInstances.add(classToLoad.newInstance());
-                log.info("initialized class: " + className);
-            } catch (ClassNotFoundException e) {
-                log.error("Class: " + className + " not found");
-            } catch (InstantiationException e1) {
-                log.error("Failed to initialize class: " + className);
-            } catch (IllegalAccessException e1) {
-                log.error("Failed to access class: " + className);
+        final String[] mssClassNames = readMSSManifestEntry(jarPath);
+
+        //Parent class loader is required to provide classes that are outside of the jar
+        AccessController.doPrivileged(new PrivilegedAction<Void>() {
+            public Void run() {
+                try {
+                    URLClassLoader classLoader =
+                            new URLClassLoader(new URL[]{file.toURI().toURL()}, this.getClass().getClassLoader());
+                    for (String className : mssClassNames) {
+                        try {
+                            Class classToLoad = classLoader.loadClass(className);
+                            resourceInstances.add(classToLoad.newInstance());
+                            log.info("initialized class: " + className);
+                        } catch (ClassNotFoundException e) {
+                            log.error("Class: " + className + " not found");
+                        } catch (InstantiationException e1) {
+                            log.error("Failed to initialize class: " + className);
+                        } catch (IllegalAccessException e1) {
+                            log.error("Failed to access class: " + className);
+                        }
+                    }
+                } catch (MalformedURLException e) {
+                    log.error("Path to jar is invalid");
+                }
+                return null;
             }
-        }
+        });
+
         return this;
     }
 
@@ -111,7 +118,7 @@ public class MSSJarProcessor {
                 try {
                     jarFile.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.warn("Cannot close jar file: " + jarPath, e);
                 }
             }
         }

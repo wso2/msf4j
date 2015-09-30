@@ -27,10 +27,7 @@ import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.AbstractIdleService;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelConfig;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.group.ChannelGroup;
@@ -59,7 +56,7 @@ import java.util.concurrent.TimeUnit;
  */
 public final class NettyHttpService extends AbstractIdleService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(NettyHttpService.class);
+    private static final Logger log = LoggerFactory.getLogger(NettyHttpService.class);
 
     private static final int CLOSE_CHANNEL_TIMEOUT = 5;
     private final int bossThreadPoolSize;
@@ -180,27 +177,27 @@ public final class NettyHttpService extends AbstractIdleService {
         resourceHandler.init(handlerContext);
 
         //TODO: Check how to handle this
-        final ChannelInboundHandlerAdapter connectionTracker = new ChannelInboundHandlerAdapter() {
+        /*final ChannelInboundHandlerAdapter connectionTracker = new ChannelInboundHandlerAdapter() {
 
             @Override
             public void channelActive(ChannelHandlerContext ctx) throws Exception {
                 channelGroup.add(ctx.channel());
                 super.channelActive(ctx);
             }
-        };
+        };*/
         bootstrap.childHandler(new ServerInitializer(eventExecutor, httpChunkLimit, sslHandlerFactory,
                 resourceHandler, pipelineModifier));
     }
 
     @Override
     protected void startUp() throws Exception {
-        LOG.info("Starting service on address {}...", bindAddress);
+        log.info("Starting service on address {}...", bindAddress);
         eventExecutorGroup = new DefaultEventExecutorGroup(execThreadPoolSize);
         bootStrap(eventExecutorGroup);
         ChannelFuture channelFuture = bootstrap.bind(bindAddress).sync();
         channelGroup.add(channelFuture.channel());
         bindAddress = ((InetSocketAddress) channelFuture.channel().localAddress());
-        LOG.info("Started service on address {}", bindAddress);
+        log.info("Started service on address {}", bindAddress);
     }
 
     /**
@@ -212,16 +209,16 @@ public final class NettyHttpService extends AbstractIdleService {
 
     @Override
     protected void shutDown() throws Exception {
-        LOG.info("Stopping service on address {}...", bindAddress);
+        log.info("Stopping service on address {}...", bindAddress);
         eventExecutorGroup.shutdownGracefully();
         try {
             if (!channelGroup.close().await(CLOSE_CHANNEL_TIMEOUT, TimeUnit.SECONDS)) {
-                LOG.warn("Timeout when closing all channels.");
+                log.warn("Timeout when closing all channels.");
             }
         } finally {
             resourceHandler.destroy(handlerContext);
         }
-        LOG.info("Done stopping service on address {}", bindAddress);
+        log.info("Done stopping service on address {}", bindAddress);
     }
 
     /**
@@ -352,7 +349,6 @@ public final class NettyHttpService extends AbstractIdleService {
          * @param key   Name of the configuration.
          * @param value Value of the configuration.
          * @return an instance of {@code Builder}.
-         * @see ChannelConfig
          */
         public Builder setChannelConfig(ChannelOption key, Object value) {
             channelConfigs.put(key, value);
@@ -361,8 +357,8 @@ public final class NettyHttpService extends AbstractIdleService {
 
         /**
          * Set size of executorThreadPool in netty default value is 60 if it is not set.
-         * If the size is {@code 0}, then no executor will be used, hence calls to {@link HttpHandler} would be made from
-         * worker threads directly.
+         * If the size is {@code 0}, then no executor will be used, hence calls to {@link HttpHandler} would be made
+         * from worker threads directly.
          *
          * @param execThreadPoolSize size of workerThreadPool.
          * @return an instance of {@code Builder}.

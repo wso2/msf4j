@@ -27,7 +27,8 @@ public class TestMSSJarProcessor {
     @Test
     public void testJAXRSJarObjectInitialization() {
         MSSJarProcessor mssJarProcessor = new MSSJarProcessor();
-        File jar = new File(TestMSSJarProcessor.class.getResource("/org.wso2.carbon.mss.jaxrs.sample.simplestockquote-1.0.zip").getPath());
+        String name = "/org.wso2.carbon.mss.jaxrs.sample.simplestockquote-1.0.zip";
+        File jar = new File(TestMSSJarProcessor.class.getResource(name).getPath());
         Assert.assertTrue("Resource jar does not exist", jar.exists());
         List<Object> instances = mssJarProcessor.setArtifact(jar).process().getResourceInstances();
         Assert.assertTrue("No classes were loaded", !instances.isEmpty());

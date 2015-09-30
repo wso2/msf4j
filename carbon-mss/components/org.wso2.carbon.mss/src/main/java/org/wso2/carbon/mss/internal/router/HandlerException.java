@@ -31,7 +31,7 @@ import io.netty.handler.codec.http.HttpVersion;
  */
 final class HandlerException extends Exception {
 
-    private final HttpResponseStatus failureStatus;
+    private final transient HttpResponseStatus failureStatus;
     private final String message;
 
     HandlerException(HttpResponseStatus failureStatus, String message) {

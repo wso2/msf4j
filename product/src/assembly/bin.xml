@@ -30,7 +30,8 @@
         </fileSet>
 
         <fileSet>
-            <directory>carbon-home/repository/conf/transports</directory> <!--todo version-->
+            <directory>carbon-home/repository/conf/transports</directory>
+            <!--todo version-->
             <outputDirectory>repository/conf/transports</outputDirectory>
             <fileMode>644</fileMode>
         </fileSet>

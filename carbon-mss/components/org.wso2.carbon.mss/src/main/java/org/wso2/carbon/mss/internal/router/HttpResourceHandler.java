@@ -52,7 +52,7 @@ import javax.ws.rs.Path;
  */
 public final class HttpResourceHandler implements HttpHandler {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HttpResourceHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(HttpResourceHandler.class);
 
     private final PatternPathRouterWithGroups<HttpResourceModel> patternRouter = PatternPathRouterWithGroups.create();
     private final Iterable<Object> handlers;
@@ -60,8 +60,8 @@ public final class HttpResourceHandler implements HttpHandler {
     private final URLRewriter urlRewriter;
 
     /**
-     * Construct HttpResourceHandler. Reads all annotations from all the handler classes and methods passed in, constructs
-     * patternPathRouter which is routable by path to {@code HttpResourceModel} as destination of the route.
+     * Construct HttpResourceHandler. Reads all annotations from all the handler classes and methods passed in,
+     * constructs patternPathRouter which is routable by path to {@code HttpResourceModel} as destination of the route.
      *
      * @param handlers         Iterable of HttpHandler.
      * @param handlerHooks     Iterable of HandlerHook.
@@ -98,7 +98,8 @@ public final class HttpResourceHandler implements HttpHandler {
                     patternRouter.add(absolutePath, new HttpResourceModel(httpMethods, absolutePath, method,
                             handler, exceptionHandler));
                 } else {
-                    LOG.trace("Not adding method {}({}) to path routing like. HTTP calls will not be routed to this method",
+                    log.trace("Not adding method {}({}) to path routing like. " +
+                                    "HTTP calls will not be routed to this method",
                             method.getName(), method.getParameterTypes());
                 }
             }
@@ -150,7 +151,7 @@ public final class HttpResourceHandler implements HttpHandler {
                 responder.sendString(HttpResponseStatus.INTERNAL_SERVER_ERROR,
                         String.format("Caught exception processing request. Reason: %s",
                                 t.getMessage()));
-                LOG.error("Exception thrown during rewriting of uri {}", request.getUri(), t);
+                log.error("Exception thrown during rewriting of uri {}", request.getUri(), t);
                 return;
             }
         }
@@ -184,7 +185,8 @@ public final class HttpResourceHandler implements HttpHandler {
                 if (!terminated) {
                     // Wrap responder to make post hook calls.
                     responder = new WrappedHttpResponder(responder, handlerHooks, request, info);
-                    if (httpResourceModel.handle(request, responder, matchedDestination.getGroupNameValues()).isStreaming()) {
+                    if (httpResourceModel.handle(request, responder,
+                            matchedDestination.getGroupNameValues()).isStreaming()) {
                         responder.sendString(HttpResponseStatus.METHOD_NOT_ALLOWED,
                                 String.format("Body Consumer not supported for internalHttpResponder: %s",
                                         request.getUri()));
@@ -195,13 +197,14 @@ public final class HttpResourceHandler implements HttpHandler {
                 responder.sendString(HttpResponseStatus.METHOD_NOT_ALLOWED,
                         String.format("Problem accessing: %s. Reason: Method Not Allowed", request.getUri()));
             } else {
-                responder.sendString(HttpResponseStatus.NOT_FOUND, String.format("Problem accessing: %s. Reason: Not Found",
+                responder.sendString(HttpResponseStatus.NOT_FOUND,
+                        String.format("Problem accessing: %s. Reason: Not Found",
                         request.getUri()));
             }
         } catch (Throwable t) {
             responder.sendString(HttpResponseStatus.INTERNAL_SERVER_ERROR,
                     String.format("Caught exception processing request. Reason: %s", t.getMessage()));
-            LOG.error("Exception thrown during request processing for uri {}", request.getUri(), t);
+            log.error("Exception thrown during request processing for uri {}", request.getUri(), t);
         }
     }
 
@@ -221,7 +224,7 @@ public final class HttpResourceHandler implements HttpHandler {
                     return null;
                 }
             } catch (Throwable t) {
-                LOG.error("Exception thrown during rewriting of uri {}", request.getUri(), t);
+                log.error("Exception thrown during rewriting of uri {}", request.getUri(), t);
                 throw new HandlerException(HttpResponseStatus.INTERNAL_SERVER_ERROR,
                         String.format("Caught exception processing request. Reason: %s", t.getMessage()));
             }
@@ -327,7 +330,8 @@ public final class HttpResourceHandler implements HttpHandler {
         }
 
         if (matchedDestinations.size() > 1) {
-            throw new IllegalStateException(String.format("Multiple matched handlers found for request uri %s", requestUri));
+            throw new IllegalStateException(String.format("Multiple matched handlers found for request uri %s",
+                    requestUri));
         } else if (matchedDestinations.size() == 1) {
             return matchedDestinations.get(0);
         }

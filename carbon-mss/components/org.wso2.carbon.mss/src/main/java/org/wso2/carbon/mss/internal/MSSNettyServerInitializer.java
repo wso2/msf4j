@@ -34,9 +34,9 @@ import java.util.ArrayList;
 import java.util.Map;
 
 /**
- * TODO: class level comment
+ * Netty Transport ServerInitializer for the Microservices Server
  */
-public class JaxrsNettyServerInitializer implements CarbonNettyServerInitializer {
+public class MSSNettyServerInitializer implements CarbonNettyServerInitializer {
 
     private DefaultEventExecutorGroup eventExecutorGroup;
 
@@ -53,8 +53,9 @@ public class JaxrsNettyServerInitializer implements CarbonNettyServerInitializer
         pipeline.addLast("encoder", new HttpResponseEncoder());
         pipeline.addLast("compressor", new HttpContentCompressor());
 
-        HttpResourceHandler resourceHandler = new HttpResourceHandler(MicroservicesRegistry.getInstance().getHttpServices(),
-                new ArrayList<HandlerHook>(), null, null);
+        HttpResourceHandler resourceHandler =
+                new HttpResourceHandler(MicroservicesRegistry.getInstance().getHttpServices(),
+                        new ArrayList<HandlerHook>(), null, null);
         pipeline.addLast(eventExecutorGroup, "router", new RequestRouter(resourceHandler, 0)); //TODO: remove limit
 
         //TODO: see what can be done

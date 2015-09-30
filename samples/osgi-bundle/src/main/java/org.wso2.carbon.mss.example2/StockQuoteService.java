@@ -14,6 +14,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
+/**
+ * StockQuote microservice
+ */
 @Path("/SimpleStockQuote")
 public class StockQuoteService extends AbstractHttpHandler {
 

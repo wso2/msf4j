@@ -34,9 +34,12 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * This Netty handler handles routing of requests to the relevant microservice
+ */
 public class RequestRouter extends SimpleChannelInboundHandler<HttpObject> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RequestRouter.class);
+    private static final Logger log = LoggerFactory.getLogger(RequestRouter.class);
 
     private final int chunkMemoryLimit;
     private final HttpResourceHandler httpMethodHandler;
@@ -70,7 +73,8 @@ public class RequestRouter extends SimpleChannelInboundHandler<HttpObject> {
         }
     }
 
-    private boolean handleRequest(HttpRequest httpRequest, Channel channel, ChannelHandlerContext ctx) throws Exception {
+    private boolean handleRequest(HttpRequest httpRequest, Channel channel,
+                                  ChannelHandlerContext ctx) throws Exception {
         methodInfo = httpMethodHandler.getDestinationMethod(
                 httpRequest, new BasicHttpResponder(channel, HttpHeaders.isKeepAlive(httpRequest)));
         return methodInfo != null;
@@ -83,7 +87,7 @@ public class RequestRouter extends SimpleChannelInboundHandler<HttpObject> {
             exceptionRaised.set(true);
 
             if (methodInfo != null) {
-                LOG.error(exceptionMessage, cause);
+                log.error(exceptionMessage, cause);
                 methodInfo.sendError(HttpResponseStatus.INTERNAL_SERVER_ERROR, cause);
                 methodInfo = null;
             } else {
@@ -92,19 +96,19 @@ public class RequestRouter extends SimpleChannelInboundHandler<HttpObject> {
                     response = ((HandlerException) cause).createFailureResponse();
                     // trace logs for user errors, error logs for internal server errors
                     if (isUserError(response)) {
-                        LOG.trace(exceptionMessage, cause);
+                        log.trace(exceptionMessage, cause);
                     } else {
-                        LOG.error(exceptionMessage, cause);
+                        log.error(exceptionMessage, cause);
                     }
                 } else {
-                    LOG.error(exceptionMessage, cause);
+                    log.error(exceptionMessage, cause);
                     response = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.INTERNAL_SERVER_ERROR);
                 }
                 response.headers().set(HttpHeaders.Names.CONTENT_TYPE, "text/plain; charset=UTF-8");
                 ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
             }
         } else {
-            LOG.trace(exceptionMessage, cause);
+            log.trace(exceptionMessage, cause);
         }
     }
 

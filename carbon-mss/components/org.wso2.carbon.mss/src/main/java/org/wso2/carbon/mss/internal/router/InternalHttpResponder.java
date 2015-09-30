@@ -99,12 +99,24 @@ public class InternalHttpResponder extends AbstractHttpResponder {
     private InputSupplier<InputStream> createContentSupplier(ByteBuf content) {
         final ByteBuf responseContent = content.duplicate();    // Have independent pointers.
         responseContent.markReaderIndex();
-        return new InputSupplier<InputStream>() {
-            @Override
-            public InputStream getInput() throws IOException {
-                responseContent.resetReaderIndex();
-                return new ByteBufInputStream(responseContent);
-            }
-        };
+        return new HttpResponderInputSupplier(responseContent).invoke();
+    }
+
+    private static class HttpResponderInputSupplier {
+        private final ByteBuf responseContent;
+
+        public HttpResponderInputSupplier(ByteBuf responseContent) {
+            this.responseContent = responseContent;
+        }
+
+        public InputSupplier<InputStream> invoke() {
+            return new InputSupplier<InputStream>() {
+                @Override
+                public InputStream getInput() throws IOException {
+                    responseContent.resetReaderIndex();
+                    return new ByteBufInputStream(responseContent);
+                }
+            };
+        }
     }
 }
