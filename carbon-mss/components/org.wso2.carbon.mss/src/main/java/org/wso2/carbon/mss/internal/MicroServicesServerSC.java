@@ -41,7 +41,7 @@ import java.util.concurrent.TimeUnit;
 public class MicroServicesServerSC {
     public static final String CHANNEL_ID_KEY = "channel.id";
     private static final Logger LOG = LoggerFactory.getLogger(MicroServicesServerSC.class);
-    private final DataHolder dataHolder = DataHolder.getInstance();
+    private final MicroservicesRegistry microservicesRegistry = MicroservicesRegistry.getInstance();
 
     private BundleContext bundleContext;
     private int jaxRsServiceCount;
@@ -58,7 +58,7 @@ public class MicroServicesServerSC {
 
                 public void run() {
                     while (true) {
-                        if (dataHolder.getHttpServices().size() == jaxRsServiceCount) {
+                        if (microservicesRegistry.getHttpServices().size() == jaxRsServiceCount) {
                             LOG.info("Starting micro services server...");
 
                             // Create an OSGi services (HTTP/HTTPS) & register it with the relevant CHANNEL_ID_KEY
@@ -109,7 +109,7 @@ public class MicroServicesServerSC {
     )
     protected void addHttpService(HttpHandler httpService) {
         try {
-            dataHolder.addHttpService(httpService);
+            microservicesRegistry.addHttpService(httpService);
             /*if (nettyHttpService != null && nettyHttpService.isRunning()) {
                 nettyHttpService.addHttpHandler(httpService);
             }*/   // FIXME
@@ -120,7 +120,7 @@ public class MicroServicesServerSC {
 
     @SuppressWarnings("unused")
     protected void removeHttpService(HttpHandler httpService) {
-        dataHolder.removeHttpService(httpService);
+        microservicesRegistry.removeHttpService(httpService);
         //TODO: handle removing HttpService from NettyHttpService
     }
 }

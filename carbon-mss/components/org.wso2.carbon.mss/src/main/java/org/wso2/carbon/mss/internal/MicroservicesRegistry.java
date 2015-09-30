@@ -26,18 +26,18 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * DataHolder for the MSS component
+ * MicroservicesRegistry for the MSS component
  */
-public class DataHolder {
+public class MicroservicesRegistry {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DataHolder.class);
-    private static DataHolder instance = new DataHolder();
+    private static final Logger LOG = LoggerFactory.getLogger(MicroservicesRegistry.class);
+    private static MicroservicesRegistry instance = new MicroservicesRegistry();
     private volatile Set<Object> httpServices = new HashSet<>();
 
-    private DataHolder() {
+    private MicroservicesRegistry() {
     }
 
-    public static DataHolder getInstance() {
+    public static MicroservicesRegistry getInstance() {
         return instance;
     }
 
