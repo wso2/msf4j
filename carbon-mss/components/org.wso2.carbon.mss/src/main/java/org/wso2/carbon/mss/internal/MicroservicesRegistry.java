@@ -46,7 +46,7 @@ public class MicroservicesRegistry {
         LOG.info("Added HTTP Service: " + httpHandler);
     }
 
-    void removeHttpService(Object httpService) {
+    public void removeHttpService(Object httpService) {
         httpServices.remove(httpService);
     }
 
