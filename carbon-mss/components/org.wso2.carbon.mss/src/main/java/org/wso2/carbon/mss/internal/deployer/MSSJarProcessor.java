@@ -57,7 +57,8 @@ public class MSSJarProcessor {
         String[] mssClassNames = readMSSManifestEntry(jarPath);
         URLClassLoader classLoader;
         try {
-            //parent class loader is required to provide classes that are outside of the jar
+            //Parent class loader is required to provide classes that are outside of the jar
+            //A Privileged Block is not required to initialise class loader since this code is internal
             classLoader = new URLClassLoader(new URL[]{file.toURI().toURL()}, this.getClass().getClassLoader());
         } catch (MalformedURLException e) {
             log.error("Path to jar is invalid");
@@ -87,27 +88,33 @@ public class MSSJarProcessor {
      * @return String array of fully qualified class names
      */
     private String[] readMSSManifestEntry(String jarPath) {
-        JarFile jarFile;
+        JarFile jarFile = null;
         try {
             jarFile = new JarFile(jarPath);
-        } catch (IOException e) {
-            log.error("Error loading artifact jar: " + jarPath);
-            return new String[0];
-        }
-        Manifest manifest;
-        try {
-            manifest = jarFile.getManifest();
+            Manifest manifest = jarFile.getManifest();
+            if (manifest == null) {
+                log.error("Error retrieving manifest: " + jarPath);
+                return new String[0];
+            }
+            Attributes mainAttributes = manifest.getMainAttributes();
+            String mssEntry = mainAttributes.getValue(MICROSERVICES_MANIFEST_KEY);
+            if (mssEntry == null) {
+                log.error("\'microservices\' manifest entry not found: " + jarPath);
+                return new String[0];
+            }
+            return mssEntry.split("\\s*,\\s*");
         } catch (IOException e) {
             log.error("Error retrieving manifest: " + jarPath);
             return new String[0];
+        } finally {
+            if (jarFile != null) {
+                try {
+                    jarFile.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-        Attributes mainAttributes = manifest.getMainAttributes();
-        String mssEntry = mainAttributes.getValue(MICROSERVICES_MANIFEST_KEY);
-        if (mssEntry == null) {
-            log.error("\'microservices\' manifest entry not found: " + jarPath);
-            return new String[0];
-        }
-        return mssEntry.split("\\s*,\\s*");
     }
 
     /**
