@@ -103,7 +103,7 @@ public class MicroServicesServerSC {
     @Reference(
             name = "netty-http.handler",
             service = HttpHandler.class,
-            cardinality = ReferenceCardinality.AT_LEAST_ONE,
+            cardinality = ReferenceCardinality.MULTIPLE,
             policy = ReferencePolicy.DYNAMIC,
             unbind = "removeHttpService"
     )
