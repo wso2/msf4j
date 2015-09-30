@@ -53,7 +53,7 @@ public class JaxrsNettyServerInitializer implements CarbonNettyServerInitializer
         pipeline.addLast("encoder", new HttpResponseEncoder());
         pipeline.addLast("compressor", new HttpContentCompressor());
 
-        HttpResourceHandler resourceHandler = new HttpResourceHandler(DataHolder.getInstance().getHttpServices(),
+        HttpResourceHandler resourceHandler = new HttpResourceHandler(MicroservicesRegistry.getInstance().getHttpServices(),
                 new ArrayList<HandlerHook>(), null, null);
         pipeline.addLast(eventExecutorGroup, "router", new RequestRouter(resourceHandler, 0)); //TODO: remove limit
 

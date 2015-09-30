@@ -20,38 +20,37 @@ package org.wso2.carbon.mss.internal;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.mss.HttpHandler;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * DataHolder for the MSS component
+ * MicroservicesRegistry for the MSS component
  */
-public class DataHolder {
+public class MicroservicesRegistry {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DataHolder.class);
-    private static DataHolder instance = new DataHolder();
-    private volatile Set<HttpHandler> httpServices = new HashSet<>();
+    private static final Logger LOG = LoggerFactory.getLogger(MicroservicesRegistry.class);
+    private static MicroservicesRegistry instance = new MicroservicesRegistry();
+    private volatile Set<Object> httpServices = new HashSet<>();
 
-    private DataHolder() {
+    private MicroservicesRegistry() {
     }
 
-    public static DataHolder getInstance() {
+    public static MicroservicesRegistry getInstance() {
         return instance;
     }
 
-    public void addHttpService(HttpHandler httpHandler) {
+    public void addHttpService(Object httpHandler) {
         httpServices.add(httpHandler);
         LOG.info("Added HTTP Service: " + httpHandler);
     }
 
-    void removeHttpService(HttpHandler httpService) {
+    public void removeHttpService(Object httpService) {
         httpServices.remove(httpService);
     }
 
-    Set<HttpHandler> getHttpServices() {
+    Set<Object> getHttpServices() {
         return Collections.unmodifiableSet(httpServices);
     }
 }

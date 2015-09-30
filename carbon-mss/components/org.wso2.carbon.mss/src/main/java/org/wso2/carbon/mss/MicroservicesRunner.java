@@ -18,7 +18,7 @@
  */
 package org.wso2.carbon.mss;
 
-import org.wso2.carbon.mss.internal.DataHolder;
+import org.wso2.carbon.mss.internal.MicroservicesRegistry;
 import org.wso2.carbon.mss.internal.JaxrsNettyServerInitializer;
 import org.wso2.carbon.transport.http.netty.internal.NettyTransportDataHolder;
 import org.wso2.carbon.transport.http.netty.internal.config.ListenerConfiguration;
@@ -36,7 +36,7 @@ public class MicroservicesRunner {
 
     private TransportManager transportManager = new TransportManager();
 
-    public MicroservicesRunner deploy(HttpHandler microservice) {
+    public MicroservicesRunner deploy(Object microservice) {
 
         TransportsConfiguration trpConfig = TransportConfigurationBuilder.build();
         Set<ListenerConfiguration> listenerConfigurations = trpConfig.getListenerConfigurations();
@@ -48,7 +48,7 @@ public class MicroservicesRunner {
         NettyTransportDataHolder nettyTransportDataHolder = NettyTransportDataHolder.getInstance();
         nettyTransportDataHolder.
                 addNettyChannelInitializer(ListenerConfiguration.DEFAULT_KEY, new JaxrsNettyServerInitializer());
-        DataHolder.getInstance().addHttpService(microservice);
+        MicroservicesRegistry.getInstance().addHttpService(microservice);
         return this;
     }
 
