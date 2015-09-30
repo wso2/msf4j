@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.mss.HandlerContext;
 import org.wso2.carbon.mss.HttpHandler;
+import org.wso2.carbon.mss.HttpHandlerWrapper;
 import org.wso2.carbon.mss.HttpResponder;
 
 import java.lang.reflect.Method;
@@ -77,11 +78,18 @@ public final class HttpResourceHandler implements HttpHandler {
 
         for (HttpHandler handler : handlers) {
             String basePath = "";
-            if (handler.getClass().isAnnotationPresent(Path.class)) {
-                basePath = handler.getClass().getAnnotation(Path.class).value();
+            Class<?> serviceClass;
+            if(HttpHandlerWrapper.class.isInstance(handler)){
+                serviceClass = ((HttpHandlerWrapper)handler).getServiceClass();
+            } else {
+                serviceClass = handler.getClass();
             }
 
-            for (Method method : handler.getClass().getDeclaredMethods()) {
+            if (serviceClass.isAnnotationPresent(Path.class)) {
+                basePath = serviceClass.getAnnotation(Path.class).value();
+            }
+
+            for (Method method : serviceClass.getDeclaredMethods()) {
                 if (method.getParameterTypes().length >= 2 &&
                         method.getParameterTypes()[0].isAssignableFrom(HttpRequest.class) &&
                         method.getParameterTypes()[1].isAssignableFrom(HttpResponder.class) &&

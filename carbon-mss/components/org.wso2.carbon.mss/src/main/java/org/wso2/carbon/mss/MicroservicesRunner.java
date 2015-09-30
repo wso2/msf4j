@@ -52,6 +52,11 @@ public class MicroservicesRunner {
         return this;
     }
 
+    public MicroservicesRunner deploy(Object pojo) {
+        HttpHandler handlerWrapper = new HttpHandlerWrapper(pojo);
+        return deploy(handlerWrapper);
+    }
+
     public void start() {
         transportManager.startTransports();
     }
