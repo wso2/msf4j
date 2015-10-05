@@ -85,6 +85,7 @@ public class MSSJarProcessor {
                 }
             });
         } catch (PrivilegedActionException e) {
+            //This assignment is required to fix unchecked/unconfirmed cast findbugs issue
             Exception e1 = e.getException();
             if (e1 instanceof MSSJarProcessorException) {
                 throw (MSSJarProcessorException) e1;
