@@ -25,7 +25,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.AccessController;
-import java.security.PrivilegedAction;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.Attributes;
@@ -54,35 +55,41 @@ public class MSSJarProcessor {
      * Initialize a list of objects from the jar for the specified
      * classes in the jar's manifest file under 'microservices' key
      */
-    public MSSJarProcessor process() {
+    public MSSJarProcessor process() throws MSSJarProcessorException {
         String jarPath = file.getAbsolutePath();
         final String[] mssClassNames = readMSSManifestEntry(jarPath);
 
         //Parent class loader is required to provide classes that are outside of the jar
-        AccessController.doPrivileged(new PrivilegedAction<Void>() {
-            public Void run() {
-                try {
-                    URLClassLoader classLoader =
-                            new URLClassLoader(new URL[]{file.toURI().toURL()}, this.getClass().getClassLoader());
-                    for (String className : mssClassNames) {
-                        try {
-                            Class classToLoad = classLoader.loadClass(className);
-                            resourceInstances.add(classToLoad.newInstance());
-                            log.info("initialized class: " + className);
-                        } catch (ClassNotFoundException e) {
-                            log.error("Class: " + className + " not found");
-                        } catch (InstantiationException e1) {
-                            log.error("Failed to initialize class: " + className);
-                        } catch (IllegalAccessException e1) {
-                            log.error("Failed to access class: " + className);
+        try {
+            AccessController.doPrivileged(new PrivilegedExceptionAction<Void>() {
+                public Void run() throws MSSJarProcessorException {
+                    try {
+                        URLClassLoader classLoader =
+                                new URLClassLoader(new URL[]{file.toURI().toURL()}, this.getClass().getClassLoader());
+                        for (String className : mssClassNames) {
+                            try {
+                                Class classToLoad = classLoader.loadClass(className);
+                                resourceInstances.add(classToLoad.newInstance());
+                            } catch (ClassNotFoundException e) {
+                                throw new MSSJarProcessorException("Class: " + className + " not found", e);
+                            } catch (InstantiationException e) {
+                                throw new MSSJarProcessorException("Failed to initialize class: " + className, e);
+                            } catch (IllegalAccessException e) {
+                                throw new MSSJarProcessorException("Failed to access class: " + className, e);
+                            }
                         }
+                    } catch (MalformedURLException e) {
+                        throw new MSSJarProcessorException("Path to jar is invalid", e);
                     }
-                } catch (MalformedURLException e) {
-                    log.error("Path to jar is invalid");
+                    return null;
                 }
-                return null;
+            });
+        } catch (PrivilegedActionException e) {
+            Exception e1 = e.getException();
+            if (e1 instanceof MSSJarProcessorException) {
+                throw (MSSJarProcessorException) e1;
             }
-        });
+        }
 
         return this;
     }
@@ -94,25 +101,22 @@ public class MSSJarProcessor {
      * @param jarPath absolute path to the jar file
      * @return String array of fully qualified class names
      */
-    private String[] readMSSManifestEntry(String jarPath) {
+    private String[] readMSSManifestEntry(String jarPath) throws MSSJarProcessorException {
         JarFile jarFile = null;
         try {
             jarFile = new JarFile(jarPath);
             Manifest manifest = jarFile.getManifest();
             if (manifest == null) {
-                log.error("Error retrieving manifest: " + jarPath);
-                return new String[0];
+                throw new MSSJarProcessorException("Error retrieving manifest: " + jarPath);
             }
             Attributes mainAttributes = manifest.getMainAttributes();
             String mssEntry = mainAttributes.getValue(MICROSERVICES_MANIFEST_KEY);
             if (mssEntry == null) {
-                log.error("\'microservices\' manifest entry not found: " + jarPath);
-                return new String[0];
+                throw new MSSJarProcessorException("Manifest entry 'microservices' not found: " + jarPath);
             }
             return mssEntry.split("\\s*,\\s*");
         } catch (IOException e) {
-            log.error("Error retrieving manifest: " + jarPath);
-            return new String[0];
+            throw new MSSJarProcessorException("Error retrieving manifest: " + jarPath, e);
         } finally {
             if (jarFile != null) {
                 try {
