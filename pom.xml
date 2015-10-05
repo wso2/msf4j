@@ -42,12 +42,12 @@
             </dependency>
 
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.mss</groupId>
                 <artifactId>org.wso2.carbon.mss</artifactId>
                 <version>${carbon.mss.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.mss</groupId>
                 <artifactId>org.wso2.carbon.mss.feature</artifactId>
                 <version>${carbon.mss.version}</version>
             </dependency>

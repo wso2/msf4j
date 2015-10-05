@@ -114,7 +114,7 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.mss</bundleDef>
+                                <bundleDef>org.wso2.carbon.mss:org.wso2.carbon.mss</bundleDef>
 
                                 <bundleDef>javax.ws.rs:javax.ws.rs-api</bundleDef>
                                 <bundleDef>io.netty:netty-common</bundleDef>

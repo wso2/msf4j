@@ -107,7 +107,7 @@
                                     org.wso2.carbon:org.wso2.carbon.core.runtime.feature:${carbon.kernel.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.mss.feature:${carbon.mss.version}
+                                    org.wso2.carbon.mss:org.wso2.carbon.mss.feature:${carbon.mss.version}
                                 </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
