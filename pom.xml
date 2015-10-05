@@ -15,6 +15,14 @@
     <packaging>pom</packaging>
     <version>1.0.0-SNAPSHOT</version>
 
+    <scm>
+        <url>https://github.com/wso2/product-mss.git</url>
+        <developerConnection>scm:git:https://github.com/wso2/product-mss.git</developerConnection>
+        <connection>scm:git:https://github.com/wso2/product-mss.git</connection>
+        <tag>HEAD</tag>
+    </scm>
+
+
     <pluginRepositories>
         <pluginRepository>
             <id>wso2-nexus</id>
@@ -162,6 +170,13 @@
     </dependencyManagement>
 
     <build>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh</artifactId>
+                <version>${maven.wagon.ssh.version}</version>
+            </extension>
+        </extensions>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -237,6 +252,7 @@
         <!-- Maven plugins -->
         <maven.checkstyleplugin.version>2.16</maven.checkstyleplugin.version>
         <maven.findbugsplugin.version>3.0.2</maven.findbugsplugin.version>
+        <maven.wagon.ssh.version>2.1</maven.wagon.ssh.version>
 
         <!-- Dependencies -->
         <carbon.kernel.version>5.0.0-SNAPSHOT</carbon.kernel.version>
