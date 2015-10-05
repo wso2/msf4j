@@ -39,7 +39,6 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.transport.http.netty</artifactId>
         </dependency>
-
         <dependency>
             <groupId>javax.ws.rs</groupId>
             <artifactId>javax.ws.rs-api</artifactId>

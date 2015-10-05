@@ -33,39 +33,6 @@
     <description>Netty based path router</description>
     <url>https://github.com/wso2/product-mss</url>
 
-    <licenses>
-        <license>
-            <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-        </license>
-    </licenses>
-
-    <developers>
-        <developer>
-            <name>WSO2</name>
-            <email>architecture@wso2.org</email>
-            <organization>WSO2 Inc</organization>
-            <organizationUrl>https://github.com/wso2/product-mss</organizationUrl>
-        </developer>
-    </developers>
-
-    <scm>
-        <connection>scm:git:git@github.com:caskdata/netty-http.git</connection>
-        <url>scm:git:git://github.com/wso2/product-mss.git</url>
-        <developerConnection>scm:git:git@github.com:wso2/product-mss.git</developerConnection>
-    </scm>
-
-    <distributionManagement>
-        <repository>
-            <id>sonatype.release</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-        </repository>
-        <snapshotRepository>
-            <id>sonatype.snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
-
     <dependencies>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
@@ -424,19 +391,6 @@
                             </executions>
                         </plugin>
 
-                        <!-- Nexus deploy plugin -->
-                        <plugin>
-                            <groupId>org.sonatype.plugins</groupId>
-                            <artifactId>nexus-staging-maven-plugin</artifactId>
-                            <version>1.6.2</version>
-                            <extensions>true</extensions>
-                            <configuration>
-                                <nexusUrl>https://oss.sonatype.org</nexusUrl>
-                                <serverId>sonatype.release</serverId>
-                                <stagingProfileId>655dc88dc770c3</stagingProfileId>
-                            </configuration>
-                        </plugin>
-
                     </plugins>
                 </pluginManagement>
 
@@ -455,11 +409,6 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
                         <version>1.5</version>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.2</version>
                     </plugin>
                 </plugins>
             </build>
