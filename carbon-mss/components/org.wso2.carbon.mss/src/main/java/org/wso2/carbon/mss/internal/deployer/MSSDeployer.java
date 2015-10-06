@@ -70,7 +70,7 @@ public class MSSDeployer implements Deployer {
     public Object deploy(Artifact artifact) throws CarbonDeploymentException {
         File artifactFile = artifact.getFile();
         String artifactPath = artifactFile.getAbsolutePath();
-        log.info("Deploying artifact: " + artifactPath);
+        log.info("Deploying artifact: {}", artifactPath);
         List<Object> resourcesList = null;
         try {
             resourcesList = new MSSJarProcessor().setArtifact(artifactFile).process().getResourceInstances();
@@ -95,7 +95,7 @@ public class MSSDeployer implements Deployer {
      * @throws CarbonDeploymentException
      */
     public void undeploy(Object key) throws CarbonDeploymentException {
-        log.info("Undeploying artifact: " + key);
+        log.info("Undeploying artifact: {}", key);
         List<Object> resourcesList = deployedArtifacts.get(key);
         for (Object resource : resourcesList) {
             MicroservicesRegistry.getInstance().removeHttpService(resource);
@@ -105,7 +105,7 @@ public class MSSDeployer implements Deployer {
     public Object update(Artifact artifact) throws CarbonDeploymentException {
         File artifactFile = artifact.getFile();
         String artifactPath = artifactFile.getAbsolutePath();
-        log.info("Updating artifact: " + artifactPath);
+        log.info("Updating artifact: {}", artifactPath);
         undeploy(artifact.getKey());
         deploy(artifact);
         return artifactPath;
