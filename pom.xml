@@ -72,7 +72,7 @@
                 <version>${rs-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.transport</groupId>
                 <artifactId>org.wso2.carbon.transport.http.netty</artifactId>
                 <version>${org.wso2.carbon.transport.http.netty.version}</version>
             </dependency>
