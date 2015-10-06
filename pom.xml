@@ -10,32 +10,37 @@
         <version>1</version>
     </parent>
 
-    <groupId>org.wso2.carbon</groupId>
+    <groupId>org.wso2.carbon.mss</groupId>
     <artifactId>org.wso2.carbon.mss.parent</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0-SNAPSHOT</version>
 
-    <repositories>
-        <repository>
+    <scm>
+        <url>https://github.com/wso2/product-mss.git</url>
+        <developerConnection>scm:git:https://github.com/wso2/product-mss.git</developerConnection>
+        <connection>scm:git:https://github.com/wso2/product-mss.git</connection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <developers>
+        <developer>
+            <name>WSO2</name>
+            <email>architecture@wso2.org</email>
+            <organization>WSO2 Inc</organization>
+            <organizationUrl>https://github.com/wso2/product-mss</organizationUrl>
+        </developer>
+    </developers>
+
+    <pluginRepositories>
+        <pluginRepository>
             <id>wso2-nexus</id>
-            <name>WSO2 internal Repository</name>
+            <name>WSO2 Internal Repository</name>
             <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
             <releases>
                 <enabled>true</enabled>
                 <updatePolicy>daily</updatePolicy>
                 <checksumPolicy>ignore</checksumPolicy>
             </releases>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>wso2-maven2-repository-1</id>
-            <url>http://dist.wso2.org/maven2</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>wso2-maven2-repository-2</id>
-            <url>http://dist.wso2.org/snapshots/maven2</url>
         </pluginRepository>
     </pluginRepositories>
 
@@ -51,18 +56,16 @@
                 <artifactId>wso2carbon-kernel</artifactId>
                 <version>${carbon.kernel.version}</version>
             </dependency>
-
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.mss</groupId>
                 <artifactId>org.wso2.carbon.mss</artifactId>
                 <version>${carbon.mss.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.mss</groupId>
                 <artifactId>org.wso2.carbon.mss.feature</artifactId>
                 <version>${carbon.mss.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>javax.ws.rs</groupId>
                 <artifactId>javax.ws.rs-api</artifactId>
@@ -173,6 +176,13 @@
     </dependencyManagement>
 
     <build>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh</artifactId>
+                <version>${maven.wagon.ssh.version}</version>
+            </extension>
+        </extensions>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -248,6 +258,7 @@
         <!-- Maven plugins -->
         <maven.checkstyleplugin.version>2.16</maven.checkstyleplugin.version>
         <maven.findbugsplugin.version>3.0.2</maven.findbugsplugin.version>
+        <maven.wagon.ssh.version>2.1</maven.wagon.ssh.version>
 
         <!-- Dependencies -->
         <carbon.kernel.version>5.0.0-SNAPSHOT</carbon.kernel.version>
