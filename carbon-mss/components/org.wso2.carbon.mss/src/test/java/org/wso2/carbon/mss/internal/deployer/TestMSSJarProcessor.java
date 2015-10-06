@@ -25,7 +25,7 @@ import java.util.List;
 public class TestMSSJarProcessor {
 
     @Test
-    public void testJAXRSJarObjectInitialization() {
+    public void testJAXRSJarObjectInitialization() throws MSSJarProcessorException {
         MSSJarProcessor mssJarProcessor = new MSSJarProcessor();
         String name = "/org.wso2.carbon.mss.jaxrs.sample.simplestockquote-1.0.zip";
         File jar = new File(TestMSSJarProcessor.class.getResource(name).getPath());
