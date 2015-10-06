@@ -252,6 +252,11 @@
                 <version>${maven.findbugsplugin.version}</version>
             </plugin>
             <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>${maven.bundleplugin.version}</version>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
                 <configuration>
@@ -271,6 +276,7 @@
         <maven.checkstyleplugin.version>2.16</maven.checkstyleplugin.version>
         <maven.findbugsplugin.version>3.0.2</maven.findbugsplugin.version>
         <maven.wagon.ssh.version>2.1</maven.wagon.ssh.version>
+        <maven.bundleplugin.version>2.5.4</maven.bundleplugin.version>
 
         <!-- Dependencies -->
         <carbon.kernel.version>5.0.0-SNAPSHOT</carbon.kernel.version>
