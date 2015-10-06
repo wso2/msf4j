@@ -106,7 +106,9 @@ public class MSSDeployer implements Deployer {
         File artifactFile = artifact.getFile();
         String artifactPath = artifactFile.getAbsolutePath();
         log.info("Updating artifact: " + artifactPath);
-        return null;
+        undeploy(artifact.getKey());
+        deploy(artifact);
+        return artifactPath;
     }
 
     /**
