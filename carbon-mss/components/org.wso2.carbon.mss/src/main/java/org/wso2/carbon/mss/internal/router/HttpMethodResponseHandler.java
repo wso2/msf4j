@@ -34,6 +34,7 @@ public class HttpMethodResponseHandler {
     private HttpResponder responder;
     private HttpResponseStatus status = HttpResponseStatus.OK;
     private Object entity;
+    private Multimap<String, String> headers = null;
 
     /**
      * Set netty-http responder object
@@ -56,12 +57,27 @@ public class HttpMethodResponseHandler {
     }
 
     /**
-     * Set entity body for the response.
+     * Set entity body fro the response. If the entity is
+     * type of javax.ws.rs.core.Response extract entity,
+     * status code etc from it
      *
      * @param entity
      */
     public HttpMethodResponseHandler setEntity(Object entity) {
-        this.entity = entity;
+        if (entity instanceof Response) {
+            Response response = (Response) entity;
+            this.entity = response.getEntity();
+            MultivaluedMap<String, String> multivaluedMap = response.getStringHeaders();
+            if (multivaluedMap != null) {
+                headers = LinkedListMultimap.create();
+                multivaluedMap.forEach((key, strings) -> {
+                    headers.putAll(key, strings);
+                });
+            }
+            setStatus(response.getStatus());
+        } else {
+            this.entity = entity;
+        }
         return this;
     }
 
@@ -70,14 +86,14 @@ public class HttpMethodResponseHandler {
      */
     public void send() {
         if (entity == null) {
-            responder.sendStatus(HttpResponseStatus.NO_CONTENT);
+            responder.sendStatus(HttpResponseStatus.NO_CONTENT, headers);
         } else if (entity instanceof JsonObject) {
             //TODO: check no header support
             responder.sendJson(status, entity);
         } else if (entity instanceof String) {
-            responder.sendString(status, (String) entity);
+            responder.sendString(status, (String) entity, headers);
         } else {
-            responder.sendString(status, String.valueOf(entity));
+            responder.sendString(status, String.valueOf(entity), headers);
         }
     }
 }
