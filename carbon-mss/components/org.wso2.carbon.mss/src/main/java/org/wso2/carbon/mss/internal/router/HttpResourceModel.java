@@ -44,6 +44,7 @@ import javax.ws.rs.DefaultValue;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 
 /**
  * HttpResourceModel contains information needed to handle Http call for a given path. Used as a destination in
@@ -52,13 +53,13 @@ import javax.ws.rs.QueryParam;
 public final class HttpResourceModel {
 
     private static final Set<Class<? extends Annotation>> SUPPORTED_PARAM_ANNOTATIONS =
-            ImmutableSet.of(PathParam.class, QueryParam.class, HeaderParam.class);
+            ImmutableSet.of(PathParam.class, QueryParam.class, HeaderParam.class, Context.class);
 
     private final Set<HttpMethod> httpMethods;
     private final String path;
     private final Method method;
     private final Object handler;
-    private final List<Map<Class<? extends Annotation>, ParameterInfo<?>>> paramsInfo;
+    private final List<Map<Class<? extends Annotation>, ParameterInfo<?>>> paramInfoList;
     private final ExceptionHandler exceptionHandler;
 
     /**
@@ -75,7 +76,7 @@ public final class HttpResourceModel {
         this.path = path;
         this.method = method;
         this.handler = handler;
-        this.paramsInfo = createParametersInfos(method);
+        this.paramInfoList = createParametersInfos(method);
         this.exceptionHandler = exceptionHandler;
     }
 
@@ -122,18 +123,18 @@ public final class HttpResourceModel {
         try {
             if (httpMethods.contains(request.getMethod())) {
                 //Setup args for reflection call
-                Object[] args = new Object[paramsInfo.size()];
+                Object[] args = new Object[paramInfoList.size()];
 
                 int idx = 0;
-                for (Map<Class<? extends Annotation>, ParameterInfo<?>> info : paramsInfo) {
+                for (Map<Class<? extends Annotation>, ParameterInfo<?>> info : paramInfoList) {
                     if (info.containsKey(PathParam.class)) {
                         args[idx] = getPathParamValue(info, groupValues);
-                    }
-                    if (info.containsKey(QueryParam.class)) {
+                    } else if (info.containsKey(QueryParam.class)) {
                         args[idx] = getQueryParamValue(info, request.getUri());
-                    }
-                    if (info.containsKey(HeaderParam.class)) {
+                    } else if (info.containsKey(HeaderParam.class)) {
                         args[idx] = getHeaderParamValue(info, request);
+                    } else if (info.containsKey(Context.class)) {
+                        args[idx] = getContextParamValue(info, request, responder);
                     }
                     idx++;
                 }
@@ -159,6 +160,21 @@ public final class HttpResourceModel {
                 .add("method", method)
                 .add("handler", handler)
                 .toString();
+    }
+
+    @SuppressWarnings("unchecked")
+    private Object getContextParamValue(Map<Class<? extends Annotation>, ParameterInfo<?>> annotations,
+                                        HttpRequest request, HttpResponder responder) {
+        ParameterInfo<Object> paramInfo = (ParameterInfo<Object>) annotations.get(Context.class);
+        Type paramType = paramInfo.getParameterType();
+        Object value = null;
+        if (((Class) paramType).isAssignableFrom(HttpRequest.class)) {
+            value = request;
+        } else if (((Class) paramType).isAssignableFrom(HttpResponder.class)) {
+            value = responder;
+        }
+        Preconditions.checkArgument(value != null, "Could not resolve parameter %s", paramType.getTypeName());
+        return value;
     }
 
     @SuppressWarnings("unchecked")
@@ -223,19 +239,16 @@ public final class HttpResourceModel {
 
             for (Annotation annotation : annotations) {
                 Class<? extends Annotation> annotationType = annotation.annotationType();
-                ParameterInfo<?> parameterInfo;
+                Type parameterType = parameterTypes[i];
+                Function<?, Object> converter = null;
                 if (PathParam.class.isAssignableFrom(annotationType)) {
-                    parameterInfo = ParameterInfo.create(annotation,
-                            ParamConvertUtils.createPathParamConverter(parameterTypes[i]));
+                    converter = ParamConvertUtils.createPathParamConverter(parameterType);
                 } else if (QueryParam.class.isAssignableFrom(annotationType)) {
-                    parameterInfo = ParameterInfo.create(annotation,
-                            ParamConvertUtils.createQueryParamConverter(parameterTypes[i]));
+                    converter = ParamConvertUtils.createQueryParamConverter(parameterType);
                 } else if (HeaderParam.class.isAssignableFrom(annotationType)) {
-                    parameterInfo = ParameterInfo.create(annotation,
-                            ParamConvertUtils.createHeaderParamConverter(parameterTypes[i]));
-                } else {
-                    parameterInfo = ParameterInfo.create(annotation, null);
+                    converter = ParamConvertUtils.createHeaderParamConverter(parameterType);
                 }
+                ParameterInfo<?> parameterInfo = ParameterInfo.create(parameterType, annotation, converter);
                 paramAnnotations.put(annotationType, parameterInfo);
             }
 
@@ -248,6 +261,7 @@ public final class HttpResourceModel {
 
             result.add(Collections.unmodifiableMap(paramAnnotations));
         }
+
         return result.build();
     }
 
@@ -257,19 +271,26 @@ public final class HttpResourceModel {
     private static final class ParameterInfo<T> {
         private final Annotation annotation;
         private final Function<T, Object> converter;
+        private final Type parameterType;
 
-        private ParameterInfo(Annotation annotation, @Nullable Function<T, Object> converter) {
+        private ParameterInfo(Type parameterType, Annotation annotation, @Nullable Function<T, Object> converter) {
+            this.parameterType = parameterType;
             this.annotation = annotation;
             this.converter = converter;
         }
 
-        static <V> ParameterInfo<V> create(Annotation annotation, @Nullable Function<V, Object> converter) {
-            return new ParameterInfo<>(annotation, converter);
+        static <V> ParameterInfo<V> create(Type parameterType, Annotation annotation,
+                                           @Nullable Function<V, Object> converter) {
+            return new ParameterInfo<>(parameterType, annotation, converter);
         }
 
         @SuppressWarnings("unchecked")
         <V extends Annotation> V getAnnotation() {
             return (V) annotation;
+        }
+
+        public Type getParameterType() {
+            return parameterType;
         }
 
         Object convert(T input) {
