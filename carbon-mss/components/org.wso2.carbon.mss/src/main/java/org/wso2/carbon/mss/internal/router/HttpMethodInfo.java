@@ -89,7 +89,9 @@ class HttpMethodInfo {
             // Actually <T> would be void
             bodyConsumer = null;
             try {
-                method.invoke(handler, args);
+                Object returnVal = method.invoke(handler, args);
+                //sending return value as output
+                new HttpMethodResponseHandler().setResponder(responder).setEntity(returnVal).send();
             } catch (InvocationTargetException e) {
                 exceptionHandler.handle(e.getTargetException(), request, responder);
             }
