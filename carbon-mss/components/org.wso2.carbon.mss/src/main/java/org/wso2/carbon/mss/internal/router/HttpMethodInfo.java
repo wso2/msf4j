@@ -67,10 +67,7 @@ class HttpMethodInfo {
         this.exceptionHandler = exceptionHandler;
 
         // The actual arguments list to invoke handler method
-        this.args = new Object[args.length + 2];
-        this.args[0] = request;
-        this.args[1] = responder;
-        System.arraycopy(args, 0, this.args, 2, args.length);
+        this.args = args;
     }
 
     /**

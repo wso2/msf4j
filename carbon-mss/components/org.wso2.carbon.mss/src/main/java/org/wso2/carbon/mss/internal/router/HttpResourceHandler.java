@@ -82,19 +82,13 @@ public final class HttpResourceHandler implements HttpHandler {
             }
 
             for (Method method : handler.getClass().getDeclaredMethods()) {
-                if (method.getParameterTypes().length >= 2 &&
-                        method.getParameterTypes()[0].isAssignableFrom(HttpRequest.class) &&
-                        method.getParameterTypes()[1].isAssignableFrom(HttpResponder.class) &&
-                        Modifier.isPublic(method.getModifiers())) {
-
+                Set<HttpMethod> httpMethods = getHttpMethods(method);
+                if (Modifier.isPublic(method.getModifiers()) && !httpMethods.isEmpty()) {
                     String relativePath = "";
                     if (method.getAnnotation(Path.class) != null) {
                         relativePath = method.getAnnotation(Path.class).value();
                     }
                     String absolutePath = String.format("%s/%s", basePath, relativePath);
-                    Set<HttpMethod> httpMethods = getHttpMethods(method);
-                    Preconditions.checkArgument(httpMethods.size() >= 1,
-                            String.format("No HttpMethod found for method: %s", method.getName()));
                     patternRouter.add(absolutePath, new HttpResourceModel(httpMethods, absolutePath, method,
                             handler, exceptionHandler));
                 } else {
@@ -199,7 +193,7 @@ public final class HttpResourceHandler implements HttpHandler {
             } else {
                 responder.sendString(HttpResponseStatus.NOT_FOUND,
                         String.format("Problem accessing: %s. Reason: Not Found",
-                        request.getUri()));
+                                request.getUri()));
             }
         } catch (Throwable t) {
             responder.sendString(HttpResponseStatus.INTERNAL_SERVER_ERROR,

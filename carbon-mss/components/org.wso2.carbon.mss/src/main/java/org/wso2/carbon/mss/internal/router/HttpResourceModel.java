@@ -213,22 +213,17 @@ public final class HttpResourceModel {
      * Gathers all parameters' annotations for the given method, starting from the third parameter.
      */
     private List<Map<Class<? extends Annotation>, ParameterInfo<?>>> createParametersInfos(Method method) {
-        if (method.getParameterTypes().length <= 2) {
-            return ImmutableList.of();
-        }
-
         ImmutableList.Builder<Map<Class<? extends Annotation>, ParameterInfo<?>>> result = ImmutableList.builder();
         Type[] parameterTypes = method.getGenericParameterTypes();
         Annotation[][] parameterAnnotations = method.getParameterAnnotations();
 
-        for (int i = 2; i < parameterAnnotations.length; i++) {
+        for (int i = 0; i < parameterAnnotations.length; i++) {
             Annotation[] annotations = parameterAnnotations[i];
             Map<Class<? extends Annotation>, ParameterInfo<?>> paramAnnotations = Maps.newIdentityHashMap();
 
             for (Annotation annotation : annotations) {
                 Class<? extends Annotation> annotationType = annotation.annotationType();
                 ParameterInfo<?> parameterInfo;
-
                 if (PathParam.class.isAssignableFrom(annotationType)) {
                     parameterInfo = ParameterInfo.create(annotation,
                             ParamConvertUtils.createPathParamConverter(parameterTypes[i]));
@@ -241,12 +236,11 @@ public final class HttpResourceModel {
                 } else {
                     parameterInfo = ParameterInfo.create(annotation, null);
                 }
-
                 paramAnnotations.put(annotationType, parameterInfo);
             }
 
-            // Must have either @PathParam, @QueryParam or @HeaderParam, but not two or more.
-            if (Sets.intersection(SUPPORTED_PARAM_ANNOTATIONS, paramAnnotations.keySet()).size() != 1) {
+            //Can have only one from @PathParam, @QueryParam or @HeaderParam.
+            if (Sets.intersection(SUPPORTED_PARAM_ANNOTATIONS, paramAnnotations.keySet()).size() > 1) {
                 throw new IllegalArgumentException(
                         String.format("Must have exactly one annotation from %s for parameter %d in method %s",
                                 SUPPORTED_PARAM_ANNOTATIONS, i, method));
@@ -254,7 +248,6 @@ public final class HttpResourceModel {
 
             result.add(Collections.unmodifiableMap(paramAnnotations));
         }
-
         return result.build();
     }
 
