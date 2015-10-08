@@ -23,7 +23,6 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
-import com.google.common.collect.ImmutableMultimap;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -52,6 +51,8 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
 
 /**
  * Test handler.
@@ -64,48 +65,48 @@ public class TestHandler implements HttpHandler {
 
     @Path("sleep/{seconds}")
     @GET
-    public void testSleep(HttpRequest request, HttpResponder responder, @PathParam("seconds") int seconds) {
+    public Response testSleep(@PathParam("seconds") int seconds) {
         try {
             TimeUnit.SECONDS.sleep(seconds);
-            responder.sendStatus(HttpResponseStatus.OK);
+            return Response.status(Response.Status.OK).entity("slept: " + seconds + "s").build();
         } catch (InterruptedException e) {
-            responder.sendString(HttpResponseStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
 
     @Path("resource")
     @GET
-    public void testGet(HttpRequest request, HttpResponder responder) {
+    public Response testGet() {
         JsonObject object = new JsonObject();
         object.addProperty("status", "Handled get in resource end-point");
-        responder.sendJson(HttpResponseStatus.OK, object);
+        return Response.status(Response.Status.OK).entity(object).build();
     }
 
     @Path("tweets/{id}")
     @GET
-    public void testGetTweet(HttpRequest request, HttpResponder responder, @PathParam("id") String id) {
+    public Response testGetTweet(@PathParam("id") String id) {
         JsonObject object = new JsonObject();
         object.addProperty("status", String.format("Handled get in tweets end-point, id: %s", id));
-        responder.sendJson(HttpResponseStatus.OK, object);
+        return Response.status(Response.Status.OK).entity(object).build();
     }
 
     @Path("tweets/{id}")
     @PUT
-    public void testPutTweet(HttpRequest request, HttpResponder responder, @PathParam("id") String id) {
+    public Response testPutTweet(@PathParam("id") String id) {
         JsonObject object = new JsonObject();
         object.addProperty("status", String.format("Handled put in tweets end-point, id: %s", id));
-        responder.sendJson(HttpResponseStatus.OK, object);
+        return Response.status(Response.Status.OK).entity(object).build();
     }
 
     @Path("facebook/{id}/message")
     @DELETE
-    public void testNoMethodRoute(HttpRequest request, HttpResponder responder, @PathParam("id") String id) {
+    public void testNoMethodRoute(@PathParam("id") String id) {
 
     }
 
     @Path("facebook/{id}/message")
     @PUT
-    public void testPutMessage(HttpRequest request, HttpResponder responder, @PathParam("id") String id) {
+    public Response testPutMessage(@PathParam("id") String id, @Context HttpRequest request) {
         String message = String.format("Handled put in tweets end-point, id: %s. ", id);
         try {
             String data = getStringContent(request);
@@ -116,12 +117,12 @@ public class TestHandler implements HttpHandler {
         }
         JsonObject object = new JsonObject();
         object.addProperty("result", message);
-        responder.sendJson(HttpResponseStatus.OK, object);
+        return Response.status(Response.Status.OK).entity(object).build();
     }
 
     @Path("facebook/{id}/message")
     @POST
-    public void testPostMessage(HttpRequest request, HttpResponder responder, @PathParam("id") String id) {
+    public Response testPostMessage(@PathParam("id") String id, @Context HttpRequest request) {
         String message = String.format("Handled post in tweets end-point, id: %s. ", id);
         try {
             String data = getStringContent(request);
@@ -132,41 +133,38 @@ public class TestHandler implements HttpHandler {
         }
         JsonObject object = new JsonObject();
         object.addProperty("result", message);
-        responder.sendJson(HttpResponseStatus.OK, object);
+        return Response.status(Response.Status.OK).entity(object).build();
     }
 
     @Path("/user/{userId}/message/{messageId}")
     @GET
-    public void testMultipleParametersInPath(HttpRequest request, HttpResponder responder,
-                                             @PathParam("userId") String userId,
-                                             @PathParam("messageId") int messageId) {
+    public Response testMultipleParametersInPath(@PathParam("userId") String userId,
+                                                 @PathParam("messageId") int messageId) {
         JsonObject object = new JsonObject();
         object.addProperty("result", String.format("Handled multiple path parameters %s %d", userId, messageId));
-        responder.sendJson(HttpResponseStatus.OK, object);
+        return Response.status(Response.Status.OK).entity(object).build();
     }
 
     @Path("/message/{messageId}/user/{userId}")
     @GET
-    public void testMultipleParametersInDifferentParameterDeclarationOrder(HttpRequest request, HttpResponder responder,
-                                                                           @PathParam("userId") String userId,
-                                                                           @PathParam("messageId") int messageId) {
+    public Response testMultipleParametersInDifferentParameterDeclarationOrder(@PathParam("userId") String userId,
+                                                                               @PathParam("messageId") int messageId) {
         JsonObject object = new JsonObject();
         object.addProperty("result", String.format("Handled multiple path parameters %s %d", userId, messageId));
-        responder.sendJson(HttpResponseStatus.OK, object);
+        return Response.status(Response.Status.OK).entity(object).build();
     }
 
     @Path("/NotRoutable/{id}")
     @GET
-    public void notRoutableParameterMismatch(HttpRequest request,
-                                             HttpResponder responder, @PathParam("userid") String userId) {
+    public Response notRoutableParameterMismatch(@PathParam("userid") String userId) {
         JsonObject object = new JsonObject();
         object.addProperty("result", String.format("Handled Not routable path %s ", userId));
-        responder.sendJson(HttpResponseStatus.OK, object);
+        return Response.status(Response.Status.OK).entity(object).build();
     }
 
     @Path("/exception")
     @GET
-    public void exception(HttpRequest request, HttpResponder responder) {
+    public void exception() {
         throw new IllegalArgumentException("Illegal argument");
     }
 
@@ -176,69 +174,67 @@ public class TestHandler implements HttpHandler {
 
     @Path("/multi-match/**")
     @GET
-    public void multiMatchAll(HttpRequest request, HttpResponder responder) {
-        responder.sendString(HttpResponseStatus.OK, "multi-match-*");
+    public String multiMatchAll() {
+        return "multi-match-*";
     }
 
     @Path("/multi-match/{param}")
     @GET
-    public void multiMatchParam(HttpRequest request, HttpResponder responder, @PathParam("param") String param) {
-        responder.sendString(HttpResponseStatus.OK, "multi-match-param-" + param);
+    public String multiMatchParam(@PathParam("param") String param) {
+        return "multi-match-param-" + param;
     }
 
     @Path("/multi-match/foo")
     @GET
-    public void multiMatchFoo(HttpRequest request, HttpResponder responder) {
-        responder.sendString(HttpResponseStatus.OK, "multi-match-get-actual-foo");
+    public String multiMatchFoo() {
+        return "multi-match-get-actual-foo";
     }
 
     @Path("/multi-match/foo")
     @PUT
-    public void multiMatchParamPut(HttpRequest request, HttpResponder responder) {
-        responder.sendString(HttpResponseStatus.OK, "multi-match-put-actual-foo");
+    public String multiMatchParamPut() {
+        return "multi-match-put-actual-foo";
     }
 
     @Path("/multi-match/{param}/bar")
     @GET
-    public void multiMatchParamBar(HttpRequest request, HttpResponder responder, @PathParam("param") String param) {
-        responder.sendString(HttpResponseStatus.OK, "multi-match-param-bar-" + param);
+    public String multiMatchParamBar(@PathParam("param") String param) {
+        return "multi-match-param-bar-" + param;
     }
 
     @Path("/multi-match/foo/{param}")
     @GET
-    public void multiMatchFooParam(HttpRequest request, HttpResponder responder, @PathParam("param") String param) {
-        responder.sendString(HttpResponseStatus.OK, "multi-match-get-foo-param-" + param);
+    public String multiMatchFooParam(@PathParam("param") String param) {
+        return "multi-match-get-foo-param-" + param;
     }
 
     @Path("/multi-match/foo/{param}/bar")
     @GET
-    public void multiMatchFooParamBar(HttpRequest request, HttpResponder responder, @PathParam("param") String param) {
-        responder.sendString(HttpResponseStatus.OK, "multi-match-foo-param-bar-" + param);
+    public String multiMatchFooParamBar(@PathParam("param") String param) {
+        return "multi-match-foo-param-bar-" + param;
     }
 
     @Path("/multi-match/foo/bar/{param}")
     @GET
-    public void multiMatchFooBarParam(HttpRequest request, HttpResponder responder, @PathParam("param") String param) {
-        responder.sendString(HttpResponseStatus.OK, "multi-match-foo-bar-param-" + param);
+    public String multiMatchFooBarParam(@PathParam("param") String param) {
+        return "multi-match-foo-bar-param-" + param;
     }
 
     @Path("/multi-match/foo/{param}/bar/baz")
     @GET
-    public void multiMatchFooParamBarBaz(HttpRequest request, HttpResponder responder,
-                                         @PathParam("param") String param) {
-        responder.sendString(HttpResponseStatus.OK, "multi-match-foo-param-bar-baz-" + param);
+    public String multiMatchFooParamBarBaz(@PathParam("param") String param) {
+        return "multi-match-foo-param-bar-baz-" + param;
     }
 
     @Path("/multi-match/foo/bar/{param}/{id}")
     @GET
-    public void multiMatchFooBarParamId(HttpRequest request, HttpResponder responder,
-                                        @PathParam("param") String param, @PathParam("id") String id) {
-        responder.sendString(HttpResponseStatus.OK, "multi-match-foo-bar-param-" + param + "-id-" + id);
+    public String multiMatchFooBarParamId(@PathParam("param") String param, @PathParam("id") String id) {
+        return "multi-match-foo-bar-param-" + param + "-id-" + id;
     }
 
     @Path("/stream/upload")
     @PUT
-    public BodyConsumer streamUpload(HttpRequest request, HttpResponder responder) {
+    public BodyConsumer streamUpload() {
         final int fileSize = 30 * 1024 * 1024;
         return new BodyConsumer() {
             ByteBuf offHeapBuffer = Unpooled.buffer(fileSize);
@@ -266,7 +262,7 @@ public class TestHandler implements HttpHandler {
 
     @Path("/stream/upload/fail")
     @PUT
-    public BodyConsumer streamUploadFailure(HttpRequest request, HttpResponder responder) {
+    public BodyConsumer streamUploadFailure() {
         final int fileSize = 30 * 1024 * 1024;
 
         return new BodyConsumer() {
@@ -294,10 +290,10 @@ public class TestHandler implements HttpHandler {
 
     @Path("/aggregate/upload")
     @PUT
-    public void aggregatedUpload(HttpRequest request, HttpResponder response) {
+    public String aggregatedUpload(@Context HttpRequest request) {
         ByteBuf content = ((FullHttpRequest) request).content();
         int bytesUploaded = content.readableBytes();
-        response.sendString(HttpResponseStatus.OK, "Uploaded:" + bytesUploaded);
+        return "Uploaded:" + bytesUploaded;
     }
 
     @Path("/chunk")
@@ -314,73 +310,74 @@ public class TestHandler implements HttpHandler {
 
     @Path("/uexception")
     @GET
-    public void testException(HttpRequest request, HttpResponder responder) {
+    public void testException() {
         throw Throwables.propagate(new RuntimeException("User Exception"));
     }
 
     @Path("/noresponse")
     @GET
-    public void testNoResponse(HttpRequest request, HttpResponder responder) {
+    public void testNoResponse() {
     }
 
     @Path("/stringQueryParam/{path}")
     @GET
-    public void testStringQueryParam(HttpRequest request, HttpResponder responder,
-                                     @PathParam("path") String path, @QueryParam("name") String name) {
-        responder.sendString(HttpResponseStatus.OK, path + ":" + name);
+    public String testStringQueryParam(@PathParam("path") String path, @QueryParam("name") String name) {
+        return path + ":" + name;
     }
 
     @Path("/primitiveQueryParam")
     @GET
-    public void testPrimitiveQueryParam(HttpRequest request, HttpResponder responder, @QueryParam("age") int age) {
-        responder.sendString(HttpResponseStatus.OK, Integer.toString(age));
+    public String testPrimitiveQueryParam(@QueryParam("age") int age) {
+        return Integer.toString(age);
     }
 
     @Path("/sortedSetQueryParam")
     @GET
-    public void testSortedSetQueryParam(HttpRequest request, HttpResponder responder,
-                                        @QueryParam("id") SortedSet<Integer> ids) {
-        responder.sendString(HttpResponseStatus.OK, Joiner.on(',').join(ids));
+    public String testSortedSetQueryParam(@QueryParam("id") SortedSet<Integer> ids) {
+        return Joiner.on(',').join(ids);
     }
 
     @Path("/listHeaderParam")
     @GET
-    public void testListHeaderParam(HttpRequest request, HttpResponder responder,
-                                    @HeaderParam("name") List<String> names) {
-        responder.sendString(HttpResponseStatus.OK, Joiner.on(',').join(names));
+    public String testListHeaderParam(@HeaderParam("name") List<String> names) {
+        return Joiner.on(',').join(names);
+    }
+
+    @Path("/headerResponse")
+    @GET
+    public Response testHeaderResponse(@HeaderParam("name") String name) {
+        return Response.status(HttpResponseStatus.OK.code()).entity("Entity").header("name", name).build();
     }
 
     @Path("/defaultValue")
     @GET
-    public void testDefaultValue(HttpRequest request, HttpResponder responder,
-                                 @DefaultValue("30") @QueryParam("age") Integer age,
-                                 @DefaultValue("hello") @QueryParam("name") String name,
-                                 @DefaultValue("casking") @HeaderParam("hobby") List<String> hobbies) {
+    public Object testDefaultValue(@DefaultValue("30") @QueryParam("age") Integer age,
+                                   @DefaultValue("hello") @QueryParam("name") String name,
+                                   @DefaultValue("casking") @HeaderParam("hobby") List<String> hobbies) {
         JsonObject response = new JsonObject();
         response.addProperty("age", age);
         response.addProperty("name", name);
         response.add("hobby", GSON.toJsonTree(hobbies, new TypeToken<List<String>>() {
         }.getType()));
 
-        responder.sendJson(HttpResponseStatus.OK, response);
+        return response;
     }
 
     @Path("/connectionClose")
     @GET
-    public void testConnectionClose(HttpRequest request, HttpResponder responder) {
-        responder.sendString(HttpResponseStatus.OK, "Close connection", ImmutableMultimap.of("Connection", "close"));
+    public Response testConnectionClose() {
+        return Response.status(Response.Status.OK).entity("Close connection").header("Connection", "close").build();
     }
 
     @Path("/uploadReject")
     @POST
-    public BodyConsumer testUploadReject(HttpRequest request, HttpResponder responder) {
-        responder.sendString(HttpResponseStatus.BAD_REQUEST, "Rejected", ImmutableMultimap.of("Connection", "close"));
-        return null;
+    public Response testUploadReject() {
+        return Response.status(Response.Status.BAD_REQUEST).entity("Rejected").header("Connection", "close").build();
     }
 
     @Path("/customException")
     @POST
-    public void testCustomException(HttpRequest request, HttpResponder responder) throws CustomException {
+    public void testCustomException() throws CustomException {
         throw new CustomException();
     }
 
