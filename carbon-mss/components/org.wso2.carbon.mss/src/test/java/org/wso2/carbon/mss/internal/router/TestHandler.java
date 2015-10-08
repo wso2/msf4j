@@ -343,6 +343,12 @@ public class TestHandler implements HttpHandler {
         return Joiner.on(',').join(names);
     }
 
+    @Path("/headerResponse")
+    @GET
+    public Response testHeaderResponse(@HeaderParam("name") String name) {
+        return Response.status(HttpResponseStatus.OK.code()).entity("Entity").header("name", name).build();
+    }
+
     @Path("/defaultValue")
     @GET
     public Object testDefaultValue(@DefaultValue("30") @QueryParam("age") Integer age,

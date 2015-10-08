@@ -28,10 +28,10 @@ import org.junit.Test;
 import org.wso2.carbon.mss.ChunkResponder;
 import org.wso2.carbon.mss.HttpResponder;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
+import javax.annotation.Nullable;
 
 /**
  * Tests HttpMethodResponseHandlerTest class
@@ -41,7 +41,8 @@ public class HttpMethodResponseHandlerTest {
     @Test
     public void testNoStatusCodeNoEntity() {
         new HttpMethodResponseHandler()
-                .setResponder(new HttpResponderMock((HttpResponseStatus status, Object entity, Multimap<String, String> headers) -> {
+                .setResponder(new HttpResponderMock((HttpResponseStatus status,
+                                                     Object entity, Multimap<String, String> headers) -> {
                     Assert.assertTrue("Expected 204", status.code() == HttpResponseStatus.NO_CONTENT.code());
                     Assert.assertEquals(null, entity);
                 }))
@@ -51,7 +52,8 @@ public class HttpMethodResponseHandlerTest {
     @Test
     public void testNoStatusCodeWithEntity() {
         new HttpMethodResponseHandler()
-                .setResponder(new HttpResponderMock((HttpResponseStatus status, Object entity, Multimap<String, String> headers) -> {
+                .setResponder(new HttpResponderMock((HttpResponseStatus status,
+                                                     Object entity, Multimap<String, String> headers) -> {
                     Assert.assertTrue("Expected 200", status.code() == HttpResponseStatus.OK.code());
                     Assert.assertEquals("Entity", entity);
                 }))
@@ -62,7 +64,8 @@ public class HttpMethodResponseHandlerTest {
     @Test
     public void testStatusCodeOkWithNoEntity() {
         new HttpMethodResponseHandler()
-                .setResponder(new HttpResponderMock((HttpResponseStatus status, Object entity, Multimap<String, String> headers) -> {
+                .setResponder(new HttpResponderMock((HttpResponseStatus status,
+                                                     Object entity, Multimap<String, String> headers) -> {
                     Assert.assertTrue("Expected 200", status.code() == HttpResponseStatus.OK.code());
                     Assert.assertEquals(null, entity);
                 }))
@@ -73,7 +76,8 @@ public class HttpMethodResponseHandlerTest {
     @Test
     public void testStatusCodeNotFoundWithNoEntity() {
         new HttpMethodResponseHandler()
-                .setResponder(new HttpResponderMock((HttpResponseStatus status, Object entity, Multimap<String, String> headers) -> {
+                .setResponder(new HttpResponderMock((HttpResponseStatus status,
+                                                     Object entity, Multimap<String, String> headers) -> {
                     Assert.assertTrue("Expected 404", status.code() == HttpResponseStatus.NOT_FOUND.code());
                     Assert.assertEquals(null, entity);
                 }))
@@ -110,7 +114,8 @@ public class HttpMethodResponseHandlerTest {
         }
 
         @Override
-        public void sendString(HttpResponseStatus status, String data, @Nullable Multimap<String, String> headers) {
+        public void sendString(HttpResponseStatus status, String data,
+                               @Nullable Multimap<String, String> headers) {
             cb.values(status, data, headers);
         }
 
@@ -120,28 +125,33 @@ public class HttpMethodResponseHandlerTest {
         }
 
         @Override
-        public void sendStatus(HttpResponseStatus status, @Nullable Multimap<String, String> headers) {
+        public void sendStatus(HttpResponseStatus status,
+                               @Nullable Multimap<String, String> headers) {
             cb.values(status, null, headers);
         }
 
         @Override
-        public void sendByteArray(HttpResponseStatus status, byte[] bytes, @Nullable Multimap<String, String> headers) {
+        public void sendByteArray(HttpResponseStatus status, byte[] bytes,
+                                  @Nullable Multimap<String, String> headers) {
             cb.values(status, bytes, headers);
         }
 
         @Override
-        public void sendBytes(HttpResponseStatus status, ByteBuffer buffer, @Nullable Multimap<String, String> headers) {
+        public void sendBytes(HttpResponseStatus status, ByteBuffer buffer,
+                              @Nullable Multimap<String, String> headers) {
             cb.values(status, buffer, headers);
         }
 
         @Override
-        public ChunkResponder sendChunkStart(HttpResponseStatus status, @Nullable Multimap<String, String> headers) {
+        public ChunkResponder sendChunkStart(HttpResponseStatus status,
+                                             @Nullable Multimap<String, String> headers) {
             cb.values(status, null, headers);
             return null;
         }
 
         @Override
-        public void sendContent(HttpResponseStatus status, ByteBuf content, String contentType, @Nullable Multimap<String, String> headers) {
+        public void sendContent(HttpResponseStatus status, ByteBuf content, String contentType,
+                                @Nullable Multimap<String, String> headers) {
             cb.values(status, content, headers);
         }
 

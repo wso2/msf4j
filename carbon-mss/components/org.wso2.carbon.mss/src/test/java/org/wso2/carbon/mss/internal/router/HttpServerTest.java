@@ -439,6 +439,16 @@ public class HttpServerTest {
     }
 
     @Test
+    public void testHeaderResponse() throws IOException {
+        HttpURLConnection urlConn = request("/test/v1/headerResponse", HttpMethod.GET);
+        urlConn.addRequestProperty("name", "name1");
+
+        Assert.assertEquals(200, urlConn.getResponseCode());
+        Assert.assertEquals("name1", urlConn.getHeaderField("name"));
+        urlConn.disconnect();
+    }
+
+    @Test
     public void testDefaultQueryParam() throws IOException {
         // Submit with no parameters. Each should get the default values.
         HttpURLConnection urlConn = request("/test/v1/defaultValue", HttpMethod.GET);
