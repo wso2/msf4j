@@ -1,24 +1,28 @@
 package org.wso2.carbon.mss.example2;
 
 import com.google.gson.JsonObject;
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.HttpResponseStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wso2.carbon.mss.AbstractHttpHandler;
-import org.wso2.carbon.mss.HttpResponder;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Response;
 
 /**
  * StockQuote microservice
  */
 @Path("/SimpleStockQuote")
 public class StockQuoteService extends AbstractHttpHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(StockQuoteService.class);
 
     // http://localhost:7778/StockQuote/get/IBM
 
@@ -31,18 +35,23 @@ public class StockQuoteService extends AbstractHttpHandler {
     }
 
     @GET
-    @Path("getQuote")
+    @Path("get/{symbol}")
     @Consumes("application/json")
     @Produces("application/json")
-    public void getQuote(HttpRequest request, HttpResponder responder, @QueryParam("symbol") String symbol) {
+    public Response getQuote(@PathParam("symbol") String symbol) {
         Double price = stockQuotes.get(symbol);
         if (price != null) {
             JsonObject response = new JsonObject();
             response.addProperty("symbol", symbol);
             response.addProperty("price", price);
-            responder.sendJson(HttpResponseStatus.OK, response);
+            try {
+                response.addProperty("ip", InetAddress.getLocalHost().getHostAddress());
+            } catch (UnknownHostException e) {
+                log.error("Could not get IP address of local host", e);
+            }
+            return Response.status(Response.Status.OK).entity(response).build();
         } else {
-            responder.sendStatus(HttpResponseStatus.NOT_FOUND);
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
 
