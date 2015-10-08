@@ -32,7 +32,7 @@ import javax.ws.rs.core.Response;
 public class HttpMethodResponseHandler {
 
     private HttpResponder responder;
-    private HttpResponseStatus status = HttpResponseStatus.OK;
+    private HttpResponseStatus status = null;
     private Object entity;
     private Multimap<String, String> headers = null;
 
@@ -85,15 +85,25 @@ public class HttpMethodResponseHandler {
      * send response using netty-http provided responder
      */
     public void send() {
-        if (entity == null) {
-            responder.sendStatus(HttpResponseStatus.NO_CONTENT, headers);
-        } else if (entity instanceof JsonObject) {
-            //TODO: check no header support
-            responder.sendJson(status, entity);
-        } else if (entity instanceof String) {
-            responder.sendString(status, (String) entity, headers);
+        HttpResponseStatus status;
+        if (this.status != null) {
+            status = this.status;
+        } else if (entity != null) {
+            status = HttpResponseStatus.OK;
         } else {
-            responder.sendString(status, String.valueOf(entity), headers);
+            status = HttpResponseStatus.NO_CONTENT;
+        }
+        if (entity != null) {
+            if (entity instanceof JsonObject) {
+                //TODO: check no header support
+                responder.sendJson(status, entity);
+            } else if (entity instanceof String) {
+                responder.sendString(status, (String) entity, headers);
+            } else {
+                responder.sendString(status, String.valueOf(entity), headers);
+            }
+        } else {
+            responder.sendStatus(status, headers);
         }
     }
 }
