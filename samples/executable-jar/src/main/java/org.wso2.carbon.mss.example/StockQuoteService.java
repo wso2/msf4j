@@ -64,6 +64,13 @@ public class StockQuoteService extends AbstractHttpHandler {
         }
     }
 
+    @GET
+    @Consumes("application/json")
+    @Produces("application/json")
+    public Response getQuote() {
+        return getQuote("IBM");
+    }
+
     @Path("/v1/ping")
     @GET
     public String testGet() {
