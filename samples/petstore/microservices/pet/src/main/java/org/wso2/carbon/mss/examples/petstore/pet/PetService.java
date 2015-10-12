@@ -35,7 +35,6 @@ import javax.ws.rs.Path;
 public class PetService {
     private static final Logger log = LoggerFactory.getLogger(PetService.class);
 
-
     @PUT
     public void addPet(Pet pet) {
         log.info("Added pet");
