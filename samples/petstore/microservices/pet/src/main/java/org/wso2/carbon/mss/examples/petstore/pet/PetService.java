@@ -37,23 +37,24 @@ public class PetService {
 
 
     @PUT
-    public void addPet() {
+    public void addPet(Pet pet) {
         log.info("Added pet");
     }
 
     @DELETE
-    public void deletePet() {
+    public void deletePet(String id) {
         log.info("Deleted pet");
     }
 
     @POST
-    public void updatePet() {
+    public void updatePet(Pet pet) {
         log.info("Updated pet");
     }
 
     @GET
-    public void getPet() {
+    public Pet getPet() {
         log.info("Got pet");
+        return null;
     }
 
     public static void main(String[] args) {
