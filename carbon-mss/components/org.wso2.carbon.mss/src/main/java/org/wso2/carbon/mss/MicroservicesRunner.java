@@ -18,6 +18,8 @@
  */
 package org.wso2.carbon.mss;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wso2.carbon.mss.internal.MSSNettyServerInitializer;
 import org.wso2.carbon.mss.internal.MicroservicesRegistry;
 import org.wso2.carbon.transport.http.netty.internal.NettyTransportDataHolder;
@@ -34,7 +36,9 @@ import java.util.Set;
  */
 public class MicroservicesRunner {
 
+    private static final Logger log = LoggerFactory.getLogger(MicroservicesRunner.class);
     private TransportManager transportManager = new TransportManager();
+    private long startTime = System.currentTimeMillis();
 
     public MicroservicesRunner deploy(Object microservice) {
 
@@ -54,5 +58,6 @@ public class MicroservicesRunner {
 
     public void start() {
         transportManager.startTransports();
+        log.info("Microservices server started in " + (System.currentTimeMillis() - startTime) + "ms");
     }
 }
