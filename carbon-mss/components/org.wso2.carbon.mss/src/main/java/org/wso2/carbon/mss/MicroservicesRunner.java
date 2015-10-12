@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.mss.internal.MSSNettyServerInitializer;
 import org.wso2.carbon.mss.internal.MicroservicesRegistry;
+import org.wso2.carbon.mss.internal.router.HandlerHook;
 import org.wso2.carbon.transport.http.netty.internal.NettyTransportDataHolder;
 import org.wso2.carbon.transport.http.netty.internal.config.ListenerConfiguration;
 import org.wso2.carbon.transport.http.netty.internal.config.TransportConfigurationBuilder;
@@ -38,9 +39,10 @@ public class MicroservicesRunner {
 
     private static final Logger log = LoggerFactory.getLogger(MicroservicesRunner.class);
     private TransportManager transportManager = new TransportManager();
+    private MSSNettyServerInitializer serverInitializer;
     private long startTime = System.currentTimeMillis();
 
-    public MicroservicesRunner deploy(Object microservice) {
+    public MicroservicesRunner() {
 
         TransportsConfiguration trpConfig = TransportConfigurationBuilder.build();
         Set<ListenerConfiguration> listenerConfigurations = trpConfig.getListenerConfigurations();
@@ -50,9 +52,18 @@ public class MicroservicesRunner {
         }
 
         NettyTransportDataHolder nettyTransportDataHolder = NettyTransportDataHolder.getInstance();
+        serverInitializer = new MSSNettyServerInitializer();
         nettyTransportDataHolder.
-                addNettyChannelInitializer(ListenerConfiguration.DEFAULT_KEY, new MSSNettyServerInitializer());
+                addNettyChannelInitializer(ListenerConfiguration.DEFAULT_KEY, serverInitializer);
+    }
+
+    public MicroservicesRunner deploy(Object microservice) {
         MicroservicesRegistry.getInstance().addHttpService(microservice);
+        return this;
+    }
+
+    public MicroservicesRunner addHook(HandlerHook hook) {
+        serverInitializer.addHandlerHook(hook);
         return this;
     }
 
