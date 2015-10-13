@@ -44,6 +44,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 
@@ -63,6 +64,7 @@ public final class HttpResourceModel {
     private final List<ParameterInfo<?>> paramInfoList;
     private final ExceptionHandler exceptionHandler;
     private List<String> consumesMediaTypes;
+    private List<String> producesMediaTypes;
 
     /**
      * Construct a resource model with HttpMethod, method that handles httprequest, Object that contains the method.
@@ -81,6 +83,7 @@ public final class HttpResourceModel {
         this.paramInfoList = makeParamInfoList(method);
         this.exceptionHandler = exceptionHandler;
         consumesMediaTypes = parseConsumesMediaTypes();
+        producesMediaTypes = parseProducesMediaTypes();
     }
 
     private List<String> parseConsumesMediaTypes() {
@@ -88,6 +91,13 @@ public final class HttpResourceModel {
                 method.getAnnotation(Consumes.class).value() :
                 handler.getClass().getAnnotation(Consumes.class).value();
         return Arrays.asList(consumesMediaTypeArr);
+    }
+
+    private List<String> parseProducesMediaTypes() {
+        String[] producesMediaTypeArr = (method.isAnnotationPresent(Produces.class)) ?
+                method.getAnnotation(Produces.class).value() :
+                handler.getClass().getAnnotation(Produces.class).value();
+        return Arrays.asList(producesMediaTypeArr);
     }
 
     /**
