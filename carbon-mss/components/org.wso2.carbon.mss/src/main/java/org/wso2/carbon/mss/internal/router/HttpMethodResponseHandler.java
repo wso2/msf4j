@@ -95,8 +95,7 @@ public class HttpMethodResponseHandler {
         }
         if (entity != null) {
             if (entity instanceof JsonObject) {
-                //TODO: check no header support
-                responder.sendJson(status, entity);
+                responder.sendString(status, entity.toString(), headers);
             } else if (entity instanceof String) {
                 responder.sendString(status, (String) entity, headers);
             } else {
