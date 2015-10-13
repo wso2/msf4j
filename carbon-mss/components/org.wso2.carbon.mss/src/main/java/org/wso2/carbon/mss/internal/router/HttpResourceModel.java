@@ -108,6 +108,15 @@ public final class HttpResourceModel {
                 || this.consumesMediaTypes.contains(consumesMediaType);
     }
 
+    public boolean matchProduceMediaType(List<String> producesMediaTypes) {
+        return producesMediaTypes == null
+                || producesMediaTypes.contains("*/*")
+                || this.producesMediaTypes.contains("*/*")
+                || this.producesMediaTypes
+                .stream().filter
+                        (producesMediaTypes::contains).findAny().isPresent();
+    }
+
     /**
      * @return httpMethods.
      */
