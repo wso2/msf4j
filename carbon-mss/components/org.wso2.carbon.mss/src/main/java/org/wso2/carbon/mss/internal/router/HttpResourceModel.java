@@ -31,6 +31,7 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import org.wso2.carbon.mss.HttpResponder;
+import org.wso2.carbon.mss.internal.router.beanconversion.BeanConverter;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -172,25 +173,31 @@ public final class HttpResourceModel {
             if (httpMethods.contains(request.getMethod())) {
                 //Setup args for reflection call
                 Object[] args = new Object[paramInfoList.size()];
-
+                String acceptType = "*/*";
                 int idx = 0;
                 for (ParameterInfo<?> paramInfo : paramInfoList) {
-                    Class<? extends Annotation> annotationType = paramInfo.getAnnotation().annotationType();
-                    if (PathParam.class.isAssignableFrom(annotationType)) {
-                        args[idx] = getPathParamValue((ParameterInfo<String>) paramInfo, groupValues);
-                    } else if (QueryParam.class.isAssignableFrom(annotationType)) {
-                        args[idx] = getQueryParamValue((ParameterInfo<List<String>>) paramInfo, request.getUri());
-                    } else if (HeaderParam.class.isAssignableFrom(annotationType)) {
-                        args[idx] = getHeaderParamValue((ParameterInfo<List<String>>) paramInfo, request);
-                    } else if (Context.class.isAssignableFrom(annotationType)) {
-                        args[idx] = getContextParamValue((ParameterInfo<Object>) paramInfo, request, responder);
+                    if (paramInfo.getAnnotation() != null) {
+                        Class<? extends Annotation> annotationType = paramInfo.getAnnotation().annotationType();
+                        if (PathParam.class.isAssignableFrom(annotationType)) {
+                            args[idx] = getPathParamValue((ParameterInfo<String>) paramInfo, groupValues);
+                        } else if (QueryParam.class.isAssignableFrom(annotationType)) {
+                            args[idx] = getQueryParamValue((ParameterInfo<List<String>>) paramInfo, request.getUri());
+                        } else if (HeaderParam.class.isAssignableFrom(annotationType)) {
+                            args[idx] = getHeaderParamValue((ParameterInfo<List<String>>) paramInfo, request);
+                        } else if (Context.class.isAssignableFrom(annotationType)) {
+                            args[idx] = getContextParamValue((ParameterInfo<Object>) paramInfo, request, responder);
+                        }
                     } else {
-                        String acceptType = producesMediaTypes.stream()
-                                .filter(acceptTypes::contains)
-                                .findFirst()
-                                .get();
+                        acceptType = (acceptTypes.contains("*/*")) ?
+                                producesMediaTypes.get(0) :
+                                producesMediaTypes.stream()
+                                        .filter(acceptTypes::contains)
+                                        .findFirst()
+                                        .get();
                         String content = ((FullHttpRequest) request).content().toString(Charsets.UTF_8);
                         Type paramType = paramInfo.getParameterType();
+                        args[idx] = BeanConverter.instance((contentType != null) ? contentType : "*/*")
+                                .toObject(content, paramType);
                     }
                     idx++;
                 }
