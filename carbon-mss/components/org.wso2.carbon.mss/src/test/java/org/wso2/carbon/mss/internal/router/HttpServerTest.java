@@ -557,6 +557,43 @@ public class HttpServerTest {
         urlConn.disconnect();
     }
 
+    @Test
+    public void testConsumeJsonProduceString() throws IOException {
+        HttpURLConnection urlConn = request("/test/v1/jsonConsumeStringProduce", HttpMethod.POST);
+        urlConn.setRequestProperty(HttpHeaders.Names.CONTENT_TYPE, "text/json");
+        Gson gson = new Gson();
+        Pet pet = petInstance();
+        writeContent(urlConn, gson.toJson(pet));
+        Assert.assertEquals(HttpResponseStatus.OK.code(), urlConn.getResponseCode());
+        Assert.assertEquals(pet.getDetails(), getContent(urlConn));
+        urlConn.disconnect();
+    }
+
+    @Test
+    public void testConsumeStringProduceJson() throws IOException {
+        HttpURLConnection urlConn = request("/test/v1/textConsumeJsonProduce", HttpMethod.POST);
+        urlConn.setRequestProperty(HttpHeaders.Names.CONTENT_TYPE, "text/plain");
+        String str = "send-something";
+        writeContent(urlConn, str);
+        Assert.assertEquals(HttpResponseStatus.OK.code(), urlConn.getResponseCode());
+        Gson gson = new Gson();
+        String content = getContent(urlConn);
+        TextBean textBean = gson.fromJson(content, TextBean.class);
+        Assert.assertEquals(str, textBean.getText());
+        urlConn.disconnect();
+    }
+
+    @Test
+    public void testConsumeStringProduceString() throws IOException {
+        HttpURLConnection urlConn = request("/test/v1/textConsumeTextProduce", HttpMethod.POST);
+        urlConn.setRequestProperty(HttpHeaders.Names.CONTENT_TYPE, "text/plain");
+        String str = "send-something";
+        writeContent(urlConn, str);
+        Assert.assertEquals(HttpResponseStatus.OK.code(), urlConn.getResponseCode());
+        Assert.assertEquals(str + "-processed", getContent(urlConn));
+        urlConn.disconnect();
+    }
+
     protected Socket createRawSocket(URL url) throws IOException {
         return new Socket(url.getHost(), url.getPort());
     }
@@ -596,5 +633,17 @@ public class HttpServerTest {
 
     protected void writeContent(HttpURLConnection urlConn, String content) throws IOException {
         urlConn.getOutputStream().write(content.getBytes(Charsets.UTF_8));
+    }
+
+    protected Pet petInstance() {
+        Pet pet = new Pet();
+        pet.setId("0001");
+        pet.setCategory(new Category("dog"));
+        pet.setAgeMonths(3);
+        pet.setDetails("small-cat");
+        pet.setPrice(10.5f);
+        pet.setDateAdded(99999);
+        pet.setImage("cat.png");
+        return pet;
     }
 }

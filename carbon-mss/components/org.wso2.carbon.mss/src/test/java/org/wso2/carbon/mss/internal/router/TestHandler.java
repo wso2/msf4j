@@ -42,6 +42,7 @@ import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.concurrent.TimeUnit;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -50,6 +51,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
@@ -81,6 +83,32 @@ public class TestHandler implements HttpHandler {
     @DELETE
     public String noMethodPathDelete() {
         return "no-@Path-DELETE";
+    }
+
+    @Path("jsonConsumeStringProduce")
+    @POST
+    @Consumes("text/json")
+    @Produces("text/plain")
+    public String jsonConsume01(Pet input) {
+        return input.getDetails();
+    }
+
+    @Path("textConsumeJsonProduce")
+    @POST
+    @Produces("text/json")
+    @Consumes("text/plain")
+    public TextBean textConsume01(String input) {
+        TextBean textBean = new TextBean();
+        textBean.setText(input);
+        return textBean;
+    }
+
+    @Path("textConsumeTextProduce")
+    @POST
+    @Consumes("text/plain")
+    @Produces("text/plain")
+    public String textConsume02(String input) {
+        return input + "-processed";
     }
 
     @Path("sleep/{seconds}")
