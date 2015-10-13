@@ -19,21 +19,20 @@
 
 package org.wso2.carbon.mss.internal.router.beanconversion;
 
-/**
- * Factory class for getting correct media type conversion
- * instance for a given mime type
- */
-public class BeanConverter {
+import java.lang.reflect.Type;
 
-    public static MediaTypeConverter instance(String mediaType) throws BeanConversionException {
-        if (mediaType.toLowerCase().equals("text/json")
-                || mediaType.equals("application/json")) {
-            return new JsonConverter();
-        } else if (mediaType.toLowerCase().equals("text/xml")) {
-            return new XmlConverter();
-        } else if (mediaType.toLowerCase().equals("text/plain")) {
-            return new TextPlainConverter();
-        }
-        throw new BeanConversionException("Unsupported media type: " + mediaType);
+/**
+ * Media type converter for text/plain mime type
+ */
+public class TextPlainConverter implements MediaTypeConverter {
+
+    @Override
+    public Object toMedia(Object object) {
+        return object.toString();
+    }
+
+    @Override
+    public Object toObject(String content, Type targetType) {
+        return content;
     }
 }
