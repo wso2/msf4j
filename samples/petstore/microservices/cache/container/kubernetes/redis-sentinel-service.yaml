@@ -9,5 +9,6 @@ spec:
   ports:
     - port: 26379
       targetPort: 26379
+  type: NodePort
   selector:
     redis-sentinel: "true"
