@@ -509,6 +509,34 @@ public class HttpServerTest {
     }
 
     @Test
+    public void testNoPathGetMethod() throws Exception {
+        HttpURLConnection urlConn = request("/test/v1", HttpMethod.GET);
+        Assert.assertEquals("no-@Path-GET", getContent(urlConn));
+        urlConn.disconnect();
+    }
+
+    @Test
+    public void testNoPathPostMethod() throws Exception {
+        HttpURLConnection urlConn = request("/test/v1", HttpMethod.POST);
+        Assert.assertEquals("no-@Path-POST", getContent(urlConn));
+        urlConn.disconnect();
+    }
+
+    @Test
+    public void testNoPathPutMethod() throws Exception {
+        HttpURLConnection urlConn = request("/test/v1", HttpMethod.PUT);
+        Assert.assertEquals("no-@Path-PUT", getContent(urlConn));
+        urlConn.disconnect();
+    }
+
+    @Test
+    public void testNoPathDeleteMethod() throws Exception {
+        HttpURLConnection urlConn = request("/test/v1", HttpMethod.DELETE);
+        Assert.assertEquals("no-@Path-DELETE", getContent(urlConn));
+        urlConn.disconnect();
+    }
+
+    @Test
     public void testSleep() throws Exception {
         HttpURLConnection urlConn = request("/test/v1/sleep/10", HttpMethod.GET);
         Assert.assertEquals(200, urlConn.getResponseCode());

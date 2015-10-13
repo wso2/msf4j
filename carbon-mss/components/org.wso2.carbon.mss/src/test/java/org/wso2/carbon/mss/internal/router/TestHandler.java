@@ -63,6 +63,26 @@ public class TestHandler implements HttpHandler {
 
     private static final Gson GSON = new Gson();
 
+    @GET
+    public String noMethodPathGet() {
+        return "no-@Path-GET";
+    }
+
+    @POST
+    public String noMethodPathPost() {
+        return "no-@Path-POST";
+    }
+
+    @PUT
+    public String noMethodPathPut() {
+        return "no-@Path-PUT";
+    }
+
+    @DELETE
+    public String noMethodPathDelete() {
+        return "no-@Path-DELETE";
+    }
+
     @Path("sleep/{seconds}")
     @GET
     public Response testSleep(@PathParam("seconds") int seconds) {
