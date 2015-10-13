@@ -26,14 +26,14 @@ package org.wso2.carbon.mss.internal.router.beanconversion;
 public class BeanConverter {
 
     public static MediaTypeConverter instance(String mediaType) throws BeanConversionException {
-        if (mediaType.toLowerCase().equals("text/json")
-                || mediaType.equals("application/json")) {
+        if (mediaType.equalsIgnoreCase("text/json")
+                || mediaType.equalsIgnoreCase("application/json")) {
             return new JsonConverter();
-        } else if (mediaType.toLowerCase().equals("text/xml")) {
+        } else if (mediaType.equalsIgnoreCase("text/xml")) {
             return new XmlConverter();
-        } else if (mediaType.toLowerCase().equals("text/plain")) {
+        } else if (mediaType.equalsIgnoreCase("text/plain")) {
             return new TextPlainConverter();
-        } else if (mediaType.toLowerCase().equals("*/*")) {
+        } else if (mediaType.equalsIgnoreCase("*/*")) {
             return new DefaultConverter();
         }
         throw new BeanConversionException("Unsupported media type: " + mediaType);

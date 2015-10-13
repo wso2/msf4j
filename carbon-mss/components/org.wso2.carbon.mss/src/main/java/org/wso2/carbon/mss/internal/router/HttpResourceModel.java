@@ -187,7 +187,7 @@ public final class HttpResourceModel {
                         } else if (Context.class.isAssignableFrom(annotationType)) {
                             args[idx] = getContextParamValue((ParameterInfo<Object>) paramInfo, request, responder);
                         }
-                    } else {
+                    } else if (request instanceof FullHttpRequest) {
                         acceptType = (acceptTypes.contains("*/*")) ?
                                 producesMediaTypes.get(0) :
                                 producesMediaTypes.stream()

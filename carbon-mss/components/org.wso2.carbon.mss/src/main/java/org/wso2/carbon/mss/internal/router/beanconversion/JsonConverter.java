@@ -29,7 +29,7 @@ import java.lang.reflect.Type;
  */
 public class JsonConverter implements MediaTypeConverter {
 
-    private final static Gson gson = new Gson();
+    private static final Gson gson = new Gson();
 
     @Override
     public Object toMedia(Object object) {
