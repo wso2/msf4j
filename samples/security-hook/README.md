@@ -23,8 +23,8 @@ How to test the sample
 
 Use following cURL commands.  
 ```
-curl --user john:john http://<IP>:8080/hello/john -v
+curl --user john:john http://localhost:8080/hello/john -v
 
-curl --user john:wrong http://<IP>:8080/hello/john -v
+curl --user john:wrong http://localhost:8080/hello/john -v
 
 ```
