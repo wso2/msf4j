@@ -21,7 +21,7 @@ java -jar target/security-hook-1.0.0-SNAPSHOT.jar
 How to test the sample  
 ------------------------------------------
 
-Use following cURL.  
+Use following cURL commands.  
 ```
 curl --user john:john http://<IP>:8080/hello/john -v
 
