@@ -235,7 +235,9 @@ public final class HttpResourceHandler implements HttpHandler {
                         .collect(Collectors.toList()) :
                 null;
 
-        String contentTypeHeader = request.headers().get(HttpHeaders.Names.CONTENT_TYPE);
+        String contentTypeHeaderStr = request.headers().get(HttpHeaders.Names.CONTENT_TYPE);
+        //Trim specified charset since UTF-8 is assumed
+        String contentTypeHeader = (contentTypeHeaderStr != null) ? contentTypeHeaderStr.split("\\s*;\\s*")[0] : null;
 
         try {
             String path = URI.create(request.getUri()).normalize().getPath();
