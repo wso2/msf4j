@@ -25,6 +25,6 @@ How to test the sample
 
 Use following cURL commands.
 ```
-curl --user john:john http://localhost:8080/StockQuote/get/IBM
+curl http://localhost:8080/StockQuote/get/IBM
 
 ```
