@@ -307,6 +307,7 @@
         <module>carbon-mss/features/org.wso2.carbon.mss.feature</module>
         <module>samples/executable-jar</module>
         <module>samples/osgi-bundle</module>
+        <module>samples/security-hook</module>
         <module>samples/petstore</module>
         <module>product</module>
     </modules>
