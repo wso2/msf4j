@@ -33,6 +33,8 @@ public class BeanConverter {
             return new XmlConverter();
         } else if (mediaType.toLowerCase().equals("text/plain")) {
             return new TextPlainConverter();
+        } else if (mediaType.toLowerCase().equals("*/*")) {
+            return new DefaultConverter();
         }
         throw new BeanConversionException("Unsupported media type: " + mediaType);
     }
