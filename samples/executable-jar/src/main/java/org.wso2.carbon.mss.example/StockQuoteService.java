@@ -3,7 +3,6 @@ package org.wso2.carbon.mss.example;
 import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.mss.AbstractHttpHandler;
 import org.wso2.carbon.mss.MicroservicesRunner;
 
 import java.net.InetAddress;
@@ -23,13 +22,13 @@ import javax.ws.rs.core.Response;
  * StockQuote sample
  */
 @Path("/StockQuote")
-public class StockQuoteService extends AbstractHttpHandler {
+public class StockQuoteService {
 
     private static final Logger log = LoggerFactory.getLogger(StockQuoteService.class);
 
     // http://localhost:8080/StockQuote/get/IBM
 
-    private Map<String, Double> stockQuotes = new HashMap<String, Double>();
+    private Map<String, Double> stockQuotes = new HashMap<>();
 
     public StockQuoteService() {
         stockQuotes.put("IBM", 77.45);
