@@ -31,6 +31,7 @@ import org.wso2.carbon.mss.internal.router.RequestRouter;
 import org.wso2.carbon.transport.http.netty.listener.CarbonNettyServerInitializer;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,6 +40,7 @@ import java.util.Map;
 public class MSSNettyServerInitializer implements CarbonNettyServerInitializer {
 
     private DefaultEventExecutorGroup eventExecutorGroup;
+    private List<HandlerHook> hooks = new ArrayList<>();
 
     @Override
     public void setup(Map<String, String> map) {
@@ -55,12 +57,16 @@ public class MSSNettyServerInitializer implements CarbonNettyServerInitializer {
 
         HttpResourceHandler resourceHandler =
                 new HttpResourceHandler(MicroservicesRegistry.getInstance().getHttpServices(),
-                        new ArrayList<HandlerHook>(), null, null);
+                       hooks, null, null);
         pipeline.addLast(eventExecutorGroup, "router", new RequestRouter(resourceHandler, 0)); //TODO: remove limit
 
         //TODO: see what can be done
             /*if (pipelineModifier != null) {
                 pipelineModifier.apply(pipeline);
             }*/
+    }
+
+    public void addHandlerHook(HandlerHook hook) {
+        hooks.add(hook);
     }
 }

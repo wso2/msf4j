@@ -38,9 +38,7 @@ public class StockQuoteService extends AbstractHttpHandler {
     }
 
     public static void main(String[] args) {
-        long start = System.currentTimeMillis();
         new MicroservicesRunner().deploy(new StockQuoteService()).start();
-        log.info("Microservices server started in " + (System.currentTimeMillis() - start) + "ms");
     }
 
     @GET
