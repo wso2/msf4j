@@ -19,11 +19,13 @@
 
 package org.wso2.carbon.mss.internal.router;
 
+import com.google.common.base.Charsets;
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
@@ -158,7 +160,11 @@ public final class HttpResourceModel {
      * @param groupValues Values needed for the invocation.
      */
     @SuppressWarnings("unchecked")
-    public HttpMethodInfo handle(HttpRequest request, HttpResponder responder, Map<String, String> groupValues)
+    public HttpMethodInfo handle(HttpRequest request,
+                                 HttpResponder responder,
+                                 Map<String, String> groupValues,
+                                 String contentType,
+                                 List<String> acceptTypes)
             throws Exception {
 
         //TODO: Refactor group values.
@@ -178,6 +184,13 @@ public final class HttpResourceModel {
                         args[idx] = getHeaderParamValue((ParameterInfo<List<String>>) paramInfo, request);
                     } else if (Context.class.isAssignableFrom(annotationType)) {
                         args[idx] = getContextParamValue((ParameterInfo<Object>) paramInfo, request, responder);
+                    } else {
+                        String acceptType = producesMediaTypes.stream()
+                                .filter(acceptTypes::contains)
+                                .findFirst()
+                                .get();
+                        String content = ((FullHttpRequest) request).content().toString(Charsets.UTF_8);
+                        Type paramType = paramInfo.getParameterType();
                     }
                     idx++;
                 }

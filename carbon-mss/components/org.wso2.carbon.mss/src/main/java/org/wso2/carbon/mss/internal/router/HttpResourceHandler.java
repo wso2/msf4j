@@ -271,7 +271,11 @@ public final class HttpResourceHandler implements HttpHandler {
                 if (!terminated) {
                     // Wrap responder to make post hook calls.
                     responder = new WrappedHttpResponder(responder, handlerHooks, request, handlerInfo);
-                    return httpResourceModel.handle(request, responder, matchedDestination.getGroupNameValues());
+                    return httpResourceModel.handle(request,
+                            responder,
+                            matchedDestination.getGroupNameValues(),
+                            contentTypeHeader,
+                            acceptHeader);
                 }
             } else if (!routableDestinations.isEmpty()) {
                 //Found a matching resource but could not find the right HttpMethod so return 405
