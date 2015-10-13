@@ -28,6 +28,7 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.LastHttpContent;
 import org.wso2.carbon.mss.HttpResponder;
+import org.wso2.carbon.mss.internal.router.beanconversion.BeanConverter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -48,11 +49,12 @@ class HttpMethodInfo {
     private final Object[] args;
     private final boolean isStreaming;
     private final ExceptionHandler exceptionHandler;
+    private final String mediaType;
 
     private BodyConsumer bodyConsumer;
 
     HttpMethodInfo(Method method, Object handler, HttpRequest request, HttpResponder responder, Object[] args,
-                   ExceptionHandler exceptionHandler) {
+                   ExceptionHandler exceptionHandler, String mediaType) {
         this.method = method;
         this.handler = handler;
         this.isChunkedRequest = request instanceof HttpContent;
@@ -65,6 +67,7 @@ class HttpMethodInfo {
         this.request = rewriteRequest(request, isStreaming);
         this.responder = responder;
         this.exceptionHandler = exceptionHandler;
+        this.mediaType = mediaType;
 
         // The actual arguments list to invoke handler method
         this.args = args;
@@ -90,8 +93,10 @@ class HttpMethodInfo {
             bodyConsumer = null;
             try {
                 Object returnVal = method.invoke(handler, args);
+                Object convertedVal = BeanConverter.instance(mediaType)
+                        .toMedia(returnVal);
                 //sending return value as output
-                new HttpMethodResponseHandler().setResponder(responder).setEntity(returnVal).send();
+                new HttpMethodResponseHandler().setResponder(responder).setEntity(convertedVal).send();
             } catch (InvocationTargetException e) {
                 exceptionHandler.handle(e.getTargetException(), request, responder);
             }

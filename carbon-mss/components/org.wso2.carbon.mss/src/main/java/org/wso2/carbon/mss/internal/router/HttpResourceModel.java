@@ -202,7 +202,8 @@ public final class HttpResourceModel {
                     idx++;
                 }
 
-                return new HttpMethodInfo(method, handler, request, responder, args, exceptionHandler);
+                return new HttpMethodInfo(method, handler, request, responder, args, exceptionHandler,
+                        (acceptType != null) ? acceptType : "*/*");
             } else {
                 //Found a matching resource but could not find the right HttpMethod so return 405
                 throw new HandlerException(HttpResponseStatus.METHOD_NOT_ALLOWED, String.format
