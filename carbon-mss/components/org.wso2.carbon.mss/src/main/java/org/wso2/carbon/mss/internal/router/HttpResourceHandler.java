@@ -288,7 +288,7 @@ public final class HttpResourceHandler implements HttpHandler {
             }
         } catch (NoSuchElementException ex) {
             throw new HandlerException(HttpResponseStatus.UNSUPPORTED_MEDIA_TYPE,
-                    String.format("Problem accessing: %s. Reason: Not Found", request.getUri()), ex);
+                    String.format("Problem accessing: %s. Reason: Unsupported Media Type", request.getUri()), ex);
         }
         return null;
     }
