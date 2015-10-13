@@ -22,9 +22,7 @@ package org.wso2.carbon.mss.internal.router;
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpRequest;
@@ -35,6 +33,8 @@ import org.wso2.carbon.mss.HttpResponder;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +59,7 @@ public final class HttpResourceModel {
     private final String path;
     private final Method method;
     private final Object handler;
-    private final List<Map<Class<? extends Annotation>, ParameterInfo<?>>> paramInfoList;
+    private final List<ParameterInfo<?>> paramInfoList;
     private final ExceptionHandler exceptionHandler;
 
     /**
@@ -76,7 +76,7 @@ public final class HttpResourceModel {
         this.path = path;
         this.method = method;
         this.handler = handler;
-        this.paramInfoList = createParametersInfos(method);
+        this.paramInfoList = makeParamInfoList(method);
         this.exceptionHandler = exceptionHandler;
     }
 
@@ -126,15 +126,16 @@ public final class HttpResourceModel {
                 Object[] args = new Object[paramInfoList.size()];
 
                 int idx = 0;
-                for (Map<Class<? extends Annotation>, ParameterInfo<?>> info : paramInfoList) {
-                    if (info.containsKey(PathParam.class)) {
-                        args[idx] = getPathParamValue(info, groupValues);
-                    } else if (info.containsKey(QueryParam.class)) {
-                        args[idx] = getQueryParamValue(info, request.getUri());
-                    } else if (info.containsKey(HeaderParam.class)) {
-                        args[idx] = getHeaderParamValue(info, request);
-                    } else if (info.containsKey(Context.class)) {
-                        args[idx] = getContextParamValue(info, request, responder);
+                for (ParameterInfo<?> paramInfo : paramInfoList) {
+                    Class<? extends Annotation> annotationType = paramInfo.getAnnotation().annotationType();
+                    if (PathParam.class.isAssignableFrom(annotationType)) {
+                        args[idx] = getPathParamValue((ParameterInfo<String>) paramInfo, groupValues);
+                    } else if (QueryParam.class.isAssignableFrom(annotationType)) {
+                        args[idx] = getQueryParamValue((ParameterInfo<List<String>>) paramInfo, request.getUri());
+                    } else if (HeaderParam.class.isAssignableFrom(annotationType)) {
+                        args[idx] = getHeaderParamValue((ParameterInfo<List<String>>) paramInfo, request);
+                    } else if (Context.class.isAssignableFrom(annotationType)) {
+                        args[idx] = getContextParamValue((ParameterInfo<Object>) paramInfo, request, responder);
                     }
                     idx++;
                 }
@@ -163,9 +164,8 @@ public final class HttpResourceModel {
     }
 
     @SuppressWarnings("unchecked")
-    private Object getContextParamValue(Map<Class<? extends Annotation>, ParameterInfo<?>> annotations,
-                                        HttpRequest request, HttpResponder responder) {
-        ParameterInfo<Object> paramInfo = (ParameterInfo<Object>) annotations.get(Context.class);
+    private Object getContextParamValue(ParameterInfo<Object> paramInfo, HttpRequest request,
+                                        HttpResponder responder) {
         Type paramType = paramInfo.getParameterType();
         Object value = null;
         if (((Class) paramType).isAssignableFrom(HttpRequest.class)) {
@@ -178,91 +178,87 @@ public final class HttpResourceModel {
     }
 
     @SuppressWarnings("unchecked")
-    private Object getPathParamValue(Map<Class<? extends Annotation>, ParameterInfo<?>> annotations,
-                                     Map<String, String> groupValues) {
-        ParameterInfo<String> info = (ParameterInfo<String>) annotations.get(PathParam.class);
+    private Object getPathParamValue(ParameterInfo<String> info, Map<String, String> groupValues) {
         PathParam pathParam = info.getAnnotation();
         String value = groupValues.get(pathParam.value());
         Preconditions.checkArgument(value != null, "Could not resolve value for parameter %s", pathParam.value());
+        if (value == null) {
+            String defaultVal = info.getDefaultVal();
+            if (defaultVal != null) {
+                value = defaultVal;
+            }
+        }
         return info.convert(value);
     }
 
     @SuppressWarnings("unchecked")
-    private Object getQueryParamValue(Map<Class<? extends Annotation>, ParameterInfo<?>> annotations, String uri) {
-        ParameterInfo<List<String>> info = (ParameterInfo<List<String>>) annotations.get(QueryParam.class);
+    private Object getQueryParamValue(ParameterInfo<List<String>> info, String uri) {
         QueryParam queryParam = info.getAnnotation();
         List<String> values = new QueryStringDecoder(uri).parameters().get(queryParam.value());
-
-        return (values == null) ? info.convert(defaultValue(annotations)) : info.convert(values);
+        if (values == null || values.isEmpty()) {
+            String defaultVal = info.getDefaultVal();
+            if (defaultVal != null) {
+                values = Arrays.asList(defaultVal);
+            }
+        }
+        return info.convert(values);
     }
 
     @SuppressWarnings("unchecked")
-    private Object getHeaderParamValue(Map<Class<? extends Annotation>, ParameterInfo<?>> annotations,
-                                       HttpRequest request) {
-        ParameterInfo<List<String>> info = (ParameterInfo<List<String>>) annotations.get(HeaderParam.class);
+    private Object getHeaderParamValue(ParameterInfo<List<String>> info, HttpRequest request) {
         HeaderParam headerParam = info.getAnnotation();
         String headerName = headerParam.value();
-        List<String> headers = request.headers().getAll(headerParam.value());
-
-        return (request.headers().contains(headerName)) ?
-                info.convert(headers) :
-                info.convert(defaultValue(annotations));
-    }
-
-    /**
-     * Returns a List of String created based on the {@link DefaultValue} if it is presented in the annotations Map.
-     *
-     * @return a List of String or an empty List if {@link DefaultValue} is not presented
-     */
-    private List<String> defaultValue(Map<Class<? extends Annotation>, ParameterInfo<?>> annotations) {
-        List<String> values = ImmutableList.of();
-
-        ParameterInfo<?> defaultInfo = annotations.get(DefaultValue.class);
-        if (defaultInfo != null) {
-            DefaultValue defaultValue = defaultInfo.getAnnotation();
-            values = ImmutableList.of(defaultValue.value());
+        List<String> headers = request.headers().getAll(headerName);
+        if (headers == null || headers.isEmpty()) {
+            String defaultVal = info.getDefaultVal();
+            if (defaultVal != null) {
+                headers = Arrays.asList(defaultVal);
+            }
         }
-        return values;
+        return info.convert(headers);
     }
 
     /**
      * Gathers all parameters' annotations for the given method, starting from the third parameter.
      */
-    private List<Map<Class<? extends Annotation>, ParameterInfo<?>>> createParametersInfos(Method method) {
-        ImmutableList.Builder<Map<Class<? extends Annotation>, ParameterInfo<?>>> result = ImmutableList.builder();
-        Type[] parameterTypes = method.getGenericParameterTypes();
-        Annotation[][] parameterAnnotations = method.getParameterAnnotations();
+    private List<ParameterInfo<?>> makeParamInfoList(Method method) {
+        List<ParameterInfo<?>> paramInfoList = new ArrayList<>();
 
-        for (int i = 0; i < parameterAnnotations.length; i++) {
-            Annotation[] annotations = parameterAnnotations[i];
-            Map<Class<? extends Annotation>, ParameterInfo<?>> paramAnnotations = Maps.newIdentityHashMap();
+        Type[] paramTypes = method.getGenericParameterTypes();
+        Annotation[][] paramAnnotations = method.getParameterAnnotations();
 
-            for (Annotation annotation : annotations) {
+        for (int i = 0; i < paramAnnotations.length; i++) {
+            Annotation[] annotations = paramAnnotations[i];
+
+            //Can have only one from @PathParam, @QueryParam, @HeaderParam or @Context.
+            if (Sets.intersection(SUPPORTED_PARAM_ANNOTATIONS, ImmutableSet.of(annotations)).size() > 1) {
+                throw new IllegalArgumentException(
+                        String.format("Must have exactly one annotation from %s for parameter %d in method %s",
+                                SUPPORTED_PARAM_ANNOTATIONS, i, method));
+            }
+
+            Annotation annotation = null;
+            Type parameterType = paramTypes[i];
+            Function<?, Object> converter = null;
+            String defaultVal = null;
+            for (Annotation annotation0 : annotations) {
+                annotation = annotation0;
                 Class<? extends Annotation> annotationType = annotation.annotationType();
-                Type parameterType = parameterTypes[i];
-                Function<?, Object> converter = null;
                 if (PathParam.class.isAssignableFrom(annotationType)) {
                     converter = ParamConvertUtils.createPathParamConverter(parameterType);
                 } else if (QueryParam.class.isAssignableFrom(annotationType)) {
                     converter = ParamConvertUtils.createQueryParamConverter(parameterType);
                 } else if (HeaderParam.class.isAssignableFrom(annotationType)) {
                     converter = ParamConvertUtils.createHeaderParamConverter(parameterType);
+                } else if (DefaultValue.class.isAssignableFrom(annotationType)) {
+                    defaultVal = ((DefaultValue) annotation).value();
                 }
-                ParameterInfo<?> parameterInfo = ParameterInfo.create(parameterType, annotation, converter);
-                paramAnnotations.put(annotationType, parameterInfo);
             }
-
-            //Can have only one from @PathParam, @QueryParam or @HeaderParam.
-            if (Sets.intersection(SUPPORTED_PARAM_ANNOTATIONS, paramAnnotations.keySet()).size() > 1) {
-                throw new IllegalArgumentException(
-                        String.format("Must have exactly one annotation from %s for parameter %d in method %s",
-                                SUPPORTED_PARAM_ANNOTATIONS, i, method));
-            }
-
-            result.add(Collections.unmodifiableMap(paramAnnotations));
+            ParameterInfo<?> parameterInfo = ParameterInfo.create(parameterType, annotation, defaultVal, converter);
+            paramInfoList.add(parameterInfo);
         }
 
-        return result.build();
+        return Collections.unmodifiableList(paramInfoList);
     }
 
     /**
@@ -272,16 +268,20 @@ public final class HttpResourceModel {
         private final Annotation annotation;
         private final Function<T, Object> converter;
         private final Type parameterType;
+        private final String defaultVal;
 
-        private ParameterInfo(Type parameterType, Annotation annotation, @Nullable Function<T, Object> converter) {
+        private ParameterInfo(Type parameterType, Annotation annotation, String defaultVal, @Nullable Function<T,
+                Object>
+                converter) {
             this.parameterType = parameterType;
             this.annotation = annotation;
+            this.defaultVal = defaultVal;
             this.converter = converter;
         }
 
-        static <V> ParameterInfo<V> create(Type parameterType, Annotation annotation,
+        static <V> ParameterInfo<V> create(Type parameterType, Annotation annotation, String defaultVal,
                                            @Nullable Function<V, Object> converter) {
-            return new ParameterInfo<>(parameterType, annotation, converter);
+            return new ParameterInfo<>(parameterType, annotation, defaultVal, converter);
         }
 
         @SuppressWarnings("unchecked")
@@ -291,6 +291,10 @@ public final class HttpResourceModel {
 
         public Type getParameterType() {
             return parameterType;
+        }
+
+        public String getDefaultVal() {
+            return defaultVal;
         }
 
         Object convert(T input) {
