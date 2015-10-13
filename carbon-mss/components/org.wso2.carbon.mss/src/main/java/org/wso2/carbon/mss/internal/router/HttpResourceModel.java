@@ -56,6 +56,7 @@ public final class HttpResourceModel {
 
     private static final Set<Class<? extends Annotation>> SUPPORTED_PARAM_ANNOTATIONS =
             ImmutableSet.of(PathParam.class, QueryParam.class, HeaderParam.class, Context.class);
+    private static final String[] ANY_MEDIA_TYPE = new String[]{"*/*"};
 
     private final Set<HttpMethod> httpMethods;
     private final String path;
@@ -89,14 +90,18 @@ public final class HttpResourceModel {
     private List<String> parseConsumesMediaTypes() {
         String[] consumesMediaTypeArr = (method.isAnnotationPresent(Consumes.class)) ?
                 method.getAnnotation(Consumes.class).value() :
-                handler.getClass().getAnnotation(Consumes.class).value();
+                (handler.getClass().isAnnotationPresent(Consumes.class)) ?
+                        handler.getClass().getAnnotation(Consumes.class).value() :
+                        ANY_MEDIA_TYPE;
         return Arrays.asList(consumesMediaTypeArr);
     }
 
     private List<String> parseProducesMediaTypes() {
         String[] producesMediaTypeArr = (method.isAnnotationPresent(Produces.class)) ?
                 method.getAnnotation(Produces.class).value() :
-                handler.getClass().getAnnotation(Produces.class).value();
+                (handler.getClass().isAnnotationPresent(Produces.class)) ?
+                        handler.getClass().getAnnotation(Produces.class).value() :
+                        ANY_MEDIA_TYPE;
         return Arrays.asList(producesMediaTypeArr);
     }
 
