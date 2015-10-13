@@ -100,6 +100,14 @@ public final class HttpResourceModel {
         return Arrays.asList(producesMediaTypeArr);
     }
 
+    public boolean matchConsumeMediaType(String consumesMediaType) {
+        return consumesMediaType == null
+                || consumesMediaType.isEmpty()
+                || consumesMediaType.equals("*/*")
+                || this.consumesMediaTypes.contains("*/*")
+                || this.consumesMediaTypes.contains(consumesMediaType);
+    }
+
     /**
      * @return httpMethods.
      */
