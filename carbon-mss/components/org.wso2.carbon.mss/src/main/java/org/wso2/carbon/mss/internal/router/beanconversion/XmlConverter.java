@@ -19,21 +19,42 @@
 
 package org.wso2.carbon.mss.internal.router.beanconversion;
 
+import com.google.common.base.Charsets;
+
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.lang.reflect.Type;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 
 /**
  * Media type converter for text/xml mime type
  */
-//TODO: implement methods
+//TODO: test xml conversions
 public class XmlConverter implements MediaTypeConverter {
 
     @Override
-    public Object toMedia(Object object) {
-        throw new UnsupportedOperationException();
+    public Object toMedia(Object object) throws BeanConversionException {
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(object.getClass());
+            Marshaller marshaller = jaxbContext.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_ENCODING, Charsets.UTF_8);
+            StringWriter stringWriter = new StringWriter();
+            marshaller.marshal(object, stringWriter);
+            return stringWriter.toString();
+        } catch (JAXBException e) {
+            throw new BeanConversionException("Unable to perform object to xml conversion", e);
+        }
     }
 
     @Override
-    public Object toObject(String content, Type targetType) {
-        throw new UnsupportedOperationException();
+    public Object toObject(String content, Type targetType) throws BeanConversionException {
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance((Class) targetType);
+            return jaxbContext.createUnmarshaller().unmarshal(new StringReader(content));
+        } catch (JAXBException e) {
+            throw new BeanConversionException("Unable to perform xml to object conversion", e);
+        }
     }
 }

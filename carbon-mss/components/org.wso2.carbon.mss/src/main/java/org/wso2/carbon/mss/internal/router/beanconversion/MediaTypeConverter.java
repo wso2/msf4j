@@ -26,8 +26,8 @@ import java.lang.reflect.Type;
  */
 public interface MediaTypeConverter {
 
-    public Object toMedia(Object object);
+    public Object toMedia(Object object) throws BeanConversionException;
 
-    public Object toObject(String content, Type targetType);
+    public Object toObject(String content, Type targetType) throws BeanConversionException;
 
 }
