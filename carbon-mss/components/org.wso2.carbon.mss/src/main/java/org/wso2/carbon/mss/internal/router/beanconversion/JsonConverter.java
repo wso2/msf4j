@@ -19,17 +19,25 @@
 
 package org.wso2.carbon.mss.internal.router.beanconversion;
 
-/**
- * Factory class for getting correct media type conversion
- * instance for a given mime type
- */
-public class BeanConverter {
+import com.google.gson.Gson;
 
-    public static MediaTypeConverter instance(String mediaType) throws BeanConversionException {
-        if (mediaType.toLowerCase().equals("text/json")
-                || mediaType.equals("application/json")) {
-            return new JsonConverter();
-        }
-        throw new BeanConversionException("Unsupported media type: " + mediaType);
+import java.lang.reflect.Type;
+
+/**
+ * Media type converter for text/json,
+ * application/json mime types
+ */
+public class JsonConverter implements MediaTypeConverter {
+
+    private final static Gson gson = new Gson();
+
+    @Override
+    public Object toMedia(Object object) {
+        return gson.toJson(object);
+    }
+
+    @Override
+    public Object toObject(String content, Type targetType) {
+        return gson.fromJson(content, targetType);
     }
 }
