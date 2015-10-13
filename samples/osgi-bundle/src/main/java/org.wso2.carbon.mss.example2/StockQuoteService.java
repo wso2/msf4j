@@ -26,7 +26,7 @@ public class StockQuoteService extends AbstractHttpHandler {
 
     // http://localhost:7778/StockQuote/get/IBM
 
-    private Map<String, Double> stockQuotes = new HashMap<String, Double>();
+    private Map<String, Double> stockQuotes = new HashMap<>();
 
     public StockQuoteService() {
         stockQuotes.put("IBM", 77.45);
