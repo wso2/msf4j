@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.Nullable;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.PathParam;
@@ -61,6 +62,7 @@ public final class HttpResourceModel {
     private final Object handler;
     private final List<ParameterInfo<?>> paramInfoList;
     private final ExceptionHandler exceptionHandler;
+    private List<String> consumesMediaTypes;
 
     /**
      * Construct a resource model with HttpMethod, method that handles httprequest, Object that contains the method.
@@ -78,6 +80,14 @@ public final class HttpResourceModel {
         this.handler = handler;
         this.paramInfoList = makeParamInfoList(method);
         this.exceptionHandler = exceptionHandler;
+        consumesMediaTypes = parseConsumesMediaTypes();
+    }
+
+    private List<String> parseConsumesMediaTypes() {
+        String[] consumesMediaTypeArr = (method.isAnnotationPresent(Consumes.class)) ?
+                method.getAnnotation(Consumes.class).value() :
+                handler.getClass().getAnnotation(Consumes.class).value();
+        return Arrays.asList(consumesMediaTypeArr);
     }
 
     /**
