@@ -20,9 +20,7 @@
 package org.wso2.carbon.mss.internal.router.beanconversion;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.wso2.carbon.mss.internal.router.Category;
 import org.wso2.carbon.mss.internal.router.Pet;

@@ -19,8 +19,6 @@
 
 package org.wso2.carbon.mss.internal.router.beanconversion;
 
-import com.google.common.base.Charsets;
-
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.Type;
