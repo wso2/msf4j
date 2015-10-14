@@ -31,7 +31,6 @@ import javax.xml.bind.Marshaller;
 /**
  * Media type converter for text/xml mime type
  */
-//TODO: test xml conversions
 public class XmlConverter implements MediaTypeConverter {
 
     @Override
