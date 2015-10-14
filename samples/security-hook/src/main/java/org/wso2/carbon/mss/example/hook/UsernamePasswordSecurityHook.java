@@ -24,6 +24,8 @@ package org.wso2.carbon.mss.example.hook;
 public class UsernamePasswordSecurityHook extends AbstractBasicAuthHook {
     @Override
     protected boolean authenticate(String username, String password) {
+
+        // The authentication logic goes in here. For simplicity, we just check that username == password
         if (username.equals(password)) {
             return true;
         }
