@@ -3,7 +3,7 @@ package org.wso2.carbon.mss.example;
 import com.google.gson.JsonObject;
 import org.wso2.carbon.mss.MicroservicesRunner;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +46,11 @@ public class StockQuoteService {
                 Response.status(Response.Status.OK).entity(stock).build();
     }
 
+    /*
+    curl -v -X POST -H "Content-Type:application/json"
+    -d '{"symbol":"BAR","name": "Bar Inc.","last":149.62,"low":150.78,"high":149.18,"createdByHost":"10.100.1.192"}'
+    http://localhost:8080/StockQuote/
+     */
     @POST
     @Consumes("application/json")
     public void addStock(Stock stock) {
@@ -54,8 +59,9 @@ public class StockQuoteService {
 
     @GET
     @Path("/all")
+    @Produces("application/json")
     public List<Stock> getAllStocks() {
-        List<Stock> stocks = Collections.emptyList();
+        List<Stock> stocks = new ArrayList<>();
         stocks.addAll(stockQuotes.values());
         return stocks;
     }
