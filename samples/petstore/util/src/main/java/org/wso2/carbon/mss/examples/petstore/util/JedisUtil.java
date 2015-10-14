@@ -16,7 +16,7 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.mss.examples.petstore.pet.jedis;
+package org.wso2.carbon.mss.examples.petstore.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

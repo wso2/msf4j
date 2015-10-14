@@ -44,8 +44,9 @@
             <artifactId>gson</artifactId>
         </dependency>
         <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
+            <groupId>org.wso2.carbon.mss</groupId>
+            <artifactId>petstore-util</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

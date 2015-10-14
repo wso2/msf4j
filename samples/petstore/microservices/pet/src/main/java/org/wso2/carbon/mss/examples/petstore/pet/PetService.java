@@ -22,7 +22,7 @@ import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.mss.MicroservicesRunner;
-import org.wso2.carbon.mss.examples.petstore.pet.jedis.JedisUtil;
+import org.wso2.carbon.mss.examples.petstore.util.JedisUtil;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;

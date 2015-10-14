@@ -59,6 +59,7 @@
     </dependencyManagement>
 
     <modules>
+        <module>util</module>
         <!--<module>microservices/cache</module>-->
         <!--<module>microservices/database</module>-->
         <!--<module>microservices/frontend-admin</module>-->
