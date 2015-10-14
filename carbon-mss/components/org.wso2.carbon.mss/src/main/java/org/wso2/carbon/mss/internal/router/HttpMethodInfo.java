@@ -96,7 +96,11 @@ class HttpMethodInfo {
                 Object convertedVal = BeanConverter.instance(mediaType)
                         .toMedia(returnVal);
                 //sending return value as output
-                new HttpMethodResponseHandler().setResponder(responder).setEntity(convertedVal).send();
+                new HttpMethodResponseHandler()
+                        .setResponder(responder)
+                        .setEntity(convertedVal)
+                        .setMediaType(mediaType)
+                        .send();
             } catch (InvocationTargetException e) {
                 exceptionHandler.handle(e.getTargetException(), request, responder);
             }

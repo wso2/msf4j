@@ -22,6 +22,7 @@ package org.wso2.carbon.mss.internal.router;
 import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
 import io.netty.buffer.ByteBuf;
+import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.junit.Assert;
 import org.junit.Test;
@@ -32,6 +33,7 @@ import java.io.File;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import javax.annotation.Nullable;
+import javax.ws.rs.core.MediaType;
 
 /**
  * Tests HttpMethodResponseHandlerTest class
@@ -82,6 +84,22 @@ public class HttpMethodResponseHandlerTest {
                     Assert.assertEquals(null, entity);
                 }))
                 .setStatus(HttpResponseStatus.NOT_FOUND.code())
+                .send();
+    }
+
+    @Test
+    public void testStatusCodeOkWithPlainTextMediaType() {
+        String content = "Text-Content";
+        new HttpMethodResponseHandler()
+                .setResponder(new HttpResponderMock((HttpResponseStatus status,
+                                                     Object entity, Multimap<String, String> headers) -> {
+                    Assert.assertEquals(status.code(), HttpResponseStatus.OK.code());
+                    Assert.assertTrue(headers.containsEntry(HttpHeaders.Names.CONTENT_TYPE, MediaType.TEXT_PLAIN));
+                    Assert.assertEquals(content, entity);
+                }))
+                .setEntity(content)
+                .setMediaType(MediaType.TEXT_PLAIN)
+                .setStatus(HttpResponseStatus.OK.code())
                 .send();
     }
 

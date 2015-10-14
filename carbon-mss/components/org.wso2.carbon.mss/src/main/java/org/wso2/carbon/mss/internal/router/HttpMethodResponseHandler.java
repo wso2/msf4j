@@ -19,6 +19,7 @@ package org.wso2.carbon.mss.internal.router;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.JsonObject;
+import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.wso2.carbon.mss.HttpResponder;
 
@@ -33,8 +34,9 @@ public class HttpMethodResponseHandler {
 
     private HttpResponder responder;
     private HttpResponseStatus status = null;
+    private String mediaType = null;
     private Object entity;
-    private Multimap<String, String> headers = null;
+    private Multimap<String, String> headers = LinkedListMultimap.create();
 
     /**
      * Set netty-http responder object
@@ -57,6 +59,16 @@ public class HttpMethodResponseHandler {
     }
 
     /**
+     * Set media type of the entity
+     *
+     * @param mediaType entity media type
+     */
+    public HttpMethodResponseHandler setMediaType(String mediaType) {
+        this.mediaType = mediaType;
+        return this;
+    }
+
+    /**
      * Set entity body fro the response. If the entity is
      * type of javax.ws.rs.core.Response extract entity,
      * status code etc from it
@@ -69,12 +81,12 @@ public class HttpMethodResponseHandler {
             this.entity = response.getEntity();
             MultivaluedMap<String, String> multivaluedMap = response.getStringHeaders();
             if (multivaluedMap != null) {
-                headers = LinkedListMultimap.create();
                 multivaluedMap.forEach((key, strings) -> {
                     headers.putAll(key, strings);
                 });
             }
             setStatus(response.getStatus());
+            setMediaType(response.getMediaType().toString());
         } else {
             this.entity = entity;
         }
@@ -93,6 +105,7 @@ public class HttpMethodResponseHandler {
         } else {
             status = HttpResponseStatus.NO_CONTENT;
         }
+        headers.put(HttpHeaders.Names.CONTENT_TYPE, mediaType);
         if (entity != null) {
             if (entity instanceof JsonObject) {
                 responder.sendString(status, entity.toString(), headers);
