@@ -1,13 +1,11 @@
 package org.wso2.carbon.mss.example;
 
 import com.google.gson.JsonObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.wso2.carbon.mss.MicroservicesRunner;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -24,16 +22,14 @@ import javax.ws.rs.core.Response;
 @Path("/StockQuote")
 public class StockQuoteService {
 
-    private static final Logger log = LoggerFactory.getLogger(StockQuoteService.class);
-
     // http://localhost:8080/StockQuote/get/IBM
 
-    private Map<String, Double> stockQuotes = new HashMap<>();
+    private Map<String, Stock> stockQuotes = new HashMap<>();
 
     public StockQuoteService() {
-        stockQuotes.put("IBM", 77.45);
-        stockQuotes.put("GOOG", 200.65);
-        stockQuotes.put("AMZN", 145.88);
+        stockQuotes.put("IBM", new Stock("IBM", "International Business Machines", 149.62, 150.78, 149.18));
+        stockQuotes.put("GOOG", new Stock("GOOG", "Alphabet Inc.", 652.30, 657.81, 643.15));
+        stockQuotes.put("AMZN", new Stock("AMZN", "Amazon.com", 548.90, 553.20, 543.10));
     }
 
     public static void main(String[] args) {
@@ -41,24 +37,27 @@ public class StockQuoteService {
     }
 
     @GET
-    @Path("get/{symbol}")
-    @Consumes("application/json")
-    @Produces("application/json")
+    @Path("/{symbol}")
+    @Produces({"application/json", "text/xml"})
     public Response getQuote(@PathParam("symbol") String symbol) {
-        Double price = stockQuotes.get(symbol);
-        if (price != null) {
-            JsonObject response = new JsonObject();
-            response.addProperty("symbol", symbol);
-            response.addProperty("price", price);
-            try {
-                response.addProperty("ip", InetAddress.getLocalHost().getHostAddress());
-            } catch (UnknownHostException e) {
-                log.error("Could not get IP address of local host", e);
-            }
-            return Response.status(Response.Status.OK).entity(response).build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        Stock stock = stockQuotes.get(symbol);
+        return (stock == null) ?
+                Response.status(Response.Status.NOT_FOUND).build() :
+                Response.status(Response.Status.OK).entity(stock).build();
+    }
+
+    @POST
+    @Consumes("application/json")
+    public void addStock(Stock stock) {
+        stockQuotes.put(stock.getSymbol(), stock);
+    }
+
+    @GET
+    @Path("/all")
+    public List<Stock> getAllStocks() {
+        List<Stock> stocks = Collections.emptyList();
+        stocks.addAll(stockQuotes.values());
+        return stocks;
     }
 
     @GET

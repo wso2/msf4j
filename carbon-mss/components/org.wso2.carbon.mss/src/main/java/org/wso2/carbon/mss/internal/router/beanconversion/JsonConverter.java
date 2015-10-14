@@ -20,6 +20,7 @@
 package org.wso2.carbon.mss.internal.router.beanconversion;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import java.lang.reflect.Type;
 
@@ -37,7 +38,16 @@ public class JsonConverter implements MediaTypeConverter {
     }
 
     @Override
-    public Object toObject(String content, Type targetType) {
+    public Object toObject(String content, Type targetType) throws BeanConversionException {
+        Object object;
+        try {
+            object = gson.fromJson(content, targetType);
+            if (object == null) {
+                throw new BeanConversionException("Unable to perform json to object conversion");
+            }
+        } catch (JsonSyntaxException ex) {
+            throw new BeanConversionException("Unable to perform json to object conversion", ex);
+        }
         return gson.fromJson(content, targetType);
     }
 }

@@ -18,10 +18,11 @@ package org.wso2.carbon.mss.internal.router;
 
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
-import com.google.gson.JsonObject;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.wso2.carbon.mss.HttpResponder;
+import org.wso2.carbon.mss.internal.router.beanconversion.BeanConversionException;
+import org.wso2.carbon.mss.internal.router.beanconversion.BeanConverter;
 
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
@@ -98,7 +99,7 @@ public class HttpMethodResponseHandler {
     /**
      * send response using netty-http provided responder
      */
-    public void send() {
+    public void send() throws BeanConversionException {
         HttpResponseStatus status;
         if (this.status != null) {
             status = this.status;
@@ -107,17 +108,16 @@ public class HttpMethodResponseHandler {
         } else {
             status = HttpResponseStatus.NO_CONTENT;
         }
-        if (mediaType != null) {
-            headers.put(HttpHeaders.Names.CONTENT_TYPE, mediaType);
-        }
+        Object entityToSend;
         if (entity != null) {
-            if (entity instanceof JsonObject) {
-                responder.sendString(status, entity.toString(), headers);
-            } else if (entity instanceof String) {
-                responder.sendString(status, (String) entity, headers);
+            if (mediaType != null) {
+                headers.put(HttpHeaders.Names.CONTENT_TYPE, mediaType);
+                entityToSend = BeanConverter.instance(mediaType)
+                        .toMedia(entity);
             } else {
-                responder.sendString(status, String.valueOf(entity), headers);
+                entityToSend = entity;
             }
+            responder.sendString(status, String.valueOf(entityToSend), headers);
         } else {
             responder.sendStatus(status, headers);
         }

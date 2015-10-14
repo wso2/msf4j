@@ -174,6 +174,11 @@ public final class HttpResourceModel {
                 //Setup args for reflection call
                 Object[] args = new Object[paramInfoList.size()];
                 String acceptType = "*/*";
+                if (acceptTypes != null) {
+                    acceptType =
+                            (acceptTypes.contains("*/*")) ? producesMediaTypes.get(0) :
+                                    producesMediaTypes.stream().filter(acceptTypes::contains).findFirst().get();
+                }
                 int idx = 0;
                 for (ParameterInfo<?> paramInfo : paramInfoList) {
                     if (paramInfo.getAnnotation() != null) {
@@ -188,12 +193,6 @@ public final class HttpResourceModel {
                             args[idx] = getContextParamValue((ParameterInfo<Object>) paramInfo, request, responder);
                         }
                     } else if (request instanceof FullHttpRequest) {
-                        acceptType = (acceptTypes.contains("*/*")) ?
-                                producesMediaTypes.get(0) :
-                                producesMediaTypes.stream()
-                                        .filter(acceptTypes::contains)
-                                        .findFirst()
-                                        .get();
                         String content = ((FullHttpRequest) request).content().toString(Charsets.UTF_8);
                         Type paramType = paramInfo.getParameterType();
                         args[idx] = BeanConverter.instance((contentType != null) ? contentType : "*/*")

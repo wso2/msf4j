@@ -28,7 +28,6 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.LastHttpContent;
 import org.wso2.carbon.mss.HttpResponder;
-import org.wso2.carbon.mss.internal.router.beanconversion.BeanConverter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -93,12 +92,10 @@ class HttpMethodInfo {
             bodyConsumer = null;
             try {
                 Object returnVal = method.invoke(handler, args);
-                Object convertedVal = BeanConverter.instance(mediaType)
-                        .toMedia(returnVal);
                 //sending return value as output
                 new HttpMethodResponseHandler()
                         .setResponder(responder)
-                        .setEntity(convertedVal)
+                        .setEntity(returnVal)
                         .setMediaType(mediaType)
                         .send();
             } catch (InvocationTargetException e) {
@@ -124,9 +121,12 @@ class HttpMethodInfo {
     }
 
     /**
-     * Calls the {@link BodyConsumer#chunk(ByteBuf, HttpResponder)} method. If the chunk method call
-     * throws exception, the {@link BodyConsumer#handleError(Throwable)} will be called and this method will
-     * throw {@link HandlerException}.
+     * Calls the {@link org.wso2.carbon.mss.internal.router.BodyConsumer#chunk(io.netty.buffer.ByteBuf,
+     * org.wso2.carbon.mss.HttpResponder)} method.
+     *
+     * If the chunk method calls throws exception,
+     * the {@link org.wso2.carbon.mss.internal.router.BodyConsumer#handleError(Throwable)} will be called and
+     * this method will throw {@link org.wso2.carbon.mss.internal.router.HandlerException}.
      */
     private void bodyConsumerChunk(ByteBuf buffer) throws HandlerException {
         try {
@@ -137,8 +137,8 @@ class HttpMethodInfo {
     }
 
     /**
-     * Calls {@link BodyConsumer#finished(HttpResponder)} method. The current bodyConsumer will be set to {@code null}
-     * after the call.
+     * Calls {@link org.wso2.carbon.mss.internal.router.BodyConsumer#finished(org.wso2.carbon.mss.HttpResponder)}
+     * method. The current bodyConsumer will be set to {@code null} after the call.
      */
     private void bodyConsumerFinish() {
         BodyConsumer consumer = bodyConsumer;
@@ -147,8 +147,9 @@ class HttpMethodInfo {
     }
 
     /**
-     * Calls {@link BodyConsumer#handleError(Throwable)} and throws {@link HandlerException}. The current
-     * bodyConsumer will be set to {@code null} after the call.
+     * Calls {@link org.wso2.carbon.mss.internal.router.BodyConsumer#handleError(Throwable)} and
+     * throws {@link org.wso2.carbon.mss.internal.router.HandlerException}. The current bodyConsumer will be set
+     * to {@code null} after the call.
      */
     private HandlerException bodyConsumerError(Throwable cause) throws HandlerException {
         BodyConsumer consumer = bodyConsumer;
