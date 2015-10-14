@@ -86,7 +86,9 @@ public class HttpMethodResponseHandler {
                 });
             }
             setStatus(response.getStatus());
-            setMediaType(response.getMediaType().toString());
+            if (response.getMediaType() != null) {
+                setMediaType(response.getMediaType().toString());
+            }
         } else {
             this.entity = entity;
         }
@@ -105,7 +107,9 @@ public class HttpMethodResponseHandler {
         } else {
             status = HttpResponseStatus.NO_CONTENT;
         }
-        headers.put(HttpHeaders.Names.CONTENT_TYPE, mediaType);
+        if (mediaType != null) {
+            headers.put(HttpHeaders.Names.CONTENT_TYPE, mediaType);
+        }
         if (entity != null) {
             if (entity instanceof JsonObject) {
                 responder.sendString(status, entity.toString(), headers);
