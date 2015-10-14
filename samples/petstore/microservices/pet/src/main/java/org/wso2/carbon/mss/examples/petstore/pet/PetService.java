@@ -18,15 +18,21 @@
  */
 package org.wso2.carbon.mss.examples.petstore.pet;
 
+import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.mss.MicroservicesRunner;
+import org.wso2.carbon.mss.examples.petstore.pet.jedis.JedisUtil;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
 
 /**
  * Pet microservice
@@ -35,25 +41,57 @@ import javax.ws.rs.Path;
 public class PetService {
     private static final Logger log = LoggerFactory.getLogger(PetService.class);
 
-    @PUT
+    static {
+        Gson gson = new Gson();
+        for (int i = 0; i < 10; i++) {
+            Pet pet = new Pet();
+            pet.setId("pet-" + i);
+            pet.setAgeMonths(1 + i);
+            pet.setCategory(new Category("dog"));
+            pet.setDateAdded(System.currentTimeMillis());
+            pet.setImage("http://foo.com/dog.png");
+            pet.setPrice(100.99 + i);
+
+            JedisUtil.set(pet.getId(), gson.toJson(pet));
+        }
+    }
+
+    @POST
+    @Consumes("application/json")
     public void addPet(Pet pet) {
+        JedisUtil.set(pet.getId(), new Gson().toJson(pet));
         log.info("Added pet");
     }
 
     @DELETE
-    public void deletePet(String id) {
+    @Path("/{id}")
+    public Response deletePet(@PathParam("id") String id) {
         log.info("Deleted pet");
+        String json = JedisUtil.get(id);
+        if (json == null || json.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        JedisUtil.del(id);
+        return Response.status(Response.Status.OK).entity("OK").build();
     }
 
-    @POST
+    @PUT
+    @Consumes("application/json")
     public void updatePet(Pet pet) {
+        addPet(pet);
         log.info("Updated pet");
     }
 
     @GET
-    public Pet getPet() {
+    @Produces("application/json")
+    @Path("/{id}")
+    public Response getPet(@PathParam("id") String id) {
         log.info("Got pet");
-        return null;
+        String json = JedisUtil.get(id);
+        if (json == null || json.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.status(Response.Status.OK).entity(new Gson().fromJson(json, Pet.class)).build();
     }
 
     public static void main(String[] args) {

@@ -47,8 +47,8 @@ public class StockQuoteService {
     }
 
     /*
-    curl -v -X POST -H "Content-Type:application/json"
-    -d '{"symbol":"BAR","name": "Bar Inc.","last":149.62,"low":150.78,"high":149.18,"createdByHost":"10.100.1.192"}'
+    curl -v -X POST -H "Content-Type:application/json" \
+    -d '{"symbol":"BAR","name": "Bar Inc.","last":149.62,"low":150.78,"high":149.18,"createdByHost":"10.100.1.192"}' \
     http://localhost:8080/StockQuote/
      */
     @POST

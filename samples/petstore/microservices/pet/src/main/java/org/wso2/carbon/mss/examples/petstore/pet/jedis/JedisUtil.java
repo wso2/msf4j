@@ -25,6 +25,7 @@ import redis.clients.jedis.exceptions.JedisConnectionException;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * TODO: class level comment
@@ -43,7 +44,49 @@ public class JedisUtil {
     private static Jedis sentinel1 = new Jedis(SENTINEL1_IP, SENTINEL1_PORT);
     private static Jedis sentinel2 = new Jedis(SENTINEL2_IP, SENTINEL2_PORT);
 
-    public static Jedis getJedis() {
+    private static Jedis master = getJedis();
+    private static ReentrantLock lock = new ReentrantLock();
+
+    public static void set(String key, String value) {
+        fetchMaster();
+        try {
+            master.set(key, value);
+        } catch (JedisConnectionException e) {
+            master = getJedis();
+            master.set(key, value);
+        }
+    }
+
+    public static String get(String key) {
+        fetchMaster();
+        try {
+            return master.get(key);
+        } catch (JedisConnectionException e) {
+            master = getJedis();
+            return master.get(key);
+        }
+    }
+
+    public static void del(String key) {
+        fetchMaster();
+        try {
+            master.del(key);
+        } catch (JedisConnectionException e) {
+            master = getJedis();
+            master.del(key);
+        }
+    }
+
+    private static void fetchMaster() {
+        if (master == null) {
+            lock.lock();
+            if (master == null) {
+                master = getJedis();
+            }
+        }
+    }
+
+    private static Jedis getJedis() {
         try {
             log.info("Using sentinel: " + sentinel1);
             return getJedisInternal(sentinel1);

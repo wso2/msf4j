@@ -18,16 +18,20 @@
  */
 package org.wso2.carbon.mss.examples.petstore.pet;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
- * TODO: class level comment
+ * Represents a pet
  */
+@SuppressWarnings("unused")
+@XmlRootElement
 public class Pet {
 
     private String id;
     private Category category;
     private int ageMonths;
     private String details;
-    private float price;
+    private double price;
     private long dateAdded;
     private String image;
 
@@ -82,11 +86,11 @@ public class Pet {
         this.image = image;
     }
 
-    public float getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 }
