@@ -174,7 +174,7 @@ public final class HttpResourceModel {
                 //Setup args for reflection call
                 Object[] args = new Object[paramInfoList.size()];
                 String acceptType = "*/*";
-                if (acceptTypes != null) {
+                if (!producesMediaTypes.contains("*/*") && acceptTypes != null) {
                     acceptType =
                             (acceptTypes.contains("*/*")) ? producesMediaTypes.get(0) :
                                     producesMediaTypes.stream().filter(acceptTypes::contains).findFirst().get();
@@ -201,8 +201,7 @@ public final class HttpResourceModel {
                     idx++;
                 }
 
-                return new HttpMethodInfo(method, handler, request, responder, args, exceptionHandler,
-                        (acceptType != null) ? acceptType : "*/*");
+                return new HttpMethodInfo(method, handler, request, responder, args, exceptionHandler, acceptType);
             } else {
                 //Found a matching resource but could not find the right HttpMethod so return 405
                 throw new HandlerException(HttpResponseStatus.METHOD_NOT_ALLOWED, String.format
