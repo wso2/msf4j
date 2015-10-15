@@ -23,7 +23,7 @@ import io.netty.handler.codec.http.HttpRequest;
 import org.wso2.carbon.mss.HttpResponder;
 
 /**
- * Re-writes URL of an incoming request before any handlers or their hooks are called.
+ * Re-writes URL of an incoming request before any handlers or their interceptors are called.
  * This can be used to map an incoming URL to an URL that a handler understands. The re-writer overwrites the incoming
  * URL with the new value.
  * The re-writer can also send response to the clients, eg. redirect header,

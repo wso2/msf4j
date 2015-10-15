@@ -59,7 +59,7 @@ public final class HttpResourceHandler implements HttpHandler {
 
     private final PatternPathRouterWithGroups<HttpResourceModel> patternRouter = PatternPathRouterWithGroups.create();
     private final Iterable<Object> handlers;
-    private final Iterable<HandlerHook> handlerHooks;
+    private final Iterable<Interceptor> interceptors;
     private final URLRewriter urlRewriter;
 
     /**
@@ -67,15 +67,15 @@ public final class HttpResourceHandler implements HttpHandler {
      * constructs patternPathRouter which is routable by path to {@code HttpResourceModel} as destination of the route.
      *
      * @param handlers         Iterable of HttpHandler.
-     * @param handlerHooks     Iterable of HandlerHook.
+     * @param interceptors     Iterable of interceptors.
      * @param urlRewriter      URL re-writer.
      * @param exceptionHandler Exception handler
      */
-    public HttpResourceHandler(Iterable<? extends Object> handlers, Iterable<? extends HandlerHook> handlerHooks,
+    public HttpResourceHandler(Iterable<? extends Object> handlers, Iterable<? extends Interceptor> interceptors,
                                URLRewriter urlRewriter, ExceptionHandler exceptionHandler) {
         //Store the handlers to call init and destroy on all handlers.
         this.handlers = ImmutableList.copyOf(handlers);
-        this.handlerHooks = ImmutableList.copyOf(handlerHooks);
+        this.interceptors = ImmutableList.copyOf(interceptors);
         this.urlRewriter = urlRewriter;
 
         for (Object handler : handlers) {
@@ -257,12 +257,12 @@ public final class HttpResourceHandler implements HttpHandler {
                         }).findFirst().get();
                 HttpResourceModel httpResourceModel = matchedDestination.getDestination();
 
-                // Call preCall method of handler hooks.
+                // Call preCall method of handler interceptors.
                 boolean terminated = false;
                 HandlerInfo handlerInfo = new HandlerInfo(httpResourceModel.getMethod().getDeclaringClass().getName(),
                         httpResourceModel.getMethod().getName());
-                for (HandlerHook hook : handlerHooks) {
-                    if (!hook.preCall(request, responder, handlerInfo)) {
+                for (Interceptor interceptor : interceptors) {
+                    if (!interceptor.preCall(request, responder, handlerInfo)) {
                         // Terminate further request processing if preCall returns false.
                         terminated = true;
                         break;
@@ -272,7 +272,7 @@ public final class HttpResourceHandler implements HttpHandler {
                 // Call httpresource handle method, return the HttpMethodInfo Object.
                 if (!terminated) {
                     // Wrap responder to make post hook calls.
-                    responder = new WrappedHttpResponder(responder, handlerHooks, request, handlerInfo);
+                    responder = new WrappedHttpResponder(responder, interceptors, request, handlerInfo);
                     return httpResourceModel.handle(request,
                             responder,
                             matchedDestination.getGroupNameValues(),

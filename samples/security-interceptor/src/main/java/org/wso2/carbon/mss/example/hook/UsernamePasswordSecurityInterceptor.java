@@ -16,21 +16,19 @@
  *  under the License.
  */
 
-package org.wso2.carbon.mss.example;
-
-import org.wso2.carbon.mss.MicroservicesRunner;
-import org.wso2.carbon.mss.example.hook.LoggingHeadersInterceptor;
-import org.wso2.carbon.mss.example.hook.UsernamePasswordSecurityInterceptor;
-import org.wso2.carbon.mss.example.service.Helloworld;
+package org.wso2.carbon.mss.example.hook;
 
 /**
- * Main Application Class.
+ * Demonstrate usage of  AbstractBasicAuthHook, just check username and password are equal or not.
  */
-public class Application {
-    public static void main(String[] args) {
-        new MicroservicesRunner()
-                .addInterceptor(new UsernamePasswordSecurityInterceptor())
-                .addInterceptor(new LoggingHeadersInterceptor())
-                .deploy(new Helloworld()).start();
+public class UsernamePasswordSecurityInterceptor extends AbstractBasicAuthInterceptor {
+    @Override
+    protected boolean authenticate(String username, String password) {
+
+        // The authentication logic goes in here. For simplicity, we just check that username == password
+        if (username.equals(password)) {
+            return true;
+        }
+        return false;
     }
 }

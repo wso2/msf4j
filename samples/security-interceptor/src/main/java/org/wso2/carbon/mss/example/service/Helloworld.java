@@ -16,19 +16,22 @@
  *  under the License.
  */
 
-package org.wso2.carbon.mss.example.hook;
+package org.wso2.carbon.mss.example.service;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 
 /**
- * Demonstrate usage of  AbstractBasicAuthHook, just check username and password are equal or not.
+ * Helloworld resource class.
  */
-public class UsernamePasswordSecurityHook extends AbstractBasicAuthHook {
-    @Override
-    protected boolean authenticate(String username, String password) {
+@Path("/hello")
+public class Helloworld {
 
-        // The authentication logic goes in here. For simplicity, we just check that username == password
-        if (username.equals(password)) {
-            return true;
-        }
-        return false;
+    @GET
+    @Path("/{user}")
+    public String getUser(@PathParam("user") String user) {
+        return "Hello " + user;
     }
+
 }

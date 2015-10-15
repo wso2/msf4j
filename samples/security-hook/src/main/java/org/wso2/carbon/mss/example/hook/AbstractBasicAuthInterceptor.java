@@ -24,8 +24,8 @@ import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.wso2.carbon.mss.HttpResponder;
-import org.wso2.carbon.mss.internal.router.HandlerHook;
 import org.wso2.carbon.mss.internal.router.HandlerInfo;
+import org.wso2.carbon.mss.internal.router.Interceptor;
 
 import java.nio.charset.Charset;
 import java.util.Base64;
@@ -34,7 +34,7 @@ import java.util.Base64;
  * AbstractBasicAuthHook hide Netty based header processing and provide authenticate()
  * method to plug-in custom authentication logic.
  */
-public abstract class AbstractBasicAuthHook implements HandlerHook {
+public abstract class AbstractBasicAuthInterceptor implements Interceptor {
 
     private static final String AUTH_TYPE_BASIC = "Basic";
     private static final int AUTH_TYPE_BASIC_LENGTH = AUTH_TYPE_BASIC.length();
@@ -48,7 +48,7 @@ public abstract class AbstractBasicAuthHook implements HandlerHook {
                 String authType = authHeader.substring(0, AUTH_TYPE_BASIC_LENGTH);
                 String authEncoded = authHeader.substring(AUTH_TYPE_BASIC_LENGTH).trim();
                 if (AUTH_TYPE_BASIC.equals(authType) && !authEncoded.isEmpty()) {
-                    byte[] decodedByte =  authEncoded.getBytes(Charset.forName("UTF-8"));
+                    byte[] decodedByte = authEncoded.getBytes(Charset.forName("UTF-8"));
                     String authDecoded = new String(Base64.getDecoder().decode(decodedByte), Charset.forName("UTF-8"));
                     String[] authParts = authDecoded.split(":");
                     String username = authParts[0];

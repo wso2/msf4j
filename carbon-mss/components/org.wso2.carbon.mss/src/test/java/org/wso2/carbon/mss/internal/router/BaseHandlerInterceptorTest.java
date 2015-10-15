@@ -26,7 +26,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Map;
 
-public class BaseHandlerHookTest {
+public class BaseHandlerInterceptorTest {
 
     protected static URI baseURI;
 
