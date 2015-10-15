@@ -19,8 +19,8 @@
 package org.wso2.carbon.mss.example;
 
 import org.wso2.carbon.mss.MicroservicesRunner;
-import org.wso2.carbon.mss.example.hook.LoggingHeadersHook;
-import org.wso2.carbon.mss.example.hook.UsernamePasswordSecurityHook;
+import org.wso2.carbon.mss.example.hook.LoggingHeadersInterceptor;
+import org.wso2.carbon.mss.example.hook.UsernamePasswordSecurityInterceptor;
 import org.wso2.carbon.mss.example.service.Helloworld;
 
 /**
@@ -29,8 +29,8 @@ import org.wso2.carbon.mss.example.service.Helloworld;
 public class Application {
     public static void main(String[] args) {
         new MicroservicesRunner()
-                .addHook(new UsernamePasswordSecurityHook())
-                .addHook(new LoggingHeadersHook())
+                .addInterceptor(new UsernamePasswordSecurityInterceptor())
+                .addInterceptor(new LoggingHeadersInterceptor())
                 .deploy(new Helloworld()).start();
     }
 }

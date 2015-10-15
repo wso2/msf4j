@@ -34,12 +34,12 @@ import java.net.URI;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Tests handler hooks.
+ * Tests handler interceptor.
  */
-public class HandlerHookTest2 extends BaseHandlerHookTest {
-    private static final Logger LOG = LoggerFactory.getLogger(HandlerHookTest2.class);
-    private static final TestHandlerHook handlerHook1 = new TestHandlerHook();
-    private static final TestHandlerHook handlerHook2 = new TestHandlerHook();
+public class HandlerInterceptorTest2 extends BaseHandlerInterceptorTest {
+    private static final Logger LOG = LoggerFactory.getLogger(HandlerInterceptorTest2.class);
+    private static final TestInterceptor interceptor1 = new TestInterceptor();
+    private static final TestInterceptor interceptor2 = new TestInterceptor();
     private static String hostname = "127.0.0.1";
     private static NettyHttpService service;
 
@@ -48,7 +48,7 @@ public class HandlerHookTest2 extends BaseHandlerHookTest {
 
         NettyHttpService.Builder builder = NettyHttpService.builder();
         builder.addHttpHandlers(ImmutableList.of(new TestHandler()));
-        builder.setHandlerHooks(ImmutableList.of(handlerHook1, handlerHook2));
+        builder.setInterceptors(ImmutableList.of(interceptor1, interceptor2));
         builder.setHost(hostname);
 
         service = builder.build();
@@ -67,8 +67,8 @@ public class HandlerHookTest2 extends BaseHandlerHookTest {
 
     @Before
     public void reset() {
-        handlerHook1.reset();
-        handlerHook2.reset();
+        interceptor1.reset();
+        interceptor2.reset();
     }
 
     @Test
@@ -78,13 +78,13 @@ public class HandlerHookTest2 extends BaseHandlerHookTest {
 
         // Wait for any post handlers to be called
         TimeUnit.MILLISECONDS.sleep(100);
-        Assert.assertEquals(1, handlerHook1.getNumPreCalls());
+        Assert.assertEquals(1, interceptor1.getNumPreCalls());
 
         // The second pre-call should not have happened due to exception in the first pre-call
         // None of the post calls should have happened.
-        Assert.assertEquals(0, handlerHook1.getNumPostCalls());
-        Assert.assertEquals(0, handlerHook2.getNumPreCalls());
-        Assert.assertEquals(0, handlerHook2.getNumPostCalls());
+        Assert.assertEquals(0, interceptor1.getNumPostCalls());
+        Assert.assertEquals(0, interceptor2.getNumPreCalls());
+        Assert.assertEquals(0, interceptor2.getNumPostCalls());
     }
 
     @Test
@@ -92,11 +92,11 @@ public class HandlerHookTest2 extends BaseHandlerHookTest {
         int status = doGet("/test/v1/resource", "X-Request-Type", "PostException");
         Assert.assertEquals(HttpResponseStatus.OK.code(), status);
 
-        Assert.assertEquals(1, handlerHook1.getNumPreCalls());
-        Assert.assertEquals(1, handlerHook1.getNumPostCalls());
+        Assert.assertEquals(1, interceptor1.getNumPreCalls());
+        Assert.assertEquals(1, interceptor1.getNumPostCalls());
 
-        Assert.assertEquals(1, handlerHook2.getNumPreCalls());
-        Assert.assertEquals(1, handlerHook2.getNumPostCalls());
+        Assert.assertEquals(1, interceptor2.getNumPreCalls());
+        Assert.assertEquals(1, interceptor2.getNumPostCalls());
     }
 
     @Test
@@ -106,10 +106,10 @@ public class HandlerHookTest2 extends BaseHandlerHookTest {
 
         // Wait for any post handlers to be called
         TimeUnit.MILLISECONDS.sleep(100);
-        Assert.assertEquals(0, handlerHook1.getNumPreCalls());
-        Assert.assertEquals(0, handlerHook1.getNumPostCalls());
+        Assert.assertEquals(0, interceptor1.getNumPreCalls());
+        Assert.assertEquals(0, interceptor1.getNumPostCalls());
 
-        Assert.assertEquals(0, handlerHook2.getNumPreCalls());
-        Assert.assertEquals(0, handlerHook2.getNumPostCalls());
+        Assert.assertEquals(0, interceptor2.getNumPreCalls());
+        Assert.assertEquals(0, interceptor2.getNumPostCalls());
     }
 }

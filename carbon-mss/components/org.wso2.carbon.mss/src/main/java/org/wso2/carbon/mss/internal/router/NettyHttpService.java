@@ -87,7 +87,7 @@ public final class NettyHttpService extends AbstractIdleService {
      * @param rejectedExecutionHandler rejection policy for executor.
      * @param urlRewriter              URLRewriter to rewrite incoming URLs.
      * @param httpHandlers             HttpHandlers to handle the calls.
-     * @param handlerHooks             Hooks to be called before/after request processing by httpHandlers.
+     * @param interceptors             Interceptors to be called before/after request processing by httpHandlers.
      * @deprecated Use {@link NettyHttpService.Builder} instead.
      */
     @Deprecated
@@ -96,9 +96,9 @@ public final class NettyHttpService extends AbstractIdleService {
                             Map<ChannelOption, Object> channelConfigs,
                             RejectedExecutionHandler rejectedExecutionHandler, URLRewriter urlRewriter,
                             Iterable<? extends HttpHandler> httpHandlers,
-                            Iterable<? extends HandlerHook> handlerHooks, int httpChunkLimit) {
+                            Iterable<? extends Interceptor> interceptors, int httpChunkLimit) {
         this(bindAddress, bossThreadPoolSize, workerThreadPoolSize, execThreadPoolSize,
-                channelConfigs, rejectedExecutionHandler, urlRewriter, httpHandlers, handlerHooks, httpChunkLimit,
+                channelConfigs, rejectedExecutionHandler, urlRewriter, httpHandlers, interceptors, httpChunkLimit,
                 null, null, new ExceptionHandler());
     }
 
@@ -113,7 +113,7 @@ public final class NettyHttpService extends AbstractIdleService {
      * @param rejectedExecutionHandler rejection policy for executor.
      * @param urlRewriter              URLRewriter to rewrite incoming URLs.
      * @param httpHandlers             HttpHandlers to handle the calls.
-     * @param handlerHooks             Hooks to be called before/after request processing by httpHandlers.
+     * @param interceptors             Interceptors to be called before/after request processing by httpHandlers.
      * @param pipelineModifier         Function used to modify the pipeline.
      * @param sslHandlerFactory        Object used to share SSL certificate details
      * @param exceptionHandler         Handles exceptions from calling handler methods
@@ -123,7 +123,7 @@ public final class NettyHttpService extends AbstractIdleService {
                              Map<ChannelOption, Object> channelConfigs,
                              RejectedExecutionHandler rejectedExecutionHandler, URLRewriter urlRewriter,
                              Iterable<? extends HttpHandler> httpHandlers,
-                             Iterable<? extends HandlerHook> handlerHooks, int httpChunkLimit,
+                             Iterable<? extends Interceptor> interceptors, int httpChunkLimit,
                              Function<ChannelPipeline, ChannelPipeline> pipelineModifier,
                              SSLHandlerFactory sslHandlerFactory, ExceptionHandler exceptionHandler) {
         this.bindAddress = bindAddress;
@@ -133,7 +133,7 @@ public final class NettyHttpService extends AbstractIdleService {
         this.channelConfigs = ImmutableMap.copyOf(channelConfigs);
         this.rejectedExecutionHandler = rejectedExecutionHandler;
         this.channelGroup = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-        this.resourceHandler = new HttpResourceHandler(httpHandlers, handlerHooks, urlRewriter, exceptionHandler);
+        this.resourceHandler = new HttpResourceHandler(httpHandlers, interceptors, urlRewriter, exceptionHandler);
         this.handlerContext = new BasicHandlerContext(this.resourceHandler);
         this.httpChunkLimit = httpChunkLimit;
         this.pipelineModifier = pipelineModifier;
@@ -237,7 +237,7 @@ public final class NettyHttpService extends AbstractIdleService {
         private final Map<ChannelOption, Object> channelConfigs;
 
         private Iterable<? extends HttpHandler> handlers;
-        private Iterable<? extends HandlerHook> handlerHooks = ImmutableList.of();
+        private Iterable<? extends Interceptor> interceptors = ImmutableList.of();
         private URLRewriter urlRewriter = null;
         private int bossThreadPoolSize;
         private int workerThreadPoolSize;
@@ -287,19 +287,19 @@ public final class NettyHttpService extends AbstractIdleService {
         }
 
         /**
-         * Set HandlerHooks to be executed pre and post handler calls. They are executed in the same order as specified
+         * Set Interceptors to be executed pre and post handler calls. They are executed in the same order as specified
          * by the iterable.
          *
-         * @param handlerHooks Iterable of HandlerHooks.
+         * @param interceptors Iterable of interceptors.
          * @return an instance of {@code Builder}.
          */
-        public Builder setHandlerHooks(Iterable<? extends HandlerHook> handlerHooks) {
-            this.handlerHooks = handlerHooks;
+        public Builder setInterceptors(Iterable<? extends Interceptor> interceptors) {
+            this.interceptors = interceptors;
             return this;
         }
 
         /**
-         * Set URLRewriter to re-write URL of an incoming request before any handlers or their hooks are called.
+         * Set URLRewriter to re-write URL of an incoming request before any handlers or their interceptors are called.
          *
          * @param urlRewriter instance of URLRewriter.
          * @return an instance of {@code Builder}.
@@ -434,7 +434,7 @@ public final class NettyHttpService extends AbstractIdleService {
 
             return new NettyHttpService(bindAddress, bossThreadPoolSize, workerThreadPoolSize,
                     execThreadPoolSize, channelConfigs, rejectedExecutionHandler,
-                    urlRewriter, handlers, handlerHooks, httpChunkLimit, pipelineModifier,
+                    urlRewriter, handlers, interceptors, httpChunkLimit, pipelineModifier,
                     sslHandlerFactory, exceptionHandler);
         }
     }

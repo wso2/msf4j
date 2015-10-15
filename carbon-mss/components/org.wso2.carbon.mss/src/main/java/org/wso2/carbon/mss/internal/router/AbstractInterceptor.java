@@ -23,11 +23,11 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import org.wso2.carbon.mss.HttpResponder;
 
 /**
- * A base implementation of {@link HandlerHook} that provides no-op for both
- * {@link HandlerHook#preCall(HttpRequest, org.wso2.carbon.mss.HttpResponder, HandlerInfo)}
- * and {@link HandlerHook#postCall(HttpRequest, HttpResponseStatus, HandlerInfo)} methods.
+ * A base implementation of {@link Interceptor} that provides no-op for both
+ * {@link Interceptor#preCall(HttpRequest, org.wso2.carbon.mss.HttpResponder, HandlerInfo)}
+ * and {@link Interceptor#postCall(HttpRequest, HttpResponseStatus, HandlerInfo)} methods.
  */
-public abstract class AbstractHandlerHook implements HandlerHook {
+public abstract class AbstractInterceptor implements Interceptor {
     @Override
     public boolean preCall(HttpRequest request, HttpResponder responder, HandlerInfo handlerInfo) {
         return true;

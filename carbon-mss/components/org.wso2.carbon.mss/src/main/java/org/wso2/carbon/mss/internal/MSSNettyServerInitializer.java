@@ -25,8 +25,8 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
-import org.wso2.carbon.mss.internal.router.HandlerHook;
 import org.wso2.carbon.mss.internal.router.HttpResourceHandler;
+import org.wso2.carbon.mss.internal.router.Interceptor;
 import org.wso2.carbon.mss.internal.router.RequestRouter;
 import org.wso2.carbon.transport.http.netty.listener.CarbonNettyServerInitializer;
 
@@ -40,7 +40,7 @@ import java.util.Map;
 public class MSSNettyServerInitializer implements CarbonNettyServerInitializer {
 
     private DefaultEventExecutorGroup eventExecutorGroup;
-    private List<HandlerHook> hooks = new ArrayList<>();
+    private List<Interceptor> interceptors = new ArrayList<>();
 
     @Override
     public void setup(Map<String, String> map) {
@@ -57,7 +57,7 @@ public class MSSNettyServerInitializer implements CarbonNettyServerInitializer {
 
         HttpResourceHandler resourceHandler =
                 new HttpResourceHandler(MicroservicesRegistry.getInstance().getHttpServices(),
-                       hooks, null, null);
+                                        interceptors, null, null);
         pipeline.addLast(eventExecutorGroup, "router", new RequestRouter(resourceHandler, 0)); //TODO: remove limit
 
         //TODO: see what can be done
@@ -66,7 +66,7 @@ public class MSSNettyServerInitializer implements CarbonNettyServerInitializer {
             }*/
     }
 
-    public void addHandlerHook(HandlerHook hook) {
-        hooks.add(hook);
+    public void addInterceptor(Interceptor interceptor) {
+        interceptors.add(interceptor);
     }
 }

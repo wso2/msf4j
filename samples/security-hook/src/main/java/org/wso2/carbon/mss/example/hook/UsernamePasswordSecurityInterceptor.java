@@ -21,7 +21,7 @@ package org.wso2.carbon.mss.example.hook;
 /**
  * Demonstrate usage of  AbstractBasicAuthHook, just check username and password are equal or not.
  */
-public class UsernamePasswordSecurityHook extends AbstractBasicAuthHook {
+public class UsernamePasswordSecurityInterceptor extends AbstractBasicAuthInterceptor {
     @Override
     protected boolean authenticate(String username, String password) {
 

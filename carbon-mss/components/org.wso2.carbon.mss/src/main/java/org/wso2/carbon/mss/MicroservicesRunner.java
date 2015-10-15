@@ -22,7 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.mss.internal.MSSNettyServerInitializer;
 import org.wso2.carbon.mss.internal.MicroservicesRegistry;
-import org.wso2.carbon.mss.internal.router.HandlerHook;
+import org.wso2.carbon.mss.internal.router.Interceptor;
 import org.wso2.carbon.transport.http.netty.internal.NettyTransportDataHolder;
 import org.wso2.carbon.transport.http.netty.internal.config.ListenerConfiguration;
 import org.wso2.carbon.transport.http.netty.internal.config.TransportConfigurationBuilder;
@@ -62,8 +62,8 @@ public class MicroservicesRunner {
         return this;
     }
 
-    public MicroservicesRunner addHook(HandlerHook hook) {
-        serverInitializer.addHandlerHook(hook);
+    public MicroservicesRunner addInterceptor(Interceptor interceptor) {
+        serverInitializer.addInterceptor(interceptor);
         return this;
     }
 
