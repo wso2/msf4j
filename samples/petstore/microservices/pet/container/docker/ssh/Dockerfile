@@ -19,7 +19,7 @@
 FROM ubuntu:14.04
 MAINTAINER architecture@wso2.org
 
-RUN apt-get update && apt-get install -y openssh-server && apt-get install -y dnsutils
+RUN apt-get update && apt-get install -y openssh-server dnsutils
 RUN mkdir -p /var/run/sshd
 RUN echo 'root:wso2' | chpasswd
 RUN sed -i "s/PermitRootLogin without-password/#PermitRootLogin without-password/" /etc/ssh/sshd_config
