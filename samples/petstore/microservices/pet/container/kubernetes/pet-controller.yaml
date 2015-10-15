@@ -26,3 +26,8 @@ spec:
           # value: env
         ports:
         - containerPort: 80
+        env:
+        - name: SENTINEL1_HOST
+          value: redis-sentinel 
+          name: SENTINEL1_PORT
+          value: 26379 
