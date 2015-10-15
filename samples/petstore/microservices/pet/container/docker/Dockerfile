@@ -26,8 +26,8 @@ WORKDIR /opt
 # --------------------------------
 # Copy scripts, packages & plugins
 # --------------------------------
-COPY packages/petstore-pet-1.0.0-SNAPSHOT.jar /opt/
 ADD packages/jdk-8u60-linux-x64.gz /opt/
+COPY packages/petstore-pet-1.0.0-SNAPSHOT.jar /opt/
 
 ENV JAVA_HOME /opt/jdk1.8.0_60
 
