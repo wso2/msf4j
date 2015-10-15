@@ -62,16 +62,16 @@ here is the summary of commands:
 
 ```
 # Create a bootstrap master
-kubectl create -f examples/redis/redis-master.yaml
+kubectl create -f redis-master.yaml
 
 # Create a service to track the sentinels
-kubectl create -f examples/redis/redis-sentinel-service.yaml
+kubectl create -f redis-sentinel-service.yaml
 
 # Create a replication controller for redis servers
-kubectl create -f examples/redis/redis-controller.yaml
+kubectl create -f redis-controller.yaml
 
 # Create a replication controller for redis sentinels
-kubectl create -f examples/redis/redis-sentinel-controller.yaml
+kubectl create -f redis-sentinel-controller.yaml
 
 # Scale both replication controllers
 kubectl scale rc redis --replicas=3

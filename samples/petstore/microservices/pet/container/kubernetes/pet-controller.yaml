@@ -5,7 +5,7 @@ metadata:
   labels:
     name: pet
 spec:
-  replicas: 20
+  replicas: 1
   selector:
     name: pet
   template:
@@ -24,10 +24,16 @@ spec:
           # info, comment out the 'value: dns' line above, and uncomment the
           # line below.
           # value: env
-        ports:
-        - containerPort: 80
-        env:
         - name: SENTINEL1_HOST
-          value: redis-sentinel 
-          name: SENTINEL1_PORT
-          value: 26379 
+          value: redis-sentinel
+        - name: SENTINEL1_PORT
+          value: "26379"
+        ports:
+        - containerPort: 8080
+      - name: ssh
+        image: wso2mss/ssh
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        ports:
+        - containerPort: 22
