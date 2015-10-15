@@ -28,24 +28,50 @@ import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * TODO: class level comment
+ * Utility class for connecting to Redis & handling Redis calls
  */
 public class JedisUtil {
     private static final Logger log = LoggerFactory.getLogger(JedisUtil.class);
 
-    private static final String SENTINEL1_IP = "127.0.0.1";
-    private static final String SENTINEL2_IP = "127.0.0.1";
+    private static final String SENTINEL1_HOST;
+    private static final String SENTINEL2_HOST;
 
-    private static final int SENTINEL1_PORT = 5000;
-    private static final int SENTINEL2_PORT = 5001;
+    private static final int SENTINEL1_PORT;
+    private static final int SENTINEL2_PORT;
 
     private static final String MASTER_NAME = "mymaster";
 
-    private static Jedis sentinel1 = new Jedis(SENTINEL1_IP, SENTINEL1_PORT);
-    private static Jedis sentinel2 = new Jedis(SENTINEL2_IP, SENTINEL2_PORT);
+    private static Jedis sentinel1;
+    private static Jedis sentinel2;
+
+    private static ReentrantLock lock = new ReentrantLock();
+
+    static {
+        SENTINEL1_HOST =
+                System.getenv("SENTINEL1_HOST") != null ?
+                        System.getenv("SENTINEL1_HOST") :
+                        System.getProperty("SENTINEL1_HOST", "127.0.0.1");
+        SENTINEL2_HOST =
+                System.getenv("SENTINEL2_HOST") != null ?
+                        System.getenv("SENTINEL2_HOST") :
+                        System.getProperty("SENTINEL2_HOST", "127.0.0.1");
+        SENTINEL1_PORT =
+                Integer.parseInt(System.getenv("SENTINEL1_PORT") != null ?
+                        System.getenv("SENTINEL1_PORT") :
+                        System.getProperty("SENTINEL1_PORT", "5000"));
+        SENTINEL2_PORT =
+                Integer.parseInt(System.getenv("SENTINEL2_PORT") != null ?
+                        System.getenv("SENTINEL2_PORT") :
+                        System.getProperty("SENTINEL2_PORT", "5001"));
+
+        sentinel1 = new Jedis(SENTINEL1_HOST, SENTINEL1_PORT);
+        sentinel2 = new Jedis(SENTINEL2_HOST, SENTINEL2_PORT);
+
+        log.info("Sentinel 1: " + SENTINEL1_HOST + ":" + SENTINEL1_PORT);
+        log.info("Sentinel 2: " + SENTINEL2_HOST + ":" + SENTINEL2_PORT);
+    }
 
     private static Jedis master = getJedis();
-    private static ReentrantLock lock = new ReentrantLock();
 
     public static void set(String key, String value) {
         fetchMaster();
@@ -106,7 +132,7 @@ public class JedisUtil {
             if (MASTER_NAME.equals(master.get("name"))) {
                 String masterIP = master.get("ip");
                 int masterPort = Integer.parseInt(master.get("port"));
-                log.debug("master IP: {}, master port: {}", masterIP, masterPort);
+                log.info("Redis master : {}:{}", masterIP, masterPort);
                 return new Jedis(masterIP, masterPort);
             }
         }
@@ -115,13 +141,14 @@ public class JedisUtil {
 
     public static void main(String[] args) {
         while (true) {
-            Jedis jedis = JedisUtil.getJedis();
-            if (jedis != null) {
-                jedis.set("foo", "foo-" + System.currentTimeMillis());
-            }
             try {
-                Thread.sleep(1000);
-            } catch (InterruptedException ignored) {
+                JedisUtil.set("foo", "foo-" + System.currentTimeMillis());
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ignored) {
+                }
+            } catch (Exception e) {
+                log.error("Exception occurred while set", e);
             }
         }
     }
