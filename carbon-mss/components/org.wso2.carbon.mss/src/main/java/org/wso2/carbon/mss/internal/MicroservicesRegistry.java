@@ -35,10 +35,10 @@ import java.util.Set;
 public class MicroservicesRegistry {
 
     private static final Logger LOG = LoggerFactory.getLogger(MicroservicesRegistry.class);
-    private static MicroservicesRegistry instance = new MicroservicesRegistry();
-    private volatile Set<Object> httpServices = new HashSet<>();
-    private List<Interceptor> interceptors = new ArrayList<>();
-    private HttpResourceHandler httpResourceHandler =
+    private static final MicroservicesRegistry instance = new MicroservicesRegistry();
+    private final Set<Object> httpServices = new HashSet<>();
+    private final List<Interceptor> interceptors = new ArrayList<>();
+    private volatile HttpResourceHandler httpResourceHandler =
             new HttpResourceHandler(Collections.emptyList(), interceptors, null, null);
 
     private MicroservicesRegistry() {
