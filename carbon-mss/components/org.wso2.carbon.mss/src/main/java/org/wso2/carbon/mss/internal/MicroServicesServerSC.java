@@ -62,7 +62,7 @@ public class MicroServicesServerSC {
 
                 public void run() {
                     while (true) {
-                        if (microservicesRegistry.getHttpServices().size() == jaxRsServiceCount) {
+                        if (microservicesRegistry.getServiceCount() == jaxRsServiceCount) {
                             LOG.info("Starting micro services server...");
 
                             // Create an OSGi services (HTTP/HTTPS) & register it with the relevant CHANNEL_ID_KEY

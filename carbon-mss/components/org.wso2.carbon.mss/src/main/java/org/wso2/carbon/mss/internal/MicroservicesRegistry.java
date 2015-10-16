@@ -67,12 +67,12 @@ public class MicroservicesRegistry {
         interceptors.add(interceptor);
     }
 
+    public int getServiceCount() {
+        return httpServices.size();
+    }
+
     private void updateHttpResourceHandler() {
         httpResourceHandler =
                 new HttpResourceHandler(Collections.unmodifiableSet(httpServices), interceptors, null, null);
-    }
-
-    Set<Object> getHttpServices() {
-        return Collections.unmodifiableSet(httpServices);
     }
 }
