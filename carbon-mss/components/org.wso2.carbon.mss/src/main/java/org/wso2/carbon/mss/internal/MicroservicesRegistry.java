@@ -65,6 +65,7 @@ public class MicroservicesRegistry {
 
     public void addInterceptor(Interceptor interceptor) {
         interceptors.add(interceptor);
+        updateHttpResourceHandler();
     }
 
     public int getServiceCount() {
