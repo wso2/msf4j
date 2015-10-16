@@ -54,11 +54,10 @@ public class MSSNettyServerInitializer implements CarbonNettyServerInitializer {
         pipeline.addLast("aggregator", new HttpObjectAggregator(Integer.MAX_VALUE));  //TODO: fix
         pipeline.addLast("encoder", new HttpResponseEncoder());
         pipeline.addLast("compressor", new HttpContentCompressor());
-
-        HttpResourceHandler resourceHandler =
-                new HttpResourceHandler(MicroservicesRegistry.getInstance().getHttpServices(),
-                                        interceptors, null, null);
-        pipeline.addLast(eventExecutorGroup, "router", new RequestRouter(resourceHandler, 0)); //TODO: remove limit
+        pipeline.addLast(eventExecutorGroup, "router", new RequestRouter(MicroservicesRegistry
+                .getInstance().getHttpResourceHandler(), 0));
+        //TODO: remove
+        // limit
 
         //TODO: see what can be done
             /*if (pipelineModifier != null) {
