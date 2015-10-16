@@ -63,7 +63,7 @@ public class MicroservicesRunner {
     }
 
     public MicroservicesRunner addInterceptor(Interceptor interceptor) {
-        serverInitializer.addInterceptor(interceptor);
+        MicroservicesRegistry.getInstance().addInterceptor(interceptor);
         return this;
     }
 
