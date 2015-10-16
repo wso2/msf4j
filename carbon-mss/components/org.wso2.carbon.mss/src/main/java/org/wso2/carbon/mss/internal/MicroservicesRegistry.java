@@ -63,6 +63,10 @@ public class MicroservicesRegistry {
         return httpResourceHandler;
     }
 
+    public void addInterceptor(Interceptor interceptor) {
+        interceptors.add(interceptor);
+    }
+
     private void updateHttpResourceHandler() {
         httpResourceHandler =
                 new HttpResourceHandler(Collections.unmodifiableSet(httpServices), interceptors, null, null);

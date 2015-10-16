@@ -40,7 +40,6 @@ import java.util.Map;
 public class MSSNettyServerInitializer implements CarbonNettyServerInitializer {
 
     private DefaultEventExecutorGroup eventExecutorGroup;
-    private List<Interceptor> interceptors = new ArrayList<>();
 
     @Override
     public void setup(Map<String, String> map) {
@@ -63,9 +62,5 @@ public class MSSNettyServerInitializer implements CarbonNettyServerInitializer {
             /*if (pipelineModifier != null) {
                 pipelineModifier.apply(pipeline);
             }*/
-    }
-
-    public void addInterceptor(Interceptor interceptor) {
-        interceptors.add(interceptor);
     }
 }
