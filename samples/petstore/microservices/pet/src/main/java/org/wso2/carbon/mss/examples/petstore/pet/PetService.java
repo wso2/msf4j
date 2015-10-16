@@ -42,6 +42,11 @@ public class PetService {
     private static final Logger log = LoggerFactory.getLogger(PetService.class);
 
     static {
+        log.info("SENTINEL1_HOST: {}", System.getenv("SENTINEL1_HOST"));
+        log.info("SENTINEL1_PORT: {}", System.getenv("SENTINEL1_PORT"));
+    }
+
+    /*static {
         Gson gson = new Gson();
         for (int i = 0; i < 10; i++) {
             Pet pet = new Pet();
@@ -54,7 +59,7 @@ public class PetService {
 
             JedisUtil.set(pet.getId(), gson.toJson(pet));
         }
-    }
+    }*/
 
     @POST
     @Consumes("application/json")
