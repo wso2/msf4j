@@ -19,6 +19,8 @@
 
 package org.wso2.carbon.mss.internal.router;
 
+import java.lang.reflect.Method;
+
 /**
  * Contains information about {@link org.wso2.carbon.mss.HttpHandler} method.
  */
@@ -26,9 +28,12 @@ public class HandlerInfo {
     private final String handlerName;
     private final String methodName;
 
-    public HandlerInfo(String handlerName, String methodName) {
+    private final Method method;
+
+    public HandlerInfo(String handlerName, String methodName, Method method) {
         this.handlerName = handlerName;
         this.methodName = methodName;
+        this.method = method;
     }
 
     public String getHandlerName() {
@@ -37,5 +42,9 @@ public class HandlerInfo {
 
     public String getMethodName() {
         return methodName;
+    }
+
+    public Method getMethod() {
+        return method;
     }
 }

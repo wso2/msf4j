@@ -152,6 +152,31 @@
                 <artifactId>org.apache.servicemix.bundles.commons-beanutils</artifactId>
                 <version>${beanutils.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.metrics</groupId>
+                <artifactId>org.wso2.carbon.metrics.manager</artifactId>
+                <version>${carbon.metrics.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.metrics</groupId>
+                <artifactId>org.wso2.carbon.metrics.impl</artifactId>
+                <version>${carbon.metrics.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.ws.commons.axiom.wso2</groupId>
+                        <artifactId>axiom</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>xerces</groupId>
+                        <artifactId>xercesImpl</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.metrics</groupId>
+                <artifactId>org.wso2.carbon.metrics.annotation</artifactId>
+                <version>${carbon.metrics.version}</version>
+            </dependency>
 
             <!-- Test dependencies -->
             <dependency>
@@ -281,6 +306,7 @@
         <!-- Dependencies -->
         <carbon.kernel.version>5.0.0-SNAPSHOT</carbon.kernel.version>
         <carbon.mss.version>1.0.0-SNAPSHOT</carbon.mss.version>
+        <carbon.metrics.version>1.2.0-SNAPSHOT</carbon.metrics.version>
 
         <osgi.api.version>6.0.0</osgi.api.version>
         <equinox.osgi.version>3.10.2.v20150203-1939</equinox.osgi.version>
