@@ -154,7 +154,6 @@
                             <productConfigurationFile>${basedir}/carbon.product
                             </productConfigurationFile>
                             <repositoryURL>file:${basedir}/target/p2-repo</repositoryURL>
-
                             <targetPath>
                                 file:${basedir}/target/wso2carbon-kernel-${carbon.kernel.version}/repository/components
                             </targetPath>
@@ -170,7 +169,6 @@
                         <configuration>
                             <profile>profile/default</profile>
                             <repositoryURL>file:${basedir}/target/p2-repo</repositoryURL>
-
                             <destination>
                                 ${basedir}/target/wso2carbon-kernel-${carbon.kernel.version}/repository/components
                             </destination>

@@ -123,64 +123,52 @@
                                     <symbolicName>org.wso2.carbon.mss</symbolicName>
                                     <version>${carbon.mss.osgi.version}</version>
                                 </bundle>
-
                                 <bundle>
                                     <symbolicName>javax.ws.rs-api</symbolicName>
                                     <version>${rs-api.version}</version>
                                 </bundle>
                                 <bundle>
-                                    <!--<symbolicName>netty-common</symbolicName>-->
                                     <symbolicName>io.netty.common</symbolicName>
                                     <version>${netty.version}</version>
                                 </bundle>
                                 <bundle>
-                                    <!--<symbolicName>netty-transport</symbolicName>-->
                                     <symbolicName>io.netty.transport</symbolicName>
                                     <version>${netty.version}</version>
                                 </bundle>
                                 <bundle>
-                                    <!--<symbolicName>netty-codec</symbolicName>-->
                                     <symbolicName>io.netty.codec</symbolicName>
                                     <version>${netty.version}</version>
                                 </bundle>
                                 <bundle>
-                                    <!--<symbolicName>netty-codec-http</symbolicName>-->
                                     <symbolicName>io.netty.codec-http</symbolicName>
                                     <version>${netty.version}</version>
                                 </bundle>
                                 <bundle>
-                                    <!--<symbolicName>netty-handler</symbolicName>-->
                                     <symbolicName>io.netty.handler</symbolicName>
                                     <version>${netty.version}</version>
                                 </bundle>
                                 <bundle>
-                                    <!--<symbolicName>netty-buffer</symbolicName>-->
                                     <symbolicName>io.netty.buffer</symbolicName>
                                     <version>${netty.version}</version>
                                 </bundle>
-
                                 <bundle>
                                     <symbolicName>org.wso2.carbon.transport.http.netty</symbolicName>
                                     <version>${org.wso2.carbon.transport.http.netty.osgi.version}</version>
                                 </bundle>
                                 <bundle>
-                                    <!--<symbolicName>slf4j-api</symbolicName>-->
                                     <symbolicName>slf4j.api</symbolicName>
                                     <version>${slf4j.version}</version>
                                 </bundle>
                                 <bundle>
-                                    <!--<symbolicName>slf4j-log4j12</symbolicName>-->
                                     <symbolicName>slf4j.log4j12</symbolicName>
                                     <version>${slf4j.log4j.version}</version>
                                 </bundle>
 
                                 <bundle>
-                                    <!--<symbolicName>guava</symbolicName>-->
                                     <symbolicName>com.google.guava</symbolicName>
                                     <version>13.0.1</version>
                                 </bundle>
                                 <bundle>
-                                    <!--<symbolicName>gson</symbolicName>-->
                                     <symbolicName>com.google.gson</symbolicName>
                                     <version>${gson.version}</version>
                                 </bundle>
