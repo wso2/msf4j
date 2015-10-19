@@ -63,9 +63,16 @@ public class PetService {
 
     @POST
     @Consumes("application/json")
-    public void addPet(Pet pet) {
-        JedisUtil.set(pet.getId(), new Gson().toJson(pet));
-        log.info("Added pet");
+    public Response addPet(Pet pet) {
+        String id = pet.getId();
+        if (JedisUtil.get(id) != null) {
+            return Response.status(Response.Status.CONFLICT).
+                    entity("Pet with ID " + id + " successfully added").build();
+        } else {
+            JedisUtil.set(id, new Gson().toJson(pet));
+            log.info("Added pet");
+        }
+        return Response.status(Response.Status.OK).entity("Pet with ID " + id + " successfully added").build();
     }
 
     @DELETE

@@ -64,6 +64,10 @@ here is the summary of commands:
 # Create a bootstrap master
 kubectl create -f redis-master.yaml
 
+# Check whether the pods are up & running and wait until they are up
+
+kubectl get pods
+
 # Create a service to track the sentinels
 kubectl create -f redis-sentinel-service.yaml
 
