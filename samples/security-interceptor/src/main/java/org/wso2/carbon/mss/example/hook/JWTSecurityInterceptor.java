@@ -29,6 +29,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.mss.HttpResponder;
 import org.wso2.carbon.mss.internal.router.HandlerInfo;
 import org.wso2.carbon.mss.internal.router.Interceptor;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,12 +53,11 @@ public class JWTSecurityInterceptor implements Interceptor {
     private static final String JWT_HEADER = "X-JWT-Assertion";
 
     private static String keyStorePath = "/home/dinusha/nothing/WSO2/Micro-Services/product-mss" +
-                                              "/samples/security-interceptor/src/main/" +
-                                              "resources/wso2carbon.jks";
+                                         "/samples/security-interceptor/src/main/" +
+                                         "resources/wso2carbon.jks";
 
     public boolean preCall(HttpRequest request, HttpResponder responder, HandlerInfo handlerInfo) {
 
-        log.info("Processing JWT ..");
         HttpHeaders headers = request.headers();
         boolean isValidSignature = false;
         if (headers != null) {
@@ -66,7 +66,7 @@ public class JWTSecurityInterceptor implements Interceptor {
                 try {
                     isValidSignature = verifySignature(jwtHeader);
                 } catch (Exception e) {
-                    log.error("Error while JWT signature validation.");
+                    log.error("Error while JWT signature validation." + e);
                     return false;
                 }
             }
@@ -76,12 +76,12 @@ public class JWTSecurityInterceptor implements Interceptor {
     }
 
     public void postCall(HttpRequest request, HttpResponseStatus status, HandlerInfo handlerInfo) {
-        
+
     }
 
     private PublicKey getPublicKey() throws IOException, KeyStoreException,
-                                                   CertificateException, NoSuchAlgorithmException,
-                                                   UnrecoverableKeyException {
+                                            CertificateException, NoSuchAlgorithmException,
+                                            UnrecoverableKeyException {
         InputStream inputStream = null;
         try {
             inputStream = new FileInputStream(keyStorePath);
