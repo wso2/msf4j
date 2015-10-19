@@ -163,7 +163,6 @@
                                     <symbolicName>slf4j.log4j12</symbolicName>
                                     <version>${slf4j.log4j.version}</version>
                                 </bundle>
-
                                 <bundle>
                                     <symbolicName>com.google.guava</symbolicName>
                                     <version>13.0.1</version>
