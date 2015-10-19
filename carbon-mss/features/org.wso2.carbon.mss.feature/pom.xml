@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!--
  ~ Copyright (c) 2010-2011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  ~
@@ -14,8 +14,7 @@
  ~ See the License for the specific language governing permissions and
  ~ limitations under the License.
 -->
-
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
@@ -27,7 +26,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.mss.feature</artifactId>
-    <packaging>pom</packaging>
+    <packaging>carbon-feature</packaging>
     <name>WSO2 Carbon - MSS Feature</name>
     <url>http://wso2.org</url>
     <description>This feature contains the core bundles required by the MSS feature
@@ -87,51 +86,108 @@
             <groupId>org.apache.servicemix.bundles</groupId>
             <artifactId>org.apache.servicemix.bundles.commons-beanutils</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.mss</groupId>
+            <artifactId>org.wso2.carbon.mss</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>org.wso2.maven</groupId>
-                <artifactId>carbon-p2-plugin</artifactId>
-                <version>${carbon.p2.plugin.version}</version>
+                <groupId>org.wso2.carbon.maven</groupId>
+                <artifactId>carbon-feature-plugin</artifactId>
+                <version>${carbon.feature.plugin.version}</version>
+                <extensions>true</extensions>
                 <executions>
                     <execution>
                         <id>1-p2-feature-generation</id>
                         <goals>
-                            <goal>p2-feature-gen</goal>
+                            <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <id>org.wso2.carbon.mss</id>
-                            <propertiesFile>../etc/feature.properties</propertiesFile>
-                            <adviceFile>
-                                <properties>
-                                    <propertyDef>org.wso2.carbon.p2.category.type:server
-                                    </propertyDef>
-                                    <propertyDef>org.eclipse.equinox.p2.type.group:false
-                                    </propertyDef>
-                                </properties>
-                            </adviceFile>
+
+                            <propertyFile>../etc/feature.properties</propertyFile>
+                            <adviceFileContents>
+                                <advice>
+                                    <name>org.wso2.carbon.p2.category.type</name>
+                                    <value>server</value>
+                                </advice>
+                                <advice>
+                                    <name>org.eclipse.equinox.p2.type.group</name>
+                                    <value>false</value>
+                                </advice>
+                            </adviceFileContents>
                             <bundles>
-                                <bundleDef>org.wso2.carbon.mss:org.wso2.carbon.mss</bundleDef>
+                                <bundle>
+                                    <symbolicName>org.wso2.carbon.mss</symbolicName>
+                                    <version>${carbon.mss.osgi.version}</version>
+                                </bundle>
 
-                                <bundleDef>javax.ws.rs:javax.ws.rs-api</bundleDef>
-                                <bundleDef>io.netty:netty-common</bundleDef>
-                                <bundleDef>io.netty:netty-transport</bundleDef>
-                                <bundleDef>io.netty:netty-codec</bundleDef>
-                                <bundleDef>io.netty:netty-codec-http</bundleDef>
-                                <bundleDef>io.netty:netty-handler</bundleDef>
-                                <bundleDef>io.netty:netty-buffer</bundleDef>
+                                <bundle>
+                                    <symbolicName>javax.ws.rs-api</symbolicName>
+                                    <version>${rs-api.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <!--<symbolicName>netty-common</symbolicName>-->
+                                    <symbolicName>io.netty.common</symbolicName>
+                                    <version>${netty.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <!--<symbolicName>netty-transport</symbolicName>-->
+                                    <symbolicName>io.netty.transport</symbolicName>
+                                    <version>${netty.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <!--<symbolicName>netty-codec</symbolicName>-->
+                                    <symbolicName>io.netty.codec</symbolicName>
+                                    <version>${netty.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <!--<symbolicName>netty-codec-http</symbolicName>-->
+                                    <symbolicName>io.netty.codec-http</symbolicName>
+                                    <version>${netty.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <!--<symbolicName>netty-handler</symbolicName>-->
+                                    <symbolicName>io.netty.handler</symbolicName>
+                                    <version>${netty.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <!--<symbolicName>netty-buffer</symbolicName>-->
+                                    <symbolicName>io.netty.buffer</symbolicName>
+                                    <version>${netty.version}</version>
+                                </bundle>
 
-                                <bundleDef>org.wso2.carbon.transport:org.wso2.carbon.transport.http.netty</bundleDef>
-                                <bundleDef>org.slf4j:slf4j-api</bundleDef>
-                                <bundleDef>org.slf4j:slf4j-log4j12</bundleDef>
+                                <bundle>
+                                    <symbolicName>org.wso2.carbon.transport.http.netty</symbolicName>
+                                    <version>${org.wso2.carbon.transport.http.netty.osgi.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <!--<symbolicName>slf4j-api</symbolicName>-->
+                                    <symbolicName>slf4j.api</symbolicName>
+                                    <version>${slf4j.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <!--<symbolicName>slf4j-log4j12</symbolicName>-->
+                                    <symbolicName>slf4j.log4j12</symbolicName>
+                                    <version>${slf4j.log4j.version}</version>
+                                </bundle>
 
-                                <bundleDef>com.google.guava:guava</bundleDef>
-                                <bundleDef>com.google.code.gson:gson</bundleDef>
-                                <bundleDef>
-                                    org.apache.servicemix.bundles:org.apache.servicemix.bundles.commons-beanutils
-                                </bundleDef>
+                                <bundle>
+                                    <!--<symbolicName>guava</symbolicName>-->
+                                    <symbolicName>com.google.guava</symbolicName>
+                                    <version>13.0.1</version>
+                                </bundle>
+                                <bundle>
+                                    <!--<symbolicName>gson</symbolicName>-->
+                                    <symbolicName>com.google.gson</symbolicName>
+                                    <version>${gson.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>org.apache.servicemix.bundles.commons-beanutils</symbolicName>
+                                    <version>${beanutils.osgi.version}</version>
+                                </bundle>
                             </bundles>
                         </configuration>
                     </execution>
