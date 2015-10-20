@@ -16,7 +16,7 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.mss.examples.petstore.pet;
+package org.wso2.carbon.mss.examples.petstore.util.model;
 
 /**
  * The pet category; such as dog, cat, bird, reptile, fish etc.

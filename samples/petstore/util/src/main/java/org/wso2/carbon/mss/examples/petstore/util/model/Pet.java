@@ -16,23 +16,21 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.mss.examples.petstore.pet;
+package org.wso2.carbon.mss.examples.petstore.util.model;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import java.util.UUID;
 
 /**
- * Represents a pet
+ * Bean class used for testing JAX-RS bean conversions
  */
-@SuppressWarnings("unused")
-@XmlRootElement
 public class Pet {
 
-    private String id;
+    private String id = UUID.randomUUID().toString();
     private Category category;
     private int ageMonths;
     private String details;
-    private double price;
-    private long dateAdded;
+    private float price;
+    private long dateAdded  = System.currentTimeMillis();
     private String image;
 
     public Pet() {
@@ -58,10 +56,6 @@ public class Pet {
         return dateAdded;
     }
 
-    public void setDateAdded(long dateAdded) {
-        this.dateAdded = dateAdded;
-    }
-
     public String getDetails() {
         return details;
     }
@@ -74,10 +68,6 @@ public class Pet {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getImage() {
         return image;
     }
@@ -86,11 +76,11 @@ public class Pet {
         this.image = image;
     }
 
-    public double getPrice() {
+    public float getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(float price) {
         this.price = price;
     }
 }

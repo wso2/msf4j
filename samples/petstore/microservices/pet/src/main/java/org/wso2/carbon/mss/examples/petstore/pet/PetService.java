@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.mss.MicroservicesRunner;
 import org.wso2.carbon.mss.examples.petstore.util.JedisUtil;
+import org.wso2.carbon.mss.examples.petstore.util.model.Pet;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -43,7 +44,8 @@ public class PetService {
 
     static {
         log.info("SENTINEL1_HOST: {}", System.getenv("SENTINEL1_HOST"));
-        log.info("SENTINEL1_PORT: {}", System.getenv("SENTINEL1_PORT"));
+        log.info("SENTINEL1_PORT: {}", System.getenv("SENTI" +
+                "NEL1_PORT"));
     }
 
     /*static {
@@ -105,6 +107,10 @@ public class PetService {
         }
         return Response.status(Response.Status.OK).entity(new Gson().fromJson(json, Pet.class)).build();
     }
+/*
+    public Response addCategory(String type) {
+
+    }*/
 
     public static void main(String[] args) {
         new MicroservicesRunner().deploy(new PetService()).start();
