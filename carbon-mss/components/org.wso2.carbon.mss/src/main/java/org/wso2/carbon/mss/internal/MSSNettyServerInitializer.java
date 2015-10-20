@@ -25,13 +25,9 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
-import org.wso2.carbon.mss.internal.router.HttpResourceHandler;
-import org.wso2.carbon.mss.internal.router.Interceptor;
 import org.wso2.carbon.mss.internal.router.RequestRouter;
 import org.wso2.carbon.transport.http.netty.listener.CarbonNettyServerInitializer;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,7 +36,6 @@ import java.util.Map;
 public class MSSNettyServerInitializer implements CarbonNettyServerInitializer {
 
     private DefaultEventExecutorGroup eventExecutorGroup;
-    private List<Interceptor> interceptors = new ArrayList<>();
 
     @Override
     public void setup(Map<String, String> map) {
@@ -54,19 +49,14 @@ public class MSSNettyServerInitializer implements CarbonNettyServerInitializer {
         pipeline.addLast("aggregator", new HttpObjectAggregator(Integer.MAX_VALUE));  //TODO: fix
         pipeline.addLast("encoder", new HttpResponseEncoder());
         pipeline.addLast("compressor", new HttpContentCompressor());
-
-        HttpResourceHandler resourceHandler =
-                new HttpResourceHandler(MicroservicesRegistry.getInstance().getHttpServices(),
-                                        interceptors, null, null);
-        pipeline.addLast(eventExecutorGroup, "router", new RequestRouter(resourceHandler, 0)); //TODO: remove limit
+        pipeline.addLast(eventExecutorGroup, "router", new RequestRouter(MicroservicesRegistry
+                .getInstance().getHttpResourceHandler(), 0));
+        //TODO: remove
+        // limit
 
         //TODO: see what can be done
             /*if (pipelineModifier != null) {
                 pipelineModifier.apply(pipeline);
             }*/
-    }
-
-    public void addInterceptor(Interceptor interceptor) {
-        interceptors.add(interceptor);
     }
 }
