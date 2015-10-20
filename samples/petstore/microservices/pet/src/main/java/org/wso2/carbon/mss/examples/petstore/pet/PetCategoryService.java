@@ -99,6 +99,7 @@ public class PetCategoryService {
 
     @GET
     @Path("/all")
+    @Produces("application/json")
     public List<Category> getAllCategories() {
         List<String> values = JedisUtil.getValues(CATEGORY_PREFIX + "*");
         List<Category> result = new ArrayList<>();

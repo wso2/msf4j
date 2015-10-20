@@ -104,7 +104,8 @@ public class PetService {
 
     @GET
     @Path("/all")
-    public List<Pet> getAllCategories() {
+    @Produces("application/json")
+    public List<Pet> getAllPets() {
         List<String> values = JedisUtil.getValues(PET_PREFIX + "*");
         List<Pet> result = new ArrayList<>();
         for (String value : values) {
