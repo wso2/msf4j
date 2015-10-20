@@ -39,7 +39,7 @@ import java.util.jar.Manifest;
  */
 public class MSSJarProcessor {
     private static final Logger log = LoggerFactory.getLogger(MSSJarProcessor.class);
-    private static final String MICROSERVICES_MANIFEST_KEY = "microservices";
+    private static final String MICROSERVICES_MANIFEST_KEY = "Microservices";
     private File file;
     private List<Object> resourceInstances = new ArrayList<>();
 

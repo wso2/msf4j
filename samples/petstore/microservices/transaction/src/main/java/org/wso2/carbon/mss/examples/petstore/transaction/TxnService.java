@@ -16,20 +16,21 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.mss.examples.petstore.pet;
+package org.wso2.carbon.mss.examples.petstore.transaction;
+
+import javax.ws.rs.Path;
 
 /**
- * The pet category; such as dog, cat, bird, reptile, fish etc.
+ * Transaction microservice
  */
-public class Category {
+@Path("/transaction")
+public class TxnService {
 
-    private String name;
+    public void addTransaction() {
 
-    public Category(String name) {
-        this.name = name;
     }
 
-    public String getName() {
-        return name;
+    public Transaction getTransaction(String txnId) {
+        return null;
     }
 }
