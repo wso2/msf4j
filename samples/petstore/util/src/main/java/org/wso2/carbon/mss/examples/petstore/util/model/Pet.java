@@ -30,7 +30,7 @@ public class Pet {
     private int ageMonths;
     private String details;
     private float price;
-    private long dateAdded  = System.currentTimeMillis();
+    private long dateAdded = System.currentTimeMillis();
     private String image;
 
     public Pet() {
@@ -82,5 +82,13 @@ public class Pet {
 
     public void setPrice(float price) {
         this.price = price;
+    }
+
+    public void setDateAdded(long dateAdded) {
+        this.dateAdded = dateAdded;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
