@@ -18,77 +18,61 @@
  */
 package org.wso2.carbon.mss.examples.petstore.util.model;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
- * Represents a pet
+ * Represents an order
  */
-public class Pet {
-
+@SuppressWarnings("unused")
+public class Order {
     private String id = UUID.randomUUID().toString();
-    private Category category;
-    private int ageMonths;
-    private String details;
-    private float price;
     private long dateAdded = System.currentTimeMillis();
-    private String image;
 
-    public Pet() {
-    }
-
-    public int getAgeMonths() {
-        return ageMonths;
-    }
-
-    public void setAgeMonths(int ageMonths) {
-        this.ageMonths = ageMonths;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
+    /**
+     * IDs of the pets purchased
+     */
+    private List<String> pets;
+    private double total;
+    private CreditCard creditCard;
 
     public long getDateAdded() {
         return dateAdded;
-    }
-
-    public String getDetails() {
-        return details;
-    }
-
-    public void setDetails(String details) {
-        this.details = details;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public float getPrice() {
-        return price;
-    }
-
-    public void setPrice(float price) {
-        this.price = price;
     }
 
     public void setDateAdded(long dateAdded) {
         this.dateAdded = dateAdded;
     }
 
+    public String getId() {
+        return id;
+    }
+
     public void setId(String id) {
         this.id = id;
+    }
+
+    public CreditCard getCreditCard() {
+        return creditCard;
+    }
+
+    public void setCreditCard(CreditCard creditCard) {
+        this.creditCard = creditCard;
+    }
+
+    public List<String> getPets() {
+        return pets;
+    }
+
+    public void setPets(List<String> pets) {
+        this.pets = pets;
+    }
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
     }
 }

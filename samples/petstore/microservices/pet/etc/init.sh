@@ -15,11 +15,6 @@ do
   http://$1:$2/pet/
 done
 
-
-for i in {0..10}
-do
-    curl http://$1:$2/pet/pet-$i
-    echo ""
-done
+curl http://$1:$2/pet/all
 
 #172.17.4.201:31485
