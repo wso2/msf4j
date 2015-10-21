@@ -637,12 +637,10 @@ public class HttpServerTest {
 
     protected Pet petInstance() {
         Pet pet = new Pet();
-        pet.setId("0001");
         pet.setCategory(new Category("dog"));
         pet.setAgeMonths(3);
         pet.setDetails("small-cat");
         pet.setPrice(10.5f);
-        pet.setDateAdded(99999);
         pet.setImage("cat.png");
         return pet;
     }

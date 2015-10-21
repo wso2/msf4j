@@ -75,7 +75,7 @@
                             com.google.gson.*,
                             javax.ws.rs.*
                         </Import-Package>
-                        <JAXRS-Services>1</JAXRS-Services>
+                        <Microservices>org.wso2.carbon.mss.example2.StockQuoteService</Microservices>
                     </instructions>
                 </configuration>
             </plugin>

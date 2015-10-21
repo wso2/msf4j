@@ -1,6 +1,6 @@
 <?php
 # Fileserver IP
-$fileserver="";
+$fileserver="fileserver";
 # File saving location
 # need write access to apache user 
 $file_location="upload";

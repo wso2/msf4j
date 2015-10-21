@@ -20,9 +20,13 @@ package org.wso2.carbon.mss.internal;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.mss.internal.router.HttpResourceHandler;
+import org.wso2.carbon.mss.internal.router.Interceptor;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -31,8 +35,11 @@ import java.util.Set;
 public class MicroservicesRegistry {
 
     private static final Logger LOG = LoggerFactory.getLogger(MicroservicesRegistry.class);
-    private static MicroservicesRegistry instance = new MicroservicesRegistry();
-    private volatile Set<Object> httpServices = new HashSet<>();
+    private static final MicroservicesRegistry instance = new MicroservicesRegistry();
+    private final Set<Object> httpServices = new HashSet<>();
+    private final List<Interceptor> interceptors = new ArrayList<>();
+    private volatile HttpResourceHandler httpResourceHandler =
+            new HttpResourceHandler(Collections.emptyList(), interceptors, null, null);
 
     private MicroservicesRegistry() {
     }
@@ -43,14 +50,30 @@ public class MicroservicesRegistry {
 
     public void addHttpService(Object httpHandler) {
         httpServices.add(httpHandler);
+        updateHttpResourceHandler();
         LOG.info("Added HTTP Service: " + httpHandler);
     }
 
     public void removeHttpService(Object httpService) {
         httpServices.remove(httpService);
+        updateHttpResourceHandler();
     }
 
-    Set<Object> getHttpServices() {
-        return Collections.unmodifiableSet(httpServices);
+    public HttpResourceHandler getHttpResourceHandler() {
+        return httpResourceHandler;
+    }
+
+    public void addInterceptor(Interceptor interceptor) {
+        interceptors.add(interceptor);
+        updateHttpResourceHandler();
+    }
+
+    public int getServiceCount() {
+        return httpServices.size();
+    }
+
+    private void updateHttpResourceHandler() {
+        httpResourceHandler =
+                new HttpResourceHandler(Collections.unmodifiableSet(httpServices), interceptors, null, null);
     }
 }

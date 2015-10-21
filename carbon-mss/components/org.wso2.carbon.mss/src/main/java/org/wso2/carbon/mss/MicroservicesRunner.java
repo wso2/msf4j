@@ -33,13 +33,13 @@ import org.wso2.carbon.transports.TransportManager;
 import java.util.Set;
 
 /**
- * TODO: class level comment
+ * This runner initializes the microservices runtime, deploys the microservices & service interceptors,
+ * and starts the relevant transports.
  */
 public class MicroservicesRunner {
 
     private static final Logger log = LoggerFactory.getLogger(MicroservicesRunner.class);
     private TransportManager transportManager = new TransportManager();
-    private MSSNettyServerInitializer serverInitializer;
     private long startTime = System.currentTimeMillis();
 
     public MicroservicesRunner() {
@@ -52,9 +52,8 @@ public class MicroservicesRunner {
         }
 
         NettyTransportDataHolder nettyTransportDataHolder = NettyTransportDataHolder.getInstance();
-        serverInitializer = new MSSNettyServerInitializer();
         nettyTransportDataHolder.
-                addNettyChannelInitializer(ListenerConfiguration.DEFAULT_KEY, serverInitializer);
+                addNettyChannelInitializer(ListenerConfiguration.DEFAULT_KEY, new MSSNettyServerInitializer());
     }
 
     public MicroservicesRunner deploy(Object microservice) {
@@ -63,7 +62,7 @@ public class MicroservicesRunner {
     }
 
     public MicroservicesRunner addInterceptor(Interceptor interceptor) {
-        serverInitializer.addInterceptor(interceptor);
+        MicroservicesRegistry.getInstance().addInterceptor(interceptor);
         return this;
     }
 
