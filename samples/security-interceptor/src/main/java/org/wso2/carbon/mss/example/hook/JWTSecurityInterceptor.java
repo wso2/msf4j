@@ -30,7 +30,6 @@ import org.wso2.carbon.mss.HttpResponder;
 import org.wso2.carbon.mss.internal.router.HandlerInfo;
 import org.wso2.carbon.mss.internal.router.Interceptor;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Key;
@@ -52,9 +51,11 @@ public class JWTSecurityInterceptor implements Interceptor {
 
     private static final String JWT_HEADER = "X-JWT-Assertion";
 
-    private static String keyStorePath = "/home/dinusha/nothing/WSO2/Micro-Services/product-mss" +
-                                         "/samples/security-interceptor/src/main/" +
-                                         "resources/wso2carbon.jks";
+    private static String keyStore = "wso2carbon.jks";
+
+    private String alias = "wso2carbon";
+
+    private String keyStorePassword = "wso2carbon";
 
     public boolean preCall(HttpRequest request, HttpResponder responder, HandlerInfo handlerInfo) {
 
@@ -72,6 +73,7 @@ public class JWTSecurityInterceptor implements Interceptor {
             }
         }
 
+        log.info("## signature validation ## " + isValidSignature);
         return isValidSignature;
     }
 
@@ -79,18 +81,17 @@ public class JWTSecurityInterceptor implements Interceptor {
 
     }
 
-    private PublicKey getPublicKey() throws IOException, KeyStoreException,
-                                            CertificateException, NoSuchAlgorithmException,
-                                            UnrecoverableKeyException {
+    private PublicKey getPublicKey(String keyStorePath, String keyStorePassword, String alias)
+            throws IOException, KeyStoreException, CertificateException,
+                   NoSuchAlgorithmException, UnrecoverableKeyException {
+
         InputStream inputStream = null;
         try {
-            inputStream = new FileInputStream(keyStorePath);
+            inputStream = this.getClass().getClassLoader().getResourceAsStream(keyStorePath);
             KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
-            keystore.load(inputStream, "wso2carbon".toCharArray());
+            keystore.load(inputStream, keyStorePassword.toCharArray());
 
-            String alias = "wso2carbon";
-
-            Key key = keystore.getKey(alias, "wso2carbon".toCharArray());
+            Key key = keystore.getKey(alias, keyStorePassword.toCharArray());
             if (key instanceof PrivateKey) {
                 // Get certificate of public key
                 java.security.cert.Certificate cert = keystore.getCertificate(alias);
@@ -108,9 +109,11 @@ public class JWTSecurityInterceptor implements Interceptor {
     }
 
     private boolean verifySignature(String jwt) throws Exception {
-        SignedJWT signedJWT = SignedJWT.parse(jwt);
-        JWSVerifier verifier = new RSASSAVerifier((RSAPublicKey) getPublicKey());
 
+        SignedJWT signedJWT = SignedJWT.parse(jwt);
+        JWSVerifier verifier = new RSASSAVerifier((RSAPublicKey) getPublicKey(keyStore,
+                                                                              keyStorePassword,
+                                                                              alias));
         return signedJWT.verify(verifier);
     }
 
