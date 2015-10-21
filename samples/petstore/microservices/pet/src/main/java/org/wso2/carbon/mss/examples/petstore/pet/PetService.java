@@ -21,6 +21,8 @@ package org.wso2.carbon.mss.examples.petstore.pet;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.mss.MicroservicesRunner;
+import org.wso2.carbon.mss.examples.petstore.security.JWTSecurityInterceptor;
 import org.wso2.carbon.mss.examples.petstore.util.JedisUtil;
 import org.wso2.carbon.mss.examples.petstore.util.model.Pet;
 
@@ -131,5 +133,11 @@ public class PetService {
             }
         }
         return result;
+    }
+
+    public static void main(String[] args) {
+        new MicroservicesRunner()
+                .addInterceptor(new JWTSecurityInterceptor())
+                .deploy(new PetService()).start();
     }
 }
