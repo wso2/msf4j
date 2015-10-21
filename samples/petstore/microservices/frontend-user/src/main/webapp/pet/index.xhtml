@@ -27,12 +27,19 @@
 
 <h:head>
     <title>Java Pet Shop </title>
+
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
           rel="stylesheet"/>
 </h:head>
 <h:body>
     <ui:composition template="/template/common/commonLayout.xhtml">
         <ui:define name="content">
+            <b:section id="input"
+                       label="label"
+                       badgeText="null"
+                       rendered="false">
+                Lorem ipsum dolor sit amet, consectetuer ...
+            </b:section>
             <h3>Java Pet Shop</h3>
             Wellcomeback  <h:outputText value="#{loginBean.username}"/>  !
         </ui:define>

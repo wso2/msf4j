@@ -34,6 +34,11 @@
 
     <ui:composition template="/template/common/commonLayout.xhtml">
         <ui:define name="content">
+            <div class="container-fluid body-wrapper">
+
+            <div class="row">
+            <div class="col-md-6">
+                <h3>Cart</h3>
             <h:form>
                 <b:table id="petTable"
                          var="rowItem"
@@ -82,7 +87,7 @@
                 </b:table>
                 <h:commandButton id="checkout" value="Checkout"
                                  action="checkout"
-                                 styleClass="btn btn-primary btn-xs">
+                                 styleClass="btn btn-primary">
                 </h:commandButton>
 
                 <br/>
@@ -90,6 +95,9 @@
 
                 <p> Current Total : <h:outputText value="#{checkoutBean.cart.total}"/></p>
             </h:form>
+            </div>
+            </div>
+            </div>
         </ui:define>
     </ui:composition>
 </h:body>
