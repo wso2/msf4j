@@ -106,6 +106,36 @@ public class JedisUtil {
         }
     }
 
+    public static void sadd(String key, String value) {
+        fetchMaster();
+        try {
+            master.sadd(key, value);
+        } catch (JedisConnectionException e) {
+            master = getJedis();
+            master.sadd(key, value);
+        }
+    }
+
+    public static Set<String> smembers(String key) {
+        fetchMaster();
+        try {
+            return master.smembers(key);
+        } catch (JedisConnectionException e) {
+            master = getJedis();
+            return master.smembers(key);
+        }
+    }
+
+    public static void srem(String key, String value) {
+        fetchMaster();
+        try {
+            master.srem(key, value);
+        } catch (JedisConnectionException e) {
+            master = getJedis();
+            master.sadd(key, value);
+        }
+    }
+
     public static List<String> getValues(String keyPattern) {
         fetchMaster();
         List<String> values = new ArrayList<>();
@@ -157,19 +187,5 @@ public class JedisUtil {
             }
         }
         return null;
-    }
-
-    public static void main(String[] args) {
-        while (true) {
-            try {
-                JedisUtil.set("foo", "foo-" + System.currentTimeMillis());
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ignored) {
-                }
-            } catch (Exception e) {
-                log.error("Exception occurred while set", e);
-            }
-        }
     }
 }
