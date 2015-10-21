@@ -30,33 +30,41 @@
           rel="stylesheet"/>
 </h:head>
 <h:body>
-    <ui:composition template="/template/common/commonLayout.xhtml">
-        <ui:define name="content">
-            <h3>Add new pet type</h3>
+                <ui:composition template="/template/common/commonLayout.xhtml">
+                    <ui:define name="content">
+                        <div class="container-fluid body-wrapper">
 
-            <h:form>
-                <h:messages infoStyle="color:darkgreen" errorStyle="color:darkred"/>
-                <br/>
-                <b:text id="petType"
-                        label="Pet Type Name"
-                        hideLabel="false"
-                        value="#{petTypeBean.petType.name}"
-                        placeholder="Enter new pet type name..."
-                        required="true"
-                        autoFocus="true"
-                        rendered="true"/>
-                <b:tooltip>
-                    Enter new pet type name...
-                </b:tooltip>
-                <br/>
-                <br/>
-                <h:commandButton action="#{petTypeBean.addPetType}"
-                                 value=" Add " class="btn btn-success"/>
+                        <div class="row">
+                        <div class="col-md-4">
+                        <h3>Add new pet type</h3>
 
-                <h:button value="Cancel" outcome="/pet/index" class="btn btn-danger"/>
+                        <h:form>
+                            <h:messages infoStyle="color:darkgreen" errorStyle="color:darkred"/>
+                            <br/>
+                            <b:text id="petType"
+                                    label="Pet Type Name"
+                                    hideLabel="false"
+                                    value="#{petTypeBean.petType.name}"
+                                    placeholder="Enter new pet type name..."
+                                    required="true"
+                                    autoFocus="true"
+                                    rendered="true"/>
+                            <b:tooltip>
+                                Enter new pet type name...
+                            </b:tooltip>
+                            <br/>
+                            <br/>
+                            <h:commandButton action="#{petTypeBean.addPetType}"
+                                             value=" Add " class="btn btn-primary"/>
 
-            </h:form>
-        </ui:define>
-    </ui:composition>
+                            <h:button value="Cancel" outcome="/pet/index" class="btn  btn-default"/>
+
+                        </h:form>
+                        </div>
+                        </div>
+                        </div>
+                    </ui:define>
+                </ui:composition>
+
 </h:body>
 </html>
