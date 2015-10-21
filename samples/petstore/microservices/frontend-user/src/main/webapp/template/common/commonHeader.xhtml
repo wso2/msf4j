@@ -22,16 +22,27 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:b="http://butterfaces.larmic.de/components"
       xmlns:h="http://java.sun.com/jsf/html">
 <body>
 <ui:composition>
+    <header class="header header-default">
+        <div class="container-fluid">
+            <div class="pull-left brand float-remove-xs text-center-xs">
+                <a href="/pet/index.xhtml">
+                    <img src="../libs/images/logo-inverse.svg" alt="wso2" title="wso2" class="logo"/>
+                    <h1><em>WSO2 Petstore</em></h1>
+                </a>
+            </div>
+            <div class="pull-right auth float-remove-xs text-center-xs">
+                <h:form>
+                    <h:commandButton id="button" value="Logout" action="#{loginBean.doLogout}" class="btn btn-success"/>
+                    <h:link value="Cart" outcome="/cart/list" class="btn btn-success"/><br/>
+                </h:form>
+            </div>
+        </div>
+    </header>
 
-    <!--<h1>This is default header</h1>-->
-    <h:form>
-        <h:commandButton id="button" value="Logout" action="#{loginBean.doLogout}"/>
-        <h:link value="Home" outcome="/pet/list" class="btn btn-success"/><br/>
-        <h:link value="Cart" outcome="/cart/list" class="btn btn-success"/><br/>
-    </h:form>
 </ui:composition>
 </body>
 </html>

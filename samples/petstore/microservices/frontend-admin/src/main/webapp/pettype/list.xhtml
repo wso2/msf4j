@@ -32,8 +32,14 @@
 
     <ui:composition template="/template/common/commonLayout.xhtml">
         <ui:define name="content">
+            <div class="container-fluid body-wrapper">
+
+            <div class="row">
+            <div class="col-md-6">
+                <h3>Pet types</h3>
             <h:form>
                 <b:table id="petTypeTable"
+                         class="table table-bordered"
                          var="rowItem"
                          uniqueIdentifier="petTypeTable"
                          value="#{petTypeListBean.petTypes}"
@@ -50,7 +56,7 @@
                         <h:outputText value="#{rowItem.name}"/>
                     </b:column>
                     <b:column id="column2"
-                              label="">
+                              label="Remove">
                         <b:commandLink value="Remove"
                                        styleClass="btn btn-danger btn-xs"
                                        action="#{petTypeListBean.removePetType(rowItem)}">
@@ -59,6 +65,7 @@
                     </b:column>
                 </b:table>
             </h:form>
+            </div></div></div>
         </ui:define>
     </ui:composition>
 </h:body>

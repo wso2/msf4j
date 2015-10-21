@@ -27,11 +27,39 @@
 
 <h:head>
     <title>Java Pet Shop </title>
+    <link rel="stylesheet" href="libs/css/style.css"/>
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
           rel="stylesheet"/>
 </h:head>
 <h:body>
-    <h3>Register New User</h3>
+    <!-- header -->
+    <header class="header header-default">
+        <div class="container-fluid">
+            <div class="pull-left brand float-remove-xs text-center-xs">
+                <a href="#">
+                    <img src="libs/images/logo-inverse.svg" alt="wso2" title="wso2" class="logo"/>
+                    <h1><em>WSO2 Petstore Login</em></h1>
+                </a>
+            </div>
+        </div>
+    </header>
+    <!-- page content -->
+    <div class="container-fluid body-wrapper">
+
+    <div class="row">
+    <div class="col-md-12">
+
+    <!-- content -->
+    <div class="container col-xs-10 col-sm-6 col-md-6 col-lg-3 col-centered wr-content wr-login col-centered">
+    <div>
+        <h2 class="wr-title uppercase blue-bg padding-double white boarder-bottom-blue margin-none">Register</h2>
+
+
+    </div>
+    <div class="boarder-all ">
+    <div class="clearfix"></div>
+
+    <div class="padding-double login-form">
 
     <h:form enctype="multipart/form-data">
         <h:messages infoStyle="color:darkgreen" errorStyle="color:darkred"/>
@@ -67,10 +95,28 @@
                 rendered="true"/>
 
         <h:commandButton action="#{userBean.addUser()}"
-                         value=" Add " class="btn btn-success"/>
+                         value=" Register " class="btn btn-primary"/>
 
-        <h:button value="Cancel" outcome="/login" class="btn btn-danger"/>
+        <h:button value="Back to Login" outcome="/login" class="btn btn-default"/>
 
     </h:form>
+        <div class="clearfix"></div>
+    </div>
+
+    </div>
+    </div>
+        <!-- /content -->
+
+    </div>
+    </div>
+        <!-- /content/body -->
+
+    </div>
+    <!-- footer -->
+    <footer class="footer">
+        <div class="container-fluid">
+            <p>WSO2 Pet Store | &#169; <script>document.write(new Date().getFullYear());</script> <a href="http://wso2.com/" target="_blank"><i class="icon fw fw-wso2"></i> Inc</a>. All Rights Reserved.</p>
+        </div>
+    </footer>
 </h:body>
 </html>
