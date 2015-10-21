@@ -33,28 +33,39 @@
 <h:body>
     <ui:composition template="/template/common/commonLayout.xhtml">
         <ui:define name="content">
-            <h3>Pet Details</h3>
-            <h:messages infoStyle="color:darkgreen" errorStyle="color:darkred"/>
-            <br/>
+            <div class="container-fluid body-wrapper">
 
-            <p> Seq No : <h:outputText value="#{petListBean.selectedValue.id}"/></p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>Pet Details</h3>
+                        <h:messages infoStyle="color:darkgreen" errorStyle="color:darkred"/>
+                        <br/>
+                        <div class="pet-list-block">
+                            <div class="pet-image effect2">
+                                <h:graphicImage value="#{petListBean.selectedValue.image}"/>
+                            </div>
 
-            <p> Type : <h:outputText value="#{petListBean.selectedValue.category}"/></p>
 
-            <p> Age in Months : <h:outputText value="#{petListBean.selectedValue.ageMonths}"/></p>
+                            <p> Seq No : <h:outputText value="#{petListBean.selectedValue.id}"/></p>
 
-            <p> Entered Date : <h:outputText value="#{petListBean.selectedValue.dateAdded}"/></p>
+                            <p> Type : <h:outputText value="#{petListBean.selectedValue.category.name}"/></p>
 
-            <p> Description: <h:outputText value="#{petListBean.selectedValue.details}"/></p>
+                            <p> Age in Months : <h:outputText value="#{petListBean.selectedValue.ageMonths}"/></p>
 
-            <p> Price : <h:outputText value="#{petListBean.selectedValue.price}"/></p>
+                            <p> Entered Date : <h:outputText value="#{petListBean.selectedValue.dateAdded}"/></p>
 
-            <h:form>
-                <b:commandLink value="Cancel"
-                               styleClass="btn btn-danger btn-xs"
-                               action="#{navigationBean.backtoList()}"/>
-            </h:form>
+                            <p> Description: <h:outputText value="#{petListBean.selectedValue.details}"/></p>
 
+                            <p> Price : <h:outputText value="#{petListBean.selectedValue.price}"/></p>
+                            <h:form>
+                                <b:commandLink value="Go back"
+                                               styleClass="btn btn-default"
+                                               action="#{petListBean.backtoList()}"/>
+                            </h:form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </ui:define>
     </ui:composition>
 </h:body>
