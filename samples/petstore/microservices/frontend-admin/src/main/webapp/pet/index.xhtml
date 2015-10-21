@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
 <!--
   ~ Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
   ~
@@ -17,11 +15,10 @@
   ~  specific language governing permissions and limitations
   ~  under the License.
   -->
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:b="http://butterfaces.larmic.de/components">
 
@@ -33,14 +30,29 @@
 <h:body>
     <ui:composition template="/template/common/commonLayout.xhtml">
         <ui:define name="content">
+            <b:section id="input"
+                       label="label"
+                       badgeText="null"
+                       rendered="false">
+                Lorem ipsum dolor sit amet, consectetuer ...
+            </b:section>
             <h3>Java Pet Shop</h3>
             Wellcome back  <h:outputText value="#{loginBean.username}"/>  !
 
-            <h:link value="Home" outcome="/pet/index" /><br/>
-            <h:link value="Add pet type" outcome="/pettype/add" /><br/>
-            <h:link value="List pet types" outcome="/pettype/list" /> <br/>
-            <h:link value="Add pet" outcome="/pet/add" /> <br/>
-            <h:link value="List pets" outcome="/pet/list" /> <br/>
+            <br/>
+            <h:link value="Add pet type" outcome="/pettype/add" class="pet-tile" >
+                <img src="../libs/images/pets14.png" ></img>
+            </h:link>
+            <h:link value="List pet types" outcome="/pettype/list" class="pet-tile">
+                <img src="../libs/images/verified7.png" ></img>
+            </h:link>
+            <h:link value="Add pet" outcome="/pet/add" class="pet-tile">
+                <img src="../libs/images/animals-allowed.png" ></img>
+            </h:link>
+            <h:link value="List pets" outcome="/pet/list" class="pet-tile" >
+                <img src="../libs/images/verified7.png" ></img>
+            </h:link>
+
         </ui:define>
     </ui:composition>
 </h:body>
