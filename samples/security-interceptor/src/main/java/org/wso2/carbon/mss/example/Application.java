@@ -19,7 +19,6 @@
 package org.wso2.carbon.mss.example;
 
 import org.wso2.carbon.mss.MicroservicesRunner;
-import org.wso2.carbon.mss.example.hook.JWTSecurityInterceptor;
 import org.wso2.carbon.mss.example.hook.LoggingHeadersInterceptor;
 import org.wso2.carbon.mss.example.hook.UsernamePasswordSecurityInterceptor;
 import org.wso2.carbon.mss.example.service.Helloworld;
@@ -32,7 +31,6 @@ public class Application {
         new MicroservicesRunner()
                 .addInterceptor(new UsernamePasswordSecurityInterceptor())
                 .addInterceptor(new LoggingHeadersInterceptor())
-                .addInterceptor(new JWTSecurityInterceptor())
                 .deploy(new Helloworld()).start();
     }
 }
