@@ -23,9 +23,9 @@ package org.wso2.carbon.mss.examples.petstore.pet;
  */
 public final class PetConstants {
 
-    public static final String CATEGORIES_KEY = "petstore.pet.categories";
+    public static final String CATEGORIES_KEY = "petstore:pet:categories";
 
-    public static final String CATEGORY_KEY_PREFIX = "petstore.pet.category.";
+    public static final String CATEGORY_KEY_PREFIX = "petstore:pet:category.";
 
-    public static final String PET_ID_KEY_PREFIX = "petstore.pet.id.";
+    public static final String PET_ID_KEY_PREFIX = "petstore:pet:id.";
 }
