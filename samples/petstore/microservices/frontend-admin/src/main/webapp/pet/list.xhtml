@@ -33,8 +33,14 @@
     <h3>Avilable Pets</h3>
     <ui:composition template="/template/common/commonLayout.xhtml">
         <ui:define name="content">
+            <div class="container-fluid body-wrapper">
+
+            <div class="row">
+            <div class="col-md-6">
+                <h3>Add new pet type</h3>
             <h:form>
                 <b:table id="petTable"
+                         class="table table-bordered"
                          var="rowItem"
                          uniqueIdentifier="petTable"
                          value="#{petListBean.pets}"
@@ -79,6 +85,7 @@
                     </b:column>
                 </b:table>
             </h:form>
+            </div></div></div>
         </ui:define>
     </ui:composition>
 </h:body>
