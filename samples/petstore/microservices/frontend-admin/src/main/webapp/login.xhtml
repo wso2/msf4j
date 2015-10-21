@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~   WSO2 Inc. licenses this file to you under the Apache License,
+  ~   Version 2.0 (the "License"); you may not use this file except
+  ~   in compliance with the License.
+  ~   You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  -->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:b="http://butterfaces.larmic.de/components">
+<h:head>
+    <title>Login form</title>
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
+          rel="stylesheet"/>
+</h:head>
+<h:body>
+    <h3>Login here</h3>
+    <h:form id="login-form">
+        <h:messages infoStyle="color:darkgreen" errorStyle="color:darkred"/>
+
+        <b:text id="username"
+                label="Username"
+                hideLabel="false"
+                value="#{loginBean.username}"
+                required="true"
+                autoFocus="true"
+                rendered="true">
+            <b:tooltip>
+                Enter your username...
+            </b:tooltip>
+        </b:text>
+
+        <b:secret id="password"
+                  label="Password"
+                  hideLabel="false"
+                  value="#{loginBean.password}"
+                  required="true"
+                  autoFocus="true"
+                  rendered="true">
+            <b:tooltip>
+                Enter your password...
+            </b:tooltip>
+        </b:secret>
+        <br/>
+
+        <h:commandButton action="#{loginBean.doLogin}"
+                         value=" Login " class="btn btn-success"/>
+        <br/>
+        <br/>
+    </h:form>
+</h:body>
+</html>
