@@ -18,19 +18,17 @@
  */
 package org.wso2.carbon.mss.examples.petstore.pet;
 
-import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.mss.examples.petstore.util.JedisUtil;
 import org.wso2.carbon.mss.examples.petstore.util.model.Category;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -42,71 +40,50 @@ import javax.ws.rs.core.Response;
 @Path("/category")
 public class PetCategoryService {
     private static final Logger log = LoggerFactory.getLogger(PetCategoryService.class);
-    private static final String CATEGORY_PREFIX = "$CATEGORY_";
 
     @POST
     @Consumes("application/json")
     public Response addCategory(Category category) {
         String name = category.getName();
-        if (JedisUtil.get(name) != null) {
-            return Response.status(Response.Status.CONFLICT).
-                    entity("Pet category with name " + name + " already exists").build();
-        } else {
-            JedisUtil.set(CATEGORY_PREFIX + name, new Gson().toJson(category));
-            log.info("Added category");
-        }
+        JedisUtil.sadd(PetConstants.CATEGORIES_KEY, name);
+        log.info("Added category");
         return Response.status(Response.Status.OK).entity("Category with name " + name + " successfully added").build();
     }
 
     @DELETE
     @Path("/{name}")
     public Response deleteCategory(@PathParam("name") String name) {
-        String json = JedisUtil.get(CATEGORY_PREFIX + name);
-        if (json == null || json.isEmpty()) {
+        if (!JedisUtil.smembers(PetConstants.CATEGORIES_KEY).contains(name)) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        JedisUtil.del(CATEGORY_PREFIX + name);
+        String categoryKey = PetConstants.CATEGORY_KEY_PREFIX + name;
+        JedisUtil.srem(PetConstants.CATEGORIES_KEY, name);
+        JedisUtil.del(categoryKey);
         log.info("Deleted category: " + name);
         return Response.status(Response.Status.OK).entity("OK").build();
-    }
-
-    @PUT
-    @Consumes("application/json")
-    public Response updateCategory(Category category) {
-        String name = category.getName();
-        String json = JedisUtil.get(CATEGORY_PREFIX + name);
-        if (json == null || json.isEmpty()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        } else {
-            JedisUtil.set(CATEGORY_PREFIX + name, new Gson().toJson(category));
-            log.info("Updated pet");
-            return Response.status(Response.Status.OK).entity("Category with name " + name +
-                    " successfully updated").build();
-        }
     }
 
     @GET
     @Produces("application/json")
     @Path("/{name}")
     public Response getCategory(@PathParam("name") String name) {
-        String json = JedisUtil.get(CATEGORY_PREFIX + name);
-        if (json == null || json.isEmpty()) {
+        if (!JedisUtil.smembers(PetConstants.CATEGORIES_KEY).contains(name)) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         log.info("Got category");
-        return Response.status(Response.Status.OK).entity(new Gson().fromJson(json, Category.class)).build();
+        return Response.status(Response.Status.OK).entity(new Category(name)).build();
     }
 
     @GET
     @Path("/all")
     @Produces("application/json")
-    public List<Category> getAllCategories() {
-        List<String> values = JedisUtil.getValues(CATEGORY_PREFIX + "*");
-        List<Category> result = new ArrayList<>();
-        for (String value : values) {
-            result.add(new Gson().fromJson(value, Category.class));
+    public Set<Category> getAllCategories() {
+        Set<String> smembers = JedisUtil.smembers(PetConstants.CATEGORIES_KEY);
+        Set<Category> categories = new HashSet<>(smembers.size());
+        for (String smember : smembers) {
+            categories.add(new Category(smember));
         }
-        return result;
+        return categories;
     }
 
 }
