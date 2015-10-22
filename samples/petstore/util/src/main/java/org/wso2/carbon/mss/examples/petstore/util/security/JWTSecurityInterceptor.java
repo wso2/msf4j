@@ -46,6 +46,7 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.interfaces.RSAPublicKey;
 import java.text.ParseException;
+import java.util.Date;
 
 /**
  * Verify the JWT header in request.
@@ -86,9 +87,11 @@ public class JWTSecurityInterceptor implements Interceptor {
     private boolean verifySignature(String jwt) {
         try {
             SignedJWT signedJWT = SignedJWT.parse(jwt);
-            JWSVerifier verifier =
-                    new RSASSAVerifier((RSAPublicKey) getPublicKey(KEYSTORE, KEYSTORE_PASSWORD, ALIAS));
-            return signedJWT.verify(verifier);
+            if (new Date().before(signedJWT.getJWTClaimsSet().getExpirationTime())) {
+                JWSVerifier verifier =
+                        new RSASSAVerifier((RSAPublicKey) getPublicKey(KEYSTORE, KEYSTORE_PASSWORD, ALIAS));
+                return signedJWT.verify(verifier);
+            }
         } catch (ParseException | IOException | KeyStoreException | CertificateException |
                 NoSuchAlgorithmException | UnrecoverableKeyException | JOSEException e) {
             log.error("Error occurred while JWT signature verification", e);
