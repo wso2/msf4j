@@ -48,11 +48,6 @@
             <artifactId>petstore-util</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.mss</groupId>
-            <artifactId>petstore-security</artifactId>
-            <version>${project.version}</version>
-        </dependency>
     </dependencies>
 
     <build>

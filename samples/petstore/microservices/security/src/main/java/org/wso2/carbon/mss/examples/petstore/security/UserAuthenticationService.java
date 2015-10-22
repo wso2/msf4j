@@ -20,7 +20,7 @@ package org.wso2.carbon.mss.examples.petstore.security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.mss.examples.petstore.security.util.model.User;
+import org.wso2.carbon.mss.examples.petstore.util.model.User;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -57,8 +57,7 @@ public class UserAuthenticationService {
         }
 
         return Response.status(Response.Status.UNAUTHORIZED)
-                .entity("Invalid login attempt.")
-                .build();
+                .entity("Invalid login attempt.").build();
 
     }
 

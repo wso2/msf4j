@@ -22,9 +22,9 @@ import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.mss.MicroservicesRunner;
-import org.wso2.carbon.mss.examples.petstore.security.JWTSecurityInterceptor;
 import org.wso2.carbon.mss.examples.petstore.util.JedisUtil;
 import org.wso2.carbon.mss.examples.petstore.util.model.Pet;
+import org.wso2.carbon.mss.examples.petstore.util.security.JWTSecurityInterceptor;
 
 import java.util.ArrayList;
 import java.util.List;
