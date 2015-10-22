@@ -18,17 +18,19 @@
  */
 package org.wso2.carbon.mss.internal.router;
 
+import java.util.UUID;
+
 /**
  * Bean class used for testing JAX-RS bean conversions
  */
 public class Pet {
 
-    private String id;
+    private String id = UUID.randomUUID().toString();
     private Category category;
     private int ageMonths;
     private String details;
     private float price;
-    private long dateAdded;
+    private long dateAdded  = System.currentTimeMillis();
     private String image;
 
     public Pet() {
@@ -54,10 +56,6 @@ public class Pet {
         return dateAdded;
     }
 
-    public void setDateAdded(long dateAdded) {
-        this.dateAdded = dateAdded;
-    }
-
     public String getDetails() {
         return details;
     }
@@ -68,10 +66,6 @@ public class Pet {
 
     public String getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getImage() {

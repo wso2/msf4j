@@ -19,7 +19,6 @@
 
 package org.wso2.carbon.mss.internal.router.beanconversion;
 
-import com.google.gson.Gson;
 import org.junit.Assert;
 import org.junit.Test;
 import org.wso2.carbon.mss.internal.router.Category;
@@ -27,10 +26,9 @@ import org.wso2.carbon.mss.internal.router.Pet;
 import org.wso2.carbon.mss.internal.router.XmlBean;
 
 /**
- * Tests the functionality of BeaanConverter
+ * Tests the functionality of BeanConverter
  */
 public class BeanConverterTest {
-    private Gson gson = new Gson();
 
     @Test(expected = BeanConversionException.class)
     public void testUnsupportedMediaType() throws BeanConversionException {
@@ -109,12 +107,10 @@ public class BeanConverterTest {
 
     private Pet makePet() {
         Pet pet = new Pet();
-        pet.setId("0001");
         pet.setCategory(new Category("dog"));
         pet.setAgeMonths(3);
         pet.setDetails("small-cat");
         pet.setPrice(10.5f);
-        pet.setDateAdded(99999);
         pet.setImage("cat.png");
         return pet;
     }

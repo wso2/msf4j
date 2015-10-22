@@ -23,9 +23,12 @@ import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.exceptions.JedisConnectionException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 /**
  * Utility class for connecting to Redis & handling Redis calls
@@ -101,6 +104,23 @@ public class JedisUtil {
             master = getJedis();
             master.del(key);
         }
+    }
+
+    public static List<String> getValues(String keyPattern) {
+        fetchMaster();
+        List<String> values = new ArrayList<>();
+        try {
+            getValuesInternal(keyPattern, values);
+        } catch (JedisConnectionException e) {
+            master = getJedis();
+            getValuesInternal(keyPattern, values);
+        }
+        return values;
+    }
+
+    private static void getValuesInternal(String keyPattern, List<String> values) {
+        Set<String> keys = master.keys(keyPattern);
+        values.addAll(keys.stream().map(master::get).collect(Collectors.toList()));
     }
 
     private static void fetchMaster() {
