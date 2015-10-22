@@ -1,52 +1,32 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      >
+      xmlns:b="http://butterfaces.larmic.de/components">
 
 	<h:head>
 		<!--<h:outputStylesheet name="common-style.css" library="css" />-->
+        <link rel="stylesheet" href="../libs/css/style.css"/>
 	</h:head>
 
     <h:body>
-
-	<div id="page">
-
-		<div id="header">
 			<ui:insert name="header" >
 				<ui:include src="/template/common/commonHeader.xhtml" />
 			</ui:insert>
-	    </div>
-
-        <div id="body">
 
         <div style="width: 100%;">
-            <div style="float:left;">
-                <!--<h:link value="Home" outcome="#{request.contextPath}/pet/index" /><br/>-->
-                <!--<h:link value="Add pet type" outcome="#{request.contextPath}/pettype/add" /><br/>-->
-                <!--<h:link value="List pet types" outcome="#{request.contextPath}/pettype/list" /> <br/>-->
-                <!--<h:link value="Add pet" outcome="#{request.contextPath}/pet/add" /> <br/>-->
-                <!--<h:link value="List pets" outcome="#{request.contextPath}/pet/list" /> <br/>-->
-            </div>
-            <div style="float:right; width: 80%;">
                 <div id="content" style="margin: 0 auto;">
                     <ui:insert name="content" >
                         <ui:include src="/template/common/commonContent.xhtml" />
                     </ui:insert>
                 </div>
-            </div>
         </div>
 
-        </div>
 	    <div id="footer">
 	    	<ui:insert name="footer" >
 	    		<ui:include src="/template/common/commonFooter.xhtml" />
 	    	</ui:insert>
     	</div>
-
-    </div>
 
     </h:body>
 

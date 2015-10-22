@@ -33,6 +33,10 @@
 <h:body>
     <ui:composition template="/template/common/commonLayout.xhtml">
         <ui:define name="content">
+            <div class="container-fluid body-wrapper">
+
+            <div class="row">
+            <div class="col-md-4">
             <h3>Add new pet type</h3>
 
             <h:form enctype="multipart/form-data">
@@ -94,11 +98,12 @@
                 </u>
                 <br/>
                 <h:commandButton action="#{petBean.addPet}"
-                                 value=" Add " class="btn btn-success"/>
+                                 value=" Add " class="btn btn-primary"/>
 
-                <h:button value="Cancel" outcome="/pet/index" class="btn btn-danger"/>
+                <h:button value="Cancel" outcome="/pet/index" class="btn  btn-default"/>
 
             </h:form>
+            </div></div></div>
         </ui:define>
     </ui:composition>
 </h:body>
