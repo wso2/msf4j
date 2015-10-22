@@ -20,6 +20,7 @@ package org.wso2.carbon.mss.examples.petstore.util.security;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jwt.SignedJWT;
@@ -29,6 +30,7 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.mss.HttpResponder;
+import org.wso2.carbon.mss.examples.petstore.util.SystemVariableUtil;
 import org.wso2.carbon.mss.internal.router.HandlerInfo;
 import org.wso2.carbon.mss.internal.router.Interceptor;
 
@@ -43,6 +45,7 @@ import java.security.PublicKey;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.interfaces.RSAPublicKey;
+import java.text.ParseException;
 
 /**
  * Verify the JWT header in request.
@@ -52,38 +55,23 @@ public class JWTSecurityInterceptor implements Interceptor {
     private final Log log = LogFactory.getLog(JWTSecurityInterceptor.class);
 
     private static final String JWT_HEADER = "X-JWT-Assertion";
-
     private static final String AUTH_TYPE_JWT = "JWT";
-
-    private static String keyStore = "wso2carbon.jks";
-
-    private String alias = "wso2carbon";
-
-    private String keyStorePassword = "wso2carbon";
+    private static final String KEYSTORE = SystemVariableUtil.getValue("PETSTORE_KEYSTORE", "wso2carbon.jks");
+    private static final String ALIAS = SystemVariableUtil.getValue("PETSTORE_KEY_ALIAS", "wso2carbon");
+    private static final String KEYSTORE_PASSWORD = SystemVariableUtil.getValue("PETSTORE_KEYSTORE_PASS", "wso2carbon");
 
     public boolean preCall(HttpRequest request, HttpResponder responder, HandlerInfo handlerInfo) {
-
         HttpHeaders headers = request.headers();
-        boolean isValidSignature = false;
+        boolean isValidSignature;
         if (headers != null) {
             String jwtHeader = headers.get(JWT_HEADER);
             if (jwtHeader != null) {
-                try {
-                    isValidSignature = verifySignature(jwtHeader);
-                    if (isValidSignature) {
-                        return true;
-                    }
-                } catch (Exception e) {
-                    log.error("Error while JWT signature validation." + e);
-                    Multimap<String, String> map = ArrayListMultimap.create();
-                    map.put(HttpHeaders.Names.WWW_AUTHENTICATE, AUTH_TYPE_JWT);
-                    responder.sendStatus(HttpResponseStatus.UNAUTHORIZED, map);
-                    return false;
+                isValidSignature = verifySignature(jwtHeader);
+                if (isValidSignature) {
+                    return true;
                 }
             }
         }
-        log.info("## signature validation ## " + isValidSignature);
-
         Multimap<String, String> map = ArrayListMultimap.create();
         map.put(HttpHeaders.Names.WWW_AUTHENTICATE, AUTH_TYPE_JWT);
         responder.sendStatus(HttpResponseStatus.UNAUTHORIZED, map);
@@ -92,16 +80,27 @@ public class JWTSecurityInterceptor implements Interceptor {
     }
 
     public void postCall(HttpRequest request, HttpResponseStatus status, HandlerInfo handlerInfo) {
+        // Nothing to do
+    }
 
+    private boolean verifySignature(String jwt) {
+        try {
+            SignedJWT signedJWT = SignedJWT.parse(jwt);
+            JWSVerifier verifier =
+                    new RSASSAVerifier((RSAPublicKey) getPublicKey(KEYSTORE, KEYSTORE_PASSWORD, ALIAS));
+            return signedJWT.verify(verifier);
+        } catch (ParseException | IOException | KeyStoreException | CertificateException |
+                NoSuchAlgorithmException | UnrecoverableKeyException | JOSEException e) {
+            log.error("Error occurred while JWT signature verification", e);
+        }
+        return false;
     }
 
     private PublicKey getPublicKey(String keyStorePath, String keyStorePassword, String alias)
             throws IOException, KeyStoreException, CertificateException,
-                   NoSuchAlgorithmException, UnrecoverableKeyException {
+            NoSuchAlgorithmException, UnrecoverableKeyException {
 
-        InputStream inputStream = null;
-        try {
-            inputStream = this.getClass().getClassLoader().getResourceAsStream(keyStorePath);
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(keyStorePath)) {
             KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
             keystore.load(inputStream, keyStorePassword.toCharArray());
 
@@ -113,22 +112,7 @@ public class JWTSecurityInterceptor implements Interceptor {
                 // Get public key
                 return cert.getPublicKey();
             }
-        } finally {
-            if (inputStream != null) {
-                inputStream.close();
-            }
         }
-
         return null;
     }
-
-    private boolean verifySignature(String jwt) throws Exception {
-
-        SignedJWT signedJWT = SignedJWT.parse(jwt);
-        JWSVerifier verifier = new RSASSAVerifier((RSAPublicKey) getPublicKey(keyStore,
-                                                                              keyStorePassword,
-                                                                              alias));
-        return signedJWT.verify(verifier);
-    }
-
 }
