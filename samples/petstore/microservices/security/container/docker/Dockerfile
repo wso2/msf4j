@@ -24,11 +24,11 @@ WORKDIR /opt
 # --------------------------------
 # Copy scripts, packages & plugins
 # --------------------------------
-COPY packages/petstore-txn-1.0.0-SNAPSHOT.jar /opt/
+COPY packages/petstore-security-1.0.0-SNAPSHOT.jar /opt/
 
 # ----------------------
 # Expose container ports
 # ----------------------
 EXPOSE 8080
 
-ENTRYPOINT java -jar /opt/petstore-txn-1.0.0-SNAPSHOT.jar
+ENTRYPOINT java -jar /opt/petstore-security-1.0.0-SNAPSHOT.jar

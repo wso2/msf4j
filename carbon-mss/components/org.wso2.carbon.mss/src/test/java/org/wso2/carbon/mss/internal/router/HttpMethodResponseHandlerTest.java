@@ -19,10 +19,10 @@
 
 package org.wso2.carbon.mss.internal.router;
 
+import com.google.common.base.Charsets;
 import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
 import io.netty.buffer.ByteBuf;
-import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.junit.Assert;
 import org.junit.Test;
@@ -58,7 +58,8 @@ public class HttpMethodResponseHandlerTest {
                 .setResponder(new HttpResponderMock((HttpResponseStatus status,
                                                      Object entity, Multimap<String, String> headers) -> {
                     Assert.assertTrue("Expected 200", status.code() == HttpResponseStatus.OK.code());
-                    Assert.assertEquals("Entity", entity);
+                    Assert.assertTrue(entity instanceof ByteBuf);
+                    Assert.assertEquals("Entity", ((ByteBuf) entity).toString(Charsets.UTF_8));
                 }))
                 .setEntity("Entity")
                 .send();
@@ -95,8 +96,9 @@ public class HttpMethodResponseHandlerTest {
                 .setResponder(new HttpResponderMock((HttpResponseStatus status,
                                                      Object entity, Multimap<String, String> headers) -> {
                     Assert.assertEquals(status.code(), HttpResponseStatus.OK.code());
-                    Assert.assertTrue(headers.containsEntry(HttpHeaders.Names.CONTENT_TYPE, MediaType.TEXT_PLAIN));
-                    Assert.assertEquals(content, entity);
+                    //Assert.assertTrue(headers.containsEntry(HttpHeaders.Names.CONTENT_TYPE, MediaType.TEXT_PLAIN));
+                    Assert.assertTrue(entity instanceof ByteBuf);
+                    Assert.assertEquals(content, ((ByteBuf) entity).toString(Charsets.UTF_8));
                 }))
                 .setEntity(content)
                 .setMediaType(MediaType.TEXT_PLAIN)

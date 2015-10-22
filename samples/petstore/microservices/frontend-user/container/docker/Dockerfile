@@ -16,19 +16,13 @@
 #
 # ------------------------------------------------------------------------
 
-FROM java:8-jre
+FROM tomcat:8.0
 MAINTAINER architecture@wso2.org
-
-WORKDIR /opt
 
 # --------------------------------
 # Copy scripts, packages & plugins
 # --------------------------------
-COPY packages/petstore-txn-1.0.0-SNAPSHOT.jar /opt/
+COPY packages/store.war /usr/local/tomcat/webapps/
 
-# ----------------------
-# Expose container ports
-# ----------------------
-EXPOSE 8080
 
-ENTRYPOINT java -jar /opt/petstore-txn-1.0.0-SNAPSHOT.jar
+
