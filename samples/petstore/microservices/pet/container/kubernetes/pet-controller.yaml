@@ -30,10 +30,3 @@ spec:
           value: "26379"
         ports:
         - containerPort: 8080
-      - name: ssh
-        image: wso2mss/ssh
-        env:
-        - name: GET_HOSTS_FROM
-          value: dns
-        ports:
-        - containerPort: 22

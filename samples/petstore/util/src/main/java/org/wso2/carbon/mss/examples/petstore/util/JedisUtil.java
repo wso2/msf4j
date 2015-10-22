@@ -50,22 +50,10 @@ public class JedisUtil {
     private static ReentrantLock lock = new ReentrantLock();
 
     static {
-        SENTINEL1_HOST =
-                System.getenv("SENTINEL1_HOST") != null ?
-                        System.getenv("SENTINEL1_HOST") :
-                        System.getProperty("SENTINEL1_HOST", "127.0.0.1");
-        SENTINEL2_HOST =
-                System.getenv("SENTINEL2_HOST") != null ?
-                        System.getenv("SENTINEL2_HOST") :
-                        System.getProperty("SENTINEL2_HOST", "127.0.0.1");
-        SENTINEL1_PORT =
-                Integer.parseInt(System.getenv("SENTINEL1_PORT") != null ?
-                        System.getenv("SENTINEL1_PORT") :
-                        System.getProperty("SENTINEL1_PORT", "5000"));
-        SENTINEL2_PORT =
-                Integer.parseInt(System.getenv("SENTINEL2_PORT") != null ?
-                        System.getenv("SENTINEL2_PORT") :
-                        System.getProperty("SENTINEL2_PORT", "5001"));
+        SENTINEL1_HOST = SystemVariableUtil.getValue("SENTINEL1_HOST", "127.0.0.1");
+        SENTINEL2_HOST = SystemVariableUtil.getValue("SENTINEL2_HOST", "127.0.0.1");
+        SENTINEL1_PORT = Integer.parseInt(SystemVariableUtil.getValue("SENTINEL1_PORT", "5000"));
+        SENTINEL2_PORT = Integer.parseInt(SystemVariableUtil.getValue("SENTINEL2_PORT", "5001"));
 
         sentinel1 = new Jedis(SENTINEL1_HOST, SENTINEL1_PORT);
         sentinel2 = new Jedis(SENTINEL2_HOST, SENTINEL2_PORT);
@@ -75,6 +63,14 @@ public class JedisUtil {
     }
 
     private static Jedis master = getJedis();
+
+    public static String getSentinelHost() {
+        return SENTINEL1_HOST;
+    }
+
+    public static int getSentinelPort() {
+        return SENTINEL1_PORT;
+    }
 
     public static void set(String key, String value) {
         fetchMaster();
