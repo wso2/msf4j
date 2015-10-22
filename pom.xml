@@ -152,6 +152,11 @@
                 <artifactId>org.apache.servicemix.bundles.commons-beanutils</artifactId>
                 <version>${beanutils.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.nimbusds</groupId>
+                <artifactId>nimbus-jose-jwt</artifactId>
+                <version>${nimbus.jose.jwt.version}</version>
+            </dependency>  
 
             <!-- Test dependencies -->
             <dependency>
@@ -299,6 +304,7 @@
         <beanutils.osgi.version>1.8.3.2</beanutils.osgi.version>
         <junit.version>4.11</junit.version>
         <logback.version>1.0.9</logback.version>
+        <nimbus.jose.jwt.version>2.25</nimbus.jose.jwt.version>
 
         <osgi.framework.import.version.range>[1.8.0, 2.0.0)</osgi.framework.import.version.range>
         <osgi.service.tracker.import.version.range>[1.5.1, 2.0.0)</osgi.service.tracker.import.version.range>
@@ -307,7 +313,7 @@
 
     <modules>
         <module>carbon-mss/components/org.wso2.carbon.mss</module>
-        <module>carbon-mss/features/org.wso2.carbon.mss.feature</module>
+        <module>carbon-mss/features/org.wso2.carbon.mss.feature</module> 
         <module>samples/executable-jar</module>
         <module>samples/osgi-bundle</module>
         <module>samples/security-interceptor</module>

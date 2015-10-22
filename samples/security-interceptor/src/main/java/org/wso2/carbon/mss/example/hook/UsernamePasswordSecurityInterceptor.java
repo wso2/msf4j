@@ -18,10 +18,16 @@
 
 package org.wso2.carbon.mss.example.hook;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * Demonstrate usage of  AbstractBasicAuthHook, just check username and password are equal or not.
  */
 public class UsernamePasswordSecurityInterceptor extends AbstractBasicAuthInterceptor {
+
+    private final Log log = LogFactory.getLog(UsernamePasswordSecurityInterceptor.class);
+
     @Override
     protected boolean authenticate(String username, String password) {
 
