@@ -24,6 +24,9 @@ import org.wso2.carbon.mss.examples.petstore.util.model.Pet;
 
 import java.util.List;
 
+/**
+ * PetService class.
+ */
 public interface PetService {
 
     public boolean addPetType(Category type) throws PetServiceException;

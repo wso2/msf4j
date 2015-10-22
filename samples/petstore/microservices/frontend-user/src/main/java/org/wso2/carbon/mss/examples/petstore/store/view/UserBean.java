@@ -21,10 +21,14 @@ package org.wso2.carbon.mss.examples.petstore.store.view;
 import org.wso2.carbon.mss.examples.petstore.store.dao.UserService;
 import org.wso2.carbon.mss.examples.petstore.store.model.User;
 
+import javax.annotation.Nullable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
+/**
+ * Bean classes used for JSF model.
+ */
 @ManagedBean
 @ViewScoped
 public class UserBean {
@@ -34,6 +38,7 @@ public class UserBean {
     @ManagedProperty("#{userService}")
     private UserService userService;
 
+    @Nullable
     @ManagedProperty("#{navigationBean}")
     private NavigationBean navigationBean;
 
@@ -41,7 +46,7 @@ public class UserBean {
 
     public String addUser() {
         user.addRole(ROLE_USER);
-      //  userService.addUser(user);
+        //  userService.addUser(user);
         return navigationBean.toLogin();
     }
 

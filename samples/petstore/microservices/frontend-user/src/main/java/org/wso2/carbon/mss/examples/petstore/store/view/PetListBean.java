@@ -25,17 +25,21 @@ import org.wso2.carbon.mss.examples.petstore.store.dao.PetService;
 import org.wso2.carbon.mss.examples.petstore.store.model.PetServiceException;
 import org.wso2.carbon.mss.examples.petstore.util.model.Pet;
 
+import java.util.List;
+import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
-import java.io.Serializable;
-import java.util.List;
 
+/**
+ * Bean classes used for JSF model.
+ */
 @ManagedBean
 @RequestScoped
-public class PetListBean implements Serializable {
+public class PetListBean {
 
+    @Nullable
     @ManagedProperty("#{petService}")
     private PetService petService;
     private List<Pet> pets;
@@ -99,8 +103,7 @@ public class PetListBean implements Serializable {
     }
 
 
-    public String backtoList(){
+    public String backtoList() {
         return "list";
-
     }
 }

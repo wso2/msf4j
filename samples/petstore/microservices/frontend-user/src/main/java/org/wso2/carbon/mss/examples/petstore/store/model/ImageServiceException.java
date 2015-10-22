@@ -18,6 +18,9 @@
 
 package org.wso2.carbon.mss.examples.petstore.store.model;
 
+/**
+ * ImageServiceException is used with ImageServiceClient
+ */
 public class ImageServiceException extends Exception {
     public ImageServiceException(String s) {
         super(s);

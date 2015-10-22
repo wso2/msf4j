@@ -23,23 +23,28 @@ import org.wso2.carbon.mss.examples.petstore.store.model.Cart;
 import org.wso2.carbon.mss.examples.petstore.store.model.OrderServiceException;
 import org.wso2.carbon.mss.examples.petstore.util.model.CreditCard;
 
+import javax.annotation.Nullable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
-import java.io.Serializable;
 
+/**
+ * Bean classes used for JSF model.
+ */
 @ManagedBean
 @RequestScoped
-public class CheckoutBean implements Serializable {
+public class CheckoutBean {
 
     private String ccNumber;
     private String name;
     private String cvc;
     private String orderConfirmationNo;
 
+    @Nullable
     @ManagedProperty("#{cart}")
     private Cart cart;
 
+    @Nullable
     @ManagedProperty("#{paymentService}")
     private PaymentService paymentService;
 

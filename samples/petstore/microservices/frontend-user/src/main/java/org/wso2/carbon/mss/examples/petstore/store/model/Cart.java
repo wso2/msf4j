@@ -20,11 +20,14 @@ package org.wso2.carbon.mss.examples.petstore.store.model;
 
 import org.wso2.carbon.mss.examples.petstore.util.model.Pet;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 import java.util.ArrayList;
 import java.util.List;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 
+/**
+ * This represent shopping cart for this sample.
+ */
 @ManagedBean
 @SessionScoped
 public class Cart {

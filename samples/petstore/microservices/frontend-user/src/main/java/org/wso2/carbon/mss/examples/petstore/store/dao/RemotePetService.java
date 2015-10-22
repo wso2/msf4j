@@ -24,20 +24,22 @@ import org.wso2.carbon.mss.examples.petstore.store.model.PetServiceException;
 import org.wso2.carbon.mss.examples.petstore.util.model.Category;
 import org.wso2.carbon.mss.examples.petstore.util.model.Pet;
 
-import javax.faces.bean.ApplicationScoped;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.faces.bean.ApplicationScoped;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 
+/**
+ * RemotePetService implementation of PaymentService class.
+ */
 @ManagedBean(name = "petService")
 @ApplicationScoped
-public class RemotePetService implements PetService, Serializable {
+public class RemotePetService implements PetService {
 
-    private final static Logger LOGGER = Logger.getLogger(RemotePetService.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(RemotePetService.class.getName());
 
     @ManagedProperty("#{petCategoryServiceClient}")
     private PetCategoryServiceClient petCategoryServiceClient;

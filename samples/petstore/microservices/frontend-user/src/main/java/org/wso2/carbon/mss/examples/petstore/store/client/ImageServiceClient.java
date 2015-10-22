@@ -19,11 +19,14 @@
 package org.wso2.carbon.mss.examples.petstore.store.client;
 
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
+import org.glassfish.jersey.media.multipart.MultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.media.multipart.file.StreamDataBodyPart;
 import org.wso2.carbon.mss.examples.petstore.store.model.Configuration;
 import org.wso2.carbon.mss.examples.petstore.store.view.LoginBean;
 
+import java.io.IOException;
+import javax.annotation.Nullable;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -33,12 +36,15 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 
+/**
+ * Client to access ImageServiceClient.
+ */
 @ManagedBean
 @ApplicationScoped
 public class ImageServiceClient extends AbstractServiceClient {
 
+    @Nullable
     @ManagedProperty("#{configuration}")
     private Configuration configuration;
 
@@ -47,16 +53,20 @@ public class ImageServiceClient extends AbstractServiceClient {
         final Client client = ClientBuilder.newBuilder().register(MultiPartFeature.class).build();
         final StreamDataBodyPart stream = new StreamDataBodyPart("file", file.getInputStream());
         FormDataMultiPart formDataMultiPart = new FormDataMultiPart();
-        final FormDataMultiPart multipart = (FormDataMultiPart) formDataMultiPart
-                .field("fileName", file.getSubmittedFileName()).bodyPart(stream);
-        final WebTarget target = client.target(configuration.getFileUploadServiceEP());
-        final Response response = target.request().header(LoginBean.X_JWT_ASSERTION, getJWTToken())
-                .post(Entity.entity(multipart, multipart.getMediaType()));
-        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
-            imageURL = response.readEntity(String.class);
+        final MultiPart multiPart = formDataMultiPart.field("fileName", file.getSubmittedFileName()).bodyPart(stream);
+        if (multiPart instanceof FormDataMultiPart) {
+            final FormDataMultiPart dataMultiPart = (FormDataMultiPart) multiPart;
+            final WebTarget target = client.target(configuration.getFileUploadServiceEP());
+            final Response response = target.request().header(LoginBean.X_JWT_ASSERTION, getJWTToken())
+                    .post(Entity.entity(dataMultiPart, dataMultiPart.getMediaType()));
+            if (Response.Status.OK.getStatusCode() == response.getStatus()) {
+                imageURL = response.readEntity(String.class);
+            }
+            formDataMultiPart.close();
+            dataMultiPart.close();
+            return imageURL;
         }
-        formDataMultiPart.close();
-        multipart.close();
+
         return imageURL;
     }
 

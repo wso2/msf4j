@@ -18,6 +18,9 @@
 
 package org.wso2.carbon.mss.examples.petstore.store.model;
 
+/**
+ * OrderServiceException is used with OrderServiceClient
+ */
 public class OrderServiceException extends Exception {
 
     public OrderServiceException(String s) {

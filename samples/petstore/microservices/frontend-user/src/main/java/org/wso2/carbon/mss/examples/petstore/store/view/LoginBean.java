@@ -21,17 +21,20 @@ package org.wso2.carbon.mss.examples.petstore.store.view;
 import org.wso2.carbon.mss.examples.petstore.store.dao.UserService;
 import org.wso2.carbon.mss.examples.petstore.store.model.UserServiceException;
 
+import javax.annotation.Nullable;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
-import java.io.Serializable;
 
+/**
+ * Bean classes used for JSF model.
+ */
 @ManagedBean
 @SessionScoped
-public class LoginBean implements Serializable {
+public class LoginBean {
 
     public static final String X_JWT_ASSERTION = "X-JWT-Assertion";
     private String username;
@@ -39,9 +42,11 @@ public class LoginBean implements Serializable {
     private String token;
     private boolean loggedIn;
 
+    @Nullable
     @ManagedProperty("#{navigationBean}")
     private NavigationBean navigationBean;
 
+    @Nullable
     @ManagedProperty("#{userService}")
     private UserService userService;
 

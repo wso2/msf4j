@@ -21,6 +21,9 @@ package org.wso2.carbon.mss.examples.petstore.store.model;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 
+/**
+ * Configuration details such as endpoint references for dependant services.
+ */
 @ManagedBean
 @ApplicationScoped
 public class Configuration {

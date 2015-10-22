@@ -24,6 +24,11 @@ import org.wso2.carbon.mss.examples.petstore.store.model.Configuration;
 import org.wso2.carbon.mss.examples.petstore.store.view.LoginBean;
 import org.wso2.carbon.mss.examples.petstore.util.model.Category;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.Collections;
+import java.util.List;
+import javax.annotation.Nullable;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -33,15 +38,15 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.Collections;
-import java.util.List;
 
+/**
+ * Client to access PetCategoryServiceClient.
+ */
 @ManagedBean
 @ApplicationScoped
 public class PetCategoryServiceClient extends AbstractServiceClient {
 
+    @Nullable
     @ManagedProperty("#{configuration}")
     private Configuration configuration;
 
@@ -75,8 +80,7 @@ public class PetCategoryServiceClient extends AbstractServiceClient {
         if (Response.Status.OK.getStatusCode() == response.getStatus()) {
             String body = response.readEntity(String.class);
             Gson gson = new Gson();
-            Type listType = new TypeToken<List<Category>>() {
-            }.getType();
+            Type listType = new CategoryTypeToken().getType();
             return gson.fromJson(body, listType);
         }
         return Collections.emptyList();
@@ -89,5 +93,9 @@ public class PetCategoryServiceClient extends AbstractServiceClient {
 
     public void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
+    }
+
+    static class CategoryTypeToken extends TypeToken<List<Category>> {
+        private static final long serialVersionUID = 4534722069729160047L;
     }
 }

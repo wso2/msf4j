@@ -23,6 +23,10 @@ import org.wso2.carbon.mss.examples.petstore.store.view.LoginBean;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
+/**
+ * Provide JWTToken from HTTP Session.
+ *
+ */
 public abstract class AbstractServiceClient {
 
     public static final String LOGIN_BEAN = "loginBean";

@@ -23,14 +23,19 @@ import org.wso2.carbon.mss.examples.petstore.store.model.Cart;
 import org.wso2.carbon.mss.examples.petstore.store.model.OrderServiceException;
 import org.wso2.carbon.mss.examples.petstore.util.model.CreditCard;
 
+import javax.annotation.Nullable;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 
+/**
+ * PaymentService class.
+ */
 @ManagedBean
 @ApplicationScoped
 public class PaymentService {
 
+    @Nullable
     @ManagedProperty("#{txnServiceClient}")
     private TxnServiceClient txnServiceClient;
 

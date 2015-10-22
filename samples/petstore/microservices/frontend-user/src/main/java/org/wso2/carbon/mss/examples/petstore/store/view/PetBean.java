@@ -25,6 +25,9 @@ import org.wso2.carbon.mss.examples.petstore.store.model.PetServiceException;
 import org.wso2.carbon.mss.examples.petstore.util.model.Category;
 import org.wso2.carbon.mss.examples.petstore.util.model.Pet;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -32,15 +35,15 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
 import javax.servlet.http.Part;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+/**
+ * Bean classes used for JSF model.
+ */
 @ManagedBean
 @RequestScoped
 public class PetBean {
 
-    private final static Logger LOGGER = Logger.getLogger(PetBean.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(PetBean.class.getName());
 
     private Pet pet;
     private Part file;

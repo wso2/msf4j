@@ -18,6 +18,9 @@
 
 package org.wso2.carbon.mss.examples.petstore.store.model;
 
+/**
+ * UserServiceException is used with UserServiceClient
+ */
 public class UserServiceException extends Exception {
 
     public UserServiceException(String s) {

@@ -21,24 +21,28 @@ package org.wso2.carbon.mss.examples.petstore.store.view;
 import org.wso2.carbon.mss.examples.petstore.store.model.Cart;
 import org.wso2.carbon.mss.examples.petstore.util.model.Pet;
 
+import javax.annotation.Nullable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import java.io.Serializable;
 
+/**
+ * Bean classes used for JSF model.
+ */
 @ManagedBean
 @ViewScoped
-public class CartBean implements Serializable {
+public class CartBean {
 
+    @Nullable
     @ManagedProperty("#{cart}")
     private Cart cart;
 
     private Pet selected;
 
-    public void addToCart(Pet pet){
-       cart.addItem(pet);
+    public void addToCart(Pet pet) {
+        cart.addItem(pet);
     }
-    public void removeFromCart(Pet pet){
+    public void removeFromCart(Pet pet) {
         cart.removeItem(pet);
     }
     public Cart getCart() {

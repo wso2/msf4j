@@ -24,6 +24,7 @@ import org.wso2.carbon.mss.examples.petstore.store.model.UserServiceException;
 import org.wso2.carbon.mss.examples.petstore.store.view.LoginBean;
 import org.wso2.carbon.mss.examples.petstore.util.model.User;
 
+import javax.annotation.Nullable;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -34,10 +35,14 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+/**
+ * Client to access UserServiceClient.
+ */
 @ManagedBean
 @ApplicationScoped
 public class UserServiceClient extends AbstractServiceClient {
 
+    @Nullable
     @ManagedProperty("#{configuration}")
     private Configuration configuration;
 

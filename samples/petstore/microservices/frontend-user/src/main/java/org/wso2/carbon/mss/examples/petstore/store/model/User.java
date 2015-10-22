@@ -21,6 +21,9 @@ package org.wso2.carbon.mss.examples.petstore.store.model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * User bean class
+ */
 public class User {
 
     private String username;
@@ -79,7 +82,7 @@ public class User {
         this.roles = roles;
     }
 
-    public void addRole(String role){
+    public void addRole(String role) {
         roles.add(role);
     }
 }

@@ -18,13 +18,18 @@
 
 package org.wso2.carbon.mss.examples.petstore.store.view;
 
+import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import java.io.Serializable;
 
+/**
+ * Bean classes used for JSF model.
+ */
 @ManagedBean
 @SessionScoped
 public class NavigationBean implements Serializable {
+
+    private static final long serialVersionUID = -8628674465932953415L;
 
     public String redirectToWelcome() {
         return "pet/list.xhtml?faces-redirect=true";
@@ -34,7 +39,7 @@ public class NavigationBean implements Serializable {
         return "/login.xhtml";
     }
 
-    public String backtoList(){
+    public String backtoList() {
         return "list";
 
     }

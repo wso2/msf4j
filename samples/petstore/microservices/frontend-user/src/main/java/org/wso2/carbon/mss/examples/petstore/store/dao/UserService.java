@@ -21,17 +21,19 @@ package org.wso2.carbon.mss.examples.petstore.store.dao;
 import org.wso2.carbon.mss.examples.petstore.store.client.UserServiceClient;
 import org.wso2.carbon.mss.examples.petstore.store.model.UserServiceException;
 
+import java.util.logging.Logger;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import java.io.Serializable;
-import java.util.logging.Logger;
 
+/**
+ * UserService class.
+ */
 @ManagedBean
 @ApplicationScoped
-public class UserService implements Serializable {
+public class UserService {
 
-    private final static Logger LOGGER = Logger.getLogger(UserService.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(UserService.class.getName());
 
     @ManagedProperty("#{userServiceClient}")
     private UserServiceClient userServiceClient;

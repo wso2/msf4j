@@ -18,6 +18,9 @@
 
 package org.wso2.carbon.mss.examples.petstore.store.model;
 
+/**
+ * PetServiceException is used with PetServiceClient
+ */
 public class PetServiceException extends Exception {
 
     public PetServiceException(String s) {

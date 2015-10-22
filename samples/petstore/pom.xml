@@ -67,5 +67,6 @@
         <module>microservices/pet</module>
         <module>microservices/security</module>
         <module>microservices/transaction</module>
+        <module>microservices/frontend-user</module>
     </modules>
 </project>

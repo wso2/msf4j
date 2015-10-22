@@ -22,25 +22,28 @@ import org.wso2.carbon.mss.examples.petstore.store.dao.PetService;
 import org.wso2.carbon.mss.examples.petstore.store.model.PetServiceException;
 import org.wso2.carbon.mss.examples.petstore.util.model.Category;
 
+import java.util.List;
+import javax.annotation.Nullable;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
-import java.io.Serializable;
-import java.util.List;
 
+/**
+ * Bean classes used for JSF model.
+ */
 @ManagedBean
 @RequestScoped
-public class PetTypeBean implements Serializable {
+public class PetTypeBean {
 
-    private Category petType;
-    private String result;
-
+    @Nullable
     @ManagedProperty("#{petService}")
     private PetService petService;
 
+    private Category petType;
+    private String result;
 
     public PetTypeBean() {
         petType = new Category();

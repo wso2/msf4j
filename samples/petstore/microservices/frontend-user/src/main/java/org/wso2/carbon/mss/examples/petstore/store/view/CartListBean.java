@@ -24,16 +24,20 @@ import de.larmic.butterfaces.model.table.TableModel;
 import org.wso2.carbon.mss.examples.petstore.store.model.Cart;
 import org.wso2.carbon.mss.examples.petstore.util.model.Pet;
 
+import java.util.List;
+import javax.annotation.Nullable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
-import java.io.Serializable;
-import java.util.List;
 
+/**
+ * Bean classes used for JSF model.
+ */
 @ManagedBean
 @SessionScoped
-public class CartListBean implements Serializable {
+public class CartListBean {
 
+    @Nullable
     @ManagedProperty("#{cart}")
     private Cart cart;
     private TableModel tableModel = new DefaultTableModel();

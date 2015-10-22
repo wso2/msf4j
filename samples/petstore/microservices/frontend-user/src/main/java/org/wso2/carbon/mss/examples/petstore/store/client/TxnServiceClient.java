@@ -27,6 +27,9 @@ import org.wso2.carbon.mss.examples.petstore.util.model.CreditCard;
 import org.wso2.carbon.mss.examples.petstore.util.model.Order;
 import org.wso2.carbon.mss.examples.petstore.util.model.Pet;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.Nullable;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -36,13 +39,14 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * Client to access TxnServiceClient.
+ */
 @ManagedBean
 @ApplicationScoped
 public class TxnServiceClient extends AbstractServiceClient {
 
+    @Nullable
     @ManagedProperty("#{configuration}")
     private Configuration configuration;
 
