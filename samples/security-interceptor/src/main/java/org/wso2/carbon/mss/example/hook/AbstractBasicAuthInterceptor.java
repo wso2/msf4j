@@ -23,6 +23,8 @@ import com.google.common.collect.Multimap;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.mss.HttpResponder;
 import org.wso2.carbon.mss.internal.router.HandlerInfo;
 import org.wso2.carbon.mss.internal.router.Interceptor;
@@ -36,7 +38,10 @@ import java.util.Base64;
  */
 public abstract class AbstractBasicAuthInterceptor implements Interceptor {
 
+    private final Log log = LogFactory.getLog(AbstractBasicAuthInterceptor.class);
+
     private static final String AUTH_TYPE_BASIC = "Basic";
+
     private static final int AUTH_TYPE_BASIC_LENGTH = AUTH_TYPE_BASIC.length();
 
     @Override
@@ -72,4 +77,5 @@ public abstract class AbstractBasicAuthInterceptor implements Interceptor {
     }
 
     protected abstract boolean authenticate(String username, String password);
+
 }

@@ -9,10 +9,10 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>petstore-txn</artifactId>
+    <artifactId>petstore-security</artifactId>
     <packaging>jar</packaging>
 
-    <name>Pet store microservices example - transaction microservice</name>
+    <name>Pet store microservices example - security microservice</name>
 
     <dependencies>
         <dependency>
@@ -32,6 +32,11 @@
             <artifactId>netty-codec-http</artifactId>
         </dependency>
         <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
@@ -48,6 +53,10 @@
             <artifactId>petstore-util</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+        </dependency>    
     </dependencies>
 
     <build>
@@ -76,7 +85,7 @@
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>org.wso2.carbon.mss.examples.petstore.transaction.Runner</mainClass>
+                                    <mainClass>org.wso2.carbon.mss.examples.petstore.security.Runner</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
