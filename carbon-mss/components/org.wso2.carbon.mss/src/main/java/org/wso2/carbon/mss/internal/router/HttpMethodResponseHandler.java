@@ -119,6 +119,8 @@ public class HttpMethodResponseHandler {
                 mediaType = "";
                 entityToSend = entity;
             }
+            //String.valueOf() is used to send correct response for entity types other than String
+            //such as primitives like numbers
             ByteBuf channelBuffer = Unpooled.wrappedBuffer(Charsets.UTF_8.encode(String.valueOf(entityToSend)));
             responder.sendContent(status, channelBuffer, mediaType, headers);
         } else {
