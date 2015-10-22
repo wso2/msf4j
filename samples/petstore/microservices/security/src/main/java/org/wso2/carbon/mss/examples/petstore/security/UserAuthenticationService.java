@@ -34,7 +34,6 @@ import javax.ws.rs.core.Response;
 public class UserAuthenticationService {
 
     private static final Logger log = LoggerFactory.getLogger(UserAuthenticationService.class);
-
     private static final String JWT_HEADER = "X-JWT-Assertion";
 
     @POST
@@ -43,22 +42,16 @@ public class UserAuthenticationService {
     public Response authenticate(User user) {
         String name = user.getName();
         log.info("Authenticating user " + name + " ..");
-        String jwt = null;
+        String jwt;
         if (user.getName().equals(user.getPassword())) {
             try {
                 JWTGenerator jwtGenerator = new JWTGenerator();
                 jwt = jwtGenerator.generateJWT(user.getName());
-
-                return Response.ok("User" + name + " authenticated successfully")
-                        .header(JWT_HEADER, jwt).build();
+                return Response.ok("User" + name + " authenticated successfully").header(JWT_HEADER, jwt).build();
             } catch (Exception e) {
                 return Response.status(Response.Status.EXPECTATION_FAILED).build();
             }
         }
-
-        return Response.status(Response.Status.UNAUTHORIZED)
-                .entity("Invalid login attempt.").build();
-
+        return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid login attempt.").build();
     }
-
 }
