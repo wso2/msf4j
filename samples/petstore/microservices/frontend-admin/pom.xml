@@ -114,7 +114,7 @@
                         <contextPath>/</contextPath>
                     </webApp>
                     <httpConnector>
-                    <port>9090</port>
+                    <port>9080</port>
                     </httpConnector>
                 </configuration>
             </plugin>

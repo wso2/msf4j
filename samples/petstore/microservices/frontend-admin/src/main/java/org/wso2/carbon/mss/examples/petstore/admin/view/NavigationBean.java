@@ -27,10 +27,10 @@ import java.io.Serializable;
 public class NavigationBean implements Serializable {
 
     public String redirectToWelcome() {
-        return "pet/index.xhtml?faces-redirect=true";
+        return "/pet/list.xhtml?faces-redirect=true";
     }
 
     public String toLogin() {
-        return "/login.xhtml";
+        return "pet/list.xhtml?faces-redirect=true";
     }
 }

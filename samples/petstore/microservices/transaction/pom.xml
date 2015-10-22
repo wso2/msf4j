@@ -44,14 +44,6 @@
             <artifactId>gson</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.nimbusds</groupId>
-            <artifactId>nimbus-jose-jwt</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.wso2.carbon.mss</groupId>
             <artifactId>petstore-util</artifactId>
             <version>${project.version}</version>

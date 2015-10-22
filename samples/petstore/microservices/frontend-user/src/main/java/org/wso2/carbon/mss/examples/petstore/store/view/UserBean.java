@@ -41,7 +41,7 @@ public class UserBean {
 
     public String addUser() {
         user.addRole(ROLE_USER);
-        userService.addUser(user);
+      //  userService.addUser(user);
         return navigationBean.toLogin();
     }
 

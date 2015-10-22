@@ -25,6 +25,8 @@
         <filter-name>LoginFilter</filter-name>
         <url-pattern>/pet/*</url-pattern>
         <url-pattern>/cart/*</url-pattern>
+        <url-pattern>/faces/pet/*</url-pattern>
+        <url-pattern>/faces/cart/*</url-pattern>
     </filter-mapping>
 
     <listener>
