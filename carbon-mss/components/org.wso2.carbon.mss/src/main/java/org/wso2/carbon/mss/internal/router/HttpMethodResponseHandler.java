@@ -16,9 +16,11 @@
 
 package org.wso2.carbon.mss.internal.router;
 
+import com.google.common.base.Charsets;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
-import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.wso2.carbon.mss.HttpResponder;
 import org.wso2.carbon.mss.internal.router.beanconversion.BeanConversionException;
@@ -111,13 +113,14 @@ public class HttpMethodResponseHandler {
         Object entityToSend;
         if (entity != null) {
             if (mediaType != null) {
-                headers.put(HttpHeaders.Names.CONTENT_TYPE, mediaType);
                 entityToSend = BeanConverter.instance(mediaType)
                         .toMedia(entity);
             } else {
+                mediaType = "";
                 entityToSend = entity;
             }
-            responder.sendString(status, String.valueOf(entityToSend), headers);
+            ByteBuf channelBuffer = Unpooled.wrappedBuffer(Charsets.UTF_8.encode(String.valueOf(entityToSend)));
+            responder.sendContent(status, channelBuffer, mediaType, headers);
         } else {
             responder.sendStatus(status, headers);
         }
