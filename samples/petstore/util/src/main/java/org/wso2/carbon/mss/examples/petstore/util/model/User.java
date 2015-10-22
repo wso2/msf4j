@@ -18,6 +18,8 @@
 
 package org.wso2.carbon.mss.examples.petstore.util.model;
 
+import java.util.List;
+
 /**
  * Bean class used for populating user
  */
@@ -25,13 +27,32 @@ public class User {
 
     private String name;
     private String password;
+    private String email;
+    private List<String> roles;
 
     public String getName() {
         return name;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getPassword() {
         return password;
+
     }
 
     public void setPassword(String password) {
