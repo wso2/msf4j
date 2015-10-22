@@ -1,0 +1,59 @@
+<!--
+  ~ Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~   WSO2 Inc. licenses this file to you under the Apache License,
+  ~   Version 2.0 (the "License"); you may not use this file except
+  ~   in compliance with the License.
+  ~   You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  -->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:b="http://butterfaces.larmic.de/components">
+
+<h:head>
+    <title>Java Pet Shop </title>
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
+          rel="stylesheet"/>
+</h:head>
+<h:body>
+    <ui:composition template="/template/common/commonLayout.xhtml">
+        <ui:define name="content">
+            <b:section id="input"
+                       label="label"
+                       badgeText="null"
+                       rendered="false">
+                Lorem ipsum dolor sit amet, consectetuer ...
+            </b:section>
+            <h3>Java Pet Shop</h3>
+            Wellcome back  <h:outputText value="#{loginBean.username}"/>  !
+
+            <br/>
+            <h:link value="Add pet type" outcome="/pettype/add" class="pet-tile" >
+                <img src="../libs/images/pets14.png" ></img>
+            </h:link>
+            <h:link value="List pet types" outcome="/pettype/list" class="pet-tile">
+                <img src="../libs/images/verified7.png" ></img>
+            </h:link>
+            <h:link value="Add pet" outcome="/pet/add" class="pet-tile">
+                <img src="../libs/images/animals-allowed.png" ></img>
+            </h:link>
+            <h:link value="List pets" outcome="/pet/list" class="pet-tile" >
+                <img src="../libs/images/verified7.png" ></img>
+            </h:link>
+
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

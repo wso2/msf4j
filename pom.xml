@@ -281,6 +281,7 @@
         <!-- Dependencies -->
         <carbon.kernel.version>5.0.0-SNAPSHOT</carbon.kernel.version>
         <carbon.mss.version>1.0.0-SNAPSHOT</carbon.mss.version>
+        <carbon.mss.osgi.version>1.0.0.SNAPSHOT</carbon.mss.osgi.version>
 
         <osgi.api.version>6.0.0</osgi.api.version>
         <equinox.osgi.version>3.10.2.v20150203-1939</equinox.osgi.version>
@@ -291,15 +292,17 @@
         <slf4j.log4j.version>1.6.0</slf4j.log4j.version>
         <gson.version>2.2.4</gson.version>
         <org.wso2.carbon.transport.http.netty.version>1.0.0-SNAPSHOT</org.wso2.carbon.transport.http.netty.version>
+        <org.wso2.carbon.transport.http.netty.osgi.version>1.0.0.SNAPSHOT</org.wso2.carbon.transport.http.netty.osgi.version>
         <guava.version>13.0.1</guava.version>
         <jsr305.version>2.0.1</jsr305.version>
         <beanutils.version>1.8.3_2</beanutils.version>
+        <beanutils.osgi.version>1.8.3.2</beanutils.osgi.version>
         <junit.version>4.11</junit.version>
         <logback.version>1.0.9</logback.version>
 
         <osgi.framework.import.version.range>[1.8.0, 2.0.0)</osgi.framework.import.version.range>
         <osgi.service.tracker.import.version.range>[1.5.1, 2.0.0)</osgi.service.tracker.import.version.range>
-        <carbon.p2.plugin.version>1.5.4</carbon.p2.plugin.version>
+        <carbon.feature.plugin.version>2.0.0-m1</carbon.feature.plugin.version>
     </properties>
 
     <modules>

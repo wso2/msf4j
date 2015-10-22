@@ -21,7 +21,7 @@ package org.wso2.carbon.mss.examples.petstore.util.model;
 import java.util.UUID;
 
 /**
- * Bean class used for testing JAX-RS bean conversions
+ * Represents a pet
  */
 public class Pet {
 
