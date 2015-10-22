@@ -43,17 +43,15 @@ public class MicroservicesRunner {
     private long startTime = System.currentTimeMillis();
 
     public MicroservicesRunner() {
-
         TransportsConfiguration trpConfig = TransportConfigurationBuilder.build();
         Set<ListenerConfiguration> listenerConfigurations = trpConfig.getListenerConfigurations();
+        NettyTransportDataHolder nettyTransportDataHolder = NettyTransportDataHolder.getInstance();
         for (ListenerConfiguration listenerConfiguration : listenerConfigurations) {
             NettyListener listener = new NettyListener(listenerConfiguration);
             transportManager.registerTransport(listener);
+            nettyTransportDataHolder.
+                    addNettyChannelInitializer(listenerConfiguration.getId(), new MSSNettyServerInitializer());
         }
-
-        NettyTransportDataHolder nettyTransportDataHolder = NettyTransportDataHolder.getInstance();
-        nettyTransportDataHolder.
-                addNettyChannelInitializer(ListenerConfiguration.DEFAULT_KEY, new MSSNettyServerInitializer());
     }
 
     public MicroservicesRunner deploy(Object microservice) {
