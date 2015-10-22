@@ -9,7 +9,7 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>petstore-transaction</artifactId>
+    <artifactId>petstore-txn</artifactId>
     <packaging>jar</packaging>
 
     <name>Pet store microservices example - transaction microservice</name>
@@ -76,7 +76,7 @@
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>org.wso2.carbon.mss.examples.petstore.pet.TransactionService</mainClass>
+                                    <mainClass>org.wso2.carbon.mss.examples.petstore.transaction.Runner</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>

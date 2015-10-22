@@ -59,7 +59,7 @@ public class TxnService {
         }
         // We are ignoring the credit card details. In the real world, this is where we would make a call to the
         // payment gateway
-        return Response.status(Response.Status.OK).entity("Order with ID " + orderId + " successfully added").build();
+        return Response.status(Response.Status.OK).entity(new Gson().toJson(orderId)).build();
     }
 
     @GET
