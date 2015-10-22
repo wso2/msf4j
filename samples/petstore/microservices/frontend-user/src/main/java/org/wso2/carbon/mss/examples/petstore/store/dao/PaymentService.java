@@ -18,16 +18,31 @@
 
 package org.wso2.carbon.mss.examples.petstore.store.dao;
 
+import org.wso2.carbon.mss.examples.petstore.store.client.TxnServiceClient;
+import org.wso2.carbon.mss.examples.petstore.store.model.Cart;
+import org.wso2.carbon.mss.examples.petstore.store.model.OrderServiceException;
+import org.wso2.carbon.mss.examples.petstore.util.model.CreditCard;
+
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
-import java.util.Random;
+import javax.faces.bean.ManagedProperty;
 
 @ManagedBean
 @ApplicationScoped
 public class PaymentService {
 
-    public int pay(String ccNo, String name, String cvc) {
-        return new Random().nextInt();
+    @ManagedProperty("#{txnServiceClient}")
+    private TxnServiceClient txnServiceClient;
+
+    public String order(Cart cart, CreditCard creditCard) throws OrderServiceException {
+        return txnServiceClient.addOrder(cart, creditCard);
     }
 
+    public TxnServiceClient getTxnServiceClient() {
+        return txnServiceClient;
+    }
+
+    public void setTxnServiceClient(TxnServiceClient txnServiceClient) {
+        this.txnServiceClient = txnServiceClient;
+    }
 }

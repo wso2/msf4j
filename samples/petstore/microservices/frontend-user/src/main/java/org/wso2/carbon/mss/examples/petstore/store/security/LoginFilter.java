@@ -40,12 +40,20 @@ public class LoginFilter implements Filter {
             throws IOException, ServletException {
 
         LoginBean loginBean = (LoginBean) ((HttpServletRequest) request).getSession().getAttribute("loginBean");
-        if (loginBean == null || !loginBean.isLoggedIn()) {
+        if (isRestrictedPath(request) && (loginBean == null || !loginBean.isLoggedIn())) {
             String contextPath = ((HttpServletRequest) request).getContextPath();
             ((HttpServletResponse) response).sendRedirect(contextPath + "/login.xhtml");
         }
         ((HttpServletRequest) request).getUserPrincipal();
         chain.doFilter(request, response);
+    }
+
+    private boolean isRestrictedPath(ServletRequest request) {
+        String path = ((HttpServletRequest) request).getRequestURL().toString();
+        if (path.contains("login.xhtml") || path.contains(".css")) {
+            return false;
+        }
+        return true;
     }
 
     @Override

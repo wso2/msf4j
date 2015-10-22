@@ -20,6 +20,8 @@ package org.wso2.carbon.mss.examples.petstore.store.view;
 
 import org.wso2.carbon.mss.examples.petstore.store.dao.PaymentService;
 import org.wso2.carbon.mss.examples.petstore.store.model.Cart;
+import org.wso2.carbon.mss.examples.petstore.store.model.OrderServiceException;
+import org.wso2.carbon.mss.examples.petstore.util.model.CreditCard;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -41,8 +43,12 @@ public class CheckoutBean implements Serializable {
     @ManagedProperty("#{paymentService}")
     private PaymentService paymentService;
 
-    public String checkout() {
-        orderConfirmationNo = String.valueOf(paymentService.pay(ccNumber, name, cvc));
+    public String checkout() throws OrderServiceException {
+        CreditCard creditCard = new CreditCard();
+        creditCard.setNumber(ccNumber);
+        creditCard.setName(name);
+        creditCard.setCvc(cvc);
+        orderConfirmationNo = paymentService.order(cart, creditCard);
         cart.clear();
         return "confirmation";
     }

@@ -18,11 +18,14 @@
 
 package org.wso2.carbon.mss.examples.petstore.store.client;
 
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import org.wso2.carbon.mss.examples.petstore.store.model.Cart;
 import org.wso2.carbon.mss.examples.petstore.store.model.Configuration;
+import org.wso2.carbon.mss.examples.petstore.store.model.OrderServiceException;
 import org.wso2.carbon.mss.examples.petstore.store.view.LoginBean;
-import org.wso2.carbon.mss.examples.petstore.util.model.Category;
+import org.wso2.carbon.mss.examples.petstore.util.model.CreditCard;
+import org.wso2.carbon.mss.examples.petstore.util.model.Order;
+import org.wso2.carbon.mss.examples.petstore.util.model.Pet;
 
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
@@ -33,55 +36,41 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 @ManagedBean
 @ApplicationScoped
-public class PetCategoryServiceClient extends AbstractServiceClient {
+public class TxnServiceClient extends AbstractServiceClient {
 
     @ManagedProperty("#{configuration}")
     private Configuration configuration;
 
-    public boolean addPetCategory(Category category) throws IOException {
+    public String addOrder(Cart cart, CreditCard card) throws OrderServiceException {
         final Client client = ClientBuilder.newBuilder().build();
-        final WebTarget target = client.target(configuration.getPetServiceEP() + "/category");
+        final WebTarget target = client.target(configuration.getTxServiceEP() + "/transaction");
+        Order order = createOrder(cart, card);
         Gson gson = new Gson();
         final Response response = target.request().header(LoginBean.X_JWT_ASSERTION, getJWTToken())
-                .post(Entity.entity(gson.toJson(category), MediaType.APPLICATION_JSON));
+                .post(Entity.entity(gson.toJson(order), MediaType.APPLICATION_JSON));
         if (Response.Status.OK.getStatusCode() == response.getStatus()) {
-            return true;
+            return response.readEntity(String.class);
+        } else {
+            throw new OrderServiceException("Can't proceed with the order");
         }
-        return false;
     }
 
-
-    public boolean removePetCategory(Category category) throws IOException {
-        final Client client = ClientBuilder.newBuilder().build();
-        final WebTarget target = client.target(configuration.getPetServiceEP() + "/category/" + category.getName());
-        final Response response = target.request().header(LoginBean.X_JWT_ASSERTION, getJWTToken()).delete();
-        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
-            return true;
+    private Order createOrder(Cart cart, CreditCard card) {
+        Order order = new Order();
+        List<String> orderIds = new ArrayList<>();
+        for (Pet pet : cart.getItems()) {
+            orderIds.add(pet.getId());
         }
-        return false;
+        order.setPets(orderIds);
+        order.setCreditCard(card);
+        order.setTotal(cart.getTotal());
+        return order;
     }
-
-    public List<Category> list() {
-        final Client client = ClientBuilder.newBuilder().build();
-        final WebTarget target = client.target(configuration.getPetServiceEP() + "/category/all");
-        final Response response = target.request().header(LoginBean.X_JWT_ASSERTION, getJWTToken()).get();
-        if (Response.Status.OK.getStatusCode() == response.getStatus()) {
-            String body = response.readEntity(String.class);
-            Gson gson = new Gson();
-            Type listType = new TypeToken<List<Category>>() {
-            }.getType();
-            return gson.fromJson(body, listType);
-        }
-        return Collections.emptyList();
-    }
-
 
     public Configuration getConfiguration() {
         return configuration;
