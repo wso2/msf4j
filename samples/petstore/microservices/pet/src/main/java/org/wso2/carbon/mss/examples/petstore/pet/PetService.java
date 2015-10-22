@@ -45,12 +45,8 @@ public class PetService {
     private static final Logger log = LoggerFactory.getLogger(PetService.class);
 
     static {
-        log.info("SENTINEL1_HOST: {}",
-                System.getenv("SENTINEL1_HOST") != null ? System.getenv("SENTINEL1_HOST") :
-                        System.getProperty("SENTINEL1_HOST"));
-        log.info("SENTINEL1_PORT: {}",
-                System.getenv("SENTINEL1_PORT") != null ? System.getenv("SENTINEL1_PORT") :
-                        System.getProperty("SENTINEL1_PORT"));
+        log.info("SENTINEL_HOST: {}", JedisUtil.getSentinelHost());
+        log.info("SENTINEL1_PORT: {}", JedisUtil.getSentinelPort());
     }
 
     @POST

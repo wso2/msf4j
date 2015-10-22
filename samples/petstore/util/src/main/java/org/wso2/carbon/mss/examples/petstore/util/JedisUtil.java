@@ -64,6 +64,14 @@ public class JedisUtil {
 
     private static Jedis master = getJedis();
 
+    public static String getSentinelHost() {
+        return SENTINEL1_HOST;
+    }
+
+    public static int getSentinelPort() {
+        return SENTINEL1_PORT;
+    }
+
     public static void set(String key, String value) {
         fetchMaster();
         try {
