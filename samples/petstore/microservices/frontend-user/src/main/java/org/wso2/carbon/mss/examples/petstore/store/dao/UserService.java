@@ -18,37 +18,33 @@
 
 package org.wso2.carbon.mss.examples.petstore.store.dao;
 
-import org.wso2.carbon.mss.examples.petstore.store.model.User;
+import org.wso2.carbon.mss.examples.petstore.store.client.UserServiceClient;
+import org.wso2.carbon.mss.examples.petstore.store.model.UserServiceException;
 
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.logging.Logger;
 
 @ManagedBean
 @ApplicationScoped
 public class UserService implements Serializable {
 
-    private static Map<String, User> users = new HashMap<>();
+    private final static Logger LOGGER = Logger.getLogger(UserService.class.getName());
 
-    public boolean authenticate(String username, String password) {
-        if (username != null && password != null & !username.isEmpty() && !password.isEmpty()) {
-            User current = findUser(username);
-            if (current != null) {
-                if (current.getPassword().equals(password)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+    @ManagedProperty("#{userServiceClient}")
+    private UserServiceClient userServiceClient;
+
+    public String authenticate(String username, String password) throws UserServiceException {
+        return userServiceClient.login(username, password);
     }
 
-    public void addUser(User user) {
-        users.put(user.getUsername(), user);
+    public UserServiceClient getUserServiceClient() {
+        return userServiceClient;
     }
 
-    public User findUser(String username) {
-        return users.get(username);
+    public void setUserServiceClient(UserServiceClient userServiceClient) {
+        this.userServiceClient = userServiceClient;
     }
 }

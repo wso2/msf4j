@@ -19,20 +19,24 @@
 package org.wso2.carbon.mss.examples.petstore.store.view;
 
 import org.wso2.carbon.mss.examples.petstore.store.dao.UserService;
+import org.wso2.carbon.mss.examples.petstore.store.model.UserServiceException;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
 import java.io.Serializable;
 
 @ManagedBean
 @SessionScoped
 public class LoginBean implements Serializable {
 
+    public static final String X_JWT_ASSERTION = "X-JWT-Assertion";
     private String username;
     private String password;
+    private String token;
     private boolean loggedIn;
 
     @ManagedProperty("#{navigationBean}")
@@ -42,16 +46,17 @@ public class LoginBean implements Serializable {
     private UserService userService;
 
     public String doLogin() {
-        if (userService.authenticate(username, password)) {
+        try {
+            token = userService.authenticate(username, password);
             loggedIn = true;
             password = null;
             return navigationBean.redirectToWelcome();
+        } catch (UserServiceException e) {
+            FacesMessage msg = new FacesMessage("Login error!", "ERROR MSG");
+            msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return navigationBean.toLogin();
         }
-        FacesMessage msg = new FacesMessage("Login error!", "ERROR MSG");
-        msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-        FacesContext.getCurrentInstance().addMessage(null, msg);
-        return navigationBean.toLogin();
-
     }
 
     public String doLogout() {
@@ -59,6 +64,7 @@ public class LoginBean implements Serializable {
         FacesMessage msg = new FacesMessage("Logout success!", "INFO MSG");
         msg.setSeverity(FacesMessage.SEVERITY_INFO);
         FacesContext.getCurrentInstance().addMessage(null, msg);
+        ((HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false)).invalidate();
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
         return navigationBean.toLogin();
     }
@@ -104,4 +110,11 @@ public class LoginBean implements Serializable {
         this.loggedIn = loggedIn;
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 }

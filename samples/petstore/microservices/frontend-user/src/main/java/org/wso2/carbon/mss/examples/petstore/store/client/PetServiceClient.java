@@ -21,6 +21,7 @@ package org.wso2.carbon.mss.examples.petstore.store.client;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import org.wso2.carbon.mss.examples.petstore.store.model.Configuration;
+import org.wso2.carbon.mss.examples.petstore.store.view.LoginBean;
 import org.wso2.carbon.mss.examples.petstore.util.model.Pet;
 
 import javax.faces.bean.ApplicationScoped;
@@ -39,7 +40,7 @@ import java.util.List;
 
 @ManagedBean
 @ApplicationScoped
-public class PetServiceClient {
+public class PetServiceClient extends AbstractServiceClient {
 
     @ManagedProperty("#{configuration}")
     private Configuration configuration;
@@ -48,7 +49,8 @@ public class PetServiceClient {
         final Client client = ClientBuilder.newBuilder().build();
         final WebTarget target = client.target(configuration.getPetServiceEP() + "/pet");
         Gson gson = new Gson();
-        final Response response = target.request().post(Entity.entity(gson.toJson(pet), MediaType.APPLICATION_JSON));
+        final Response response = target.request().header(LoginBean.X_JWT_ASSERTION, getJWTToken())
+                .post(Entity.entity(gson.toJson(pet), MediaType.APPLICATION_JSON));
         if (Response.Status.OK.getStatusCode() == response.getStatus()) {
             return true;
         }
@@ -59,7 +61,7 @@ public class PetServiceClient {
     public boolean removePet(String id) throws IOException {
         final Client client = ClientBuilder.newBuilder().build();
         final WebTarget target = client.target(configuration.getPetServiceEP() + "/pet/" + id);
-        final Response response = target.request().delete();
+        final Response response = target.request().header(LoginBean.X_JWT_ASSERTION, getJWTToken()).delete();
         if (Response.Status.OK.getStatusCode() == response.getStatus()) {
             return true;
         }
@@ -69,7 +71,7 @@ public class PetServiceClient {
     public List<Pet> list() {
         final Client client = ClientBuilder.newBuilder().build();
         final WebTarget target = client.target(configuration.getPetServiceEP() + "/pet/all");
-        final Response response = target.request().get();
+        final Response response = target.request().header(LoginBean.X_JWT_ASSERTION, getJWTToken()).get();
         if (Response.Status.OK.getStatusCode() == response.getStatus()) {
             String body = response.readEntity(String.class);
             Gson gson = new Gson();

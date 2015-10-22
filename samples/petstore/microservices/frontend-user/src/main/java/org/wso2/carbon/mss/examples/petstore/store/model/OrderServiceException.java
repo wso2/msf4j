@@ -16,26 +16,11 @@
  *  under the License.
  */
 
-package org.wso2.carbon.mss.examples.petstore.store.view;
+package org.wso2.carbon.mss.examples.petstore.store.model;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
-import java.io.Serializable;
+public class OrderServiceException extends Exception {
 
-@ManagedBean
-@SessionScoped
-public class NavigationBean implements Serializable {
-
-    public String redirectToWelcome() {
-        return "pet/list.xhtml?faces-redirect=true";
-    }
-
-    public String toLogin() {
-        return "/login.xhtml";
-    }
-
-    public String backtoList(){
-        return "list";
-
+    public OrderServiceException(String s) {
+        super(s);
     }
 }

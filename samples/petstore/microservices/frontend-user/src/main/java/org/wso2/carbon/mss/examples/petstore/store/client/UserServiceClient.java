@@ -18,51 +18,42 @@
 
 package org.wso2.carbon.mss.examples.petstore.store.client;
 
-import org.glassfish.jersey.media.multipart.FormDataMultiPart;
-import org.glassfish.jersey.media.multipart.MultiPartFeature;
-import org.glassfish.jersey.media.multipart.file.StreamDataBodyPart;
+import com.google.gson.Gson;
 import org.wso2.carbon.mss.examples.petstore.store.model.Configuration;
+import org.wso2.carbon.mss.examples.petstore.store.model.UserServiceException;
 import org.wso2.carbon.mss.examples.petstore.store.view.LoginBean;
+import org.wso2.carbon.mss.examples.petstore.util.model.User;
 
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.servlet.http.Part;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 
 @ManagedBean
 @ApplicationScoped
-public class ImageServiceClient extends AbstractServiceClient {
+public class UserServiceClient extends AbstractServiceClient {
 
     @ManagedProperty("#{configuration}")
     private Configuration configuration;
 
-    public String uploadImage(Part file) throws IOException {
-        String imageURL = null;
-        final Client client = ClientBuilder.newBuilder().register(MultiPartFeature.class).build();
-        final StreamDataBodyPart stream = new StreamDataBodyPart("file", file.getInputStream());
-        FormDataMultiPart formDataMultiPart = new FormDataMultiPart();
-        final FormDataMultiPart multipart = (FormDataMultiPart) formDataMultiPart
-                .field("fileName", file.getSubmittedFileName()).bodyPart(stream);
-        final WebTarget target = client.target(configuration.getFileUploadServiceEP());
-        final Response response = target.request().header(LoginBean.X_JWT_ASSERTION, getJWTToken())
-                .post(Entity.entity(multipart, multipart.getMediaType()));
+    public String login(String username, String password) throws UserServiceException {
+        final Client client = ClientBuilder.newBuilder().build();
+        final WebTarget target = client.target(configuration.getUserServiceEP() + "/user/login");
+        User user = new User();
+        user.setName(username);
+        user.setPassword(password);
+        Gson gson = new Gson();
+        final Response response = target.request().post(Entity.entity(gson.toJson(user), MediaType.APPLICATION_JSON));
         if (Response.Status.OK.getStatusCode() == response.getStatus()) {
-            imageURL = response.readEntity(String.class);
+            return response.getHeaderString(LoginBean.X_JWT_ASSERTION);
+        } else {
+            throw new UserServiceException("Can't authenticate the user");
         }
-        formDataMultiPart.close();
-        multipart.close();
-        return imageURL;
-    }
-
-    public boolean deleteImage(String url) {
-        //TODO -
-        return false;
     }
 
     public Configuration getConfiguration() {
