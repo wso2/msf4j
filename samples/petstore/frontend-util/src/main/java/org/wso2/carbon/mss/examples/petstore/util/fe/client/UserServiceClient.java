@@ -61,6 +61,16 @@ public class UserServiceClient extends AbstractServiceClient {
         }
     }
 
+    public void addUser(User user) throws UserServiceException {
+        final Client client = ClientBuilder.newBuilder().build();
+        final WebTarget target = client.target(configuration.getUserServiceEP() + "/user/add");
+        Gson gson = new Gson();
+        final Response response = target.request().post(Entity.entity(gson.toJson(user), MediaType.APPLICATION_JSON));
+        if (Response.Status.OK.getStatusCode() != response.getStatus()) {
+            throw new UserServiceException("Can't add the user");
+        }
+    }
+
     public Configuration getConfiguration() {
         return configuration;
     }

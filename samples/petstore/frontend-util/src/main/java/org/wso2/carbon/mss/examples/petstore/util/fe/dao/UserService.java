@@ -20,6 +20,7 @@ package org.wso2.carbon.mss.examples.petstore.util.fe.dao;
 
 import org.wso2.carbon.mss.examples.petstore.util.fe.client.UserServiceClient;
 import org.wso2.carbon.mss.examples.petstore.util.fe.model.UserServiceException;
+import org.wso2.carbon.mss.examples.petstore.util.model.User;
 
 import java.util.logging.Logger;
 import javax.faces.bean.ApplicationScoped;
@@ -40,6 +41,10 @@ public class UserService {
 
     public String authenticate(String username, String password) throws UserServiceException {
         return userServiceClient.login(username, password);
+    }
+
+    public void addUser(User user) throws UserServiceException {
+        userServiceClient.addUser(user);
     }
 
     public UserServiceClient getUserServiceClient() {
