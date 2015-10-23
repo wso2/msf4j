@@ -60,13 +60,10 @@
 
     <modules>
         <module>util</module>
-        <!--<module>microservices/cache</module>-->
-        <!--<module>microservices/database</module>-->
         <!--<module>microservices/frontend-admin</module>-->
-        <!--<module>microservices/frontend-user</module>-->
         <module>microservices/pet</module>
-        <module>microservices/security</module>
         <module>microservices/transaction</module>
+        <module>microservices/security</module>
         <module>microservices/frontend-user</module>
     </modules>
 </project>
