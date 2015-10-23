@@ -66,5 +66,6 @@
         <module>microservices/transaction</module>
         <module>microservices/security</module>
         <module>microservices/frontend-user</module>
+        <module>microservices/frontend-admin</module>
     </modules>
 </project>
