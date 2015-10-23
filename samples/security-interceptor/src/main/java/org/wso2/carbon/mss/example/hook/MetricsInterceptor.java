@@ -9,12 +9,19 @@ import org.wso2.carbon.metrics.annotation.Counted;
 import org.wso2.carbon.metrics.annotation.Level;
 import org.wso2.carbon.metrics.annotation.Metered;
 import org.wso2.carbon.metrics.annotation.Timed;
+import org.wso2.carbon.metrics.impl.MetricServiceImpl;
+import org.wso2.carbon.metrics.impl.MetricsLevelConfiguration;
+import org.wso2.carbon.metrics.impl.util.ConsoleReporterBuilder;
+import org.wso2.carbon.metrics.impl.util.DASReporterBuilder;
+import org.wso2.carbon.metrics.impl.util.JmxReporterBuilder;
 import org.wso2.carbon.metrics.manager.Counter;
 import org.wso2.carbon.metrics.manager.Meter;
 import org.wso2.carbon.metrics.manager.MetricManager;
 import org.wso2.carbon.metrics.manager.Timer;
 import org.wso2.carbon.metrics.manager.Timer.Context;
+import org.wso2.carbon.metrics.manager.internal.ServiceReferenceHolder;
 import org.wso2.carbon.mss.HttpResponder;
+import org.wso2.carbon.mss.example.MetricsEnvConfiguration;
 import org.wso2.carbon.mss.internal.router.HandlerInfo;
 import org.wso2.carbon.mss.internal.router.Interceptor;
 
@@ -33,7 +40,38 @@ public class MetricsInterceptor implements Interceptor {
 
     private Map<Method, Set<Interceptor>> map = new ConcurrentHashMap<>();
 
-    public MetricsInterceptor() {
+    private final MetricServiceImpl metricServiceImpl;
+
+    private final MetricsEnvConfiguration metricsEnvConfiguration;
+
+    public MetricsInterceptor(MetricReporter... metricReporters) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Creating Metrics Interceptor");
+        }
+        metricsEnvConfiguration = new MetricsEnvConfiguration();
+        MetricsLevelConfiguration metricsLevelConfiguration = new MetricsLevelConfiguration();
+        MetricServiceImpl.Builder builder = new MetricServiceImpl.Builder().setEnabled(true)
+                .setRootLevel(org.wso2.carbon.metrics.manager.Level.INFO);
+        for (MetricReporter metricReporter : metricReporters) {
+            switch (metricReporter) {
+            case CONSOLE:
+                builder.addReporterBuilder(new ConsoleReporterBuilder().configure(metricsEnvConfiguration));
+                break;
+            case DAS:
+                builder.addReporterBuilder(new DASReporterBuilder().configure(metricsEnvConfiguration));
+                break;
+            case JMX:
+                builder.addReporterBuilder(new JmxReporterBuilder().configure(metricsEnvConfiguration));
+                break;
+            default:
+                break;
+
+            }
+        }
+        metricServiceImpl = (MetricServiceImpl) builder.build(metricsLevelConfiguration);
+        // TODO Find a way to keep the MetricService
+        ServiceReferenceHolder.getInstance().setMetricService(metricServiceImpl);
+
     }
 
     @Override
@@ -130,28 +168,24 @@ public class MetricsInterceptor implements Interceptor {
 
         private final Timer timer;
 
-        private final TimerContextThreadLocal timerContextThreadLocal;
+        private static final String TIMER_CONTEXT = "TIMER_CONTEXT";
 
         private TimerInterceptor(Timer timer) {
             this.timer = timer;
-            this.timerContextThreadLocal = new TimerContextThreadLocal();
         }
 
         @Override
         public boolean preCall(HttpRequest request, HttpResponder responder, HandlerInfo handlerInfo) {
             Context context = timer.start();
-            timerContextThreadLocal.set(context);
+            handlerInfo.setAttribute(TIMER_CONTEXT, context);
             return true;
         }
 
         @Override
         public void postCall(HttpRequest request, HttpResponseStatus status, HandlerInfo handlerInfo) {
-            Context context = timerContextThreadLocal.get();
+            Context context = (Context) handlerInfo.getAttribute(TIMER_CONTEXT);
             context.stop();
         }
-    }
-
-    private static class TimerContextThreadLocal extends ThreadLocal<Context> {
     }
 
     private static class MeterInterceptor implements Interceptor {
