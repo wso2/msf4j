@@ -11,6 +11,9 @@
     <artifactId>store</artifactId>
     <packaging>war</packaging>
 
+    <name>Pet Store microservices example petstore-frontend-user</name>
+    <url>http://wso2.org</url>
+
     <properties>
         <jersey2.version>2.19</jersey2.version>
         <jaxrs.version>2.0.1</jaxrs.version>
