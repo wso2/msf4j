@@ -20,13 +20,6 @@ package org.wso2.carbon.mss;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.metrics.impl.MetricServiceImpl;
-import org.wso2.carbon.metrics.impl.MetricsLevelConfiguration;
-import org.wso2.carbon.metrics.impl.util.ConsoleReporterBuilder;
-import org.wso2.carbon.metrics.impl.util.JmxReporterBuilder;
-import org.wso2.carbon.metrics.manager.Level;
-import org.wso2.carbon.metrics.manager.MetricService;
-import org.wso2.carbon.metrics.manager.internal.ServiceReferenceHolder;
 import org.wso2.carbon.mss.internal.MSSNettyServerInitializer;
 import org.wso2.carbon.mss.internal.MicroservicesRegistry;
 import org.wso2.carbon.mss.internal.router.Interceptor;
@@ -50,22 +43,15 @@ public class MicroservicesRunner {
     private long startTime = System.currentTimeMillis();
 
     public MicroservicesRunner() {
-
         TransportsConfiguration trpConfig = TransportConfigurationBuilder.build();
         Set<ListenerConfiguration> listenerConfigurations = trpConfig.getListenerConfigurations();
+        NettyTransportDataHolder nettyTransportDataHolder = NettyTransportDataHolder.getInstance();
         for (ListenerConfiguration listenerConfiguration : listenerConfigurations) {
             NettyListener listener = new NettyListener(listenerConfiguration);
             transportManager.registerTransport(listener);
+            nettyTransportDataHolder.
+                    addNettyChannelInitializer(listenerConfiguration.getId(), new MSSNettyServerInitializer());
         }
-
-        NettyTransportDataHolder nettyTransportDataHolder = NettyTransportDataHolder.getInstance();
-        nettyTransportDataHolder.
-                addNettyChannelInitializer(ListenerConfiguration.DEFAULT_KEY, new MSSNettyServerInitializer());
-        MetricsLevelConfiguration metricsLevelConfiguration = new MetricsLevelConfiguration();
-        MetricService metricService = new MetricServiceImpl.Builder().setEnabled(true).setRootLevel(Level.INFO)
-                .addReporterBuilder(new ConsoleReporterBuilder().setEnabled(true))
-                .addReporterBuilder(new JmxReporterBuilder().setEnabled(true)).build(metricsLevelConfiguration);
-        ServiceReferenceHolder.getInstance().setMetricService(metricService);
     }
 
     public MicroservicesRunner deploy(Object microservice) {

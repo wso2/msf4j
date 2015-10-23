@@ -49,7 +49,6 @@ public class TxnService {
             JedisUtil.sadd(TxnConstants.ORDERS_KEY, orderId);
         }
         String orderKey = TxnConstants.ORDER_KEY_PREFIX + orderId;
-        JedisUtil.set(orderKey, new Gson().toJson(order));
         if (JedisUtil.get(orderKey) != null) {
             return Response.status(Response.Status.CONFLICT).
                     entity("Order with ID " + orderId + " already exists").build();

@@ -177,6 +177,11 @@
                 <artifactId>org.wso2.carbon.metrics.annotation</artifactId>
                 <version>${carbon.metrics.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.nimbusds</groupId>
+                <artifactId>nimbus-jose-jwt</artifactId>
+                <version>${nimbus.jose.jwt.version}</version>
+            </dependency>  
 
             <!-- Test dependencies -->
             <dependency>
@@ -304,7 +309,7 @@
         <maven.bundleplugin.version>2.5.4</maven.bundleplugin.version>
 
         <!-- Dependencies -->
-        <carbon.kernel.version>5.0.0-SNAPSHOT</carbon.kernel.version>
+        <carbon.kernel.version>5.0.0-m5</carbon.kernel.version>
         <carbon.mss.version>1.0.0-SNAPSHOT</carbon.mss.version>
         <carbon.metrics.version>1.2.0-SNAPSHOT</carbon.metrics.version>
         <carbon.mss.osgi.version>1.0.0.SNAPSHOT</carbon.mss.osgi.version>
@@ -325,6 +330,7 @@
         <beanutils.osgi.version>1.8.3.2</beanutils.osgi.version>
         <junit.version>4.11</junit.version>
         <logback.version>1.0.9</logback.version>
+        <nimbus.jose.jwt.version>2.25</nimbus.jose.jwt.version>
 
         <osgi.framework.import.version.range>[1.8.0, 2.0.0)</osgi.framework.import.version.range>
         <osgi.service.tracker.import.version.range>[1.5.1, 2.0.0)</osgi.service.tracker.import.version.range>
@@ -333,7 +339,7 @@
 
     <modules>
         <module>carbon-mss/components/org.wso2.carbon.mss</module>
-        <module>carbon-mss/features/org.wso2.carbon.mss.feature</module>
+        <module>carbon-mss/features/org.wso2.carbon.mss.feature</module> 
         <module>samples/executable-jar</module>
         <module>samples/osgi-bundle</module>
         <module>samples/security-interceptor</module>
