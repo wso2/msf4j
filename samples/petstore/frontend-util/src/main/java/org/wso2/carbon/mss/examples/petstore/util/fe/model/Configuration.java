@@ -21,23 +21,39 @@ package org.wso2.carbon.mss.examples.petstore.util.fe.model;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 
+import static org.wso2.carbon.mss.examples.petstore.util.SystemVariableUtil.getValue;
+
 /**
  * Configuration details such as endpoint references for dependant services.
  */
 @ManagedBean
 @ApplicationScoped
 public class Configuration {
-    //    String petServiceEP = "http://172.17.4.201:32270";
-    public static final String FILE_UPLOAD_SERVICE_EP_NAME = "UPLOAD_SERVICE_EP";
-    public static final String PET_SERVICE_EP_NAME = "PET_SERVICE_EP";
-    public static final String TX_SERVICE_EP_NAME = "TX_SERVICE_EP";
-    public static final String USER_SERVICE_EP_NAME = "USER_SERVICE_EP";
+
+    public static final String FILE_SERVICE_HOST_NAME = "FE_FILE_SERVICE_HOST";
+    public static final String FILE_SERVICE_PORT_NAME = "FE_FILE_SERVICE_PORT";
+
+    public static final String PET_SERVICE_HOST_NAME = "FE_PET_SERVICE_HOST";
+    public static final String PET_SERVICE_PORT_NAME = "FE_PET_SERVICE_PORT";
+
+    public static final String TX_SERVICE_HOST_NAME = "FE_PET_SERVICE_HOST";
+    public static final String TX_SERVICE_PORT_NAME = "FE_PET_SERVICE_PORT";
+
+    public static final String USER_SERVICE_HOST_NAME = "FE_USER_SERVICE_HOST";
+    public static final String USER_SERVICE_PORT_NAME = "FE_USER_SERVICE_PORT";
 
 
-    public static final String DEFAULT_FILE_UPLOAD_SERVICE_EP = "http://192.168.99.100";
-    public static final String DEFAULT_USER_SERVICE_EP = "http://127.0.0.1:8070";
-    public static final String DEFAULT_PET_SERVICE_EP = "http://localhost:8080";
-    public static final String DEFAULT_TX_SERVICE_EP = "http://127.0.0.1:8090";
+    public static final String DEFAULT_FILE_SERVICE_HOST = "192.168.99.100";
+    public static final String DEFAULT_FILE_SERVICE_PORT = "80";
+
+    public static final String DEFAULT_PET_SERVICE_HOST = "localhost";
+    public static final String DEFAULT_PET_SERVICE_PORT = "8080";
+
+    public static final String DEFAULT_TX_SERVICE_HOST = "localhost";
+    public static final String DEFAULT_TX_SERVICE_PORT = "8090";
+
+    public static final String DEFAULT_USER_SERVICE_HOST = "localhost";
+    public static final String DEFAULT_USER_SERVICE_PORT = "8070";
 
 
     private String fileUploadServiceEP;
@@ -46,23 +62,18 @@ public class Configuration {
     private String userServiceEP;
 
     public Configuration() {
-        fileUploadServiceEP = setProperty(FILE_UPLOAD_SERVICE_EP_NAME, DEFAULT_FILE_UPLOAD_SERVICE_EP);
-        petServiceEP = setProperty(PET_SERVICE_EP_NAME, DEFAULT_PET_SERVICE_EP);
-        txServiceEP = setProperty(TX_SERVICE_EP_NAME, DEFAULT_TX_SERVICE_EP);
-        userServiceEP = setProperty(USER_SERVICE_EP_NAME, DEFAULT_USER_SERVICE_EP);
-    }
+        fileUploadServiceEP = createHTTPEp(getValue(FILE_SERVICE_HOST_NAME, DEFAULT_FILE_SERVICE_HOST),
+                                           getValue(FILE_SERVICE_PORT_NAME, DEFAULT_FILE_SERVICE_PORT));
 
-    private String setProperty(String propertyName, String defaultPropertValue) {
-        String propertyValue = System.getenv(propertyName);
-        if (propertyValue == null) {
-            propertyValue = System.getProperty(propertyName);
-        }
-        if (propertyValue == null) {
-            propertyValue = defaultPropertValue;
-        }
-        return propertyValue;
-    }
+        petServiceEP = createHTTPEp(getValue(PET_SERVICE_HOST_NAME, DEFAULT_PET_SERVICE_HOST),
+                                    getValue(PET_SERVICE_PORT_NAME, DEFAULT_PET_SERVICE_PORT));
 
+        txServiceEP = createHTTPEp(getValue(TX_SERVICE_HOST_NAME, DEFAULT_TX_SERVICE_HOST),
+                                   getValue(TX_SERVICE_PORT_NAME, DEFAULT_TX_SERVICE_PORT));
+
+        userServiceEP = createHTTPEp(getValue(USER_SERVICE_HOST_NAME, DEFAULT_USER_SERVICE_HOST),
+                                     getValue(USER_SERVICE_PORT_NAME, DEFAULT_USER_SERVICE_PORT));
+    }
 
     public String getFileUploadServiceEP() {
         return fileUploadServiceEP;
@@ -94,5 +105,14 @@ public class Configuration {
 
     public void setUserServiceEP(String userServiceEP) {
         this.userServiceEP = userServiceEP;
+    }
+
+    private String createHTTPEp(String host, String port) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("http://")
+                .append(host)
+                .append(":")
+                .append(port);
+        return builder.toString();
     }
 }
