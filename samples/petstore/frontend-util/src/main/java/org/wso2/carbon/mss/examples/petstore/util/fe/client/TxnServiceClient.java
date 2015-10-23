@@ -29,6 +29,7 @@ import org.wso2.carbon.mss.examples.petstore.util.model.Pet;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.annotation.Nullable;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
@@ -51,13 +52,17 @@ public class TxnServiceClient extends AbstractServiceClient {
     @ManagedProperty("#{configuration}")
     private Configuration configuration;
 
+    private static final Logger LOGGER = Logger.getLogger(TxnServiceClient.class.getName());
+
     public String addOrder(Cart cart, CreditCard card) throws OrderServiceException {
         final Client client = ClientBuilder.newBuilder().build();
         final WebTarget target = client.target(configuration.getTxServiceEP() + "/transaction");
         Order order = createOrder(cart, card);
         Gson gson = new Gson();
+        LOGGER.info("Connecting to TXN service on " + configuration.getTxServiceEP());
         final Response response = target.request().header(LoginBean.X_JWT_ASSERTION, getJWTToken())
                 .post(Entity.entity(gson.toJson(order), MediaType.APPLICATION_JSON));
+        LOGGER.info("Returned from TXN service " + configuration.getTxServiceEP());
         if (Response.Status.OK.getStatusCode() == response.getStatus()) {
             return response.readEntity(String.class);
         } else {

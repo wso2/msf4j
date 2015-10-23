@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.annotation.Nullable;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
@@ -46,6 +47,8 @@ import javax.ws.rs.core.Response;
 @ApplicationScoped
 public class PetServiceClient extends AbstractServiceClient {
 
+    private static final Logger LOGGER = Logger.getLogger(PetServiceClient.class.getName());
+
     @Nullable
     @ManagedProperty("#{configuration}")
     private Configuration configuration;
@@ -54,8 +57,10 @@ public class PetServiceClient extends AbstractServiceClient {
         final Client client = ClientBuilder.newBuilder().build();
         final WebTarget target = client.target(configuration.getPetServiceEP() + "/pet");
         Gson gson = new Gson();
+        LOGGER.info("Connecting to pet service on " + configuration.getPetServiceEP());
         final Response response = target.request().header(LoginBean.X_JWT_ASSERTION, getJWTToken())
                 .post(Entity.entity(gson.toJson(pet), MediaType.APPLICATION_JSON));
+        LOGGER.info("Returned from pet service " + configuration.getPetServiceEP());
         if (Response.Status.OK.getStatusCode() == response.getStatus()) {
             return true;
         }
@@ -66,7 +71,9 @@ public class PetServiceClient extends AbstractServiceClient {
     public boolean removePet(String id) throws IOException {
         final Client client = ClientBuilder.newBuilder().build();
         final WebTarget target = client.target(configuration.getPetServiceEP() + "/pet/" + id);
+        LOGGER.info("Connecting to pet service on " + configuration.getPetServiceEP());
         final Response response = target.request().header(LoginBean.X_JWT_ASSERTION, getJWTToken()).delete();
+        LOGGER.info("Returned from pet service " + configuration.getPetServiceEP());
         if (Response.Status.OK.getStatusCode() == response.getStatus()) {
             return true;
         }
@@ -76,7 +83,9 @@ public class PetServiceClient extends AbstractServiceClient {
     public List<Pet> list() {
         final Client client = ClientBuilder.newBuilder().build();
         final WebTarget target = client.target(configuration.getPetServiceEP() + "/pet/all");
+        LOGGER.info("Connecting to pet service on " + configuration.getPetServiceEP());
         final Response response = target.request().header(LoginBean.X_JWT_ASSERTION, getJWTToken()).get();
+        LOGGER.info("Returned from pet service " + configuration.getPetServiceEP());
         if (Response.Status.OK.getStatusCode() == response.getStatus()) {
             String body = response.readEntity(String.class);
             Gson gson = new Gson();
