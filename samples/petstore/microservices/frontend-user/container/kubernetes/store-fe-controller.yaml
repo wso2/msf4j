@@ -14,7 +14,7 @@ spec:
         name: store-fe
     spec:
       containers:
-      - name: pet
+      - name: store-fe
         image: wso2mss/petstore-store-fe
         env:
         - name: GET_HOSTS_FROM
