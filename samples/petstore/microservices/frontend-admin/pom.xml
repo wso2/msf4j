@@ -10,7 +10,7 @@
     <artifactId>petstore-admin</artifactId>
     <packaging>war</packaging>
 
-    <name>Pet Store microservices example petstore-frontend-admin</name>
+    <name>Pet Store microservices example - petstore-frontend-admin</name>
     <url>http://wso2.org</url>
 
     <properties>

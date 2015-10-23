@@ -11,7 +11,7 @@
     <artifactId>store</artifactId>
     <packaging>war</packaging>
 
-    <name>Pet Store microservices example petstore-frontend-user</name>
+    <name>Pet Store microservices example - petstore-frontend-user</name>
     <url>http://wso2.org</url>
 
     <properties>
