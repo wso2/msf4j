@@ -22,7 +22,7 @@
       xmlns:b="http://butterfaces.larmic.de/components">
 <h:head>
     <title>Login form</title>
-    <link rel="stylesheet" href="libs/css/style.css"/>
+    <h:outputStylesheet library="css" name="style.css"  />
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
           rel="stylesheet"/>
 </h:head>
@@ -32,10 +32,9 @@
     <header class="header header-default">
         <div class="container-fluid">
             <div class="pull-left brand float-remove-xs text-center-xs">
-                <a href="#">
-                    <img src="libs/images/logo-inverse.svg" alt="wso2" title="wso2" class="logo"/>
-                    <h1><em>WSO2 Petstore Login</em></h1>
-                </a>
+                <h:graphicImage name="img/logo-inverse.svg" alt="wso2" title="wso2" class="logo">
+                    <h1><em>WSO2 Petstore Login </em></h1>
+                </h:graphicImage>
             </div>
         </div>
     </header>
