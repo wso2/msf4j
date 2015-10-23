@@ -21,7 +21,6 @@ package org.wso2.carbon.mss.examples.petstore.util.fe.model;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 
-import static org.wso2.carbon.mss.examples.petstore.util.SystemVariableUtil.getValue;
 
 /**
  * Configuration details such as endpoint references for dependant services.
@@ -114,5 +113,17 @@ public class Configuration {
                 .append(":")
                 .append(port);
         return builder.toString();
+    }
+
+    public static String getValue(String variableName, String defaultValue) {
+        String value;
+        if (System.getProperty(variableName) != null) {
+            value = System.getProperty(variableName);
+        } else if (System.getenv(variableName) != null) {
+            value = System.getenv(variableName);
+        } else {
+            value = defaultValue;
+        }
+        return value;
     }
 }
