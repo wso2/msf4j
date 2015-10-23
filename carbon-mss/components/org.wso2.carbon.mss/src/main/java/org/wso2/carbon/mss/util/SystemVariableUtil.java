@@ -16,7 +16,7 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.mss.examples.petstore.util;
+package org.wso2.carbon.mss.util;
 
 /**
  * A utility which allows reading variables from the environment or System properties.

@@ -16,7 +16,7 @@
 *under the License.
 */
 
-package org.wso2.carbon.mss.examples.petstore.util.security;
+package org.wso2.carbon.mss.security;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -30,9 +30,9 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.mss.HttpResponder;
-import org.wso2.carbon.mss.examples.petstore.util.SystemVariableUtil;
 import org.wso2.carbon.mss.internal.router.HandlerInfo;
 import org.wso2.carbon.mss.internal.router.Interceptor;
+import org.wso2.carbon.mss.util.SystemVariableUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
