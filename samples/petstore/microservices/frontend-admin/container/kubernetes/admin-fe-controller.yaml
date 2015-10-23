@@ -14,7 +14,7 @@ spec:
         name: admin-fe
     spec:
       containers:
-      - name: pet
+      - name: admin-fe
         image: wso2mss/petstore-admin-fe
         env:
         - name: GET_HOSTS_FROM
