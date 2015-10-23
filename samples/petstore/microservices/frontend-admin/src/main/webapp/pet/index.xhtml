@@ -24,8 +24,7 @@
 
 <h:head>
     <title>Java Pet Shop </title>
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
-          rel="stylesheet"/>
+    <h:outputStylesheet library="css" name="font-awesome.min.css"/>
 </h:head>
 <h:body>
     <ui:composition template="/template/common/commonLayout.xhtml">
@@ -36,11 +35,12 @@
                        rendered="false">
                 Lorem ipsum dolor sit amet, consectetuer ...
             </b:section>
+
             <h3>Java Pet Shop</h3>
-            Wellcome back  <h:outputText value="#{loginBean.username}"/>  !
+            Wellcome back <h:outputText value="#{loginBean.username}"/> !
 
             <br/>
-            <h:link value="Add pet type" outcome="/pettype/add" class="pet-tile" >
+            <h:link value="Add pet type" outcome="/pettype/add" class="pet-tile">
                 <h:graphicImage name="img/pets14.png" alt="wso2" title="wso2" class="logo"/>
             </h:link>
             <h:link value="List pet types" outcome="/pettype/list" class="pet-tile">
@@ -49,7 +49,7 @@
             <h:link value="Add pet" outcome="/pet/add" class="pet-tile">
                 <h:graphicImage name="img/animals-allowed.png" alt="wso2" title="wso2" class="logo"/>
             </h:link>
-            <h:link value="List pets" outcome="/pet/list" class="pet-tile" >
+            <h:link value="List pets" outcome="/pet/list" class="pet-tile">
                 <h:graphicImage name="img/verified7.png" alt="wso2" title="wso2" class="logo"/>
             </h:link>
 
