@@ -11,12 +11,20 @@
     <artifactId>store</artifactId>
     <packaging>war</packaging>
 
+    <name>Pet Store microservices example - petstore-frontend-user</name>
+    <url>http://wso2.org</url>
+
     <properties>
         <jersey2.version>2.19</jersey2.version>
         <jaxrs.version>2.0.1</jaxrs.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.wso2.carbon.mss</groupId>
+            <artifactId>petstore-frontend-util</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
         <!-- JSF 2.0 -->
         <dependency>
             <groupId>com.sun.faces</groupId>
