@@ -27,6 +27,7 @@ import javax.faces.bean.ManagedBean;
  */
 @ManagedBean
 @ApplicationScoped
+@SuppressWarnings("unused")
 public class Configuration {
 
     public static final String FILE_SERVICE_HOST_NAME = "FE_FILE_SERVICE_HOST";
@@ -35,8 +36,8 @@ public class Configuration {
     public static final String PET_SERVICE_HOST_NAME = "FE_PET_SERVICE_HOST";
     public static final String PET_SERVICE_PORT_NAME = "FE_PET_SERVICE_PORT";
 
-    public static final String TX_SERVICE_HOST_NAME = "FE_PET_SERVICE_HOST";
-    public static final String TX_SERVICE_PORT_NAME = "FE_PET_SERVICE_PORT";
+    public static final String TXN_SERVICE_HOST_NAME = "FE_TXN_SERVICE_HOST";
+    public static final String TXN_SERVICE_PORT_NAME = "FE_TXN_SERVICE_PORT";
 
     public static final String USER_SERVICE_HOST_NAME = "FE_USER_SERVICE_HOST";
     public static final String USER_SERVICE_PORT_NAME = "FE_USER_SERVICE_PORT";
@@ -48,8 +49,8 @@ public class Configuration {
     public static final String DEFAULT_PET_SERVICE_HOST = "localhost";
     public static final String DEFAULT_PET_SERVICE_PORT = "8080";
 
-    public static final String DEFAULT_TX_SERVICE_HOST = "localhost";
-    public static final String DEFAULT_TX_SERVICE_PORT = "8090";
+    public static final String DEFAULT_TXN_SERVICE_HOST = "localhost";
+    public static final String DEFAULT_TXN_SERVICE_PORT = "8090";
 
     public static final String DEFAULT_USER_SERVICE_HOST = "localhost";
     public static final String DEFAULT_USER_SERVICE_PORT = "8070";
@@ -67,8 +68,8 @@ public class Configuration {
         petServiceEP = createHTTPEp(getValue(PET_SERVICE_HOST_NAME, DEFAULT_PET_SERVICE_HOST),
                                     getValue(PET_SERVICE_PORT_NAME, DEFAULT_PET_SERVICE_PORT));
 
-        txServiceEP = createHTTPEp(getValue(TX_SERVICE_HOST_NAME, DEFAULT_TX_SERVICE_HOST),
-                                   getValue(TX_SERVICE_PORT_NAME, DEFAULT_TX_SERVICE_PORT));
+        txServiceEP = createHTTPEp(getValue(TXN_SERVICE_HOST_NAME, DEFAULT_TXN_SERVICE_HOST),
+                                   getValue(TXN_SERVICE_PORT_NAME, DEFAULT_TXN_SERVICE_PORT));
 
         userServiceEP = createHTTPEp(getValue(USER_SERVICE_HOST_NAME, DEFAULT_USER_SERVICE_HOST),
                                      getValue(USER_SERVICE_PORT_NAME, DEFAULT_USER_SERVICE_PORT));
@@ -107,12 +108,7 @@ public class Configuration {
     }
 
     private String createHTTPEp(String host, String port) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("http://")
-                .append(host)
-                .append(":")
-                .append(port);
-        return builder.toString();
+        return "http://" + host + ":" + port;
     }
 
     public static String getValue(String variableName, String defaultValue) {
