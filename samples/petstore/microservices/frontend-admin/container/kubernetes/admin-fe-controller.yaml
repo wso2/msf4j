@@ -22,14 +22,14 @@ spec:
         - name: FE_FILE_SERVICE_HOST
           value: fileserver
         - name: FE_FILE_SERVICE_PORT
-          value: 80
+          value: "80"
         - name: FE_PET_SERVICE_HOST
           value: pet
         - name: FE_PET_SERVICE_PORT
-          value: 8080
+          value: "8080"
         - name: FE_USER_SERVICE_HOST
           value: security
         - name: FE_USER_SERVICE_PORT
-          value: 8080
+          value: "8080"
         ports:
         - containerPort: 8080
