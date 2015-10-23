@@ -22,13 +22,7 @@
         <dependency>
             <groupId>org.wso2.carbon.mss</groupId>
             <artifactId>petstore-frontend-util</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.wso2.carbon.mss</groupId>
-                    <artifactId>org.wso2.carbon.mss</artifactId>
-                </exclusion>
-            </exclusions>
+            <version>${project.version}</version>
         </dependency>
         <!-- JSF 2.0 -->
         <dependency>
@@ -47,11 +41,6 @@
             <version>1.2</version>
         </dependency>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.1.0</version>
-        </dependency>
-        <dependency>
             <groupId>javax.servlet.jsp</groupId>
             <artifactId>jsp-api</artifactId>
             <version>2.1</version>
@@ -61,56 +50,6 @@
             <artifactId>el-impl</artifactId>
             <version>2.2</version>
         </dependency>
-        <dependency>
-            <groupId>de.larmic.butterfaces</groupId>
-            <artifactId>components-mojarra</artifactId>
-            <version>1.8.9</version>
-        </dependency>
-
-        <!-- JAX-RS 2.0 -->
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
-            <version>${jaxrs.version}</version>
-        </dependency>
-
-        <!-- jersey Client -->
-        <dependency>
-            <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-servlet</artifactId>
-            <version>${jersey2.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-server</artifactId>
-            <version>${jersey2.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-client</artifactId>
-            <version>${jersey2.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-multipart</artifactId>
-            <version>${jersey2.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.4</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.wso2.carbon.mss</groupId>
-            <artifactId>petstore-util</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>13.0.1</version>
-        </dependency>
     </dependencies>
 
     <build>
@@ -119,7 +58,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.1</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
