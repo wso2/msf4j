@@ -17,6 +17,11 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.wso2.carbon.mss</groupId>
+            <artifactId>petstore-frontend-util</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
         <!-- JSF 2.0 -->
         <dependency>
             <groupId>com.sun.faces</groupId>
