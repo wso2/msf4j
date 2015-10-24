@@ -20,7 +20,7 @@ package org.wso2.carbon.mss.examples.petstore.security.ldap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.mss.examples.petstore.util.SystemVariableUtil;
+import org.wso2.carbon.mss.util.SystemVariableUtil;
 
 import java.util.HashMap;
 import java.util.List;

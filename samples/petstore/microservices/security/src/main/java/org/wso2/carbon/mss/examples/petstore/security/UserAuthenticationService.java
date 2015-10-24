@@ -21,15 +21,13 @@ package org.wso2.carbon.mss.examples.petstore.security;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.mss.examples.petstore.security.ldap.LDAPUserStoreManager;
-import org.wso2.carbon.mss.examples.petstore.util.SystemVariableUtil;
 import org.wso2.carbon.mss.examples.petstore.util.model.User;
+import org.wso2.carbon.mss.util.SystemVariableUtil;
 import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 /**
