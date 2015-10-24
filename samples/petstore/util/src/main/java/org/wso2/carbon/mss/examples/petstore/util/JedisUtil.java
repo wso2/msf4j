@@ -20,6 +20,7 @@ package org.wso2.carbon.mss.examples.petstore.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.mss.util.SystemVariableUtil;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.exceptions.JedisConnectionException;
 

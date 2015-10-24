@@ -26,16 +26,15 @@
 
 <h:head>
     <title>Java Pet Shop </title>
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
-          rel="stylesheet"/>
+    <h:outputStylesheet library="css" name="font-awesome.min.css"/>
 </h:head>
 <h:body>
-                <ui:composition template="/template/common/commonLayout.xhtml">
-                    <ui:define name="content">
-                        <div class="container-fluid body-wrapper">
+    <ui:composition template="/template/common/commonLayout.xhtml">
+        <ui:define name="content">
+            <div class="container-fluid body-wrapper">
 
-                        <div class="row">
-                        <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-4">
                         <h3>Add new pet type</h3>
 
                         <h:form>
@@ -56,15 +55,13 @@
                             <br/>
                             <h:commandButton action="#{petTypeBean.addPetType}"
                                              value=" Add " class="btn btn-primary"/>
-
                             <h:button value="Cancel" outcome="/pet/index" class="btn  btn-default"/>
-
                         </h:form>
-                        </div>
-                        </div>
-                        </div>
-                    </ui:define>
-                </ui:composition>
+                    </div>
+                </div>
+            </div>
+        </ui:define>
+    </ui:composition>
 
 </h:body>
 </html>
