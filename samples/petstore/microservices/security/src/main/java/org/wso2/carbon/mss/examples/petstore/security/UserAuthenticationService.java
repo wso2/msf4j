@@ -20,10 +20,10 @@ package org.wso2.carbon.mss.examples.petstore.security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.mss.examples.petstore.security.ldap.LDAPUserStoreManager;
+import org.wso2.carbon.mss.examples.petstore.util.SystemVariableUtil;
 import org.wso2.carbon.mss.examples.petstore.util.model.User;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
+import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -40,8 +40,10 @@ public class UserAuthenticationService {
 
     private static final Logger log = LoggerFactory.getLogger(UserAuthenticationService.class);
     private static final String JWT_HEADER = "X-JWT-Assertion";
-    private static AtomicInteger count = new AtomicInteger(0);
-    private Map<String, User> users = new HashMap<>();
+    private  String host = SystemVariableUtil.getValue("LDAP_HOST", "localhost");
+    private  int port = Integer.parseInt(SystemVariableUtil.getValue("LDAP_PORT", "10389"));
+    private  String connectionName = SystemVariableUtil.getValue("LDAP_CONNECTION_NAME", "uid=admin,ou=system");
+    private  String connectionPassword = SystemVariableUtil.getValue("LDAP_CONNECTION_PASSWORD", "secret");
 
     @POST
     @Consumes("application/json")
@@ -50,22 +52,30 @@ public class UserAuthenticationService {
         String name = user.getName();
         log.info("Authenticating user " + name + " ..");
         String jwt;
-        User userFromUserStore = users.get(name);
+        boolean isAuthenticated;
 
-        if (userFromUserStore != null
-            && userFromUserStore.getName().equals(user.getName()) 
-            && userFromUserStore.getPassword().equals(user.getPassword())) {
+        try {
+            LDAPUserStoreManager ldapUserStoreManager = LDAPUserStoreManager.
+                    getInstance(host, port, connectionName, connectionPassword);
+            isAuthenticated = ldapUserStoreManager.isValidUser(name, user.getPassword());
+            if (isAuthenticated) {
+                User userFromUserStore = new User();
+                userFromUserStore.setName(name);
+                userFromUserStore.setEmail(ldapUserStoreManager.getAttributeValue(name, "mail"));
+                userFromUserStore.setLastName(ldapUserStoreManager.getAttributeValue(name, "sn"));
 
-            try {
                 JWTGenerator jwtGenerator = new JWTGenerator();
-                jwt = jwtGenerator.generateJWT(user);
+                jwt = jwtGenerator.generateJWT(userFromUserStore);
 
                 return Response.ok("User" + name + " authenticated successfully")
                         .header(JWT_HEADER, jwt).build();
-            } catch (Exception e) {
-                return Response.status(Response.Status.EXPECTATION_FAILED).build();
+
             }
+
+        } catch (Exception e) {
+            return Response.status(Response.Status.EXPECTATION_FAILED).build();
         }
+
         return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid login attempt.").build();
     }
 
@@ -75,18 +85,47 @@ public class UserAuthenticationService {
     public Response addUser(User user) {
         String name = user.getName();
         log.info("Adding new user " + name + " ..");
-        users.put(user.getName(), user);
+        LDAPUserStoreManager ldapUserStoreManager;
+
+        try {
+            ldapUserStoreManager = LDAPUserStoreManager
+                    .getInstance(host, port, connectionName, connectionPassword);
+
+            //Create groups
+            if (user.getRoles() != null && user.getRoles().size() > 0) {
+                for (String role : user.getRoles()) {
+                    ldapUserStoreManager.addGroup(role, role);
+                }
+            }
+            ldapUserStoreManager.addUserAndAssignGroups(user.getName(), user.getFirstName(), user.getLastName(),
+                                                        user.getPassword(), user.getEmail(), user.getRoles());
+            log.info("User " + name + " successfully added ..");
+        } catch (NamingException e) {
+            return Response.status(Response.Status.EXPECTATION_FAILED).build();
+        }
 
         return Response.status(Response.Status.OK)
                 .entity("User " + name + " successfully added").build();
 
     }
 
-    @GET
-    @Produces("application/json")
-    @Path("/{id}")
-    public User getUser(@PathParam("id") String id) {
-        return users.get(id);
+    @POST
+    @Consumes("application/json")
+    @Path("/ldapgroup/{name}/{description}")
+    public Response addLDAPGroup(@PathParam("name") String name, @PathParam("description") String description) {
+        log.info("Adding new ldap group " + name + " ..");
+        LDAPUserStoreManager ldapUserStoreManager;
+
+        try {
+            ldapUserStoreManager = LDAPUserStoreManager
+                    .getInstance(host, port, connectionName, connectionPassword);
+            ldapUserStoreManager.addGroup(name, description);
+        } catch (NamingException e) {
+            return Response.status(Response.Status.EXPECTATION_FAILED).build();
+        }
+
+        return Response.status(Response.Status.OK)
+                .entity("LDAP group " + name + " successfully added").build();
 
     }
 

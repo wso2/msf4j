@@ -313,7 +313,7 @@
 
     <modules>
         <module>carbon-mss/components/org.wso2.carbon.mss</module>
-        <module>carbon-mss/features/org.wso2.carbon.mss.feature</module> 
+        <module>carbon-mss/features/org.wso2.carbon.mss.feature</module>
         <module>samples/executable-jar</module>
         <module>samples/osgi-bundle</module>
         <module>samples/security-interceptor</module>

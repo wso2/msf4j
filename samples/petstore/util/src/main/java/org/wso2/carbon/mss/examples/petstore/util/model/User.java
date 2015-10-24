@@ -29,6 +29,10 @@ public class User {
     private String password;
     private String email;
     private List<String> roles;
+    private String firstName;
+    private String lastName;
+
+
 
     public String getName() {
         return name;
@@ -61,5 +65,21 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }
