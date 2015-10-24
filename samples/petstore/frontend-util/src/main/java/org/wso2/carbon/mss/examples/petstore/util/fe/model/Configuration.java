@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.mss.examples.petstore.util.fe.model;
 
+import java.util.logging.Logger;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 
@@ -55,6 +56,7 @@ public class Configuration {
     public static final String DEFAULT_USER_SERVICE_HOST = "localhost";
     public static final String DEFAULT_USER_SERVICE_PORT = "8070";
 
+    private static final Logger LOGGER = Logger.getLogger(Configuration.class.getName());
 
     private String fileUploadServiceEP;
     private String petServiceEP;
@@ -73,6 +75,11 @@ public class Configuration {
 
         userServiceEP = createHTTPEp(getValue(USER_SERVICE_HOST_NAME, DEFAULT_USER_SERVICE_HOST),
                                      getValue(USER_SERVICE_PORT_NAME, DEFAULT_USER_SERVICE_PORT));
+        LOGGER.info("...........INFO...................");
+        LOGGER.info("User Service Endpoint : " + userServiceEP);
+        LOGGER.info("Pet Service Endpoint : " + petServiceEP);
+        LOGGER.info("TXN Service Endpoint : " + txServiceEP);
+        LOGGER.info("File Service Endpoint : " + fileUploadServiceEP);
     }
 
     public String getFileUploadServiceEP() {

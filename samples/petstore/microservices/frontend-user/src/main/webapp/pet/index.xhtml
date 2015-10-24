@@ -20,16 +20,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:f="http://java.sun.com/jsf/core"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:b="http://butterfaces.larmic.de/components">
 
 <h:head>
     <title>Java Pet Shop </title>
-
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
-          rel="stylesheet"/>
+    <h:outputStylesheet library="css" name="font-awesome.min.css"/>
 </h:head>
 <h:body>
     <ui:composition template="/template/common/commonLayout.xhtml">
@@ -40,8 +37,9 @@
                        rendered="false">
                 Lorem ipsum dolor sit amet, consectetuer ...
             </b:section>
+
             <h3>Java Pet Shop</h3>
-            Wellcomeback  <h:outputText value="#{loginBean.username}"/>  !
+            Wellcomeback <h:outputText value="#{loginBean.username}"/> !
         </ui:define>
     </ui:composition>
 </h:body>

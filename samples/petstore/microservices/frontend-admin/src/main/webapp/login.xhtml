@@ -18,39 +18,30 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:b="http://butterfaces.larmic.de/components">
 <h:head>
     <title>Login form</title>
-    <link rel="stylesheet" href="libs/css/style.css"/>
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
-          rel="stylesheet"/>
+    <h:outputStylesheet library="css" name="style.css"/>
+    <h:outputStylesheet library="css" name="font-awesome.min.css"/>
 </h:head>
 <h:body>
 
-    <!-- header -->
     <header class="header header-default">
         <div class="container-fluid">
             <div class="pull-left brand float-remove-xs text-center-xs">
-                <a href="#">
-                    <img src="libs/images/logo-inverse.svg" alt="wso2" title="wso2" class="logo"/>
-                    <h1><em>WSO2 Petstore Login</em></h1>
-                </a>
+                <h:graphicImage name="img/logo-inverse.svg" alt="wso2" title="wso2" class="logo">
+                    <h1><em>WSO2 Petstore Login </em></h1>
+                </h:graphicImage>
             </div>
         </div>
     </header>
 
-    <!-- page content -->
     <div class="container-fluid body-wrapper">
-
         <div class="row">
             <div class="col-md-12">
-
-                <!-- content -->
                 <div class="container col-xs-10 col-sm-6 col-md-6 col-lg-3 col-centered wr-content wr-login col-centered">
                     <div>
                         <h2 class="wr-title uppercase blue-bg padding-double white boarder-bottom-blue margin-none">Sign in </h2>
-
 
                     </div>
                     <div class="boarder-all ">
@@ -81,7 +72,7 @@
                                           required="true"
                                           autoFocus="true"
                                           placeholder="Enter your password">
-                                          rendered="true">
+                                    rendered="true">
                                     <b:tooltip>
                                         Enter your password...
                                     </b:tooltip>
@@ -89,27 +80,29 @@
                                 <br/>
 
                                 <h:commandButton action="#{loginBean.doLogin}"
-                                                 value=" Login " class="wr-btn grey-bg col-xs-12 col-md-12 col-lg-12 uppercase font-extra-large"/>
+                                                 value=" Login "
+                                                 class="wr-btn grey-bg col-xs-12 col-md-12 col-lg-12 uppercase font-extra-large"/>
                                 <br/>
                                 <br/>
                             </h:form>
+
                             <div class="clearfix"></div>
                         </div>
 
                     </div>
                 </div>
-                <!-- /content -->
 
             </div>
         </div>
-        <!-- /content/body -->
 
     </div>
 
-    <!-- footer -->
     <footer class="footer">
         <div class="container-fluid">
-            <p>WSO2 Pet Store | &#169; <script>document.write(new Date().getFullYear());</script> <a href="http://wso2.com/" target="_blank"><i class="icon fw fw-wso2"></i> Inc</a>. All Rights Reserved.</p>
+            <p>WSO2 Pet Store | &#169;
+                <script>document.write(new Date().getFullYear());</script>
+                <a href="http://wso2.com/" target="_blank"><i class="icon fw fw-wso2"></i> Inc</a>. All Rights Reserved.
+            </p>
         </div>
     </footer>
 </h:body>

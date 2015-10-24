@@ -27,83 +27,84 @@
 
 <h:head>
     <title>Java Pet Shop </title>
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
-          rel="stylesheet"/>
+    <h:outputStylesheet library="css" name="font-awesome.min.css"/>
 </h:head>
 <h:body>
     <ui:composition template="/template/common/commonLayout.xhtml">
         <ui:define name="content">
             <div class="container-fluid body-wrapper">
 
-            <div class="row">
-            <div class="col-md-4">
-            <h3>Add new pet type</h3>
+                <div class="row">
+                    <div class="col-md-4">
+                        <h3>Add new pet type</h3>
 
-            <h:form enctype="multipart/form-data">
-                <h:messages infoStyle="color:darkgreen" errorStyle="color:darkred"/>
-                <br/>
+                        <h:form enctype="multipart/form-data">
+                            <h:messages infoStyle="color:darkgreen" errorStyle="color:darkred"/>
+                            <br/>
 
-                <b:comboBox id="petType"
-                            label="petType"
-                            value="#{petBean.pet.category.name}"
-                            required="true"
-                            rendered="true">
-                    <f:selectItems value="#{petTypeListBean.petTypes}"
-                                   var="petType"
-                                   itemLabel="#{petType.name}"
-                                   itemValue="#{petType.name}"/>
-                </b:comboBox>
+                            <b:comboBox id="petType"
+                                        label="petType"
+                                        value="#{petBean.pet.category.name}"
+                                        required="true"
+                                        rendered="true">
+                                <f:selectItems value="#{petTypeListBean.petTypes}"
+                                               var="petType"
+                                               itemLabel="#{petType.name}"
+                                               itemValue="#{petType.name}"/>
+                            </b:comboBox>
 
-                <b:text id="ageMonths"
-                        label="Age In Months"
-                        hideLabel="false"
-                        value="#{petBean.pet.ageMonths}"
-                        required="true"
-                        autoFocus="true"
-                        rendered="true">
-                    <b:tooltip>
-                        Pet's Age In Months...
-                    </b:tooltip>
-                </b:text>
+                            <b:text id="ageMonths"
+                                    label="Age In Months"
+                                    hideLabel="false"
+                                    value="#{petBean.pet.ageMonths}"
+                                    required="true"
+                                    autoFocus="true"
+                                    rendered="true">
+                                <b:tooltip>
+                                    Pet's Age In Months...
+                                </b:tooltip>
+                            </b:text>
 
-                <b:textArea id="details"
-                            label="Details of Pet"
-                            value="#{petBean.pet.details}"
-                            required="false"
-                            placeholder="Provide a short description about the pet"
-                            rendered="true">
-                    <b:tooltip>
-                        Provide a short description about the pet.
-                    </b:tooltip>
-                </b:textArea>
+                            <b:textArea id="details"
+                                        label="Details of Pet"
+                                        value="#{petBean.pet.details}"
+                                        required="false"
+                                        placeholder="Provide a short description about the pet"
+                                        rendered="true">
+                                <b:tooltip>
+                                    Provide a short description about the pet.
+                                </b:tooltip>
+                            </b:textArea>
 
-                <b:text id="price"
-                        label="Price"
-                        hideLabel="false"
-                        value="#{petBean.pet.price}"
-                        required="true"
-                        autoFocus="true"
-                        rendered="true">
-                    <b:tooltip>
-                        Pet's Price...
-                    </b:tooltip>
-                </b:text>
+                            <b:text id="price"
+                                    label="Price"
+                                    hideLabel="false"
+                                    value="#{petBean.pet.price}"
+                                    required="true"
+                                    autoFocus="true"
+                                    rendered="true">
+                                <b:tooltip>
+                                    Pet's Price...
+                                </b:tooltip>
+                            </b:text>
 
-                <br/>
-                <u>
-                    <b:labeledContainer label="Image of the Pet">
-                        <h:inputFile class="btn btn-default" label="Price" value="#{petBean.file}"/>
-                    </b:labeledContainer>
-                    <br/>
-                </u>
-                <br/>
-                <h:commandButton action="#{petBean.addPet}"
-                                 value=" Add " class="btn btn-primary"/>
+                            <br/>
+                            <u>
+                                <b:labeledContainer label="Image of the Pet">
+                                    <h:inputFile class="btn btn-default" label="Price" value="#{petBean.file}"/>
+                                </b:labeledContainer>
+                                <br/>
+                            </u>
+                            <br/>
+                            <h:commandButton action="#{petBean.addPet}"
+                                             value=" Add " class="btn btn-primary"/>
 
-                <h:button value="Cancel" outcome="/pet/index" class="btn  btn-default"/>
+                            <h:button value="Cancel" outcome="/pet/index" class="btn  btn-default"/>
 
-            </h:form>
-            </div></div></div>
+                        </h:form>
+                    </div>
+                </div>
+            </div>
         </ui:define>
     </ui:composition>
 </h:body>

@@ -20,6 +20,7 @@ package org.wso2.carbon.mss.examples.petstore.util.fe.view;
 
 import org.wso2.carbon.mss.examples.petstore.util.fe.dao.UserService;
 import org.wso2.carbon.mss.examples.petstore.util.fe.model.User;
+import org.wso2.carbon.mss.examples.petstore.util.fe.model.UserServiceException;
 
 import javax.annotation.Nullable;
 import javax.faces.bean.ManagedBean;
@@ -35,6 +36,7 @@ public class UserBean {
 
     public static final String ROLE_USER = "user";
 
+    @Nullable
     @ManagedProperty("#{userService}")
     private UserService userService;
 
@@ -44,9 +46,9 @@ public class UserBean {
 
     private User user = new User();
 
-    public String addUser() {
+    public String addUser() throws UserServiceException {
         user.addRole(ROLE_USER);
-        //  userService.addUser(user);
+        userService.addUser(user.getUser());
         return navigationBean.toLogin();
     }
 

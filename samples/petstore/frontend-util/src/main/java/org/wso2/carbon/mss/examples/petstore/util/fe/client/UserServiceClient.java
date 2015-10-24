@@ -24,6 +24,7 @@ import org.wso2.carbon.mss.examples.petstore.util.fe.model.UserServiceException;
 import org.wso2.carbon.mss.examples.petstore.util.fe.view.LoginBean;
 import org.wso2.carbon.mss.examples.petstore.util.model.User;
 
+import java.util.logging.Logger;
 import javax.annotation.Nullable;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
@@ -42,6 +43,8 @@ import javax.ws.rs.core.Response;
 @ApplicationScoped
 public class UserServiceClient extends AbstractServiceClient {
 
+    private static final Logger LOGGER = Logger.getLogger(UserServiceClient.class.getName());
+
     @Nullable
     @ManagedProperty("#{configuration}")
     private Configuration configuration;
@@ -53,11 +56,25 @@ public class UserServiceClient extends AbstractServiceClient {
         user.setName(username);
         user.setPassword(password);
         Gson gson = new Gson();
+        LOGGER.info("Connecting to user service " + configuration.getUserServiceEP());
         final Response response = target.request().post(Entity.entity(gson.toJson(user), MediaType.APPLICATION_JSON));
+        LOGGER.info("Returned from user service " + configuration.getUserServiceEP());
         if (Response.Status.OK.getStatusCode() == response.getStatus()) {
             return response.getHeaderString(LoginBean.X_JWT_ASSERTION);
         } else {
             throw new UserServiceException("Can't authenticate the user");
+        }
+    }
+
+    public void addUser(User user) throws UserServiceException {
+        final Client client = ClientBuilder.newBuilder().build();
+        final WebTarget target = client.target(configuration.getUserServiceEP() + "/user/add");
+        Gson gson = new Gson();
+        LOGGER.info("Connecting to user service " + configuration.getUserServiceEP());
+        final Response response = target.request().post(Entity.entity(gson.toJson(user), MediaType.APPLICATION_JSON));
+        LOGGER.info("Returned from user service " + configuration.getUserServiceEP());
+        if (Response.Status.OK.getStatusCode() != response.getStatus()) {
+            throw new UserServiceException("Can't add the user");
         }
     }
 

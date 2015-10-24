@@ -85,4 +85,13 @@ public class User {
     public void addRole(String role) {
         roles.add(role);
     }
+    public org.wso2.carbon.mss.examples.petstore.util.model.User getUser() {
+        org.wso2.carbon.mss.examples.petstore.util.model.User user = new org.wso2.carbon.mss.examples.petstore.util
+                .model.User();
+        user.setName(getUsername());
+        user.setPassword(getPassword());
+        user.setEmail(getEmail());
+        user.setRoles(getRoles());
+        return user;
+    }
 }

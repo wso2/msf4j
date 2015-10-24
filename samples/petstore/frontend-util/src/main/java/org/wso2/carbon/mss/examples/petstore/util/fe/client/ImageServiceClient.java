@@ -26,6 +26,7 @@ import org.wso2.carbon.mss.examples.petstore.util.fe.model.Configuration;
 import org.wso2.carbon.mss.examples.petstore.util.fe.view.LoginBean;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 import javax.annotation.Nullable;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
@@ -44,6 +45,8 @@ import javax.ws.rs.core.Response;
 @ApplicationScoped
 public class ImageServiceClient extends AbstractServiceClient {
 
+    private static final Logger LOGGER = Logger.getLogger(ImageServiceClient.class.getName());
+
     @Nullable
     @ManagedProperty("#{configuration}")
     private Configuration configuration;
@@ -57,8 +60,10 @@ public class ImageServiceClient extends AbstractServiceClient {
         if (multiPart instanceof FormDataMultiPart) {
             final FormDataMultiPart dataMultiPart = (FormDataMultiPart) multiPart;
             final WebTarget target = client.target(configuration.getFileUploadServiceEP());
+            LOGGER.info("Connecting to file service on " + configuration.getFileUploadServiceEP());
             final Response response = target.request().header(LoginBean.X_JWT_ASSERTION, getJWTToken())
                     .post(Entity.entity(dataMultiPart, dataMultiPart.getMediaType()));
+            LOGGER.info("Returned from file service " + configuration.getFileUploadServiceEP());
             if (Response.Status.OK.getStatusCode() == response.getStatus()) {
                 imageURL = response.readEntity(String.class);
             }
