@@ -40,8 +40,11 @@ import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.ModificationItem;
 import javax.naming.directory.NoSuchAttributeException;
 
+
 /**
- * Perform user management operations for LDAP.
+ * Perform user management operations for LDAP. OrganizationUnit (OU) for Users and Groups
+ * should have defined in system variables "LDAP_USER_OU" and "LDAP_GROUPS_OU" correspondingly.
+ * If not default OU/s are used.
  */
 public class LDAPUserStoreManager {
 
@@ -49,11 +52,11 @@ public class LDAPUserStoreManager {
 
     //The OU (organizational unit) to add users to
     private static final String USERS_OU = SystemVariableUtil.getValue("LDAP_USER_OU",
-                                                                       "ou=Users,dc=example,dc=com");
+                                                                       "ou=Users,dc=WSO2,dc=ORG");
 
     //The OU (organizational unit) to add groups to
     private static final String GROUPS_OU = SystemVariableUtil.getValue("LDAP_GROUPS_OU",
-                                                                        "ou=Groups,dc=example,dc=com");
+                                                                        "ou=Groups,dc=WSO2,dc=ORG");
 
     //The default LDAP port
     private static final int DEFAULT_PORT = 389;
@@ -132,7 +135,7 @@ public class LDAPUserStoreManager {
 
         // Add password
         Attribute userPassword = new BasicAttribute("userpassword", password);
-
+        
         // Add these to the container
         container.put(objClasses);
         container.put(cn);
@@ -156,12 +159,14 @@ public class LDAPUserStoreManager {
 
     public boolean isValidUser(String username, String password)
             throws Exception {
+
         try {
             getInitialContext(hostname, port, getUserDN(username), password);
             return true;
         } catch (javax.naming.NameNotFoundException e) {
             throw new Exception("Authentication failed " + username);
         } catch (NamingException e) {
+            log.error("error", e);
             // Any other error indicates couldn't log user in
             return false;
         }
@@ -182,13 +187,11 @@ public class LDAPUserStoreManager {
         // Assign the name and description to the group
         Attribute cn = new BasicAttribute("cn", name);
         Attribute desc = new BasicAttribute("description", description);
-        Attribute mod = new BasicAttribute("member", USERS_OU);
 
         // Add these to the container
         container.put(objClasses);
         container.put(cn);
         container.put(desc);
-        container.put(mod);
 
         try {
             // Create the entry

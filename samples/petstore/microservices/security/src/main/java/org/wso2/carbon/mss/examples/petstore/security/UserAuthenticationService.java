@@ -41,7 +41,7 @@ public class UserAuthenticationService {
     private  String host = SystemVariableUtil.getValue("LDAP_HOST", "localhost");
     private  int port = Integer.parseInt(SystemVariableUtil.getValue("LDAP_PORT", "10389"));
     private  String connectionName = SystemVariableUtil.getValue("LDAP_CONNECTION_NAME", "uid=admin,ou=system");
-    private  String connectionPassword = SystemVariableUtil.getValue("LDAP_CONNECTION_PASSWORD", "secret");
+    private  String connectionPassword = SystemVariableUtil.getValue("LDAP_CONNECTION_PASSWORD", "admin");
 
     @POST
     @Consumes("application/json")
