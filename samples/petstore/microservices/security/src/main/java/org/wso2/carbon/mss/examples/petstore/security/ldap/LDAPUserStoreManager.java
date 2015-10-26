@@ -126,10 +126,19 @@ public class LDAPUserStoreManager {
         objClasses.add("inetOrgPerson");
 
         // Assign the username, first name, and last name
-        String cnValue = new StringBuffer(firstName).append(" ").append(lastName).toString();
+        String cnValue;
+        Attribute givenName;
+        Attribute sn;
+        if (firstName == null || lastName == null) {
+            cnValue = username;
+            givenName = new BasicAttribute("givenName", username);
+            sn = new BasicAttribute("sn", username);
+        } else {
+            cnValue = new StringBuffer(firstName).append(" ").append(lastName).toString();
+            givenName = new BasicAttribute("givenName", firstName);
+            sn = new BasicAttribute("sn", lastName);
+        }
         Attribute cn = new BasicAttribute("cn", cnValue);
-        Attribute givenName = new BasicAttribute("givenName", firstName);
-        Attribute sn = new BasicAttribute("sn", lastName);
         Attribute uid = new BasicAttribute("uid", username);
         Attribute mail = new BasicAttribute("mail", email);
 
@@ -255,9 +264,11 @@ public class LDAPUserStoreManager {
             throws NamingException {
 
         addUser(username, firstName, lastName, password, email);
-        for (String group : groups) {
-            assignUser(username, group);
+        if (groups != null) {
+            for (String group : groups) {
+                assignUser(username, group);
 
+            }
         }
     }
 

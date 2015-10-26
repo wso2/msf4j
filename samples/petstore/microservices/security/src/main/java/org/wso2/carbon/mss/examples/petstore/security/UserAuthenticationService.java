@@ -95,6 +95,7 @@ public class UserAuthenticationService {
                     ldapUserStoreManager.addGroup(role, role);
                 }
             }
+
             ldapUserStoreManager.addUserAndAssignGroups(user.getName(), user.getFirstName(), user.getLastName(),
                                                         user.getPassword(), user.getEmail(), user.getRoles());
             log.info("User " + name + " successfully added ..");
