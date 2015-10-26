@@ -36,6 +36,9 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Bean classes used for JSF model.
@@ -126,6 +129,12 @@ public class PetListBean {
         return "list";
     }
 
+    private String getServerIP() {
+        ExternalContext extContext = FacesContext.getCurrentInstance().getExternalContext();
+        HttpServletRequest request = (HttpServletRequest) extContext.getRequest();
+        return request.getLocalAddr();
+    }
+
     private Pet modifyImageURL(Pet selectedValue) {
         LOGGER.info("Current Image URL " + selectedValue.getImage());
         try {
@@ -133,7 +142,7 @@ public class PetListBean {
             URL currentURL = new URL(selectedValue.getImage());
             String imageFile = currentURL.getFile();
             imageFile = "/fs/".concat(imageFile.substring(imageFile.lastIndexOf("/") + 1));
-            URL newURL = new URL(currentURL.getProtocol(), currentURL.getHost(), nodePort, imageFile);
+            URL newURL = new URL(currentURL.getProtocol(), getServerIP(), nodePort, imageFile);
             selectedValue.setImage(newURL.toString());
         } catch (MalformedURLException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
