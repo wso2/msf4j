@@ -28,6 +28,7 @@ import org.wso2.carbon.mss.examples.petstore.util.model.Pet;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -132,10 +133,16 @@ public class PetListBean {
     private String getServerIP() {
         ExternalContext extContext = FacesContext.getCurrentInstance().getExternalContext();
         HttpServletRequest request = (HttpServletRequest) extContext.getRequest();
+        LOGGER.info("================ printing all headers =============");
+        for (String key : Collections.list(request.getHeaderNames())) {
+            LOGGER.info(key + "=" + request.getHeader(key));
+        }
+        LOGGER.info("===================================================");
         return request.getLocalAddr();
     }
 
     private Pet modifyImageURL(Pet selectedValue) {
+        getServerIP();
         LOGGER.info("Current Image URL " + selectedValue.getImage());
         try {
             Integer nodePort = Integer.valueOf(configuration.getFileUploadServiceNodePort());
