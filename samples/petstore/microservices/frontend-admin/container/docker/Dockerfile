@@ -19,6 +19,8 @@
 FROM tomcat:8.0.28-jre8
 MAINTAINER architecture@wso2.org
 
+RUN apt-get update && apt-get install -y --no-install-recommends dnsutils
+
 # --------------------------------
 # Copy scripts, packages & plugins
 # --------------------------------
