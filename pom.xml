@@ -311,7 +311,7 @@
         <!-- Dependencies -->
         <carbon.kernel.version>5.0.0-m5</carbon.kernel.version>
         <carbon.mss.version>1.0.0-SNAPSHOT</carbon.mss.version>
-        <carbon.metrics.version>1.2.0-SNAPSHOT</carbon.metrics.version>
+        <carbon.metrics.version>1.2.0-m1</carbon.metrics.version>
         <carbon.mss.osgi.version>1.0.0.SNAPSHOT</carbon.mss.osgi.version>
 
         <osgi.api.version>6.0.0</osgi.api.version>
