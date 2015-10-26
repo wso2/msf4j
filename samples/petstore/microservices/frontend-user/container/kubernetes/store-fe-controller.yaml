@@ -35,5 +35,7 @@ spec:
           value: security
         - name: FE_TXN_SERVICE_PORT
           value: "80"
+        - name: FE_FILESERVER_NODE_PORT
+          value: "31111"
         ports:
         - containerPort: 8080
