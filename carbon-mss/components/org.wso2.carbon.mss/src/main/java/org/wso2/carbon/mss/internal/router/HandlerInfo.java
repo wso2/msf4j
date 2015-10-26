@@ -19,23 +19,50 @@
 
 package org.wso2.carbon.mss.internal.router;
 
+import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * Contains information about {@link org.wso2.carbon.mss.HttpHandler} method.
  */
 public class HandlerInfo {
-    private final String handlerName;
-    private final String methodName;
 
-    public HandlerInfo(String handlerName, String methodName) {
+    private final String handlerName;
+    private final Method method;
+
+    private Map<String, Object> attributes = new ConcurrentHashMap<>();
+
+    public HandlerInfo(String handlerName, Method method) {
         this.handlerName = handlerName;
-        this.methodName = methodName;
+        this.method = method;
     }
 
     public String getHandlerName() {
         return handlerName;
     }
 
-    public String getMethodName() {
-        return methodName;
+    public Method getMethod() {
+        return method;
+    }
+
+    /**
+     * Returns the value of the named attribute as an Object, or null if no attribute of the given name exists.
+     * 
+     * @param name a {@link String} specifying the name of the attribute
+     * @return an {@link Object} containing the value of the attribute, or null if the attribute does not exist
+     */
+    public Object getAttribute(String name) {
+        return attributes.get(name);
+    }
+
+    /**
+     * Stores an attribute in this request.
+     * 
+     * @param name a {@link String} specifying the name of the attribute
+     * @param obj the {@link Object} to be stored
+     */
+    public void setAttribute(String name, Object obj) {
+        attributes.put(name, obj);
     }
 }
