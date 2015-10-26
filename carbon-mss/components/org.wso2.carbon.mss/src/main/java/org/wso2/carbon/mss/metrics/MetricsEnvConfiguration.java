@@ -1,4 +1,4 @@
-package org.wso2.carbon.mss.example;
+package org.wso2.carbon.mss.metrics;
 
 import org.wso2.carbon.metrics.common.MetricsConfiguration;
 

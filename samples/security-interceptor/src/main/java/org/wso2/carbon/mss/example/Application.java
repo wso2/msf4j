@@ -22,10 +22,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.mss.MicroservicesRunner;
 import org.wso2.carbon.mss.example.hook.LoggingHeadersInterceptor;
-import org.wso2.carbon.mss.example.hook.MetricReporter;
-import org.wso2.carbon.mss.example.hook.MetricsInterceptor;
 import org.wso2.carbon.mss.example.hook.UsernamePasswordSecurityInterceptor;
 import org.wso2.carbon.mss.example.service.Helloworld;
+import org.wso2.carbon.mss.metrics.MetricReporter;
+import org.wso2.carbon.mss.metrics.MetricsInterceptor;
 
 /**
  * Main Application Class.

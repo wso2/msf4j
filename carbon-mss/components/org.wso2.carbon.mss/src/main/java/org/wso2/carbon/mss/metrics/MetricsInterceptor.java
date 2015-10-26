@@ -1,4 +1,4 @@
-package org.wso2.carbon.mss.example.hook;
+package org.wso2.carbon.mss.metrics;
 
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
@@ -21,7 +21,6 @@ import org.wso2.carbon.metrics.manager.Timer;
 import org.wso2.carbon.metrics.manager.Timer.Context;
 import org.wso2.carbon.metrics.manager.internal.ServiceReferenceHolder;
 import org.wso2.carbon.mss.HttpResponder;
-import org.wso2.carbon.mss.example.MetricsEnvConfiguration;
 import org.wso2.carbon.mss.internal.router.HandlerInfo;
 import org.wso2.carbon.mss.internal.router.Interceptor;
 

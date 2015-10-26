@@ -1,4 +1,4 @@
-package org.wso2.carbon.mss.example.hook;
+package org.wso2.carbon.mss.metrics;
 
 /**
  * Metric Reporter Types
