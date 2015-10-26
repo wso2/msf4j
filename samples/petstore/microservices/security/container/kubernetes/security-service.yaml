@@ -12,7 +12,6 @@ spec:
     # the port that this service should serve on
     - port: 80
       targetPort: 8080
-
   type: NodePort
   selector:
     name: security

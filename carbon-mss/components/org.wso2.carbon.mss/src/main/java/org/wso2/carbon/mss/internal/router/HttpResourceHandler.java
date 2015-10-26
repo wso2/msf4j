@@ -260,7 +260,7 @@ public final class HttpResourceHandler implements HttpHandler {
                 // Call preCall method of handler interceptors.
                 boolean terminated = false;
                 HandlerInfo handlerInfo = new HandlerInfo(httpResourceModel.getMethod().getDeclaringClass().getName(),
-                        httpResourceModel.getMethod().getName());
+                        httpResourceModel.getMethod());
                 for (Interceptor interceptor : interceptors) {
                     if (!interceptor.preCall(request, responder, handlerInfo)) {
                         // Terminate further request processing if preCall returns false.

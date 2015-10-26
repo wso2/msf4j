@@ -18,6 +18,10 @@
 
 package org.wso2.carbon.mss.example.service;
 
+import org.wso2.carbon.metrics.annotation.Counted;
+import org.wso2.carbon.metrics.annotation.Metered;
+import org.wso2.carbon.metrics.annotation.Timed;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -30,6 +34,9 @@ public class Helloworld {
 
     @GET
     @Path("/{user}")
+    @Timed
+    @Metered(name = "hello-meter")
+    @Counted(name = "hello-counter")
     public String getUser(@PathParam("user") String user) {
         return "Hello " + user;
     }
