@@ -138,7 +138,11 @@ public class PetListBean {
             LOGGER.info(key + "=" + request.getHeader(key));
         }
         LOGGER.info("===================================================");
-        return request.getLocalAddr();
+        String host = request.getHeader("host");
+        if (host == null || host.isEmpty()) {
+            host = request.getHeader("origin");
+        }
+        return host.substring(0, host.indexOf(":"));
     }
 
     private Pet modifyImageURL(Pet selectedValue) {
