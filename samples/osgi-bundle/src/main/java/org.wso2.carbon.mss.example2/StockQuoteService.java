@@ -21,7 +21,7 @@ import javax.ws.rs.core.Response;
  * StockQuote microservice
  */
 @Path("/SimpleStockQuote")
-public class StockQuoteService implements HttpHandler{
+public class StockQuoteService implements HttpHandler {
 
     private static final Logger log = LoggerFactory.getLogger(StockQuoteService.class);
 
