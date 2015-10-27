@@ -23,9 +23,10 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html">
 <body>
-<!-- header -->
 <ui:composition>
     <header class="header header-default">
+        <meta http-equiv="refresh"
+              content="#{facesContext.externalContext.sessionMaxInactiveInterval};url=#{request.contextPath}/login.xhtml"/>
         <div class="container-fluid">
             <div class="pull-left brand float-remove-xs text-center-xs">
                 <h:link outcome="/pet/index">
