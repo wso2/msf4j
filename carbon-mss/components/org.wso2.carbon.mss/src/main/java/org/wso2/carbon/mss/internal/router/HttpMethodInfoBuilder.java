@@ -75,4 +75,8 @@ public class HttpMethodInfoBuilder {
     public HttpResourceModel getHttpResourceModel() {
         return httpResourceModel;
     }
+
+    public HttpResponder getResponder() {
+        return responder;
+    }
 }
