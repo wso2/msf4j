@@ -67,6 +67,10 @@ class HttpMethodInfo {
                    HttpStreaming httpStreaming) throws HandlerException {
         this(method, handler, request, responder, args, exceptionHandler, mediaType);
 
+        if (!method.getReturnType().equals(Void.TYPE)) {
+            throw new HandlerException(HttpResponseStatus.INTERNAL_SERVER_ERROR,
+                    "Resource method should be void if it accepts chunked requests");
+        }
         try {
             method.invoke(handler, args);
         } catch (InvocationTargetException e) {
@@ -77,6 +81,10 @@ class HttpMethodInfo {
                     "Resource method invocation access failed", e);
         }
         bodyConsumer = httpStreaming.getBodyConsumer();
+        if (bodyConsumer == null) {
+            throw new HandlerException(HttpResponseStatus.INTERNAL_SERVER_ERROR,
+                    "Streaming unsupported");
+        }
     }
 
     /**
