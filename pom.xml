@@ -327,7 +327,7 @@
         <maven.bundleplugin.version>2.5.4</maven.bundleplugin.version>
 
         <!-- Dependencies -->
-        <carbon.kernel.version>5.0.0-SNAPSHOT</carbon.kernel.version>
+        <carbon.kernel.version>5.0.0-m7</carbon.kernel.version>
         <carbon.mss.version>1.0.0-SNAPSHOT</carbon.mss.version>
         <carbon.metrics.version>1.2.0-m1</carbon.metrics.version>
         <carbon.mss.osgi.version>1.0.0.SNAPSHOT</carbon.mss.osgi.version>
@@ -352,7 +352,7 @@
 
         <osgi.framework.import.version.range>[1.8.0, 2.0.0)</osgi.framework.import.version.range>
         <osgi.service.tracker.import.version.range>[1.5.1, 2.0.0)</osgi.service.tracker.import.version.range>
-        <carbon.feature.plugin.version>2.0.0-m1</carbon.feature.plugin.version>
+        <carbon.feature.plugin.version>2.0.0-alpha</carbon.feature.plugin.version>
     </properties>
 
     <modules>
