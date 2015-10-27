@@ -139,7 +139,7 @@ class HttpMethodInfo {
         try {
             bodyConsumer.chunk(buffer, responder);
         } catch (Throwable t) {
-            throw bodyConsumerError(t);
+            bodyConsumerError(t);
         }
     }
 
@@ -153,7 +153,7 @@ class HttpMethodInfo {
             bodyConsumer = null;
             consumer.finished(buffer, responder);
         } catch (Throwable t) {
-            throw bodyConsumerError(t);
+            bodyConsumerError(t);
         }
     }
 
@@ -162,7 +162,7 @@ class HttpMethodInfo {
      * throws {@link org.wso2.carbon.mss.internal.router.HandlerException}. The current bodyConsumer will be set
      * to {@code null} after the call.
      */
-    private HandlerException bodyConsumerError(Throwable cause) throws HandlerException {
+    private void bodyConsumerError(Throwable cause) throws HandlerException {
         BodyConsumer consumer = bodyConsumer;
         bodyConsumer = null;
         consumer.handleError(cause);

@@ -34,7 +34,7 @@ import io.netty.util.AttributeKey;
 public class HttpDispatcher extends SimpleChannelInboundHandler<HttpObject> {
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, HttpObject msg) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, HttpObject msg) throws HandlerException {
         Object httpMethodInfoBuilderObj = ctx.pipeline()
                 .context(RequestRouter.class)
                 .attr(AttributeKey.valueOf(RequestRouter.METHOD_INFO_BUILDER))
