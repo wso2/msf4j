@@ -57,12 +57,12 @@ public class HttpResourceModelProcessor {
      * @param groupValues Values needed for the invocation.
      */
     @SuppressWarnings("unchecked")
-    public HttpMethodInfo handle(HttpRequest request,
+    public HttpMethodInfo buildHttpMethodInfo(HttpRequest request,
                                  HttpResponder responder,
                                  Map<String, String> groupValues,
                                  String contentType,
                                  List<String> acceptTypes)
-            throws Exception {
+            throws HandlerException {
 
         //TODO: Refactor group values.
         try {
