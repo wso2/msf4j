@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
 import javax.faces.bean.ApplicationScoped;
@@ -64,6 +65,8 @@ public class PetCategoryServiceClient extends AbstractServiceClient {
         if (Response.Status.OK.getStatusCode() == response.getStatus()) {
             return true;
         }
+        LOGGER.log(Level.SEVERE, "Pet service return code is  " + response.getStatus() + " , " +
+                                 "hence can't proceed with the response");
         return false;
     }
 
@@ -77,6 +80,8 @@ public class PetCategoryServiceClient extends AbstractServiceClient {
         if (Response.Status.OK.getStatusCode() == response.getStatus()) {
             return true;
         }
+        LOGGER.log(Level.SEVERE, "Pet service return code is  " + response.getStatus() + " , " +
+                                 "hence can't proceed with the response");
         return false;
     }
 
@@ -92,6 +97,8 @@ public class PetCategoryServiceClient extends AbstractServiceClient {
             Type listType = new CategoryTypeToken().getType();
             return gson.fromJson(body, listType);
         }
+        LOGGER.log(Level.SEVERE, "Pet service return code is  " + response.getStatus() + " , " +
+                                 "hence can't proceed with the response");
         return Collections.emptyList();
     }
 
