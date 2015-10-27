@@ -29,6 +29,7 @@ import org.wso2.carbon.mss.examples.petstore.util.model.Pet;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
 import javax.faces.bean.ApplicationScoped;
@@ -66,6 +67,8 @@ public class TxnServiceClient extends AbstractServiceClient {
         if (Response.Status.OK.getStatusCode() == response.getStatus()) {
             return response.readEntity(String.class);
         } else {
+            LOGGER.log(Level.SEVERE, "TXN service return code is  " + response.getStatus() + " , " +
+                                     "hence can't proceed with the response");
             throw new OrderServiceException("Can't proceed with the order");
         }
     }

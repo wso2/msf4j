@@ -22,15 +22,24 @@ import de.larmic.butterfaces.event.TableSingleSelectionListener;
 import de.larmic.butterfaces.model.table.DefaultTableModel;
 import de.larmic.butterfaces.model.table.TableModel;
 import org.wso2.carbon.mss.examples.petstore.util.fe.dao.PetService;
+import org.wso2.carbon.mss.examples.petstore.util.fe.model.Configuration;
 import org.wso2.carbon.mss.examples.petstore.util.fe.model.PetServiceException;
 import org.wso2.carbon.mss.examples.petstore.util.model.Pet;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Bean classes used for JSF model.
@@ -39,12 +48,18 @@ import javax.faces.bean.RequestScoped;
 @RequestScoped
 public class PetListBean {
 
+    private static final Logger LOGGER = Logger.getLogger(PetListBean.class.getName());
+
     @Nullable
     @ManagedProperty("#{petService}")
     private PetService petService;
     private List<Pet> pets;
     private TableModel tableModel = new DefaultTableModel();
     private Pet selectedValue;
+
+    @Nullable
+    @ManagedProperty("#{configuration}")
+    private Configuration configuration;
 
     @PostConstruct
     public void init() {
@@ -85,7 +100,15 @@ public class PetListBean {
     }
 
     public void setSelectedValue(Pet selectedValue) {
-        this.selectedValue = selectedValue;
+        this.selectedValue = modifyImageURL(selectedValue);
+    }
+
+    public Configuration getConfiguration() {
+        return configuration;
+    }
+
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
     }
 
     public TableSingleSelectionListener<Pet> getTableSelectionListener() {
@@ -105,5 +128,37 @@ public class PetListBean {
 
     public String backtoList() {
         return "list";
+    }
+
+    private String getServerIP() {
+        ExternalContext extContext = FacesContext.getCurrentInstance().getExternalContext();
+        HttpServletRequest request = (HttpServletRequest) extContext.getRequest();
+        //TODO - Remove following log messages after testing.
+        LOGGER.info("================ printing all headers =============");
+        for (String key : Collections.list(request.getHeaderNames())) {
+            LOGGER.info(key + "=" + request.getHeader(key));
+        }
+        LOGGER.info("===================================================");
+        String host = request.getHeader("host");
+        if (host == null || host.isEmpty()) {
+            host = request.getHeader("origin");
+        }
+        return host.substring(0, host.indexOf(":"));
+    }
+
+    private Pet modifyImageURL(Pet selectedValue) {
+        getServerIP();
+        LOGGER.info("Current Image URL " + selectedValue.getImage());
+        try {
+            Integer nodePort = Integer.valueOf(configuration.getFileUploadServiceNodePort());
+            String imageFile = "/fs/".concat(selectedValue.getImage());
+            URL newURL = new URL("http", getServerIP(), nodePort, imageFile);
+            selectedValue.setImage(newURL.toString());
+        } catch (MalformedURLException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+        }
+
+        LOGGER.info("New Image URL " + selectedValue.getImage());
+        return selectedValue;
     }
 }

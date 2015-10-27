@@ -33,6 +33,7 @@ public class Configuration {
 
     public static final String FILE_SERVICE_HOST_NAME = "FE_FILE_SERVICE_HOST";
     public static final String FILE_SERVICE_PORT_NAME = "FE_FILE_SERVICE_PORT";
+    public static final String FILE_SERVICE_NODE_PORT_NAME = "FE_FILE_SERVICE_NODE_PORT";
 
     public static final String PET_SERVICE_HOST_NAME = "FE_PET_SERVICE_HOST";
     public static final String PET_SERVICE_PORT_NAME = "FE_PET_SERVICE_PORT";
@@ -46,6 +47,7 @@ public class Configuration {
 
     public static final String DEFAULT_FILE_SERVICE_HOST = "192.168.99.100";
     public static final String DEFAULT_FILE_SERVICE_PORT = "80";
+    public static final String DEFAULT_FILE_SERVICE_NODE_PORT = "80";
 
     public static final String DEFAULT_PET_SERVICE_HOST = "localhost";
     public static final String DEFAULT_PET_SERVICE_PORT = "8080";
@@ -62,6 +64,7 @@ public class Configuration {
     private String petServiceEP;
     private String txServiceEP;
     private String userServiceEP;
+    private String fileUploadServiceNodePort;
 
     public Configuration() {
         fileUploadServiceEP = createHTTPEp(getValue(FILE_SERVICE_HOST_NAME, DEFAULT_FILE_SERVICE_HOST),
@@ -75,11 +78,17 @@ public class Configuration {
 
         userServiceEP = createHTTPEp(getValue(USER_SERVICE_HOST_NAME, DEFAULT_USER_SERVICE_HOST),
                                      getValue(USER_SERVICE_PORT_NAME, DEFAULT_USER_SERVICE_PORT));
+
+        fileUploadServiceNodePort = getValue(FILE_SERVICE_NODE_PORT_NAME, DEFAULT_FILE_SERVICE_NODE_PORT);
+
+
         LOGGER.info("...........INFO...................");
         LOGGER.info("User Service Endpoint : " + userServiceEP);
         LOGGER.info("Pet Service Endpoint : " + petServiceEP);
         LOGGER.info("TXN Service Endpoint : " + txServiceEP);
         LOGGER.info("File Service Endpoint : " + fileUploadServiceEP);
+        LOGGER.info("File Service Node Port  : " + fileUploadServiceNodePort);
+
     }
 
     public String getFileUploadServiceEP() {
@@ -112,6 +121,14 @@ public class Configuration {
 
     public void setUserServiceEP(String userServiceEP) {
         this.userServiceEP = userServiceEP;
+    }
+
+    public String getFileUploadServiceNodePort() {
+        return fileUploadServiceNodePort;
+    }
+
+    public void setFileUploadServiceNodePort(String fileUploadServiceNodePort) {
+        this.fileUploadServiceNodePort = fileUploadServiceNodePort;
     }
 
     private String createHTTPEp(String host, String port) {
