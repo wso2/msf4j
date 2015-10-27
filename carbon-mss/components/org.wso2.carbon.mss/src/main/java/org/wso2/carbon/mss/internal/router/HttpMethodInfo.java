@@ -169,11 +169,4 @@ class HttpMethodInfo {
 
         throw new HandlerException(HttpResponseStatus.INTERNAL_SERVER_ERROR, "", cause);
     }
-
-    /**
-     * Returns true if the handler method's return type is BodyConsumer.
-     */
-//    boolean isStreaming() {
-//        return isStreaming;
-//    }
 }
