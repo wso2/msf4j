@@ -32,6 +32,7 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
+import io.netty.util.AttributeKey;
 import io.netty.util.ReferenceCountUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +50,8 @@ public class RequestRouter extends SimpleChannelInboundHandler<HttpObject> {
     private final int chunkMemoryLimit;
     private final HttpResourceHandler httpMethodHandler;
     private final AtomicBoolean exceptionRaised;
+
+    public static final String METHOD_INFO_BUILDER = "METHOD_INFO_BUILDER";
 
     private HttpMethodInfoBuilder httpMethodInfoBuilder;
 
@@ -89,6 +92,7 @@ public class RequestRouter extends SimpleChannelInboundHandler<HttpObject> {
                                   ChannelHandlerContext ctx) throws HandlerException {
         httpMethodInfoBuilder = httpMethodHandler.getDestinationMethod(
                 httpRequest, new BasicHttpResponder(channel, HttpHeaders.isKeepAlive(httpRequest)));
+        ctx.attr(AttributeKey.valueOf(METHOD_INFO_BUILDER)).set(httpMethodInfoBuilder);
         return httpMethodInfoBuilder != null;
     }
 
