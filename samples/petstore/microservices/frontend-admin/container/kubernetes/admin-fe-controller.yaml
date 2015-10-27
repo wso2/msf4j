@@ -5,7 +5,7 @@ metadata:
   labels:
     name: admin-fe
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     name: admin-fe
   template:

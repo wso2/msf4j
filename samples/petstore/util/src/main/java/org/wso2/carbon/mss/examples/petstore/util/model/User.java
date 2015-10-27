@@ -39,8 +39,6 @@ public class User {
     @XmlAttribute(required = false)
     private String lastName;
 
-
-
     public String getName() {
         return name;
     }

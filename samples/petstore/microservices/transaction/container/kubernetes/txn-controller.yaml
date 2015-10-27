@@ -5,7 +5,7 @@ metadata:
   labels:
     name: txn
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     name: txn
   template:
