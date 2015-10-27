@@ -114,7 +114,7 @@ public final class HttpResourceHandler implements HttpHandler {
      * @param responder instance of {@code HttpResponder} to handle the request.
      * @return HttpMethodInfo object, null if urlRewriter rewrite returns false, also when method cannot be invoked.
      */
-    public HttpMethodInfo getDestinationMethod(HttpRequest request, HttpResponder responder) throws Exception {
+    public HttpMethodInfoBuilder getDestinationMethod(HttpRequest request, HttpResponder responder) throws Exception {
         if (urlRewriter != null) {
             try {
                 request.setUri(URI.create(request.getUri()).normalize().toString());
@@ -174,11 +174,14 @@ public final class HttpResourceHandler implements HttpHandler {
                 if (!terminated) {
                     // Wrap responder to make post hook calls.
                     responder = new WrappedHttpResponder(responder, interceptors, request, handlerInfo);
-                    return httpResourceModel.handle(request,
-                            responder,
-                            matchedDestination.getGroupNameValues(),
-                            contentTypeHeader,
-                            acceptHeader);
+                    return HttpMethodInfoBuilder
+                            .getInstance()
+                            .httpResourceModel(httpResourceModel)
+                            .httpRequest(request)
+                            .httpResponder(responder)
+                            .requestInfo(matchedDestination.getGroupNameValues(),
+                                    contentTypeHeader,
+                                    acceptHeader);
                 }
             } else if (!routableDestinations.isEmpty()) {
                 //Found a matching resource but could not find the right HttpMethod so return 405

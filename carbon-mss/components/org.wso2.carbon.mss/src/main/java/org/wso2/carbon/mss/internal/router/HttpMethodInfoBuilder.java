@@ -38,10 +38,14 @@ public class HttpMethodInfoBuilder {
     private String contentType;
     private List<String> acceptTypes;
 
-    public static HttpMethodInfoBuilder httpResourceModel(HttpResourceModel httpResourceModel) {
+    public static HttpMethodInfoBuilder getInstance() {
         HttpMethodInfoBuilder httpMethodInfoBuilder = new HttpMethodInfoBuilder();
-        httpMethodInfoBuilder.httpResourceModel = httpResourceModel;
         return httpMethodInfoBuilder;
+    }
+
+    public HttpMethodInfoBuilder httpResourceModel(HttpResourceModel httpResourceModel) {
+        this.httpResourceModel = httpResourceModel;
+        return this;
     }
 
     public HttpMethodInfoBuilder httpRequest(HttpRequest request) {
@@ -68,4 +72,7 @@ public class HttpMethodInfoBuilder {
                 .buildHttpMethodInfo(request,responder,groupValues,contentType,acceptTypes);
     }
 
+    public HttpResourceModel getHttpResourceModel() {
+        return httpResourceModel;
+    }
 }
