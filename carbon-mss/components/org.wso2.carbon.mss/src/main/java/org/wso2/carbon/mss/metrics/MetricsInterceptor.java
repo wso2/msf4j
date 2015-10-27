@@ -54,13 +54,16 @@ public class MetricsInterceptor implements Interceptor {
         for (MetricReporter metricReporter : metricReporters) {
             switch (metricReporter) {
             case CONSOLE:
-                builder.addReporterBuilder(new ConsoleReporterBuilder().configure(metricsEnvConfiguration));
+                builder.addReporterBuilder(
+                        new ConsoleReporterBuilder().setEnabled(true).configure(metricsEnvConfiguration));
                 break;
             case DAS:
-                builder.addReporterBuilder(new DASReporterBuilder().configure(metricsEnvConfiguration));
+                builder.addReporterBuilder(
+                        new DASReporterBuilder().setEnabled(true).configure(metricsEnvConfiguration));
                 break;
             case JMX:
-                builder.addReporterBuilder(new JmxReporterBuilder().configure(metricsEnvConfiguration));
+                builder.addReporterBuilder(
+                        new JmxReporterBuilder().setEnabled(true).configure(metricsEnvConfiguration));
                 break;
             default:
                 break;
@@ -70,7 +73,7 @@ public class MetricsInterceptor implements Interceptor {
         metricServiceImpl = (MetricServiceImpl) builder.build(metricsLevelConfiguration);
         // TODO Find a way to keep the MetricService
         ServiceReferenceHolder.getInstance().setMetricService(metricServiceImpl);
-
+        MetricManager.registerMXBean();
     }
 
     @Override
