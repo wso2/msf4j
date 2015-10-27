@@ -26,6 +26,7 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.LastHttpContent;
 import org.wso2.carbon.mss.HttpResponder;
 import org.wso2.carbon.mss.HttpStreaming;
+import org.wso2.carbon.mss.internal.router.beanconversion.BeanConversionException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -90,33 +91,18 @@ class HttpMethodInfo {
     /**
      * Calls the httpHandler method.
      */
-    void invoke() throws Exception {
-//        if (isStreaming) {
-//            // Casting guarantee to be succeeded.
-//            bodyConsumer = (BodyConsumer) method.invoke(handler, args);
-//            if (bodyConsumer != null) {
-//                if (requestContent.isReadable()) {
-//                    bodyConsumerChunk(requestContent);
-//                }
-//                if (!isChunkedRequest) {
-//                    //bodyConsumerFinish();
-//                }
-//            }
-//        } else {
-//            // Actually <T> would be void
-//            bodyConsumer = null;
-//            try {
-//                Object returnVal = method.invoke(handler, args);
-//                //sending return value as output
-//                new HttpMethodResponseHandler()
-//                        .setResponder(responder)
-//                        .setEntity(returnVal)
-//                        .setMediaType(mediaType)
-//                        .send();
-//            } catch (InvocationTargetException e) {
-//                exceptionHandler.handle(e.getTargetException(), request, responder);
-//            }
-//        }
+    void invoke() throws BeanConversionException, IllegalAccessException {
+        try {
+            Object returnVal = method.invoke(handler, args);
+            //sending return value as output
+            new HttpMethodResponseHandler()
+                    .setResponder(responder)
+                    .setEntity(returnVal)
+                    .setMediaType(mediaType)
+                    .send();
+        } catch (InvocationTargetException e) {
+            exceptionHandler.handle(e.getTargetException(), request, responder);
+        }
     }
 
     void chunk(HttpContent chunk) throws Exception {
