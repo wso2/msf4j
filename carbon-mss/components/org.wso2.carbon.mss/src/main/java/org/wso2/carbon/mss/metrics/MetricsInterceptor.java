@@ -10,6 +10,7 @@ import org.wso2.carbon.metrics.annotation.Level;
 import org.wso2.carbon.metrics.annotation.Metered;
 import org.wso2.carbon.metrics.annotation.Timed;
 import org.wso2.carbon.metrics.impl.MetricServiceImpl;
+import org.wso2.carbon.metrics.impl.MetricsLevelConfigException;
 import org.wso2.carbon.metrics.impl.MetricsLevelConfiguration;
 import org.wso2.carbon.metrics.impl.util.ConsoleReporterBuilder;
 import org.wso2.carbon.metrics.impl.util.DASReporterBuilder;
@@ -49,6 +50,13 @@ public class MetricsInterceptor implements Interceptor {
         }
         metricsEnvConfiguration = new MetricsEnvConfiguration();
         MetricsLevelConfiguration metricsLevelConfiguration = new MetricsLevelConfiguration();
+        try {
+            metricsLevelConfiguration.loadFromSystemPropertyFile();
+        } catch (MetricsLevelConfigException e) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("Error loading metrics level configuration", e);
+            }
+        }
         MetricServiceImpl.Builder builder = new MetricServiceImpl.Builder().setEnabled(true)
                 .setRootLevel(org.wso2.carbon.metrics.manager.Level.INFO);
         for (MetricReporter metricReporter : metricReporters) {
