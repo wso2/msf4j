@@ -63,7 +63,7 @@ class HttpMethodInfo {
             this.requestContent = null;
         }
         this.isStreaming = BodyConsumer.class.isAssignableFrom(method.getReturnType());
-        this.request = rewriteRequest(request, isStreaming);
+        this.request = request;
         this.responder = responder;
         this.exceptionHandler = exceptionHandler;
         this.mediaType = mediaType;
@@ -160,40 +160,9 @@ class HttpMethodInfo {
     }
 
     /**
-     * Sends the error to responder.
-     */
-    void sendError(HttpResponseStatus status, Throwable ex) {
-        String msg;
-
-        if (ex instanceof InvocationTargetException) {
-            msg = String.format("Exception Encountered while processing request : %s",
-                    Objects.firstNonNull(ex.getCause(), ex).getMessage());
-        } else {
-            msg = String.format("Exception Encountered while processing request: %s", ex.getMessage());
-        }
-
-        // Send the status and message, followed by closing of the connection.
-        responder.sendString(status, msg, ImmutableMultimap.of(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE));
-    }
-
-    /**
      * Returns true if the handler method's return type is BodyConsumer.
      */
     boolean isStreaming() {
         return isStreaming;
-    }
-
-    private HttpRequest rewriteRequest(HttpRequest request, boolean isStreaming) {
-        if (!isStreaming) {
-            return request;
-        }
-
-        //TODO: Azeez handle chunks
-    /*boolean isChunked = request.headers().contains(HttpHeaderNames.TRANSFER_ENCODING, HttpHeaderValues.CHUNKED, true)
-    if (!isChunked || request.content().readable()) {
-      request.setChunked(true);
-      request.setContent(Unpooled.EMPTY_BUFFER);
-    }*/
-        return request;
     }
 }
