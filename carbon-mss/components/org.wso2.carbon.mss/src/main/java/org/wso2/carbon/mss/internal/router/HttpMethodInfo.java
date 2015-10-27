@@ -84,7 +84,7 @@ class HttpMethodInfo {
                     bodyConsumerChunk(requestContent);
                 }
                 if (!isChunkedRequest) {
-                    bodyConsumerFinish();
+                    //bodyConsumerFinish();
                 }
             }
         } else {
@@ -114,7 +114,7 @@ class HttpMethodInfo {
             return;
         }
         if (chunk instanceof LastHttpContent) {  //TODO: azeez
-            bodyConsumerFinish();
+            bodyConsumerFinish(chunk.content());
         } else {
             bodyConsumerChunk(chunk.content());
         }
@@ -123,7 +123,7 @@ class HttpMethodInfo {
     /**
      * Calls the {@link org.wso2.carbon.mss.internal.router.BodyConsumer#chunk(io.netty.buffer.ByteBuf,
      * org.wso2.carbon.mss.HttpResponder)} method.
-     *
+     * <p/>
      * If the chunk method calls throws exception,
      * the {@link org.wso2.carbon.mss.internal.router.BodyConsumer#handleError(Throwable)} will be called and
      * this method will throw {@link org.wso2.carbon.mss.internal.router.HandlerException}.
@@ -137,13 +137,17 @@ class HttpMethodInfo {
     }
 
     /**
-     * Calls {@link org.wso2.carbon.mss.internal.router.BodyConsumer#finished(org.wso2.carbon.mss.HttpResponder)}
+     * Calls {@link BodyConsumer#finished(io.netty.buffer.ByteBuf, org.wso2.carbon.mss.HttpResponder)}
      * method. The current bodyConsumer will be set to {@code null} after the call.
      */
-    private void bodyConsumerFinish() {
-        BodyConsumer consumer = bodyConsumer;
-        bodyConsumer = null;
-        consumer.finished(responder);
+    private void bodyConsumerFinish(ByteBuf buffer) throws HandlerException {
+        try {
+            BodyConsumer consumer = bodyConsumer;
+            bodyConsumer = null;
+            consumer.finished(buffer, responder);
+        } catch (Throwable t) {
+            throw bodyConsumerError(t);
+        }
     }
 
     /**
