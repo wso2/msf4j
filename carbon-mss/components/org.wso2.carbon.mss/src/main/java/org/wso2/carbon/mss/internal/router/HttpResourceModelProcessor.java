@@ -60,10 +60,10 @@ public class HttpResourceModelProcessor {
      */
     @SuppressWarnings("unchecked")
     public HttpMethodInfo buildHttpMethodInfo(HttpRequest request,
-                                 HttpResponder responder,
-                                 Map<String, String> groupValues,
-                                 String contentType,
-                                 List<String> acceptTypes)
+                                              HttpResponder responder,
+                                              Map<String, String> groupValues,
+                                              String contentType,
+                                              List<String> acceptTypes)
             throws HandlerException {
 
         //TODO: Refactor group values.
@@ -107,12 +107,22 @@ public class HttpResourceModelProcessor {
                     idx++;
                 }
 
-                return new HttpMethodInfo(httpResourceModel.getMethod(),
-                        httpResourceModel.getHttpHandler(),
-                        request, responder,
-                        args,
-                        httpResourceModel.getExceptionHandler(),
-                        acceptType);
+                if (httpStreaming == null) {
+                    return new HttpMethodInfo(httpResourceModel.getMethod(),
+                            httpResourceModel.getHttpHandler(),
+                            request, responder,
+                            args,
+                            httpResourceModel.getExceptionHandler(),
+                            acceptType);
+                } else {
+                    return new HttpMethodInfo(httpResourceModel.getMethod(),
+                            httpResourceModel.getHttpHandler(),
+                            request, responder,
+                            args,
+                            httpResourceModel.getExceptionHandler(),
+                            acceptType,
+                            httpStreaming);
+                }
             } else {
                 //Found a matching resource but could not find the right HttpMethod so return 405
                 throw new HandlerException(HttpResponseStatus.METHOD_NOT_ALLOWED, String.format
@@ -135,7 +145,7 @@ public class HttpResourceModelProcessor {
             value = request;
         } else if (((Class) paramType).isAssignableFrom(HttpResponder.class)) {
             value = responder;
-        }else if (((Class) paramType).isAssignableFrom(HttpStreaming.class)) {
+        } else if (((Class) paramType).isAssignableFrom(HttpStreaming.class)) {
             if (httpStreaming == null) {
                 httpStreaming = new HttpStreaming();
             }

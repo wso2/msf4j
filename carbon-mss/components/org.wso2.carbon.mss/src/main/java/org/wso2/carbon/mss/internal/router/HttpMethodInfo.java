@@ -19,15 +19,13 @@
 
 package org.wso2.carbon.mss.internal.router;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableMultimap;
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.HttpContent;
-import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.LastHttpContent;
 import org.wso2.carbon.mss.HttpResponder;
+import org.wso2.carbon.mss.HttpStreaming;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -41,28 +39,19 @@ class HttpMethodInfo {
 
     private final Method method;
     private final Object handler;
-    private final boolean isChunkedRequest;
-    private final ByteBuf requestContent;
     private final HttpRequest request;
     private final HttpResponder responder;
     private final Object[] args;
-    private final boolean isStreaming;
     private final ExceptionHandler exceptionHandler;
     private final String mediaType;
 
     private BodyConsumer bodyConsumer;
 
-    HttpMethodInfo(Method method, Object handler, HttpRequest request, HttpResponder responder, Object[] args,
+    HttpMethodInfo(Method method, Object handler, HttpRequest request,
+                   HttpResponder responder, Object[] args,
                    ExceptionHandler exceptionHandler, String mediaType) {
         this.method = method;
         this.handler = handler;
-        this.isChunkedRequest = request instanceof HttpContent;
-        if (request instanceof HttpContent) {
-            requestContent = ((HttpContent) request).content();
-        } else {
-            this.requestContent = null;
-        }
-        this.isStreaming = BodyConsumer.class.isAssignableFrom(method.getReturnType());
         this.request = request;
         this.responder = responder;
         this.exceptionHandler = exceptionHandler;
@@ -72,36 +61,54 @@ class HttpMethodInfo {
         this.args = args;
     }
 
+    HttpMethodInfo(Method method, Object handler, HttpRequest request,
+                   HttpResponder responder, Object[] args,
+                   ExceptionHandler exceptionHandler, String mediaType,
+                   HttpStreaming httpStreaming) throws HandlerException {
+        this(method, handler, request, responder, args, exceptionHandler, mediaType);
+
+        try {
+            method.invoke(handler, args);
+        } catch (InvocationTargetException e) {
+            throw new HandlerException(HttpResponseStatus.INTERNAL_SERVER_ERROR,
+                    "Resource method invocation failed", e.getTargetException());
+        } catch (IllegalAccessException e) {
+            throw new HandlerException(HttpResponseStatus.INTERNAL_SERVER_ERROR,
+                    "Resource method invocation access failed", e);
+        }
+        bodyConsumer = httpStreaming.getBodyConsumer();
+    }
+
     /**
      * Calls the httpHandler method.
      */
     void invoke() throws Exception {
-        if (isStreaming) {
-            // Casting guarantee to be succeeded.
-            bodyConsumer = (BodyConsumer) method.invoke(handler, args);
-            if (bodyConsumer != null) {
-                if (requestContent.isReadable()) {
-                    bodyConsumerChunk(requestContent);
-                }
-                if (!isChunkedRequest) {
-                    //bodyConsumerFinish();
-                }
-            }
-        } else {
-            // Actually <T> would be void
-            bodyConsumer = null;
-            try {
-                Object returnVal = method.invoke(handler, args);
-                //sending return value as output
-                new HttpMethodResponseHandler()
-                        .setResponder(responder)
-                        .setEntity(returnVal)
-                        .setMediaType(mediaType)
-                        .send();
-            } catch (InvocationTargetException e) {
-                exceptionHandler.handle(e.getTargetException(), request, responder);
-            }
-        }
+//        if (isStreaming) {
+//            // Casting guarantee to be succeeded.
+//            bodyConsumer = (BodyConsumer) method.invoke(handler, args);
+//            if (bodyConsumer != null) {
+//                if (requestContent.isReadable()) {
+//                    bodyConsumerChunk(requestContent);
+//                }
+//                if (!isChunkedRequest) {
+//                    //bodyConsumerFinish();
+//                }
+//            }
+//        } else {
+//            // Actually <T> would be void
+//            bodyConsumer = null;
+//            try {
+//                Object returnVal = method.invoke(handler, args);
+//                //sending return value as output
+//                new HttpMethodResponseHandler()
+//                        .setResponder(responder)
+//                        .setEntity(returnVal)
+//                        .setMediaType(mediaType)
+//                        .send();
+//            } catch (InvocationTargetException e) {
+//                exceptionHandler.handle(e.getTargetException(), request, responder);
+//            }
+//        }
     }
 
     void chunk(HttpContent chunk) throws Exception {
@@ -166,7 +173,7 @@ class HttpMethodInfo {
     /**
      * Returns true if the handler method's return type is BodyConsumer.
      */
-    boolean isStreaming() {
-        return isStreaming;
-    }
+//    boolean isStreaming() {
+//        return isStreaming;
+//    }
 }
