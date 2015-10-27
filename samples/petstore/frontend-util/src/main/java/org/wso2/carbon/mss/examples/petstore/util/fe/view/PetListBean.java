@@ -133,6 +133,7 @@ public class PetListBean {
     private String getServerIP() {
         ExternalContext extContext = FacesContext.getCurrentInstance().getExternalContext();
         HttpServletRequest request = (HttpServletRequest) extContext.getRequest();
+        //TODO - Remove following log messages after testing.
         LOGGER.info("================ printing all headers =============");
         for (String key : Collections.list(request.getHeaderNames())) {
             LOGGER.info(key + "=" + request.getHeader(key));
@@ -150,10 +151,8 @@ public class PetListBean {
         LOGGER.info("Current Image URL " + selectedValue.getImage());
         try {
             Integer nodePort = Integer.valueOf(configuration.getFileUploadServiceNodePort());
-            URL currentURL = new URL(selectedValue.getImage());
-            String imageFile = currentURL.getFile();
-            imageFile = "/fs/".concat(imageFile.substring(imageFile.lastIndexOf("/") + 1));
-            URL newURL = new URL(currentURL.getProtocol(), getServerIP(), nodePort, imageFile);
+            String imageFile = "/fs/".concat(selectedValue.getImage());
+            URL newURL = new URL("http", getServerIP(), nodePort, imageFile);
             selectedValue.setImage(newURL.toString());
         } catch (MalformedURLException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
