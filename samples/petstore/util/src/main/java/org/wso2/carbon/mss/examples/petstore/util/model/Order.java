@@ -36,6 +36,8 @@ public class Order {
     private double total;
     private CreditCard creditCard;
 
+    // TODO: store the customer ID
+
     public long getDateAdded() {
         return dateAdded;
     }

@@ -5,7 +5,7 @@ metadata:
   labels:
     name: pet
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     name: pet
   template:
