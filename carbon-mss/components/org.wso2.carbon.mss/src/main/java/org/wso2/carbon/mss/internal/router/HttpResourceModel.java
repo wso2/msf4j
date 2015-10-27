@@ -193,6 +193,8 @@ public final class HttpResourceModel {
                             args[idx] = getContextParamValue((ParameterInfo<Object>) paramInfo, request, responder);
                         }
                     } else if (request instanceof FullHttpRequest) {
+                        // If an annotation is not present the parameter is considered a
+                        // request body data parameter
                         String content = ((FullHttpRequest) request).content().toString(Charsets.UTF_8);
                         Type paramType = paramInfo.getParameterType();
                         args[idx] = BeanConverter.instance((contentType != null) ? contentType : "*/*")
