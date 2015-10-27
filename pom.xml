@@ -55,6 +55,7 @@
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>wso2carbon-kernel</artifactId>
                 <version>${carbon.kernel.version}</version>
+                <type>zip</type>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.mss</groupId>
@@ -65,6 +66,7 @@
                 <groupId>org.wso2.carbon.mss</groupId>
                 <artifactId>org.wso2.carbon.mss.feature</artifactId>
                 <version>${carbon.mss.version}</version>
+                <type>zip</type>
             </dependency>
             <dependency>
                 <groupId>javax.ws.rs</groupId>
