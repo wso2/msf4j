@@ -37,6 +37,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 
+/**
+ * This class is responsible for processing the HttpResourceModel
+ * when a HTTP request arrives.
+ */
 public class HttpResourceModelProcessor {
 
     private final HttpResourceModel httpResourceModel;
