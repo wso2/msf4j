@@ -91,7 +91,7 @@ class HttpMethodInfo {
     /**
      * Calls the httpHandler method.
      */
-    void invoke() throws BeanConversionException, IllegalAccessException {
+    void invoke() {
         try {
             Object returnVal = method.invoke(handler, args);
             //sending return value as output
@@ -102,10 +102,12 @@ class HttpMethodInfo {
                     .send();
         } catch (InvocationTargetException e) {
             exceptionHandler.handle(e.getTargetException(), request, responder);
+        } catch (IllegalAccessException | BeanConversionException e) {
+            exceptionHandler.handle(e, request, responder);
         }
     }
 
-    void chunk(HttpContent chunk) throws Exception {
+    void chunk(HttpContent chunk) {
         if (bodyConsumer == null) {
             // If the handler method doesn't want to handle chunk request, the bodyConsumer will be null.
             // It applies to case when the handler method inspects the request and decides to decline it.
@@ -114,10 +116,14 @@ class HttpMethodInfo {
             // there may be some chunk of data already sent by the client.
             return;
         }
-        if (chunk instanceof LastHttpContent) {  //TODO: azeez
-            bodyConsumerFinish(chunk.content());
-        } else {
-            bodyConsumerChunk(chunk.content());
+        try {
+            if (chunk instanceof LastHttpContent) {
+                bodyConsumerFinish(chunk.content());
+            } else {
+                bodyConsumerChunk(chunk.content());
+            }
+        } catch (HandlerException e) {
+            exceptionHandler.handle(e, request, responder);
         }
     }
 
