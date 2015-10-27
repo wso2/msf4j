@@ -67,7 +67,7 @@ public class RequestRouter extends SimpleChannelInboundHandler<HttpObject> {
     }
 
     private boolean handleRequest(HttpRequest httpRequest, Channel channel,
-                                  ChannelHandlerContext ctx) throws Exception {
+                                  ChannelHandlerContext ctx) throws HandlerException {
         httpMethodInfoBuilder = httpMethodHandler.getDestinationMethod(
                 httpRequest, new BasicHttpResponder(channel, HttpHeaders.isKeepAlive(httpRequest)));
         return httpMethodInfoBuilder != null;
