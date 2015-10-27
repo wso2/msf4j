@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: security
+  labels:
+    name: security
+spec:
+  replicas: 1
+  selector:
+    name: security
+  template:
+    metadata:
+      labels:
+        name: security
+    spec:
+      containers:
+      - name: security
+        image: wso2mss/petstore-security
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        ports:
+        - containerPort: 8080

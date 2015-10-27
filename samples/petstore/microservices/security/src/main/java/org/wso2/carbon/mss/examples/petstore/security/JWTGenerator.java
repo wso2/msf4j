@@ -24,6 +24,9 @@ import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.crypto.RSASSASigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.wso2.carbon.mss.examples.petstore.util.model.User;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,13 +43,12 @@ import java.util.Date;
  */
 public class JWTGenerator {
 
+    private static final Logger log = LoggerFactory.getLogger(JWTGenerator.class);
     private static String keyStore = "wso2carbon.jks";
-
     private String alias = "wso2carbon";
-
     private String keyStorePassword = "wso2carbon";
 
-    protected String generateJWT(String userName) throws Exception {
+    protected String generateJWT(User user) throws Exception {
 
         RSAPrivateKey privateKey = getPrivateKey(keyStore, keyStorePassword, alias);
         // Create RSA-signer with the private key
@@ -54,9 +56,11 @@ public class JWTGenerator {
 
         // Prepare JWT with claims set
         JWTClaimsSet claimsSet = new JWTClaimsSet();
-        claimsSet.setSubject(userName);
+        claimsSet.setSubject(user.getName());
+        claimsSet.setClaim("email", user.getEmail());
+        claimsSet.setClaim("roles", user.getRoles());
         claimsSet.setIssuer("wso2.org/products/mss");
-        claimsSet.setExpirationTime(new Date(new Date().getTime() + 60 * 1000));
+        claimsSet.setExpirationTime(new Date(new Date().getTime() + 5 * 60 * 1000)); //5 min
 
         SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.RS256), claimsSet);
 
@@ -69,11 +73,6 @@ public class JWTGenerator {
         // maXlS9DhN0nUk_hGI3amEjkKd0BWYCB8vfUbUv0XGjQip78AI4z1PrFRNidm7
         // -jPDm5Iq0SZnjKjCNS5Q15fokXZc8u0A
         String jwt = signedJWT.serialize();
-
-//        String jwt = "eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJqb2huIiwiaXNzIjoid3NvMi5vcmdcL3Byb2R1Y3RzXC9t" +
-//                     "c3MiLCJleHAiOjE0NDUzMjMyMTV9.DIXVvku4AAuwmCs9NH2h_uAwC1Nh2GxaXe11mcKaHt06lalQ" +
-//                     "4QBUvl6GnFoVNf0SQAeWdjNbCYqMRsgrbSphqwRcAfk4LnhtTuC4En4GaPvCJs61QMGfdq4sEcyq" +
-//                     "3Puqt2c82L57uE1NtdzimT_vQUKq3O6hHqaT7aJ14OQuWp4aaa";
 
         return jwt;
 

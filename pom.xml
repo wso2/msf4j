@@ -55,6 +55,7 @@
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>wso2carbon-kernel</artifactId>
                 <version>${carbon.kernel.version}</version>
+                <type>zip</type>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.mss</groupId>
@@ -65,6 +66,7 @@
                 <groupId>org.wso2.carbon.mss</groupId>
                 <artifactId>org.wso2.carbon.mss.feature</artifactId>
                 <version>${carbon.mss.version}</version>
+                <type>zip</type>
             </dependency>
             <dependency>
                 <groupId>javax.ws.rs</groupId>
@@ -153,10 +155,51 @@
                 <version>${beanutils.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.metrics</groupId>
+                <artifactId>org.wso2.carbon.metrics.manager</artifactId>
+                <version>${carbon.metrics.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.metrics</groupId>
+                <artifactId>org.wso2.carbon.metrics.impl</artifactId>
+                <version>${carbon.metrics.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.ws.commons.axiom.wso2</groupId>
+                        <artifactId>axiom</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>xerces</groupId>
+                        <artifactId>xercesImpl</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.metrics</groupId>
+                <artifactId>org.wso2.carbon.metrics.annotation</artifactId>
+                <version>${carbon.metrics.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.nimbusds</groupId>
                 <artifactId>nimbus-jose-jwt</artifactId>
                 <version>${nimbus.jose.jwt.version}</version>
-            </dependency>  
+            </dependency>
+            <dependency>
+                <groupId>org.apache.ws.commons.axiom</groupId>
+                <artifactId>axiom-impl</artifactId>
+                <version>1.2.11</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity</groupId>
+                <artifactId>org.wso2.carbon.ldap.server</artifactId>
+                <version>5.0.0</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.wso2.carbon</groupId>
+                        <artifactId>org.wso2.carbon.core</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
 
             <!-- Test dependencies -->
             <dependency>
@@ -286,6 +329,7 @@
         <!-- Dependencies -->
         <carbon.kernel.version>5.0.0-m5</carbon.kernel.version>
         <carbon.mss.version>1.0.0-SNAPSHOT</carbon.mss.version>
+        <carbon.metrics.version>1.2.0-m1</carbon.metrics.version>
         <carbon.mss.osgi.version>1.0.0.SNAPSHOT</carbon.mss.osgi.version>
 
         <osgi.api.version>6.0.0</osgi.api.version>
@@ -313,7 +357,7 @@
 
     <modules>
         <module>carbon-mss/components/org.wso2.carbon.mss</module>
-        <module>carbon-mss/features/org.wso2.carbon.mss.feature</module> 
+        <module>carbon-mss/features/org.wso2.carbon.mss.feature</module>
         <module>samples/executable-jar</module>
         <module>samples/osgi-bundle</module>
         <module>samples/security-interceptor</module>

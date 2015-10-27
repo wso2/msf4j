@@ -17,6 +17,9 @@ spec:
         - resources:
           image: wso2mss/petstore-fileserver
           name: fileserver
+          env:
+          - name: GET_HOSTS_FROM
+            value: dns
           ports: 
             - containerPort: 80
               name: fileserver

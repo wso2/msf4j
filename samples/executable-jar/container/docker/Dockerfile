@@ -16,10 +16,8 @@
 #
 # ------------------------------------------------------------------------
 
-FROM debian:7.7
+FROM java:8-jre
 MAINTAINER architecture@wso2.org
-
-ENV DEBIAN_FRONTEND noninteractive
 
 WORKDIR /opt
 
@@ -27,19 +25,10 @@ WORKDIR /opt
 # Copy scripts, packages & plugins
 # --------------------------------
 COPY packages/SimpleStockQuote-1.0.0-SNAPSHOT.jar /opt/
-ADD packages/jdk-8u60-linux-x64.gz /opt/
-
-ENV JAVA_HOME /opt/jdk1.8.0_60
 
 # ----------------------
 # Expose container ports
 # ----------------------
 EXPOSE 8080
 
-RUN apt-get update && apt-get install -y openssh-server
-RUN mkdir -p /var/run/sshd
-RUN echo 'root:wso2' | chpasswd
-RUN sed -i "s/PermitRootLogin without-password/#PermitRootLogin without-password/" /etc/ssh/sshd_config
-EXPOSE 22
-
-ENTRYPOINT ${JAVA_HOME}/bin/java -jar /opt/SimpleStockQuote-1.0.0-SNAPSHOT.jar
+ENTRYPOINT java -jar /opt/SimpleStockQuote-1.0.0-SNAPSHOT.jar

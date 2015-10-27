@@ -21,27 +21,26 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:b="http://butterfaces.larmic.de/components"
       xmlns:h="http://java.sun.com/jsf/html">
 <body>
 <!-- header -->
 <ui:composition>
-<header class="header header-default">
-    <div class="container-fluid">
-        <div class="pull-left brand float-remove-xs text-center-xs">
-            <a href="/pet/index.xhtml">
-                <img src="../libs/images/logo-inverse.svg" alt="wso2" title="wso2" class="logo"/>
-                <h1><em>WSO2 Petstore</em></h1>
-            </a>
-        </div>
-        <div class="pull-right auth float-remove-xs text-center-xs">
+    <header class="header header-default">
+        <div class="container-fluid">
+            <div class="pull-left brand float-remove-xs text-center-xs">
+                <h:link outcome="/pet/index">
+                    <h:graphicImage name="img/logo-inverse.svg" alt="wso2" title="wso2" class="logo"/>
+                    <h1><em>WSO2 Petstore</em></h1>
+                </h:link>
+            </div>
+            <div class="pull-right auth float-remove-xs text-center-xs">
                 <h:form>
                     <h:commandButton id="logout" value="Logout" action="#{loginBean.doLogout}" class="btn btn-success"/>
                 </h:form>
 
+            </div>
         </div>
-    </div>
-</header>
+    </header>
 </ui:composition>
 </body>
 </html>

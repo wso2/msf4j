@@ -20,62 +20,55 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:f="http://java.sun.com/jsf/core"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:b="http://butterfaces.larmic.de/components">
 
 <h:head>
     <title>Java Pet Shop </title>
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
-          rel="stylesheet"/>
+    <h:outputStylesheet library="css" name="font-awesome.min.css"/>
 </h:head>
 <h:body>
     <ui:composition template="/template/common/commonLayout.xhtml">
         <ui:define name="content">
             <div class="container-fluid body-wrapper">
 
-            <div class="row">
-            <div class="col-md-6">
-            <h3>Checkout</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>Checkout</h3>
 
-            <h:form>
-                <h:messages infoStyle="color:darkgreen" errorStyle="color:darkred"/>
-                <br/>
-                <b:text id="ccno"
-                            label="Credit Card Number "
-                            value="#{checkoutBean.ccNumber}"
-                            required="true"
-                            rendered="true">
-                </b:text>
+                        <h:form>
+                            <h:messages infoStyle="color:darkgreen" errorStyle="color:darkred"/>
+                            <br/>
+                            <b:text id="ccno"
+                                    label="Credit Card Number "
+                                    value="#{checkoutBean.ccNumber}"
+                                    required="true"
+                                    rendered="true">
+                            </b:text>
 
-                <b:text id="name"
-                        label="Card Holder Name "
-                        value="#{checkoutBean.name}"
-                        required="true"
-                        rendered="true">
-                </b:text>
+                            <b:text id="name"
+                                    label="Card Holder Name "
+                                    value="#{checkoutBean.name}"
+                                    required="true"
+                                    rendered="true">
+                            </b:text>
 
-                <b:text id="cvc"
-                        label="CVC"
-                        value="#{checkoutBean.cvc}"
-                        required="true"
-                        rendered="true">
-                </b:text>
+                            <b:text id="cvc"
+                                    label="CVC"
+                                    value="#{checkoutBean.cvc}"
+                                    required="true"
+                                    rendered="true">
+                            </b:text>
 
+                            <h:commandButton action="#{checkoutBean.checkout()}"
+                                             value="Confirm Checkout" class="btn btn-primary"/>
 
-
-                <h:commandButton action="#{checkoutBean.checkout()}"
-                                 value="Confirm Checkout" class="btn btn-primary"/>
-
-                <h:button value="Cancel" outcome="/pet/list" class="btn btn-default"/>
-
-
-
-
-
-            </h:form>
-            </div></div></div>
+                            <h:button value="Cancel" outcome="/pet/list" class="btn btn-default"/>
+                        </h:form>
+                    </div>
+                </div>
+            </div>
         </ui:define>
     </ui:composition>
 </h:body>

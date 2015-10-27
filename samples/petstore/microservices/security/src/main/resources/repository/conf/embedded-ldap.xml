@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- *
+* Copyright 2004,2005 The Apache Software Foundation.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* -->
+
+<!--
+	All carbon based products comes with a LDAP user store. 
+	For this we use an embedded LDAP in carbon based products. 
+	This file contains necessary configurations to control the behavior of embedded LDAP.
+	You may use this file to enable, disable LDAP server, configure connection admin password, etc ...
+	In addition to embedded-ldap server configurations this file also has Kerberos KDC (Key Distribution Center) 
+	specific configurations.
+-->
+
+<EmbeddedLDAPConfig>
+
+  <!-- 
+	LDAP server configurations 
+	==========================
+	This section contains LDAP server specific configurations.
+
+	Property                Usage
+	=======                 ====
+	enable                  If true the embedded LDAP server will start when server starts up.
+				            Else embedded LDAP server will not start. Thus user has to use a different
+				            user store.
+	instanceid              An id given to the LDAP server instance.
+	connectionPassword      The password of the admin. (uid=admin,ou=system)
+	workingDirectory        Location where LDAP will store its schema files.
+	AdminEntryObjectClass   Object class which encapsulate attributes needed by claims.
+	allowAnonymousAccess    Should allow users to access LDAP server without credentials. Default false.
+	accessControlEnabled    Should access control be enabled among partitions. Default true.
+	saslHostName            Default host name to be used in SASL (Simple Authentication and Security Layer).
+				            This property comes from apacheds implementation itself.
+	saslPrincipalName       Default SASL principal name. Again this property also comes from apacheds implementation
+				            itself.
+  -->
+  <EmbeddedLDAP>
+    <Property name="enable">true</Property>
+    <Property name="port">10389</Property>
+    <Property name="instanceId">default</Property>
+    <Property name="connectionPassword">admin</Property>
+    <Property name="workingDirectory">.</Property>
+    <Property name="AdminEntryObjectClass">identityPerson</Property>
+    <Property name="allowAnonymousAccess">false</Property>
+    <Property name="accessControlEnabled">true</Property>
+    <Property name="denormalizeOpAttrsEnabled">false</Property>
+    <Property name="maxPDUSize">2000000</Property>
+    <Property name="saslHostName">localhost</Property>
+    <Property name="saslPrincipalName">ldap/localhost@EXAMPLE.COM</Property>
+  </EmbeddedLDAP>
+
+  <!-- 
+	Default partition configurations
+	================================ 
+	When embedded LDAP server starts for the first time it will create a default partition. 
+	Following properties configure values for the default partition.
+	
+	Property                        Usage
+	=======                         =====
+	id                              Each partition is given an id. The id given to the default paritition.
+	realm                           Realm is the place where we store user principals and service principals.
+                                        The name of the realm for default partition.
+	kdcPassword                     This parameter is used when KDC (Key Distribution Center) is enabled. In apacheds
+                                        KDC also has a server principal. This defines a password for KDC server principal.
+	ldapServerPrinciplePassword     If LDAP server is also defined as a server principal, this will be the password.
+	
+  -->
+  <DefaultPartition>
+    <Property name="id">root</Property>
+    <Property name="realm">WSO2.ORG</Property>    
+    <Property name="kdcPassword">secret</Property>
+    <Property name="ldapServerPrinciplePassword">randall</Property>
+  </DefaultPartition>
+
+  <!-- 
+	Default partition admin configurations
+	======================================
+	In a multi-tenant scenario each tenant will have a separate partition. Thus tenant admin will be the partition admin.
+	Following configurations define admin attributes for above created default partition.
+
+	Property            Usage
+	========            =====
+	uid                 UID attribute for partition admin.
+	commonName          The cn attribute for admin
+	lastName            The sn attribute for admin
+	email               The email attribute for admin
+	passwordType        The password hashing mechanism. Following hashing mechanisms are available, "SHA", "MD5".
+                        "PLAIN_TEXT" is also a valid value. If KDC is enabled password type will be enforced to be
+                        plain text.
+  -->
+  <PartitionAdmin>
+    <Property name="uid">admin</Property>
+    <Property name="firstName">admin</Property>
+    <Property name="lastName">admin</Property>
+    <Property name="email">admin@wso2.com</Property>
+    <Property name="password">admin</Property>
+    <Property name="passwordType">PLAIN_TEXT</Property>
+  </PartitionAdmin>
+
+  <!-- 
+	Default partition admin's group configuration 
+	=============================================
+	Embedded LDAP is capable of keeping group information also.
+	If LDAP groups are enabled in user store (usr-mgt.xml) group information will be
+	recorded in a separate sub-context. Following configuration defines the group
+	properties.
+
+	Property                Usage
+	=======                 =====
+	adminRoleName		    The name of the role/group that admin should be included.
+	groupNameAttribute	    The attribute which group name will be recorded.
+	memberNameAttribute	    The attribute which memebers are recorded.
+  -->
+  <PartitionAdminGroup>
+    <Property name="adminRoleName">admin</Property>
+    <Property name="groupNameAttribute">cn</Property>
+    <Property name="memberNameAttribute">member</Property>
+  </PartitionAdminGroup>
+
+    <!--
+      KDC configurations
+      =================
+      Following configurations are applicable to KDC server. Generally, the KDC is only enabled in
+      Identity Server. You may enable KDC server if you wish to do so. But if you dont have any Kerberos specific
+      programs, it is recommended to disable KDC server.
+
+      Property                          Usage
+      =======                           =====
+      name                              Name given to default KDC server.
+      enabled                           If true a KDC server will start when starting LDAP server.
+                                          Else a KDC server will not start with a LDAP server.
+      protocol                          Default protocol to be used in KDC communication. Default is UDP.
+      maximumTicketLifeTime             The maximum life time of a ticket issued by the KDC.
+      maximumRenewableLifeTime          Life time which a ticket can be used by renewing it several times.
+      preAuthenticationTimeStampEnabled Pre-authentication is a feature in latest Kerberos protocol.
+                                          This property says whether to enable it or disable it.
+    -->
+  <KDCServer>
+    <Property name="name">defaultKDC</Property>
+    <Property name="enabled">false</Property>
+    <Property name="protocol">UDP</Property>
+    <Property name="host">localhost</Property>
+    <Property name="port">10389</Property>
+    <Property name="maximumTicketLifeTime">8640000</Property>
+    <Property name="maximumRenewableLifeTime">604800000</Property>
+    <Property name="preAuthenticationTimeStampEnabled">true</Property>
+  </KDCServer>
+
+</EmbeddedLDAPConfig>

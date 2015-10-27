@@ -19,7 +19,7 @@
 package org.wso2.carbon.mss.examples.petstore.pet;
 
 import org.wso2.carbon.mss.MicroservicesRunner;
-import org.wso2.carbon.mss.examples.petstore.util.security.JWTSecurityInterceptor;
+import org.wso2.carbon.mss.security.JWTSecurityInterceptor;
 
 /**
  * Microservice runner for the pet microservices

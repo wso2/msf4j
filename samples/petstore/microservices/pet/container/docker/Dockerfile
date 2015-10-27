@@ -16,7 +16,7 @@
 #
 # ------------------------------------------------------------------------
 
-FROM ubuntu:14.04
+FROM java:8-jre
 MAINTAINER architecture@wso2.org
 
 WORKDIR /opt
@@ -24,14 +24,11 @@ WORKDIR /opt
 # --------------------------------
 # Copy scripts, packages & plugins
 # --------------------------------
-ADD packages/jdk-8u60-linux-x64.gz /opt/
 COPY packages/petstore-pet-1.0.0-SNAPSHOT.jar /opt/
-
-ENV JAVA_HOME /opt/jdk1.8.0_60
 
 # ----------------------
 # Expose container ports
 # ----------------------
 EXPOSE 8080
 
-ENTRYPOINT ${JAVA_HOME}/bin/java -jar /opt/petstore-pet-1.0.0-SNAPSHOT.jar
+ENTRYPOINT java -jar /opt/petstore-pet-1.0.0-SNAPSHOT.jar

@@ -7,5 +7,8 @@ metadata:
 spec: 
   ports:
     - port: 80
+      targetPort: 80
+      "nodePort": 31111
+  type: NodePort
   selector: 
     name: fileserver

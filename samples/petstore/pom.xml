@@ -15,37 +15,6 @@
     <name>Pet Store Microservices Solution example</name>
     <url>http://wso2.org</url>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.wso2.carbon.mss</groupId>
-            <artifactId>org.wso2.carbon.mss</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-codec</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-codec-http</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-        </dependency>
-    </dependencies>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -60,12 +29,12 @@
 
     <modules>
         <module>util</module>
-        <!--<module>microservices/cache</module>-->
-        <!--<module>microservices/database</module>-->
+        <module>frontend-util</module>
         <!--<module>microservices/frontend-admin</module>-->
-        <!--<module>microservices/frontend-user</module>-->
         <module>microservices/pet</module>
-        <module>microservices/security</module>
         <module>microservices/transaction</module>
+        <module>microservices/security</module>
+        <module>microservices/frontend-user</module>
+        <module>microservices/frontend-admin</module>
     </modules>
 </project>

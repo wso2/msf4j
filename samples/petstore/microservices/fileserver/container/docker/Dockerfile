@@ -23,4 +23,4 @@ MAINTAINER architecture@wso2.org
 # Copy scripts
 # --------------------------------
 COPY php/ /var/www/html/
-RUN chmod 777 -R /var/www/html/upload 
+RUN chmod 777 -R /var/www/html/fs 
