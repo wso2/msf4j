@@ -33,6 +33,8 @@ import io.netty.util.AttributeKey;
  */
 public class HttpDispatcher extends SimpleChannelInboundHandler<HttpObject> {
 
+    private HttpMethodInfoBuilder httpMethodInfoBuilder;
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, HttpObject msg) throws HandlerException {
         Object httpMethodInfoBuilderObj = ctx.pipeline()
@@ -40,7 +42,7 @@ public class HttpDispatcher extends SimpleChannelInboundHandler<HttpObject> {
                 .attr(AttributeKey.valueOf(RequestRouter.METHOD_INFO_BUILDER))
                 .get();
         if (httpMethodInfoBuilderObj instanceof HttpMethodInfoBuilder) {
-            HttpMethodInfoBuilder httpMethodInfoBuilder = (HttpMethodInfoBuilder) httpMethodInfoBuilderObj;
+            httpMethodInfoBuilder = (HttpMethodInfoBuilder) httpMethodInfoBuilderObj;
             if (msg instanceof FullHttpRequest) {
                 FullHttpRequest fullHttpRequest = (FullHttpRequest) msg;
                 httpMethodInfoBuilder
@@ -52,6 +54,13 @@ public class HttpDispatcher extends SimpleChannelInboundHandler<HttpObject> {
                         .build()
                         .chunk((HttpContent) msg);
             }
+        }
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws HandlerException {
+        if (httpMethodInfoBuilder != null) {
+            httpMethodInfoBuilder.build().error(cause);
         }
     }
 }

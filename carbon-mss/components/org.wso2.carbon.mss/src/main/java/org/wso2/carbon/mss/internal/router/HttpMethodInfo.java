@@ -127,6 +127,17 @@ class HttpMethodInfo {
         }
     }
 
+    void error(Throwable e) {
+        try {
+            if (bodyConsumer != null) {
+                bodyConsumerError(e);
+            }
+            exceptionHandler.handle(e, request, responder);
+        } catch (HandlerException ex) {
+            exceptionHandler.handle(ex, request, responder);
+        }
+    }
+
     /**
      * Calls the {@link org.wso2.carbon.mss.internal.router.BodyConsumer#chunk(io.netty.buffer.ByteBuf,
      * org.wso2.carbon.mss.HttpResponder)} method.
