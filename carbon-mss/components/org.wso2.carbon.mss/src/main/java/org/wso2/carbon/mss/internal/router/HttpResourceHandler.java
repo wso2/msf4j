@@ -21,9 +21,7 @@ package org.wso2.carbon.mss.internal.router;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpRequest;
@@ -41,7 +39,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Set;
 import java.util.stream.Collectors;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -85,14 +82,13 @@ public final class HttpResourceHandler implements HttpHandler {
             }
 
             for (Method method : handler.getClass().getDeclaredMethods()) {
-                Set<HttpMethod> httpMethods = getHttpMethods(method);
-                if (Modifier.isPublic(method.getModifiers()) && !httpMethods.isEmpty()) {
+                if (Modifier.isPublic(method.getModifiers()) && !isHttpMethodAvailable(method)) {
                     String relativePath = "";
                     if (method.getAnnotation(Path.class) != null) {
                         relativePath = method.getAnnotation(Path.class).value();
                     }
                     String absolutePath = String.format("%s/%s", basePath, relativePath);
-                    patternRouter.add(absolutePath, new HttpResourceModel(httpMethods, absolutePath, method,
+                    patternRouter.add(absolutePath, new HttpResourceModel(absolutePath, method,
                             handler, exceptionHandler));
                 } else {
                     log.trace("Not adding method {}({}) to path routing like. " +
@@ -103,30 +99,11 @@ public final class HttpResourceHandler implements HttpHandler {
         }
     }
 
-    /**
-     * Fetches the HttpMethod from annotations and returns String representation of HttpMethod.
-     * Return emptyString if not present.
-     *
-     * @param method Method handling the http request.
-     * @return String representation of HttpMethod from annotations or emptyString as a default.
-     */
-    private Set<HttpMethod> getHttpMethods(Method method) {
-        Set<HttpMethod> httpMethods = Sets.newHashSet();
-
-        if (method.isAnnotationPresent(GET.class)) {
-            httpMethods.add(HttpMethod.GET);
-        }
-        if (method.isAnnotationPresent(PUT.class)) {
-            httpMethods.add(HttpMethod.PUT);
-        }
-        if (method.isAnnotationPresent(POST.class)) {
-            httpMethods.add(HttpMethod.POST);
-        }
-        if (method.isAnnotationPresent(DELETE.class)) {
-            httpMethods.add(HttpMethod.DELETE);
-        }
-
-        return ImmutableSet.copyOf(httpMethods);
+    private boolean isHttpMethodAvailable(Method method) {
+        return method.isAnnotationPresent(GET.class) ||
+                method.isAnnotationPresent(PUT.class) ||
+                method.isAnnotationPresent(POST.class) ||
+                method.isAnnotationPresent(DELETE.class);
     }
 
     /**

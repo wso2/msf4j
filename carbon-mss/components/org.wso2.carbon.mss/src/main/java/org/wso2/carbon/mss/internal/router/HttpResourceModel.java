@@ -44,8 +44,12 @@ import java.util.Map;
 import java.util.Set;
 import javax.annotation.Nullable;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -73,14 +77,13 @@ public final class HttpResourceModel {
     /**
      * Construct a resource model with HttpMethod, method that handles httprequest, Object that contains the method.
      *
-     * @param httpMethods Set of http methods that is handled by the resource.
-     * @param path        path associated with this model.
-     * @param method      handler that handles the http request.
-     * @param handler     instance {@code HttpHandler}.
+     * @param path    path associated with this model.
+     * @param method  handler that handles the http request.
+     * @param handler instance {@code HttpHandler}.
      */
-    public HttpResourceModel(Set<HttpMethod> httpMethods, String path, Method method, Object handler,
+    public HttpResourceModel(String path, Method method, Object handler,
                              ExceptionHandler exceptionHandler) {
-        this.httpMethods = httpMethods;
+        this.httpMethods = getHttpMethods(method);
         this.path = path;
         this.method = method;
         this.handler = handler;
@@ -279,6 +282,30 @@ public final class HttpResourceModel {
             }
         }
         return info.convert(headers);
+    }
+
+    /**
+     * Fetches the HttpMethod from annotations and returns String representation of HttpMethod.
+     * Return emptyString if not present.
+     *
+     * @param method Method handling the http request.
+     * @return String representation of HttpMethod from annotations or emptyString as a default.
+     */
+    private Set<HttpMethod> getHttpMethods(Method method) {
+        Set<HttpMethod> httpMethods = Sets.newHashSet();
+        if (method.isAnnotationPresent(GET.class)) {
+            httpMethods.add(HttpMethod.GET);
+        }
+        if (method.isAnnotationPresent(PUT.class)) {
+            httpMethods.add(HttpMethod.PUT);
+        }
+        if (method.isAnnotationPresent(POST.class)) {
+            httpMethods.add(HttpMethod.POST);
+        }
+        if (method.isAnnotationPresent(DELETE.class)) {
+            httpMethods.add(HttpMethod.DELETE);
+        }
+        return ImmutableSet.copyOf(httpMethods);
     }
 
     /**
