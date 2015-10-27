@@ -27,10 +27,12 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.DefaultHttpResponse;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpObject;
+import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
+import io.netty.util.ReferenceCountUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,7 +65,24 @@ public class RequestRouter extends SimpleChannelInboundHandler<HttpObject> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, HttpObject msg) throws Exception {
-
+        Channel channel = ctx.channel();
+        if (msg instanceof HttpRequest) {
+            HttpRequest request = (HttpRequest) msg;
+            if (handleRequest(request, channel, ctx)) {
+                if (httpMethodInfoBuilder.getHttpResourceModel()
+                        .isStreamingReqSupported() &&
+                        channel.pipeline().get("aggregator") != null) {
+                    channel.pipeline().remove("aggregator");
+                } else if (!httpMethodInfoBuilder.getHttpResourceModel()
+                        .isStreamingReqSupported() &&
+                        channel.pipeline().get("aggregator") == null) {
+                    channel.pipeline().addAfter("router", "aggregator",
+                            new HttpObjectAggregator(Integer.MAX_VALUE));
+                }
+            }
+        }
+        ReferenceCountUtil.retain(msg);
+        ctx.fireChannelRead(msg);
     }
 
     private boolean handleRequest(HttpRequest httpRequest, Channel channel,
