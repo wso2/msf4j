@@ -32,7 +32,7 @@ spec:
         - name: FE_USER_SERVICE_PORT
           value: "80"
         - name: FE_TXN_SERVICE_HOST
-          value: security
+          value: txn
         - name: FE_TXN_SERVICE_PORT
           value: "80"
         - name: FE_FILESERVER_NODE_PORT
