@@ -24,6 +24,7 @@ import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import io.netty.handler.codec.http.HttpMethod;
+import org.wso2.carbon.mss.HttpStreaming;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -55,6 +56,7 @@ public final class HttpResourceModel {
     private static final Set<Class<? extends Annotation>> SUPPORTED_PARAM_ANNOTATIONS =
             ImmutableSet.of(PathParam.class, QueryParam.class, HeaderParam.class, Context.class);
     private static final String[] ANY_MEDIA_TYPE = new String[]{"*/*"};
+    private static final int STREAMING_REQ_UNKNOWN = 0, STREAMING_REQ_SUPPORTED = 1, STREAMING_REQ_UNSUPPORTED = 2;
 
     private final Set<HttpMethod> httpMethods;
     private final String path;
@@ -64,6 +66,8 @@ public final class HttpResourceModel {
     private final ExceptionHandler exceptionHandler;
     private List<String> consumesMediaTypes;
     private List<String> producesMediaTypes;
+    private int isStreamingReqSupported = STREAMING_REQ_UNKNOWN;
+
 
     /**
      * Construct a resource model with HttpMethod, method that handles httprequest, Object that contains the method.
@@ -222,6 +226,22 @@ public final class HttpResourceModel {
         }
 
         return Collections.unmodifiableList(paramInfoList);
+    }
+
+    public boolean isStreamingReqSupported() {
+        if (isStreamingReqSupported == STREAMING_REQ_SUPPORTED) {
+            return true;
+        } else if (isStreamingReqSupported == STREAMING_REQ_UNSUPPORTED) {
+            return false;
+        } else if (paramInfoList.stream().filter(parameterInfo -> parameterInfo
+                .getParameterType().equals(HttpStreaming.class))
+                .findAny().isPresent()) {
+            isStreamingReqSupported = STREAMING_REQ_SUPPORTED;
+            return true;
+        } else {
+            isStreamingReqSupported = STREAMING_REQ_UNSUPPORTED;
+            return false;
+        }
     }
 
     public List<ParameterInfo<?>> getParamInfoList() {
