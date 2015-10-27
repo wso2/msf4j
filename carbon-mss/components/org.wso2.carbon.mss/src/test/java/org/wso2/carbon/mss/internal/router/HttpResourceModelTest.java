@@ -22,6 +22,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.wso2.carbon.mss.HttpStreaming;
 
+/**
+ * Tests functionality fo HttpResourceModel
+ */
 public class HttpResourceModelTest {
 
     @Test
@@ -44,6 +47,9 @@ public class HttpResourceModelTest {
         Assert.assertTrue(!httpResourceModel.isStreamingReqSupported());
     }
 
+    /**
+     * Test class used for testing HttpResourceMethod functionality
+     */
     private static class TestClass {
 
         public void methodWithHttpStreaming(HttpStreaming httpStreaming) {
