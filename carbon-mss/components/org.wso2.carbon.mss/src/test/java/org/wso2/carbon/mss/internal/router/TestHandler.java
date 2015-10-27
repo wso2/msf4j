@@ -294,7 +294,7 @@ public class TestHandler implements HttpHandler {
             }
 
             @Override
-            public void finished(HttpResponder responder) {
+            public void finished(ByteBuf request, HttpResponder responder) {
 //        int bytesUploaded = offHeapBuffer.position();
                 responder.sendString(HttpResponseStatus.OK, "Uploaded:");
 //        responder.sendString(HttpResponseStatus.OK, "Uploaded:" + bytesUploaded);
@@ -324,7 +324,7 @@ public class TestHandler implements HttpHandler {
             }
 
             @Override
-            public void finished(HttpResponder responder) {
+            public void finished(ByteBuf request, HttpResponder responder) {
                 int bytesUploaded = offHeapBuffer.position();
                 responder.sendString(HttpResponseStatus.OK, "Uploaded:" + bytesUploaded);
             }
