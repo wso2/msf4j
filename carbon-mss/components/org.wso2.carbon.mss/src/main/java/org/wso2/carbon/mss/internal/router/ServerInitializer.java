@@ -67,6 +67,7 @@ public class ServerInitializer extends ChannelInitializer<SocketChannel> {
         pipeline.addLast("chunkWriter", new ChunkedWriteHandler());
         pipeline.addLast("compressor", new HttpContentCompressor());
         pipeline.addLast(eventExecutor, "router", new RequestRouter(resourceHandler, httpChunkLimit));
+        pipeline.addLast(eventExecutor, "dispatcher", new HttpDispatcher());
 
         if (pipelineModifier != null) {
             pipelineModifier.apply(pipeline);

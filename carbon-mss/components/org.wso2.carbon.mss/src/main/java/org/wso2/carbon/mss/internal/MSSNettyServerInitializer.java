@@ -21,10 +21,10 @@ package org.wso2.carbon.mss.internal;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.HttpContentCompressor;
-import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
+import org.wso2.carbon.mss.internal.router.HttpDispatcher;
 import org.wso2.carbon.mss.internal.router.RequestRouter;
 import org.wso2.carbon.transport.http.netty.listener.CarbonNettyServerInitializer;
 
@@ -47,7 +47,9 @@ public class MSSNettyServerInitializer implements CarbonNettyServerInitializer {
         pipeline.addLast("decoder", new HttpRequestDecoder());
         pipeline.addLast("encoder", new HttpResponseEncoder());
         pipeline.addLast("compressor", new HttpContentCompressor());
-        pipeline.addLast(eventExecutorGroup, "router", new RequestRouter(MicroservicesRegistry
-                .getInstance().getHttpResourceHandler(), 0));
+        pipeline.addLast(eventExecutorGroup, "router",
+                new RequestRouter(MicroservicesRegistry.getInstance()
+                        .getHttpResourceHandler(), 0));
+        pipeline.addLast(eventExecutorGroup, "dispatcher", new HttpDispatcher());
     }
 }
