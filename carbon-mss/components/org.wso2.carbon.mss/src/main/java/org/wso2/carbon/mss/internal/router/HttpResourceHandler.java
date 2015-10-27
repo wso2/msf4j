@@ -82,7 +82,7 @@ public final class HttpResourceHandler implements HttpHandler {
             }
 
             for (Method method : handler.getClass().getDeclaredMethods()) {
-                if (Modifier.isPublic(method.getModifiers()) && !isHttpMethodAvailable(method)) {
+                if (Modifier.isPublic(method.getModifiers()) && isHttpMethodAvailable(method)) {
                     String relativePath = "";
                     if (method.getAnnotation(Path.class) != null) {
                         relativePath = method.getAnnotation(Path.class).value();
