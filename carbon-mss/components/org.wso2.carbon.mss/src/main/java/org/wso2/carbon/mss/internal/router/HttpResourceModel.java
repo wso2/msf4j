@@ -351,10 +351,26 @@ public final class HttpResourceModel {
         return Collections.unmodifiableList(paramInfoList);
     }
 
+    public List<ParameterInfo<?>> getParamInfoList() {
+        return paramInfoList;
+    }
+
+    public ExceptionHandler getExceptionHandler() {
+        return exceptionHandler;
+    }
+
+    public List<String> getConsumesMediaTypes() {
+        return consumesMediaTypes;
+    }
+
+    public List<String> getProducesMediaTypes() {
+        return producesMediaTypes;
+    }
+
     /**
      * A container class to hold information about a handler method parameters.
      */
-    private static final class ParameterInfo<T> {
+    public static final class ParameterInfo<T> {
         private final Annotation annotation;
         private final Function<T, Object> converter;
         private final Type parameterType;
