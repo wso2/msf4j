@@ -24,11 +24,11 @@ WORKDIR /opt
 # --------------------------------
 # Copy scripts, packages & plugins
 # --------------------------------
-COPY packages/SimpleStockQuote-1.0.0-SNAPSHOT.jar /opt/
+COPY packages/SimpleStockQuote.jar /opt/
 
 # ----------------------
 # Expose container ports
 # ----------------------
 EXPOSE 8080
 
-ENTRYPOINT java -jar /opt/SimpleStockQuote-1.0.0-SNAPSHOT.jar
+ENTRYPOINT java -jar /opt/SimpleStockQuote.jar

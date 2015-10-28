@@ -26,20 +26,13 @@ import org.wso2.carbon.mss.examples.petstore.util.fe.model.Configuration;
 import org.wso2.carbon.mss.examples.petstore.util.fe.model.PetServiceException;
 import org.wso2.carbon.mss.examples.petstore.util.model.Pet;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Bean classes used for JSF model.
@@ -100,7 +93,7 @@ public class PetListBean {
     }
 
     public void setSelectedValue(Pet selectedValue) {
-        this.selectedValue = modifyImageURL(selectedValue);
+        this.selectedValue = selectedValue;
     }
 
     public Configuration getConfiguration() {
@@ -130,35 +123,5 @@ public class PetListBean {
         return "list";
     }
 
-    private String getServerIP() {
-        ExternalContext extContext = FacesContext.getCurrentInstance().getExternalContext();
-        HttpServletRequest request = (HttpServletRequest) extContext.getRequest();
-        //TODO - Remove following log messages after testing.
-        LOGGER.info("================ printing all headers =============");
-        for (String key : Collections.list(request.getHeaderNames())) {
-            LOGGER.info(key + "=" + request.getHeader(key));
-        }
-        LOGGER.info("===================================================");
-        String host = request.getHeader("host");
-        if (host == null || host.isEmpty()) {
-            host = request.getHeader("origin");
-        }
-        return host.substring(0, host.indexOf(":"));
-    }
 
-    private Pet modifyImageURL(Pet selectedValue) {
-        getServerIP();
-        LOGGER.info("Current Image URL " + selectedValue.getImage());
-        try {
-            Integer nodePort = Integer.valueOf(configuration.getFileUploadServiceNodePort());
-            String imageFile = "/fs/".concat(selectedValue.getImage());
-            URL newURL = new URL("http", getServerIP(), nodePort, imageFile);
-            selectedValue.setImage(newURL.toString());
-        } catch (MalformedURLException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
-        }
-
-        LOGGER.info("New Image URL " + selectedValue.getImage());
-        return selectedValue;
-    }
 }

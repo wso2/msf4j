@@ -31,8 +31,12 @@ public class NavigationBean implements Serializable {
 
     private static final long serialVersionUID = -8628674465932953415L;
 
-    public String redirectToWelcome() {
+    public String redirectToStoreWelcome() {
         return "pet/list.xhtml?faces-redirect=true";
+    }
+
+    public String redirectToAdminWelcome() {
+        return "pet/index.xhtml?faces-redirect=true";
     }
 
     public String toLogin() {
