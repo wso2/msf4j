@@ -25,6 +25,7 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.DefaultHttpResponse;
+import io.netty.handler.codec.http.HttpContent;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpObject;
 import io.netty.handler.codec.http.HttpObjectAggregator;
@@ -83,9 +84,12 @@ public class RequestRouter extends SimpleChannelInboundHandler<HttpObject> {
                             new HttpObjectAggregator(Integer.MAX_VALUE));
                 }
             }
+            ReferenceCountUtil.retain(msg);
+            ctx.fireChannelRead(msg);
+        } else if (msg instanceof HttpContent) {
+            ReferenceCountUtil.retain(msg);
+            ctx.fireChannelRead(msg);
         }
-        ReferenceCountUtil.retain(msg);
-        ctx.fireChannelRead(msg);
     }
 
     private boolean handleRequest(HttpRequest httpRequest, Channel channel,
