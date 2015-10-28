@@ -22,10 +22,12 @@ import de.larmic.butterfaces.event.TableSingleSelectionListener;
 import de.larmic.butterfaces.model.table.DefaultTableModel;
 import de.larmic.butterfaces.model.table.TableModel;
 import org.wso2.carbon.mss.examples.petstore.util.fe.dao.PetService;
+import org.wso2.carbon.mss.examples.petstore.util.fe.model.Configuration;
 import org.wso2.carbon.mss.examples.petstore.util.fe.model.PetServiceException;
 import org.wso2.carbon.mss.examples.petstore.util.model.Pet;
 
 import java.util.List;
+import java.util.logging.Logger;
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -39,12 +41,18 @@ import javax.faces.bean.RequestScoped;
 @RequestScoped
 public class PetListBean {
 
+    private static final Logger LOGGER = Logger.getLogger(PetListBean.class.getName());
+
     @Nullable
     @ManagedProperty("#{petService}")
     private PetService petService;
     private List<Pet> pets;
     private TableModel tableModel = new DefaultTableModel();
     private Pet selectedValue;
+
+    @Nullable
+    @ManagedProperty("#{configuration}")
+    private Configuration configuration;
 
     @PostConstruct
     public void init() {
@@ -88,6 +96,14 @@ public class PetListBean {
         this.selectedValue = selectedValue;
     }
 
+    public Configuration getConfiguration() {
+        return configuration;
+    }
+
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
+    }
+
     public TableSingleSelectionListener<Pet> getTableSelectionListener() {
         return new TableSingleSelectionListener<Pet>() {
             @Override
@@ -106,4 +122,6 @@ public class PetListBean {
     public String backtoList() {
         return "list";
     }
+
+
 }

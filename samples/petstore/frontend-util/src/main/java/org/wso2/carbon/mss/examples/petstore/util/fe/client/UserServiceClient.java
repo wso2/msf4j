@@ -24,6 +24,7 @@ import org.wso2.carbon.mss.examples.petstore.util.fe.model.UserServiceException;
 import org.wso2.carbon.mss.examples.petstore.util.fe.view.LoginBean;
 import org.wso2.carbon.mss.examples.petstore.util.model.User;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
 import javax.faces.bean.ApplicationScoped;
@@ -74,6 +75,8 @@ public class UserServiceClient extends AbstractServiceClient {
         final Response response = target.request().post(Entity.entity(gson.toJson(user), MediaType.APPLICATION_JSON));
         LOGGER.info("Returned from user service " + configuration.getUserServiceEP());
         if (Response.Status.OK.getStatusCode() != response.getStatus()) {
+            LOGGER.log(Level.SEVERE, "User service return code is  " + response.getStatus() + " , " +
+                                     "hence can't proceed with the response");
             throw new UserServiceException("Can't add the user");
         }
     }

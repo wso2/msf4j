@@ -5,7 +5,7 @@ metadata:
   labels:
     name: admin-fe
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     name: admin-fe
   template:
@@ -31,7 +31,7 @@ spec:
           value: security
         - name: FE_USER_SERVICE_PORT
           value: "80"
-        - name: FE_FILESERVER_NODE_PORT
+        - name: FE_FILE_SERVICE_NODE_PORT
           value: "31111"
         ports:
         - containerPort: 8080

@@ -19,6 +19,7 @@
 package org.wso2.carbon.mss.examples.petstore.util.model;
 
 import java.util.List;
+import javax.xml.bind.annotation.XmlAttribute;
 
 /**
  * Bean class used for populating user
@@ -28,7 +29,15 @@ public class User {
     private String name;
     private String password;
     private String email;
+
+    @XmlAttribute(required = false)
     private List<String> roles;
+
+    @XmlAttribute(required = false)
+    private String firstName;
+
+    @XmlAttribute(required = false)
+    private String lastName;
 
     public String getName() {
         return name;
@@ -61,5 +70,21 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }
