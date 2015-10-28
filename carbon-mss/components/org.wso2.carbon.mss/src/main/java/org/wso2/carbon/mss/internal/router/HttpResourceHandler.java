@@ -89,7 +89,7 @@ public final class HttpResourceHandler implements HttpHandler {
                     }
                     String absolutePath = String.format("%s/%s", basePath, relativePath);
                     patternRouter.add(absolutePath, new HttpResourceModel(absolutePath, method,
-                            handler, exceptionHandler));
+                            handler, new ExceptionHandler()));
                 } else {
                     log.trace("Not adding method {}({}) to path routing like. " +
                                     "HTTP calls will not be routed to this method",
