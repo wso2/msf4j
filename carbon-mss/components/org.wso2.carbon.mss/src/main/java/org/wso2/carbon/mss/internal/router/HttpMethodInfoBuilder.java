@@ -37,6 +37,7 @@ public class HttpMethodInfoBuilder {
     private Map<String, String> groupValues;
     private String contentType;
     private List<String> acceptTypes;
+    private HttpMethodInfo httpMethodInfo;
 
     public static HttpMethodInfoBuilder getInstance() {
         HttpMethodInfoBuilder httpMethodInfoBuilder = new HttpMethodInfoBuilder();
@@ -68,8 +69,11 @@ public class HttpMethodInfoBuilder {
     }
 
     public HttpMethodInfo build() throws HandlerException {
-        return (new HttpResourceModelProcessor(httpResourceModel))
-                .buildHttpMethodInfo(request,responder,groupValues,contentType,acceptTypes);
+        if (httpMethodInfo == null) {
+            httpMethodInfo = (new HttpResourceModelProcessor(httpResourceModel))
+                    .buildHttpMethodInfo(request, responder, groupValues, contentType, acceptTypes);
+        }
+        return httpMethodInfo;
     }
 
     public HttpResourceModel getHttpResourceModel() {
