@@ -60,7 +60,11 @@ public class HttpDispatcher extends SimpleChannelInboundHandler<HttpObject> {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws HandlerException {
         if (httpMethodInfoBuilder != null) {
-            httpMethodInfoBuilder.build().error(cause);
+            httpMethodInfoBuilder.getHttpResourceModel()
+                    .getExceptionHandler()
+                    .handle(cause,
+                            httpMethodInfoBuilder.getRequest(),
+                            httpMethodInfoBuilder.getResponder());
         }
     }
 }

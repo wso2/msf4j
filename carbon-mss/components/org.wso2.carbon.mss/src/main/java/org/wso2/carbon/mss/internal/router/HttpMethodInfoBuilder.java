@@ -79,4 +79,8 @@ public class HttpMethodInfoBuilder {
     public HttpResponder getResponder() {
         return responder;
     }
+
+    public HttpRequest getRequest() {
+        return request;
+    }
 }
