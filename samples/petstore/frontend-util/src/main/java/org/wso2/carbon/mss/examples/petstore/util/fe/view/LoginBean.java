@@ -50,12 +50,26 @@ public class LoginBean {
     @ManagedProperty("#{userService}")
     private UserService userService;
 
-    public String doLogin() {
+    public String doLoginAdmin() {
         try {
             token = userService.authenticate(username, password);
             loggedIn = true;
             password = null;
-            return navigationBean.redirectToWelcome();
+            return navigationBean.redirectToAdminWelcome();
+        } catch (UserServiceException e) {
+            FacesMessage msg = new FacesMessage("Login error!", "ERROR MSG");
+            msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return navigationBean.toLogin();
+        }
+    }
+
+    public String doLoginStore() {
+        try {
+            token = userService.authenticate(username, password);
+            loggedIn = true;
+            password = null;
+            return navigationBean.redirectToStoreWelcome();
         } catch (UserServiceException e) {
             FacesMessage msg = new FacesMessage("Login error!", "ERROR MSG");
             msg.setSeverity(FacesMessage.SEVERITY_ERROR);
