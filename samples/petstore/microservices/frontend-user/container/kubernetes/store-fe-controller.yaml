@@ -5,7 +5,7 @@ metadata:
   labels:
     name: store-fe
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     name: store-fe
   template:
