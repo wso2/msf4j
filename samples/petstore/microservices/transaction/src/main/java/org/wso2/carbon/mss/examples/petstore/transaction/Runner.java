@@ -27,7 +27,7 @@ import org.wso2.carbon.mss.security.JWTSecurityInterceptor;
 public class Runner {
     public static void main(String[] args) {
         new MicroservicesRunner().
-                addInterceptor(new JWTSecurityInterceptor())
-                .deploy(new TxnService()).start();
+                addInterceptor(new JWTSecurityInterceptor()).
+                deploy(new TxnService()).start();
     }
 }
