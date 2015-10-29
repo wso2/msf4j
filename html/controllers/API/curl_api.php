@@ -66,4 +66,35 @@ function callAuthApigetPets($url, $token){
     }
 }
 
+function addToCart($pet_id, $pet_price, $pet_image){
+    $pet_array = array(
+        'id' => $pet_id,
+        'price' => $pet_price,
+        'image' => $pet_image
+    );
+    if(isset($_SESSION['cart'])){
+        if(!in_array($pet_array, $_SESSION['cart'], true)){
+            array_push($_SESSION['cart'], $pet_array);
+            echo json_encode(array('status' => 'success', 'message' => 'Pet added to your cart successfully'));
+        }else{
+            echo json_encode(array('status' => 'warning', 'message' => 'Pet is already in your cart'));
+        }
+
+    }else{
+        $_SESSION['cart'] = array();
+    }
+
+}
+
+function removeFromCart($pet_id, $cart){
+
+    for($i = count($cart)-1; $i >= 0; $i--){
+        if(isset($cart[$i]["id"]) && ($cart[$i]["id"] == $pet_id)){
+            unset($cart[$i]);
+        }
+    }
+    $_SESSION['cart'] = $cart;
+    echo json_encode(array('status' => 'success', 'message' => 'Pet remove from your cart successfully'));
+}
+
 ?>

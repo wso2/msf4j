@@ -7,7 +7,10 @@ if(!isset($_SESSION['username'])){
 }
 //return page breadcrumbs
 $breadcrumbs = array("cart.php"=>"cart");
-$cart = $_SESSION['cart'];
+$cart = [];
+if(isset($_SESSION['cart'])){
+    $cart = $_SESSION['cart'];
+}
 ?>
 <!--
 ~   Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
@@ -208,7 +211,36 @@ include('includes/header.php');
 
 <!-- Noty JS -->
 <script src="libs/noty_2.3.5/packaged/jquery.noty.packaged.min.js"></script>
+<script>
+    $(document).on('click', '.remove-pet', function(){
+       var petId = $(this).attr('data-petid');
 
+        $.ajax({
+            type: "POST",
+            url:  "controllers/cart/cart.php",
+            dataType: 'json',
+            data: {
+                cart_action: 'removeFromcart',
+                pet_id: petId
+            },
+            success: function (data, textStatus, jqXHR) {
+                if (data.status == 'error') {
+                    var n = noty({text: data.message, layout: 'bottomRight', type: 'error'});
+                    window.setTimeout(function(){
+                        window.location.href = 'logout.php';
+                    }, 1500);
+                } else if (data.status == 'warning') {
+                    var n = noty({text: data.message, layout: 'bottomRight', type: 'warning'});
+                } else {
+                    var n = noty({text: data.message, layout: 'bottomRight', type: 'success'});
+                    window.setTimeout(function(){
+                        window.location.href = 'cart.php';
+                    }, 1500);
+                }
+            }
+        });
+    });
+</script>
 <script src="js/custom.js"></script>
 
 </body>
