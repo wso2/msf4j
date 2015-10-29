@@ -50,4 +50,8 @@ final class HandlerException extends Exception {
         return new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, failureStatus,
                 Unpooled.copiedBuffer(message, Charsets.UTF_8));
     }
+
+    public HttpResponseStatus getFailureStatus() {
+        return failureStatus;
+    }
 }

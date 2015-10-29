@@ -3,7 +3,8 @@ package org.wso2.carbon.mss.example2;
 import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.mss.AbstractHttpHandler;
+import org.wso2.carbon.mss.HandlerContext;
+import org.wso2.carbon.mss.HttpHandler;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -20,7 +21,7 @@ import javax.ws.rs.core.Response;
  * StockQuote microservice
  */
 @Path("/SimpleStockQuote")
-public class StockQuoteService extends AbstractHttpHandler {
+public class StockQuoteService implements HttpHandler {
 
     private static final Logger log = LoggerFactory.getLogger(StockQuoteService.class);
 
@@ -58,5 +59,15 @@ public class StockQuoteService extends AbstractHttpHandler {
     @Override
     public String toString() {
         return "StockQuoteService2{}";
+    }
+
+    @Override
+    public void init(HandlerContext context) {
+
+    }
+
+    @Override
+    public void destroy(HandlerContext context) {
+
     }
 }

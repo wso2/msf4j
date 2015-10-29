@@ -41,7 +41,7 @@ public abstract class BodyConsumer {
      *
      * @param responder
      */
-    public abstract void finished(HttpResponder responder);
+    public abstract void finished(ByteBuf request, HttpResponder responder);
 
     /**
      * When there is exception on netty while streaming, it will be propagated to handler

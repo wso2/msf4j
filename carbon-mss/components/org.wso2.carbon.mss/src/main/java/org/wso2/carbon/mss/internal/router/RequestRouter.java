@@ -18,20 +18,27 @@
  */
 package org.wso2.carbon.mss.internal.router;
 
+import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableMultimap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.DefaultHttpResponse;
+import io.netty.handler.codec.http.HttpContent;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpObject;
+import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
+import io.netty.util.AttributeKey;
+import io.netty.util.ReferenceCountUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -45,7 +52,9 @@ public class RequestRouter extends SimpleChannelInboundHandler<HttpObject> {
     private final HttpResourceHandler httpMethodHandler;
     private final AtomicBoolean exceptionRaised;
 
-    private HttpMethodInfo methodInfo;
+    public static final String METHOD_INFO_BUILDER = "METHOD_INFO_BUILDER";
+
+    private HttpMethodInfoBuilder httpMethodInfoBuilder;
 
     public RequestRouter(HttpResourceHandler methodHandler, int chunkMemoryLimit) {
         this.httpMethodHandler = methodHandler;
@@ -60,24 +69,35 @@ public class RequestRouter extends SimpleChannelInboundHandler<HttpObject> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, HttpObject msg) throws Exception {
+        Channel channel = ctx.channel();
         if (msg instanceof HttpRequest) {
             HttpRequest request = (HttpRequest) msg;
-            if (handleRequest(request, ctx.channel(), ctx)) {
-//                if (msg instanceof HttpContent) {
-//                    methodInfo.chunk((HttpContent) msg);
-//                } else {
-                methodInfo.invoke();
-//                }
-                ctx.fireChannelReadComplete();
+            if (handleRequest(request, channel, ctx)) {
+                if (httpMethodInfoBuilder.getHttpResourceModel()
+                        .isStreamingReqSupported() &&
+                        channel.pipeline().get("aggregator") != null) {
+                    channel.pipeline().remove("aggregator");
+                } else if (!httpMethodInfoBuilder.getHttpResourceModel()
+                        .isStreamingReqSupported() &&
+                        channel.pipeline().get("aggregator") == null) {
+                    channel.pipeline().addAfter("router", "aggregator",
+                            new HttpObjectAggregator(Integer.MAX_VALUE));
+                }
             }
+            ReferenceCountUtil.retain(msg);
+            ctx.fireChannelRead(msg);
+        } else if (msg instanceof HttpContent) {
+            ReferenceCountUtil.retain(msg);
+            ctx.fireChannelRead(msg);
         }
     }
 
     private boolean handleRequest(HttpRequest httpRequest, Channel channel,
-                                  ChannelHandlerContext ctx) throws Exception {
-        methodInfo = httpMethodHandler.getDestinationMethod(
+                                  ChannelHandlerContext ctx) throws HandlerException {
+        httpMethodInfoBuilder = httpMethodHandler.getDestinationMethod(
                 httpRequest, new BasicHttpResponder(channel, HttpHeaders.isKeepAlive(httpRequest)));
-        return methodInfo != null;
+        ctx.attr(AttributeKey.valueOf(METHOD_INFO_BUILDER)).set(httpMethodInfoBuilder);
+        return httpMethodInfoBuilder != null;
     }
 
     @Override
@@ -86,10 +106,10 @@ public class RequestRouter extends SimpleChannelInboundHandler<HttpObject> {
         if (!exceptionRaised.get()) {
             exceptionRaised.set(true);
 
-            if (methodInfo != null) {
+            if (httpMethodInfoBuilder != null) {
                 log.error(exceptionMessage, cause);
-                methodInfo.sendError(HttpResponseStatus.INTERNAL_SERVER_ERROR, cause);
-                methodInfo = null;
+                sendError(HttpResponseStatus.INTERNAL_SERVER_ERROR, cause);
+                httpMethodInfoBuilder = null;
             } else {
                 HttpResponse response;
                 if (cause instanceof HandlerException) {
@@ -116,5 +136,25 @@ public class RequestRouter extends SimpleChannelInboundHandler<HttpObject> {
         int code = response.getStatus().code();
         return code == HttpResponseStatus.BAD_REQUEST.code() || code == HttpResponseStatus.NOT_FOUND.code() ||
                 code == HttpResponseStatus.METHOD_NOT_ALLOWED.code();
+    }
+
+
+    /**
+     * Sends the error to responder.
+     */
+    private void sendError(HttpResponseStatus status, Throwable ex) {
+        String msg;
+
+        if (ex instanceof InvocationTargetException) {
+            msg = String.format("Exception Encountered while processing request : %s",
+                    Objects.firstNonNull(ex.getCause(), ex).getMessage());
+        } else {
+            msg = String.format("Exception Encountered while processing request: %s", ex.getMessage());
+        }
+
+        // Send the status and message, followed by closing of the connection.
+        httpMethodInfoBuilder.getResponder()
+                .sendString(status, msg,
+                        ImmutableMultimap.of(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE));
     }
 }

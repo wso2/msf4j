@@ -23,7 +23,6 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.HttpContentCompressor;
-import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.handler.stream.ChunkedWriteHandler;
@@ -61,12 +60,13 @@ public class ServerInitializer extends ChannelInitializer<SocketChannel> {
         pipeline.addLast("encoder", new HttpResponseEncoder());
         pipeline.addLast("decoder", new HttpRequestDecoder());
 //        pipeline.addLast("aggregator", new HttpObjectAggregator(httpChunkLimit));
-        pipeline.addLast("aggregator", new HttpObjectAggregator(Integer.MAX_VALUE)); //TODO: put a proper value
+//        pipeline.addLast("aggregator", new HttpObjectAggregator(Integer.MAX_VALUE)); //TODO: put a proper value
 
         //TODO: add this only if chunking is enabled (BodyConsumer implemented?)
         pipeline.addLast("chunkWriter", new ChunkedWriteHandler());
         pipeline.addLast("compressor", new HttpContentCompressor());
         pipeline.addLast(eventExecutor, "router", new RequestRouter(resourceHandler, httpChunkLimit));
+        pipeline.addLast(eventExecutor, "dispatcher", new HttpDispatcher());
 
         if (pipelineModifier != null) {
             pipelineModifier.apply(pipeline);

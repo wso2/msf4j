@@ -27,7 +27,6 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
@@ -36,6 +35,7 @@ import org.wso2.carbon.mss.ChunkResponder;
 import org.wso2.carbon.mss.HandlerContext;
 import org.wso2.carbon.mss.HttpHandler;
 import org.wso2.carbon.mss.HttpResponder;
+import org.wso2.carbon.mss.HttpStreaming;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -282,30 +282,25 @@ public class TestHandler implements HttpHandler {
 
     @Path("/stream/upload")
     @PUT
-    public BodyConsumer streamUpload() {
-        final int fileSize = 30 * 1024 * 1024;
-        return new BodyConsumer() {
-            ByteBuf offHeapBuffer = Unpooled.buffer(fileSize);
-
+    public void streamUpload(@Context HttpStreaming httpStreaming) throws Exception {
+        final StringBuffer sb = new StringBuffer();
+        httpStreaming.bodyConsumer(new BodyConsumer() {
             @Override
             public void chunk(ByteBuf request, HttpResponder responder) {
-//        offHeapBuffer.put(request.array());
-                responder.sendString(HttpResponseStatus.OK, "Uploaded:");
+                sb.append(request.toString(Charsets.UTF_8));
             }
 
             @Override
-            public void finished(HttpResponder responder) {
-//        int bytesUploaded = offHeapBuffer.position();
-                responder.sendString(HttpResponseStatus.OK, "Uploaded:");
-//        responder.sendString(HttpResponseStatus.OK, "Uploaded:" + bytesUploaded);
+            public void finished(ByteBuf request, HttpResponder responder) {
+                sb.append(request.toString(Charsets.UTF_8));
+                responder.sendString(HttpResponseStatus.OK, sb.toString());
             }
 
             @Override
             public void handleError(Throwable cause) {
-                offHeapBuffer = null;
+                sb.delete(0, sb.length());
             }
-
-        };
+        });
     }
 
     @Path("/stream/upload/fail")
@@ -324,7 +319,7 @@ public class TestHandler implements HttpHandler {
             }
 
             @Override
-            public void finished(HttpResponder responder) {
+            public void finished(ByteBuf request, HttpResponder responder) {
                 int bytesUploaded = offHeapBuffer.position();
                 responder.sendString(HttpResponseStatus.OK, "Uploaded:" + bytesUploaded);
             }
@@ -441,6 +436,6 @@ public class TestHandler implements HttpHandler {
      * Custom exception class for testing exception handler.
      */
     public static final class CustomException extends Exception {
-        public static final HttpResponseStatus HTTP_RESPONSE_STATUS = HttpResponseStatus.SEE_OTHER;
+        public static final HttpResponseStatus HTTP_RESPONSE_STATUS = HttpResponseStatus.INTERNAL_SERVER_ERROR;
     }
 }

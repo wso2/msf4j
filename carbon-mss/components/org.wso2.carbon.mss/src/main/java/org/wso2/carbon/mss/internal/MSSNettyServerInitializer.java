@@ -21,10 +21,10 @@ package org.wso2.carbon.mss.internal;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.HttpContentCompressor;
-import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
+import org.wso2.carbon.mss.internal.router.HttpDispatcher;
 import org.wso2.carbon.mss.internal.router.RequestRouter;
 import org.wso2.carbon.transport.http.netty.listener.CarbonNettyServerInitializer;
 
@@ -50,19 +50,11 @@ public class MSSNettyServerInitializer implements CarbonNettyServerInitializer {
 
     public void initChannel(SocketChannel channel) {
         ChannelPipeline pipeline = channel.pipeline();
-        //        pipeline.addLast("tracker", connectionTracker);
-        pipeline.addLast("decoder", new HttpRequestDecoder());
-        pipeline.addLast("aggregator", new HttpObjectAggregator(Integer.MAX_VALUE));  //TODO: fix
-        pipeline.addLast("encoder", new HttpResponseEncoder());
         pipeline.addLast("compressor", new HttpContentCompressor());
+        pipeline.addLast("decoder", new HttpRequestDecoder());
+        pipeline.addLast("encoder", new HttpResponseEncoder());
         pipeline.addLast(eventExecutorGroup, "router",
                 new RequestRouter(microservicesRegistry.getHttpResourceHandler(), 0));
-        //TODO: remove
-        // limit
-
-        //TODO: see what can be done
-            /*if (pipelineModifier != null) {
-                pipelineModifier.apply(pipeline);
-            }*/
+        pipeline.addLast(eventExecutorGroup, "dispatcher", new HttpDispatcher());
     }
 }

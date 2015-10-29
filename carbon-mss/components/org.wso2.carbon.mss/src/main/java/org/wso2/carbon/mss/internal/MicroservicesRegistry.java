@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.wso2.carbon.mss.internal.router.ExceptionHandler;
 import org.wso2.carbon.mss.internal.router.HttpResourceHandler;
 import org.wso2.carbon.mss.internal.router.Interceptor;
+import org.wso2.carbon.mss.internal.router.URLRewriter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,8 +40,10 @@ public class MicroservicesRegistry {
     private static final MicroservicesRegistry instance = new MicroservicesRegistry();
     private final Set<Object> httpServices = new HashSet<>();
     private final List<Interceptor> interceptors = new ArrayList<>();
+    private URLRewriter urlRewriter = null;
     private volatile HttpResourceHandler httpResourceHandler =
-            new HttpResourceHandler(Collections.emptyList(), interceptors, null, new ExceptionHandler());
+            new HttpResourceHandler(Collections.emptyList(),
+                    interceptors, urlRewriter, new ExceptionHandler());
 
     private MicroservicesRegistry() {
     }
@@ -83,6 +86,16 @@ public class MicroservicesRegistry {
         updateHttpResourceHandler();
     }
 
+    public void removeInterceptor(Interceptor interceptor) {
+        interceptors.remove(interceptor);
+        updateHttpResourceHandler();
+    }
+
+    public void setUrlRewriter(URLRewriter urlRewriter) {
+        this.urlRewriter = urlRewriter;
+        updateHttpResourceHandler();
+    }
+
     public int getServiceCount() {
         return httpServices.size();
     }
@@ -90,6 +103,6 @@ public class MicroservicesRegistry {
     private void updateHttpResourceHandler() {
         httpResourceHandler =
                 new HttpResourceHandler(Collections.unmodifiableSet(httpServices),
-                        interceptors, null, new ExceptionHandler());
+                        interceptors, urlRewriter, new ExceptionHandler());
     }
 }

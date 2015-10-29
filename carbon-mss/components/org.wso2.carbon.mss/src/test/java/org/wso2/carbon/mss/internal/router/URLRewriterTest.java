@@ -20,12 +20,10 @@
 package org.wso2.carbon.mss.internal.router;
 
 import com.google.common.base.Charsets;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Maps;
 import com.google.common.io.ByteStreams;
-import com.google.common.util.concurrent.Service;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import io.netty.handler.codec.http.HttpMethod;
@@ -36,6 +34,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.wso2.carbon.mss.HttpResponder;
+import org.wso2.carbon.mss.MicroservicesRunner;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -49,30 +48,27 @@ import java.util.Map;
 public class URLRewriterTest {
     private static final Gson GSON = new Gson();
 
-    private static String hostname = "127.0.0.1";
-    private static NettyHttpService service;
+    private static final TestHandler testHandler = new TestHandler();
+
+    private static String hostname = Constants.HOSTNAME;
+    private static final int port = Constants.PORT + 3;
     private static URI baseURI;
+
+    private static final MicroservicesRunner microservicesRunner = new MicroservicesRunner(port);
 
     @BeforeClass
     public static void setup() throws Exception {
-
-        NettyHttpService.Builder builder = NettyHttpService.builder();
-        builder.addHttpHandlers(ImmutableList.of(new TestHandler()));
-        builder.setUrlRewriter(new TestURLRewriter());
-        builder.setHost(hostname);
-
-        service = builder.build();
-        service.startAndWait();
-        Service.State state = service.state();
-        Assert.assertEquals(Service.State.RUNNING, state);
-        int port = service.getBindAddress().getPort();
-
+        // MicroservicesRegistry is singleton
+        microservicesRunner.getMsRegistry().setUrlRewriter(new TestURLRewriter());
+        microservicesRunner
+                .deploy(testHandler)
+                .start();
         baseURI = URI.create(String.format("http://%s:%d", hostname, port));
     }
 
     @AfterClass
     public static void teardown() throws Exception {
-        service.stopAndWait();
+        microservicesRunner.stop();
     }
 
     private static int doGet(String resource) throws Exception {
