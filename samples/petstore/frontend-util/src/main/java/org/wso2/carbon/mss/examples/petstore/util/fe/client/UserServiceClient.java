@@ -61,7 +61,9 @@ public class UserServiceClient extends AbstractServiceClient {
         final Response response = target.request().post(Entity.entity(gson.toJson(user), MediaType.APPLICATION_JSON));
         LOGGER.info("Returned from user service " + configuration.getUserServiceEP());
         if (Response.Status.OK.getStatusCode() == response.getStatus()) {
-            return response.getHeaderString(LoginBean.X_JWT_ASSERTION);
+            String jwt = response.getHeaderString(LoginBean.X_JWT_ASSERTION);
+            LOGGER.info("JWT = " + jwt);
+            return jwt;
         } else {
             throw new UserServiceException("Can't authenticate the user");
         }
