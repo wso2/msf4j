@@ -1,4 +1,6 @@
-
+<?php
+include_once('config/config.php')
+?>
 <!--
 ~   Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
 ~
@@ -88,7 +90,7 @@
                             </div>
 
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
-                                <button class="wr-btn grey-bg col-xs-12 col-md-12 col-lg-12 uppercase font-extra-large" type="submit">Sign in</button>
+                                <button class="wr-btn grey-bg col-xs-12 col-md-12 col-lg-12 uppercase font-extra-large" type="submit" id="submit-btn"> Sign in</button>
                             </div>
                             <div class="clearfix"></div>
                         </div>
@@ -119,7 +121,7 @@
 
 <!-- Noty JS -->
 <script src="libs/noty_2.3.5/packaged/jquery.noty.packaged.min.js"></script>
-
+<script src="js/login.js"></script>
 <script src="js/custom.js"></script>
 
 </body>

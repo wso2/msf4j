@@ -1,4 +1,9 @@
-
+<?php
+session_start();
+if(!isset($_SESSION['username'])){
+    header("location:login.php");
+}
+?>
 <!--
 ~   Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
 ~
@@ -63,7 +68,7 @@
             <ul class="dropdown-menu float-remove-xs position-static-xs text-center-xs remove-margin-xs slideInDown" role="menu">
                 <li class="dropdown-header visible-xs">administrator <span class="caret"></span></li>
                 <li class="divider visible-xs"></li>
-                <li><a href="#">Sign out</a></li>
+                <li><a href="logout.php">Sign out</a></li>
             </ul>
 
         </div>
