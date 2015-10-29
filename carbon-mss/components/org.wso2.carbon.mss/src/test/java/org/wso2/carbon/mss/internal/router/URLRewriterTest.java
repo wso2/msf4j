@@ -63,7 +63,7 @@ public class URLRewriterTest {
     @BeforeClass
     public static void setup() throws Exception {
         // MicroservicesRegistry is singleton
-        MicroservicesRegistry.getInstance().setUrlRewriter(new TestURLRewriter());
+        microservicesRunner.getMsRegistry().setUrlRewriter(new TestURLRewriter());
         microservicesRunner
                 .deploy(testHandler)
                 .start();
