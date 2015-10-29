@@ -72,7 +72,7 @@ echo "Copying Datasources."
 cp $config_dir/datasources/*-datasources.xml $das_dir/repository/conf/datasources/
 
 echo "Downloading MySQL connector."
-wget https://repo1.maven.org/maven2/mysql/mysql-connector-java/5.1.37/mysql-connector-java-5.1.37.jar -P $das_dir/repository/components/lib/
+wget http://repo1.maven.org/maven2/mysql/mysql-connector-java/5.1.37/mysql-connector-java-5.1.37.jar -P $das_dir/repository/components/lib/
 
 echo "Copying Carbon Apps to DAS."
 mkdir -p $das_dir/repository/deployment/server/carbonapps
