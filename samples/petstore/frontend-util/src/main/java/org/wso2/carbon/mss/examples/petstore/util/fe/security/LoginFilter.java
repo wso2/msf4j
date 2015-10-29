@@ -21,6 +21,8 @@ package org.wso2.carbon.mss.examples.petstore.util.fe.security;
 import org.wso2.carbon.mss.examples.petstore.util.fe.view.LoginBean;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.logging.Logger;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -34,6 +36,9 @@ import javax.servlet.http.HttpServletResponse;
  * Login Filter
  */
 public class LoginFilter implements Filter {
+
+    private static final Logger LOGGER = Logger.getLogger(LoginFilter.class.getName());
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
     }
@@ -41,7 +46,7 @@ public class LoginFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-
+        printHeaders((HttpServletRequest) request);
         LoginBean loginBean = (LoginBean) ((HttpServletRequest) request).getSession().getAttribute("loginBean");
         if (isRestrictedPath(request) && (loginBean == null || !loginBean.isLoggedIn())) {
             String contextPath = ((HttpServletRequest) request).getContextPath();
@@ -59,8 +64,15 @@ public class LoginFilter implements Filter {
         return true;
     }
 
+    private void printHeaders(HttpServletRequest request) {
+        LOGGER.info("................... Printing HTTP Headers ............");
+        for (String key : Collections.list(request.getHeaderNames())) {
+            LOGGER.info(key + " = " + request.getHeader(key));
+        }
+        LOGGER.info("......................................................");
+    }
+
     @Override
     public void destroy() {
-
     }
 }

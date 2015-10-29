@@ -5,7 +5,7 @@ metadata:
   labels:
     name: stockquote
 spec:
-  replicas: 20
+  replicas: 2
   selector:
     name: stockquote
   template:

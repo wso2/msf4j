@@ -148,7 +148,7 @@
                                 org.wso2.carbon.mss*;version="1.0.0"
                             </Export-Package>
                             <Import-Package>
-                                org.wso2.carbon.deployment.*,
+                                org.wso2.carbon.kernel.deployment.*,
                                 io.netty.*,
                                 com.google.gson.*,
                                 com.google.common.*,
