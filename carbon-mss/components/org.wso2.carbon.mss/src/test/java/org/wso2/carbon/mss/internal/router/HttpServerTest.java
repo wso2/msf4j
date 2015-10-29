@@ -37,8 +37,6 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.wso2.carbon.mss.MicroservicesRunner;
 
 import java.io.File;
@@ -78,10 +76,10 @@ public class HttpServerTest {
 
     @BeforeClass
     public static void setup() throws Exception {
+        baseURI = URI.create(String.format("http://%s:%d", hostname, port));
         microservicesRunner
                 .deploy(testHandler)
                 .start();
-        baseURI = URI.create(String.format("http://%s:%d", hostname, port));
     }
 
     @AfterClass

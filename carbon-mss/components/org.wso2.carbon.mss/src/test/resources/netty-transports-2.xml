@@ -21,7 +21,7 @@
             xmlns="http://wso2.com/schema/netty-transports/config">
     <listeners>
         <listener
-                id="jaxrs-https"
+                id="jaxrs-https2"
                 host="0.0.0.0"
                 port="8085"
                 bossThreadPoolSize="2"

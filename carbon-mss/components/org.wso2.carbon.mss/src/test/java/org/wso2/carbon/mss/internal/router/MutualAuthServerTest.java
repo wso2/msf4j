@@ -34,8 +34,6 @@ import java.net.URI;
  */
 public class MutualAuthServerTest extends HttpsServerTest {
 
-    private static SSLClientContext sslClientContext;
-
     private static final TestHandler testHandler = new TestHandler();
     private static MicroservicesRunner microservicesRunner;
 
@@ -45,6 +43,7 @@ public class MutualAuthServerTest extends HttpsServerTest {
 
     @BeforeClass
     public static void setup() throws Exception {
+        baseURI = URI.create(String.format("https://%s:%d", hostname, port));
         File trustKeyStore = tmpFolder.newFile();
         ByteStreams.copy(Resources.newInputStreamSupplier(Resources.getResource("client.jks")),
                 Files.newOutputStreamSupplier(trustKeyStore));
@@ -52,13 +51,11 @@ public class MutualAuthServerTest extends HttpsServerTest {
         setSslClientContext(new SSLClientContext(trustKeyStore, trustKeyStorePassword));
 
         System.setProperty(TransportConfigurationBuilder.NETTY_TRANSPORT_CONF,
-                Resources.getResource("netty-transports-1.xml").getPath());
+                Resources.getResource("netty-transports-2.xml").getPath());
         microservicesRunner = new MicroservicesRunner();
-        sslClientContext = new SSLClientContext();
         microservicesRunner
                 .deploy(testHandler)
                 .start();
-        baseURI = URI.create(String.format("https://%s:%d", hostname, port));
     }
 
     @AfterClass
