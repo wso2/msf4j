@@ -23,12 +23,14 @@ import org.slf4j.LoggerFactory;
 import org.wso2.carbon.mss.util.SystemVariableUtil;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import javax.naming.Context;
 import javax.naming.NameAlreadyBoundException;
 import javax.naming.NameNotFoundException;
+import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.AttributeInUseException;
@@ -39,6 +41,8 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.ModificationItem;
 import javax.naming.directory.NoSuchAttributeException;
+import javax.naming.directory.SearchControls;
+import javax.naming.directory.SearchResult;
 
 
 /**
@@ -191,7 +195,6 @@ public class LDAPUserStoreManager {
         Attribute objClasses = new BasicAttribute("objectClass");
         objClasses.add("top");
         objClasses.add("groupOfNames");
-        //objClasses.add("groupOfForethoughtNames");
 
         // Assign the name and description to the group
         Attribute cn = new BasicAttribute("cn", name);
@@ -243,6 +246,33 @@ public class LDAPUserStoreManager {
         }
     }
 
+    public List getGroups(String username) throws NamingException {
+        List groups = new LinkedList();
+
+        // Set up criteria to search on
+        String filter = new StringBuffer()
+                .append("(&")
+                .append("(objectClass=groupOfNames)")
+                .append("(member=")
+                .append(getUserDN(username))
+                .append(")")
+                .append(")")
+                .toString();
+
+        // Set up search constraints
+        SearchControls cons = new SearchControls();
+        cons.setSearchScope(SearchControls.ONELEVEL_SCOPE);
+        NamingEnumeration results = context.search(GROUPS_OU, filter, cons);
+
+        while (results.hasMore()) {
+            SearchResult result = (SearchResult) results.next();
+            groups.add(getGroupCN(result.getName()));
+        }
+
+        return groups;
+    }
+
+
     public String getAttributeValue(String username, String attributeName) throws NamingException {
 
         String attributeValue = null;
@@ -272,7 +302,6 @@ public class LDAPUserStoreManager {
         }
     }
 
-
     private String getUserDN(String username) {
         return new StringBuffer()
                 .append("uid=")
@@ -289,6 +318,17 @@ public class LDAPUserStoreManager {
                 .append(",")
                 .append(GROUPS_OU)
                 .toString();
+    }
+
+    private String getGroupCN(String groupDN) {
+        int start = groupDN.indexOf("=");
+        int end = groupDN.indexOf(",");
+
+        if (end == -1) {
+            end = groupDN.length();
+        }
+
+        return groupDN.substring(start + 1, end);
     }
 
     private DirContext getInitialContext(String hostname, int port,
