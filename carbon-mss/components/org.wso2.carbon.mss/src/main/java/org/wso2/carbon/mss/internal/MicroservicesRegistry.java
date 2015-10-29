@@ -40,7 +40,7 @@ public class MicroservicesRegistry {
     private static final MicroservicesRegistry instance = new MicroservicesRegistry();
     private final Set<Object> httpServices = new HashSet<>();
     private final List<Interceptor> interceptors = new ArrayList<>();
-    private URLRewriter urlRewriter;
+    private URLRewriter urlRewriter = null;
     private volatile HttpResourceHandler httpResourceHandler =
             new HttpResourceHandler(Collections.emptyList(),
                     interceptors, urlRewriter, new ExceptionHandler());
