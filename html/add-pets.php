@@ -3,14 +3,14 @@ include('controllers/API/curl_api.php');
 include('config/config.php');
 session_start();
 if(!isset($_SESSION['username'])){
-    // header("location:login.php");
+    header("location:login.php");
 }
 //return page breadcrumbs
 $breadcrumbs = array("pets.php"=>'Pets', "add-pets.php"=>'Add');
 
 $url = 'http://'.PET_SERVICE.':'.PET_SERVICE_PORT.'/category/all';
 $pet_catogories = callAuthAPIgetPetTypes($url,  preg_replace('/\s+/', '', $_SESSION['authtoken']));
-echo $pet_catogories;
+
 ?>
 <!--
 ~   Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
@@ -77,22 +77,14 @@ include('includes/navbar.php');
         <div class="form-horizontal col-md-5">
             <div class="form-group">
                 <div class="col-sm-12">
-                    <label for="pet-name" class="control-label">Name <span class="">*</span></label>
-                    <input type="text" class="form-control" id="pet-name" placeholder="pet name" required="">
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-12">
                     <label for="pet-category" class="control-label">Type</label>
                     <select class="form-control" id="pet-category">
                         <?php
-
-                        if (is_array($pet_catogories) || is_object($pet_catogories)){
-                            foreach ($pet_catogories as $obj) {
-                                echo '<option>'.$pet_catogories.'</option>';
+                        if(is_array($pet_catogories)) {
+                            foreach ($pet_catogories as $json) {
+                                echo '<option value="' . $json['name'] . '">' . $json['name'] . '</option>';
                             }
                         }
-
                         ?>
                     </select>
                 </div>
@@ -106,7 +98,7 @@ include('includes/navbar.php');
             <div class="form-group">
                 <div class="col-sm-12">
                     <label for="pet-price" class="control-label">Price </label>
-                    <input type="text" class="form-control" id="pet-price" placeholder="pet age" required="">
+                    <input type="text" class="form-control" id="pet-price" placeholder="pet price" required="">
                 </div>
             </div>
             <div class="form-group">
@@ -140,7 +132,41 @@ include('includes/navbar.php');
 
 <!-- Noty JS -->
 <script src="libs/noty_2.3.5/packaged/jquery.noty.packaged.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var petCategory = $('#pet-category'),
+            petAgeMonths = $('#pet-age-months'),
+            petPrice = $('#pet-price');
 
+        // handle the add pet type button click event
+        $('#pet-add-btn').click(function () {
+            var btn = $(this); //get current clicked button
+            addPets(btn);
+        });
+
+        function addPets(btn){
+            btn.button('loading');
+            $.ajax({
+                type: "POST",
+                url:  "controllers/rest.php",
+                dataType: 'json',
+                data: {
+                    api_type: 'addPets',
+                    pet_category: petCategory.val(),
+                    pet_age_months: petAgeMonths.val(),
+                    pet_price: petPrice.val()
+                },
+                success: function (data) {
+
+                }
+            })
+                .always(function () {
+                    btn.button('reset');
+                });
+        }
+
+    });
+</script>
 <script src="js/custom.js"></script>
 
 </body>

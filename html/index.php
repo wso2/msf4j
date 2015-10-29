@@ -125,9 +125,6 @@ include('includes/header.php');
 
 <!-- #page-content-wrapper -->
 <div class="page-content-wrapper">
-    <?php
-    echo $_SERVER['SERVER_ADDR'];
-    ?>
     <!-- page content -->
     <div class="container-fluid body-wrapper">
         <div class="clearfix"></div>

@@ -8,6 +8,10 @@ if(!isset($_SESSION['username'])){
 }
 //return page breadcrumbs
 $breadcrumbs = array("pets.php"=>'Pets');
+
+$url = 'http://'.PET_SERVICE.':'.PET_SERVICE_PORT.'/pet/all';
+$get_pets = callAuthAPIgetPets($url,  preg_replace('/\s+/', '', $_SESSION['authtoken']));
+
 ?>
 <!--
 ~   Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
@@ -69,10 +73,9 @@ include('includes/navbar.php');
     <div class="container-fluid body-wrapper">
         <div class="clearfix"></div>
         <?php
-        $url = 'http://'.PET_SERVICE.':'.PET_SERVICE_PORT.'/pet/all';
-        callAuthAPIgetPets($url,  preg_replace('/\s+/', '', $_SESSION['authtoken']));
-        echo '<br/>'.preg_replace('/\s+/', '', $_SESSION['authtoken']);
-        ?>
+        print_r($get_pets);
+
+?>
     </div>
 
 </div><!-- /#page-content-wrapper -->

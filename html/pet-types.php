@@ -3,7 +3,7 @@ include('controllers/API/curl_api.php');
 include('config/config.php');
 session_start();
 if(!isset($_SESSION['username'])){
-    // header("location:login.php");
+    header("location:login.php");
 }
 //return page breadcrumbs
 $breadcrumbs = array("pet-types.php"=>'Pet Types');

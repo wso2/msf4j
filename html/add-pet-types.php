@@ -101,6 +101,34 @@ include('includes/navbar.php');
 <!-- Noty JS -->
 <script src="libs/noty_2.3.5/packaged/jquery.noty.packaged.min.js"></script>
 
+<script>
+    $(document).ready(function () {
+        var petCategoryName = $('#pet-type-name');
+        // handle the add pet type button click event
+        $('#pet-type-btn').click(function () {
+            var btn = $(this); //get current clicked button
+            addPetType(btn);
+        });
+
+        function addPetType(btn){
+            btn.button('loading');
+            console.log(petCategoryName.val())
+            $.ajax({
+                type: "POST",
+                url:  "controllers/rest.php",
+                dataType: 'json',
+                data: {api_type: 'addPetTypes', category_name: petCategoryName.val()},
+                success: function (data) {
+
+                }
+            })
+                .always(function () {
+                    btn.button('reset');
+                });
+        }
+
+    });
+</script>
 <script src="js/custom.js"></script>
 
 </body>

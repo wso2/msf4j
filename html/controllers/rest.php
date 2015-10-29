@@ -15,8 +15,19 @@ switch ($api_type) {
         callAuthAPIAddPetTypes($url, $token, $category_name_json);
         break;
     case "addPets":
+        $pet_category = htmlspecialchars($_POST["pet_category"]);
+        $pet_age_months = htmlspecialchars($_POST["pet_age_months"]);
+        $pet_price = htmlspecialchars($_POST["pet_price"]);
         $url = 'http://'.PET_SERVICE.':'.PET_SERVICE_PORT.'/pet/';
-        callAuthAPIAddPets($url);
+        $data_json =json_encode(
+            array(
+                'category' => array('name'=>$pet_category),
+                'ageMonths' => $pet_age_months,
+                'price' => $pet_price,
+                'image'=>''
+            )
+        );
+        callAuthApiAddPet($url, $token, $data_json);
         break;
     default:
         echo "Invalid API call";
