@@ -12,7 +12,7 @@ switch ($api_type) {
         $category_name = htmlspecialchars($_POST["category_name"]);
         $category_name_json = json_encode(array('name' => $category_name));
         $url = 'http://'.PET_SERVICE.':'.PET_SERVICE_PORT.'/category/';
-        callAuthAPIAddPetTypes($url, $token, $category_name_json);
+        callAuthApiAddPetTypes($url, $token, $category_name_json);
         break;
     case "addPets":
         $pet_category = htmlspecialchars($_POST["pet_category"]);
@@ -28,6 +28,11 @@ switch ($api_type) {
             )
         );
         callAuthApiAddPet($url, $token, $data_json);
+        break;
+    case "deletePetTypes":
+        $category_name = htmlspecialchars($_POST["category_name"]);
+        $url = 'http://'.PET_SERVICE.':'.PET_SERVICE_PORT.'/category/'.urlencode($category_name);
+        callAuthapiDeletePetType($url, $token);
         break;
     default:
         echo "Invalid API call";

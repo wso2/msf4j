@@ -7,6 +7,8 @@ if(!isset($_SESSION['username'])){
 }
 //return page breadcrumbs
 $breadcrumbs = array("pet-types.php"=>'Pet Types');
+$url = 'http://'.PET_SERVICE.':'.PET_SERVICE_PORT.'/category/all';
+$pet_catogories = callAuthAPIgetPetTypes($url,  preg_replace('/\s+/', '', $_SESSION['authtoken']));
 ?>
 <!--
 ~   Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
@@ -121,11 +123,42 @@ include('includes/header.php');
     <!-- page content -->
     <div class="container-fluid body-wrapper">
         <div class="clearfix"></div>
-        <?php
-        $url = 'http://'.PET_SERVICE.':'.PET_SERVICE_PORT.'/category/all';
-        echo callAuthAPIgetPetTypes($url,  preg_replace('/\s+/', '', $_SESSION['authtoken']));
+        <div class="row">
+            <div class="col-md-6">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Category Name</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    if(is_array($pet_catogories)) {
+                        foreach ($pet_catogories as $json) {
+                    ?>
+                    <tr>
+                        <td><?php echo $json['name'] ?></td>
+                        <td>
+                            <a href="#" class="btn padding-reduce-on-grid-view remove-cat"
+                               data-category="<?php echo $json['name'] ?>">
+                                <span class="fw-stack">
+                                    <i class="fw fw-ring fw-stack-2x"></i>
+                                    <i class="fw fw-delete fw-stack-1x"></i>
+                                </span>
+                                <span class="hidden-xs">Delete</span>
+                            </a>
+                        </td>
+                    </tr>
+                    <?php
+                        }
+                    }
+                    ?>
 
-        ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
 </div><!-- /#page-content-wrapper -->
@@ -145,6 +178,33 @@ include('includes/header.php');
 
 <!-- Noty JS -->
 <script src="libs/noty_2.3.5/packaged/jquery.noty.packaged.min.js"></script>
+<script>
+   $(document).on('click', '.remove-cat', function(){
+       var pet_category = $(this).attr('data-category');
+       $.ajax({
+           type: "POST",
+           url:  "controllers/rest.php",
+           dataType: 'json',
+           data: {api_type: 'deletePetTypes', category_name: pet_category},
+           success: function (data, textStatus, jqXHR) {
+               if (data.status == 'error') {
+                   var n = noty({text: data.message, layout: 'top', type: 'error'});
+                   window.setTimeout(function(){
+                       window.location.href = 'logout.php';
+                   }, 1500);
+               } else if (data.status == 'warning') {
+                   var n = noty({text: data.message, layout: 'top', type: 'warning'});
+               } else {
+                   var n = noty({text: data.message, layout: 'top', type: 'success'});
+                   window.setTimeout(function(){
+                       window.location.href = 'pet-types.php';
+                   }, 1500);
+               }
+           }
+       });
+
+   });
+</script>
 
 <script src="js/custom.js"></script>
 
