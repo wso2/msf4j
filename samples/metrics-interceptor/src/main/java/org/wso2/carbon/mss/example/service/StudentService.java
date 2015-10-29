@@ -21,6 +21,7 @@ package org.wso2.carbon.mss.example.service;
 import org.wso2.carbon.metrics.annotation.Counted;
 import org.wso2.carbon.metrics.annotation.Metered;
 import org.wso2.carbon.metrics.annotation.Timed;
+import org.wso2.carbon.mss.httpmonitoring.HTTPMonitoring;
 
 import java.util.Collection;
 import java.util.Map;
@@ -54,6 +55,7 @@ public class StudentService {
     @Path("/{nic}")
     @Produces("application/json")
     @Timed
+    @HTTPMonitoring
     public Student getStudent(@PathParam("nic") String nic) {
         return students.get(nic);
     }
@@ -61,6 +63,7 @@ public class StudentService {
     @POST
     @Consumes("application/json")
     @Metered
+    @HTTPMonitoring
     public void addStudent(Student student) {
         students.put(student.getNic(), student);
     }

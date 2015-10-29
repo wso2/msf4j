@@ -21,6 +21,7 @@ package org.wso2.carbon.mss.example.service;
 import org.wso2.carbon.metrics.annotation.Counted;
 import org.wso2.carbon.metrics.annotation.Metered;
 import org.wso2.carbon.metrics.annotation.Timed;
+import org.wso2.carbon.mss.httpmonitoring.HTTPMonitoring;
 
 import java.util.Random;
 
@@ -32,6 +33,7 @@ import javax.ws.rs.PathParam;
  * TestService class.
  */
 @Path("/test")
+@HTTPMonitoring
 public class TestService {
 
     private final Random random = new Random();
