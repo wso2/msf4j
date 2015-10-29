@@ -17,7 +17,7 @@ configuration. [More info](https://github.com/wso2/product-mss/tree/master/mss-s
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    
+
     <parent>
         <artifactId>mss-service-parent</artifactId>
         <groupId>org.wso2.carbon.mss</groupId>
@@ -28,9 +28,12 @@ configuration. [More info](https://github.com/wso2/product-mss/tree/master/mss-s
 
     <groupId>org.wso2.carbon.mss.sample</groupId>
     <artifactId>Hello-Service</artifactId>
+    <version>1.0.0</version>
+
+    <name>Hello Microservice Sample</name>
 
     <properties>
-        <microservice.mainClass>org.wso2.carbon.mss.sample.Application</microservice.mainClass>
+        <microservice.mainClass>org.wso2.carbon.mss.example.Application</microservice.mainClass>
     </properties>
 
 </project>
@@ -75,7 +78,7 @@ mvn package
 ###Run the Service
 You just have to run the following command to get your service up and running.
 ```
-java -jar target/Hello-Service-1.0.0-SNAPSHOT.jar
+java -jar target/Hello-Service-1.0.0.jar
 ```
 
 

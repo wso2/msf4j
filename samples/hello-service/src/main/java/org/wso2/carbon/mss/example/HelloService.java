@@ -16,17 +16,22 @@
  * under the License.
  */
 
-package org.wso2.carbon.mss.sample;
+package org.wso2.carbon.mss.example;
 
-import org.wso2.carbon.mss.MicroservicesRunner;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 
 /**
- * Application entry point
+ * Hello service resource class
  */
-public class Application {
-    public static void main(String[] args) {
-        new MicroservicesRunner()
-                .deploy(new HelloService())
-                .start();
+@Path("/hello")
+public class HelloService {
+
+    @GET
+    @Path("/{name}")
+    public String hello(@PathParam("name") String name) {
+        return "Hello " + name;
     }
+
 }

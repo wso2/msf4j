@@ -31,11 +31,12 @@
 
     <groupId>org.wso2.carbon.mss.sample</groupId>
     <artifactId>Hello-Service</artifactId>
+    <version>1.0.0</version>
 
     <name>Hello Microservice Sample</name>
 
     <properties>
-        <microservice.mainClass>org.wso2.carbon.mss.sample.Application</microservice.mainClass>
+        <microservice.mainClass>org.wso2.carbon.mss.example.Application</microservice.mainClass>
     </properties>
 
 </project>
