@@ -6,8 +6,7 @@ This directory provides an Eclipse plugin installable with Developer Studio Kern
 
 1. Run Eclipse Luna.<br /><br />
 2. Install WSO2 Developer Studio Kernel 4.0.0 on Eclipse Luna<br />
- You can download Developer Studio Kernel 4.0.0 M0 pack from http://builder1.us1.wso2
- .org/~developerstudio/developer-studio-kernel/4.0.0/M0/ <br /> Then select **Help** and **Install New
+ You can download Developer Studio Kernel 4.0.0 M0 pack from http://builder1.us1.wso2.org/~developerstudio/developer-studio-kernel/4.0.0/M0/ <br /> Then select **Help** and **Install New
  Software...** to install above pack.<br /><br />
 3. Finally, install MMS Tool Developer-Studio-MSS-Tool-1.0.0-SNAPSHOT available at
 repository/target<br />
