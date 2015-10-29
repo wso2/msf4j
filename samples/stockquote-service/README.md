@@ -18,7 +18,7 @@ mvn clean package
 ```
 2. Use following command to run the application
 ```
-java -jar target/SimpleStockQuote-1.0.0.jar
+java -jar target/StockQuote-Service-1.0.0.jar
 ```
 How to test the sample
 ------------------------------------------
