@@ -123,6 +123,9 @@ include('includes/header.php');
     <!-- page content -->
     <div class="container-fluid body-wrapper">
         <div class="clearfix"></div>
+        <div class="page-header" id="loading">
+            <h1>Pet Types</h1>
+        </div>
         <div class="row">
             <div class="col-md-6">
                 <table class="table table-striped">
