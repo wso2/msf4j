@@ -61,13 +61,13 @@ public class UserAuthenticationService {
                 userFromUserStore.setName(name);
                 userFromUserStore.setEmail(ldapUserStoreManager.getAttributeValue(name, "mail"));
                 userFromUserStore.setLastName(ldapUserStoreManager.getAttributeValue(name, "sn"));
+                userFromUserStore.setRoles(ldapUserStoreManager.getGroups(user.getName()));
 
                 JWTGenerator jwtGenerator = new JWTGenerator();
                 jwt = jwtGenerator.generateJWT(userFromUserStore);
 
                 return Response.ok("User" + name + " authenticated successfully")
                         .header(JWT_HEADER, jwt).build();
-
             }
 
         } catch (Exception e) {
