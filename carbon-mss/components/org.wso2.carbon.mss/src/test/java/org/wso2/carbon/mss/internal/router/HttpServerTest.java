@@ -20,18 +20,14 @@
 package org.wso2.carbon.mss.internal.router;
 
 import com.google.common.base.Charsets;
-import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.CharStreams;
 import com.google.common.io.Files;
 import com.google.common.reflect.TypeToken;
-import com.google.common.util.concurrent.Service;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import io.netty.channel.ChannelPipeline;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpRequest;
@@ -44,8 +40,9 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.mss.HttpHandler;
 import org.wso2.carbon.mss.HttpResponder;
+import org.wso2.carbon.mss.MicroservicesRunner;
+import org.wso2.carbon.mss.internal.MicroservicesRegistry;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,6 +56,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Test the HttpServer.
@@ -78,45 +76,35 @@ public class HttpServerTest {
             }
         }
     };
-    private static final Logger LOG = LoggerFactory.getLogger(HttpServerTest.class);
+
     @ClassRule
     public static TemporaryFolder tmpFolder = new TemporaryFolder();
-    protected static NettyHttpService service;
-    protected static URI baseURI;
 
-    protected static NettyHttpService.Builder createBaseNettyHttpServiceBuilder() {
-        List<HttpHandler> handlers = Lists.newArrayList();
-        handlers.add(new TestHandler());
+    private static final Logger log = LoggerFactory.getLogger(HttpServerTest.class);
+    private static final MicroservicesRunner microservicesRunner = new MicroservicesRunner();
+    private static final TestHandler testHandler = new TestHandler();
 
-        NettyHttpService.Builder builder = NettyHttpService.builder();
-        builder.addHttpHandlers(handlers);
-        builder.setHttpChunkLimit(75 * 1024);
-        builder.setExceptionHandler(EXCEPTION_HANDLER);
-
-        builder.modifyChannelPipeline(new Function<ChannelPipeline, ChannelPipeline>() {
-            @Override
-            public ChannelPipeline apply(ChannelPipeline channelPipeline) {
-                channelPipeline.addAfter("compressor", "testhandler", new TestChannelHandler());
-                return channelPipeline;
-            }
-        });
-        return builder;
-    }
+    private static String hostname = Constants.HOSTNAME;
+    private static final int port = Constants.PORT;
+    private static URI baseURI;
 
     @BeforeClass
     public static void setup() throws Exception {
-        service = createBaseNettyHttpServiceBuilder().build();
-        service.startAndWait();
-        Service.State state = service.state();
-        Assert.assertEquals(Service.State.RUNNING, state);
-
-        int port = service.getBindAddress().getPort();
-        baseURI = URI.create(String.format("http://localhost:%d", port));
+        microservicesRunner
+                .deploy(testHandler)
+                .start();
+        baseURI = URI.create(String.format("http://%s:%d", hostname, port));
+        log.info("Waiting for server start..");
+        TimeUnit.SECONDS.sleep(Constants.SERVER_START_WAIT);
     }
 
     @AfterClass
     public static void teardown() throws Exception {
-        service.stopAndWait();
+        microservicesRunner.stop();
+        // MicroservicesRegistry is singleton
+        MicroservicesRegistry.getInstance().removeHttpService(testHandler);
+        log.info("Waiting for server shutdown..");
+        TimeUnit.SECONDS.sleep(Constants.SERVER_STOP_WAIT);
     }
 
     @Test
