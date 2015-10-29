@@ -331,7 +331,7 @@ a.thumbnail-overide:hover{
 }
 a.btn:hover, .btn:hover, a.btn:focus, .btn:focus {
     text-decoration: none;
-    background: #eee;
+    background: #7B7B7B;
 }
 .invert-png{
     -webkit-filter: invert(1);

@@ -3,12 +3,11 @@ include('controllers/API/curl_api.php');
 include('config/config.php');
 session_start();
 if(!isset($_SESSION['username'])){
-   header("location:login.php");
+    header("location:login.php");
 }
 //return page breadcrumbs
-$breadcrumbs = array("");
-$url = 'http://'.PET_SERVICE.':'.PET_SERVICE_PORT.'/pet/all';
-$get_pets = callAuthApigetPets($url, preg_replace('/\s+/', '', $_SESSION['authtoken']));
+$breadcrumbs = array("cart.php"=>"cart");
+$cart = $_SESSION['cart'];
 ?>
 <!--
 ~   Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
@@ -109,7 +108,11 @@ include('includes/header.php');
                                     <i class="fa fa-shopping-cart fa-stack-1x"></i>
                                 </span>
                             Cart
-                            <span class="badge">0</span>
+                            <span class="badge"><?php
+                                if(isset($_SESSION['cart'])) {
+                                    echo count($_SESSION['cart']);
+                                }
+                                ?></span>
                         </a>
                     </li>
                 </ul>
@@ -123,30 +126,67 @@ include('includes/header.php');
     <!-- page content -->
     <div class="container-fluid body-wrapper">
         <div class="clearfix"></div>
+        <div class="page-header" id="loading">
+            <h1>Cart</h1>
+        </div>
         <div class="row">
-            <?php
-            foreach ($get_pets as $json) {
-                ?>
-                <div class="col-xs-6 col-md-2">
-                    <div class="thumbnail" data-id="<?php echo $json['id'] ?>">
-                        <img src="images/paw-pets.png" alt="Add Pet Types" class="pet-image">
+            <div class="col-md-6">
+                <table class="table table-striped">
+                    <?php
+                    if(is_array($cart) && (count($cart) > 0)) {
+                    ?>
+                    <thead>
+                    <tr>
+                        <th>Pet Id</th>
+                        <th>Image</th>
+                        <th>Price($)</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    $total_price = 0;
+                    foreach ($cart as $json) {
+                        $total_price += $json['price'];
+                        ?>
+                        <tr>
+                            <td><?php echo $json['id'] ?></td>
+                            <td><img src="<?php echo $json['image'] ?>" /></td>
+                            <td><?php echo $json['price'] ?></td>
+                            <td>
+                                <a href="#" class="btn padding-reduce-on-grid-view remove-pet"
+                                   data-petid="<?php echo $json['id'] ?>">
+                                <span class="fw-stack">
+                                    <i class="fw fw-ring fw-stack-2x"></i>
+                                    <i class="fw fw-delete fw-stack-1x"></i>
+                                </span>
+                                </a>
+                            </td>
+                        </tr>
+                        <?php
+                    }
+                    ?>
+                     <tr>
+                         <td colspan="2"><strong>Total Amount</strong></td>
+                         <td><strong><?php echo  $total_price; ?></strong></td>
+                         <td></td>
+                     </tr>
+                     <tr>
+                         <td colspan="2"></td>
+                         <td colspan="2">
+                             <button type="button" id="pet-type-btn" class="btn btn-default btn-primary">Proceed to Checkout</button>
+                         </td>
+                     </tr>
+                    <?php
+                    }else{
+                        echo '<div class="alert alert-info" role="alert">No Pets added yet. Click <a href="index.php">here to add new pet</a></div>';
+                    }
+                    ?>
 
-                        <div class="caption">
-                            <h3 class="pet-price">Price: $<?php echo $json['price'] ?></h3>
+                    </tbody>
+                </table>
 
-                            <!--<p>
-                                <a href="#" class="btn btn-primary" role="button">More</a>
-                                <a href="#" class="btn btn-default" role="button">Add to cart</a>
-                            </p>-->
-                            <div class="ct-product-meta">
-                                <a href="#" class="btn btn-motive ct-product-button"><i class="fa fa-shopping-cart"></i> Add to Cart</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <?php
-            }
-            ?>
+            </div>
         </div>
 
     </div>
