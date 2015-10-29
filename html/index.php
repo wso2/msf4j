@@ -109,7 +109,11 @@ include('includes/header.php');
                                     <i class="fa fa-shopping-cart fa-stack-1x"></i>
                                 </span>
                             Cart
-                            <span class="badge">0</span>
+                            <span class="badge"><?php
+                                if(isset($_SESSION['cart'])) {
+                                   echo count($_SESSION['cart']);
+                                }
+                                ?></span>
                         </a>
                     </li>
                 </ul>
@@ -128,7 +132,7 @@ include('includes/header.php');
             foreach ($get_pets as $json) {
                 ?>
                 <div class="col-xs-6 col-md-2">
-                    <div class="thumbnail" data-id="<?php echo $json['id'] ?>">
+                    <div class="thumbnail">
                         <img src="images/paw-pets.png" alt="Add Pet Types" class="pet-image">
 
                         <div class="caption">
@@ -139,7 +143,11 @@ include('includes/header.php');
                                 <a href="#" class="btn btn-default" role="button">Add to cart</a>
                             </p>-->
                             <div class="ct-product-meta">
-                                <a href="#" class="btn btn-motive ct-product-button"><i class="fa fa-shopping-cart"></i> Add to Cart</a>
+                                <a href="#" class="btn btn-motive ct-product-button"
+                                   data-id="<?php echo $json['id'] ?>"
+                                   data-price="<?php echo $json['price'] ?>">
+                                    <i class="fa fa-shopping-cart"></i> Add to Cart
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -168,7 +176,41 @@ include('includes/header.php');
 
 <!-- Noty JS -->
 <script src="libs/noty_2.3.5/packaged/jquery.noty.packaged.min.js"></script>
+<script>
+    $(document).on('click', '.ct-product-button', function(){
+        var petId = $(this).attr('data-id'),
+            petPrice = $(this).attr('data-price'),
+            petImage = $(this).parent().parent().parent().find('img').attr('src');
 
+        $.ajax({
+            type: "POST",
+            url:  "controllers/cart/cart.php",
+            dataType: 'json',
+            data: {
+                cart_action: 'addTocart',
+                pet_id: petId,
+                pet_price: petPrice,
+                pet_image: petImage
+
+            },
+            success: function (data, textStatus, jqXHR) {
+                if (data.status == 'error') {
+                    var n = noty({text: data.message, layout: 'bottomRight', type: 'error'});
+                    window.setTimeout(function(){
+                        window.location.href = 'logout.php';
+                    }, 1500);
+                } else if (data.status == 'warning') {
+                    var n = noty({text: data.message, layout: 'bottomRight', type: 'warning'});
+                } else {
+                    var n = noty({text: data.message, layout: 'bottomRight', type: 'success'});
+                    window.setTimeout(function(){
+                        window.location.href = 'index.php';
+                    }, 1500);
+                }
+            }
+        });
+    });
+</script>
 <script src="js/custom.js"></script>
 
 </body>

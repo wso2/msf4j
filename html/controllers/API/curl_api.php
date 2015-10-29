@@ -97,4 +97,5 @@ function removeFromCart($pet_id, $cart){
     echo json_encode(array('status' => 'success', 'message' => 'Pet remove from your cart successfully'));
 }
 
+
 ?>
