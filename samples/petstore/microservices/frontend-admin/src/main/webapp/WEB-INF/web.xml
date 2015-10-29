@@ -56,14 +56,14 @@
         <url-pattern>*.xhtml</url-pattern>
     </servlet-mapping>
 
-    <!--<error-page>-->
-        <!--<exception-type>javax.faces.application.ViewExpiredException</exception-type>-->
-        <!--<location>/login.xhtml</location>-->
-    <!--</error-page>-->
+    <error-page>
+        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+        <location>/faces/login.xhtml</location>
+    </error-page>
 
-    <!--<session-config>-->
-        <!--<session-timeout>5</session-timeout>-->
-    <!--</session-config>-->
+    <session-config>
+        <session-timeout>1</session-timeout>
+    </session-config>
 
 
 </web-app>

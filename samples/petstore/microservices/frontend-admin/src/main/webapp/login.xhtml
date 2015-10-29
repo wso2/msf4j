@@ -17,6 +17,7 @@
   -->
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:b="http://butterfaces.larmic.de/components">
 <h:head>
@@ -48,7 +49,7 @@
                         <div class="clearfix"></div>
 
                         <div class="padding-double login-form">
-
+                            <f:view transient="true">
                             <h:form id="login-form" role="form">
                                 <h:messages infoStyle="color:darkgreen" errorStyle="color:darkred"/>
 
@@ -85,7 +86,7 @@
                                 <br/>
                                 <br/>
                             </h:form>
-
+                           </f:view>
                             <div class="clearfix"></div>
                         </div>
 
