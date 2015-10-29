@@ -83,7 +83,7 @@ function addToCart($pet_id, $pet_price, $pet_image){
     }else{
         $_SESSION['cart'] = array();
     }
-    
+
 }
 
 function removeFromCart($pet_id, $cart){

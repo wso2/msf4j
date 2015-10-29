@@ -11,6 +11,7 @@ $cart = [];
 if(isset($_SESSION['cart'])){
     $cart = $_SESSION['cart'];
 }
+
 ?>
 <!--
 ~   Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
@@ -211,6 +212,7 @@ include('includes/header.php');
 
 <!-- Noty JS -->
 <script src="libs/noty_2.3.5/packaged/jquery.noty.packaged.min.js"></script>
+<<<<<<< HEAD
 <script>
     $(document).on('click', '.remove-pet', function(){
        var petId = $(this).attr('data-petid');
@@ -241,6 +243,9 @@ include('includes/header.php');
         });
     });
 </script>
+=======
+
+>>>>>>> 067bb4e... add cart page
 <script src="js/custom.js"></script>
 
 </body>
