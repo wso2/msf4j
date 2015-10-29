@@ -62,7 +62,43 @@
     <!-- page content -->
     <div class="container-fluid body-wrapper">
 
+        <div class="row">
+            <div class="col-md-12">
 
+                <!-- content -->
+                <div class="container col-xs-10 col-sm-6 col-md-6 col-lg-3 col-centered wr-content wr-login col-centered">
+                    <div>
+                        <h2 class="wr-title uppercase blue-bg padding-double white boarder-bottom-blue margin-none">Sign in </h2>
+
+
+                    </div>
+                    <div class="boarder-all ">
+                        <div class="clearfix"></div>
+
+                        <div class="padding-double login-form">
+                            <div class="error-msg" id="error-msg" style="display:none;">Username or password is invalid</div>
+
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
+                                <input id="username" name="username" type="text" class="form-control" tabindex="0"
+                                       placeholder="Username">
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
+                                <input id="password" name="password" type="password" class="form-control"
+                                       placeholder="Password">
+                            </div>
+
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
+                                <button class="wr-btn grey-bg col-xs-12 col-md-12 col-lg-12 uppercase font-extra-large" type="submit">Sign in</button>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- /content -->
+
+            </div>
+        </div>
 
     </div>
 

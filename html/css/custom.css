@@ -1,6 +1,11 @@
 * {
     outline: none !important;
 }
+body {
+    background: #f9f9f9;
+    font-family: 'Roboto Light', Arial, Helvetica, sans-serif;
+    font-weight: 300;
+}
 header {
     background: #222222;
     min-height: 50px;
@@ -215,4 +220,54 @@ footer > .container p, footer > .container-fluid p {
 }
 footer a, footer a:hover {
     color: #cbcbcb;
+}
+/*login page */
+.col-centered {
+    float: none;
+    margin: 0 auto;
+}
+.wr-login {
+    padding-top: 50px;
+}
+.uppercase {
+    text-transform: uppercase;
+}
+.blue-bg {
+    background-color: #3a9ecf !important;
+}
+.padding-double {
+    padding: 20px;
+}
+.boarder-bottom-blue {
+    border-bottom: 2px solid #006596;
+}
+.boarder-all {
+    border: 1px solid #d8d8d8;
+    background: #FFF;
+    margin-top: -10px;
+}
+.wr-login input[type=text], .wr-login input[type=password] {
+    border: 1px #d2d2d2 solid;
+    width: 100%;
+    height: 100%;
+    padding: 6px 10px;
+    z-index: 1;
+    -webkit-appearance: none;
+    line-height: 30px;
+    border-radius: 0px;
+}
+button.grey-bg:hover {
+    background-color: #3A9ECF;
+}
+.wr-btn {
+    font-weight: normal;
+    font-size: 13px;
+    color: #fff;
+    background: #5d81d2;
+    padding: 10px 10px;
+    display: inline-block;
+    border: none;
+}
+button.grey-bg {
+    background-color: #222222;
 }
