@@ -52,7 +52,7 @@ public class Configuration {
     public static final String DEFAULT_FILE_SERVICE_NODE_PORT = "80";
 
     public static final String DEFAULT_PET_SERVICE_HOST = "localhost";
-    public static final String DEFAULT_PET_SERVICE_PORT = "8080";
+    public static final String DEFAULT_PET_SERVICE_PORT = "8050";
 
     public static final String DEFAULT_TXN_SERVICE_HOST = "localhost";
     public static final String DEFAULT_TXN_SERVICE_PORT = "8090";
