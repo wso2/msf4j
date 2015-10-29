@@ -3,6 +3,8 @@ session_start();
 if(!isset($_SESSION['username'])){
    // header("location:login.php");
 }
+//return page breadcrumbs
+$breadcrumbs = array("");
 ?>
 <!--
 ~   Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
@@ -50,30 +52,9 @@ if(!isset($_SESSION['username'])){
 </head>
 <body>
 <!-- header -->
-<header class="header header-default">
-    <div class="container-fluid">
-        <div class="pull-left brand float-remove-xs text-center-xs">
-            <a href="#">
-                <img src="images/logo-inverse.svg" alt="wso2" title="wso2" class="logo">
-                <h1>WSO2 Pet Store - backend</h1>
-            </a>
-        </div>
-        <div class="pull-right auth float-remove-xs text-center-xs">
-            <a href="#" class="dropdown" data-toggle="dropdown">
-                <span class="hidden-xs add-padding-left-3x">administrator <span class="caret"></span></span>
-               <span class="icon fw-stack fw-lg">
-                   <i class="fw fw-user fw-stack-1x"></i>
-               </span>
-            </a>
-            <ul class="dropdown-menu float-remove-xs position-static-xs text-center-xs remove-margin-xs slideInDown" role="menu">
-                <li class="dropdown-header visible-xs">administrator <span class="caret"></span></li>
-                <li class="divider visible-xs"></li>
-                <li><a href="logout.php">Sign out</a></li>
-            </ul>
-
-        </div>
-    </div>
-</header>
+<?php
+include('includes/header.php');
+?>
 
 <!-- navbar -->
 <div class="navbar-wrapper">
@@ -106,42 +87,37 @@ if(!isset($_SESSION['username'])){
                     </li>
                 </ul>
                 <ol class="breadcrumb navbar-brand">
-                    <li><a href="index.html"><i class="icon fw fw-home"></i></a></li>
-                    <li><a href="#">Library</a></li>
-                    <li class="active"><a href="#">Data</a></li>
+                    <li><a href="index.php"><i class="icon fw fw-home"></i></a></li>
+                    <?php
+                    if($breadcrumbs){
+                        foreach ($breadcrumbs as $key => $value) {
+                            echo '<li><a href="'.$key.'">'.$value.'</a></li>';
+                        }
+                    }
+                    ?>
                 </ol>
             </div>
             <div id="navbar" class="collapse navbar-collapse">
-                <ul class="nav navbar-nav">
-                    <li>
-                        <a href="layout.html">
+                    <ul class="nav navbar-nav">
+                        <li>
+                                <a href="add-pet-types.php">
                                 <span class="icon fw-stack">
-                                    <i class="fw fw-laptop fw-stack-1x"></i>
+                                    <i class="fw fw-add fw-stack-1x"></i>
                                     <i class="fw fw-ring fw-stack-2x"></i>
                                 </span>
-                            Main Wrapper
-                        </a>
-                    </li>
-                    <li>
-                        <a href="details_layout.html">Details Layout</a>
-                    </li>
-                    <li class="active"><a href="#noiconlink">No Icon Link</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Quick Jump <span class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li class="dropdown-header">UI Components</li>
-                            <li class="divider"></li>
-                            <li><a href="#forms">Forms</a></li>
-                            <li class="dropdown-submenu"><a href="#table">Table</a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Data Table</a></li>
-                                    <li><a href="#">Data List Table</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-
+                                    Add pet types
+                                </a>
+                        </li>
+                        <li>
+                            <a href="add-pets.php">
+                                <span class="icon fw-stack">
+                                    <i class="fw fw-add fw-stack-1x"></i>
+                                    <i class="fw fw-ring fw-stack-2x"></i>
+                                </span>
+                                Add pets
+                            </a>
+                        </li>
+                    </ul>
             </div><!--/.nav-collapse -->
         </div>
     </nav>
@@ -157,7 +133,7 @@ if(!isset($_SESSION['username'])){
         <div class="clearfix"></div>
         <div class="row">
             <div class="col-xs-6 col-md-2">
-                <a href="#" class="thumbnail thumbnail-overide">
+                <a href="add-pet-types.php" class="thumbnail thumbnail-overide">
                     <img src="images/paw-pets.png" alt="Add Pet Types">
                     <div class="caption">
                         <h3>Add Pet Types</h3>
@@ -165,7 +141,7 @@ if(!isset($_SESSION['username'])){
                 </a>
             </div>
             <div class="col-xs-6 col-md-2">
-                <a href="#" class="thumbnail thumbnail-overide">
+                <a href="pet-types.php" class="thumbnail thumbnail-overide">
                     <img src="images/list-pet-type.png" alt="List Pet Types">
                     <div class="caption">
                         <h3>List Pet Types</h3>
@@ -173,7 +149,7 @@ if(!isset($_SESSION['username'])){
                 </a>
             </div>
             <div class="col-xs-6 col-md-2">
-                <a href="#" class="thumbnail thumbnail-overide">
+                <a href="add-pets.php" class="thumbnail thumbnail-overide">
                     <img src="images/pets.png" alt="Add Pets">
                     <div class="caption">
                         <h3>Add Pets</h3>
@@ -181,7 +157,7 @@ if(!isset($_SESSION['username'])){
                 </a>
             </div>
             <div class="col-xs-6 col-md-2 ">
-                <a href="#" class="thumbnail thumbnail-overide">
+                <a href="pets.php" class="thumbnail thumbnail-overide">
                     <img src="images/list-pets.png" alt="List Pets">
                     <div class="caption">
                         <h3>List Pets</h3>
