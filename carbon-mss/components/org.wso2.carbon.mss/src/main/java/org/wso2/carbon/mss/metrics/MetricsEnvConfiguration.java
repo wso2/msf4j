@@ -15,7 +15,7 @@ public class MetricsEnvConfiguration extends MetricsConfiguration {
     }
 
     @Override
-    public String getFirstProperty(String key) {
+    public String getProperty(String key) {
         key = convertKey(key);
         String value = null;
         if (System.getProperty(key) != null) {
@@ -27,6 +27,7 @@ public class MetricsEnvConfiguration extends MetricsConfiguration {
     }
 
     private String convertKey(String key) {
+        // Convert the key to uppercase and replace all dots with underscore
         return PREFIX.concat(key.toUpperCase(Locale.getDefault()).replaceAll("\\.", "_"));
     }
 

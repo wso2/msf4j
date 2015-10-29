@@ -24,8 +24,6 @@ import org.wso2.carbon.mss.MicroservicesRunner;
 import org.wso2.carbon.mss.example.hook.LoggingHeadersInterceptor;
 import org.wso2.carbon.mss.example.hook.UsernamePasswordSecurityInterceptor;
 import org.wso2.carbon.mss.example.service.Helloworld;
-import org.wso2.carbon.mss.metrics.MetricReporter;
-import org.wso2.carbon.mss.metrics.MetricsInterceptor;
 
 /**
  * Main Application Class.
@@ -35,9 +33,9 @@ public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
     public static void main(String[] args) {
+        logger.info("Starting the Microservice");
         new MicroservicesRunner().addInterceptor(new UsernamePasswordSecurityInterceptor())
                 .addInterceptor(new LoggingHeadersInterceptor())
-                .addInterceptor(new MetricsInterceptor(MetricReporter.CONSOLE, MetricReporter.JMX))
                 .deploy(new Helloworld()).start();
     }
 }

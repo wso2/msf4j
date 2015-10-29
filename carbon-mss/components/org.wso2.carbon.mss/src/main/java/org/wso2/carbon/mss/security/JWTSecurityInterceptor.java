@@ -91,6 +91,8 @@ public class JWTSecurityInterceptor implements Interceptor {
                 JWSVerifier verifier =
                         new RSASSAVerifier((RSAPublicKey) getPublicKey(KEYSTORE, KEYSTORE_PASSWORD, ALIAS));
                 return signedJWT.verify(verifier);
+            } else {
+                log.info("Token has expired");
             }
         } catch (ParseException | IOException | KeyStoreException | CertificateException |
                 NoSuchAlgorithmException | UnrecoverableKeyException | JOSEException e) {

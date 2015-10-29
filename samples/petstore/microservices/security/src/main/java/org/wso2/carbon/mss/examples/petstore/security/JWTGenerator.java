@@ -60,7 +60,7 @@ public class JWTGenerator {
         claimsSet.setClaim("email", user.getEmail());
         claimsSet.setClaim("roles", user.getRoles());
         claimsSet.setIssuer("wso2.org/products/mss");
-        claimsSet.setExpirationTime(new Date(new Date().getTime() + 5 * 60 * 1000)); //5 min
+        claimsSet.setExpirationTime(new Date(new Date().getTime() + 60 * 60 * 1000)); //60 min
 
         SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.RS256), claimsSet);
 
@@ -72,15 +72,13 @@ public class JWTGenerator {
         // mZq3ivwoAjqa1uUkSBKFIX7ATndFF5ivnt-m8uApHO4kfIFOrW7w2Ezmlg3Qd
         // maXlS9DhN0nUk_hGI3amEjkKd0BWYCB8vfUbUv0XGjQip78AI4z1PrFRNidm7
         // -jPDm5Iq0SZnjKjCNS5Q15fokXZc8u0A
-        String jwt = signedJWT.serialize();
 
-        return jwt;
-
+        return signedJWT.serialize();
     }
 
     private RSAPrivateKey getPrivateKey(String keyStorePath, String keyStorePassword, String alias)
             throws IOException, KeyStoreException, CertificateException,
-                   NoSuchAlgorithmException, UnrecoverableKeyException {
+            NoSuchAlgorithmException, UnrecoverableKeyException {
 
         InputStream inputStream = null;
         try {
