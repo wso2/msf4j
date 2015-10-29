@@ -285,3 +285,11 @@ button.grey-bg {
 .white {
     color: #FFF;
 }
+
+/* main page content */
+.thumbnail-overide{
+    border-radius: 0px;
+}
+.thumbnail-overide>.caption h3{
+    font-size: 1.2em;
+}

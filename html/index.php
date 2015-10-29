@@ -152,8 +152,41 @@ if(!isset($_SESSION['username'])){
 
     <!-- page content -->
     <div class="container-fluid body-wrapper">
-
-
+        <div class="clearfix"></div>
+        <div class="row">
+            <div class="col-xs-6 col-md-2">
+                <a href="#" class="thumbnail thumbnail-overide">
+                    <img data-src="holder.js/100%x180" alt="...">
+                    <div class="caption">
+                        <h3>Add Pet Types</h3>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xs-6 col-md-2">
+                <a href="#" class="thumbnail thumbnail-overide">
+                    <img data-src="holder.js/100%x180" alt="...">
+                    <div class="caption">
+                        <h3>List Pet Types</h3>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xs-6 col-md-2">
+                <a href="#" class="thumbnail thumbnail-overide">
+                    <img data-src="holder.js/100%x180" alt="...">
+                    <div class="caption">
+                        <h3>Add Pets</h3>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xs-6 col-md-2 ">
+                <a href="#" class="thumbnail thumbnail-overide">
+                    <img data-src="holder.js/100%x180" alt="...">
+                    <div class="caption">
+                        <h3>List Pets</h3>
+                    </div>
+                </a>
+            </div>
+        </div>
 
     </div>
 
