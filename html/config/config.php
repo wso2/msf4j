@@ -1,4 +1,5 @@
 <?php
 //get security server env varaible
 $security_server = getenv('');
-define("SECURITY_SERVER", "192.168.58.5:8080");
+define("SECURITY_SERVER", "security");
+define("SECURITY_SERVER_PORT", "80");
