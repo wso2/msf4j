@@ -74,14 +74,14 @@ include('includes/header.php');
                 </a>
                 <ul class="dropdown-menu tiles arrow dark add-margin-1x" role="menu">
                     <li>
-                        <a href="#">
-                            <i class="icon fa  fa-paw"></i>
-                            <span class="name">Pet Type</span>
+                        <a href="pet-types.php">
+                            <img src="images/list-pet-type.png" class="invert-png">
+                            <span class="name">Pet Types</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#">
-                            <i class="icon fw fw-wsdl"></i>
+                        <a href="pets.php">
+                            <img src="images/list-pets.png" class="invert-png">
                             <span class="name">Pets</span>
                         </a>
                     </li>

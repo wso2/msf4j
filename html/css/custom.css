@@ -333,3 +333,9 @@ a.btn:hover, .btn:hover, a.btn:focus, .btn:focus {
     text-decoration: none;
     background: #eee;
 }
+.invert-png{
+    -webkit-filter: invert(1);
+    filter: invert(1);
+    margin-bottom: 10px;
+    width: 50px;
+}
