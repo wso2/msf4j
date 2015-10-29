@@ -72,7 +72,7 @@ public class HttpServerTest {
 
     private static String hostname = Constants.HOSTNAME;
     private static final int port = Constants.PORT + 1;
-    private static URI baseURI;
+    protected static URI baseURI;
 
     private static final MicroservicesRunner microservicesRunner = new MicroservicesRunner(port);
 
