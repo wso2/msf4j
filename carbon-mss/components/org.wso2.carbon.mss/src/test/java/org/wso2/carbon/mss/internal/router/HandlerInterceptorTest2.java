@@ -28,7 +28,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.mss.MicroservicesRunner;
-import org.wso2.carbon.mss.internal.MicroservicesRegistry;
 
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
@@ -62,10 +61,6 @@ public class HandlerInterceptorTest2 extends BaseHandlerInterceptorTest {
     @AfterClass
     public static void teardown() throws Exception {
         microservicesRunner.stop();
-        // MicroservicesRegistry is singleton
-        MicroservicesRegistry.getInstance().removeInterceptor(interceptor1);
-        MicroservicesRegistry.getInstance().removeInterceptor(interceptor2);
-        MicroservicesRegistry.getInstance().removeHttpService(testHandler);
         log.info("Waiting for server shutdown..");
         TimeUnit.SECONDS.sleep(Constants.SERVER_STOP_WAIT);
     }

@@ -42,7 +42,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.mss.HttpResponder;
 import org.wso2.carbon.mss.MicroservicesRunner;
-import org.wso2.carbon.mss.internal.MicroservicesRegistry;
 
 import java.io.File;
 import java.io.IOException;
@@ -103,8 +102,6 @@ public class HttpServerTest {
     @AfterClass
     public static void teardown() throws Exception {
         microservicesRunner.stop();
-        // MicroservicesRegistry is singleton
-        MicroservicesRegistry.getInstance().removeHttpService(testHandler);
         log.info("Waiting for server shutdown..");
         TimeUnit.SECONDS.sleep(Constants.SERVER_STOP_WAIT);
     }
