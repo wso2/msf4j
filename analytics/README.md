@@ -2,21 +2,15 @@
 
 This directory contains the files related to DAS
 
-Configure Datasource
+
+Configure DAS
 ------------------------------------------
-1. Copy `httpmon-datasources.xml` to $DAS_HOME/repository/conf/datasources/
+Run "setup-das.sh" to script copy required files to DAS. 
+
+Note: This will also copy the already built MSS HTTP Monitoring CAPP to DAS.
 
 
-Create MySQL Database for HTTP Monitoring
-------------------------------------------
-1. Create database
-```
-create database mss_httpmon;
-```
-2. Use `http-mon-mysql.sql` to create tables
-
-
-Deploy MSS HTTP Monitoring CAPP
+MSS HTTP Monitoring CAPP Source
 ------------------------------------------
 1. Use ant to build the CAR file
 ```
