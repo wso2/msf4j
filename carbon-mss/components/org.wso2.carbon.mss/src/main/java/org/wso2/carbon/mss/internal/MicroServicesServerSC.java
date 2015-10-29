@@ -70,12 +70,14 @@ public class MicroServicesServerSC {
                             Hashtable<String, String> httpInitParams = new Hashtable<>();
                             httpInitParams.put(CHANNEL_ID_KEY, "netty-jaxrs-http");
                             bundleContext.registerService(CarbonNettyServerInitializer.class,
-                                    new MSSNettyServerInitializer(), httpInitParams);
+                                    new MSSNettyServerInitializer(MicroservicesRegistry.getInstance()), httpInitParams);
 
                             Hashtable<String, String> httpsInitParams = new Hashtable<>();
                             httpsInitParams.put(CHANNEL_ID_KEY, "netty-jaxrs-https");
-                            bundleContext.registerService(CarbonNettyServerInitializer.class,
-                                    new MSSNettyServerInitializer(), httpsInitParams);
+                            bundleContext.
+                                    registerService(CarbonNettyServerInitializer.class,
+                                            new MSSNettyServerInitializer(MicroservicesRegistry.getInstance()),
+                                            httpsInitParams);
 
                             LOG.info("Micro services server started");
                             break;
