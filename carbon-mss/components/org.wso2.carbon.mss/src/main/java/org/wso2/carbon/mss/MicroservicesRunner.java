@@ -42,6 +42,7 @@ public class MicroservicesRunner {
     private TransportManager transportManager = new TransportManager();
     private long startTime = System.currentTimeMillis();
     private boolean isStarted;
+    private MicroservicesRegistry msRegistry = MicroservicesRegistry.newInstance();
 
     /**
      * Creates a MicroservicesRunner instance which will be used for deploying microservices. Allows specifying
@@ -89,7 +90,7 @@ public class MicroservicesRunner {
      */
     public MicroservicesRunner deploy(Object microservice) {
         checkState();
-        MicroservicesRegistry.getInstance().addHttpService(microservice);
+        msRegistry.addHttpService(microservice);
         return this;
     }
 
@@ -102,7 +103,7 @@ public class MicroservicesRunner {
      */
     public MicroservicesRunner addInterceptor(Interceptor interceptor) {
         checkState();
-        MicroservicesRegistry.getInstance().addInterceptor(interceptor);
+        msRegistry.addInterceptor(interceptor);
         return this;
     }
 

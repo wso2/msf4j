@@ -45,8 +45,22 @@ public class MicroservicesRegistry {
     private MicroservicesRegistry() {
     }
 
+    /**
+     * Always returns the same MicroservicesRegistry instance
+     *
+     * @return the singleton MicroservicesRegistry instance
+     */
     public static MicroservicesRegistry getInstance() {
         return instance;
+    }
+
+    /**
+     * Every call to this method will result in the creation of a new MicroservicesRegistry instance
+     *
+     * @return a new MicroservicesRegistry instance
+     */
+    public static MicroservicesRegistry newInstance() {
+        return new MicroservicesRegistry();
     }
 
     public void addHttpService(Object httpHandler) {
