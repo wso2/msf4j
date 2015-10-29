@@ -72,6 +72,11 @@ public class MicroservicesRegistry {
         updateHttpResourceHandler();
     }
 
+    public void removeInterceptor(Interceptor interceptor) {
+        interceptors.remove(interceptor);
+        updateHttpResourceHandler();
+    }
+
     public void setUrlRewriter(URLRewriter urlRewriter) {
         this.urlRewriter = urlRewriter;
         updateHttpResourceHandler();
