@@ -10,8 +10,7 @@ if(!isset($_SESSION['username'])){
 $breadcrumbs = array("pets.php"=>'Pets');
 
 $url = 'http://'.PET_SERVICE.':'.PET_SERVICE_PORT.'/pet/all';
-$get_pets = callAuthAPIgetPets($url,  preg_replace('/\s+/', '', $_SESSION['authtoken']));
-
+$get_pets = callAuthApigetPets($url,  preg_replace('/\s+/', '', $_SESSION['authtoken']));
 ?>
 <!--
 ~   Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
@@ -72,10 +71,53 @@ include('includes/navbar.php');
     <!-- page content -->
     <div class="container-fluid body-wrapper">
         <div class="clearfix"></div>
-        <?php
-        print_r($get_pets);
+        <div class="row">
+            <div class="col-md-6">
+                <table class="table table-striped">
+                    <?php
+                    if(is_array($get_pets) && (count($get_pets) > 0)) {
+                    ?>
+                    <thead>
+                    <tr>
+                        <th>Pet Id</th>
+                        <th>Image</th>
+                        <th>Category</th>
+                        <th>Age</th>
+                        <th>Price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                        foreach ($get_pets as $json) {
+                            ?>
+                            <tr>
+                                <td><?php echo $json['id'] ?></td>
+                                <td><?php echo $json['image'] ?></td>
+                                <td><?php echo $json['category']['name'] ?></td>
+                                <td><?php echo $json['ageMonths'] ?></td>
+                                <td><?php echo $json['price'] ?></td>
+                                <td>
+                                    <a href="#" class="btn padding-reduce-on-grid-view remove-pet"
+                                       data-petid="<?php echo $json['id'] ?>">
+                                <span class="fw-stack">
+                                    <i class="fw fw-ring fw-stack-2x"></i>
+                                    <i class="fw fw-delete fw-stack-1x"></i>
+                                </span>
+                                        <span class="hidden-xs">Delete</span>
+                                    </a>
+                                </td>
+                            </tr>
+                            <?php
+                        }
+                    }else{
+                        echo '<div class="alert alert-info" role="alert">No Pets added yet. Click <a href="add-pets.php">here to add new pet</a></div>';
+                    }
+                    ?>
 
-?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
 </div><!-- /#page-content-wrapper -->
@@ -95,7 +137,33 @@ include('includes/navbar.php');
 
 <!-- Noty JS -->
 <script src="libs/noty_2.3.5/packaged/jquery.noty.packaged.min.js"></script>
+<script>
+    $(document).on('click', '.remove-pet', function(){
+        var pet_id = $(this).attr('data-petid');
+        $.ajax({
+            type: "POST",
+            url:  "controllers/rest.php",
+            dataType: 'json',
+            data: {api_type: 'deletePet', pet_id: pet_id},
+            success: function (data, textStatus, jqXHR) {
+                if (data.status == 'error') {
+                    var n = noty({text: data.message, layout: 'top', type: 'error'});
+                    window.setTimeout(function(){
+                        window.location.href = 'logout.php';
+                    }, 1500);
+                } else if (data.status == 'warning') {
+                    var n = noty({text: data.message, layout: 'top', type: 'warning'});
+                } else {
+                    var n = noty({text: data.message, layout: 'top', type: 'success'});
+                    window.setTimeout(function(){
+                        window.location.href = 'pets.php';
+                    }, 1500);
+                }
+            }
+        });
 
+    });
+</script>
 <script src="js/custom.js"></script>
 
 </body>
