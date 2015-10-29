@@ -1,7 +1,7 @@
 <?php
 session_start();
 if(!isset($_SESSION['username'])){
-    header("location:login.php");
+   // header("location:login.php");
 }
 ?>
 <!--
@@ -149,14 +149,16 @@ if(!isset($_SESSION['username'])){
 
 <!-- #page-content-wrapper -->
 <div class="page-content-wrapper">
-
+    <?php
+    echo $_SERVER['SERVER_ADDR'];
+    ?>
     <!-- page content -->
     <div class="container-fluid body-wrapper">
         <div class="clearfix"></div>
         <div class="row">
             <div class="col-xs-6 col-md-2">
                 <a href="#" class="thumbnail thumbnail-overide">
-                    <img data-src="holder.js/100%x180" alt="...">
+                    <img src="images/paw-pets.png" alt="Add Pet Types">
                     <div class="caption">
                         <h3>Add Pet Types</h3>
                     </div>
@@ -164,7 +166,7 @@ if(!isset($_SESSION['username'])){
             </div>
             <div class="col-xs-6 col-md-2">
                 <a href="#" class="thumbnail thumbnail-overide">
-                    <img data-src="holder.js/100%x180" alt="...">
+                    <img src="images/list-pet-type.png" alt="List Pet Types">
                     <div class="caption">
                         <h3>List Pet Types</h3>
                     </div>
@@ -172,7 +174,7 @@ if(!isset($_SESSION['username'])){
             </div>
             <div class="col-xs-6 col-md-2">
                 <a href="#" class="thumbnail thumbnail-overide">
-                    <img data-src="holder.js/100%x180" alt="...">
+                    <img src="images/pets.png" alt="Add Pets">
                     <div class="caption">
                         <h3>Add Pets</h3>
                     </div>
@@ -180,7 +182,7 @@ if(!isset($_SESSION['username'])){
             </div>
             <div class="col-xs-6 col-md-2 ">
                 <a href="#" class="thumbnail thumbnail-overide">
-                    <img data-src="holder.js/100%x180" alt="...">
+                    <img src="images/list-pets.png" alt="List Pets">
                     <div class="caption">
                         <h3>List Pets</h3>
                     </div>

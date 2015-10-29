@@ -292,4 +292,11 @@ button.grey-bg {
 }
 .thumbnail-overide>.caption h3{
     font-size: 1.2em;
+    text-align: center;
+}
+a.thumbnail-overide:hover{
+   text-decoration: none;
+}
+.thumbnail-overide img{
+    margin-top: 1em;
 }
