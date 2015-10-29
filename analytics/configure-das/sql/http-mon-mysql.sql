@@ -14,6 +14,10 @@
 -- limitations under the License.
 -- 
 
+CREATE DATABASE IF NOT EXISTS mss_httpmon;
+
+USE mss_httpmon;
+
 CREATE TABLE IF NOT EXISTS REQUESTS_SUMMARY_PER_MINUTE 
 (
   webappName            VARCHAR(100) NOT NULL,
