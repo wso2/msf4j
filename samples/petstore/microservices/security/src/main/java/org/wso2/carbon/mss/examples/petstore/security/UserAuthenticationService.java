@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.wso2.carbon.mss.examples.petstore.security.ldap.LDAPUserStoreManager;
 import org.wso2.carbon.mss.examples.petstore.util.model.User;
 import org.wso2.carbon.mss.util.SystemVariableUtil;
+
 import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -38,10 +39,10 @@ public class UserAuthenticationService {
 
     private static final Logger log = LoggerFactory.getLogger(UserAuthenticationService.class);
     private static final String JWT_HEADER = "X-JWT-Assertion";
-    private  String host = SystemVariableUtil.getValue("LDAP_HOST", "localhost");
-    private  int port = Integer.parseInt(SystemVariableUtil.getValue("LDAP_PORT", "10389"));
-    private  String connectionName = SystemVariableUtil.getValue("LDAP_CONNECTION_NAME", "uid=admin,ou=system");
-    private  String connectionPassword = SystemVariableUtil.getValue("LDAP_CONNECTION_PASSWORD", "admin");
+    private String host = SystemVariableUtil.getValue("LDAP_HOST", "localhost");
+    private int port = Integer.parseInt(SystemVariableUtil.getValue("LDAP_PORT", "10389"));
+    private String connectionName = SystemVariableUtil.getValue("LDAP_CONNECTION_NAME", "uid=admin,ou=system");
+    private String connectionPassword = SystemVariableUtil.getValue("LDAP_CONNECTION_PASSWORD", "admin");
 
     @POST
     @Consumes("application/json")
@@ -65,15 +66,11 @@ public class UserAuthenticationService {
                 JWTGenerator jwtGenerator = new JWTGenerator();
                 jwt = jwtGenerator.generateJWT(userFromUserStore);
 
-                return Response.ok("User" + name + " authenticated successfully")
-                        .header(JWT_HEADER, jwt).build();
-
+                return Response.ok("User" + name + " authenticated successfully").header(JWT_HEADER, jwt).build();
             }
-
         } catch (Exception e) {
             return Response.status(Response.Status.EXPECTATION_FAILED).build();
         }
-
         return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid login attempt.").build();
     }
 
@@ -97,15 +94,12 @@ public class UserAuthenticationService {
             }
 
             ldapUserStoreManager.addUserAndAssignGroups(user.getName(), user.getFirstName(), user.getLastName(),
-                                                        user.getPassword(), user.getEmail(), user.getRoles());
+                    user.getPassword(), user.getEmail(), user.getRoles());
             log.info("User " + name + " successfully added ..");
         } catch (NamingException e) {
             return Response.status(Response.Status.EXPECTATION_FAILED).build();
         }
-
-        return Response.status(Response.Status.OK)
-                .entity("User " + name + " successfully added").build();
-
+        return Response.status(Response.Status.OK).entity("User " + name + " successfully added").build();
     }
 
     @POST
@@ -114,7 +108,6 @@ public class UserAuthenticationService {
     public Response addLDAPGroup(@PathParam("name") String name, @PathParam("description") String description) {
         log.info("Adding new ldap group " + name + " ..");
         LDAPUserStoreManager ldapUserStoreManager;
-
         try {
             ldapUserStoreManager = LDAPUserStoreManager
                     .getInstance(host, port, connectionName, connectionPassword);
@@ -122,10 +115,6 @@ public class UserAuthenticationService {
         } catch (NamingException e) {
             return Response.status(Response.Status.EXPECTATION_FAILED).build();
         }
-
-        return Response.status(Response.Status.OK)
-                .entity("LDAP group " + name + " successfully added").build();
-
+        return Response.status(Response.Status.OK).entity("LDAP group " + name + " successfully added").build();
     }
-
 }
