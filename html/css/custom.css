@@ -271,3 +271,6 @@ button.grey-bg:hover {
 button.grey-bg {
     background-color: #222222;
 }
+.white {
+    color: #FFF;
+}
