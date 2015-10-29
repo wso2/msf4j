@@ -124,6 +124,9 @@ public class MicroservicesRunner {
         log.info("Microservices server started in " + (System.currentTimeMillis() - startTime) + "ms");
     }
 
+    /**
+     * Stop this Microservices runner. This will stop all the Netty transports.
+     */
     public void stop() {
         transportManager.stopTransports();
         log.info("Microservices server stopped");
