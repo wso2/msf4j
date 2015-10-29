@@ -14,11 +14,6 @@
     # See the License for the specific language governing permissions and
     # limitations under the License.
 -->
-<artifacts>
-    <artifact name="MSS_HTTP_Monitoring_CApp" version="1.0.0" type="carbon/application">
-        <dependency artifact="http_event_receiver" version="1.0.0" include="true" serverRole="DataAnalyticsServer" />
-        <dependency artifact="http_event_store" version="1.0.0" include="true" serverRole="DataAnalyticsServer" />
-        <dependency artifact="http_event_stream" version="1.0.0" include="true" serverRole="DataAnalyticsServer" />
-        <dependency artifact="spark_script" version="1.0.0" include="true" serverRole="DataAnalyticsServer" />
-    </artifact>
-</artifacts>
+<artifact name="spark_script" version="1.0.0" type="analytics/spark" serverRole="DataAnalyticsServer">
+    <file>http_event_script.xml</file>
+</artifact>
