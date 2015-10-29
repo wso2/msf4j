@@ -17,7 +17,7 @@
 <Analytics>
     <Name>http_event_script</Name>
 <Script>
-create temporary table RequestsPerMinute using CarbonJDBC options (dataSource "WSO2MSS_HTTP_MON_DB", tableName "REQUESTS_SUMMARY_PER_MINUTE");
+create temporary table RequestsPerMinute using CarbonJDBC options (dataSource "WSO2AS_MONITORING_DB", tableName "REQUESTS_SUMMARY_PER_MINUTE");
 
 create temporary table ServiceRequestData USING CarbonAnalytics OPTIONS(tableName "ORG_WSO2_CARBON_MSS_HTTPMONITORING");  
 
@@ -49,7 +49,7 @@ INSERT OVERWRITE TABLE RequestsPerMinute SELECT service_class as webappName, app
 
 
 
-create temporary table HttpStatus using CarbonJDBC options (dataSource "WSO2MSS_HTTP_MON_DB", tableName "HTTP_STATUS");
+create temporary table HttpStatus using CarbonJDBC options (dataSource "WSO2AS_MONITORING_DB", tableName "HTTP_STATUS");
 
 CREATE TEMPORARY TABLE MSS_HTTP_STATUS_FINAL USING CarbonAnalytics OPTIONS (tableName "MSS_HTTP_STATUS",
   schema "service_class string,
@@ -71,7 +71,7 @@ INSERT OVERWRITE TABLE HttpStatus SELECT service_class as webappName, server_add
 
 
 
-create temporary table WebappContext using CarbonJDBC options (dataSource "WSO2MSS_HTTP_MON_DB", tableName "WEBAPP_CONTEXT");
+create temporary table WebappContext using CarbonJDBC options (dataSource "WSO2AS_MONITORING_DB", tableName "WEBAPP_CONTEXT");
 
 CREATE TEMPORARY TABLE MSS_SERVICE_CONTEXT_FINAL USING CarbonAnalytics OPTIONS (tableName "MSS_SERVICE_CONTEXT",
   schema "service_class string,
