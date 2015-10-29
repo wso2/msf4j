@@ -126,6 +126,9 @@ include('includes/header.php');
         <div class="row">
             <div class="col-md-6">
                 <table class="table table-striped">
+                    <?php
+                    if(is_array($pet_catogories) && (count($pet_catogories) > 0)) {
+                    ?>
                     <thead>
                     <tr>
                         <th>Category Name</th>
@@ -134,7 +137,6 @@ include('includes/header.php');
                     </thead>
                     <tbody>
                     <?php
-                    if(is_array($pet_catogories)) {
                         foreach ($pet_catogories as $json) {
                     ?>
                     <tr>
@@ -152,6 +154,8 @@ include('includes/header.php');
                     </tr>
                     <?php
                         }
+                    }else{
+                        echo '<div class="alert alert-info" role="alert">No Pet Types added yet. Click <a href="add-pets.php">here to add new pet type</a></div>';
                     }
                     ?>
 
