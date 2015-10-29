@@ -4,7 +4,7 @@ This directory contains the files related to DAS
 
 Configure Datasource
 ------------------------------------------
-1. Copy `httpmon-datasources.xml` to <DAS_HOME>/repository/conf/datasources/
+1. Copy `httpmon-datasources.xml` to $DAS_HOME/repository/conf/datasources/
 
 
 Create MySQL Database for HTTP Monitoring
