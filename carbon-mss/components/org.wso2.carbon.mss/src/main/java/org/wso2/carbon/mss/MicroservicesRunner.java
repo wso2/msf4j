@@ -66,7 +66,7 @@ public class MicroservicesRunner {
     /**
      * Default constructor which will take care of initializing Netty transports in the file pointed to by the
      * System property <code>transports.netty.conf</code>.
-     * <p>
+     * <p/>
      * If that System property is not specified, it will start a single Netty transport on port 8080.
      *
      * @see {@link #MicroservicesRunner(int...)}
@@ -127,5 +127,14 @@ public class MicroservicesRunner {
     public void stop() {
         transportManager.stopTransports();
         log.info("Microservices server stopped");
+    }
+
+    /**
+     * Get the MicroservicesRegistry instance of this runner.
+     *
+     * @return MicroservicesRegistry instance of this runner
+     */
+    public MicroservicesRegistry getMsRegistry() {
+        return msRegistry;
     }
 }
