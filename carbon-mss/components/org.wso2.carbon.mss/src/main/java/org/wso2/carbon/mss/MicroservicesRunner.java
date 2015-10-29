@@ -58,7 +58,8 @@ public class MicroservicesRunner {
             NettyListener listener = new NettyListener(listenerConfiguration);
             transportManager.registerTransport(listener);
             nettyTransportDataHolder.
-                    addNettyChannelInitializer(listenerConfiguration.getId(), new MSSNettyServerInitializer());
+                    addNettyChannelInitializer(listenerConfiguration.getId(),
+                            new MSSNettyServerInitializer(msRegistry));
         }
     }
 
@@ -78,7 +79,8 @@ public class MicroservicesRunner {
             NettyListener listener = new NettyListener(listenerConfiguration);
             transportManager.registerTransport(listener);
             nettyTransportDataHolder.
-                    addNettyChannelInitializer(listenerConfiguration.getId(), new MSSNettyServerInitializer());
+                    addNettyChannelInitializer(listenerConfiguration.getId(),
+                            new MSSNettyServerInitializer(msRegistry));
         }
     }
 
