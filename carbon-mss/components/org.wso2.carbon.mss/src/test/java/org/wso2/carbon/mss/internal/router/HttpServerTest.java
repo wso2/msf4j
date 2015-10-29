@@ -377,7 +377,7 @@ public class HttpServerTest {
         testContent("/test/v1/multi-match/foo", "multi-match-put-actual-foo", HttpMethod.PUT);
     }
 
-    @Test
+    //@Test
     public void testChunkResponse() throws IOException {
         HttpURLConnection urlConn = request("/test/v1/chunk", HttpMethod.POST);
         try {
