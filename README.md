@@ -92,7 +92,7 @@ curl http://localhost:8080/hello/Microservices
 
 
 
-###Class level annotations.
+###Class level annotations
 #####@Path
 Root path for resource methods. All the paths specfied in the resource methods will be sub paths of this.
 
