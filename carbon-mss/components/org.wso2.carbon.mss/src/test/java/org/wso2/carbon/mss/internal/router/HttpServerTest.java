@@ -57,6 +57,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Test the HttpServer.
@@ -135,21 +137,25 @@ public class HttpServerTest {
 
     @Test
     public void testLargeFileUpload() throws IOException {
-        testStreamUpload(30 * 1024 * 1024);
+        testStreamUpload(1000000);
     }
-
 
     protected void testStreamUpload(int size) throws IOException {
         //create a random file to be uploaded.
         File fname = tmpFolder.newFile();
         RandomAccessFile randf = new RandomAccessFile(fname, "rw");
-        randf.setLength(size);
+        String contentStr = IntStream.range(0, size)
+                .mapToObj(value -> String.valueOf((int) (Math.random() * 1000)))
+                .collect(Collectors.joining(""));
+        randf.write(contentStr.getBytes(Charsets.UTF_8));
         randf.close();
 
         //test stream upload
         HttpURLConnection urlConn = request("/test/v1/stream/upload", HttpMethod.PUT);
         Files.copy(fname, urlConn.getOutputStream());
         Assert.assertEquals(200, urlConn.getResponseCode());
+        String contentFromServer = getContent(urlConn);
+        Assert.assertEquals(contentStr, contentFromServer);
         urlConn.disconnect();
     }
 
@@ -371,7 +377,7 @@ public class HttpServerTest {
         testContent("/test/v1/multi-match/foo", "multi-match-put-actual-foo", HttpMethod.PUT);
     }
 
-    //  @Test
+    @Test
     public void testChunkResponse() throws IOException {
         HttpURLConnection urlConn = request("/test/v1/chunk", HttpMethod.POST);
         try {
