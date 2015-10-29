@@ -158,6 +158,12 @@
                 <groupId>org.wso2.carbon.metrics</groupId>
                 <artifactId>org.wso2.carbon.metrics.manager</artifactId>
                 <version>${carbon.metrics.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.eclipse.osgi</groupId>
+                        <artifactId>org.eclipse.osgi.services</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.metrics</groupId>
@@ -171,6 +177,22 @@
                     <exclusion>
                         <groupId>xerces</groupId>
                         <artifactId>xercesImpl</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.wso2.carbon</groupId>
+                        <artifactId>org.wso2.carbon.utils</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.wso2.carbon</groupId>
+                        <artifactId>org.wso2.carbon.registry.core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.wso2.securevault</groupId>
+                        <artifactId>org.wso2.securevault</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.eclipse.osgi</groupId>
+                        <artifactId>org.eclipse.osgi</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -329,7 +351,7 @@
         <!-- Dependencies -->
         <carbon.kernel.version>5.0.0-m7</carbon.kernel.version>
         <carbon.mss.version>1.0.0-SNAPSHOT</carbon.mss.version>
-        <carbon.metrics.version>1.2.0-m1</carbon.metrics.version>
+        <carbon.metrics.version>1.2.0-m2</carbon.metrics.version>
         <carbon.mss.osgi.version>1.0.0.SNAPSHOT</carbon.mss.osgi.version>
 
         <osgi.api.version>6.0.0</osgi.api.version>
@@ -362,6 +384,7 @@
         <module>samples/executable-jar</module>
         <module>samples/osgi-bundle</module>
         <module>samples/security-interceptor</module>
+        <module>samples/metrics-interceptor</module>
         <module>samples/petstore</module>
         <module>product</module>
     </modules>

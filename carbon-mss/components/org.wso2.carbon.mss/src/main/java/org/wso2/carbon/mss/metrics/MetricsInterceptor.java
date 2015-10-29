@@ -10,6 +10,7 @@ import org.wso2.carbon.metrics.annotation.Level;
 import org.wso2.carbon.metrics.annotation.Metered;
 import org.wso2.carbon.metrics.annotation.Timed;
 import org.wso2.carbon.metrics.impl.MetricServiceImpl;
+import org.wso2.carbon.metrics.impl.MetricsLevelConfigException;
 import org.wso2.carbon.metrics.impl.MetricsLevelConfiguration;
 import org.wso2.carbon.metrics.impl.util.ConsoleReporterBuilder;
 import org.wso2.carbon.metrics.impl.util.DASReporterBuilder;
@@ -49,18 +50,28 @@ public class MetricsInterceptor implements Interceptor {
         }
         metricsEnvConfiguration = new MetricsEnvConfiguration();
         MetricsLevelConfiguration metricsLevelConfiguration = new MetricsLevelConfiguration();
+        try {
+            metricsLevelConfiguration.loadFromSystemPropertyFile();
+        } catch (MetricsLevelConfigException e) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("Error loading metrics level configuration", e);
+            }
+        }
         MetricServiceImpl.Builder builder = new MetricServiceImpl.Builder().setEnabled(true)
                 .setRootLevel(org.wso2.carbon.metrics.manager.Level.INFO);
         for (MetricReporter metricReporter : metricReporters) {
             switch (metricReporter) {
             case CONSOLE:
-                builder.addReporterBuilder(new ConsoleReporterBuilder().configure(metricsEnvConfiguration));
+                builder.addReporterBuilder(
+                        new ConsoleReporterBuilder().setEnabled(true).configure(metricsEnvConfiguration));
                 break;
             case DAS:
-                builder.addReporterBuilder(new DASReporterBuilder().configure(metricsEnvConfiguration));
+                builder.addReporterBuilder(
+                        new DASReporterBuilder().setEnabled(true).configure(metricsEnvConfiguration));
                 break;
             case JMX:
-                builder.addReporterBuilder(new JmxReporterBuilder().configure(metricsEnvConfiguration));
+                builder.addReporterBuilder(
+                        new JmxReporterBuilder().setEnabled(true).configure(metricsEnvConfiguration));
                 break;
             default:
                 break;
@@ -70,7 +81,7 @@ public class MetricsInterceptor implements Interceptor {
         metricServiceImpl = (MetricServiceImpl) builder.build(metricsLevelConfiguration);
         // TODO Find a way to keep the MetricService
         ServiceReferenceHolder.getInstance().setMetricService(metricServiceImpl);
-
+        MetricManager.registerMXBean();
     }
 
     @Override

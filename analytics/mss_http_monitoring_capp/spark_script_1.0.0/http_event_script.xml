@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    # Copyright 2015 WSO2 Inc. (http://wso2.org)
+    #
+    # Licensed under the Apache License, Version 2.0 (the "License");
+    # you may not use this file except in compliance with the License.
+    # You may obtain a copy of the License at
+    #
+    # http://www.apache.org/licenses/LICENSE-2.0
+    #
+    # Unless required by applicable law or agreed to in writing, software
+    # distributed under the License is distributed on an "AS IS" BASIS,
+    # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    # See the License for the specific language governing permissions and
+    # limitations under the License.
+-->
+<Analytics>
+    <Name>http_event_script</Name>
+<Script>
+create temporary table RequestsPerMinute using CarbonJDBC options (dataSource "WSO2AS_MONITORING_DB", tableName "REQUESTS_SUMMARY_PER_MINUTE");
+
+create temporary table ServiceRequestData USING CarbonAnalytics OPTIONS(tableName "ORG_WSO2_CARBON_MSS_HTTPMONITORING");  
+
+CREATE TEMPORARY TABLE MSS_REQUESTS_SUMMARY_PER_MINUTE_FINAL USING CarbonAnalytics OPTIONS (tableName "MSS_REQUESTS_SUMMARY_PER_MINUTE",
+  schema "service_class string,
+  application_type string,
+  server_addess string,
+  avg_request_count int,
+  avg_response_time int,
+  http_success_count int,
+  http_error_count int,
+  session_count int,
+  time string",
+  primaryKeys "service_class,time"
+); 
+
+insert into table MSS_REQUESTS_SUMMARY_PER_MINUTE_FINAL select service_class,
+meta_application_type as application_type,
+meta_server_addess as server_addess,
+count(request_uri) as avg_request_count,
+avg(response_time) as avg_response_time,
+sum(if(http_status_code&lt;400, 1, 0)) as http_success_count,
+sum(if(http_status_code&gt;=400, 1, 0)) as http_error_count,
+0 as session_count,
+substring(cast(meta_timestamp/1000 as timestamp),0,16) as time from ServiceRequestData group by meta_application_type, meta_server_addess, service_class, substring(cast(meta_timestamp/1000 as timestamp),0,16);
+                            
+INSERT OVERWRITE TABLE RequestsPerMinute SELECT service_class as webappName, application_type as webappType, server_addess as serverName, avg_request_count as averageRequestCount, avg_response_time as averageResponseTime, http_success_count as httpSuccessCount, http_error_count as httpErrorCount, session_count as sessionCount, time as TIME FROM MSS_REQUESTS_SUMMARY_PER_MINUTE_FINAL;
+
+
+
+
+create temporary table HttpStatus using CarbonJDBC options (dataSource "WSO2AS_MONITORING_DB", tableName "HTTP_STATUS");
+
+CREATE TEMPORARY TABLE MSS_HTTP_STATUS_FINAL USING CarbonAnalytics OPTIONS (tableName "MSS_HTTP_STATUS",
+  schema "service_class string,
+  server_addess string,
+  avg_request_count int,
+  http_status_code int,
+  time string",
+  primaryKeys "service_class,time"
+);
+
+insert into table MSS_HTTP_STATUS_FINAL select service_class,
+meta_server_addess as server_addess,
+count(request_uri) as avg_request_count,
+http_status_code,
+substring(cast(meta_timestamp/1000 as timestamp),0,16) as time from ServiceRequestData group by meta_server_addess, service_class, http_status_code, substring(cast(meta_timestamp/1000 as timestamp),0,16);
+
+INSERT OVERWRITE TABLE HttpStatus SELECT service_class as webappName, server_addess as serverName, avg_request_count as averageRequestCount, http_status_code as responseHttpStatusCode, time as TIME FROM MSS_HTTP_STATUS_FINAL;
+
+
+
+
+create temporary table WebappContext using CarbonJDBC options (dataSource "WSO2AS_MONITORING_DB", tableName "WEBAPP_CONTEXT");
+
+CREATE TEMPORARY TABLE MSS_SERVICE_CONTEXT_FINAL USING CarbonAnalytics OPTIONS (tableName "MSS_SERVICE_CONTEXT",
+  schema "service_class string,
+  server_addess string,
+  avg_request_count int,
+  service_context string,
+  time string",
+  primaryKeys "service_class,time"
+);
+
+insert into table MSS_SERVICE_CONTEXT_FINAL select service_class,
+meta_server_addess as server_addess,
+count(request_uri) as avg_request_count,
+service_context,
+substring(cast(meta_timestamp/1000 as timestamp),0,16) as time from ServiceRequestData group by meta_server_addess, service_class, service_context, substring(cast(meta_timestamp/1000 as timestamp),0,16);
+
+INSERT OVERWRITE TABLE WebappContext SELECT service_class as webappName, server_addess as serverName, avg_request_count as averageRequestCount, service_context as webappcontext, time as TIME FROM MSS_SERVICE_CONTEXT_FINAL;
+
+</Script>
+    <CronExpression>0 0/5 * 1/1 * ? *</CronExpression>
+</Analytics>
