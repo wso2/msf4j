@@ -339,3 +339,45 @@ a.btn:hover, .btn:hover, a.btn:focus, .btn:focus {
     margin-bottom: 10px;
     width: 50px;
 }
+
+.thumbnail:hover .ct-product-meta {
+    bottom: 0;
+}
+
+.thumbnail .ct-product-meta {
+    -webkit-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+    position: absolute;
+    height: 50px;
+    width: 100%;
+    left: 0px;
+    bottom: -50px;
+    text-align: center;
+    background: #2b8be9;
+}
+.thumbnail .ct-product-meta .ct-product-button {
+    height: 50px;
+    width: 100%;
+    line-height: 50px;
+    padding: 0;
+    color: #fff;
+}
+.thumbnail{
+    overflow: hidden;
+    min-height: 200px;
+    max-height: 200px;
+    position: relative;
+    border-radius: 0px;
+
+}
+
+.ct-product-button:hover, a.ct-product-button:focus, .ct-product-button:focus {
+    text-decoration: none;
+    background: #6BABEA !important;
+}
+.pet-price{
+    font-size: 1.3em;
+}
+.pet-image{
+    width:100%;
+}

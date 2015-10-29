@@ -1,10 +1,14 @@
 <?php
+include('controllers/API/curl_api.php');
+include('config/config.php');
 session_start();
 if(!isset($_SESSION['username'])){
    header("location:login.php");
 }
 //return page breadcrumbs
 $breadcrumbs = array("");
+$url = 'http://'.PET_SERVICE.':'.PET_SERVICE_PORT.'/pet/all';
+$get_pets = callAuthApigetPets($url, preg_replace('/\s+/', '', $_SESSION['authtoken']));
 ?>
 <!--
 ~   Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
@@ -98,9 +102,17 @@ include('includes/header.php');
                 </ol>
             </div>
             <div id="navbar" class="collapse navbar-collapse">
-                    <ul class="nav navbar-nav">
-
-                    </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="visible-inline-block">
+                        <a data-toggle="sidebar" data-target="#right-sidebar" aria-controls="right-sidebar" aria-expanded="false">
+                                <span class="icon fw-stack">
+                                    <i class="fa fa-shopping-cart fa-stack-1x"></i>
+                                </span>
+                            Cart
+                            <span class="badge">0</span>
+                        </a>
+                    </li>
+                </ul>
             </div><!--/.nav-collapse -->
         </div>
     </nav>
@@ -112,15 +124,29 @@ include('includes/header.php');
     <div class="container-fluid body-wrapper">
         <div class="clearfix"></div>
         <div class="row">
-            <div class="col-xs-6 col-md-2">
-                <div class="thumbnail">
-                    <img src="images/paw-pets.png" alt="Add Pet Types">
-                    <div class="caption">
-                        <h3>Price: </h3>
-                        <p><a href="#" class="btn btn-default" role="button">Add to cart</a></p>
+            <?php
+            foreach ($get_pets as $json) {
+                ?>
+                <div class="col-xs-6 col-md-2">
+                    <div class="thumbnail" data-id="<?php echo $json['id'] ?>">
+                        <img src="images/paw-pets.png" alt="Add Pet Types" class="pet-image">
+
+                        <div class="caption">
+                            <h3 class="pet-price">Price: $<?php echo $json['price'] ?></h3>
+
+                            <!--<p>
+                                <a href="#" class="btn btn-primary" role="button">More</a>
+                                <a href="#" class="btn btn-default" role="button">Add to cart</a>
+                            </p>-->
+                            <div class="ct-product-meta">
+                                <a href="#" class="btn btn-motive ct-product-button"><i class="fa fa-shopping-cart"></i> Add to Cart</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+                <?php
+            }
+            ?>
         </div>
 
     </div>
