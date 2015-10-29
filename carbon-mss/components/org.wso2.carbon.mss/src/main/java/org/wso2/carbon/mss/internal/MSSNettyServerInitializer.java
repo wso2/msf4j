@@ -37,6 +37,12 @@ public class MSSNettyServerInitializer implements CarbonNettyServerInitializer {
 
     private DefaultEventExecutorGroup eventExecutorGroup;
 
+    private MicroservicesRegistry microservicesRegistry;
+
+    public MSSNettyServerInitializer(MicroservicesRegistry microservicesRegistry) {
+        this.microservicesRegistry = microservicesRegistry;
+    }
+
     @Override
     public void setup(Map<String, String> map) {
         eventExecutorGroup = new DefaultEventExecutorGroup(200);
@@ -48,8 +54,7 @@ public class MSSNettyServerInitializer implements CarbonNettyServerInitializer {
         pipeline.addLast("decoder", new HttpRequestDecoder());
         pipeline.addLast("encoder", new HttpResponseEncoder());
         pipeline.addLast(eventExecutorGroup, "router",
-                new RequestRouter(MicroservicesRegistry.getInstance()
-                        .getHttpResourceHandler(), 0));
+                new RequestRouter(microservicesRegistry.getHttpResourceHandler(), 0));
         pipeline.addLast(eventExecutorGroup, "dispatcher", new HttpDispatcher());
     }
 }

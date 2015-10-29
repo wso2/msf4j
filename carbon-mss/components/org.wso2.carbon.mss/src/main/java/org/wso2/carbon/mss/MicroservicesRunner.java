@@ -41,7 +41,36 @@ public class MicroservicesRunner {
     private static final Logger log = LoggerFactory.getLogger(MicroservicesRunner.class);
     private TransportManager transportManager = new TransportManager();
     private long startTime = System.currentTimeMillis();
+    private boolean isStarted;
+    private MicroservicesRegistry msRegistry = MicroservicesRegistry.newInstance();
 
+    /**
+     * Creates a MicroservicesRunner instance which will be used for deploying microservices. Allows specifying
+     * ports on which the microservices in this MicroservicesRunner are deployed.
+     *
+     * @param ports The port on which the microservices are exposed
+     */
+    public MicroservicesRunner(int... ports) {
+        for (int port : ports) {
+            NettyTransportDataHolder nettyTransportDataHolder = NettyTransportDataHolder.getInstance();
+            ListenerConfiguration listenerConfiguration =
+                    new ListenerConfiguration("netty-" + port, "0.0.0.0", port);
+            NettyListener listener = new NettyListener(listenerConfiguration);
+            transportManager.registerTransport(listener);
+            nettyTransportDataHolder.
+                    addNettyChannelInitializer(listenerConfiguration.getId(),
+                            new MSSNettyServerInitializer(msRegistry));
+        }
+    }
+
+    /**
+     * Default constructor which will take care of initializing Netty transports in the file pointed to by the
+     * System property <code>transports.netty.conf</code>.
+     * <p>
+     * If that System property is not specified, it will start a single Netty transport on port 8080.
+     *
+     * @see {@link #MicroservicesRunner(int...)}
+     */
     public MicroservicesRunner() {
         TransportsConfiguration trpConfig = TransportConfigurationBuilder.build();
         Set<ListenerConfiguration> listenerConfigurations = trpConfig.getListenerConfigurations();
@@ -50,22 +79,48 @@ public class MicroservicesRunner {
             NettyListener listener = new NettyListener(listenerConfiguration);
             transportManager.registerTransport(listener);
             nettyTransportDataHolder.
-                    addNettyChannelInitializer(listenerConfiguration.getId(), new MSSNettyServerInitializer());
+                    addNettyChannelInitializer(listenerConfiguration.getId(),
+                            new MSSNettyServerInitializer(msRegistry));
         }
     }
 
+    /**
+     * Deploy a microservice
+     *
+     * @param microservice The microservice which is to be deployed
+     * @return this MicroservicesRunner object
+     */
     public MicroservicesRunner deploy(Object microservice) {
-        MicroservicesRegistry.getInstance().addHttpService(microservice);
+        checkState();
+        msRegistry.addHttpService(microservice);
         return this;
     }
 
+    /**
+     * Add an interceptor which will get called before & after the deployed microservices are invoked. Multiple
+     * interceptors can be added.
+     *
+     * @param interceptor The interceptor to be added.
+     * @return this MicroservicesRunner object
+     */
     public MicroservicesRunner addInterceptor(Interceptor interceptor) {
-        MicroservicesRegistry.getInstance().addInterceptor(interceptor);
+        checkState();
+        msRegistry.addInterceptor(interceptor);
         return this;
     }
 
+    private void checkState() {
+        if (isStarted) {
+            throw new IllegalStateException("Microservices runner already started");
+        }
+    }
+
+    /**
+     * Start this Microservices runner. This will startup all the Netty transports.
+     */
     public void start() {
         transportManager.startTransports();
+        isStarted = true;
         log.info("Microservices server started in " + (System.currentTimeMillis() - startTime) + "ms");
     }
 
