@@ -23,7 +23,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>WSO2 Pet Store - Administrator</title>
+    <title>WSO2 Pet Store - Login</title>
 
     <link rel="shortcut icon" href="images/favicon.png" />
 
@@ -50,7 +50,7 @@
         <div class="pull-left brand float-remove-xs text-center-xs">
             <a href="#">
                 <img src="images/logo-inverse.svg" alt="wso2" title="wso2" class="logo">
-                <h1>WSO2 Pet Store - backend</h1>
+                <h1>WSO2 Pet Store - login</h1>
             </a>
         </div>
     </div>
