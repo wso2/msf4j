@@ -143,7 +143,7 @@ Inject additional objects to a resource method. Currently supports injection of 
     This object can be used to retrieve HTTP request information. [More info](http://netty.io/4.0/api/io/netty/handler/codec/http/HttpRequest.html).
 * org.wso2.carbon.mss.HttpResponder - 
     This object can be used to send HTTP responses. You can make responses more clean way by returning an instance of 
-    javax.ws.rs.core.Response or a POJO. See the [stockquote-service]
+    javax.ws.rs.core.Response or a POJO. See the [StockQuote-Service]
     (https://github.com/wso2/product-mss/tree/master/samples/stockquote-service) sample.
 
 #####@PathParam
