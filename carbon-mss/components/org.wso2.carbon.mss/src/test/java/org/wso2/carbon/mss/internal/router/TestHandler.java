@@ -441,6 +441,6 @@ public class TestHandler implements HttpHandler {
      * Custom exception class for testing exception handler.
      */
     public static final class CustomException extends Exception {
-        public static final HttpResponseStatus HTTP_RESPONSE_STATUS = HttpResponseStatus.SEE_OTHER;
+        public static final HttpResponseStatus HTTP_RESPONSE_STATUS = HttpResponseStatus.INTERNAL_SERVER_ERROR;
     }
 }
