@@ -43,7 +43,6 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Test URLRewriter.
@@ -52,12 +51,13 @@ public class URLRewriterTest {
     private static final Gson GSON = new Gson();
 
     private static final Logger log = LoggerFactory.getLogger(URLRewriterTest.class);
-    private static final MicroservicesRunner microservicesRunner = new MicroservicesRunner();
     private static final TestHandler testHandler = new TestHandler();
 
     private static String hostname = Constants.HOSTNAME;
-    private static final int port = Constants.PORT;
+    private static final int port = Constants.PORT + 3;
     private static URI baseURI;
+
+    private static final MicroservicesRunner microservicesRunner = new MicroservicesRunner(port);
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -67,15 +67,11 @@ public class URLRewriterTest {
                 .deploy(testHandler)
                 .start();
         baseURI = URI.create(String.format("http://%s:%d", hostname, port));
-        log.info("Waiting for server start..");
-        TimeUnit.SECONDS.sleep(Constants.SERVER_START_WAIT);
     }
 
     @AfterClass
     public static void teardown() throws Exception {
         microservicesRunner.stop();
-        log.info("Waiting for server shutdown..");
-        TimeUnit.SECONDS.sleep(Constants.SERVER_STOP_WAIT);
     }
 
     private static int doGet(String resource) throws Exception {

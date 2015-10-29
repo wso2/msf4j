@@ -40,11 +40,12 @@ public class HandlerInterceptorTest2 extends BaseHandlerInterceptorTest {
     private static final TestInterceptor interceptor2 = new TestInterceptor();
 
     private static final Logger log = LoggerFactory.getLogger(HandlerInterceptorTest2.class);
-    private static final MicroservicesRunner microservicesRunner = new MicroservicesRunner();
     private static final TestHandler testHandler = new TestHandler();
 
     private static String hostname = Constants.HOSTNAME;
-    private static final int port = Constants.PORT;
+    private static final int port = Constants.PORT + 0;
+
+    private static final MicroservicesRunner microservicesRunner = new MicroservicesRunner(port);
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -54,15 +55,11 @@ public class HandlerInterceptorTest2 extends BaseHandlerInterceptorTest {
                 .addInterceptor(interceptor2)
                 .start();
         baseURI = URI.create(String.format("http://%s:%d", hostname, port));
-        log.info("Waiting for server start..");
-        TimeUnit.SECONDS.sleep(Constants.SERVER_START_WAIT);
     }
 
     @AfterClass
     public static void teardown() throws Exception {
         microservicesRunner.stop();
-        log.info("Waiting for server shutdown..");
-        TimeUnit.SECONDS.sleep(Constants.SERVER_STOP_WAIT);
     }
 
     @Before
