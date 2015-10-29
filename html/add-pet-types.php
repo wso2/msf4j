@@ -112,14 +112,25 @@ include('includes/navbar.php');
 
         function addPetType(btn){
             btn.button('loading');
-            console.log(petCategoryName.val())
             $.ajax({
                 type: "POST",
                 url:  "controllers/rest.php",
                 dataType: 'json',
                 data: {api_type: 'addPetTypes', category_name: petCategoryName.val()},
-                success: function (data) {
-
+                success: function (data, textStatus, jqXHR) {
+                    if (data.status == 'error') {
+                        var n = noty({text: data.message, layout: 'top', type: 'error'});
+                        window.setTimeout(function(){
+                            window.location.href = 'logout.php';
+                        }, 1500);
+                    } else if (data.status == 'warning') {
+                        var n = noty({text: data.message, layout: 'top', type: 'warning'});
+                    } else {
+                        var n = noty({text: data.message, layout: 'top', type: 'success'});
+                        window.setTimeout(function(){
+                            window.location.href = 'pet-types.php';
+                        }, 1500);
+                    }
                 }
             })
                 .always(function () {
