@@ -64,7 +64,7 @@ public class UserAuthenticationService {
 
                 JWTGenerator jwtGenerator = new JWTGenerator();
                 jwt = jwtGenerator.generateJWT(userFromUserStore);
-                String msg = "User" + name + " authenticated successfully";
+                String msg = "User " + name + " authenticated successfully";
                 log.info(msg);
                 return Response.ok(msg).header(JWT_HEADER, jwt).build();
             }
