@@ -158,6 +158,12 @@
                 <groupId>org.wso2.carbon.metrics</groupId>
                 <artifactId>org.wso2.carbon.metrics.manager</artifactId>
                 <version>${carbon.metrics.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.eclipse.osgi</groupId>
+                        <artifactId>org.eclipse.osgi.services</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.metrics</groupId>
@@ -171,6 +177,22 @@
                     <exclusion>
                         <groupId>xerces</groupId>
                         <artifactId>xercesImpl</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.wso2.carbon</groupId>
+                        <artifactId>org.wso2.carbon.utils</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.wso2.carbon</groupId>
+                        <artifactId>org.wso2.carbon.registry.core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.wso2.securevault</groupId>
+                        <artifactId>org.wso2.securevault</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.eclipse.osgi</groupId>
+                        <artifactId>org.eclipse.osgi</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
