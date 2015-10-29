@@ -20,7 +20,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    
+
     <parent>
         <artifactId>mss-service-parent</artifactId>
         <groupId>org.wso2.carbon.mss</groupId>
@@ -31,6 +31,8 @@
 
     <groupId>org.wso2.carbon.mss.sample</groupId>
     <artifactId>Hello-Service</artifactId>
+
+    <name>Hello Microservice Sample</name>
 
     <properties>
         <microservice.mainClass>org.wso2.carbon.mss.sample.Application</microservice.mainClass>

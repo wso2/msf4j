@@ -9,10 +9,10 @@
         <relativePath>../../mss-service-parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>SimpleStockQuote</artifactId>
+    <artifactId>StockQuote-Service</artifactId>
     <packaging>jar</packaging>
 
-    <name>Executable Jar Microservice Sample</name>
+    <name>StockQuote Microservice Sample</name>
 
     <properties>
         <microservice.mainClass>org.wso2.carbon.mss.example.StockQuoteService</microservice.mainClass>
