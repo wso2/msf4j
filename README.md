@@ -5,7 +5,8 @@ WSO2 Microservices Server is a lightweight high performance runtime for hosting 
 ##Getting Started
 
 It is really easy to setup a microservice using WSO2 Microservices Server. You simply need to write a usual JAX-RS 
-service and deploy it using a single line of code. Check the following [Hello-Service](https://github.com/samiyuru/product-mss/tree/documentation01/samples/hello-service) sample.
+service and deploy it using a single line of code. Check the following [Hello-Service]
+(https://github.com/wso2/product-mss/tree/master/samples/hello-service) sample.
 
 ####pom.xml
 This pom file inherits from mss-service-parent/pom.xml. It provides a way of setting up things quickly with minimum 
@@ -142,7 +143,8 @@ Inject additional objects to a resource method. Currently supports injection of 
     This object can be used to retrieve HTTP request information. [More info](http://netty.io/4.0/api/io/netty/handler/codec/http/HttpRequest.html).
 * org.wso2.carbon.mss.HttpResponder - 
     This object can be used to send HTTP responses. You can make responses more clean way by returning an instance of 
-    javax.ws.rs.core.Response or a POJO. See the [stockquote-service](https://github.com/wso2/product-mss/tree/master/samples/executable-jar) sample.
+    javax.ws.rs.core.Response or a POJO. See the [stockquote-service]
+    (https://github.com/wso2/product-mss/tree/master/samples/stockquote-service) sample.
 
 #####@PathParam
 /StockQuote/{symbol} to get value of symbol. The value will be automatically converted to the corresponding parameter
