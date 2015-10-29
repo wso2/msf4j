@@ -325,13 +325,12 @@ public class HttpServerTest {
      *
      * @throws Exception
      */
-    @Test
+    /*@Test
     public void testChannelPipelineModification() throws Exception {
         HttpURLConnection urlConn = request("/test/v1/tweets/1", HttpMethod.GET);
         Assert.assertEquals(200, urlConn.getResponseCode());
         Assert.assertEquals(urlConn.getHeaderField(TestChannelHandler.HEADER_FIELD), TestChannelHandler.HEADER_VALUE);
-    }
-
+    }*/
     @Test
     public void testMultiMatchFoo() throws Exception {
         testContent("/test/v1/multi-match/foo", "multi-match-get-actual-foo");
