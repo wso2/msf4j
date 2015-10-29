@@ -119,14 +119,14 @@ include('includes/navbar.php');
                 data: {api_type: 'addPetTypes', category_name: petCategoryName.val()},
                 success: function (data, textStatus, jqXHR) {
                     if (data.status == 'error') {
-                        var n = noty({text: data.message, layout: 'top', type: 'error'});
+                        var n = noty({text: data.message, layout: 'bottomRight', type: 'error'});
                         window.setTimeout(function(){
                             window.location.href = 'logout.php';
                         }, 1500);
                     } else if (data.status == 'warning') {
-                        var n = noty({text: data.message, layout: 'top', type: 'warning'});
+                        var n = noty({text: data.message, layout: 'bottomRight', type: 'warning'});
                     } else {
-                        var n = noty({text: data.message, layout: 'top', type: 'success'});
+                        var n = noty({text: data.message, layout: 'bottomRight', type: 'success'});
                         window.setTimeout(function(){
                             window.location.href = 'pet-types.php';
                         }, 1500);

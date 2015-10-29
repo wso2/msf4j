@@ -155,7 +155,7 @@ include('includes/header.php');
                     <?php
                         }
                     }else{
-                        echo '<div class="alert alert-info" role="alert">No Pet Types added yet. Click <a href="add-pets.php">here to add new pet type</a></div>';
+                        echo '<div class="alert alert-info" role="alert">No Pet Types added yet. Click <a href="add-pet-types.php">here to add new pet type</a></div>';
                     }
                     ?>
 
@@ -185,27 +185,44 @@ include('includes/header.php');
 <script>
    $(document).on('click', '.remove-cat', function(){
        var pet_category = $(this).attr('data-category');
-       $.ajax({
-           type: "POST",
-           url:  "controllers/rest.php",
-           dataType: 'json',
-           data: {api_type: 'deletePetTypes', category_name: pet_category},
-           success: function (data, textStatus, jqXHR) {
-               if (data.status == 'error') {
-                   var n = noty({text: data.message, layout: 'top', type: 'error'});
-                   window.setTimeout(function(){
-                       window.location.href = 'logout.php';
-                   }, 1500);
-               } else if (data.status == 'warning') {
-                   var n = noty({text: data.message, layout: 'top', type: 'warning'});
-               } else {
-                   var n = noty({text: data.message, layout: 'top', type: 'success'});
-                   window.setTimeout(function(){
-                       window.location.href = 'pet-types.php';
-                   }, 1500);
+       noty({
+           layout: 'bottomRight',
+           type: 'warning',
+           text: 'Are you sure you want to delete : <strong>'+ pet_category + "</strong> ?",
+           buttons: [
+               {addClass: 'btn btn-primary', text: 'Yes', onClick: function($noty) {
+                   $noty.close();
+                   $.ajax({
+                       type: "POST",
+                       url:  "controllers/rest.php",
+                       dataType: 'json',
+                       data: {api_type: 'deletePetTypes', category_name: pet_category},
+                       success: function (data, textStatus, jqXHR) {
+                           if (data.status == 'error') {
+                               var n = noty({text: data.message, layout: 'bottomRight', type: 'error'});
+                               window.setTimeout(function(){
+                                   window.location.href = 'logout.php';
+                               }, 1500);
+                           } else if (data.status == 'warning') {
+                               var n = noty({text: data.message, layout: 'bottomRight', type: 'warning'});
+                           } else {
+                               var n = noty({text: data.message, layout: 'bottomRight', type: 'success'});
+                               window.setTimeout(function(){
+                                   window.location.href = 'pet-types.php';
+                               }, 1500);
+                           }
+                       }
+                   });
+
                }
-           }
+               },
+               {addClass: 'btn btn-danger', text: 'No', onClick: function($noty) {
+                   $noty.close();
+               }
+               }
+           ]
        });
+
 
    });
 </script>

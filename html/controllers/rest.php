@@ -19,6 +19,9 @@ switch ($api_type) {
         $pet_category = htmlspecialchars($_POST["pet_category"]);
         $pet_age_months = htmlspecialchars($_POST["pet_age_months"]);
         $pet_price = htmlspecialchars($_POST["pet_price"]);
+        $file_name = htmlspecialchars($_POST["file_name"]);
+        $file_location="upload/";
+        move_uploaded_file($_FILES['file']['tmp_name'], "upload/" . $_FILES['file']['name']);
         $url = 'http://'.PET_SERVICE.':'.PET_SERVICE_PORT.'/pet/';
         $data_json =json_encode(
             array(

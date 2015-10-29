@@ -329,3 +329,7 @@ a.thumbnail-overide:hover{
 .btn-primary:hover {
     background-color: #424958;
 }
+a.btn:hover, .btn:hover, a.btn:focus, .btn:focus {
+    text-decoration: none;
+    background: #eee;
+}

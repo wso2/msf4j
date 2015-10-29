@@ -74,7 +74,7 @@ include('includes/navbar.php');
         <div class="page-header" id="loading">
             <h1>Add Pets</h1>
         </div>
-        <div class="form-horizontal col-md-5">
+        <form class="form-horizontal col-md-5" enctype="multipart/form-data">
             <div class="form-group">
                 <div class="col-sm-12">
                     <label for="pet-category" class="control-label">Type</label>
@@ -92,19 +92,24 @@ include('includes/navbar.php');
             <div class="form-group">
                 <div class="col-sm-12">
                     <label for="pet-age-months" class="control-label">Age </label>
-                    <input type="text" class="form-control" id="pet-age-months" placeholder="pet age" required="">
+                    <input type="number" class="form-control" id="pet-age-months" min="1" max="1200"
+                           placeholder="pet age" required="">
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-12">
                     <label for="pet-price" class="control-label">Price </label>
-                    <input type="text" class="form-control" id="pet-price" placeholder="pet price" required="">
+                    <div class="input-group">
+                        <div class="input-group-addon">$</div>
+                        <input type="number" min="1" max="100000" class="form-control form-control-md" id="pet-price"
+                               placeholder="pet price">
+                    </div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-12">
-                    <label for="pet-image" class="control-label">Image </label>
-
+                    <label for="pet-file-upload" class="control-label">Image </label>
+                    <input type="file" name="file_upl" id="pet-file-upload" class="form-control" />
                 </div>
             </div>
             <div class="form-group">
@@ -112,7 +117,7 @@ include('includes/navbar.php');
                     <button type="button" id="pet-add-btn" class="btn btn-default btn-primary">Add</button>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
 
 </div><!-- /#page-content-wrapper -->
@@ -146,6 +151,8 @@ include('includes/navbar.php');
 
         function addPets(btn){
             btn.button('loading');
+            var file = $('#pet-file-upload')[0].files[0];
+            console.log(file)
             $.ajax({
                 type: "POST",
                 url:  "controllers/rest.php",
@@ -154,10 +161,24 @@ include('includes/navbar.php');
                     api_type: 'addPets',
                     pet_category: petCategory.val(),
                     pet_age_months: petAgeMonths.val(),
-                    pet_price: petPrice.val()
-                },
-                success: function (data) {
+                    pet_price: petPrice.val(),
+                    file_name: file['name'],
 
+                },
+                success: function (data, textStatus, jqXHR) {
+                    if (data.status == 'error') {
+                        var n = noty({text: data.message, layout: 'bottomRight', type: 'error'});
+                        window.setTimeout(function(){
+                            window.location.href = 'logout.php';
+                        }, 1500);
+                    } else if (data.status == 'warning') {
+                        var n = noty({text: data.message, layout: 'bottomRight', type: 'warning'});
+                    } else {
+                        var n = noty({text: data.message, layout: 'bottomRight', type: 'success'});
+                        window.setTimeout(function(){
+                            window.location.href = 'pets.php';
+                        }, 1500);
+                    }
                 }
             })
                 .always(function () {

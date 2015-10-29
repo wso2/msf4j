@@ -62,10 +62,64 @@ $get_pets = callAuthApigetPets($url,  preg_replace('/\s+/', '', $_SESSION['autht
 include('includes/header.php');
 ?>
 
+
 <!-- navbar -->
-<?php
-include('includes/navbar.php');
-?>
+<div class="navbar-wrapper">
+    <nav class="navbar navbar-default" data-spy="affix" data-offset-top="50" data-offset-bottom="40">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-menu-toggle" data-toggle="dropdown">
+                        <span class="icon fw-stack">
+                            <i class="fw fw-tiles fw-stack-1x"></i>
+                        </span>
+                </a>
+                <ul class="dropdown-menu tiles arrow dark add-margin-1x" role="menu">
+                    <li>
+                        <a href="#">
+                            <i class="icon fa  fa-paw"></i>
+                            <span class="name">Pet Type</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="icon fw fw-wsdl"></i>
+                            <span class="name">Pets</span>
+                        </a>
+                    </li>
+                </ul>
+                <ol class="breadcrumb navbar-brand">
+                    <li><a href="index.php"><i class="icon fw fw-home"></i></a></li>
+                    <?php
+                    if($breadcrumbs){
+                        foreach ($breadcrumbs as $key => $value) {
+                            echo '<li><a href="'.$key.'">'.$value.'</a></li>';
+                        }
+                    }
+                    ?>
+                </ol>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="add-pets.php">
+                                <span class="icon fw-stack">
+                                    <i class="fw fw-add fw-stack-1x"></i>
+                                    <i class="fw fw-ring fw-stack-2x"></i>
+                                </span>
+                            Add pet
+                        </a>
+                    </li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+    </nav>
+</div>
 <!-- #page-content-wrapper -->
 <div class="page-content-wrapper">
     <!-- page content -->
@@ -140,27 +194,44 @@ include('includes/navbar.php');
 <script>
     $(document).on('click', '.remove-pet', function(){
         var pet_id = $(this).attr('data-petid');
-        $.ajax({
-            type: "POST",
-            url:  "controllers/rest.php",
-            dataType: 'json',
-            data: {api_type: 'deletePet', pet_id: pet_id},
-            success: function (data, textStatus, jqXHR) {
-                if (data.status == 'error') {
-                    var n = noty({text: data.message, layout: 'top', type: 'error'});
-                    window.setTimeout(function(){
-                        window.location.href = 'logout.php';
-                    }, 1500);
-                } else if (data.status == 'warning') {
-                    var n = noty({text: data.message, layout: 'top', type: 'warning'});
-                } else {
-                    var n = noty({text: data.message, layout: 'top', type: 'success'});
-                    window.setTimeout(function(){
-                        window.location.href = 'pets.php';
-                    }, 1500);
+        noty({
+            layout: 'bottomRight',
+            type: 'warning',
+            text: 'Are you sure you want to delete : <strong>'+ pet_id + "</strong> ?",
+            buttons: [
+                {addClass: 'btn btn-primary', text: 'Yes', onClick: function($noty) {
+                    $noty.close();
+                    $.ajax({
+                        type: "POST",
+                        url:  "controllers/rest.php",
+                        dataType: 'json',
+                        data: {api_type: 'deletePet', pet_id: pet_id},
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.status == 'error') {
+                                var n = noty({text: data.message, layout: 'bottomRight', type: 'error'});
+                                window.setTimeout(function(){
+                                    window.location.href = 'logout.php';
+                                }, 1500);
+                            } else if (data.status == 'warning') {
+                                var n = noty({text: data.message, layout: 'bottomRight', type: 'warning'});
+                            } else {
+                                var n = noty({text: data.message, layout: 'bottomRight', type: 'success'});
+                                window.setTimeout(function(){
+                                    window.location.href = 'pets.php';
+                                }, 1500);
+                            }
+                        }
+                    });
+
                 }
-            }
+                },
+                {addClass: 'btn btn-danger', text: 'No', onClick: function($noty) {
+                    $noty.close();
+                }
+                }
+            ]
         });
+
 
     });
 </script>

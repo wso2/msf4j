@@ -126,9 +126,11 @@ function callAuthApiAddPet($url, $token, $data){
     $header = substr($curl_response, 0, $header_size);
 
     if($info['http_code'] === 200){
-        echo 'get something';
+        echo json_encode(array('status' => 'success', 'message' => 'Pet added successfully'));
+    }else if($info['http_code'] === 401) {
+        echo json_encode(array('status' => 'error', 'message' => 'User unauthorized'));
     }else{
-        echo 'Something went wrong'.$info['http_code'];
+        echo json_encode(array('status' => 'error', 'message' => 'Something went wrong'));
     }
 }
 
