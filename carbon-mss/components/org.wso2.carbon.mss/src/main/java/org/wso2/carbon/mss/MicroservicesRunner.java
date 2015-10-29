@@ -68,4 +68,9 @@ public class MicroservicesRunner {
         transportManager.startTransports();
         log.info("Microservices server started in " + (System.currentTimeMillis() - startTime) + "ms");
     }
+
+    public void stop() {
+        transportManager.stopTransports();
+        log.info("Microservices server stopped");
+    }
 }
