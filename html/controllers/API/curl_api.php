@@ -83,7 +83,7 @@ function addToCart($pet_id, $pet_price, $pet_image){
     }else{
         $_SESSION['cart'] = array();
     }
-
+    
 }
 
 function removeFromCart($pet_id, $cart){
@@ -96,6 +96,4 @@ function removeFromCart($pet_id, $cart){
     $_SESSION['cart'] = $cart;
     echo json_encode(array('status' => 'success', 'message' => 'Pet remove from your cart successfully'));
 }
-
-
 ?>
