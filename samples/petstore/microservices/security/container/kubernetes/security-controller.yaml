@@ -5,7 +5,7 @@ metadata:
   labels:
     name: security
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     name: security
   template:

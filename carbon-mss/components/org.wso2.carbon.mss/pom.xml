@@ -79,6 +79,10 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
         </dependency>
@@ -148,7 +152,7 @@
                                 org.wso2.carbon.mss*;version="1.0.0"
                             </Export-Package>
                             <Import-Package>
-                                org.wso2.carbon.deployment.*,
+                                org.wso2.carbon.kernel.deployment.*,
                                 io.netty.*,
                                 com.google.gson.*,
                                 com.google.common.*,

@@ -20,6 +20,7 @@ package org.wso2.carbon.mss.internal;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.mss.internal.router.ExceptionHandler;
 import org.wso2.carbon.mss.internal.router.HttpResourceHandler;
 import org.wso2.carbon.mss.internal.router.Interceptor;
 
@@ -39,13 +40,27 @@ public class MicroservicesRegistry {
     private final Set<Object> httpServices = new HashSet<>();
     private final List<Interceptor> interceptors = new ArrayList<>();
     private volatile HttpResourceHandler httpResourceHandler =
-            new HttpResourceHandler(Collections.emptyList(), interceptors, null, null);
+            new HttpResourceHandler(Collections.emptyList(), interceptors, null, new ExceptionHandler());
 
     private MicroservicesRegistry() {
     }
 
+    /**
+     * Always returns the same MicroservicesRegistry instance
+     *
+     * @return the singleton MicroservicesRegistry instance
+     */
     public static MicroservicesRegistry getInstance() {
         return instance;
+    }
+
+    /**
+     * Every call to this method will result in the creation of a new MicroservicesRegistry instance
+     *
+     * @return a new MicroservicesRegistry instance
+     */
+    public static MicroservicesRegistry newInstance() {
+        return new MicroservicesRegistry();
     }
 
     public void addHttpService(Object httpHandler) {
@@ -74,6 +89,7 @@ public class MicroservicesRegistry {
 
     private void updateHttpResourceHandler() {
         httpResourceHandler =
-                new HttpResourceHandler(Collections.unmodifiableSet(httpServices), interceptors, null, null);
+                new HttpResourceHandler(Collections.unmodifiableSet(httpServices),
+                        interceptors, null, new ExceptionHandler());
     }
 }
