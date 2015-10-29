@@ -4,7 +4,7 @@
         <div class="pull-left brand float-remove-xs text-center-xs">
             <a href="#">
                 <img src="images/logo-inverse.svg" alt="wso2" title="wso2" class="logo">
-                <h1>WSO2 Pet Store - backend</h1>
+                <h1>WSO2 Pet Store</h1>
             </a>
         </div>
         <div class="pull-right auth float-remove-xs text-center-xs">
