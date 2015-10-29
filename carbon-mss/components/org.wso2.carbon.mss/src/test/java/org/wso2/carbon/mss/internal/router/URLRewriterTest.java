@@ -50,7 +50,6 @@ import java.util.Map;
 public class URLRewriterTest {
     private static final Gson GSON = new Gson();
 
-    private static final Logger log = LoggerFactory.getLogger(URLRewriterTest.class);
     private static final TestHandler testHandler = new TestHandler();
 
     private static String hostname = Constants.HOSTNAME;

@@ -39,7 +39,6 @@ public class HandlerInterceptorTest2 extends BaseHandlerInterceptorTest {
     private static final TestInterceptor interceptor1 = new TestInterceptor();
     private static final TestInterceptor interceptor2 = new TestInterceptor();
 
-    private static final Logger log = LoggerFactory.getLogger(HandlerInterceptorTest2.class);
     private static final TestHandler testHandler = new TestHandler();
 
     private static String hostname = Constants.HOSTNAME;

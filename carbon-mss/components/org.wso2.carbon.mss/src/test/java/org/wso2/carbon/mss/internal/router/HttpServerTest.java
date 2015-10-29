@@ -30,7 +30,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpMethod;
-import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -40,7 +39,6 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.mss.HttpResponder;
 import org.wso2.carbon.mss.MicroservicesRunner;
 
 import java.io.File;
@@ -66,21 +64,10 @@ public class HttpServerTest {
     protected static final Type STRING_MAP_TYPE = new TypeToken<Map<String, String>>() {
     }.getType();
     protected static final Gson GSON = new Gson();
-    protected static final ExceptionHandler EXCEPTION_HANDLER = new ExceptionHandler() {
-        @Override
-        public void handle(Throwable t, HttpRequest request, HttpResponder responder) {
-            if (t instanceof TestHandler.CustomException) {
-                responder.sendStatus(TestHandler.CustomException.HTTP_RESPONSE_STATUS);
-            } else {
-                super.handle(t, request, responder);
-            }
-        }
-    };
 
     @ClassRule
     public static TemporaryFolder tmpFolder = new TemporaryFolder();
 
-    private static final Logger log = LoggerFactory.getLogger(HttpServerTest.class);
     private static final TestHandler testHandler = new TestHandler();
 
     private static String hostname = Constants.HOSTNAME;
