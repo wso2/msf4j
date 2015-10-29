@@ -18,19 +18,6 @@
  */
 package org.wso2.carbon.mss.internal.router;
 
-import com.google.common.collect.Lists;
-import com.google.common.io.ByteStreams;
-import com.google.common.io.Files;
-import com.google.common.io.Resources;
-import com.google.common.util.concurrent.Service;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.wso2.carbon.mss.HttpHandler;
-
-import java.io.File;
-import java.net.URI;
-import java.util.List;
-
 /**
  * Test the HttpsServer with mutual authentication.
  */
