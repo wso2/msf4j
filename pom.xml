@@ -365,7 +365,7 @@
         <maven.javadocplugin.version>2.10.3</maven.javadocplugin.version>
 
         <!-- Dependencies -->
-        <carbon.kernel.version>5.0.0-m7</carbon.kernel.version>
+        <carbon.kernel.version>5.0.0-alpha</carbon.kernel.version>
         <carbon.mss.version>1.0.0-SNAPSHOT</carbon.mss.version>
         <carbon.metrics.version>1.2.0-m2</carbon.metrics.version>
         <carbon.mss.osgi.version>1.0.0.SNAPSHOT</carbon.mss.osgi.version>
