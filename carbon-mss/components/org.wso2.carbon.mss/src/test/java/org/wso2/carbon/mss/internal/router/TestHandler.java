@@ -285,7 +285,7 @@ public class TestHandler implements HttpHandler {
     @PUT
     public void streamUpload(@Context HttpStreamer httpStreamer) throws Exception {
         final StringBuffer sb = new StringBuffer();
-        httpStreamer.bodyConsumer(new HttpStreamingCallback() {
+        httpStreamer.callback(new HttpStreamingCallback() {
             @Override
             public void chunk(ByteBuf request, HttpResponder responder) {
                 sb.append(request.toString(Charsets.UTF_8));

@@ -39,7 +39,7 @@ public class StreamerService {
     @Path("/stream")
     @Consumes("text/plain")
     public void stream(@Context HttpStreamer httpStreamer) {
-        httpStreamer.bodyConsumer(new HttpStreamingCallback() {
+        httpStreamer.callback(new HttpStreamingCallback() {
             @Override
             public void chunk(ByteBuf request, HttpResponder responder) {
 

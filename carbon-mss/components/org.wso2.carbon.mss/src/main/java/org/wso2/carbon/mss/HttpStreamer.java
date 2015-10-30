@@ -26,7 +26,7 @@ public class HttpStreamer {
 
     private HttpStreamingCallback httpStreamingCallback;
 
-    public void bodyConsumer(HttpStreamingCallback httpStreamingCallback) {
+    public void callback(HttpStreamingCallback httpStreamingCallback) {
         this.httpStreamingCallback = httpStreamingCallback;
     }
 
