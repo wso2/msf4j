@@ -20,7 +20,6 @@ package org.wso2.carbon.mss.util;
 
 /**
  * A utility which allows reading variables from the environment or System properties.
- * <p>
  * If the variable in available in the environment as well as a System property, the System property takes
  * precedence.
  */

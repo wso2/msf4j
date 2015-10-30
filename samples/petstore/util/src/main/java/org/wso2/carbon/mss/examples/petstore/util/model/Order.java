@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Represents an order
+ * Represents an order.
  */
 @SuppressWarnings("unused")
 public class Order {

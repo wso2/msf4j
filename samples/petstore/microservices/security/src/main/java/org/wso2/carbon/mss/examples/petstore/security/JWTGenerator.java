@@ -39,7 +39,7 @@ import java.security.interfaces.RSAPrivateKey;
 import java.util.Date;
 
 /**
- * Generates JWT
+ * Generates JWT.
  */
 public class JWTGenerator {
 

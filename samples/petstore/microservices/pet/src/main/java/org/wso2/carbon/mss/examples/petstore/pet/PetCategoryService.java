@@ -35,7 +35,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 /**
- * Pet category microservice
+ * Pet category microservice.
  */
 @Path("/category")
 public class PetCategoryService {

@@ -22,7 +22,7 @@ import org.wso2.carbon.mss.MicroservicesRunner;
 import org.wso2.carbon.mss.security.JWTSecurityInterceptor;
 
 /**
- * Microservice runner for the pet microservices
+ * Microservice runner for the pet microservices.
  */
 public class Runner {
     public static void main(String[] args) {

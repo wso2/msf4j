@@ -21,7 +21,7 @@ package org.wso2.carbon.mss.internal.router.beanconversion;
 
 /**
  * Factory class for getting correct media type conversion
- * instance for a given mime type
+ * instance for a given mime type.
  */
 public class BeanConverter {
 

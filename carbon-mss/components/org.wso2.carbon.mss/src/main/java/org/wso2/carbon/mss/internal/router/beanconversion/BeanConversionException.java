@@ -20,7 +20,7 @@
 package org.wso2.carbon.mss.internal.router.beanconversion;
 
 /**
- * Exception that is thrown when a bean conversion is failed
+ * Exception that is thrown when a bean conversion is failed.
  */
 public class BeanConversionException extends Exception {
 

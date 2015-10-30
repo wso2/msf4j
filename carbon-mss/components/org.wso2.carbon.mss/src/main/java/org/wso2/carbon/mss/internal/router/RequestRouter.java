@@ -42,7 +42,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * This Netty handler handles routing of requests to the relevant microservice
+ * This Netty handler handles routing of requests to the relevant microservice.
  */
 public class RequestRouter extends SimpleChannelInboundHandler<HttpObject> {
 

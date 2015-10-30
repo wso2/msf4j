@@ -22,7 +22,7 @@ package org.wso2.carbon.mss.internal.router.beanconversion;
 import java.lang.reflect.Type;
 
 /**
- * Media type converter for (*)/(*) mime type
+ * Media type converter for (*)/(*) mime type.
  */
 public class DefaultConverter implements MediaTypeConverter {
 

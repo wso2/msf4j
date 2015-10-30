@@ -34,7 +34,7 @@ import java.util.Hashtable;
 import java.util.concurrent.TimeUnit;
 
 /**
- * OSGi service component for MicroServicesServer
+ * OSGi service component for MicroServicesServer.
  */
 @Component(
         name = "org.wso2.carbon.mss.internal.MicroServicesServerSC",
