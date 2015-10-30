@@ -31,7 +31,7 @@ import javax.ws.rs.core.Response;
 
 /**
  * Handles the return values of the resource methods
- * of JAX-RS resource classes
+ * of JAX-RS resource classes.
  */
 public class HttpMethodResponseHandler {
 

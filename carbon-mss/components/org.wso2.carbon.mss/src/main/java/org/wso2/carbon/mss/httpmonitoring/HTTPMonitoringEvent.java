@@ -16,7 +16,7 @@
 package org.wso2.carbon.mss.httpmonitoring;
 
 /**
- * Monitoring Event
+ * Monitoring Event.
  */
 public class HTTPMonitoringEvent {
 

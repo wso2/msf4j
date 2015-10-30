@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * Implementation of the MSS service deployer. This will be picked by the
  * DeploymentEngine service according to the whiteboard pattern to deploy
- * MSS POJO artifacts
+ * MSS POJO artifacts.
  */
 @Component(
         name = "org.wso2.carbon.mss.internal.deployer.MSSDeployer",

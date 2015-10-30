@@ -37,7 +37,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Variant;
 
 /**
- * Trimmed MSS implementation of javax.ws.rs.core.Response
+ * Trimmed MSS implementation of javax.ws.rs.core.Response.
  */
 public class MSSResponse extends Response {
 

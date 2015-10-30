@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
- * A responder for sending chunk-encoded response
+ * A responder for sending chunk-encoded response.
  */
 public interface ChunkResponder extends Closeable {
 

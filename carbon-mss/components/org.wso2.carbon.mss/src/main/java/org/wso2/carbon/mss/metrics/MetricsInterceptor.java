@@ -32,7 +32,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Collecting Metrics via annotations
+ * Collecting Metrics via annotations.
  */
 public class MetricsInterceptor implements Interceptor {
 

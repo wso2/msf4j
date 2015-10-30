@@ -31,7 +31,7 @@ import org.wso2.carbon.transport.http.netty.listener.CarbonNettyServerInitialize
 import java.util.Map;
 
 /**
- * Netty Transport ServerInitializer for the Microservices Server
+ * Netty Transport ServerInitializer for the Microservices Server.
  */
 public class MSSNettyServerInitializer implements CarbonNettyServerInitializer {
 

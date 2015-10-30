@@ -5,7 +5,7 @@ import org.wso2.carbon.metrics.common.MetricsConfiguration;
 import java.util.Locale;
 
 /**
- * Read Metrics Configurations from environment
+ * Read Metrics Configurations from environment.
  */
 public class MetricsEnvConfiguration extends MetricsConfiguration {
 

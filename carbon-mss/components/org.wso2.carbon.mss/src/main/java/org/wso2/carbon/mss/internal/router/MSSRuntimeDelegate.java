@@ -29,7 +29,7 @@ import javax.ws.rs.ext.RuntimeDelegate;
 /**
  * <p>
  * Implementation of the RuntimeDelegate which is
- * required for the javax.ws.rs.core.Response
+ * required for the javax.ws.rs.core.Response.
  * <p>
  * This class will be loaded by javax.ws.rs.ext.RuntimeDelegate
  */

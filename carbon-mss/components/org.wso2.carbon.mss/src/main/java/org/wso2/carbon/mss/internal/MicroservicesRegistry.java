@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * MicroservicesRegistry for the MSS component
+ * MicroservicesRegistry for the MSS component.
  */
 public class MicroservicesRegistry {
 

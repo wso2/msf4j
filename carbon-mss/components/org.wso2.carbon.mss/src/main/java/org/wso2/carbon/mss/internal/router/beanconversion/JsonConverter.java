@@ -26,7 +26,7 @@ import java.lang.reflect.Type;
 
 /**
  * Media type converter for text/json,
- * application/json mime types
+ * application/json mime types.
  */
 public class JsonConverter implements MediaTypeConverter {
 

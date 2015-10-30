@@ -23,7 +23,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Monitor HTTP Requests
+ * Monitor HTTP Requests.
  */
 @Inherited
 @Documented

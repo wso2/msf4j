@@ -18,7 +18,7 @@ package org.wso2.carbon.mss.internal.deployer;
 
 /**
  * Exception that is thrown when processing jar files
- * by MSSJarProcessor
+ * by MSSJarProcessor.
  */
 public class MSSJarProcessorException extends Exception {
     public MSSJarProcessorException(String message) {

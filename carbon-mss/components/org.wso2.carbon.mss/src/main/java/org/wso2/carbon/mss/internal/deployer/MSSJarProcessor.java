@@ -35,7 +35,7 @@ import java.util.jar.Manifest;
 
 /**
  * Dynamically initialising a set of objects from a given jar
- * according to the manifest entry 'microservices'
+ * according to the manifest entry 'microservices'.
  */
 public class MSSJarProcessor {
     private static final Logger log = LoggerFactory.getLogger(MSSJarProcessor.class);

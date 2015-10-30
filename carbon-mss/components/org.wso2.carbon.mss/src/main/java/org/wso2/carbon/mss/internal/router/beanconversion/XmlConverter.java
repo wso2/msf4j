@@ -27,7 +27,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 /**
- * Media type converter for text/xml mime type
+ * Media type converter for text/xml mime type.
  */
 public class XmlConverter implements MediaTypeConverter {
 
