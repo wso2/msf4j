@@ -139,6 +139,8 @@ corresponding parameter's type.
 
 #####@Context
 Inject additional objects to a resource method. Currently supports injection of  following objects.
+* org.wso2.carbon.mss.StreamingInput - 
+    This object can be used to stream a chunked request body and process it while the request is streaming. 
 * io.netty.handler.codec.http.HttpRequest - 
     This object can be used to retrieve HTTP request information. [More info](http://netty.io/4.0/api/io/netty/handler/codec/http/HttpRequest.html).
 * org.wso2.carbon.mss.HttpResponder - 
