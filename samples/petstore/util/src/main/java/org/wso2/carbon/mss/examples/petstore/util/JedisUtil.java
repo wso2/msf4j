@@ -32,7 +32,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 /**
- * Utility class for connecting to Redis & handling Redis calls
+ * Utility class for connecting to Redis &amp; handling Redis calls.
  */
 public class JedisUtil {
     private static final Logger log = LoggerFactory.getLogger(JedisUtil.class);

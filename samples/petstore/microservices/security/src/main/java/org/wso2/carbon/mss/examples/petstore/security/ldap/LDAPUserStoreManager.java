@@ -88,9 +88,9 @@ public class LDAPUserStoreManager {
             throws NamingException {
 
         // Construct the key for the supplied information
-        String key = new StringBuffer().append(hostname).append(":").append(port).append("|")
-                .append((username == null ? "" : username)).append("|")
-                .append((password == null ? "" : password)).toString();
+        String key = hostname + ":" + port + "|" +
+                (username == null ? "" : username) + "|" +
+                (password == null ? "" : password);
 
         if (!instances.containsKey(key)) {
             synchronized (LDAPUserStoreManager.class) {
@@ -134,7 +134,7 @@ public class LDAPUserStoreManager {
             givenName = new BasicAttribute("givenName", username);
             sn = new BasicAttribute("sn", username);
         } else {
-            cnValue = new StringBuffer(firstName).append(" ").append(lastName).toString();
+            cnValue = firstName + " " + lastName;
             givenName = new BasicAttribute("givenName", firstName);
             sn = new BasicAttribute("sn", lastName);
         }
@@ -274,29 +274,18 @@ public class LDAPUserStoreManager {
 
 
     private String getUserDN(String username) {
-        return new StringBuffer()
-                .append("uid=")
-                .append(username)
-                .append(",")
-                .append(USERS_OU)
-                .toString();
+        return "uid=" + username + "," + USERS_OU;
     }
 
     private String getGroupDN(String name) {
-        return new StringBuffer()
-                .append("cn=")
-                .append(name)
-                .append(",")
-                .append(GROUPS_OU)
-                .toString();
+        return "cn=" + name + "," + GROUPS_OU;
     }
 
     private DirContext getInitialContext(String hostname, int port,
                                          String username, String password)
             throws NamingException {
 
-        String providerURL = new StringBuffer("ldap://").append(hostname).append(":")
-                .append(port).toString();
+        String providerURL = "ldap://" + hostname + ":" + port;
 
         Properties props = new Properties();
         props.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
