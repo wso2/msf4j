@@ -35,7 +35,7 @@ import org.wso2.carbon.mss.ChunkResponder;
 import org.wso2.carbon.mss.HandlerContext;
 import org.wso2.carbon.mss.HttpHandler;
 import org.wso2.carbon.mss.HttpResponder;
-import org.wso2.carbon.mss.HttpStreaming;
+import org.wso2.carbon.mss.HttpStreamer;
 import org.wso2.carbon.mss.StreamingInput;
 
 import java.io.IOException;
@@ -283,9 +283,9 @@ public class TestHandler implements HttpHandler {
 
     @Path("/stream/upload")
     @PUT
-    public void streamUpload(@Context HttpStreaming httpStreaming) throws Exception {
+    public void streamUpload(@Context HttpStreamer httpStreamer) throws Exception {
         final StringBuffer sb = new StringBuffer();
-        httpStreaming.bodyConsumer(new StreamingInput() {
+        httpStreamer.bodyConsumer(new StreamingInput() {
             @Override
             public void chunk(ByteBuf request, HttpResponder responder) {
                 sb.append(request.toString(Charsets.UTF_8));

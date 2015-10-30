@@ -22,7 +22,7 @@ package org.wso2.carbon.mss;
  * This class can be injected to a resource method
  * inorder to consume requests as streams
  */
-public class HttpStreaming {
+public class HttpStreamer {
 
     private StreamingInput streamingInput;
 

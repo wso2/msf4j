@@ -25,7 +25,7 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.LastHttpContent;
 import org.wso2.carbon.mss.HttpResponder;
-import org.wso2.carbon.mss.HttpStreaming;
+import org.wso2.carbon.mss.HttpStreamer;
 import org.wso2.carbon.mss.StreamingInput;
 import org.wso2.carbon.mss.internal.router.beanconversion.BeanConversionException;
 
@@ -66,7 +66,7 @@ class HttpMethodInfo {
     HttpMethodInfo(Method method, Object handler, HttpRequest request,
                    HttpResponder responder, Object[] args,
                    ExceptionHandler exceptionHandler, String mediaType,
-                   HttpStreaming httpStreaming) throws HandlerException {
+                   HttpStreamer httpStreamer) throws HandlerException {
         this(method, handler, request, responder, args, exceptionHandler, mediaType);
 
         if (!method.getReturnType().equals(Void.TYPE)) {
@@ -82,7 +82,7 @@ class HttpMethodInfo {
             throw new HandlerException(HttpResponseStatus.INTERNAL_SERVER_ERROR,
                     "Resource method invocation access failed", e);
         }
-        streamingInput = httpStreaming.getStreamingInput();
+        streamingInput = httpStreamer.getStreamingInput();
         if (streamingInput == null) {
             throw new HandlerException(HttpResponseStatus.INTERNAL_SERVER_ERROR,
                     "Streaming unsupported");

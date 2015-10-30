@@ -20,7 +20,7 @@ package org.wso2.carbon.mss.internal.router;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.wso2.carbon.mss.HttpStreaming;
+import org.wso2.carbon.mss.HttpStreamer;
 
 /**
  * Tests functionality fo HttpResourceModel
@@ -31,7 +31,7 @@ public class HttpResourceModelTest {
     public void testStreamingReqSupportedCheckWhenStreamingSupported() throws NoSuchMethodException {
         TestClass testObj = new TestClass();
         HttpResourceModel httpResourceModel = new HttpResourceModel("", testObj.getClass()
-                .getMethod("methodWithHttpStreaming", HttpStreaming.class),
+                .getMethod("methodWithHttpStreaming", HttpStreamer.class),
                 testObj, null);
         Assert.assertTrue(httpResourceModel.isStreamingReqSupported());
         Assert.assertTrue(httpResourceModel.isStreamingReqSupported());
@@ -52,7 +52,7 @@ public class HttpResourceModelTest {
      */
     private static class TestClass {
 
-        public void methodWithHttpStreaming(HttpStreaming httpStreaming) {
+        public void methodWithHttpStreaming(HttpStreamer httpStreamer) {
         }
 
         public void methodWithNoHttpStreaming(Object object) {
