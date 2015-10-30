@@ -26,6 +26,7 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.LastHttpContent;
 import org.wso2.carbon.mss.HttpResponder;
 import org.wso2.carbon.mss.HttpStreaming;
+import org.wso2.carbon.mss.StreamingInput;
 import org.wso2.carbon.mss.internal.router.beanconversion.BeanConversionException;
 
 import java.lang.reflect.InvocationTargetException;
@@ -46,7 +47,7 @@ class HttpMethodInfo {
     private final ExceptionHandler exceptionHandler;
     private final String mediaType;
 
-    private BodyConsumer bodyConsumer;
+    private StreamingInput streamingInput;
 
     HttpMethodInfo(Method method, Object handler, HttpRequest request,
                    HttpResponder responder, Object[] args,
@@ -81,8 +82,8 @@ class HttpMethodInfo {
             throw new HandlerException(HttpResponseStatus.INTERNAL_SERVER_ERROR,
                     "Resource method invocation access failed", e);
         }
-        bodyConsumer = httpStreaming.getBodyConsumer();
-        if (bodyConsumer == null) {
+        streamingInput = httpStreaming.getStreamingInput();
+        if (streamingInput == null) {
             throw new HandlerException(HttpResponseStatus.INTERNAL_SERVER_ERROR,
                     "Streaming unsupported");
         }
@@ -108,8 +109,8 @@ class HttpMethodInfo {
     }
 
     void chunk(HttpContent chunk) {
-        if (bodyConsumer == null) {
-            // If the handler method doesn't want to handle chunk request, the bodyConsumer will be null.
+        if (streamingInput == null) {
+            // If the handler method doesn't want to handle chunk request, the streamingInput will be null.
             // It applies to case when the handler method inspects the request and decides to decline it.
             // Usually the handler also closes the connection after declining the request.
             // However, depending on the closing time and the request,
@@ -129,7 +130,7 @@ class HttpMethodInfo {
 
     void error(Throwable e) {
         try {
-            if (bodyConsumer != null) {
+            if (streamingInput != null) {
                 bodyConsumerError(e);
             }
             exceptionHandler.handle(e, request, responder);
@@ -139,29 +140,29 @@ class HttpMethodInfo {
     }
 
     /**
-     * Calls the {@link org.wso2.carbon.mss.internal.router.BodyConsumer#chunk(io.netty.buffer.ByteBuf,
+     * Calls the {@link StreamingInput#chunk(io.netty.buffer.ByteBuf,
      * org.wso2.carbon.mss.HttpResponder)} method.
      * <p/>
      * If the chunk method calls throws exception,
-     * the {@link org.wso2.carbon.mss.internal.router.BodyConsumer#handleError(Throwable)} will be called and
+     * the {@link StreamingInput#handleError(Throwable)} will be called and
      * this method will throw {@link org.wso2.carbon.mss.internal.router.HandlerException}.
      */
     private void bodyConsumerChunk(ByteBuf buffer) throws HandlerException {
         try {
-            bodyConsumer.chunk(buffer, responder);
+            streamingInput.chunk(buffer, responder);
         } catch (Throwable t) {
             bodyConsumerError(t);
         }
     }
 
     /**
-     * Calls {@link BodyConsumer#finished(io.netty.buffer.ByteBuf, org.wso2.carbon.mss.HttpResponder)}
-     * method. The current bodyConsumer will be set to {@code null} after the call.
+     * Calls {@link StreamingInput#finished(io.netty.buffer.ByteBuf, org.wso2.carbon.mss.HttpResponder)}
+     * method. The current streamingInput will be set to {@code null} after the call.
      */
     private void bodyConsumerFinish(ByteBuf buffer) throws HandlerException {
         try {
-            BodyConsumer consumer = bodyConsumer;
-            bodyConsumer = null;
+            StreamingInput consumer = streamingInput;
+            streamingInput = null;
             consumer.finished(buffer, responder);
         } catch (Throwable t) {
             bodyConsumerError(t);
@@ -169,13 +170,13 @@ class HttpMethodInfo {
     }
 
     /**
-     * Calls {@link org.wso2.carbon.mss.internal.router.BodyConsumer#handleError(Throwable)} and
-     * throws {@link org.wso2.carbon.mss.internal.router.HandlerException}. The current bodyConsumer will be set
+     * Calls {@link StreamingInput#handleError(Throwable)} and
+     * throws {@link org.wso2.carbon.mss.internal.router.HandlerException}. The current streamingInput will be set
      * to {@code null} after the call.
      */
     private void bodyConsumerError(Throwable cause) throws HandlerException {
-        BodyConsumer consumer = bodyConsumer;
-        bodyConsumer = null;
+        StreamingInput consumer = streamingInput;
+        streamingInput = null;
         consumer.handleError(cause);
 
         throw new HandlerException(HttpResponseStatus.INTERNAL_SERVER_ERROR, "", cause);

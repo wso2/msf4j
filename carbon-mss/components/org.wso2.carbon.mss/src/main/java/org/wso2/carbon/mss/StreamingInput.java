@@ -17,17 +17,16 @@
  *
  */
 
-package org.wso2.carbon.mss.internal.router;
+package org.wso2.carbon.mss;
 
 import io.netty.buffer.ByteBuf;
-import org.wso2.carbon.mss.HttpResponder;
 
 /**
  * HttpHandler would extend this abstract class and implement methods to stream the body directly.
  * chunk method would receive the http-chunks of the body and finished would be called
  * on receipt of the last chunk.
  */
-public abstract class BodyConsumer {
+public abstract class StreamingInput {
     /**
      * Http request content will be streamed directly to this method.
      *
