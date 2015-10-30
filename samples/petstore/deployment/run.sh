@@ -27,12 +27,14 @@ fi
 #    git pull
 #fi
 
+git pull
+
 echo "--------------------------------------------------------------"
 echo "Building petstore sample"
 echo "--------------------------------------------------------------"
 cd $HOME
 cd ../../../
-mvn clean install
+mvn clean install -Dmaven.test.skip=true
 
 # copy Pet
 echo "--------------------------------------------------------------"
