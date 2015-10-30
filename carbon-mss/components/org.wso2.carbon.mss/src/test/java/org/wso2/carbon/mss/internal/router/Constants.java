@@ -19,7 +19,7 @@
 package org.wso2.carbon.mss.internal.router;
 
 /**
- * Constants related to tests
+ * Constants related to tests.
  */
 public class Constants {
 

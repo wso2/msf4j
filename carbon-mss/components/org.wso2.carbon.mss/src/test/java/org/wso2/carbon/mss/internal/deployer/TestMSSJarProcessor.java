@@ -22,6 +22,9 @@ import org.junit.Test;
 import java.io.File;
 import java.util.List;
 
+/**
+ * TODO: add a class level comment.
+ */
 public class TestMSSJarProcessor {
 
     @Test

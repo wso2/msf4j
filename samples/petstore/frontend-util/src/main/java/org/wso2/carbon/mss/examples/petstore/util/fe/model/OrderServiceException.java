@@ -19,7 +19,7 @@
 package org.wso2.carbon.mss.examples.petstore.util.fe.model;
 
 /**
- * OrderServiceException is used with OrderServiceClient
+ * OrderServiceException is used with OrderServiceClient.
  */
 public class OrderServiceException extends Exception {
 

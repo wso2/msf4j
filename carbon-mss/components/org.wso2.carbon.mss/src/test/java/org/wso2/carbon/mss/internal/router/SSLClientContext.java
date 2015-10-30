@@ -31,7 +31,7 @@ import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 
 /**
- * Provides Client Context
+ * Provides Client Context.
  * Used by HttpsServerTest
  */
 public class SSLClientContext {

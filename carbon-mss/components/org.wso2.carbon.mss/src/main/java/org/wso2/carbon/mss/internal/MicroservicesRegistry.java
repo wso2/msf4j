@@ -49,7 +49,7 @@ public class MicroservicesRegistry {
     }
 
     /**
-     * Always returns the same MicroservicesRegistry instance
+     * Always returns the same MicroservicesRegistry instance.
      *
      * @return the singleton MicroservicesRegistry instance
      */
@@ -58,7 +58,7 @@ public class MicroservicesRegistry {
     }
 
     /**
-     * Every call to this method will result in the creation of a new MicroservicesRegistry instance
+     * Every call to this method will result in the creation of a new MicroservicesRegistry instance.
      *
      * @return a new MicroservicesRegistry instance
      */

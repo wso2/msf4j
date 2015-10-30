@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Login Filter
+ * Login Filter.
  */
 public class LoginFilter implements Filter {
 

@@ -42,7 +42,7 @@ public class HttpMethodResponseHandler {
     private Multimap<String, String> headers = LinkedListMultimap.create();
 
     /**
-     * Set netty-http responder object
+     * Set netty-http responder object.
      *
      * @param responder HttpResponder
      * @return this HttpMethodResponseHandler instance
@@ -53,7 +53,7 @@ public class HttpMethodResponseHandler {
     }
 
     /**
-     * Set response http status code
+     * Set response http status code.
      *
      * @param status HTTP status code
      * @return this HttpMethodResponseHandler instance
@@ -64,7 +64,7 @@ public class HttpMethodResponseHandler {
     }
 
     /**
-     * Set media type of the entity
+     * Set media type of the entity.
      *
      * @param mediaType entity media type
      * @return this HttpMethodResponseHandler instance
@@ -77,7 +77,7 @@ public class HttpMethodResponseHandler {
     /**
      * Set entity body fro the response. If the entity is
      * type of javax.ws.rs.core.Response extract entity,
-     * status code etc from it
+     * status code etc from it.
      *
      * @param entity the HTTP entity
      * @return this HttpMethodResponseHandler instance
@@ -101,7 +101,7 @@ public class HttpMethodResponseHandler {
     }
 
     /**
-     * Send response using netty-http provided responder
+     * Send response using netty-http provided responder.
      * @throws BeanConversionException If bean conversion fails
      */
     public void send() throws BeanConversionException {

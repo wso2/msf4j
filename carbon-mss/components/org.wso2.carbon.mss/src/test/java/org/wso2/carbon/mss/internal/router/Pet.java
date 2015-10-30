@@ -21,7 +21,7 @@ package org.wso2.carbon.mss.internal.router;
 import java.util.UUID;
 
 /**
- * Bean class used for testing JAX-RS bean conversions
+ * Bean class used for testing JAX-RS bean conversions.
  */
 public class Pet {
 
