@@ -22,7 +22,7 @@ package org.wso2.carbon.mss.example;
 import io.netty.buffer.ByteBuf;
 import org.wso2.carbon.mss.HttpResponder;
 import org.wso2.carbon.mss.HttpStreamer;
-import org.wso2.carbon.mss.StreamingInput;
+import org.wso2.carbon.mss.HttpStreamingCallback;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -39,7 +39,7 @@ public class StreamerService {
     @Path("/stream")
     @Consumes("text/plain")
     public void stream(@Context HttpStreamer httpStreamer) {
-        httpStreamer.bodyConsumer(new StreamingInput() {
+        httpStreamer.bodyConsumer(new HttpStreamingCallback() {
             @Override
             public void chunk(ByteBuf request, HttpResponder responder) {
 

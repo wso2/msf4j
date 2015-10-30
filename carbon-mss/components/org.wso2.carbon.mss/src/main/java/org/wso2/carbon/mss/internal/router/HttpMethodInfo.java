@@ -26,7 +26,7 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.LastHttpContent;
 import org.wso2.carbon.mss.HttpResponder;
 import org.wso2.carbon.mss.HttpStreamer;
-import org.wso2.carbon.mss.StreamingInput;
+import org.wso2.carbon.mss.HttpStreamingCallback;
 import org.wso2.carbon.mss.internal.router.beanconversion.BeanConversionException;
 
 import java.lang.reflect.InvocationTargetException;
@@ -47,7 +47,7 @@ class HttpMethodInfo {
     private final ExceptionHandler exceptionHandler;
     private final String mediaType;
 
-    private StreamingInput streamingInput;
+    private HttpStreamingCallback httpStreamingCallback;
 
     HttpMethodInfo(Method method, Object handler, HttpRequest request,
                    HttpResponder responder, Object[] args,
@@ -82,8 +82,8 @@ class HttpMethodInfo {
             throw new HandlerException(HttpResponseStatus.INTERNAL_SERVER_ERROR,
                     "Resource method invocation access failed", e);
         }
-        streamingInput = httpStreamer.getStreamingInput();
-        if (streamingInput == null) {
+        httpStreamingCallback = httpStreamer.getHttpStreamingCallback();
+        if (httpStreamingCallback == null) {
             throw new HandlerException(HttpResponseStatus.INTERNAL_SERVER_ERROR,
                     "Streaming unsupported");
         }
@@ -109,8 +109,8 @@ class HttpMethodInfo {
     }
 
     void chunk(HttpContent chunk) {
-        if (streamingInput == null) {
-            // If the handler method doesn't want to handle chunk request, the streamingInput will be null.
+        if (httpStreamingCallback == null) {
+            // If the handler method doesn't want to handle chunk request, the httpStreamingCallback will be null.
             // It applies to case when the handler method inspects the request and decides to decline it.
             // Usually the handler also closes the connection after declining the request.
             // However, depending on the closing time and the request,
@@ -130,7 +130,7 @@ class HttpMethodInfo {
 
     void error(Throwable e) {
         try {
-            if (streamingInput != null) {
+            if (httpStreamingCallback != null) {
                 bodyConsumerError(e);
             }
             exceptionHandler.handle(e, request, responder);
@@ -140,29 +140,29 @@ class HttpMethodInfo {
     }
 
     /**
-     * Calls the {@link StreamingInput#chunk(io.netty.buffer.ByteBuf,
+     * Calls the {@link HttpStreamingCallback#chunk(io.netty.buffer.ByteBuf,
      * org.wso2.carbon.mss.HttpResponder)} method.
      * <p/>
      * If the chunk method calls throws exception,
-     * the {@link StreamingInput#handleError(Throwable)} will be called and
+     * the {@link HttpStreamingCallback#handleError(Throwable)} will be called and
      * this method will throw {@link org.wso2.carbon.mss.internal.router.HandlerException}.
      */
     private void bodyConsumerChunk(ByteBuf buffer) throws HandlerException {
         try {
-            streamingInput.chunk(buffer, responder);
+            httpStreamingCallback.chunk(buffer, responder);
         } catch (Throwable t) {
             bodyConsumerError(t);
         }
     }
 
     /**
-     * Calls {@link StreamingInput#finished(io.netty.buffer.ByteBuf, org.wso2.carbon.mss.HttpResponder)}
-     * method. The current streamingInput will be set to {@code null} after the call.
+     * Calls {@link HttpStreamingCallback#finished(io.netty.buffer.ByteBuf, org.wso2.carbon.mss.HttpResponder)}
+     * method. The current httpStreamingCallback will be set to {@code null} after the call.
      */
     private void bodyConsumerFinish(ByteBuf buffer) throws HandlerException {
         try {
-            StreamingInput consumer = streamingInput;
-            streamingInput = null;
+            HttpStreamingCallback consumer = httpStreamingCallback;
+            httpStreamingCallback = null;
             consumer.finished(buffer, responder);
         } catch (Throwable t) {
             bodyConsumerError(t);
@@ -170,13 +170,13 @@ class HttpMethodInfo {
     }
 
     /**
-     * Calls {@link StreamingInput#handleError(Throwable)} and
-     * throws {@link org.wso2.carbon.mss.internal.router.HandlerException}. The current streamingInput will be set
+     * Calls {@link HttpStreamingCallback#handleError(Throwable)} and
+     * throws {@link org.wso2.carbon.mss.internal.router.HandlerException}. The current httpStreamingCallback will be set
      * to {@code null} after the call.
      */
     private void bodyConsumerError(Throwable cause) throws HandlerException {
-        StreamingInput consumer = streamingInput;
-        streamingInput = null;
+        HttpStreamingCallback consumer = httpStreamingCallback;
+        httpStreamingCallback = null;
         consumer.handleError(cause);
 
         throw new HandlerException(HttpResponseStatus.INTERNAL_SERVER_ERROR, "", cause);
