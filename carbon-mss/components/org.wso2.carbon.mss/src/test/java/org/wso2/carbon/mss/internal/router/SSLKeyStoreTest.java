@@ -30,7 +30,7 @@ import org.junit.rules.TemporaryFolder;
 import java.io.File;
 
 /**
- * Tests SSL KeyStore behaviour
+ * Tests SSL KeyStore behaviour.
  */
 public class SSLKeyStoreTest {
     @ClassRule

@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Xml bean conversion test bean
+ * Xml bean conversion test bean.
  */
 @XmlRootElement
 public class XmlBean {

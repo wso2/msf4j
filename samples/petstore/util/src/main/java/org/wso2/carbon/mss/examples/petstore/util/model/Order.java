@@ -30,7 +30,7 @@ public class Order {
     private long dateAdded = System.currentTimeMillis();
 
     /**
-     * IDs of the pets purchased
+     * IDs of the pets purchased.
      */
     private List<String> pets;
     private double total;

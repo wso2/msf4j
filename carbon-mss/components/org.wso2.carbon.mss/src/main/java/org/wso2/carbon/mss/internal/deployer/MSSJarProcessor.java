@@ -55,7 +55,7 @@ public class MSSJarProcessor {
 
     /**
      * Initialize a list of objects from the jar for the specified
-     * classes in the jar's manifest file under 'microservices' key
+     * classes in the jar's manifest file under 'microservices' key.
      *
      * @return this MSSJarProcessor instance
      * @throws MSSJarProcessorException if an error occurs while processing the jar file
@@ -102,7 +102,7 @@ public class MSSJarProcessor {
 
     /**
      * Extracts the comma separated list of fully qualified class
-     * names of the 'microservices' key of the jar's maifest file
+     * names of the 'microservices' key of the jar's maifest file.
      *
      * @param jarPath absolute path to the jar file
      * @return String array of fully qualified class names
@@ -135,7 +135,7 @@ public class MSSJarProcessor {
     }
 
     /**
-     * Return the initialized objects
+     * Return the initialized objects.
      *
      * @return List of initialized objects
      */

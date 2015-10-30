@@ -193,7 +193,7 @@ public class MSSResponse extends Response {
     }
 
     /**
-     * Trimmed Convenient builder for MSSResponse instances
+     * Trimmed Convenient builder for MSSResponse instances.
      */
     public static class Builder extends ResponseBuilder {
 

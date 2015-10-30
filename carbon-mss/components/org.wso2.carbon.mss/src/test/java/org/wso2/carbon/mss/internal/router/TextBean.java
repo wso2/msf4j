@@ -22,7 +22,7 @@
 package org.wso2.carbon.mss.internal.router;
 
 /**
- * Bean class used for testing JAX-RS bean conversions
+ * Bean class used for testing JAX-RS bean conversions.
  */
 public class TextBean {
     private String text;

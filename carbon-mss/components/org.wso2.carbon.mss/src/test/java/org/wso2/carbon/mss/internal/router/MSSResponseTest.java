@@ -27,7 +27,7 @@ import java.util.Arrays;
 import javax.ws.rs.core.Response;
 
 /**
- * Test MSSResponse and MSS ResponseBuilder
+ * Test MSSResponse and MSS ResponseBuilder.
  */
 public class MSSResponseTest {
 

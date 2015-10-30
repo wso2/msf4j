@@ -26,7 +26,7 @@ import org.wso2.carbon.mss.internal.router.Pet;
 import org.wso2.carbon.mss.internal.router.XmlBean;
 
 /**
- * Tests the functionality of BeanConverter
+ * Tests the functionality of BeanConverter.
  */
 public class BeanConverterTest {
 
