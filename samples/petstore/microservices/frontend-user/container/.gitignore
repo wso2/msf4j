@@ -1,0 +1,9 @@
+*.iml
+
+## Directory-based project format:
+.idea/
+
+atlassian-ide-plugin.xml
+soapui.log
+soapui-errors.log
+global-groovy.log
