@@ -149,7 +149,7 @@ include('includes/header.php');
                             ?>
                             <tr>
                                 <td><?php echo $json['id'] ?></td>
-                                <td><?php echo $json['image'] ?></td>
+                                <td><img src="<?php echo 'http://'.$_SERVER["REMOTE_ADDR"].':'.FILE_SERVER_HOST.'/fs/'.$json['image'] ?>" class="tb-preview"/></td>
                                 <td><?php echo $json['category']['name'] ?></td>
                                 <td><?php echo $json['ageMonths'] ?></td>
                                 <td><?php echo $json['price'] ?></td>
