@@ -82,6 +82,12 @@ public class MSSArtifactProjectNature extends AbstractWSO2ProjectNature {
 		javaxDependency.setVersion("2.0.1");
 		dependencyList.add(javaxDependency);
 
+		Dependency servletDependency = new Dependency();
+		servletDependency.setGroupId("javax.servlet");
+		servletDependency.setArtifactId("servlet-api");
+		servletDependency.setVersion("2.5");
+		dependencyList.add(servletDependency);
+
 		MavenUtils.addMavenDependency(mavenProject, dependencyList);
 
 		// Adding required plugin
