@@ -298,7 +298,7 @@ public class TestHandler implements HttpHandler {
             }
 
             @Override
-            public void handleError(Throwable cause) {
+            public void error(Throwable cause) {
                 sb.delete(0, sb.length());
             }
         });
@@ -326,7 +326,7 @@ public class TestHandler implements HttpHandler {
             }
 
             @Override
-            public void handleError(Throwable cause) {
+            public void error(Throwable cause) {
                 offHeapBuffer = null;
             }
         };

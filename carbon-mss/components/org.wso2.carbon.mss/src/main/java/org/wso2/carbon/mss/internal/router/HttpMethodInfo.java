@@ -144,7 +144,7 @@ class HttpMethodInfo {
      * org.wso2.carbon.mss.HttpResponder)} method.
      * <p/>
      * If the chunk method calls throws exception,
-     * the {@link HttpStreamHandler#handleError(Throwable)} will be called and
+     * the {@link HttpStreamHandler#error(Throwable)} will be called and
      * this method will throw {@link org.wso2.carbon.mss.internal.router.HandlerException}.
      */
     private void bodyConsumerChunk(ByteBuf buffer) throws HandlerException {
@@ -170,14 +170,14 @@ class HttpMethodInfo {
     }
 
     /**
-     * Calls {@link HttpStreamHandler#handleError(Throwable)} and
+     * Calls {@link HttpStreamHandler#error(Throwable)} and
      * throws {@link org.wso2.carbon.mss.internal.router.HandlerException}. The current httpStreamHandler will be set
      * to {@code null} after the call.
      */
     private void bodyConsumerError(Throwable cause) throws HandlerException {
         HttpStreamHandler consumer = httpStreamHandler;
         httpStreamHandler = null;
-        consumer.handleError(cause);
+        consumer.error(cause);
 
         throw new HandlerException(HttpResponseStatus.INTERNAL_SERVER_ERROR, "", cause);
     }

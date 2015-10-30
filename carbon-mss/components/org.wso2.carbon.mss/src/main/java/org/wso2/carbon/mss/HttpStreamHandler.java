@@ -26,21 +26,21 @@ import io.netty.buffer.ByteBuf;
  * chunk method would receive the http-chunks of the body and finished would be called
  * on receipt of the last chunk.
  */
-public abstract class HttpStreamHandler {
+public interface HttpStreamHandler {
     /**
      * Http request content will be streamed directly to this method.
      *
      * @param request
      * @param responder
      */
-    public abstract void chunk(ByteBuf request, HttpResponder responder);
+    void chunk(ByteBuf request, HttpResponder responder);
 
     /**
      * This is called on the receipt of the last HttpChunk.
      *
      * @param responder
      */
-    public abstract void finished(ByteBuf request, HttpResponder responder);
+    void finished(ByteBuf request, HttpResponder responder);
 
     /**
      * When there is exception on netty while streaming, it will be propagated to handler
@@ -48,5 +48,5 @@ public abstract class HttpStreamHandler {
      *
      * @param cause
      */
-    public abstract void handleError(Throwable cause);
+    void error(Throwable cause);
 }
