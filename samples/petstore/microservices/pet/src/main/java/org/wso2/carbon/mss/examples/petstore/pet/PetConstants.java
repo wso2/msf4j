@@ -19,7 +19,7 @@
 package org.wso2.carbon.mss.examples.petstore.pet;
 
 /**
- * Pet store - pet microservice constants
+ * Pet store - pet microservice constants.
  */
 public final class PetConstants {
 

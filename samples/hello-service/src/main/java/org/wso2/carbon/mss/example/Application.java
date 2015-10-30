@@ -21,7 +21,7 @@ package org.wso2.carbon.mss.example;
 import org.wso2.carbon.mss.MicroservicesRunner;
 
 /**
- * Application entry point
+ * Application entry point.
  */
 public class Application {
     public static void main(String[] args) {

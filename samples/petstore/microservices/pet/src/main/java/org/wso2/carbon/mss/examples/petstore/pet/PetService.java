@@ -38,7 +38,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 /**
- * Pet microservice
+ * Pet microservice.
  */
 @Path("/pet")
 public class PetService {

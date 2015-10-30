@@ -19,7 +19,7 @@
 package org.wso2.carbon.mss.examples.petstore.transaction;
 
 /**
- * Constants used in the transaction service
+ * Constants used in the transaction service.
  */
 public final class TxnConstants {
 

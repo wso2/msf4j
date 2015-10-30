@@ -23,7 +23,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
 /**
- * Hello service resource class
+ * Hello service resource class.
  */
 @Path("/hello")
 public class HelloService {

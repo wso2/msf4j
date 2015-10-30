@@ -22,7 +22,7 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 
 /**
- * Bean class used for populating user
+ * Bean class used for populating user.
  */
 public class User {
 

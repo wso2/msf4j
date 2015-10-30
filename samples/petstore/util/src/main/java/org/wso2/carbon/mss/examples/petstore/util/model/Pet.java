@@ -21,7 +21,7 @@ package org.wso2.carbon.mss.examples.petstore.util.model;
 import java.util.UUID;
 
 /**
- * Represents a pet
+ * Represents a pet.
  */
 public class Pet {
 

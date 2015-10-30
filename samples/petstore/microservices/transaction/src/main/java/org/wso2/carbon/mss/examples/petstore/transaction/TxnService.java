@@ -35,7 +35,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 /**
- * Transaction microservice
+ * Transaction microservice.
  */
 @Path("/transaction")
 public class TxnService {

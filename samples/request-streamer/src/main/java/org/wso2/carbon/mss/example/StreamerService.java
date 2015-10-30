@@ -32,7 +32,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 
 /**
- * Streamer service resource class
+ * Streamer service resource class.
  */
 @Path("/streamer")
 public class StreamerService {

@@ -19,7 +19,7 @@
 package org.wso2.carbon.mss.examples.petstore.util.model;
 
 /**
- * Represents a credit card
+ * Represents a credit card.
  */
 @SuppressWarnings("unused")
 public class CreditCard {

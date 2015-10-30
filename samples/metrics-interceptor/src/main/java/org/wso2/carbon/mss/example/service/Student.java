@@ -19,7 +19,7 @@
 package org.wso2.carbon.mss.example.service;
 
 /**
- * Student
+ * Student.
  */
 public class Student {
 

@@ -32,7 +32,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
 /**
- * UserAuthentication micro service
+ * UserAuthentication micro service.
  */
 @Path("/user")
 public class UserAuthenticationService {
