@@ -19,7 +19,9 @@
 package org.wso2.carbon.mss.example;
 
 
+import com.google.common.base.Charsets;
 import io.netty.buffer.ByteBuf;
+import io.netty.handler.codec.http.HttpResponseStatus;
 import org.wso2.carbon.mss.HttpResponder;
 import org.wso2.carbon.mss.HttpStreamHandler;
 import org.wso2.carbon.mss.HttpStreamer;
@@ -39,21 +41,22 @@ public class StreamerService {
     @Path("/stream")
     @Consumes("text/plain")
     public void stream(@Context HttpStreamer httpStreamer) {
-
+        final StringBuffer sb = new StringBuffer();
         httpStreamer.callback(new HttpStreamHandler() {
             @Override
             public void chunk(ByteBuf request, HttpResponder responder) {
-
+                sb.append(request.toString(Charsets.UTF_8));
             }
 
             @Override
             public void finished(ByteBuf request, HttpResponder responder) {
-
+                sb.append(request.toString(Charsets.UTF_8));
+                responder.sendString(HttpResponseStatus.OK, sb.toString());
             }
 
             @Override
             public void error(Throwable cause) {
-
+                sb.delete(0, sb.length());
             }
         });
     }
@@ -61,8 +64,8 @@ public class StreamerService {
     @POST
     @Path("/aggregate")
     @Consumes("text/plain")
-    public void aggregate(String content) {
-
+    public String aggregate(String content) {
+        return content;
     }
 
 }
