@@ -26,7 +26,7 @@ import io.netty.buffer.ByteBuf;
  * chunk method would receive the http-chunks of the body and finished would be called
  * on receipt of the last chunk.
  */
-public abstract class HttpStreamingCallback {
+public abstract class HttpStreamHandler {
     /**
      * Http request content will be streamed directly to this method.
      *

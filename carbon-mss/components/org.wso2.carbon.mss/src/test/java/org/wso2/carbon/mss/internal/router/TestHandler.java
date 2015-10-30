@@ -35,8 +35,8 @@ import org.wso2.carbon.mss.ChunkResponder;
 import org.wso2.carbon.mss.HandlerContext;
 import org.wso2.carbon.mss.HttpHandler;
 import org.wso2.carbon.mss.HttpResponder;
+import org.wso2.carbon.mss.HttpStreamHandler;
 import org.wso2.carbon.mss.HttpStreamer;
-import org.wso2.carbon.mss.HttpStreamingCallback;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -285,7 +285,7 @@ public class TestHandler implements HttpHandler {
     @PUT
     public void streamUpload(@Context HttpStreamer httpStreamer) throws Exception {
         final StringBuffer sb = new StringBuffer();
-        httpStreamer.callback(new HttpStreamingCallback() {
+        httpStreamer.callback(new HttpStreamHandler() {
             @Override
             public void chunk(ByteBuf request, HttpResponder responder) {
                 sb.append(request.toString(Charsets.UTF_8));
@@ -306,10 +306,10 @@ public class TestHandler implements HttpHandler {
 
     @Path("/stream/upload/fail")
     @PUT
-    public HttpStreamingCallback streamUploadFailure() {
+    public HttpStreamHandler streamUploadFailure() {
         final int fileSize = 30 * 1024 * 1024;
 
-        return new HttpStreamingCallback() {
+        return new HttpStreamHandler() {
             int count = 0;
             ByteBuffer offHeapBuffer = ByteBuffer.allocateDirect(fileSize);
 

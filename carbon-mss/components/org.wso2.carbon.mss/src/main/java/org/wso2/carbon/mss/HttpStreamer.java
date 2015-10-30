@@ -24,13 +24,13 @@ package org.wso2.carbon.mss;
  */
 public class HttpStreamer {
 
-    private HttpStreamingCallback httpStreamingCallback;
+    private HttpStreamHandler httpStreamHandler;
 
-    public void callback(HttpStreamingCallback httpStreamingCallback) {
-        this.httpStreamingCallback = httpStreamingCallback;
+    public void callback(HttpStreamHandler httpStreamHandler) {
+        this.httpStreamHandler = httpStreamHandler;
     }
 
-    public HttpStreamingCallback getHttpStreamingCallback() {
-        return httpStreamingCallback;
+    public HttpStreamHandler getHttpStreamHandler() {
+        return httpStreamHandler;
     }
 }
