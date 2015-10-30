@@ -64,9 +64,7 @@ checkcommand mysql
 checkcommand unzip
 
 echo "Creating MySQL Database for HTTP Monitoring."
-mysql -u $mysql_user -p -e "create database if not exists mss_httpmon;"
-echo "Creating Tables."
-mysql -u $mysql_user -p mss_httpmon < $config_dir/sql/http-mon-mysql.sql
+mysql -u $mysql_user -p < $config_dir/sql/http-mon-mysql.sql
 
 echo "Copying Datasources."
 cp $config_dir/datasources/*-datasources.xml $das_dir/repository/conf/datasources/
