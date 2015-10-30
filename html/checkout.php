@@ -6,8 +6,7 @@ if(!isset($_SESSION['username'])){
     header("location:login.php");
 }
 //return page breadcrumbs
-$breadcrumbs = array("cart.php"=>"cart");
-$cart = [];
+$breadcrumbs = array("checkout.php"=>"checkout");
 if(isset($_SESSION['cart'])){
     $cart = $_SESSION['cart'];
 }
@@ -36,7 +35,7 @@ if(isset($_SESSION['cart'])){
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>WSO2 Pet Store</title>
+    <title>WSO2 Pet Store - Checkout</title>
 
     <link rel="shortcut icon" href="images/favicon.png" />
 
@@ -64,7 +63,7 @@ include('includes/header.php');
 
 <!-- navbar -->
 <div class="navbar-wrapper">
-    <nav class="navbar navbar-default" data-spy="affix" data-offset-top="50" data-offset-bottom="40">
+    <nav class="navbar navbar-default" data-offset-top="50" data-offset-bottom="40">
         <div class="container-fluid">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -130,66 +129,32 @@ include('includes/header.php');
     <div class="container-fluid body-wrapper">
         <div class="clearfix"></div>
         <div class="page-header" id="loading">
-            <h1>Cart</h1>
+            <h1>Checkout</h1>
         </div>
         <div class="row">
-            <div class="col-md-6">
-                <table class="table table-striped">
-                    <?php
-                    if(is_array($cart) && (count($cart) > 0)) {
-                    ?>
-                    <thead>
-                    <tr>
-                        <th>Pet Id</th>
-                        <th>Image</th>
-                        <th>Price($)</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php
-                    $total_price = 0;
-                    foreach ($cart as $json) {
-                        $total_price += $json['price'];
-                        $_SESSION['carttotal'] = $total_price;
-                        ?>
-                        <tr>
-                            <td><?php echo $json['id'] ?></td>
-                            <td><img src="<?php echo $json['image'] ?>" /></td>
-                            <td><?php echo $json['price'] ?></td>
-                            <td>
-                                <a href="#" class="btn padding-reduce-on-grid-view remove-pet"
-                                   data-petid="<?php echo $json['id'] ?>">
-                                <span class="fw-stack">
-                                    <i class="fw fw-ring fw-stack-2x"></i>
-                                    <i class="fw fw-delete fw-stack-1x"></i>
-                                </span>
-                                </a>
-                            </td>
-                        </tr>
-                        <?php
-                    }
-                    ?>
-                     <tr>
-                         <td colspan="2"><strong>Total Amount</strong></td>
-                         <td><strong><?php echo  $total_price; ?></strong></td>
-                         <td></td>
-                     </tr>
-                     <tr>
-                         <td colspan="2"></td>
-                         <td colspan="2">
-                             <a type="button" id="pet-type-btn" class="btn btn-default btn-primary" href="checkout.php">Proceed to Checkout</a>
-                         </td>
-                     </tr>
-                    <?php
-                    }else{
-                        echo '<div class="alert alert-info" role="alert">No Pets added yet. Click <a href="index.php">here to add new pet</a></div>';
-                    }
-                    ?>
-
-                    </tbody>
-                </table>
-
+            <div class="form-horizontal col-md-5"
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <label for="card-number" class="control-label">Cart Number </label>
+                        <input type="text" class="form-control" id="card-number" min="1" max="1200"
+                               placeholder="Cart Number" required="" inputmode="numeric" autocomplete="cc-number">
+                    </div>
+                    <div class="col-sm-12">
+                        <label for="card-holder-name" class="control-label">Cart Holder Name </label>
+                        <input type="text" class="form-control" id="card-holder-name" min="1" max="1200"
+                               placeholder="Cart Holder Name" required="">
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="card-holder-cvc" class="control-label">Cart Holder CVC </label>
+                        <input type="text" class="form-control" id="card-holder-cvc" min="1" max="1200"
+                               placeholder="Cart Holder CVC" required="">
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="col-sm-6">
+                        <br/>
+                        <a type="button" id="place-order-btn" class="btn btn-default btn-primary">Place Order</a>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -212,31 +177,31 @@ include('includes/header.php');
 
 <!-- Noty JS -->
 <script src="libs/noty_2.3.5/packaged/jquery.noty.packaged.min.js"></script>
-
 <script>
-    $(document).on('click', '.remove-pet', function(){
-       var petId = $(this).attr('data-petid');
+    $('#place-order-btn').click(function(){
+        var cardNumber = $('#card-number').val(),
+            cardHolderName = $('#card-holder-name').val(),
+            cardCvc = $('#card-holder-cvc').val();
 
         $.ajax({
             type: "POST",
             url:  "controllers/cart/cart.php",
             dataType: 'json',
             data: {
-                cart_action: 'removeFromcart',
-                pet_id: petId
+                cart_action: 'placeOrder',
+                card_number: cardNumber,
+                card_holder_name: cardHolderName,
+                card_cvc: cardCvc
             },
             success: function (data, textStatus, jqXHR) {
                 if (data.status == 'error') {
                     var n = noty({text: data.message, layout: 'bottomRight', type: 'error'});
-                    window.setTimeout(function(){
-                        window.location.href = 'logout.php';
-                    }, 1500);
                 } else if (data.status == 'warning') {
                     var n = noty({text: data.message, layout: 'bottomRight', type: 'warning'});
                 } else {
                     var n = noty({text: data.message, layout: 'bottomRight', type: 'success'});
                     window.setTimeout(function(){
-                        window.location.href = 'cart.php';
+                        window.location.href = 'index.php';
                     }, 1500);
                 }
             }

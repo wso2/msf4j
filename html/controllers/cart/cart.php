@@ -21,6 +21,29 @@ switch ($cart_action) {
         removeFromCart($pet_id, $cart);
         break;
 
+    case "placeOrder":
+        $url = 'http://'.TRANSACTION_SERVICE.':'.TRANSACTION_SERVICE_PORT.'/transaction/';
+        $cart = $_SESSION['cart'];
+        $cart_ids = array();
+        foreach($cart as $json ){
+            array_push($cart_ids, $json['id']);
+        }
+        $card_number = htmlspecialchars($_POST["card_number"]);
+        $card_holder_name = htmlspecialchars($_POST["card_holder_name"]);
+        $card_cvc = htmlspecialchars($_POST["card_cvc"]);
+        $cart_total = $_SESSION['carttotal'];
+        $data = array(
+            "pets" => $cart_ids,
+            'total' => $cart_total,
+            'creditCard'=>array(
+                "number"=> $card_number,
+                "name"=>$card_holder_name,
+                "cvc"=>$card_cvc
+            )
+        );
+        placeOrder($url, $token, json_encode($data));
+        break;
+
     default:
         echo "Invalid API call";
 }
