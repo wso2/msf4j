@@ -20,7 +20,6 @@
 package org.wso2.carbon.mss;
 
 import io.netty.buffer.ByteBuf;
-import org.wso2.carbon.mss.HttpResponder;
 
 /**
  * HttpHandler would extend this abstract class and implement methods to stream the body directly.
