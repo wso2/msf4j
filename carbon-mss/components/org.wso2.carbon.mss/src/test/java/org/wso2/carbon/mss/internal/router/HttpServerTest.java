@@ -20,21 +20,16 @@
 package org.wso2.carbon.mss.internal.router;
 
 import com.google.common.base.Charsets;
-import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.CharStreams;
 import com.google.common.io.Files;
 import com.google.common.reflect.TypeToken;
-import com.google.common.util.concurrent.Service;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import io.netty.channel.ChannelPipeline;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpMethod;
-import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -42,10 +37,7 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.wso2.carbon.mss.HttpHandler;
-import org.wso2.carbon.mss.HttpResponder;
+import org.wso2.carbon.mss.MicroservicesRunner;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,6 +51,8 @@ import java.net.URI;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Test the HttpServer.
@@ -68,55 +62,29 @@ public class HttpServerTest {
     protected static final Type STRING_MAP_TYPE = new TypeToken<Map<String, String>>() {
     }.getType();
     protected static final Gson GSON = new Gson();
-    protected static final ExceptionHandler EXCEPTION_HANDLER = new ExceptionHandler() {
-        @Override
-        public void handle(Throwable t, HttpRequest request, HttpResponder responder) {
-            if (t instanceof TestHandler.CustomException) {
-                responder.sendStatus(TestHandler.CustomException.HTTP_RESPONSE_STATUS);
-            } else {
-                super.handle(t, request, responder);
-            }
-        }
-    };
-    private static final Logger LOG = LoggerFactory.getLogger(HttpServerTest.class);
+
     @ClassRule
     public static TemporaryFolder tmpFolder = new TemporaryFolder();
-    protected static NettyHttpService service;
+
+    private static final TestHandler testHandler = new TestHandler();
+
+    private static String hostname = Constants.HOSTNAME;
+    private static final int port = Constants.PORT + 1;
     protected static URI baseURI;
 
-    protected static NettyHttpService.Builder createBaseNettyHttpServiceBuilder() {
-        List<HttpHandler> handlers = Lists.newArrayList();
-        handlers.add(new TestHandler());
-
-        NettyHttpService.Builder builder = NettyHttpService.builder();
-        builder.addHttpHandlers(handlers);
-        builder.setHttpChunkLimit(75 * 1024);
-        builder.setExceptionHandler(EXCEPTION_HANDLER);
-
-        builder.modifyChannelPipeline(new Function<ChannelPipeline, ChannelPipeline>() {
-            @Override
-            public ChannelPipeline apply(ChannelPipeline channelPipeline) {
-                channelPipeline.addAfter("compressor", "testhandler", new TestChannelHandler());
-                return channelPipeline;
-            }
-        });
-        return builder;
-    }
+    private static final MicroservicesRunner microservicesRunner = new MicroservicesRunner(port);
 
     @BeforeClass
     public static void setup() throws Exception {
-        service = createBaseNettyHttpServiceBuilder().build();
-        service.startAndWait();
-        Service.State state = service.state();
-        Assert.assertEquals(Service.State.RUNNING, state);
-
-        int port = service.getBindAddress().getPort();
-        baseURI = URI.create(String.format("http://localhost:%d", port));
+        baseURI = URI.create(String.format("http://%s:%d", hostname, port));
+        microservicesRunner
+                .deploy(testHandler)
+                .start();
     }
 
     @AfterClass
     public static void teardown() throws Exception {
-        service.stopAndWait();
+        microservicesRunner.stop();
     }
 
     @Test
@@ -147,21 +115,25 @@ public class HttpServerTest {
 
     @Test
     public void testLargeFileUpload() throws IOException {
-        testStreamUpload(30 * 1024 * 1024);
+        testStreamUpload(1000000);
     }
-
 
     protected void testStreamUpload(int size) throws IOException {
         //create a random file to be uploaded.
         File fname = tmpFolder.newFile();
         RandomAccessFile randf = new RandomAccessFile(fname, "rw");
-        randf.setLength(size);
+        String contentStr = IntStream.range(0, size)
+                .mapToObj(value -> String.valueOf((int) (Math.random() * 1000)))
+                .collect(Collectors.joining(""));
+        randf.write(contentStr.getBytes(Charsets.UTF_8));
         randf.close();
 
         //test stream upload
         HttpURLConnection urlConn = request("/test/v1/stream/upload", HttpMethod.PUT);
         Files.copy(fname, urlConn.getOutputStream());
         Assert.assertEquals(200, urlConn.getResponseCode());
+        String contentFromServer = getContent(urlConn);
+        Assert.assertEquals(contentStr, contentFromServer);
         urlConn.disconnect();
     }
 
@@ -337,13 +309,12 @@ public class HttpServerTest {
      *
      * @throws Exception
      */
-    @Test
+    /*@Test
     public void testChannelPipelineModification() throws Exception {
         HttpURLConnection urlConn = request("/test/v1/tweets/1", HttpMethod.GET);
         Assert.assertEquals(200, urlConn.getResponseCode());
         Assert.assertEquals(urlConn.getHeaderField(TestChannelHandler.HEADER_FIELD), TestChannelHandler.HEADER_VALUE);
-    }
-
+    }*/
     @Test
     public void testMultiMatchFoo() throws Exception {
         testContent("/test/v1/multi-match/foo", "multi-match-get-actual-foo");
@@ -384,7 +355,7 @@ public class HttpServerTest {
         testContent("/test/v1/multi-match/foo", "multi-match-put-actual-foo", HttpMethod.PUT);
     }
 
-    //  @Test
+    //@Test
     public void testChunkResponse() throws IOException {
         HttpURLConnection urlConn = request("/test/v1/chunk", HttpMethod.POST);
         try {

@@ -52,7 +52,6 @@ public class UserAuthenticationService {
         log.info("Authenticating user " + name + " ..");
         String jwt;
         boolean isAuthenticated;
-
         try {
             LDAPUserStoreManager ldapUserStoreManager = LDAPUserStoreManager.
                     getInstance(host, port, connectionName, connectionPassword);
@@ -65,12 +64,15 @@ public class UserAuthenticationService {
 
                 JWTGenerator jwtGenerator = new JWTGenerator();
                 jwt = jwtGenerator.generateJWT(userFromUserStore);
-
-                return Response.ok("User" + name + " authenticated successfully").header(JWT_HEADER, jwt).build();
+                String msg = "User " + name + " authenticated successfully";
+                log.info(msg);
+                return Response.ok(msg).header(JWT_HEADER, jwt).build();
             }
         } catch (Exception e) {
+            log.error("Exception occurred while trying to authenticate user " + name, e);
             return Response.status(Response.Status.EXPECTATION_FAILED).build();
         }
+        log.warn("Failed login attempt by user " + name);
         return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid login attempt.").build();
     }
 
@@ -97,6 +99,7 @@ public class UserAuthenticationService {
                     user.getPassword(), user.getEmail(), user.getRoles());
             log.info("User " + name + " successfully added ..");
         } catch (NamingException e) {
+            log.error("Exception occurred while adding user " + name, e);
             return Response.status(Response.Status.EXPECTATION_FAILED).build();
         }
         return Response.status(Response.Status.OK).entity("User " + name + " successfully added").build();
@@ -113,6 +116,7 @@ public class UserAuthenticationService {
                     .getInstance(host, port, connectionName, connectionPassword);
             ldapUserStoreManager.addGroup(name, description);
         } catch (NamingException e) {
+            log.error("Error occurred while adding LDAP group " + name, e);
             return Response.status(Response.Status.EXPECTATION_FAILED).build();
         }
         return Response.status(Response.Status.OK).entity("LDAP group " + name + " successfully added").build();

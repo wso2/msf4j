@@ -21,26 +21,50 @@ package org.wso2.carbon.mss.internal.router;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.handler.codec.http.HttpRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.netty.handler.codec.http.FullHttpRequest;
+import io.netty.handler.codec.http.HttpContent;
+import io.netty.handler.codec.http.HttpObject;
+import io.netty.util.AttributeKey;
+
 
 /**
  * HttpDispatcher that invokes the appropriate http-handler method. The handler and the arguments are read
  * from the {@code RequestRouter} context.
  */
+public class HttpDispatcher extends SimpleChannelInboundHandler<HttpObject> {
 
-public class HttpDispatcher extends SimpleChannelInboundHandler<HttpRequest> {
-
-    private static final Logger LOG = LoggerFactory.getLogger(HttpDispatcher.class);
+    private HttpMethodInfoBuilder httpMethodInfoBuilder;
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, HttpRequest msg) throws Exception {
-        /*HttpMethodInfo methodInfo = ctx.channel().attr(RequestRouter.METHOD_INFO).get();
-        if (msg instanceof HttpContent) {
-            methodInfo.chunk((HttpContent) msg);
-        } else {
-            methodInfo.invoke();
-        }*/
+    protected void channelRead0(ChannelHandlerContext ctx, HttpObject msg) throws HandlerException {
+        Object httpMethodInfoBuilderObj = ctx.pipeline()
+                .context(RequestRouter.class)
+                .attr(AttributeKey.valueOf(RequestRouter.METHOD_INFO_BUILDER))
+                .get();
+        if (httpMethodInfoBuilderObj instanceof HttpMethodInfoBuilder) {
+            httpMethodInfoBuilder = (HttpMethodInfoBuilder) httpMethodInfoBuilderObj;
+            if (msg instanceof FullHttpRequest) {
+                FullHttpRequest fullHttpRequest = (FullHttpRequest) msg;
+                httpMethodInfoBuilder
+                        .httpRequest(fullHttpRequest)
+                        .build()
+                        .invoke();
+            } else if (msg instanceof HttpContent) {
+                httpMethodInfoBuilder
+                        .build()
+                        .chunk((HttpContent) msg);
+            }
+        }
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws HandlerException {
+        if (httpMethodInfoBuilder != null) {
+            httpMethodInfoBuilder.getHttpResourceModel()
+                    .getExceptionHandler()
+                    .handle(cause,
+                            httpMethodInfoBuilder.getRequest(),
+                            httpMethodInfoBuilder.getResponder());
+        }
     }
 }

@@ -363,7 +363,8 @@
         <slf4j.log4j.version>1.6.0</slf4j.log4j.version>
         <gson.version>2.2.4</gson.version>
         <org.wso2.carbon.transport.http.netty.version>1.0.0-SNAPSHOT</org.wso2.carbon.transport.http.netty.version>
-        <org.wso2.carbon.transport.http.netty.osgi.version>1.0.0.SNAPSHOT</org.wso2.carbon.transport.http.netty.osgi.version>
+        <org.wso2.carbon.transport.http.netty.osgi.version>1.0.0.SNAPSHOT
+        </org.wso2.carbon.transport.http.netty.osgi.version>
         <guava.version>13.0.1</guava.version>
         <jsr305.version>2.0.1</jsr305.version>
         <beanutils.version>1.8.3_2</beanutils.version>
@@ -381,8 +382,9 @@
         <module>carbon-mss/components/org.wso2.carbon.mss</module>
         <module>carbon-mss/features/org.wso2.carbon.mss.feature</module>
         <module>mss-service-parent</module>
-        <module>samples/executable-jar</module>
-        <module>samples/osgi-bundle</module>
+        <module>samples/hello-service</module>
+        <module>samples/stockquote-service</module>
+        <module>samples/stockquote-service-bundle</module>
         <module>samples/security-interceptor</module>
         <module>samples/metrics-interceptor</module>
         <module>samples/petstore</module>

@@ -21,9 +21,7 @@ package org.wso2.carbon.mss.internal.router;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpRequest;
@@ -41,7 +39,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Set;
 import java.util.stream.Collectors;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -85,15 +82,14 @@ public final class HttpResourceHandler implements HttpHandler {
             }
 
             for (Method method : handler.getClass().getDeclaredMethods()) {
-                Set<HttpMethod> httpMethods = getHttpMethods(method);
-                if (Modifier.isPublic(method.getModifiers()) && !httpMethods.isEmpty()) {
+                if (Modifier.isPublic(method.getModifiers()) && isHttpMethodAvailable(method)) {
                     String relativePath = "";
                     if (method.getAnnotation(Path.class) != null) {
                         relativePath = method.getAnnotation(Path.class).value();
                     }
                     String absolutePath = String.format("%s/%s", basePath, relativePath);
-                    patternRouter.add(absolutePath, new HttpResourceModel(httpMethods, absolutePath, method,
-                            handler, exceptionHandler));
+                    patternRouter.add(absolutePath, new HttpResourceModel(absolutePath, method,
+                            handler, new ExceptionHandler()));
                 } else {
                     log.trace("Not adding method {}({}) to path routing like. " +
                                     "HTTP calls will not be routed to this method",
@@ -103,106 +99,11 @@ public final class HttpResourceHandler implements HttpHandler {
         }
     }
 
-    /**
-     * Fetches the HttpMethod from annotations and returns String representation of HttpMethod.
-     * Return emptyString if not present.
-     *
-     * @param method Method handling the http request.
-     * @return String representation of HttpMethod from annotations or emptyString as a default.
-     */
-    private Set<HttpMethod> getHttpMethods(Method method) {
-        Set<HttpMethod> httpMethods = Sets.newHashSet();
-
-        if (method.isAnnotationPresent(GET.class)) {
-            httpMethods.add(HttpMethod.GET);
-        }
-        if (method.isAnnotationPresent(PUT.class)) {
-            httpMethods.add(HttpMethod.PUT);
-        }
-        if (method.isAnnotationPresent(POST.class)) {
-            httpMethods.add(HttpMethod.POST);
-        }
-        if (method.isAnnotationPresent(DELETE.class)) {
-            httpMethods.add(HttpMethod.DELETE);
-        }
-
-        return ImmutableSet.copyOf(httpMethods);
-    }
-
-    /**
-     * Call the appropriate handler for handling the httprequest. 404 if path is not found. 405 if path is found but
-     * httpMethod does not match what's configured.
-     *
-     * @param request   instance of {@code HttpRequest}
-     * @param responder instance of {@code HttpResponder} to handle the request.
-     */
-    public void handle(HttpRequest request, HttpResponder responder) {
-
-//        if (urlRewriter != null) {
-//            try {
-//                request.setUri(URI.create(request.getUri()).normalize().toString());
-//                if (!urlRewriter.rewrite(request, responder)) {
-//                    return;
-//                }
-//            } catch (Throwable t) {
-//                responder.sendString(HttpResponseStatus.INTERNAL_SERVER_ERROR,
-//                        String.format("Caught exception processing request. Reason: %s",
-//                                t.getMessage()));
-//                log.error("Exception thrown during rewriting of uri {}", request.getUri(), t);
-//                return;
-//            }
-//        }
-//
-//        try {
-//            String path = URI.create(request.getUri()).normalize().getPath();
-//
-//            List<PatternPathRouterWithGroups.RoutableDestination<HttpResourceModel>> routableDestinations
-//                    = patternRouter.getDestinations(path);
-//
-//            PatternPathRouterWithGroups.RoutableDestination<HttpResourceModel> matchedDestination =
-//                    getMatchedDestination(routableDestinations, request.getMethod(), path);
-//
-//            if (matchedDestination != null) {
-//                //Found a httpresource route to it.
-//                HttpResourceModel httpResourceModel = matchedDestination.getDestination();
-//
-//                // Call preCall method of handler hooks.
-//                boolean terminated = false;
-//                HandlerInfo info = new HandlerInfo(httpResourceModel.getMethod().getDeclaringClass().getName(),
-//                        httpResourceModel.getMethod().getName());
-//                for (HandlerHook hook : handlerHooks) {
-//                    if (!hook.preCall(request, responder, info)) {
-//                        // Terminate further request processing if preCall returns false.
-//                        terminated = true;
-//                        break;
-//                    }
-//                }
-//
-//                // Call httpresource method
-//                if (!terminated) {
-//                    // Wrap responder to make post hook calls.
-//                    responder = new WrappedHttpResponder(responder, handlerHooks, request, info);
-//                    if (httpResourceModel.handle(request, responder,
-//                            matchedDestination.getGroupNameValues()).isStreaming()) {
-//                        responder.sendString(HttpResponseStatus.METHOD_NOT_ALLOWED,
-//                                String.format("Body Consumer not supported for internalHttpResponder: %s",
-//                                        request.getUri()));
-//                    }
-//                }
-//            } else if (routableDestinations.size() > 0) {
-//                //Found a matching resource but could not find the right HttpMethod so return 405
-//                responder.sendString(HttpResponseStatus.METHOD_NOT_ALLOWED,
-//                        String.format("Problem accessing: %s. Reason: Method Not Allowed", request.getUri()));
-//            } else {
-//                responder.sendString(HttpResponseStatus.NOT_FOUND,
-//                        String.format("Problem accessing: %s. Reason: Not Found",
-//                                request.getUri()));
-//            }
-//        } catch (Throwable t) {
-//            responder.sendString(HttpResponseStatus.INTERNAL_SERVER_ERROR,
-//                    String.format("Caught exception processing request. Reason: %s", t.getMessage()));
-//            log.error("Exception thrown during request processing for uri {}", request.getUri(), t);
-//        }
+    private boolean isHttpMethodAvailable(Method method) {
+        return method.isAnnotationPresent(GET.class) ||
+                method.isAnnotationPresent(PUT.class) ||
+                method.isAnnotationPresent(POST.class) ||
+                method.isAnnotationPresent(DELETE.class);
     }
 
     /**
@@ -213,7 +114,8 @@ public final class HttpResourceHandler implements HttpHandler {
      * @param responder instance of {@code HttpResponder} to handle the request.
      * @return HttpMethodInfo object, null if urlRewriter rewrite returns false, also when method cannot be invoked.
      */
-    public HttpMethodInfo getDestinationMethod(HttpRequest request, HttpResponder responder) throws Exception {
+    public HttpMethodInfoBuilder getDestinationMethod(HttpRequest request, HttpResponder responder)
+            throws HandlerException {
         if (urlRewriter != null) {
             try {
                 request.setUri(URI.create(request.getUri()).normalize().toString());
@@ -273,11 +175,14 @@ public final class HttpResourceHandler implements HttpHandler {
                 if (!terminated) {
                     // Wrap responder to make post hook calls.
                     responder = new WrappedHttpResponder(responder, interceptors, request, handlerInfo);
-                    return httpResourceModel.handle(request,
-                            responder,
-                            matchedDestination.getGroupNameValues(),
-                            contentTypeHeader,
-                            acceptHeader);
+                    return HttpMethodInfoBuilder
+                            .getInstance()
+                            .httpResourceModel(httpResourceModel)
+                            .httpRequest(request)
+                            .httpResponder(responder)
+                            .requestInfo(matchedDestination.getGroupNameValues(),
+                                    contentTypeHeader,
+                                    acceptHeader);
                 }
             } else if (!routableDestinations.isEmpty()) {
                 //Found a matching resource but could not find the right HttpMethod so return 405

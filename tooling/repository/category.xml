@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/org.wso2.developerstudio.mss.feature_1.0.0.qualifier.jar" id="org.wso2.developerstudio.mss.feature" version="1.0.0.qualifier">
+      <category name="org.wso2.developerstudio.mss"/>
+   </feature>
+   <category-def name="org.wso2.developerstudio.mss" label="MSS Tool"/>
+</site>

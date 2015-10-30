@@ -19,27 +19,21 @@
 
 package org.wso2.carbon.mss.internal.router;
 
-import com.google.common.collect.Lists;
-import com.google.common.io.ByteStreams;
-import com.google.common.io.Files;
 import com.google.common.io.Resources;
-import com.google.common.util.concurrent.Service;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpMethod;
-import org.junit.Assert;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.wso2.carbon.mss.HttpHandler;
+import org.wso2.carbon.mss.MicroservicesRunner;
+import org.wso2.carbon.transport.http.netty.internal.config.TransportConfigurationBuilder;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.net.URI;
 import java.net.URL;
-import java.util.List;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLSession;
 
 /**
  * Test the HttpsServer.
@@ -48,54 +42,39 @@ public class HttpsServerTest extends HttpServerTest {
 
     private static SSLClientContext sslClientContext;
 
+    private static final TestHandler testHandler = new TestHandler();
+    private static MicroservicesRunner microservicesRunner;
+
+    private static String hostname = Constants.HOSTNAME;
+    private static final int port = Constants.PORT + 4;
+
+
     @BeforeClass
     public static void setup() throws Exception {
-        List<HttpHandler> handlers = Lists.newArrayList();
-        handlers.add(new TestHandler());
-
-        File keyStore = tmpFolder.newFile();
-        ByteStreams.copy(Resources.newInputStreamSupplier(Resources.getResource("cert.jks")),
-                Files.newOutputStreamSupplier(keyStore));
-
-    /* IMPORTANT
-     * Provide Certificate Configuration Here * *
-     * enableSSL(<SSLConfig>)
-     * KeyStore : SSL certificate
-     * KeyStorePassword : Key Store Password
-     * CertificatePassword : Certificate password if different from Key Store password or null
-    */
-
-        NettyHttpService.Builder builder = createBaseNettyHttpServiceBuilder();
-        builder.enableSSL(SSLConfig.builder(keyStore, "secret").setCertificatePassword("secret")
-                .build());
-
+        baseURI = URI.create(String.format("https://%s:%d", hostname, port));
+        System.setProperty(TransportConfigurationBuilder.NETTY_TRANSPORT_CONF,
+                Resources.getResource("netty-transports-1.xml").getPath());
+        microservicesRunner = new MicroservicesRunner();
         sslClientContext = new SSLClientContext();
-        service = builder.build();
-        service.startAndWait();
-        Service.State state = service.state();
-        Assert.assertEquals(Service.State.RUNNING, state);
-
-        int port = service.getBindAddress().getPort();
-        baseURI = URI.create(String.format("https://localhost:%d", port));
+        microservicesRunner
+                .deploy(testHandler)
+                .start();
     }
 
-    public static void setSslClientContext(SSLClientContext sslClientContext) {
-        HttpsServerTest.sslClientContext = sslClientContext;
+    @AfterClass
+    public static void teardown() throws Exception {
+        microservicesRunner.stop();
     }
 
     @Override
     protected HttpURLConnection request(String path, HttpMethod method, boolean keepAlive) throws IOException {
         URL url = baseURI.resolve(path).toURL();
         HttpsURLConnection.setDefaultSSLSocketFactory(sslClientContext.getClientContext().getSocketFactory());
-        HostnameVerifier allHostsValid = new HostnameVerifier() {
-            public boolean verify(String hostname, SSLSession session) {
-                return true;
-            }
-        };
+        HostnameVerifier allHostsValid = (hostname1, session) -> true;
 
         // Install the all-trusting host verifier
         HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
-        HttpsURLConnection urlConn = (HttpsURLConnection) url.openConnection();
+        HttpURLConnection urlConn = (HttpsURLConnection) url.openConnection();
         if (method == HttpMethod.POST || method == HttpMethod.PUT) {
             urlConn.setDoOutput(true);
         }
@@ -109,5 +88,9 @@ public class HttpsServerTest extends HttpServerTest {
     @Override
     protected Socket createRawSocket(URL url) throws IOException {
         return sslClientContext.getClientContext().getSocketFactory().createSocket(url.getHost(), url.getPort());
+    }
+
+    public static void setSslClientContext(SSLClientContext sslClientContext) {
+        HttpsServerTest.sslClientContext = sslClientContext;
     }
 }

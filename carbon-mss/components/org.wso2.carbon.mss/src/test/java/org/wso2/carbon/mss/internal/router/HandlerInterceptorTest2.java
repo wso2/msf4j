@@ -19,16 +19,13 @@
 
 package org.wso2.carbon.mss.internal.router;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.util.concurrent.Service;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.wso2.carbon.mss.MicroservicesRunner;
 
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
@@ -37,32 +34,29 @@ import java.util.concurrent.TimeUnit;
  * Tests handler interceptor.
  */
 public class HandlerInterceptorTest2 extends BaseHandlerInterceptorTest {
-    private static final Logger LOG = LoggerFactory.getLogger(HandlerInterceptorTest2.class);
     private static final TestInterceptor interceptor1 = new TestInterceptor();
     private static final TestInterceptor interceptor2 = new TestInterceptor();
-    private static String hostname = "127.0.0.1";
-    private static NettyHttpService service;
+
+    private static final TestHandler testHandler = new TestHandler();
+
+    private static String hostname = Constants.HOSTNAME;
+    private static final int port = Constants.PORT + 0;
+
+    private static final MicroservicesRunner microservicesRunner = new MicroservicesRunner(port);
 
     @BeforeClass
     public static void setup() throws Exception {
-
-        NettyHttpService.Builder builder = NettyHttpService.builder();
-        builder.addHttpHandlers(ImmutableList.of(new TestHandler()));
-        builder.setInterceptors(ImmutableList.of(interceptor1, interceptor2));
-        builder.setHost(hostname);
-
-        service = builder.build();
-        service.startAndWait();
-        Service.State state = service.state();
-        Assert.assertEquals(Service.State.RUNNING, state);
-
-        int port = service.getBindAddress().getPort();
+        microservicesRunner
+                .deploy(testHandler)
+                .addInterceptor(interceptor1)
+                .addInterceptor(interceptor2)
+                .start();
         baseURI = URI.create(String.format("http://%s:%d", hostname, port));
     }
 
     @AfterClass
     public static void teardown() throws Exception {
-        service.stopAndWait();
+        microservicesRunner.stop();
     }
 
     @Before
