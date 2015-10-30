@@ -339,3 +339,7 @@ a.btn:hover, .btn:hover, a.btn:focus, .btn:focus {
     margin-bottom: 10px;
     width: 50px;
 }
+.tb-preview {
+    width: 100px;
+    max-height: 100px;
+}

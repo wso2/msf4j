@@ -74,7 +74,7 @@ include('includes/navbar.php');
         <div class="page-header" id="loading">
             <h1>Add Pets</h1>
         </div>
-        <form class="form-horizontal col-md-5" enctype="multipart/form-data">
+        <form class="form-horizontal col-md-5" enctype="multipart/form-data" method="post" id="pet-target" action="">
             <div class="form-group">
                 <div class="col-sm-12">
                     <label for="pet-category" class="control-label">Type</label>
@@ -109,12 +109,12 @@ include('includes/navbar.php');
             <div class="form-group">
                 <div class="col-sm-12">
                     <label for="pet-file-upload" class="control-label">Image </label>
-                    <input type="file" name="file_upl" id="pet-file-upload" class="form-control" />
+                    <input type="file" name="file" id="file" class="form-control" />
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-12">
-                    <button type="button" id="pet-add-btn" class="btn btn-default btn-primary">Add</button>
+                    <input type="submit" id="pet-add-btn" class="btn btn-default btn-primary" value="Add" />
                 </div>
             </div>
         </form>
@@ -139,32 +139,24 @@ include('includes/navbar.php');
 <script src="libs/noty_2.3.5/packaged/jquery.noty.packaged.min.js"></script>
 <script>
     $(document).ready(function () {
-        var petCategory = $('#pet-category'),
-            petAgeMonths = $('#pet-age-months'),
-            petPrice = $('#pet-price');
-
         // handle the add pet type button click event
-        $('#pet-add-btn').click(function () {
+        $('#pet-target').submit(function (e) {
+            e.preventDefault();
             var btn = $(this); //get current clicked button
-            addPets(btn);
-        });
+            var formData = new FormData($('form')[0])
+            formData.append('api_type','addPets');
+            formData.append('pet-category', $('#pet-category').val());
+            formData.append('pet-age-months', $('#pet-age-months').val());
+            formData.append('pet-price', $('#pet-price').val());
 
-        function addPets(btn){
-            btn.button('loading');
-            var file = $('#pet-file-upload')[0].files[0];
-            console.log(file)
+            console.log(formData);
             $.ajax({
                 type: "POST",
                 url:  "controllers/rest.php",
-                dataType: 'json',
-                data: {
-                    api_type: 'addPets',
-                    pet_category: petCategory.val(),
-                    pet_age_months: petAgeMonths.val(),
-                    pet_price: petPrice.val(),
-                    file_name: file['name'],
-
-                },
+                data: formData,
+                cache: false,
+                processData:false,
+                contentType: false,
                 success: function (data, textStatus, jqXHR) {
                     if (data.status == 'error') {
                         var n = noty({text: data.message, layout: 'bottomRight', type: 'error'});
@@ -176,14 +168,22 @@ include('includes/navbar.php');
                     } else {
                         var n = noty({text: data.message, layout: 'bottomRight', type: 'success'});
                         window.setTimeout(function(){
-                            window.location.href = 'pets.php';
-                        }, 1500);
+                         window.location.href = 'pets.php';
+                         }, 1500);
                     }
                 }
             })
                 .always(function () {
                     btn.button('reset');
                 });
+        });
+
+        function addPets(btn){
+            btn.button('loading');
+            var formData = new FormData(this);
+                //formData.append('api_type', 'addPets');
+            console.log(formData)
+
         }
 
     });
