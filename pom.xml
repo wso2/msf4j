@@ -356,6 +356,7 @@
     </build>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- Maven plugins -->
         <maven.checkstyleplugin.version>2.16</maven.checkstyleplugin.version>
         <maven.findbugsplugin.version>3.0.2</maven.findbugsplugin.version>
