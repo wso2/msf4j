@@ -133,7 +133,8 @@ include('includes/header.php');
                 ?>
                 <div class="col-xs-6 col-md-2">
                     <div class="thumbnail">
-                        <img src="images/paw-pets.png" alt="Add Pet Types" class="pet-image">
+                        <img src="<?php echo 'http://'.$_SERVER["REMOTE_ADDR"].':'.FILE_SERVER_HOST.'/fs/'.$json['image'] ?>"
+                             alt="<?php echo $json['image'] ?>" class="pet-image">
 
                         <div class="caption">
                             <h3 class="pet-price">Price: $<?php echo $json['price'] ?></h3>
