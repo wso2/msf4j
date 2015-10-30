@@ -338,6 +338,20 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven.javadocplugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>docs</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>javadoc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -347,6 +361,7 @@
         <maven.findbugsplugin.version>3.0.2</maven.findbugsplugin.version>
         <maven.wagon.ssh.version>2.1</maven.wagon.ssh.version>
         <maven.bundleplugin.version>2.5.4</maven.bundleplugin.version>
+        <maven.javadocplugin.version>2.10.3</maven.javadocplugin.version>
 
         <!-- Dependencies -->
         <carbon.kernel.version>5.0.0-m7</carbon.kernel.version>
