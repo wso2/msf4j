@@ -17,7 +17,7 @@
  *
  */
 
-package org.wso2.carbon.mss.internal.router;
+package org.wso2.carbon.mss;
 
 import io.netty.buffer.ByteBuf;
 import org.wso2.carbon.mss.HttpResponder;

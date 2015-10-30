@@ -26,6 +26,7 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.LastHttpContent;
 import org.wso2.carbon.mss.HttpResponder;
 import org.wso2.carbon.mss.HttpStreaming;
+import org.wso2.carbon.mss.StreamingInput;
 import org.wso2.carbon.mss.internal.router.beanconversion.BeanConversionException;
 
 import java.lang.reflect.InvocationTargetException;

@@ -18,8 +18,6 @@
 
 package org.wso2.carbon.mss;
 
-import org.wso2.carbon.mss.internal.router.StreamingInput;
-
 /**
  * This class can be injected to a resource method
  * inorder to consume requests as streams

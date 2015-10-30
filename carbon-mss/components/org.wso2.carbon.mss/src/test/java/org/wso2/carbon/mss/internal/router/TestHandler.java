@@ -36,6 +36,7 @@ import org.wso2.carbon.mss.HandlerContext;
 import org.wso2.carbon.mss.HttpHandler;
 import org.wso2.carbon.mss.HttpResponder;
 import org.wso2.carbon.mss.HttpStreaming;
+import org.wso2.carbon.mss.StreamingInput;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
