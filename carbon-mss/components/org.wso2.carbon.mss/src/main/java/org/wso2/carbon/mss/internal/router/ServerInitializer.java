@@ -62,7 +62,7 @@ public class ServerInitializer extends ChannelInitializer<SocketChannel> {
 //        pipeline.addLast("aggregator", new HttpObjectAggregator(httpChunkLimit));
 //        pipeline.addLast("aggregator", new HttpObjectAggregator(Integer.MAX_VALUE)); //TODO: put a proper value
 
-        //TODO: add this only if chunking is enabled (BodyConsumer implemented?)
+        //TODO: add this only if chunking is enabled (StreamingInput implemented?)
         pipeline.addLast("chunkWriter", new ChunkedWriteHandler());
         pipeline.addLast("compressor", new HttpContentCompressor());
         pipeline.addLast(eventExecutor, "router", new RequestRouter(resourceHandler, httpChunkLimit));

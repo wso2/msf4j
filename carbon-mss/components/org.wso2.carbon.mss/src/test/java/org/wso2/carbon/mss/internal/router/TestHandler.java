@@ -284,7 +284,7 @@ public class TestHandler implements HttpHandler {
     @PUT
     public void streamUpload(@Context HttpStreaming httpStreaming) throws Exception {
         final StringBuffer sb = new StringBuffer();
-        httpStreaming.bodyConsumer(new BodyConsumer() {
+        httpStreaming.bodyConsumer(new StreamingInput() {
             @Override
             public void chunk(ByteBuf request, HttpResponder responder) {
                 sb.append(request.toString(Charsets.UTF_8));
@@ -305,10 +305,10 @@ public class TestHandler implements HttpHandler {
 
     @Path("/stream/upload/fail")
     @PUT
-    public BodyConsumer streamUploadFailure() {
+    public StreamingInput streamUploadFailure() {
         final int fileSize = 30 * 1024 * 1024;
 
-        return new BodyConsumer() {
+        return new StreamingInput() {
             int count = 0;
             ByteBuffer offHeapBuffer = ByteBuffer.allocateDirect(fileSize);
 

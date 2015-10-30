@@ -27,7 +27,7 @@ import org.wso2.carbon.mss.HttpResponder;
  * chunk method would receive the http-chunks of the body and finished would be called
  * on receipt of the last chunk.
  */
-public abstract class BodyConsumer {
+public abstract class StreamingInput {
     /**
      * Http request content will be streamed directly to this method.
      *

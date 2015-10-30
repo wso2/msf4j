@@ -18,7 +18,7 @@
 
 package org.wso2.carbon.mss;
 
-import org.wso2.carbon.mss.internal.router.BodyConsumer;
+import org.wso2.carbon.mss.internal.router.StreamingInput;
 
 /**
  * This class can be injected to a resource method
@@ -26,13 +26,13 @@ import org.wso2.carbon.mss.internal.router.BodyConsumer;
  */
 public class HttpStreaming {
 
-    private BodyConsumer bodyConsumer;
+    private StreamingInput streamingInput;
 
-    public void bodyConsumer(BodyConsumer bodyConsumer) {
-        this.bodyConsumer = bodyConsumer;
+    public void bodyConsumer(StreamingInput streamingInput) {
+        this.streamingInput = streamingInput;
     }
 
-    public BodyConsumer getBodyConsumer() {
-        return bodyConsumer;
+    public StreamingInput getStreamingInput() {
+        return streamingInput;
     }
 }
