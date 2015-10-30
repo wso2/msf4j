@@ -57,6 +57,10 @@ public class HttpResourceModelProcessor {
      * @param request     HttpRequest to be handled.
      * @param responder   HttpResponder to write the response.
      * @param groupValues Values needed for the invocation.
+     * @param contentType Content types
+     * @param acceptTypes Accept types
+     * @return HttpMethodInfo
+     * @throws HandlerException If an error occurs
      */
     @SuppressWarnings("unchecked")
     public HttpMethodInfo buildHttpMethodInfo(HttpRequest request,

@@ -4,9 +4,9 @@ Generated File. Do not edit.
 Version,0,5
 
 [COMPONENTS]
-rel:VBoxSVCM.dylib,1441697103000
+rel:VBoxSVCM.dylib,1444918799000
 rel:VBoxXPCOMIPCC.dylib,1441697104000
-rel:VBoxC.dylib,1441697103000
+rel:VBoxC.dylib,1444918798000
 
 [CLASSIDS]
 {d9e56bf8-e32e-4b6d-87f1-06d73b0ce7ca},,,,rel:VBoxXPCOMIPCC.dylib
@@ -15,7 +15,7 @@ rel:VBoxC.dylib,1441697103000
 {b1a7a4f2-47b9-4a1e-82b2-07ccd5323c3f},,,,rel:VBoxSVCM.dylib
 {3c02f46d-c9d2-4f11-a384-53f0cf917214},,,,rel:VBoxC.dylib
 {dd3fc71d-26c0-4fe1-bf6f-67f633265bba},,,,rel:VBoxC.dylib
-{63a5d9dc-4828-425a-bd50-bd10a4b26f2c},,,,rel:VBoxXPCOMIPCC.dylib
+{63a5d9dc-4828-425a-bd50-bd10a4b26f2c},@mozilla.org/ipc/dconnect-service;1,,ipcDConnectService,rel:VBoxXPCOMIPCC.dylib
 
 [CONTRACTIDS]
 @virtualbox.org/VirtualBoxClient;1,{dd3fc71d-26c0-4fe1-bf6f-67f633265bba}

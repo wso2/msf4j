@@ -75,6 +75,7 @@ public final class HttpResourceModel {
      * @param path    path associated with this model.
      * @param method  handler that handles the http request.
      * @param handler instance {@code HttpHandler}.
+     * @param exceptionHandler instance {@code ExceptionHandler} to handle exceptions.
      */
     public HttpResourceModel(String path, Method method, Object handler,
                              ExceptionHandler exceptionHandler) {

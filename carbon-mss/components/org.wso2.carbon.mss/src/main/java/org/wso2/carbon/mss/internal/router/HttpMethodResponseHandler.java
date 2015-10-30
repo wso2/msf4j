@@ -44,7 +44,8 @@ public class HttpMethodResponseHandler {
     /**
      * Set netty-http responder object
      *
-     * @param responder
+     * @param responder HttpResponder
+     * @return this HttpMethodResponseHandler instance
      */
     public HttpMethodResponseHandler setResponder(HttpResponder responder) {
         this.responder = responder;
@@ -54,7 +55,8 @@ public class HttpMethodResponseHandler {
     /**
      * Set response http status code
      *
-     * @param status http status code
+     * @param status HTTP status code
+     * @return this HttpMethodResponseHandler instance
      */
     public HttpMethodResponseHandler setStatus(int status) {
         this.status = HttpResponseStatus.valueOf(status);
@@ -65,6 +67,7 @@ public class HttpMethodResponseHandler {
      * Set media type of the entity
      *
      * @param mediaType entity media type
+     * @return this HttpMethodResponseHandler instance
      */
     public HttpMethodResponseHandler setMediaType(String mediaType) {
         this.mediaType = mediaType;
@@ -76,7 +79,8 @@ public class HttpMethodResponseHandler {
      * type of javax.ws.rs.core.Response extract entity,
      * status code etc from it
      *
-     * @param entity
+     * @param entity the HTTP entity
+     * @return this HttpMethodResponseHandler instance
      */
     public HttpMethodResponseHandler setEntity(Object entity) {
         if (entity instanceof Response) {
@@ -84,9 +88,7 @@ public class HttpMethodResponseHandler {
             this.entity = response.getEntity();
             MultivaluedMap<String, String> multivaluedMap = response.getStringHeaders();
             if (multivaluedMap != null) {
-                multivaluedMap.forEach((key, strings) -> {
-                    headers.putAll(key, strings);
-                });
+                multivaluedMap.forEach(headers::putAll);
             }
             setStatus(response.getStatus());
             if (response.getMediaType() != null) {
@@ -99,7 +101,8 @@ public class HttpMethodResponseHandler {
     }
 
     /**
-     * send response using netty-http provided responder
+     * Send response using netty-http provided responder
+     * @throws BeanConversionException If bean conversion fails
      */
     public void send() throws BeanConversionException {
         HttpResponseStatus status;

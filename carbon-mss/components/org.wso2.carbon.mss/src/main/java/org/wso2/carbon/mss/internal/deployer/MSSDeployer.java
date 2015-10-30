@@ -65,7 +65,7 @@ public class MSSDeployer implements Deployer {
      *
      * @param artifact the artifact to be deployed
      * @return A key to identify the deployed artifact
-     * @throws CarbonDeploymentException
+     * @throws CarbonDeploymentException If deployment fails
      */
     public Object deploy(Artifact artifact) throws CarbonDeploymentException {
         File artifactFile = artifact.getFile();
@@ -92,7 +92,7 @@ public class MSSDeployer implements Deployer {
      * Undeploy the artifact with the key from the netty-http service
      *
      * @param key Key to identify the artifact
-     * @throws CarbonDeploymentException
+     * @throws CarbonDeploymentException If an error occurs while undeploying
      */
     public void undeploy(Object key) throws CarbonDeploymentException {
         log.info("Undeploying artifact: {}", key);

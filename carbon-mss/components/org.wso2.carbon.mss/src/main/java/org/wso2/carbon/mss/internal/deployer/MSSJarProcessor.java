@@ -45,6 +45,8 @@ public class MSSJarProcessor {
 
     /**
      * @param file jar file to be processed
+     *
+     * @return this MSSJarProcessor instance
      */
     public MSSJarProcessor setArtifact(File file) {
         this.file = file;
@@ -54,6 +56,9 @@ public class MSSJarProcessor {
     /**
      * Initialize a list of objects from the jar for the specified
      * classes in the jar's manifest file under 'microservices' key
+     *
+     * @return this MSSJarProcessor instance
+     * @throws MSSJarProcessorException if an error occurs while processing the jar file
      */
     public MSSJarProcessor process() throws MSSJarProcessorException {
         String jarPath = file.getAbsolutePath();

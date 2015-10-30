@@ -118,6 +118,7 @@ public interface HttpResponder {
      *
      * @param status  the status code to respond with
      * @param headers additional headers to send with the response. May be null.
+     * @return ChunkResponder
      */
     ChunkResponder sendChunkStart(HttpResponseStatus status, @Nullable Multimap<String, String> headers);
 

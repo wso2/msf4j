@@ -25,7 +25,7 @@ import com.google.common.base.Objects;
  * Please note that the {@link ImmutablePair} cannot be modified once set, but the
  * objects within them can be, so in general it means that if there are mutable objects
  * within the pair then the pair itself is effectively mutable.
- * <p/>
+ *
  * <pre>
  *   ImmutablePair<Tuple, TupleInputStreamIdentifier> tupleStreamPair= new
  *    ImmutablePair<Tuple, TupleInputStreamIdentifier> (tuple, identifier);

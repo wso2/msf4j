@@ -22,7 +22,7 @@
  * {@code NettyHttpService} sets up the necessary pipeline and manages starting, stopping,
  * state-management of the web service.
  *
- * <p/>
+ *
  * In-order to handle http requests, {@code HttpHandler} must be implemented. The methods
  * in the classes implemented from {@code HttpHandler} must be annotated with Jersey annotations to
  * specify http uri paths and http methods.

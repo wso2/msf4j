@@ -28,7 +28,7 @@ package org.wso2.carbon.mss;
  * annotations from the base class (if extended) will not be applied to the given handler object.
  * Note: The framework that calls the handler assumes that the implementation is threadsafe.
  * Note: If the HttpHandler implementation is extended, the annotations are not inherited from the base class.
- * <p/>
+ *
  * Example:
  * public class ApiHandler implements HttpHandler{
  * {@literal @}Override
@@ -39,7 +39,7 @@ package org.wso2.carbon.mss;
  * public void destroy(HandlerContext context){
  * //Perform teardown operations before the server shuts down.
  * }
- * <p/>
+ *
  * {@literal @}Path("/common/v1/widgets")
  * {@literal @}GET
  * public void handleGet(HttpRequest request, HttpResponder responder){

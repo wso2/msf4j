@@ -114,7 +114,7 @@ public class LDAPServerConfigurationBuilder {
      *          <Property name="saslHostName">localhost</Property>
      *          <Property name="saslPrincipalName">ldap/localhost@EXAMPLE.COM</Property>
      *          </EmbeddedLDAP>
-     *          <p/>
+     *
      *          <!-- Default partition configurations -->
      *          <DefaultPartition>
      *          <Property name="id">root</Property>
@@ -122,7 +122,7 @@ public class LDAPServerConfigurationBuilder {
      *          <Property name="kdcPassword">secret</Property>
      *          <Property name="ldapServerPrinciplePassword">randall</Property>
      *          </DefaultPartition>
-     *          <p/>
+     *
      *          <!-- Default partition admin configurations -->
      *          <PartitionAdmin>
      *          <Property name="uid">admin</Property>
@@ -132,14 +132,14 @@ public class LDAPServerConfigurationBuilder {
      *          <Property name="password">admin</Property>
      *          <Property name="passwordType">SHA</Property>
      *          </PartitionAdmin>
-     *          <p/>
+     *
      *          <!-- Default partition admin's group configuration -->
      *          <PartitionAdminGroup>
      *          <Property name="adminRoleName">admin</Property>
      *          <Property name="groupNameAttribute">cn</Property>
      *          <Property name="memberNameAttribute">member</Property>
      *          </PartitionAdminGroup>
-     *          <p/>
+     *
      *          <!-- KDC configurations -->
      *          <KDCServer>
      *          <Property name="name">defaultKDC</Property>
@@ -150,7 +150,7 @@ public class LDAPServerConfigurationBuilder {
      *          <Property name="maximumRenewableLifeTime">604800000</Property>
      *          <Property name="preAuthenticationTimeStampEnabled">true</Property>
      *          </KDCServer>
-     *          <p/>
+     *
      *          </EmbeddedLDAPConfig>
      */
     public void buildConfigurations() throws EmbeddingLDAPException {
@@ -320,7 +320,7 @@ public class LDAPServerConfigurationBuilder {
      *                         <Property name="kdcPassword">secret</Property>
      *                         <Property name="ldapServerPrinciplePassword">randall</Property>
      *                         </DefaultPartition>
-     *                         <p/>
+     *
      *                         <!-- Default partition admin configurations -->
      *                         <PartitionAdmin>
      *                         <Property name="uid">admin</Property>
@@ -330,7 +330,7 @@ public class LDAPServerConfigurationBuilder {
      *                         <Property name="password">admin</Property>
      *                         <Property name="passwordType">SHA</Property>
      *                         </PartitionAdmin>
-     *                         <p/>
+     *
      *                         <!-- Default partition admin's group configuration -->
      *                         <PartitionAdminGroup>
      *                         <Property name="adminRoleName">admin</Property>

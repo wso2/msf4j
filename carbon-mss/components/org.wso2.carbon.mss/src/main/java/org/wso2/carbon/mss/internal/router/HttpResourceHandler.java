@@ -113,6 +113,7 @@ public final class HttpResourceHandler implements HttpHandler {
      * @param request   instance of {@code HttpRequest}
      * @param responder instance of {@code HttpResponder} to handle the request.
      * @return HttpMethodInfo object, null if urlRewriter rewrite returns false, also when method cannot be invoked.
+     * @throws HandlerException If URL rewriting fails
      */
     public HttpMethodInfoBuilder getDestinationMethod(HttpRequest request, HttpResponder responder)
             throws HandlerException {

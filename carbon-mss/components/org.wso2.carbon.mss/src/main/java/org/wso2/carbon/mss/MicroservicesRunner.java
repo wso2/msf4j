@@ -33,7 +33,7 @@ import org.wso2.carbon.transport.http.netty.listener.NettyListener;
 import java.util.Set;
 
 /**
- * This runner initializes the microservices runtime, deploys the microservices & service interceptors,
+ * This runner initializes the microservices runtime, deploys the microservices &amp; service interceptors,
  * and starts the relevant transports.
  */
 public class MicroservicesRunner {
@@ -66,10 +66,10 @@ public class MicroservicesRunner {
     /**
      * Default constructor which will take care of initializing Netty transports in the file pointed to by the
      * System property <code>transports.netty.conf</code>.
-     * <p/>
+     *
      * If that System property is not specified, it will start a single Netty transport on port 8080.
      *
-     * @see {@link #MicroservicesRunner(int...)}
+     * {@link #MicroservicesRunner(int...)}
      */
     public MicroservicesRunner() {
         TransportsConfiguration trpConfig = TransportConfigurationBuilder.build();
@@ -97,7 +97,7 @@ public class MicroservicesRunner {
     }
 
     /**
-     * Add an interceptor which will get called before & after the deployed microservices are invoked. Multiple
+     * Add an interceptor which will get called before &amp; after the deployed microservices are invoked. Multiple
      * interceptors can be added.
      *
      * @param interceptor The interceptor to be added.

@@ -68,6 +68,9 @@ public final class ParamConvertUtils {
      * Creates a converter function that converts a path segment into the given result type.
      * Current implementation doesn't follow the {@link javax.ws.rs.PathParam} specification to maintain backward
      * compatibility.
+     *
+     * @param resultType Result type
+     * @return Function the function
      */
     public static Function<String, Object> createPathParamConverter(final Type resultType) {
         if (!(resultType instanceof Class)) {
@@ -87,6 +90,9 @@ public final class ParamConvertUtils {
      * <ol>
      * <li>Does not support types registered with {@link javax.ws.rs.ext.ParamConverterProvider}</li>
      * </ol>
+     *
+     * @param resultType Result type
+     * @return Function the function
      */
     public static Function<List<String>, Object> createHeaderParamConverter(Type resultType) {
         return createListConverter(resultType);
@@ -98,6 +104,9 @@ public final class ParamConvertUtils {
      * <ol>
      * <li>Does not support types registered with {@link javax.ws.rs.ext.ParamConverterProvider}</li>
      * </ol>
+     *
+     * @param resultType Result type
+     * @return Function the function
      */
     public static Function<List<String>, Object> createQueryParamConverter(Type resultType) {
         return createListConverter(resultType);
@@ -106,6 +115,8 @@ public final class ParamConvertUtils {
     /**
      * Common helper method to convert value for {@link javax.ws.rs.HeaderParam} and {@link javax.ws.rs.QueryParam}.
      *
+     * @param resultType Result type
+     * @return Function the function
      * @see #createHeaderParamConverter(Type)
      * @see #createQueryParamConverter(Type)
      */
@@ -157,6 +168,7 @@ public final class ParamConvertUtils {
     /**
      * Creates a converter function that converts value into primitive type.
      *
+     * @param resultClass The result class
      * @return A converter function or {@code null} if the given type is not primitive type
      */
     private static Function<List<String>, Object> createPrimitiveTypeConverter(Class<?> resultClass) {
@@ -189,6 +201,7 @@ public final class ParamConvertUtils {
     /**
      * Creates a converter function that converts value using a constructor that accepts a single String argument.
      *
+     * @param resultClass Result class
      * @return A converter function or {@code null} if the given type doesn't have a public constructor that accepts
      * a single String argument.
      */
@@ -210,6 +223,7 @@ public final class ParamConvertUtils {
      * Creates a converter function that converts value using a public static method named
      * {@code valueOf} or {@code fromString} that accepts a single String argument.
      *
+     * @param resultClass Result class
      * @return A converter function or {@code null} if the given type doesn't have a public static method
      * named {@code valueOf} or {@code fromString} that accepts a single String argument.
      */
@@ -237,6 +251,7 @@ public final class ParamConvertUtils {
     /**
      * Creates a converter function that converts value into a {@link List}, {@link Set} or {@link SortedSet}.
      *
+     * @param resultType Result type
      * @return A converter function or {@code null} if the given type is not a {@link ParameterizedType} with raw type
      * as {@link List}, {@link Set} or {@link SortedSet}. Also, for {@link SortedSet} type, if the element type
      * doesn't implements {@link Comparable}, {@code null} is returned.
