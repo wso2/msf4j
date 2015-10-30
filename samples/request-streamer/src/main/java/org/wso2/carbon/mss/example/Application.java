@@ -16,21 +16,17 @@
  * under the License.
  */
 
-package org.wso2.carbon.mss;
+package org.wso2.carbon.mss.example;
+
+import org.wso2.carbon.mss.MicroservicesRunner;
 
 /**
- * This class can be injected to a resource method
- * inorder to consume requests as streams
+ * Application entry point
  */
-public class HttpStreaming {
-
-    private StreamingInput streamingInput;
-
-    public void bodyConsumer(StreamingInput streamingInput) {
-        this.streamingInput = streamingInput;
-    }
-
-    public StreamingInput getStreamingInput() {
-        return streamingInput;
+public class Application {
+    public static void main(String[] args) {
+        new MicroservicesRunner()
+                .deploy(new StreamerService())
+                .start();
     }
 }

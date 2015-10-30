@@ -25,7 +25,7 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import org.wso2.carbon.mss.HttpResponder;
-import org.wso2.carbon.mss.HttpStreaming;
+import org.wso2.carbon.mss.HttpStreamer;
 import org.wso2.carbon.mss.internal.router.beanconversion.BeanConverter;
 
 import java.lang.annotation.Annotation;
@@ -45,7 +45,7 @@ import javax.ws.rs.core.Context;
 public class HttpResourceModelProcessor {
 
     private final HttpResourceModel httpResourceModel;
-    private HttpStreaming httpStreaming;
+    private HttpStreamer httpStreamer;
 
     public HttpResourceModelProcessor(HttpResourceModel httpResourceModel) {
         this.httpResourceModel = httpResourceModel;
@@ -107,7 +107,7 @@ public class HttpResourceModelProcessor {
                     idx++;
                 }
 
-                if (httpStreaming == null) {
+                if (httpStreamer == null) {
                     return new HttpMethodInfo(httpResourceModel.getMethod(),
                             httpResourceModel.getHttpHandler(),
                             request, responder,
@@ -121,7 +121,7 @@ public class HttpResourceModelProcessor {
                             args,
                             httpResourceModel.getExceptionHandler(),
                             acceptType,
-                            httpStreaming);
+                            httpStreamer);
                 }
             } else {
                 //Found a matching resource but could not find the right HttpMethod so return 405
@@ -145,11 +145,11 @@ public class HttpResourceModelProcessor {
             value = request;
         } else if (((Class) paramType).isAssignableFrom(HttpResponder.class)) {
             value = responder;
-        } else if (((Class) paramType).isAssignableFrom(HttpStreaming.class)) {
-            if (httpStreaming == null) {
-                httpStreaming = new HttpStreaming();
+        } else if (((Class) paramType).isAssignableFrom(HttpStreamer.class)) {
+            if (httpStreamer == null) {
+                httpStreamer = new HttpStreamer();
             }
-            value = httpStreaming;
+            value = httpStreamer;
         }
         Preconditions.checkArgument(value != null, "Could not resolve parameter %s", paramType.getTypeName());
         return value;

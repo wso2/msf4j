@@ -35,8 +35,8 @@ import org.wso2.carbon.mss.ChunkResponder;
 import org.wso2.carbon.mss.HandlerContext;
 import org.wso2.carbon.mss.HttpHandler;
 import org.wso2.carbon.mss.HttpResponder;
-import org.wso2.carbon.mss.HttpStreaming;
-import org.wso2.carbon.mss.StreamingInput;
+import org.wso2.carbon.mss.HttpStreamHandler;
+import org.wso2.carbon.mss.HttpStreamer;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -283,9 +283,9 @@ public class TestHandler implements HttpHandler {
 
     @Path("/stream/upload")
     @PUT
-    public void streamUpload(@Context HttpStreaming httpStreaming) throws Exception {
+    public void streamUpload(@Context HttpStreamer httpStreamer) throws Exception {
         final StringBuffer sb = new StringBuffer();
-        httpStreaming.bodyConsumer(new StreamingInput() {
+        httpStreamer.callback(new HttpStreamHandler() {
             @Override
             public void chunk(ByteBuf request, HttpResponder responder) {
                 sb.append(request.toString(Charsets.UTF_8));
@@ -298,7 +298,7 @@ public class TestHandler implements HttpHandler {
             }
 
             @Override
-            public void handleError(Throwable cause) {
+            public void error(Throwable cause) {
                 sb.delete(0, sb.length());
             }
         });
@@ -306,10 +306,10 @@ public class TestHandler implements HttpHandler {
 
     @Path("/stream/upload/fail")
     @PUT
-    public StreamingInput streamUploadFailure() {
+    public HttpStreamHandler streamUploadFailure() {
         final int fileSize = 30 * 1024 * 1024;
 
-        return new StreamingInput() {
+        return new HttpStreamHandler() {
             int count = 0;
             ByteBuffer offHeapBuffer = ByteBuffer.allocateDirect(fileSize);
 
@@ -326,7 +326,7 @@ public class TestHandler implements HttpHandler {
             }
 
             @Override
-            public void handleError(Throwable cause) {
+            public void error(Throwable cause) {
                 offHeapBuffer = null;
             }
         };

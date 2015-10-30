@@ -388,6 +388,7 @@
         <module>samples/security-interceptor</module>
         <module>samples/metrics-interceptor</module>
         <module>samples/petstore</module>
+        <module>samples/request-streamer</module>
         <module>product</module>
     </modules>
 </project>

@@ -24,7 +24,7 @@ import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import io.netty.handler.codec.http.HttpMethod;
-import org.wso2.carbon.mss.HttpStreaming;
+import org.wso2.carbon.mss.HttpStreamer;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -234,7 +234,7 @@ public final class HttpResourceModel {
         } else if (isStreamingReqSupported == STREAMING_REQ_UNSUPPORTED) {
             return false;
         } else if (paramInfoList.stream().filter(parameterInfo -> parameterInfo
-                .getParameterType().equals(HttpStreaming.class))
+                .getParameterType().equals(HttpStreamer.class))
                 .findAny().isPresent()) {
             isStreamingReqSupported = STREAMING_REQ_SUPPORTED;
             return true;
