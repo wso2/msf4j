@@ -18,21 +18,19 @@
 
 package org.wso2.carbon.mss;
 
-import org.wso2.carbon.mss.internal.router.BodyConsumer;
-
 /**
  * This class can be injected to a resource method
  * inorder to consume requests as streams
  */
 public class HttpStreaming {
 
-    private BodyConsumer bodyConsumer;
+    private StreamingInput streamingInput;
 
-    public void bodyConsumer(BodyConsumer bodyConsumer) {
-        this.bodyConsumer = bodyConsumer;
+    public void bodyConsumer(StreamingInput streamingInput) {
+        this.streamingInput = streamingInput;
     }
 
-    public BodyConsumer getBodyConsumer() {
-        return bodyConsumer;
+    public StreamingInput getStreamingInput() {
+        return streamingInput;
     }
 }
