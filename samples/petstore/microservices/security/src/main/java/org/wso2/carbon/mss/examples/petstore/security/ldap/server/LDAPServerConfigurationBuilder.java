@@ -99,59 +99,6 @@ public class LDAPServerConfigurationBuilder {
      * OMElements.
      *
      * @throws org.wso2.carbon.ldap.server.util.EmbeddingLDAPException
-     *          Following is a sample configuration file:
-     *          <EmbeddedLDAPConfig>
-     *          <!-- LDAP server configurations -->
-     *          <EmbeddedLDAP>
-     *          <Property name="enable">true</Property>
-     *          <Property name="instanceId">default</Property>
-     *          <Property name="connectionPassword">admin</Property>
-     *          <Property name="workingDirectory">.</Property>
-     *          <Property name="allowAnonymousAccess">false</Property>
-     *          <Property name="accessControlEnabled">true</Property>
-     *          <Property name="denormalizeOpAttrsEnabled">false</Property>
-     *          <Property name="maxPDUSize">2000000</Property>
-     *          <Property name="saslHostName">localhost</Property>
-     *          <Property name="saslPrincipalName">ldap/localhost@EXAMPLE.COM</Property>
-     *          </EmbeddedLDAP>
-     *
-     *          <!-- Default partition configurations -->
-     *          <DefaultPartition>
-     *          <Property name="id">root</Property>
-     *          <Property name="realm">wso2.com</Property>
-     *          <Property name="kdcPassword">secret</Property>
-     *          <Property name="ldapServerPrinciplePassword">randall</Property>
-     *          </DefaultPartition>
-     *
-     *          <!-- Default partition admin configurations -->
-     *          <PartitionAdmin>
-     *          <Property name="uid">admin</Property>
-     *          <Property name="commonName">admin</Property>
-     *          <Property name="lastName">admin</Property>
-     *          <Property name="email">admin</Property>
-     *          <Property name="password">admin</Property>
-     *          <Property name="passwordType">SHA</Property>
-     *          </PartitionAdmin>
-     *
-     *          <!-- Default partition admin's group configuration -->
-     *          <PartitionAdminGroup>
-     *          <Property name="adminRoleName">admin</Property>
-     *          <Property name="groupNameAttribute">cn</Property>
-     *          <Property name="memberNameAttribute">member</Property>
-     *          </PartitionAdminGroup>
-     *
-     *          <!-- KDC configurations -->
-     *          <KDCServer>
-     *          <Property name="name">defaultKDC</Property>
-     *          <Property name="enabled">false</Property>
-     *          <Property name="protocol">UDP</Property>
-     *          <Property name="host">localhost</Property>
-     *          <Property name="maximumTicketLifeTime">8640000</Property>
-     *          <Property name="maximumRenewableLifeTime">604800000</Property>
-     *          <Property name="preAuthenticationTimeStampEnabled">true</Property>
-     *          </KDCServer>
-     *
-     *          </EmbeddedLDAPConfig>
      */
     public void buildConfigurations() throws EmbeddingLDAPException {
 
