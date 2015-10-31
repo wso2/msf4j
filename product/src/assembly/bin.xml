@@ -44,7 +44,7 @@
                 <exclude>**/target/**</exclude>
                 <exclude>**/.vagrant.d/**</exclude>
                 <exclude>**/.vagrant/**</exclude>
-                <exclude>**/docker/**</exclude>
+                <exclude>**/kubernetes-vagrant-coreos-cluster/docker/**</exclude>
                 <exclude>**/*.iml</exclude>
                 <exclude>**/*.ipr</exclude>
                 <exclude>**/*.iwr</exclude>
