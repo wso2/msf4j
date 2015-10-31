@@ -51,7 +51,7 @@ do
         ;;
     p)
         read -s -p "MySQL Password: " mysql_passwd
-        echo "\n"
+        echo ""
         ;;
     \?)
         help
