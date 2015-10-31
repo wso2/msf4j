@@ -26,6 +26,9 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Map;
 
+/**
+ * TODO: add a class level comment.
+ */
 public class BaseHandlerInterceptorTest {
 
     protected static URI baseURI;

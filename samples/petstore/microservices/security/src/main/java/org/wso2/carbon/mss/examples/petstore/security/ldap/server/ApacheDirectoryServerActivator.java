@@ -56,7 +56,7 @@ public class ApacheDirectoryServerActivator {
     private KDCServer kdcServer;
 
     /**
-     * Starts EmbeddedLDAP-server
+     * Starts EmbeddedLDAP-server.
      */
     public void start() {
 

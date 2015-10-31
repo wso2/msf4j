@@ -260,30 +260,34 @@ public class LDAPServerConfigurationBuilder {
      *
      * @param documentElement: whole config file read as an OMElement.
      *                         Following parts are read from the config file:
-     *                         <!-- Default partition configurations -->
-     *                         <DefaultPartition>
-     *                         <Property name="id">root</Property>
-     *                         <Property name="realm">wso2.com</Property>
-     *                         <Property name="kdcPassword">secret</Property>
-     *                         <Property name="ldapServerPrinciplePassword">randall</Property>
-     *                         </DefaultPartition>
-     *
-     *                         <!-- Default partition admin configurations -->
-     *                         <PartitionAdmin>
-     *                         <Property name="uid">admin</Property>
-     *                         <Property name="commonName">admin</Property>
-     *                         <Property name="lastName">admin</Property>
-     *                         <Property name="email">admin</Property>
-     *                         <Property name="password">admin</Property>
-     *                         <Property name="passwordType">SHA</Property>
-     *                         </PartitionAdmin>
-     *
-     *                         <!-- Default partition admin's group configuration -->
-     *                         <PartitionAdminGroup>
-     *                         <Property name="adminRoleName">admin</Property>
-     *                         <Property name="groupNameAttribute">cn</Property>
-     *                         <Property name="memberNameAttribute">member</Property>
-     *                         </PartitionAdminGroup>
+     *                       <p>
+     *                         Default partition configurations
+     *                       <p>
+     *                         &lt;DefaultPartition&gt;
+     *                         &lt;Property name="id"&gt;root &lt;/Property&gt;
+     *                         &lt;Property name="realm"&gt;wso2.com &lt;/Property&gt;
+     *                         &lt;Property name="kdcPassword"&gt;secret &lt;/Property&gt;
+     *                         &lt;Property name="ldapServerPrinciplePassword"&gt;randall &lt;/Property&gt;
+     *                         &lt;/DefaultPartition&gt;
+     *                       <p>
+     *                         Default partition admin configurations
+     *                       <p>
+     *                         &lt;PartitionAdmin&gt;
+     *                         &lt;Property name="uid"&gt;admin&lt;/Property&gt;
+     *                         &lt;Property name="commonName"&gt;admin&lt;/Property&gt;
+     *                         &lt;Property name="lastName"&gt;admin&lt;/Property&gt;
+     *                         &lt;Property name="email"&gt;admin&lt;/Property&gt;
+     *                         &lt;Property name="password"&gt;admin&lt;/Property&gt;
+     *                         &lt;Property name="passwordType"&gt;SHA&lt;/Property&gt;
+     *                         &lt;/PartitionAdmin>
+     *                        <p>
+     *                         Default partition admin's group configuration
+     *                        <p>
+     *                         &lt;PartitionAdminGroup&gt;
+     *                         &lt;Property name="adminRoleName"&gt;admin&lt;/Property&gt;
+     *                         &lt;Property name="groupNameAttribute"&gt;cn&lt;/Property&gt;
+     *                         &lt;Property name="memberNameAttribute"&gt;member&lt;/Property&gt;
+     *                         &lt;/PartitionAdminGroup&gt;
      */
     private void buildPartitionConfigurations(OMElement documentElement) {
 
@@ -390,16 +394,18 @@ public class LDAPServerConfigurationBuilder {
      *
      * @param kdcConfigElement
      * @throws org.wso2.carbon.ldap.server.util.EmbeddingLDAPException
-     *          <!-- KDC configurations -->
-     *          <KDCServer>
-     *          <Property name="name">defaultKDC</Property>
-     *          <Property name="enabled">false</Property>
-     *          <Property name="protocol">UDP</Property>
-     *          <Property name="host">localhost</Property>
-     *          <Property name="maximumTicketLifeTime">8640000</Property>
-     *          <Property name="maximumRenewableLifeTime">604800000</Property>
-     *          <Property name="preAuthenticationTimeStampEnabled">true</Property>
-     *          </KDCServer>
+     *         <p>
+     *          KDC configurations
+     *          <p>
+     *          &lt;KDCServer&gt;
+     *          &lt;Property name="name"&gt;defaultKDC&lt;/Property&gt;
+     *          &lt;Property name="enabled"&gt;false&lt;/Property&gt;
+     *          &lt;Property name="protocol"&gt;UDP&lt;/Property&gt;
+     *          &lt;Property name="host"&gt;localhost&lt;/Property&gt;
+     *          &lt;Property name="maximumTicketLifeTime"&gt;8640000&lt;/Property&gt;
+     *          &lt;Property name="maximumRenewableLifeTime"&gt;604800000&lt;/Property&gt;
+     *          &lt;Property name="preAuthenticationTimeStampEnabled"&gt;true&lt;/Property&gt;
+     *          &lt;/KDCServer&gt;
      */
     private void buildKDCConfigurations(OMElement kdcConfigElement)
             throws EmbeddingLDAPException {

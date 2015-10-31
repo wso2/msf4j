@@ -33,6 +33,7 @@ import org.wso2.carbon.transport.http.netty.listener.NettyListener;
 import java.util.Set;
 
 /**
+ * This runner initializes the microservices runtime, deploys the microservices and service interceptors,
  * This runner initializes the microservices runtime, deploys the microservices &amp; service interceptors,
  * and starts the relevant transports.
  */
@@ -85,7 +86,7 @@ public class MicroservicesRunner {
     }
 
     /**
-     * Deploy a microservice
+     * Deploy a microservice.
      *
      * @param microservice The microservice which is to be deployed
      * @return this MicroservicesRunner object

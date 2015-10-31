@@ -61,7 +61,7 @@ public class MSSDeployer implements Deployer {
     }
 
     /**
-     * Deploy and artifact in the netty-http service
+     * Deploy and artifact in the netty-http service.
      *
      * @param artifact the artifact to be deployed
      * @return A key to identify the deployed artifact
@@ -89,7 +89,7 @@ public class MSSDeployer implements Deployer {
     }
 
     /**
-     * Undeploy the artifact with the key from the netty-http service
+     * Undeploy the artifact with the key from the netty-http service.
      *
      * @param key Key to identify the artifact
      * @throws CarbonDeploymentException If an error occurs while undeploying

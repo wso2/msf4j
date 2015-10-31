@@ -26,7 +26,7 @@ import org.wso2.carbon.mss.HttpHandler;
 import org.wso2.carbon.mss.example2.StockQuoteService;
 
 /**
- * BundleActivator which registers the StockQuote OSGi service
+ * BundleActivator which registers the StockQuote OSGi service.
  */
 public class StockQuoteActivator implements BundleActivator {
     private static final Logger log = LoggerFactory.getLogger(StockQuoteActivator.class);

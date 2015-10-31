@@ -30,7 +30,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 /**
- * StockQuote sample. This service will be available at
+ * StockQuote sample. This service will be available at.
  * http://localhost:8080/stockquote
  */
 @Path("/stockquote")

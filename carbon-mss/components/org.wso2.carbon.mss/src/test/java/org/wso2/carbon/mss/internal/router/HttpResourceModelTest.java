@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.wso2.carbon.mss.HttpStreamer;
 
 /**
- * Tests functionality fo HttpResourceModel
+ * Tests functionality fo HttpResourceModel.
  */
 public class HttpResourceModelTest {
 
@@ -48,7 +48,7 @@ public class HttpResourceModelTest {
     }
 
     /**
-     * Test class used for testing HttpResourceMethod functionality
+     * Test class used for testing HttpResourceMethod functionality.
      */
     private static class TestClass {
 

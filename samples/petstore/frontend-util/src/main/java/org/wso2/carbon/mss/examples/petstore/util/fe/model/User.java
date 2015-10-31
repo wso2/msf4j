@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * User bean class
+ * User bean class.
  */
 public class User {
 

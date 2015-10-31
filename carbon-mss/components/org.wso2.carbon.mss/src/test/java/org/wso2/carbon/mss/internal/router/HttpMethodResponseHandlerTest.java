@@ -37,7 +37,7 @@ import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
 
 /**
- * Tests HttpMethodResponseHandlerTest class
+ * Tests HttpMethodResponseHandlerTest class.
  */
 public class HttpMethodResponseHandlerTest {
 

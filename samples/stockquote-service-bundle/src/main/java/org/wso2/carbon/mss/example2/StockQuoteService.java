@@ -18,7 +18,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 /**
- * StockQuote microservice
+ * StockQuote microservice.
  */
 @Path("/SimpleStockQuote")
 public class StockQuoteService implements HttpHandler {

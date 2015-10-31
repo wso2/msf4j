@@ -22,6 +22,9 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.wso2.carbon.mss.HttpResponder;
 
+/**
+ * TODO : add class level comment.
+ */
 public class TestInterceptor extends AbstractInterceptor {
     private volatile int numPreCalls = 0;
     private volatile int numPostCalls = 0;
