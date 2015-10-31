@@ -22,14 +22,14 @@
     <parent>
         <artifactId>mss-service-parent</artifactId>
         <groupId>org.wso2.carbon.mss</groupId>
-        <version>1.0.0-alpha</version>
+        <version>1.0.0-SNAPSHOT</version>
         <relativePath>../../mss-service-parent/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.wso2.carbon.mss.sample</groupId>
     <artifactId>helloworld</artifactId>
-    <version>1.0.0-alpha</version>
+    <version>1.0.0-SNAPSHOT</version>
 
     <name>Hello World Microservice Sample</name>
 

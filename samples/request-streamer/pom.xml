@@ -23,13 +23,13 @@
     <parent>
         <groupId>org.wso2.carbon.mss</groupId>
         <artifactId>mss-service-parent</artifactId>
-        <version>1.0.0-alpha</version>
+        <version>1.0.0-SNAPSHOT</version>
         <relativePath>../../mss-service-parent/pom.xml</relativePath>
     </parent>
 
     <groupId>org.wso2.carbon.mss.example</groupId>
     <artifactId>request-streamer</artifactId>
-    <version>1.0.0-alpha</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>RequestStreamer Microservice Sample</name>

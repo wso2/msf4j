@@ -11,13 +11,13 @@
     <groupId>org.wso2.carbon.mss</groupId>
     <artifactId>org.wso2.carbon.mss.parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0-alpha</version>
+    <version>1.0.0-SNAPSHOT</version>
 
     <scm>
         <url>https://github.com/wso2/product-mss.git</url>
         <developerConnection>scm:git:https://github.com/wso2/product-mss.git</developerConnection>
         <connection>scm:git:https://github.com/wso2/product-mss.git</connection>
-        <tag>v1.0.0-alpha</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <developers>
@@ -364,7 +364,7 @@
 
         <!-- Dependencies -->
         <carbon.kernel.version>5.0.0-alpha</carbon.kernel.version>
-        <carbon.mss.version>1.0.0-alpha</carbon.mss.version>
+        <carbon.mss.version>1.0.0-SNAPSHOT</carbon.mss.version>
         <carbon.metrics.version>1.2.0-m2</carbon.metrics.version>
         <carbon.mss.osgi.version>1.0.0.alpha</carbon.mss.osgi.version>
 
