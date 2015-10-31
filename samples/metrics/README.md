@@ -116,4 +116,4 @@ Analytics Dashboard in WSO2 Data Analytics Server
 ------------------------------------------
 
 The HTTP Monitoring events sent by this sample can be seen from the HTTP Monitoring Dashboard in WSO2 DAS.
-You can access the dashboard from http://localhost:9763/monitoring/
+You can access the dashboard from [http://localhost:9763/monitoring/](http://localhost:9763/monitoring/)
