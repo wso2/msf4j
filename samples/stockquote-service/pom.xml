@@ -30,7 +30,6 @@
 
     <groupId>org.wso2.carbon.mss.example</groupId>
     <artifactId>stockquote-service</artifactId>
-    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <name>StockQuote Microservice Sample</name>
