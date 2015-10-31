@@ -42,8 +42,8 @@
             <outputDirectory>samples</outputDirectory>
             <excludes>
                 <exclude>**/target/**</exclude>
-                <exclude>**/.vagrant.d</exclude>
-                <exclude>**/.vagrant</exclude>
+                <exclude>**/.vagrant.d/**</exclude>
+                <exclude>**/.vagrant/**</exclude>
                 <exclude>**/*.iml</exclude>
                 <exclude>**/*.ipr</exclude>
                 <exclude>**/*.iwr</exclude>
