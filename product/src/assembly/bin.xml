@@ -30,6 +30,7 @@
             <excludes>
                 <exclude>README.txt</exclude>
                 <exclude>LICENSE.txt</exclude>
+                <exclude>INSTALL.txt</exclude>
                 <exclude>release-notes.html</exclude>
                 <exclude>**/*.ipr</exclude>
                 <exclude>**/*.iwr</exclude>
