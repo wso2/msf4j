@@ -183,9 +183,10 @@ public class HTTPMonitoringInterceptor implements Interceptor {
         if (password == null) {
             throw new IllegalArgumentException("Password cannot be null");
         }
-        if (dataAgentConfigPath != null && dataAgentConfigPath.length() > 0) {
-            AgentHolder.setConfigPath(dataAgentConfigPath);
+        if (dataAgentConfigPath == null) {
+            throw new IllegalArgumentException("Data Agent Configuration Path cannot be null");
         }
+        AgentHolder.setConfigPath(dataAgentConfigPath);
         try {
             dataPublisher = new DataPublisher(type, receiverURL, authURL, username, password);
         } catch (DataEndpointAgentConfigurationException | DataEndpointException | DataEndpointConfigurationException
