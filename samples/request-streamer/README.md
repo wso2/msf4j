@@ -1,8 +1,30 @@
-#Handling HTTP Chunked Requests
+#HTTP Streaming (chunking) Sample
+
+This sample demonstrates streaming or HTTP chunked requests in WSO2 MSS.
+
+How to build the sample
+------------------------------------------
+From this directory, run
+
+```
+mvn clean install
+```
+
+How to run the sample
+------------------------------------------
+From the target directory, run
+
+```
+java -jar request-streamer-1.0.0.jar
+```
+
+Some Fundamentals
+------------------------------------------
 
 With WSO2 Microservices server, you can handle chunked requests in two ways.
 
-###Handle requests using HttpStreamHandler 
+#Handle requests using HttpStreamHandler
+
 First way is to implement org.wso2.carbon.mss.HttpStreamHandler as shown in the below example to handle chunked http 
 requests in a zero copy manner.
 

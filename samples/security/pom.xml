@@ -26,8 +26,9 @@
         <relativePath>../../mss-service-parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>security-interceptor</artifactId>
+    <artifactId>security</artifactId>
     <packaging>jar</packaging>
+    <description>Demostrates how to secure microservices in WSO2 MSS</description>
 
     <dependencies>
         <dependency>

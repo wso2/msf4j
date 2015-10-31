@@ -35,6 +35,19 @@
             <outputDirectory>repository/conf/transports</outputDirectory>
             <fileMode>644</fileMode>
         </fileSet>
+
+        <!-- Copy the samples -->
+        <fileSet>
+            <directory>../samples/</directory>
+            <outputDirectory>samples</outputDirectory>
+            <excludes>
+                <exclude>**/target/**</exclude>
+                <exclude>**/*.iml</exclude>
+                <exclude>**/*.ipr</exclude>
+                <exclude>**/*.iwr</exclude>
+                <exclude>**/*.eclipse</exclude>
+            </excludes>
+        </fileSet>
     </fileSets>
 
     <files>

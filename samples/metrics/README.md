@@ -2,16 +2,20 @@
 
 This sample demonstrate how to use the Metrics Interceptor with MicroservicesRunner.
 
+How to build the sample
+------------------------------------------
+From this directory, run
+
+```
+mvn clean install
+```
 
 How to run the sample
 ------------------------------------------
-1. Use maven to build the sample
+
+Use following command to run the application
 ```
-mvn clean package
-```
-2. Use following command to run the application
-```
-java -jar target/metrics-interceptor-1.0.0-SNAPSHOT.jar
+java -jar target/metrics-1.0.0.jar
 ```
 Configuring Reporters
 ------------------------------------------

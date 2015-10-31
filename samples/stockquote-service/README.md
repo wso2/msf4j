@@ -1,4 +1,4 @@
-# Executable jar Sample
+# SimpleStockQuote Executable jar Sample
 
 This sample demonstrates how to create an uber jar which contains your microservice as well as all its dependencies.
 
@@ -10,21 +10,25 @@ public static void main(String[] args) {
 }
 ```
 
+How to build the sample
+------------------------------------------
+From this directory, run
+
+```
+mvn clean install
+```
+
 How to run the sample
 ------------------------------------------
-1. Use maven to build the sample
+Use following command to run the application
 ```
-mvn clean package
-```
-2. Use following command to run the application
-```
-java -jar target/StockQuote-Service-1.0.0.jar
+java -jar target/stockquote-service-1.0.0.jar
 ```
 How to test the sample
 ------------------------------------------
 
 Use following cURL commands.
 ```
-curl http://localhost:8080/StockQuote/get/IBM
+curl http://localhost:8080/stockquote/IBM
 
 ```

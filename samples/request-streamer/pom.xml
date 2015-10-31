@@ -29,11 +29,12 @@
     </parent>
 
     <groupId>org.wso2.carbon.mss.example</groupId>
-    <artifactId>RequestStreamer-Service</artifactId>
+    <artifactId>request-streamer</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <name>RequestStreamer Microservice Sample</name>
+    <description>Demonstrates request streaming in WSO2 MSS</description>
 
     <properties>
         <microservice.mainClass>org.wso2.carbon.mss.example.Application</microservice.mainClass>

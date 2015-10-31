@@ -397,13 +397,13 @@
         <module>carbon-mss/components/org.wso2.carbon.mss</module>
         <module>carbon-mss/features/org.wso2.carbon.mss.feature</module>
         <module>mss-service-parent</module>
-        <module>samples/hello-service</module>
+        <module>samples/helloworld</module>
         <module>samples/stockquote-service</module>
         <module>samples/stockquote-service-bundle</module>
-        <module>samples/security-interceptor</module>
-        <module>samples/metrics-interceptor</module>
-        <module>samples/petstore</module>
+        <module>samples/security</module>
         <module>samples/request-streamer</module>
+        <module>samples/metrics</module>
+        <module>samples/petstore</module>
         <module>product</module>
     </modules>
 </project>

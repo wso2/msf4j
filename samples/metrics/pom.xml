@@ -24,7 +24,7 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>metrics-interceptor</artifactId>
+    <artifactId>metrics</artifactId>
     <packaging>jar</packaging>
 
 

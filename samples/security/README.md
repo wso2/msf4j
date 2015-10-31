@@ -1,6 +1,8 @@
-# Security-interceptor Sample
+# Security Sample
 
-This sample demonstrate how to implement and register Interceptor with MicroservicesRunner. There are 2 sample
+This sample shows how to secure microservices deployed on WSO2 MSS.
+
+We show how to implement and register a SecurityInterceptor with MicroservicesRunner. There are 2 sample
 Interceptors are available.
 
 1. LoggingInterceptor - Demonstrate how to log HTTP headers from incoming request.
@@ -8,17 +10,22 @@ Interceptors are available.
 2. UsernamePasswordSecurityInterceptor - Demonstrate very simple HTTP BasicAuth authentication interceptor.
 
 
-How to run the sample  
+How to build the sample
 ------------------------------------------
-1. Use maven to build the sample 
+From this directory, run
+
 ```
-mvn clean package 
+mvn clean install
 ```
-2. Use following command to run the application 
+
+How to build the sample
+------------------------------------------
+Use following command to run the application
 ```
-java -jar target/security-interceptor-1.0.0-SNAPSHOT.jar
+java -jar target/security-1.0.0.jar
 ```
-How to test the sample  
+
+How to tests the sample
 ------------------------------------------
 
 Use following cURL commands.  
