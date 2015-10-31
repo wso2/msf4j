@@ -13,28 +13,23 @@ if [ $PRE_REQ -eq 0 ];then
     exit;
 fi
 
-# get latest from git
-#if [ ! -d product-mss ];then
-#   echo "--------------------------------------------------------------"
-#   echo "Clone source code from https://github.com/wso2/product-mss.git"
-#   echo "--------------------------------------------------------------"
-#   git clone https://github.com/wso2/product-mss.git
-#else
-#    echo "-------------------------------------------------------------------"
-#    echo "Fetching new updates from https://github.com/wso2/product-mss.git"
-#    echo "-------------------------------------------------------------------"
-#    cd product-mss
-#    git pull
-#fi
-
-git pull
+#git pull
 
 echo "--------------------------------------------------------------"
 echo "Building petstore sample"
 echo "--------------------------------------------------------------"
 cd $HOME
-cd ../../../
+cd ../microservices/pet/
 mvn clean install -Dmaven.test.skip=true
+
+cd $HOME
+cd ../microservices/security/
+mvn clean install -Dmaven.test.skip=true
+
+cd $HOME
+cd ../microservices/transaction/
+mvn clean install -Dmaven.test.skip=true
+
 
 # copy Pet
 echo "--------------------------------------------------------------"
