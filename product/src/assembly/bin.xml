@@ -50,6 +50,19 @@
                 <exclude>**/*.eclipse</exclude>
             </excludes>
         </fileSet>
+
+        <!-- Copy the analytics setup -->
+        <fileSet>
+            <directory>../analytics/</directory>
+            <outputDirectory>analytics</outputDirectory>
+            <excludes>
+                <exclude>**/target/**</exclude>
+                <exclude>**/*.iml</exclude>
+                <exclude>**/*.ipr</exclude>
+                <exclude>**/*.iwr</exclude>
+                <exclude>**/*.eclipse</exclude>
+            </excludes>
+        </fileSet>
     </fileSets>
 
     <files>
