@@ -47,3 +47,19 @@ curl -v http://localhost:8080/student/860766123V
 curl -v http://localhost:8080/student
 
 ```
+
+Console Output
+------------------------------------------
+After running the above cURL commands, you should see metrics output to the console.
+
+```
+TODO IsuruP
+```
+
+Analytics Dashboard in WSO2 Data Analytics Server
+------------------------------------------
+
+Running this sample will also publish data to WSO2 DAS. In order to configure WSO2 DAS for Microservices analytics,
+please see the [analytics documentation](https://github.com/wso2/product-mss/tree/master/analytics)
+
+
