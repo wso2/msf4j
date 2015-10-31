@@ -71,6 +71,7 @@ public class StudentService {
     @GET
     @Produces("application/json")
     @Counted
+    @HTTPMonitoring
     public Collection<Student> getAll() {
         return students.values();
     }
