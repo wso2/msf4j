@@ -14,7 +14,7 @@ How to run the sample
 ------------------------------------------
 From the target directory, run
 ```
-java -jar helloworld-1.0.0.jar
+java -jar helloworld-*.jar
 ```
 
 How to test the sample

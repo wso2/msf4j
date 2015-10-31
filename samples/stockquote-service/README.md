@@ -22,7 +22,7 @@ How to run the sample
 ------------------------------------------
 Use following command to run the application
 ```
-java -jar target/stockquote-service-1.0.0.jar
+java -jar target/stockquote-service-*.jar
 ```
 How to test the sample
 ------------------------------------------

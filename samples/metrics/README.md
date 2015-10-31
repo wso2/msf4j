@@ -82,7 +82,7 @@ You can also run as follows.
 ```
 export METRICS_REPORTING_DAS_DATAAGENTCONFIGPATH="data-agent-conf.xml"
 export HTTP_MONITORING_DAS_DATAAGENTCONFIGPATH="data-agent-conf.xml"
-java -jar target/metrics-1.0.0.jar
+java -jar target/metrics-*.jar
 ```
 
 

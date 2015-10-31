@@ -22,7 +22,7 @@ How to build the sample
 ------------------------------------------
 Use following command to run the application
 ```
-java -jar target/security-1.0.0.jar
+java -jar target/security-*.jar
 ```
 
 How to tests the sample

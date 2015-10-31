@@ -26,7 +26,15 @@
     <fileSets>
         <fileSet>
             <directory>target/wso2carbon-kernel-${carbon.kernel.version}</directory>
-            <outputDirectory></outputDirectory>
+            <outputDirectory>.</outputDirectory>
+            <excludes>
+                <exclude>README.txt</exclude>
+                <exclude>LICENSE.txt</exclude>
+                <exclude>release-notes.html</exclude>
+                <exclude>**/*.ipr</exclude>
+                <exclude>**/*.iwr</exclude>
+                <exclude>**/*.eclipse</exclude>
+            </excludes>
         </fileSet>
 
         <fileSet>
@@ -34,6 +42,16 @@
             <!--todo version-->
             <outputDirectory>repository/conf/transports</outputDirectory>
             <fileMode>644</fileMode>
+        </fileSet>
+
+        <!-- Copy the README.md & LICENSE files -->
+        <fileSet>
+            <directory>..</directory>
+            <outputDirectory>.</outputDirectory>
+            <includes>
+                <include>README.md</include>
+                <include>LICENSE</include>
+            </includes>
         </fileSet>
 
         <!-- Copy the samples -->
