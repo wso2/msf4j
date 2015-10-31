@@ -38,3 +38,6 @@ If you are an advanced WSO2 DAS user, you can go to the DAS Management Console a
 [https://localhost:9443/](https://localhost:9443/) and login with username/password admin/admin.
 Once you login, you can view and manually execute the *http_event_script*  in the console to immediately see
 the results in the dashboard.
+
+The sources for MSS HTTP Monitoring Carbon Application (CAPP) can be found inside "mss_http_monitoring_capp_source" 
+directory. This CAPP is already built and copied to WSO2 DAS when you Configure DAS as mentioned above.
