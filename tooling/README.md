@@ -1,9 +1,9 @@
 #WSO2 Developer Studio Kernel Plugin for WSO2 Microservices Server
 
-This directory provides an Eclipse plugin installable with Eclipse
+This directory provides an Eclipse plugin installable with Eclipse Luna
 
 ##How to Install?
-1. Start Eclipse, then select Help > Install New Software.
+1. Run Eclipse Luna, then select Help > Install New Software.
 2. Click Add
 3. In the Add dialog, enter "MSS Tool" for the Name and http://builder1.us1.wso2.org/~developerstudio/mss-tools/updates/ for the Location:
 4. Click OK.
