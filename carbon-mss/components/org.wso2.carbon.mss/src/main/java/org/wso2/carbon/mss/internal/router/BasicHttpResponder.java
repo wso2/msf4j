@@ -102,11 +102,13 @@ public class BasicHttpResponder extends AbstractHttpResponder {
     }
 
     @Override
-    public void sendFile(File file, @Nullable Multimap<String, String> headers) {
+    public void sendFile(File file, String contentType,
+                         @Nullable Multimap<String, String> headers) {
         Preconditions.checkArgument(responded.compareAndSet(false, true), "Response has been already sent");
         HttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
 
         setCustomHeaders(response, headers);
+        response.headers().set(HttpHeaders.Names.CONTENT_TYPE, contentType);
         response.headers().set(HttpHeaders.Names.CONTENT_LENGTH, file.length());
 
         final boolean responseKeepAlive = setResponseKeepAlive(response);
