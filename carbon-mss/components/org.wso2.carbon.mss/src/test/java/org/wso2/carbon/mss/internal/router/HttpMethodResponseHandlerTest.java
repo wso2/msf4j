@@ -177,7 +177,8 @@ public class HttpMethodResponseHandlerTest {
         }
 
         @Override
-        public void sendFile(File file, @Nullable Multimap<String, String> headers) {
+        public void sendFile(File file, String contentType,
+                             @Nullable Multimap<String, String> headers) {
             cb.values(null, file, headers);
         }
     }
