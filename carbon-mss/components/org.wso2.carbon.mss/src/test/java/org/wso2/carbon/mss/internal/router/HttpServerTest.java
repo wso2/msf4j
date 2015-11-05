@@ -591,6 +591,17 @@ public class HttpServerTest {
         Assert.assertTrue(isStreamEqual(downStream, new FileInputStream(file)));
     }
 
+    @Test
+    public void testDownloadTxtFile() throws Exception {
+        HttpURLConnection urlConn = request("/test/v1/fileserver/txt", HttpMethod.GET);
+        Assert.assertEquals(HttpResponseStatus.OK.code(), urlConn.getResponseCode());
+        String contentType = urlConn.getHeaderField(HttpHeaders.Names.CONTENT_TYPE);
+        Assert.assertTrue(contentType.equalsIgnoreCase("text/plain"));
+        InputStream downStream = urlConn.getInputStream();
+        File file = new File(Resources.getResource("testTxtFile.txt").toURI());
+        Assert.assertTrue(isStreamEqual(downStream, new FileInputStream(file)));
+    }
+
     protected Socket createRawSocket(URL url) throws IOException {
         return new Socket(url.getHost(), url.getPort());
     }

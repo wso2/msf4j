@@ -293,6 +293,9 @@ public class TestHandler implements HttpHandler {
         } else if (fileType.equals("jpg")) {
             file = new File(Resources.getResource("testJpgFile.jpg").toURI());
             return Response.ok(file).build();
+        } else if (fileType.equals("txt")) {
+            file = new File(Resources.getResource("testTxtFile.txt").toURI());
+            return Response.ok(file).build();
         }
         return Response.noContent().build();
     }
