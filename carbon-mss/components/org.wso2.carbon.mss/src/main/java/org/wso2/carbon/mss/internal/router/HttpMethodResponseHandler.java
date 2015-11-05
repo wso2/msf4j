@@ -27,7 +27,8 @@ import org.wso2.carbon.mss.internal.router.beanconversion.BeanConversionExceptio
 import org.wso2.carbon.mss.internal.router.beanconversion.BeanConverter;
 
 import java.io.File;
-import javax.activation.MimetypesFileTypeMap;
+import java.io.IOException;
+import java.nio.file.Files;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
@@ -120,8 +121,13 @@ public class HttpMethodResponseHandler {
         if (entity != null) {
             if (entity instanceof File) {
                 File file = (File) entity;
-                if (mediaType == null) {
-                    mediaType = new MimetypesFileTypeMap().getContentType(file);
+                if (mediaType.equals("*/*")) {
+                    try {
+                        mediaType = Files.probeContentType(file.toPath());
+                    } catch (IOException e) {
+                        // If file type could not be probed,
+                        // media type should be kpt as it is ie. */*
+                    }
                 }
                 responder.sendFile(file, mediaType, headers);
             } else {
