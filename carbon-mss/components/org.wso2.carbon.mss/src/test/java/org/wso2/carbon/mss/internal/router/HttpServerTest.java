@@ -25,6 +25,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.CharStreams;
 import com.google.common.io.Files;
+import com.google.common.io.Resources;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -41,6 +42,7 @@ import org.wso2.carbon.mss.MicroservicesRunner;
 
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -565,6 +567,17 @@ public class HttpServerTest {
         Assert.assertEquals(HttpResponseStatus.OK.code(), urlConn.getResponseCode());
         Assert.assertEquals(str + "-processed", getContent(urlConn));
         urlConn.disconnect();
+    }
+
+    @Test
+    public void testDownloadPngFile() throws Exception {
+        HttpURLConnection urlConn = request("/test/v1/fileserver/png", HttpMethod.GET);
+        Assert.assertEquals(HttpResponseStatus.OK.code(), urlConn.getResponseCode());
+        String contentType = urlConn.getHeaderField(HttpHeaders.Names.CONTENT_TYPE);
+        Assert.assertTrue(contentType.equalsIgnoreCase("image/png"));
+        InputStream downStream = urlConn.getInputStream();
+        File file = new File(Resources.getResource("testPngFile.png").toURI());
+        Assert.assertTrue(isStreamEqual(downStream, new FileInputStream(file)));
     }
 
     protected Socket createRawSocket(URL url) throws IOException {
