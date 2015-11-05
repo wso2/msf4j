@@ -27,6 +27,7 @@ import org.wso2.carbon.mss.internal.router.beanconversion.BeanConversionExceptio
 import org.wso2.carbon.mss.internal.router.beanconversion.BeanConverter;
 
 import java.io.File;
+import javax.activation.MimetypesFileTypeMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
@@ -118,7 +119,11 @@ public class HttpMethodResponseHandler {
         Object entityToSend;
         if (entity != null) {
             if (entity instanceof File) {
-                responder.sendFile((File) entity, headers);
+                File file = (File) entity;
+                if (mediaType == null) {
+                    mediaType = new MimetypesFileTypeMap().getContentType(file);
+                }
+                responder.sendFile(file, headers);
             } else {
                 if (mediaType != null) {
                     entityToSend = BeanConverter.instance(mediaType)
