@@ -123,7 +123,7 @@ public class HttpMethodResponseHandler {
                 if (mediaType == null) {
                     mediaType = new MimetypesFileTypeMap().getContentType(file);
                 }
-                responder.sendFile(file, headers);
+                responder.sendFile(file, mediaType, headers);
             } else {
                 if (mediaType != null) {
                     entityToSend = BeanConverter.instance(mediaType)
