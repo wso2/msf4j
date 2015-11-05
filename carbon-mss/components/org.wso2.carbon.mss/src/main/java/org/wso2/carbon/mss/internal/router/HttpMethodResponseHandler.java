@@ -26,6 +26,7 @@ import org.wso2.carbon.mss.HttpResponder;
 import org.wso2.carbon.mss.internal.router.beanconversion.BeanConversionException;
 import org.wso2.carbon.mss.internal.router.beanconversion.BeanConverter;
 
+import java.io.File;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
@@ -102,6 +103,7 @@ public class HttpMethodResponseHandler {
 
     /**
      * Send response using netty-http provided responder.
+     *
      * @throws BeanConversionException If bean conversion fails
      */
     public void send() throws BeanConversionException {
@@ -115,17 +117,21 @@ public class HttpMethodResponseHandler {
         }
         Object entityToSend;
         if (entity != null) {
-            if (mediaType != null) {
-                entityToSend = BeanConverter.instance(mediaType)
-                        .toMedia(entity);
+            if (entity instanceof File) {
+                responder.sendFile((File) entity, headers);
             } else {
-                mediaType = "";
-                entityToSend = entity;
+                if (mediaType != null) {
+                    entityToSend = BeanConverter.instance(mediaType)
+                            .toMedia(entity);
+                } else {
+                    mediaType = "";
+                    entityToSend = entity;
+                }
+                //String.valueOf() is used to send correct response for entity types other than String
+                //such as primitives like numbers
+                ByteBuf channelBuffer = Unpooled.wrappedBuffer(Charsets.UTF_8.encode(String.valueOf(entityToSend)));
+                responder.sendContent(status, channelBuffer, mediaType, headers);
             }
-            //String.valueOf() is used to send correct response for entity types other than String
-            //such as primitives like numbers
-            ByteBuf channelBuffer = Unpooled.wrappedBuffer(Charsets.UTF_8.encode(String.valueOf(entityToSend)));
-            responder.sendContent(status, channelBuffer, mediaType, headers);
         } else {
             responder.sendStatus(status, headers);
         }
