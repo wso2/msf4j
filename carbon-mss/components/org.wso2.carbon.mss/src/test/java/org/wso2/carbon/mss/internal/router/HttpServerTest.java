@@ -580,6 +580,17 @@ public class HttpServerTest {
         Assert.assertTrue(isStreamEqual(downStream, new FileInputStream(file)));
     }
 
+    @Test
+    public void testDownloadJpgFile() throws Exception {
+        HttpURLConnection urlConn = request("/test/v1/fileserver/jpg", HttpMethod.GET);
+        Assert.assertEquals(HttpResponseStatus.OK.code(), urlConn.getResponseCode());
+        String contentType = urlConn.getHeaderField(HttpHeaders.Names.CONTENT_TYPE);
+        Assert.assertTrue(contentType.equalsIgnoreCase("image/jpeg"));
+        InputStream downStream = urlConn.getInputStream();
+        File file = new File(Resources.getResource("testJpgFile.jpg").toURI());
+        Assert.assertTrue(isStreamEqual(downStream, new FileInputStream(file)));
+    }
+
     protected Socket createRawSocket(URL url) throws IOException {
         return new Socket(url.getHost(), url.getPort());
     }
