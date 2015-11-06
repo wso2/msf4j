@@ -18,16 +18,17 @@
 
 package org.wso2.carbon.mss.perftest.echo.dropwizard;
 
+import io.dropwizard.Application;
 import io.dropwizard.Configuration;
 import io.dropwizard.setup.Environment;
 
 /**
- * Application entry point
+ * AppStart entry point
  */
-public class Application extends io.dropwizard.Application {
+public class AppStart extends Application<Configuration> {
 
     public static void main(String[] args) throws Exception {
-        new Application().run(args);
+        new AppStart().run(args);
     }
 
     @Override

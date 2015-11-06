@@ -66,10 +66,13 @@
                                     </excludes>
                                 </filter>
                             </filters>
+
                             <transformers>
                                 <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>org.wso2.carbon.mss.perftest.echo.dropwizard.Application</mainClass>
+                                    <mainClass>org.wso2.carbon.mss.perftest.echo.dropwizard.AppStart</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
