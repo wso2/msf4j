@@ -18,6 +18,9 @@ package org.wso2.carbon.mss.perftest.echo.springboot;/*
 
 import org.springframework.boot.SpringApplication;
 
+/**
+ * Application entry point
+ */
 public class Application {
 
     public static void main(String[] args) throws Exception {
