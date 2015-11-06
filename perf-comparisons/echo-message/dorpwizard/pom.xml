@@ -24,7 +24,7 @@
 
     <groupId>org.wso2.carbon.mss.perftest.echo</groupId>
     <artifactId>dropwizard-echo-message</artifactId>
-    <version>1.0</version>
+    <version>1.0-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
