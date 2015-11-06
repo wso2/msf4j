@@ -36,7 +36,7 @@
     <name>WSO2 MSS Microservice Sample</name>
 
     <properties>
-        <microservice.mainClass>Application</microservice.mainClass>
+        <microservice.mainClass>org.wso2.carbon.mss.perftest.echo.wso2mss.Application</microservice.mainClass>
     </properties>
 
 </project>

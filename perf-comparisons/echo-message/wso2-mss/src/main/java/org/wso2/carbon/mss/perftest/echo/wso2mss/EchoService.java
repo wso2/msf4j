@@ -1,4 +1,4 @@
-package org.wso2.carbon.mss.perftest.echo.wso2mss;/*
+/*
  * Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
@@ -15,6 +15,8 @@ package org.wso2.carbon.mss.perftest.echo.wso2mss;/*
  * specific language governing permissions and limitations
  * under the License.
  */
+
+package org.wso2.carbon.mss.perftest.echo.wso2mss;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
