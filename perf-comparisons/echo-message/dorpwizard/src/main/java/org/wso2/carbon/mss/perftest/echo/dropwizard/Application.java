@@ -21,6 +21,9 @@ package org.wso2.carbon.mss.perftest.echo.dropwizard;
 import io.dropwizard.Configuration;
 import io.dropwizard.setup.Environment;
 
+/**
+ * Application entry point
+ */
 public class Application extends io.dropwizard.Application {
 
     public static void main(String[] args) throws Exception {
