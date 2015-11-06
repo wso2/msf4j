@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @EnableAutoConfiguration
 public class EchoService {
 
-    @RequestMapping("/org.wso2.carbon.mss.perftest.echo.springboot.EchoService/echo")
+    @RequestMapping("/EchoService/echo")
     @ResponseBody
     String echo(@RequestBody String body) {
         return body;
