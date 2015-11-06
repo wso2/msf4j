@@ -28,7 +28,7 @@ With WSO2 Microservices server, you can handle chunked requests in two ways.
 First way is to implement org.wso2.carbon.mss.HttpStreamHandler as shown in the below example to handle chunked http 
 requests in a zero copy manner.
 
-```
+```java
     @POST
     @Path("/stream")
     @Consumes("text/plain")
@@ -62,7 +62,7 @@ Second way of handling chunked requests is to implement a normal resource method
 whether the requests is chunked as shown in the below example. In this case WSO2 Microservices Server internally 
 aggregates all the chunks of the request and presents it as a full http request to the resource method.
 
-```
+```java
     @POST
     @Path("/aggregate")
     @Consumes("text/plain")

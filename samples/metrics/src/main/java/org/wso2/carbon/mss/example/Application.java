@@ -37,7 +37,7 @@ public class Application {
     public static void main(String[] args) {
         logger.info("Starting the Microservice with Metrics");
         new MicroservicesRunner().addInterceptor(new HTTPMonitoringInterceptor.Builder().build())
-                .addInterceptor(new MetricsInterceptor(MetricReporter.CONSOLE, MetricReporter.JMX, MetricReporter.DAS))
+                .addInterceptor(new MetricsInterceptor(MetricReporter.CONSOLE, MetricReporter.JMX))
                 .deploy(new StudentService()).deploy(new TestService()).start();
     }
 }
