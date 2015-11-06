@@ -39,4 +39,8 @@
         </dependency>
     </dependencies>
 
+    <properties>
+        <start-class>org.wso2.carbon.mss.perftest.echo.springboot.Application</start-class>
+    </properties>
+
 </project>
