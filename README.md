@@ -14,7 +14,7 @@ amount of
 configuration. [More info](https://github.com/wso2/product-mss/tree/master/mss-service-parent#wso2-microservices-server
 ---parent-pom-for-microservices).
 
-```
+```xml
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -42,7 +42,7 @@ configuration. [More info](https://github.com/wso2/product-mss/tree/master/mss-s
 
 ####HelloService.java
 This is the hello service implementation that uses JAX-RS annotations.
-```
+```java
 @Path("/hello")
 public class HelloService {
 
@@ -58,7 +58,7 @@ public class HelloService {
 
 ####Application.java
 This is the oneliner to deploy your service using WSO2 Microservices Server.
-```
+```java
 public class Application {
     public static void main(String[] args) {
         new MicroservicesRunner()
