@@ -1,4 +1,4 @@
-package org.wso2.carbon.mss.perftest.echo.wso2mss;/*
+/*
  * Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
@@ -16,8 +16,9 @@ package org.wso2.carbon.mss.perftest.echo.wso2mss;/*
  * under the License.
  */
 
+package org.wso2.carbon.mss.perftest.echo.wso2mss;
+
 import org.wso2.carbon.mss.MicroservicesRunner;
-import org.wso2.carbon.mss.perftest.echo.wso2mss.EchoService;
 
 /**
  * Application entry point
