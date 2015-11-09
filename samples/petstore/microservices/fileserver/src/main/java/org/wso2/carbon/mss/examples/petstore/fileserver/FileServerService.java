@@ -19,23 +19,34 @@
 package org.wso2.carbon.mss.examples.petstore.fileserver;
 
 import io.netty.buffer.ByteBuf;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wso2.carbon.mss.HttpResponder;
 import org.wso2.carbon.mss.HttpStreamHandler;
 import org.wso2.carbon.mss.HttpStreamer;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Paths;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
-@Path("/fs")
+@Path("/")
 public class FileServerService {
+
+    private static final Logger log = LoggerFactory.getLogger(FileServerService.class);
 
     @POST
     @Path("/{fileName}")
     public void postFile(@Context HttpStreamer httpStreamer,
-                         @PathParam("fileName") String fileName) {
+                         @PathParam("fileName") String fileName)
+            throws IOException {
         httpStreamer.callback(new HttpStreamHandlerImpl(fileName));
     }
 
@@ -46,25 +57,35 @@ public class FileServerService {
     }
 
     private static class HttpStreamHandlerImpl implements HttpStreamHandler {
-        private final String fileName;
+        private BufferedOutputStream outputStream;
 
-        public HttpStreamHandlerImpl(String fileName) {
-            this.fileName = fileName;
+        public HttpStreamHandlerImpl(String fileName) throws FileNotFoundException {
+            File file = Paths.get("fs", fileName).toFile();
+            if (file.exists()) {
+                file.delete();
+            }
+            outputStream = new BufferedOutputStream(new FileOutputStream(file));
         }
 
         @Override
-        public void chunk(ByteBuf request, HttpResponder responder) {
-
+        public void chunk(ByteBuf request, HttpResponder responder) throws IOException {
+            outputStream.write(request.array());
         }
 
         @Override
-        public void finished(ByteBuf request, HttpResponder responder) {
-
+        public void finished(ByteBuf request, HttpResponder responder) throws IOException {
+            outputStream.write(request.array());
+            outputStream.close();
         }
 
         @Override
         public void error(Throwable cause) {
-
+            try {
+                outputStream.close();
+            } catch (IOException e) {
+                // Log if unable to close the output stream
+                log.error("Unable to close file output stream", e);
+            }
         }
     }
 }
