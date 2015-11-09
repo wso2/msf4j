@@ -19,6 +19,7 @@
 package org.wso2.carbon.mss.examples.petstore.fileserver;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.handler.codec.http.HttpResponseStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.mss.HttpResponder;
@@ -31,6 +32,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -54,7 +56,7 @@ public class FileServerService {
         httpStreamer.callback(new HttpStreamHandlerImpl(fileName));
     }
 
-    @POST
+    @GET
     @Path("/{fileName}")
     public Response getFile(@PathParam("fileName") String fileName) {
         File file = Paths.get("fs", fileName).toFile();
@@ -69,7 +71,7 @@ public class FileServerService {
 
         public HttpStreamHandlerImpl(String fileName) throws FileNotFoundException {
             File file = Paths.get("fs", fileName).toFile();
-            if (!file.exists() || file.exists() && file.delete()) {
+            if (file.getParentFile().exists() || file.getParentFile().mkdirs()) {
                 outputStream = new BufferedOutputStream(new FileOutputStream(file));
             }
         }
@@ -79,7 +81,7 @@ public class FileServerService {
             if (outputStream == null) {
                 throw new IOException("Unable to write file");
             }
-            outputStream.write(request.array());
+            request.readBytes(outputStream, request.capacity());
         }
 
         @Override
@@ -87,8 +89,9 @@ public class FileServerService {
             if (outputStream == null) {
                 throw new IOException("Unable to write file");
             }
-            outputStream.write(request.array());
+            request.readBytes(outputStream, request.capacity());
             outputStream.close();
+            responder.sendStatus(HttpResponseStatus.ACCEPTED);
         }
 
         @Override
