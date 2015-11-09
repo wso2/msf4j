@@ -53,7 +53,11 @@ public class FileServerService {
     @POST
     @Path("/{fileName}")
     public Response getFile(@PathParam("fileName") String fileName) {
-        return null;
+        File file = Paths.get("fs", fileName).toFile();
+        if (file.exists()) {
+            return Response.ok(file).build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
     private static class HttpStreamHandlerImpl implements HttpStreamHandler {
