@@ -37,6 +37,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
+/**
+ * FileServer service class. This uses request streaming
+ * to save the submitted files in the server.
+ */
 @Path("/")
 public class FileServerService {
 
