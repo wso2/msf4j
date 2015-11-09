@@ -33,8 +33,10 @@ import javax.ws.rs.core.Response;
 public class FileServerService {
 
     @POST
-    public void postFile(@Context HttpStreamer httpStreamer) {
-        httpStreamer.callback(new HttpStreamHandlerImpl());
+    @Path("/{fileName}")
+    public void postFile(@Context HttpStreamer httpStreamer,
+                         @PathParam("fileName") String fileName) {
+        httpStreamer.callback(new HttpStreamHandlerImpl(fileName));
     }
 
     @POST
@@ -44,6 +46,12 @@ public class FileServerService {
     }
 
     private static class HttpStreamHandlerImpl implements HttpStreamHandler {
+        private final String fileName;
+
+        public HttpStreamHandlerImpl(String fileName) {
+            this.fileName = fileName;
+        }
+
         @Override
         public void chunk(ByteBuf request, HttpResponder responder) {
 
