@@ -32,6 +32,13 @@
 
     <name>Pet store microservices example - file server microservice</name>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+        </dependency>
+    </dependencies>
+
     <properties>
         <microservice.mainClass>org.wso2.carbon.mss.examples.petstore.pet.Runner</microservice.mainClass>
     </properties>
