@@ -65,23 +65,28 @@ public class FileServerService {
     }
 
     private static class HttpStreamHandlerImpl implements HttpStreamHandler {
-        private BufferedOutputStream outputStream;
+        private BufferedOutputStream outputStream = null;
 
         public HttpStreamHandlerImpl(String fileName) throws FileNotFoundException {
             File file = Paths.get("fs", fileName).toFile();
-            if (file.exists()) {
-                file.delete();
+            if (!file.exists() || file.exists() && file.delete()) {
+                outputStream = new BufferedOutputStream(new FileOutputStream(file));
             }
-            outputStream = new BufferedOutputStream(new FileOutputStream(file));
         }
 
         @Override
         public void chunk(ByteBuf request, HttpResponder responder) throws IOException {
+            if (outputStream == null) {
+                throw new IOException("Unable to write file");
+            }
             outputStream.write(request.array());
         }
 
         @Override
         public void finished(ByteBuf request, HttpResponder responder) throws IOException {
+            if (outputStream == null) {
+                throw new IOException("Unable to write file");
+            }
             outputStream.write(request.array());
             outputStream.close();
         }
@@ -89,7 +94,9 @@ public class FileServerService {
         @Override
         public void error(Throwable cause) {
             try {
-                outputStream.close();
+                if (outputStream != null) {
+                    outputStream.close();
+                }
             } catch (IOException e) {
                 // Log if unable to close the output stream
                 log.error("Unable to close file output stream", e);
