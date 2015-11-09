@@ -142,7 +142,7 @@ class HttpMethodInfo {
     /**
      * Calls the {@link HttpStreamHandler#chunk(io.netty.buffer.ByteBuf,
      * org.wso2.carbon.mss.HttpResponder)} method.
-     *
+     * <p/>
      * If the chunk method calls throws exception,
      * the {@link HttpStreamHandler#error(Throwable)} will be called and
      * this method will throw {@link org.wso2.carbon.mss.internal.router.HandlerException}.
@@ -179,6 +179,6 @@ class HttpMethodInfo {
         httpStreamHandler = null;
         consumer.error(cause);
 
-        throw new HandlerException(HttpResponseStatus.INTERNAL_SERVER_ERROR, "", cause);
+        throw new HandlerException(HttpResponseStatus.INTERNAL_SERVER_ERROR, cause.getMessage(), cause);
     }
 }
