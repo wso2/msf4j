@@ -1,6 +1,13 @@
-#WSO2 Microservices Server
+#WSO2 Microservices Server (MSS)
 
 WSO2 Microservices Server is a lightweight high performance runtime for hosting microservices.
+
+WSO2 MSS is one of the highest performing lightweight microservices frameworks. The following graphs show the 
+throughput & memory consumption characteristics of MSS against other microservies frameworks.
+ 
+![Throughput](docs/images/tps.png) 
+
+![Memory](docs/images/memory.png) 
 
 ##Getting Started
 
