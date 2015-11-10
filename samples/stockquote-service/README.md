@@ -4,7 +4,7 @@ This sample demonstrates how to create an uber jar which contains your microserv
 
 Here's how to deploy & run your microservice.
 
-```
+```java
 public static void main(String[] args) {
     new MicroservicesRunner().deploy(new StockQuoteService()).start();
 }
