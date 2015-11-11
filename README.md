@@ -13,13 +13,12 @@ throughput & memory consumption characteristics of MSS against other microservie
 
 It is really easy to setup a microservice using WSO2 Microservices Server. You simply need to write a usual JAX-RS 
 service and deploy it using a single line of code. Check the following [Hello-Service]
-(https://github.com/wso2/product-mss/tree/master/samples/hello-service) sample.
+(samples/helloworld) sample.
 
 ####pom.xml
 This pom file inherits from mss-service-parent/pom.xml. It provides a way of setting up things quickly with minimum 
 amount of 
-configuration. [More info](https://github.com/wso2/product-mss/tree/master/mss-service-parent#wso2-microservices-server
----parent-pom-for-microservices).
+configuration. [More info](mss-service-parent).
 
 ```xml
 <project xmlns="http://maven.apache.org/POM/4.0.0"
