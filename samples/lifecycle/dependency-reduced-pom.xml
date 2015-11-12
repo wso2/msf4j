@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <artifactId>mss-service-parent</artifactId>
+    <groupId>org.wso2.carbon.mss</groupId>
+    <version>1.0.0-SNAPSHOT</version>
+    <relativePath>../../mss-service-parent/pom.xml</relativePath>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>lifecycle</artifactId>
+  <description>Demostrates how to use service lifecycle methods in microservices in WSO2 MSS</description>
+  <build>
+    <finalName>${project.artifactId}</finalName>
+  </build>
+  <properties>
+    <microservice.mainClass>org.wso2.carbon.mss.example.Application</microservice.mainClass>
+  </properties>
+</project>
+
