@@ -4,7 +4,7 @@ This sample shows how to use service lifecycle methods on WSO2 MSS.
 
 You can notice following 2 lifecycle methods on Helloworld service class.
 
-```
+```java
     @PostConstruct
     public void init() {
         LOG.info("Helloworld :: calling PostConstruct method");
