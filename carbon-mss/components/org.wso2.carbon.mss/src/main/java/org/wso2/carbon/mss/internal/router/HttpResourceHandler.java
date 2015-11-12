@@ -40,6 +40,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -82,6 +84,10 @@ public final class HttpResourceHandler implements HttpHandler {
             }
 
             for (Method method : handler.getClass().getDeclaredMethods()) {
+                if (method.isAnnotationPresent(PostConstruct.class) || method.isAnnotationPresent(PreDestroy.class)) {
+                    continue;
+                }
+
                 if (Modifier.isPublic(method.getModifiers()) && isHttpMethodAvailable(method)) {
                     String relativePath = "";
                     if (method.getAnnotation(Path.class) != null) {

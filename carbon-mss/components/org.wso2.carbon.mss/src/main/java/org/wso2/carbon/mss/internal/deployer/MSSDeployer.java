@@ -82,8 +82,10 @@ public class MSSDeployer implements Deployer {
         }
         artifact.setKey(artifactPath);
         deployedArtifacts.put(artifactPath, resourcesList);
+        MicroservicesRegistry msRegistry = MicroservicesRegistry.getInstance();
         for (Object resource : resourcesList) {
-            MicroservicesRegistry.getInstance().addHttpService(resource);
+            msRegistry.addHttpService(resource);
+            msRegistry.initService(resource);
         }
         return artifactPath;
     }
@@ -97,8 +99,10 @@ public class MSSDeployer implements Deployer {
     public void undeploy(Object key) throws CarbonDeploymentException {
         log.info("Undeploying artifact: {}", key);
         List<Object> resourcesList = deployedArtifacts.get(key);
+        MicroservicesRegistry msRegistry = MicroservicesRegistry.getInstance();
         for (Object resource : resourcesList) {
-            MicroservicesRegistry.getInstance().removeHttpService(resource);
+            msRegistry.removeHttpService(resource);
+            msRegistry.preDestroyService(resource);
         }
     }
 
