@@ -25,11 +25,18 @@ import org.wso2.carbon.mss.internal.router.HttpResourceHandler;
 import org.wso2.carbon.mss.internal.router.Interceptor;
 import org.wso2.carbon.mss.internal.router.URLRewriter;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 /**
  * MicroservicesRegistry for the MSS component.
@@ -104,5 +111,48 @@ public class MicroservicesRegistry {
         httpResourceHandler =
                 new HttpResourceHandler(Collections.unmodifiableSet(httpServices),
                         interceptors, urlRewriter, new ExceptionHandler());
+    }
+
+    public void initServices() {
+        invokeLifecycleMethods(PostConstruct.class);
+    }
+
+    public void initService(Object httpService) {
+        invokeLifecycleMethod(httpService, PostConstruct.class);
+    }
+
+    public void preDestroyServices() {
+        invokeLifecycleMethods(PreDestroy.class);
+    }
+
+    public void preDestroyService(Object httpService) {
+        invokeLifecycleMethod(httpService, PreDestroy.class);
+    }
+
+    private void invokeLifecycleMethods(Class lcAnnotation) {
+        httpServices.stream().forEach(httpService -> {
+            invokeLifecycleMethod(httpService, lcAnnotation);
+        });
+    }
+
+    private void invokeLifecycleMethod(Object httpService, Class lcAnnotation) {
+        Optional<Method> lcMethod = Optional.ofNullable(getLifecycleMethod(httpService, lcAnnotation));
+        if (lcMethod.isPresent()) {
+            try {
+                lcMethod.get().invoke(httpService, null);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new MicroservicesLCException("Exception occurs calling lifecycle method", e);
+            }
+        }
+    }
+
+    private Method getLifecycleMethod(Object httpService, Class lcAnnotation) {
+        return Arrays.stream(httpService.getClass().getDeclaredMethods()).filter(m -> isValidLifecycleMethod
+                (Optional.of(m), lcAnnotation)).findFirst().orElse(null);
+    }
+
+    private boolean isValidLifecycleMethod(Optional<Method> method, Class lcAnnotation) {
+        return method.filter(m -> Modifier.isPublic(m.getModifiers())
+                                  && m.getAnnotation(lcAnnotation) != null).isPresent();
     }
 }
