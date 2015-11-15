@@ -169,8 +169,16 @@ To read HTTP request header values. The value will be automatically converted to
 
 
 
+###Lifecycle Callback Methods
+Support following Java lifecycle callback method annotations. 
 
+#####@PostConstruct
+Invoke by the container on newly constructed service instances after all dependency injection has completed and before transport starts. 
 
+#####@PreDestroy
+Invoke by the container during server shutdown before the  container removes the service instance.
+
+For detailed example refer lifecycle sample from [here](https://github.com/wso2/product-mss/tree/master/samples/lifecycle). 
 
 
 
