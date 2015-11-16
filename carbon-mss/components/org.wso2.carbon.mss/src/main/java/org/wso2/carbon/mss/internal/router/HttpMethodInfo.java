@@ -29,6 +29,7 @@ import org.wso2.carbon.mss.HttpStreamHandler;
 import org.wso2.carbon.mss.HttpStreamer;
 import org.wso2.carbon.mss.internal.router.beanconversion.BeanConversionException;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -103,7 +104,7 @@ class HttpMethodInfo {
                     .send();
         } catch (InvocationTargetException e) {
             exceptionHandler.handle(e.getTargetException(), request, responder);
-        } catch (IllegalAccessException | BeanConversionException e) {
+        } catch (IllegalAccessException | BeanConversionException | IOException e) {
             exceptionHandler.handle(e, request, responder);
         }
     }

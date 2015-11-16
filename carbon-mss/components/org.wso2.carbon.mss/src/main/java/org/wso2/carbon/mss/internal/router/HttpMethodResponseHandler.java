@@ -108,7 +108,7 @@ public class HttpMethodResponseHandler {
      *
      * @throws BeanConversionException If bean conversion fails
      */
-    public void send() throws BeanConversionException {
+    public void send() throws BeanConversionException, IOException {
         HttpResponseStatus status;
         if (this.status != null) {
             status = this.status;
