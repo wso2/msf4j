@@ -120,6 +120,7 @@ public class MicroservicesRunner {
      * Start this Microservices runner. This will startup all the Netty transports.
      */
     public void start() {
+        handleServiceLifecycleMethods();
         transportManager.startTransports();
         isStarted = true;
         log.info("Microservices server started in " + (System.currentTimeMillis() - startTime) + "ms");
@@ -140,5 +141,14 @@ public class MicroservicesRunner {
      */
     public MicroservicesRegistry getMsRegistry() {
         return msRegistry;
+    }
+
+    private void handleServiceLifecycleMethods() {
+        msRegistry.initServices();
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+                msRegistry.preDestroyServices();
+            }
+        });
     }
 }
