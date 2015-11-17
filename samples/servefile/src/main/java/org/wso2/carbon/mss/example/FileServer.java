@@ -60,6 +60,14 @@ public class FileServer {
         }
     }
 
+    /**
+     * Resource method that serves the file.
+     * This method will return a Response object that
+     * contains a File entity and status code 200 or
+     * status code 404 if file is not available
+     *
+     * @return Response object
+     */
     @GET
     public Response serveFile() {
         if (file != null) {
