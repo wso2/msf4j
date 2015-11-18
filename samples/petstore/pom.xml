@@ -4,9 +4,9 @@
 
     <parent>
         <groupId>org.wso2.carbon.mss</groupId>
-        <artifactId>org.wso2.carbon.mss.parent</artifactId>
+        <artifactId>mss-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
+        <relativePath>../../parent/pom.xml</relativePath>
     </parent>
 
     <artifactId>petstore</artifactId>
