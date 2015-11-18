@@ -9,7 +9,6 @@
         <relativePath>../parent/pom.xml</relativePath>
     </parent>
 
-    <groupId>org.wso2.carbon.mss</groupId>
     <artifactId>mss-service-parent</artifactId>
     <packaging>pom</packaging>
 
