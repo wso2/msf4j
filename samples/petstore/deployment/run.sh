@@ -130,9 +130,9 @@ echo "--------------------------------------------------------------"
 if [ ! -f /usr/local/bin/kubectl ];then
     # TODO need to check incompatibility	
     if [[ "$OSTYPE" == "linux-gnu" ]]; then
-        wget https://storage.googleapis.com/kubernetes-release/release/v1.0.6/bin/linux/amd64/kubectl
+        wget https://storage.googleapis.com/kubernetes-release/release/v1.1.1/bin/linux/amd64/kubectl
     elif [[ "$OSTYPE" == "darwin"* ]]; then
-       wget https://storage.googleapis.com/kubernetes-release/release/v1.0.6/bin/darwin/amd64/kubectl
+       wget https://storage.googleapis.com/kubernetes-release/release/v1.1.1/bin/darwin/amd64/kubectl
     fi
     chmod +x kubectl
     mv kubectl /usr/local/bin/kubectl
