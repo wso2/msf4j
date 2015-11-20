@@ -38,5 +38,28 @@
         <microservice.mainClass>org.wso2.carbon.mss.example.Application</microservice.mainClass>
     </properties>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.3.5</version>
+                <configuration>
+                    <imageName>org.wso2.carbon.mss.example.stockquote</imageName>
+                    <baseImage>java:openjdk-8u66-jre</baseImage>
+                    <entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
+                    <!-- copy the service's jar file from target into the root directory of the image -->
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <directory>${project.build.directory}</directory>
+                            <include>${project.build.finalName}.jar</include>
+                        </resource>
+                    </resources>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>
 
