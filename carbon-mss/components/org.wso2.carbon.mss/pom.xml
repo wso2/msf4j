@@ -156,6 +156,7 @@
                                 io.netty.*,
                                 com.google.gson.*,
                                 com.google.common.*,
+                                javax.annotation.*,
                                 javax.ws.rs.*,
                                 org.slf4j.*,
                                 javax.net.ssl.*,
