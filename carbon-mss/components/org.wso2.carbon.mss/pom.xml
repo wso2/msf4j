@@ -21,9 +21,9 @@
 
     <parent>
         <groupId>org.wso2.carbon.mss</groupId>
-        <artifactId>org.wso2.carbon.mss.parent</artifactId>
+        <artifactId>mss-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../../../pom.xml</relativePath>
+        <relativePath>../../../parent/pom.xml</relativePath>
     </parent>
 
     <artifactId>org.wso2.carbon.mss</artifactId>
@@ -156,6 +156,7 @@
                                 io.netty.*,
                                 com.google.gson.*,
                                 com.google.common.*,
+                                javax.annotation.*,
                                 javax.ws.rs.*,
                                 org.slf4j.*,
                                 javax.net.ssl.*,
@@ -195,7 +196,6 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>2.5.4</version>
             </plugin>
         </plugins>
     </build>
@@ -210,7 +210,6 @@
                         <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-surefire-plugin</artifactId>
-                            <version>2.14.1</version>
                             <configuration>
                                 <argLine>${argLine} -Xmx512m</argLine>
                             </configuration>
@@ -218,7 +217,6 @@
                         <plugin>
                             <groupId>org.jacoco</groupId>
                             <artifactId>jacoco-maven-plugin</artifactId>
-                            <version>0.7.1.201405082137</version>
                             <executions>
                                 <execution>
                                     <id>prepare-agent</id>
@@ -242,7 +240,6 @@
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.7.1.201405082137</version>
                     </plugin>
                 </plugins>
             </build>
@@ -258,7 +255,6 @@
                         <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-source-plugin</artifactId>
-                            <version>2.2.1</version>
                             <configuration>
                                 <excludeResources>true</excludeResources>
                             </configuration>
@@ -277,7 +273,6 @@
                         <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-javadoc-plugin</artifactId>
-                            <version>2.9</version>
                             <configuration>
                                 <detectJavaApiLink>true</detectJavaApiLink>
                                 <links>
@@ -303,7 +298,6 @@
                         <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-gpg-plugin</artifactId>
-                            <version>1.5</version>
                             <configuration>
                                 <passphrase>${gpg.passphrase}</passphrase>
                                 <useAgent>${gpg.useagent}</useAgent>
@@ -316,7 +310,6 @@
                                 </execution>
                             </executions>
                         </plugin>
-
                     </plugins>
                 </pluginManagement>
 
@@ -324,17 +317,14 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>2.2.1</version>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>2.9.1</version>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.5</version>
                     </plugin>
                 </plugins>
             </build>
