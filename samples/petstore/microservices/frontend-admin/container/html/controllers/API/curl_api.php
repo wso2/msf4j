@@ -230,5 +230,5 @@ function imageUpload($url, $files){
     $curl = curl_init();
     $filePath = $files['file']['tmp_name'];
     $fileName = $files['file']['name'];
-    exec("curl -X POST -H "Transfer-Encoding: chunked" -H "Content-Type: text/plain" -d @{$filePath} http://".FILE_SERVER.":".FILE_SERVER_HOST."/$fileName");
+    exec("curl -X POST -H \"Transfer-Encoding: chunked\" -H \"Content-Type: text/plain\" -d @{$filePath} http://".FILE_SERVER.":".FILE_SERVER_HOST."/$fileName");
 }
