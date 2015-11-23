@@ -47,6 +47,7 @@ import javax.ws.rs.core.Response;
 public class FileServerService {
 
     private static final Logger log = LoggerFactory.getLogger(FileServerService.class);
+    private static final String MOUNT_PATH = "/var/www/html/upload";
 
     @POST
     @Path("/{fileName}")
@@ -70,7 +71,7 @@ public class FileServerService {
         private BufferedOutputStream outputStream = null;
 
         public HttpStreamHandlerImpl(String fileName) throws FileNotFoundException {
-            File file = Paths.get("fs", fileName).toFile();
+            File file = Paths.get(MOUNT_PATH, fileName).toFile();
             if (file.getParentFile().exists() || file.getParentFile().mkdirs()) {
                 outputStream = new BufferedOutputStream(new FileOutputStream(file));
             }
