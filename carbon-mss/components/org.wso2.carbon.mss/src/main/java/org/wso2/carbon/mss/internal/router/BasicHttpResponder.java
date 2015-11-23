@@ -106,9 +106,10 @@ public class BasicHttpResponder extends AbstractHttpResponder {
 
         setCustomHeaders(response, headers);
         response.headers().set(HttpHeaders.Names.CONTENT_TYPE, contentType);
-        // response.headers().set(HttpHeaders.Names.CONTENT_LENGTH, file.length());
 
-        response.headers().set(HttpHeaders.Names.TRANSFER_ENCODING, HttpHeaders.Values.CHUNKED);
+        if (!response.headers().contains(HttpHeaders.Names.CONTENT_LENGTH)) {
+            response.headers().set(HttpHeaders.Names.TRANSFER_ENCODING, HttpHeaders.Values.CHUNKED);
+        }
         channel.writeAndFlush(response);
 
         HttpChunkedInput httpChunkWriter = new HttpChunkedInput(new ChunkedFile(file));
