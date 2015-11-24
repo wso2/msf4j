@@ -90,6 +90,7 @@
         <module>parent</module>
         <module>carbon-mss/components/org.wso2.carbon.mss</module>
         <module>carbon-mss/features/org.wso2.carbon.mss.feature</module>
+        <module>template-engines/mss-mustache-template</module>
         <module>mss-service-parent</module>
         <module>samples/helloworld</module>
         <module>samples/stockquote-service</module>
