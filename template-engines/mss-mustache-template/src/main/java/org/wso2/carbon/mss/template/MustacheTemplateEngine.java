@@ -25,6 +25,10 @@ import com.github.mustachejava.MustacheFactory;
 import java.io.IOException;
 import java.io.StringWriter;
 
+/**
+ * Wrapper for mustache template engine that implements
+ * org.wso2.carbon.mss.template.TemplateEngine.
+ */
 public class MustacheTemplateEngine implements TemplateEngine {
 
     private MustacheFactory mustacheFactory;
@@ -37,6 +41,13 @@ public class MustacheTemplateEngine implements TemplateEngine {
         mustacheFactory = new DefaultMustacheFactory("templates");
     }
 
+    /**
+     * Render a given model from a given template.
+     *
+     * @param view  name of the template file in resources/templates directory
+     * @param model model to be rendered from the template
+     * @return rendered template
+     */
     @Override
     public String render(String view, Object model) {
         Mustache mustache = mustacheFactory.compile(view);
@@ -49,6 +60,9 @@ public class MustacheTemplateEngine implements TemplateEngine {
         return stringWriter.toString();
     }
 
+    /**
+     * @return MustacheTemplateEngine singleton
+     */
     public static MustacheTemplateEngine instance() {
         if (mustacheTemplateEngine == null) {
             synchronized (MustacheTemplateEngine.class) {

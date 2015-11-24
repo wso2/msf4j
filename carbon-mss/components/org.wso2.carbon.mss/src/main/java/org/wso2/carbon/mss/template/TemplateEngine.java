@@ -18,8 +18,18 @@
 
 package org.wso2.carbon.mss.template;
 
+/**
+ * MSS template engines should implement this interface.
+ */
 public interface TemplateEngine {
 
+    /**
+     * Renders the given model using the given template.
+     *
+     * @param view  name of the template file in resources/templates directory
+     * @param model model to be rendered from the template
+     * @return rendered template
+     */
     public String render(String view, Object model);
 
 }
