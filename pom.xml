@@ -99,6 +99,7 @@
         <module>samples/request-streamer</module>
         <module>samples/metrics</module>
         <module>samples/petstore</module>
+        <module>samples/template</module>
         <module>product</module>
     </modules>
 
