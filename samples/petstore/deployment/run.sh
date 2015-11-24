@@ -30,6 +30,10 @@ cd $HOME
 cd ../microservices/transaction/
 mvn clean install -Dmaven.test.skip=true
 
+cd $HOME
+cd ../microservices/fileserver/
+mvn clean install -Dmaven.test.skip=true
+
 
 # copy Pet
 echo "--------------------------------------------------------------"
