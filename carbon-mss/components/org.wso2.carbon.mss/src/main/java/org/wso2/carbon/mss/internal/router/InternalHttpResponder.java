@@ -87,7 +87,7 @@ public class InternalHttpResponder extends AbstractHttpResponder {
     }
 
     @Override
-    public void sendFile(File file, @Nullable Multimap<String, String> headers) {
+    public void sendFile(File file, String contentType, @Nullable Multimap<String, String> headers) {
         statusCode = HttpResponseStatus.OK.code();
         inputSupplier = Files.newInputStreamSupplier(file);
     }

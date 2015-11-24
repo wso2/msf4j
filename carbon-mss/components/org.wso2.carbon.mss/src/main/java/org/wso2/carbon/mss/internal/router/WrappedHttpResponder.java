@@ -139,8 +139,8 @@ final class WrappedHttpResponder implements HttpResponder {
     }
 
     @Override
-    public void sendFile(File file, Multimap<String, String> headers) {
-        delegate.sendFile(file, headers);
+    public void sendFile(File file, String contentType, Multimap<String, String> headers) throws IOException {
+        delegate.sendFile(file, contentType, headers);
         runInterceptor(HttpResponseStatus.OK);
     }
 

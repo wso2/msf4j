@@ -30,18 +30,18 @@ public interface HttpStreamHandler {
     /**
      * Http request content will be streamed directly to this method.
      *
-     * @param request The HTTP Request as a ByteBuf
+     * @param request   The HTTP Request as a ByteBuf
      * @param responder HttpResponder
      */
-    void chunk(ByteBuf request, HttpResponder responder);
+    void chunk(ByteBuf request, HttpResponder responder) throws Exception;
 
     /**
      * This is called on the receipt of the last HttpChunk.
      *
-     * @param request The HTTP Request as a ByteBuf
+     * @param request   The HTTP Request as a ByteBuf
      * @param responder HttpResponder
      */
-    void finished(ByteBuf request, HttpResponder responder);
+    void finished(ByteBuf request, HttpResponder responder) throws Exception;
 
     /**
      * When there is exception on netty while streaming, it will be propagated to handler

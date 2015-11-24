@@ -23,6 +23,7 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
+import com.google.common.io.Resources;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -38,6 +39,7 @@ import org.wso2.carbon.mss.HttpResponder;
 import org.wso2.carbon.mss.HttpStreamHandler;
 import org.wso2.carbon.mss.HttpStreamer;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -279,6 +281,23 @@ public class TestHandler implements HttpHandler {
     @GET
     public String multiMatchFooBarParamId(@PathParam("param") String param, @PathParam("id") String id) {
         return "multi-match-foo-bar-param-" + param + "-id-" + id;
+    }
+
+    @Path("/fileserver/{fileType}")
+    @GET
+    public Response serveFile(@PathParam("fileType") String fileType) throws Exception {
+        File file;
+        if (fileType.equals("png")) {
+            file = new File(Resources.getResource("testPngFile.png").toURI());
+            return Response.ok(file).build();
+        } else if (fileType.equals("jpg")) {
+            file = new File(Resources.getResource("testJpgFile.jpg").toURI());
+            return Response.ok(file).build();
+        } else if (fileType.equals("txt")) {
+            file = new File(Resources.getResource("testTxtFile.txt").toURI());
+            return Response.ok(file).build();
+        }
+        return Response.noContent().build();
     }
 
     @Path("/stream/upload")
