@@ -21,9 +21,9 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.wso2.carbon.mss</groupId>
-        <artifactId>mss</artifactId>
+        <artifactId>mss-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
+        <relativePath>../../parent/pom.xml</relativePath>
     </parent>
 
     <artifactId>mss-mustache-template</artifactId>
@@ -31,6 +31,7 @@
 
     <name>wso2 mss mustache</name>
 
+    <!-- Test dependencies -->
     <dependencies>
         <dependency>
             <groupId>org.wso2.carbon.mss</groupId>
@@ -41,6 +42,12 @@
             <groupId>com.github.spullara.mustache.java</groupId>
             <artifactId>compiler</artifactId>
             <version>0.9.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
