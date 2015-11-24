@@ -26,7 +26,6 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <groupId>org.wso2.carbon.mss</groupId>
     <artifactId>mss-mustache-template</artifactId>
     <packaging>jar</packaging>
 

@@ -30,6 +30,6 @@ public interface TemplateEngine {
      * @param model model to be rendered from the template
      * @return rendered template
      */
-    public String render(String view, Object model);
+    String render(String view, Object model);
 
 }
