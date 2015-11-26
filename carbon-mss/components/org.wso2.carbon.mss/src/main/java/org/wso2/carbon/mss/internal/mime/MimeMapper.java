@@ -18,6 +18,9 @@
 
 package org.wso2.carbon.mss.internal.mime;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -29,6 +32,7 @@ import java.util.Properties;
 public class MimeMapper {
 
     private static Properties mimeMap = null;
+    private static final Logger log = LoggerFactory.getLogger(MimeMapper.class);
 
     private static void loadMimeMap() throws IOException {
         mimeMap = new Properties();
@@ -36,6 +40,11 @@ public class MimeMapper {
                 .getResourceAsStream("mime-map.properties");
         if (inputStream != null) {
             mimeMap.load(inputStream);
+            try {
+                inputStream.close();
+            } catch (IOException e) {
+                log.warn("Could not close input stream", e);
+            }
         }
     }
 
