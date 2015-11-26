@@ -22,6 +22,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+/**
+ * This class lazily loads the mime-map.properties file
+ * and maps file extension to mime type using the file
+ */
 public class MimeMapper {
 
     private static Properties mimeMap = null;
