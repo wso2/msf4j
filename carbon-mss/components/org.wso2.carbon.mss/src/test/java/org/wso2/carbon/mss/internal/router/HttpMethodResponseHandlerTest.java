@@ -31,6 +31,7 @@ import org.wso2.carbon.mss.HttpResponder;
 import org.wso2.carbon.mss.internal.router.beanconversion.BeanConversionException;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import javax.annotation.Nullable;
@@ -42,7 +43,7 @@ import javax.ws.rs.core.MediaType;
 public class HttpMethodResponseHandlerTest {
 
     @Test
-    public void testNoStatusCodeNoEntity() throws BeanConversionException {
+    public void testNoStatusCodeNoEntity() throws BeanConversionException, IOException {
         new HttpMethodResponseHandler()
                 .setResponder(new HttpResponderMock((HttpResponseStatus status,
                                                      Object entity, Multimap<String, String> headers) -> {
@@ -53,7 +54,7 @@ public class HttpMethodResponseHandlerTest {
     }
 
     @Test
-    public void testNoStatusCodeWithEntity() throws BeanConversionException {
+    public void testNoStatusCodeWithEntity() throws BeanConversionException, IOException {
         new HttpMethodResponseHandler()
                 .setResponder(new HttpResponderMock((HttpResponseStatus status,
                                                      Object entity, Multimap<String, String> headers) -> {
@@ -66,7 +67,7 @@ public class HttpMethodResponseHandlerTest {
     }
 
     @Test
-    public void testStatusCodeOkWithNoEntity() throws BeanConversionException {
+    public void testStatusCodeOkWithNoEntity() throws BeanConversionException, IOException {
         new HttpMethodResponseHandler()
                 .setResponder(new HttpResponderMock((HttpResponseStatus status,
                                                      Object entity, Multimap<String, String> headers) -> {
@@ -78,7 +79,7 @@ public class HttpMethodResponseHandlerTest {
     }
 
     @Test
-    public void testStatusCodeNotFoundWithNoEntity() throws BeanConversionException {
+    public void testStatusCodeNotFoundWithNoEntity() throws BeanConversionException, IOException {
         new HttpMethodResponseHandler()
                 .setResponder(new HttpResponderMock((HttpResponseStatus status,
                                                      Object entity, Multimap<String, String> headers) -> {
@@ -90,7 +91,7 @@ public class HttpMethodResponseHandlerTest {
     }
 
     @Test
-    public void testStatusCodeOkWithPlainTextMediaType() throws BeanConversionException {
+    public void testStatusCodeOkWithPlainTextMediaType() throws BeanConversionException, IOException {
         String content = "Text-Content";
         new HttpMethodResponseHandler()
                 .setResponder(new HttpResponderMock((HttpResponseStatus status,
@@ -177,7 +178,8 @@ public class HttpMethodResponseHandlerTest {
         }
 
         @Override
-        public void sendFile(File file, @Nullable Multimap<String, String> headers) {
+        public void sendFile(File file, String contentType,
+                             @Nullable Multimap<String, String> headers) {
             cb.values(null, file, headers);
         }
     }

@@ -25,6 +25,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.HttpResponseStatus;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import javax.annotation.Nullable;
@@ -140,5 +141,6 @@ public interface HttpResponder {
      * @param file    The file to send
      * @param headers Headers to be sent back.
      */
-    void sendFile(File file, @Nullable Multimap<String, String> headers);
+    void sendFile(File file, String contentType,
+                  @Nullable Multimap<String, String> headers) throws IOException;
 }

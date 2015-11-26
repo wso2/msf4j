@@ -29,6 +29,7 @@ import org.wso2.carbon.mss.HttpStreamHandler;
 import org.wso2.carbon.mss.HttpStreamer;
 import org.wso2.carbon.mss.internal.router.beanconversion.BeanConversionException;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -103,7 +104,7 @@ class HttpMethodInfo {
                     .send();
         } catch (InvocationTargetException e) {
             exceptionHandler.handle(e.getTargetException(), request, responder);
-        } catch (IllegalAccessException | BeanConversionException e) {
+        } catch (IllegalAccessException | BeanConversionException | IOException e) {
             exceptionHandler.handle(e, request, responder);
         }
     }
@@ -142,7 +143,7 @@ class HttpMethodInfo {
     /**
      * Calls the {@link HttpStreamHandler#chunk(io.netty.buffer.ByteBuf,
      * org.wso2.carbon.mss.HttpResponder)} method.
-     *
+     * <p/>
      * If the chunk method calls throws exception,
      * the {@link HttpStreamHandler#error(Throwable)} will be called and
      * this method will throw {@link org.wso2.carbon.mss.internal.router.HandlerException}.
@@ -179,6 +180,6 @@ class HttpMethodInfo {
         httpStreamHandler = null;
         consumer.error(cause);
 
-        throw new HandlerException(HttpResponseStatus.INTERNAL_SERVER_ERROR, "", cause);
+        throw new HandlerException(HttpResponseStatus.INTERNAL_SERVER_ERROR, cause.getMessage(), cause);
     }
 }

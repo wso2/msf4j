@@ -16,11 +16,19 @@
 #
 # ------------------------------------------------------------------------
 
-FROM php:5.6-apache
+FROM java:8-jre
 MAINTAINER architecture@wso2.org
 
+WORKDIR /opt
+
 # --------------------------------
-# Copy scripts
+# Copy scripts, packages & plugins
 # --------------------------------
-COPY php/ /var/www/html/
-RUN chmod 777 -R /var/www/html/fs 
+COPY packages/petstore-fileserver.jar /opt/
+
+# ----------------------
+# Expose container ports
+# ----------------------
+EXPOSE 80
+
+ENTRYPOINT java -jar /opt/petstore-fileserver.jar
