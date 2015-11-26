@@ -19,16 +19,18 @@ package org.wso2.carbon.mss.internal.router;
 import com.google.common.base.Charsets;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.io.Files;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.wso2.carbon.mss.HttpResponder;
+import org.wso2.carbon.mss.internal.mime.MimeMapper;
+import org.wso2.carbon.mss.internal.mime.MimeMappingException;
 import org.wso2.carbon.mss.internal.router.beanconversion.BeanConversionException;
 import org.wso2.carbon.mss.internal.router.beanconversion.BeanConverter;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
@@ -123,8 +125,8 @@ public class HttpMethodResponseHandler {
                 File file = (File) entity;
                 if (mediaType.equals("*/*")) {
                     try {
-                        mediaType = Files.probeContentType(file.toPath());
-                    } catch (IOException e) {
+                        mediaType = MimeMapper.getMimeType(Files.getFileExtension(file.getName()));
+                    } catch (MimeMappingException e) {
                         // If file type could not be probed,
                         // media type should be kpt as it is ie. */*
                     }
