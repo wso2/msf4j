@@ -18,6 +18,10 @@
 
 package org.wso2.carbon.mss.internal.mime;
 
+/**
+ * This exception will be thrown in case a
+ * file extension cannot be mapped to a mime type
+ */
 public class MimeMappingException extends Exception {
 
     public MimeMappingException(String msg) {
