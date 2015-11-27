@@ -226,9 +226,8 @@ function callAuthApigetPetTypes($url, $token){
     }
 }
 
-function imageUpload($url, $files){
-    $curl = curl_init();
+function imageUpload($url, $files, $token){
     $filePath = $files['file']['tmp_name'];
     $fileName = $files['file']['name'];
-    exec("curl -X POST -H \"Transfer-Encoding: chunked\" -H \"Content-Type: text/plain\" -d @{$filePath} http://".FILE_SERVER.":".FILE_SERVER_HOST."/$fileName");
+    exec("curl -X POST -H \"Transfer-Encoding: chunked\" -H \"Content-Type: text/plain\" -H \"X-JWT-Assertion: {$token}\" -d @{$filePath} http://".$url."/$fileName");
 }

@@ -60,7 +60,7 @@ public class FileServerService {
     @GET
     @Path("/{fileName}")
     public Response getFile(@PathParam("fileName") String fileName) {
-        File file = Paths.get("fs", fileName).toFile();
+        File file = Paths.get(MOUNT_PATH, fileName).toFile();
         if (file.exists()) {
             return Response.ok(file).build();
         }
