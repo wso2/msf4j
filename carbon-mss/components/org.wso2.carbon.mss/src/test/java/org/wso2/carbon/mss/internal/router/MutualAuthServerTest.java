@@ -24,7 +24,7 @@ import com.google.common.io.Resources;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.wso2.carbon.mss.MicroservicesRunner;
-import org.wso2.carbon.transport.http.netty.internal.config.TransportConfigurationBuilder;
+import org.wso2.carbon.transport.http.netty.internal.config.YAMLTransportConfigurationBuilder;
 
 import java.io.File;
 import java.net.URI;
@@ -50,8 +50,8 @@ public class MutualAuthServerTest extends HttpsServerTest {
         String trustKeyStorePassword = "password";
         setSslClientContext(new SSLClientContext(trustKeyStore, trustKeyStorePassword));
 
-        System.setProperty(TransportConfigurationBuilder.NETTY_TRANSPORT_CONF,
-                Resources.getResource("netty-transports-2.xml").getPath());
+        System.setProperty(YAMLTransportConfigurationBuilder.NETTY_TRANSPORT_CONF,
+                Resources.getResource("netty-transports-2.yml").getPath());
         microservicesRunner = new MicroservicesRunner();
         microservicesRunner
                 .deploy(testHandler)

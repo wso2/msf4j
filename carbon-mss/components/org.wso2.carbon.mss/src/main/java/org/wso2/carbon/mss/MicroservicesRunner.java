@@ -26,8 +26,8 @@ import org.wso2.carbon.mss.internal.MicroservicesRegistry;
 import org.wso2.carbon.mss.internal.router.Interceptor;
 import org.wso2.carbon.transport.http.netty.internal.NettyTransportDataHolder;
 import org.wso2.carbon.transport.http.netty.internal.config.ListenerConfiguration;
-import org.wso2.carbon.transport.http.netty.internal.config.TransportConfigurationBuilder;
 import org.wso2.carbon.transport.http.netty.internal.config.TransportsConfiguration;
+import org.wso2.carbon.transport.http.netty.internal.config.YAMLTransportConfigurationBuilder;
 import org.wso2.carbon.transport.http.netty.listener.NettyListener;
 
 import java.util.Set;
@@ -73,7 +73,7 @@ public class MicroservicesRunner {
      * {@link #MicroservicesRunner(int...)}
      */
     public MicroservicesRunner() {
-        TransportsConfiguration trpConfig = TransportConfigurationBuilder.build();
+        TransportsConfiguration trpConfig = YAMLTransportConfigurationBuilder.build();
         Set<ListenerConfiguration> listenerConfigurations = trpConfig.getListenerConfigurations();
         NettyTransportDataHolder nettyTransportDataHolder = NettyTransportDataHolder.getInstance();
         for (ListenerConfiguration listenerConfiguration : listenerConfigurations) {
