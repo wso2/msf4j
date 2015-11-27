@@ -53,7 +53,7 @@ public class HttpsServerTest extends HttpServerTest {
     public static void setup() throws Exception {
         baseURI = URI.create(String.format("https://%s:%d", hostname, port));
         System.setProperty(TransportConfigurationBuilder.NETTY_TRANSPORT_CONF,
-                Resources.getResource("netty-transports-1.xml").getPath());
+                Resources.getResource("netty-transports-1.yml").getPath());
         microservicesRunner = new MicroservicesRunner();
         sslClientContext = new SSLClientContext();
         microservicesRunner

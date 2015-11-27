@@ -377,7 +377,7 @@
         <maven.gpgplugin.version>1.5</maven.gpgplugin.version>
 
         <!-- Dependencies -->
-        <carbon.kernel.version>5.0.0-alpha</carbon.kernel.version>
+        <carbon.kernel.version>5.0.0-SNAPSHOT</carbon.kernel.version>
         <carbon.mss.version>1.0.0-SNAPSHOT</carbon.mss.version>
         <carbon.metrics.version>1.2.0-m2</carbon.metrics.version>
         <carbon.mss.osgi.version>1.0.0.SNAPSHOT</carbon.mss.osgi.version>
@@ -392,8 +392,8 @@
         <slf4j.log4j.version>1.6.0</slf4j.log4j.version>
         <gson.version>2.2.4</gson.version>
         <guava.version>13.0.1</guava.version>
-        <org.wso2.carbon.transport.http.netty.version>1.0.0-alpha</org.wso2.carbon.transport.http.netty.version>
-        <org.wso2.carbon.transport.http.netty.osgi.version>1.0.0.alpha
+        <org.wso2.carbon.transport.http.netty.version>1.0.0-SNAPSHOT</org.wso2.carbon.transport.http.netty.version>
+        <org.wso2.carbon.transport.http.netty.osgi.version>1.0.0.SNAPSHOT
         </org.wso2.carbon.transport.http.netty.osgi.version>
         <guava.version>13.0.1</guava.version>
         <jsr305.version>2.0.1</jsr305.version>

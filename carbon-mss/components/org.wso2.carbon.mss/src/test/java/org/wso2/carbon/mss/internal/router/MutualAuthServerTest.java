@@ -51,7 +51,7 @@ public class MutualAuthServerTest extends HttpsServerTest {
         setSslClientContext(new SSLClientContext(trustKeyStore, trustKeyStorePassword));
 
         System.setProperty(TransportConfigurationBuilder.NETTY_TRANSPORT_CONF,
-                Resources.getResource("netty-transports-2.xml").getPath());
+                Resources.getResource("netty-transports-2.yml").getPath());
         microservicesRunner = new MicroservicesRunner();
         microservicesRunner
                 .deploy(testHandler)
