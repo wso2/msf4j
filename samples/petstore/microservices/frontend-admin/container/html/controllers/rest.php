@@ -17,7 +17,7 @@ switch ($api_type) {
 
     case "addPets":
         $url_image_upload= 'http://'.FILE_SERVER;
-        imageUpload($url_image_upload, $_FILES);
+        imageUpload($url_image_upload, $_FILES, $_SESSION['authtoken']);
         $pet_category = htmlspecialchars($_POST["pet-category"]);
         $pet_age_months = htmlspecialchars($_POST["pet-age-months"]);
         $pet_price = htmlspecialchars($_POST["pet-price"]);
