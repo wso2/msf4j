@@ -21,7 +21,7 @@ spec:
           - name: GET_HOSTS_FROM
             value: dns
           ports: 
-            - containerPort: 80
+            - containerPort: 8080
               name: fileserver
           volumeMounts:
               # name must match the volume name below

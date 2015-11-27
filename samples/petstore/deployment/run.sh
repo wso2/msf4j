@@ -53,7 +53,7 @@ cd $HOME
 [ ! -d $SHARE_FOLDER/pet ] && mkdir -p $SHARE_FOLDER/fileserver
 cp -fr $FILESERVER_HOME/container/docker $SHARE_FOLDER/fileserver
 [ ! -d $SHARE_FOLDER/fileserver/docker/packages ] && mkdir -p $SHARE_FOLDER/fileserver/docker/packages
-cp -f $FILESERVER_HOME/target/petstore-fileserver-*.jar $SHARE_FOLDER/pet/docker/packages/petstore-fileserver.jar
+cp -f $FILESERVER_HOME/target/petstore-fileserver-*.jar $SHARE_FOLDER/fileserver/docker/packages/petstore-fileserver.jar
 
 echo "--------------------------------------------------------------"
 echo "Copy FrontEnd Admin"

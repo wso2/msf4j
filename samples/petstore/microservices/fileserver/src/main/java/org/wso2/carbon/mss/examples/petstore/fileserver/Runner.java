@@ -28,7 +28,7 @@ public class Runner {
 
     public static void main(String[] args) {
         new MicroservicesRunner().
-                addInterceptor(new JWTSecurityInterceptor()).
+                //addInterceptor(new JWTSecurityInterceptor()).
                 deploy(new FileServerService())
                 .start();
     }
