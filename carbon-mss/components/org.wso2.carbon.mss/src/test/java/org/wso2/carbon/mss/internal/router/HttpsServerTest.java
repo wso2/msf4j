@@ -25,7 +25,7 @@ import io.netty.handler.codec.http.HttpMethod;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.wso2.carbon.mss.MicroservicesRunner;
-import org.wso2.carbon.transport.http.netty.internal.config.TransportConfigurationBuilder;
+import org.wso2.carbon.transport.http.netty.internal.config.YAMLTransportConfigurationBuilder;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -52,7 +52,7 @@ public class HttpsServerTest extends HttpServerTest {
     @BeforeClass
     public static void setup() throws Exception {
         baseURI = URI.create(String.format("https://%s:%d", hostname, port));
-        System.setProperty(TransportConfigurationBuilder.NETTY_TRANSPORT_CONF,
+        System.setProperty(YAMLTransportConfigurationBuilder.NETTY_TRANSPORT_CONF,
                 Resources.getResource("netty-transports-1.yml").getPath());
         microservicesRunner = new MicroservicesRunner();
         sslClientContext = new SSLClientContext();
