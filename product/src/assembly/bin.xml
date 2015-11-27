@@ -64,6 +64,7 @@
                 <exclude>**/.vagrant.d/**</exclude>
                 <exclude>**/.vagrant/**</exclude>
                 <exclude>**/kubernetes-vagrant-coreos-cluster/docker/**</exclude>
+                <exclude>**/VirtualBox VMs/**</exclude>
                 <exclude>**/*.iml</exclude>
                 <exclude>**/*.ipr</exclude>
                 <exclude>**/*.iwr</exclude>
