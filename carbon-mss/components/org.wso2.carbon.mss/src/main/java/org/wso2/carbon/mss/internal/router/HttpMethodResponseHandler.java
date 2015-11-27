@@ -19,13 +19,18 @@ package org.wso2.carbon.mss.internal.router;
 import com.google.common.base.Charsets;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.io.Files;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.wso2.carbon.mss.HttpResponder;
+import org.wso2.carbon.mss.internal.mime.MimeMapper;
+import org.wso2.carbon.mss.internal.mime.MimeMappingException;
 import org.wso2.carbon.mss.internal.router.beanconversion.BeanConversionException;
 import org.wso2.carbon.mss.internal.router.beanconversion.BeanConverter;
 
+import java.io.File;
+import java.io.IOException;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
@@ -102,9 +107,10 @@ public class HttpMethodResponseHandler {
 
     /**
      * Send response using netty-http provided responder.
+     *
      * @throws BeanConversionException If bean conversion fails
      */
-    public void send() throws BeanConversionException {
+    public void send() throws BeanConversionException, IOException {
         HttpResponseStatus status;
         if (this.status != null) {
             status = this.status;
@@ -115,17 +121,30 @@ public class HttpMethodResponseHandler {
         }
         Object entityToSend;
         if (entity != null) {
-            if (mediaType != null) {
-                entityToSend = BeanConverter.instance(mediaType)
-                        .toMedia(entity);
+            if (entity instanceof File) {
+                File file = (File) entity;
+                if (mediaType.equals("*/*")) {
+                    try {
+                        mediaType = MimeMapper.getMimeType(Files.getFileExtension(file.getName()));
+                    } catch (MimeMappingException e) {
+                        // If file type could not be probed,
+                        // media type should be kpt as it is ie. */*
+                    }
+                }
+                responder.sendFile(file, mediaType, headers);
             } else {
-                mediaType = "";
-                entityToSend = entity;
+                if (mediaType != null) {
+                    entityToSend = BeanConverter.instance(mediaType)
+                            .toMedia(entity);
+                } else {
+                    mediaType = "";
+                    entityToSend = entity;
+                }
+                //String.valueOf() is used to send correct response for entity types other than String
+                //such as primitives like numbers
+                ByteBuf channelBuffer = Unpooled.wrappedBuffer(Charsets.UTF_8.encode(String.valueOf(entityToSend)));
+                responder.sendContent(status, channelBuffer, mediaType, headers);
             }
-            //String.valueOf() is used to send correct response for entity types other than String
-            //such as primitives like numbers
-            ByteBuf channelBuffer = Unpooled.wrappedBuffer(Charsets.UTF_8.encode(String.valueOf(entityToSend)));
-            responder.sendContent(status, channelBuffer, mediaType, headers);
         } else {
             responder.sendStatus(status, headers);
         }

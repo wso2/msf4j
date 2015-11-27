@@ -33,5 +33,6 @@
         <module>microservices/pet</module>
         <module>microservices/transaction</module>
         <module>microservices/security</module>
+        <module>microservices/fileserver</module>
     </modules>
 </project>
