@@ -181,6 +181,15 @@ Invoke by the container during server shutdown before the  container removes the
 For detailed example refer lifecycle sample from [here](https://github.com/wso2/product-mss/tree/master/samples/lifecycle). 
 
 
+###Complete Feature List
+* Annotation based definition of microservices
+* High performance Netty based transport
+* WSO2 Developer Studio based tooling for microservices development starting from a Swagger API definition
+* HTTP request & response streaming
+* Support for metrics & visualization of metrics using WSO2 Data Analytics Server (DAS) dashboards
+* Support for securing microservices
+* Integration with rendering engines such as Mustache
+* Comprehensive samples demonstrating how to develop microservices based solutions
 
 
 
