@@ -33,7 +33,7 @@ java -jar target/fileserver-*.jar
 Note: /var/www/html/upload directory should be available with write permissions
 
 
-How to tests the sample
+How to test the sample
 ------------------------------------------
 
 Run the following curl command to upload file
