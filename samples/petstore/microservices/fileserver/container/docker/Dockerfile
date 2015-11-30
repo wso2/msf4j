@@ -29,6 +29,6 @@ COPY packages/petstore-fileserver.jar /opt/
 # ----------------------
 # Expose container ports
 # ----------------------
-EXPOSE 80
+EXPOSE 8080
 
 ENTRYPOINT java -jar /opt/petstore-fileserver.jar

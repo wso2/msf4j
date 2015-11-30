@@ -1,6 +1,6 @@
 From ubuntu:14.04
 
-RUN sudo apt-get update && apt-get install -y apache2 php5 php5-curl php5-redis
+RUN sudo apt-get update && apt-get install -y apache2 php5 php5-curl php5-redis curl
 
 RUN sudo apt-get install -y openssh-server git vim 
 RUN mkdir -p /var/run/sshd
