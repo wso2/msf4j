@@ -11,8 +11,9 @@ throughput & memory consumption characteristics of MSS against other microservie
 
 ##Getting Started
 
-It is really easy to setup a microservice using WSO2 Microservices Server. You simply need to write a usual JAX-RS 
-service and deploy it using a single line of code. Check the following [Hello-Service]
+It is really easy to define & deploy a microservice using WSO2 Microservices Server. 
+You simply need to annotate your service and deploy it using a single line of code. 
+Check the following [Hello-Service]
 (samples/helloworld) sample.
 
 ####pom.xml
@@ -63,7 +64,7 @@ public class HelloService {
 
 
 ####Application.java
-This is the oneliner to deploy your service using WSO2 Microservices Server.
+This is the one-liner to deploy your service using WSO2 Microservices Server.
 ```java
 public class Application {
     public static void main(String[] args) {
@@ -100,7 +101,7 @@ curl http://localhost:8080/hello/Microservices
 
 ##Supported Annotations
 
-
+For defining services, we support a subset of the JAXRS annotations.
 
 ###Class level annotations
 #####@Path
