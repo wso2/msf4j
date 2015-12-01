@@ -6,12 +6,13 @@ See the following sample.
 
 ```java
     @GET
-    public Response serveFile() {
-        if (file != null) {
+    @Path("/{fileName}")
+    public Response getFile(@PathParam("fileName") String fileName) {
+        File file = Paths.get(MOUNT_PATH, fileName).toFile();
+        if (file.exists()) {
             return Response.ok(file).build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
         }
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 ```
 
@@ -29,12 +30,22 @@ Use following command to run the application
 ```
 java -jar target/fileserver-*.jar
 ```
+Note: /var/www/html/upload directory should be available with write permissions
 
-How to tests the sample
+
+How to test the sample
 ------------------------------------------
 
-Run the following curl command
+Run the following curl command to upload file
 ```
-curl -v -X GET http://localhost:8080/file
+curl -v -X POST --data-binary @/testPng.png http://localhost:8080/filename.png
+```
+Here /testPng.png will be uploaded with the name filename.png
+
+---
+
+Run the following curl command to receive file
+```
+curl -v -X GET http://localhost:8080/filename.png
 ```
 
