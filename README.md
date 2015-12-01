@@ -105,7 +105,7 @@ For defining services, we support a subset of the JAXRS annotations.
 
 ###Class level annotations
 #####@Path
-Root path for resource methods. All the paths specfied in the resource methods will be sub paths of this.
+Root path for resource methods. All the paths specified in the resource methods will be sub paths of this.
 
 #####@Consumes
 Default consume media type(s) for resource methods. The resource methods that do not specify @Consume annotation will
