@@ -31,6 +31,7 @@ import org.wso2.carbon.mss.internal.router.beanconversion.BeanConverter;
 
 import java.io.File;
 import java.io.IOException;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
@@ -123,12 +124,11 @@ public class HttpMethodResponseHandler {
         if (entity != null) {
             if (entity instanceof File) {
                 File file = (File) entity;
-                if (mediaType.equals("*/*")) {
+                if (mediaType == null || mediaType.equals(MediaType.WILDCARD)) {
                     try {
                         mediaType = MimeMapper.getMimeType(Files.getFileExtension(file.getName()));
                     } catch (MimeMappingException e) {
-                        // If file type could not be probed,
-                        // media type should be kpt as it is ie. */*
+                        mediaType = MediaType.WILDCARD;
                     }
                 }
                 responder.sendFile(file, mediaType, headers);
@@ -137,7 +137,7 @@ public class HttpMethodResponseHandler {
                     entityToSend = BeanConverter.instance(mediaType)
                             .toMedia(entity);
                 } else {
-                    mediaType = "";
+                    mediaType = MediaType.WILDCARD;
                     entityToSend = entity;
                 }
                 //String.valueOf() is used to send correct response for entity types other than String
