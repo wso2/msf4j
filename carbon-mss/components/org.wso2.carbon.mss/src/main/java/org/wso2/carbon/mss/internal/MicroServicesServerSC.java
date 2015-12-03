@@ -56,34 +56,31 @@ public class MicroServicesServerSC {
         try {
             countJaxrsServices();
 
-            new Thread(new Runnable() {
+            new Thread(() -> {
+                while (true) {
+                    if (microservicesRegistry.getServiceCount() == jaxRsServiceCount) {
+                        LOG.info("Starting micro services server...");
 
-                public void run() {
-                    while (true) {
-                        if (microservicesRegistry.getServiceCount() == jaxRsServiceCount) {
-                            LOG.info("Starting micro services server...");
+                        // Create an OSGi services (HTTP/HTTPS) & register it with the relevant CHANNEL_ID_KEY
 
-                            // Create an OSGi services (HTTP/HTTPS) & register it with the relevant CHANNEL_ID_KEY
+                        Hashtable<String, String> httpInitParams = new Hashtable<>();
+                        httpInitParams.put(CHANNEL_ID_KEY, "netty-jaxrs-http");
+                        bundleContext.registerService(CarbonNettyServerInitializer.class,
+                                new MSSNettyServerInitializer(MicroservicesRegistry.getInstance()), httpInitParams);
 
-                            Hashtable<String, String> httpInitParams = new Hashtable<>();
-                            httpInitParams.put(CHANNEL_ID_KEY, "netty-jaxrs-http");
-                            bundleContext.registerService(CarbonNettyServerInitializer.class,
-                                    new MSSNettyServerInitializer(MicroservicesRegistry.getInstance()), httpInitParams);
+                        Hashtable<String, String> httpsInitParams = new Hashtable<>();
+                        httpsInitParams.put(CHANNEL_ID_KEY, "netty-jaxrs-https");
+                        bundleContext.
+                                registerService(CarbonNettyServerInitializer.class,
+                                        new MSSNettyServerInitializer(MicroservicesRegistry.getInstance()),
+                                        httpsInitParams);
 
-                            Hashtable<String, String> httpsInitParams = new Hashtable<>();
-                            httpsInitParams.put(CHANNEL_ID_KEY, "netty-jaxrs-https");
-                            bundleContext.
-                                    registerService(CarbonNettyServerInitializer.class,
-                                            new MSSNettyServerInitializer(MicroservicesRegistry.getInstance()),
-                                            httpsInitParams);
-
-                            LOG.info("Micro services server started");
-                            break;
-                        } else {
-                            try {
-                                TimeUnit.MILLISECONDS.sleep(10);
-                            } catch (InterruptedException ignored) {
-                            }
+                        LOG.info("Micro services server started");
+                        break;
+                    } else {
+                        try {
+                            TimeUnit.MILLISECONDS.sleep(10);
+                        } catch (InterruptedException ignored) {
                         }
                     }
                 }
