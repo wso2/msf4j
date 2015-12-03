@@ -43,7 +43,6 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("unused")
 public class MicroServicesServerSC {
     public static final String CHANNEL_ID_KEY = "channel.id";
-    private static final Logger log = LoggerFactory.getLogger(MicroServicesServerSC.class);
     private static final Logger LOG = LoggerFactory.getLogger(MicroServicesServerSC.class);
     private final MicroservicesRegistry microservicesRegistry = MicroservicesRegistry.getInstance();
 
