@@ -107,6 +107,18 @@ public class HttpMethodResponseHandlerTest {
                 .send();
     }
 
+    @Test
+    public void testSendFileWithNoMediaTypeSet() throws BeanConversionException, IOException {
+        File file = new File("");
+        new HttpMethodResponseHandler()
+                .setResponder(new HttpResponderMock((HttpResponseStatus status,
+                                                     Object entity, Multimap<String, String> headers) -> {
+                    Assert.assertTrue(entity == file);
+                }))
+                .setEntity(file)
+                .send();
+    }
+
     private static class HttpResponderMock implements HttpResponder {
 
         private final CallBack cb;
