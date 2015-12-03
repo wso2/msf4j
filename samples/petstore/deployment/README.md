@@ -24,7 +24,7 @@ The [vagrant-winnfsd plugin](https://github.com/GM-Alex/vagrant-winnfsd) will be
 ```
 ./run.sh 
 ```
-It will download and configure CoreOS vagrant boxes and setup Kubernetes 1.0.6 in a 3 CoreOS nodes. Complied product-mss, build all docker files, deploy k8s replication controllers, services ..etc.
+It will download and configure CoreOS vagrant boxes and setup Kubernetes 1.1.1 in a 3 CoreOS nodes. Complied product-mss, build all docker files, deploy k8s replication controllers, services ..etc.
 
 ```
 ./clean.sh
