@@ -20,7 +20,7 @@ brew install wget
 The [vagrant-winnfsd plugin](https://github.com/GM-Alex/vagrant-winnfsd) will be installed in order to enable NFS shares.
 
 
-Run automated deployment 
+##Run automated deployment 
 ```
 ./run.sh 
 ```
