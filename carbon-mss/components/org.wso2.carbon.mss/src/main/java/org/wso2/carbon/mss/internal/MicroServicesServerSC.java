@@ -57,8 +57,6 @@ public class MicroServicesServerSC {
             countJaxrsServices();
 
             new Thread(new Runnable() {
-//                private List<NettyHttpService> nettyHttpServices = new ArrayList<NettyHttpService>();
-//                private List<NettyHttpService.Builder> builders = new ArrayList<NettyHttpService.Builder>();
 
                 public void run() {
                     while (true) {
