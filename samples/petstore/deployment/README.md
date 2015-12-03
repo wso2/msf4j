@@ -5,9 +5,7 @@
  * **[Vagrant](https://www.vagrantup.com)**
  * a supported Vagrant hypervisor
  	* **[Virtualbox](https://www.virtualbox.org)** (the default)
- 	* **[Parallels Desktop](http://www.parallels.com/eu/products/desktop/)**
- 	* **[VMware Fusion](http://www.vmware.com/products/fusion)** or **[VMware Workstation](http://www.vmware.com/products/workstation)**
-
+ 	
 ### MacOS X
 
 On **MacOS X** (and assuming you have [homebrew](http://brew.sh) already installed) run
