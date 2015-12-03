@@ -43,3 +43,10 @@ Deploy k8s resources for petstore sample.
 ```
  Clean all k8s resources and stop all CoreOS nodes
 
+## Troubleshooting
+
+#### I'm getting errors while waiting for Kubernetes master to become ready on a MacOS host!
+
+You probably have a pre-existing Kubernetes config file on your system at `~/.kube/config`. Delete or move that file and try again.
+
+
