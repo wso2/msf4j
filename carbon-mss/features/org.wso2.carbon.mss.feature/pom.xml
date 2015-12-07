@@ -153,7 +153,7 @@
                                 </bundle>
                                 <bundle>
                                     <symbolicName>org.wso2.carbon.transport.http.netty</symbolicName>
-                                    <version>${org.wso2.carbon.transport.http.netty.osgi.version}</version>
+                                    <version>${org.wso2.carbon.transport.http.netty.version}</version>
                                 </bundle>
                                 <bundle>
                                     <symbolicName>slf4j.api</symbolicName>
