@@ -15,12 +15,11 @@ brew update
 brew install wget
 ```
 
-### Windows
-
-The [vagrant-winnfsd plugin](https://github.com/GM-Alex/vagrant-winnfsd) will be installed in order to enable NFS shares.
-
 
 ##Run automated deployment 
+
+Download WSO2 Identity server pack (zip) and copy into packs folder
+
 ```
 ./run.sh 
 ```
