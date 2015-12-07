@@ -4,6 +4,21 @@
 source path.sh
 
 
+# checking IS pack availability
+if [ ! -f packs/$IS_PACK ];then
+    echo "WSO2 Identity Server pack is not available at packs directry. Please copy Identity Server pack, update path.sh and re-run petstore.sh"
+    exit
+fi
+
+cd $HOME/packs
+[ -d ${IS_PACK%.zip} ] && rm -fr ${IS_PACK%.*}
+unzip $IS_PACK
+cd ${IS_PACK%.zip}/bin/
+echo "--------------------------------------------------------------"
+echo "Starting WSO2 Identity Server"
+echo "--------------------------------------------------------------"
+./wso2server.sh start
+
 echo "--------------------------------------------------------------"
 echo "Creating Kube-System Namespace, Kube-DNS, Kube-UI"
 echo "--------------------------------------------------------------"
@@ -13,6 +28,13 @@ kubectl create -f $VAGRANT_HOME/plugins/dns/dns-controller.yaml
 kubectl create -f $VAGRANT_HOME/plugins/kube-ui/kube-ui-controller.yaml
 kubectl create -f $VAGRANT_HOME/plugins/kube-ui/kube-ui-service.yaml
 sleep 20
+
+
+echo "--------------------------------------------------------------"
+echo "Creating services for external endpoints"
+echo "--------------------------------------------------------------"
+cd $HOME
+kubectl create -f external-endpoints/
 
 
 echo "--------------------------------------------------------------"
