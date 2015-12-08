@@ -121,6 +121,13 @@
             <EnableScoreParam>false</EnableScoreParam>
             <Type>LONG</Type>
         </ColumnDefinition>
+        <ColumnDefinition>
+            <Name>group_by</Name>
+            <EnableIndexing>true</EnableIndexing>
+            <IsPrimaryKey>false</IsPrimaryKey>
+            <EnableScoreParam>false</EnableScoreParam>
+            <Type>FACET</Type>
+        </ColumnDefinition>
     </TableSchema>
     <Source>
         <StreamId>org.wso2.carbon.mss.httpmonitoring:1.0.0</StreamId>
