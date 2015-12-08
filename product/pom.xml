@@ -157,7 +157,7 @@
                             <targetPath>
                                 file:${basedir}/target/wso2carbon-kernel-${carbon.kernel.version}/repository/components
                             </targetPath>
-                            <profile>profile/default</profile>
+                            <profile>profiles/default</profile>
                         </configuration>
                     </execution>
                     <execution>
@@ -167,7 +167,7 @@
                             <goal>install</goal>
                         </goals>
                         <configuration>
-                            <profile>profile/default</profile>
+                            <profile>profiles/default</profile>
                             <repositoryURL>file:${basedir}/target/p2-repo</repositoryURL>
                             <destination>
                                 ${basedir}/target/wso2carbon-kernel-${carbon.kernel.version}/repository/components
