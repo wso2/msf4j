@@ -97,7 +97,7 @@
         <module>samples/security</module>
         <module>samples/metrics</module>
         <module>samples/petstore</module>
-        <module>samples/servefile</module>
+        <module>samples/fileserver</module>
         <module>samples/template</module>
         <module>product</module>
     </modules>
