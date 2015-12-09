@@ -2,7 +2,17 @@
 
 This sample shows how to render a model from a template with WSO2 MSS.
 
-Following code demonstrates how to render a mustache template in a resource method.
+First you have to add the following dependency to the pom.
+
+```xml
+     <dependency>
+        <groupId>org.wso2.carbon.mss</groupId>
+        <artifactId>mss-mustache-template</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+     </dependency>
+```
+
+Following resource method renders the resources/templates/hello.mustache template
 
 ```java
     @GET
