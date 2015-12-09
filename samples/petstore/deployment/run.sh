@@ -152,6 +152,8 @@ cp -f $HOME/bootstrap.sh $VAGRANT_HOME/docker/
 cd $VAGRANT_HOME
 NODE_MEM=2048 NODE_CPUS=2 NODES=2 USE_KUBE_UI=true vagrant up
 
+source ~/.bash_profile
+
 kubectl get nodes
 
 cd $HOME
