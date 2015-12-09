@@ -45,6 +45,12 @@
             <fileMode>644</fileMode>
         </fileSet>
 
+        <fileSet>
+            <directory>carbon-home/repository/deployment/server/mss</directory>
+            <outputDirectory>repository/deployment/server/mss</outputDirectory>
+            <fileMode>644</fileMode>
+        </fileSet>
+
         <!-- Copy the README.md & LICENSE files -->
         <fileSet>
             <directory>..</directory>
