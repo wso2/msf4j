@@ -50,7 +50,7 @@ You probably have a pre-existing Kubernetes config file on your system at `~/.ku
 
 #### When I run kubectl get pods I can see many pods not become to running state or they have lot of restarts.
 
-This may happend first time when you run the system due to slow internet take lot of time to download k8s packa. You may resolve this by running following commands
+This may happend first time when you run the system due to slow internet. It may take lot of time to download k8s packs. You may resolve this by running following commands
 ```
 ./clean.sh
 ./petstore.sh
