@@ -48,9 +48,9 @@ Deploy k8s resources for petstore sample.
 
 You probably have a pre-existing Kubernetes config file on your system at `~/.kube/config`. Delete or move that file and try again.
 
-#### When I run kubectl get pods I can see many pods not become to running state or they have lot of restarts.
+#### When I run "kubectl get pods" I can see many pods not become to running state or they have lot of restarts.
 
-This may happend first time when you run the system due to slow internet. It may take lot of time to download k8s packs. You may resolve this by running following commands
+This may happend first time when you run the system due to slow internet. Because it took lot of time to download k8s packs. You may resolve this by running following commands
 ```
 ./clean.sh
 ./petstore.sh
