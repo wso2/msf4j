@@ -25,10 +25,12 @@ CREATE TEMPORARY TABLE MSS_REQUESTS_SUMMARY_PER_MINUTE USING CarbonAnalytics OPT
   server_address string -i,
   avg_request_count int,
   avg_response_time int,
+  session_count int,
   http_success_count int,
   http_error_count int,
   time string -i,
-  time-facet FACET -i",
+  all_facet FACET -i,
+  time_facet FACET -i",
   primaryKeys "service_class,server_address,time"
 );
 
@@ -36,11 +38,19 @@ insert into table MSS_REQUESTS_SUMMARY_PER_MINUTE select service_class,
 meta_server_address as server_address,
 count(request_uri) as avg_request_count,
 avg(response_time) as avg_response_time,
+0 as session_count,
 sum(if(http_status_code&lt;400, 1, 0)) as http_success_count,
 sum(if(http_status_code&gt;=400, 1, 0)) as http_error_count,
-substring(cast(meta_timestamp/1000 as timestamp),0,16) as time,
-facet2(service_class,meta_server_address) from ServiceRequestData group by meta_application_type, meta_server_address, service_class, substring(cast(meta_timestamp/1000 as timestamp),0,16);
+substring(cast(meta_timestamp/1000 as timestamp),0,13) as time,
+facet1(1),
+facet1(substring(cast(meta_timestamp/1000 as timestamp),0,13)) from ServiceRequestData group by meta_application_type, meta_server_address, service_class, substring(cast(meta_timestamp/1000 as timestamp),0,13);
 
+CREATE TEMPORARY TABLE MSS_NODES USING CarbonAnalytics OPTIONS (tableName "MSS_NODES",
+schema "server_address string -i",
+primaryKeys "server_address"
+);
+
+insert into table MSS_NODES select meta_server_address as server_address from ServiceRequestData group by meta_server_address;
 
 CREATE TEMPORARY TABLE MSS_HTTP_STATUS USING CarbonAnalytics OPTIONS (tableName "MSS_HTTP_STATUS",
   schema "service_class string -i,
@@ -56,8 +66,8 @@ insert into table MSS_HTTP_STATUS select service_class,
 meta_server_address as server_address,
 count(request_uri) as avg_request_count,
 http_status_code,
-substring(cast(meta_timestamp/1000 as timestamp),0,16) as time,
-facet2(service_class,server_address) from ServiceRequestData group by meta_server_address, service_class, http_status_code, substring(cast(meta_timestamp/1000 as timestamp),0,16);
+substring(cast(meta_timestamp/1000 as timestamp),0,13) as time,
+facet2(service_class,server_address) from ServiceRequestData group by meta_server_address, service_class, http_status_code, substring(cast(meta_timestamp/1000 as timestamp),0,13);
 
 
 CREATE TEMPORARY TABLE MSS_SERVICE_CONTEXT_FINAL USING CarbonAnalytics OPTIONS (tableName "MSS_SERVICE_CONTEXT",
@@ -74,8 +84,8 @@ insert into table MSS_SERVICE_CONTEXT_FINAL select service_class,
 meta_server_address as server_address,
 count(request_uri) as avg_request_count,
 service_context,
-substring(cast(meta_timestamp/1000 as timestamp),0,16) as time,
-facet2(service_class,server_address) from ServiceRequestData group by meta_server_address, service_class, service_context, substring(cast(meta_timestamp/1000 as timestamp),0,16);
+substring(cast(meta_timestamp/1000 as timestamp),0,13) as time,
+facet2(service_class,server_address) from ServiceRequestData group by meta_server_address, service_class, service_context, substring(cast(meta_timestamp/1000 as timestamp),0,13);
 
 
 </Script>
