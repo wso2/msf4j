@@ -17,6 +17,8 @@
 package org.wso2.carbon.mss.internal.deployer;
 
 
+import org.osgi.framework.BundleContext;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +51,14 @@ public class MSSDeployer implements Deployer {
     private URL deploymentLocation;
     private ArtifactType artifactType;
     private HashMap<Object, List<Object>> deployedArtifacts = new HashMap<>();
+
+    /**
+     * Activator is required to write the startup
+     * resolver related headers correctly.
+     */
+    @Activate
+    protected void start(BundleContext bundleContext) {
+    }
 
     public void init() {
         log.info("MSSDeployer initializing");
