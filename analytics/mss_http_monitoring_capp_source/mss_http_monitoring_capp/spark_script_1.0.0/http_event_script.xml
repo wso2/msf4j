@@ -28,7 +28,7 @@ CREATE TEMPORARY TABLE MSS_REQUESTS_SUMMARY_PER_MINUTE USING CarbonAnalytics OPT
   session_count int,
   http_success_count int,
   http_error_count int,
-  time string -i,
+  time long -i,
   all_facet FACET -i,
   time_facet FACET -i",
   primaryKeys "service_class,server_address,time"
@@ -41,7 +41,7 @@ avg(response_time) as avg_response_time,
 0 as session_count,
 sum(if(http_status_code&lt;400, 1, 0)) as http_success_count,
 sum(if(http_status_code&gt;=400, 1, 0)) as http_error_count,
-substring(cast(meta_timestamp/1000 as timestamp),0,13) as time,
+cast(first(meta_timestamp)/1000 as timestamp) as time,
 facet1(1),
 facet1(substring(cast(meta_timestamp/1000 as timestamp),0,13)) from ServiceRequestData group by meta_application_type, meta_server_address, service_class, substring(cast(meta_timestamp/1000 as timestamp),0,13);
 
@@ -57,7 +57,7 @@ CREATE TEMPORARY TABLE MSS_HTTP_STATUS USING CarbonAnalytics OPTIONS (tableName 
   server_address string -i,
   avg_request_count int,
   http_status_code int,
-  time string -i,
+  time long -i,
   group_by FACET -i",
   primaryKeys "service_class,server_address,time"
 );
@@ -66,7 +66,7 @@ insert into table MSS_HTTP_STATUS select service_class,
 meta_server_address as server_address,
 count(request_uri) as avg_request_count,
 http_status_code,
-substring(cast(meta_timestamp/1000 as timestamp),0,13) as time,
+cast(meta_timestamp/1000 as timestamp) as time,
 facet2(service_class,server_address) from ServiceRequestData group by meta_server_address, service_class, http_status_code, substring(cast(meta_timestamp/1000 as timestamp),0,13);
 
 
@@ -75,7 +75,7 @@ CREATE TEMPORARY TABLE MSS_SERVICE_CONTEXT_FINAL USING CarbonAnalytics OPTIONS (
   server_address string -i,
   avg_request_count int,
   service_context string,
-  time string -i",
+  time long -i",
   group_by FACET -i",
   primaryKeys "service_class,server_address,time"
 );
@@ -84,7 +84,7 @@ insert into table MSS_SERVICE_CONTEXT_FINAL select service_class,
 meta_server_address as server_address,
 count(request_uri) as avg_request_count,
 service_context,
-substring(cast(meta_timestamp/1000 as timestamp),0,13) as time,
+cast(meta_timestamp/1000 as timestamp) as time,
 facet2(service_class,server_address) from ServiceRequestData group by meta_server_address, service_class, service_context, substring(cast(meta_timestamp/1000 as timestamp),0,13);
 
 
