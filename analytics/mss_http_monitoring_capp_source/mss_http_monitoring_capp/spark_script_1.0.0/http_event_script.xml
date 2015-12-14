@@ -60,7 +60,8 @@ CREATE TEMPORARY TABLE MSS_HTTP_STATUS USING CarbonAnalytics OPTIONS (tableName 
   avg_request_count int,
   http_status_code int,
   time long -i,
-  group_by FACET -i",
+  all_facet FACET -i,
+  http_status_facet FACET -i",
   primaryKeys "service_class,server_address,time"
 );
 
@@ -68,8 +69,9 @@ insert into table MSS_HTTP_STATUS select service_class,
 meta_server_address as server_address,
 count(request_uri) as avg_request_count,
 http_status_code,
-cast(meta_timestamp/1000 as timestamp) as time,
-facet2(service_class,server_address) from ServiceRequestData group by meta_server_address, service_class, http_status_code, substring(cast(meta_timestamp/1000 as timestamp),0,16);
+cast(first(meta_timestamp)/1000 as timestamp) as time,
+facet1(1),
+facet1(http_status_code) from ServiceRequestData group by meta_server_address, service_class, http_status_code, substring(cast(meta_timestamp/1000 as timestamp),0,16);
 
 
 CREATE TEMPORARY TABLE MSS_SERVICE_CONTEXT_FINAL USING CarbonAnalytics OPTIONS (tableName "MSS_SERVICE_CONTEXT",
