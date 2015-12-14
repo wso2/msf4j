@@ -30,7 +30,8 @@ CREATE TEMPORARY TABLE MSS_REQUESTS_SUMMARY_PER_MINUTE USING CarbonAnalytics OPT
   http_error_count int,
   time long -i,
   all_facet FACET -i,
-  time_facet FACET -i",
+  time_facet FACET -i,
+  service_class_facet FACET -i",
   primaryKeys "service_class,server_address,time"
 );
 
@@ -43,7 +44,8 @@ sum(if(http_status_code&lt;400, 1, 0)) as http_success_count,
 sum(if(http_status_code&gt;=400, 1, 0)) as http_error_count,
 cast(first(meta_timestamp)/1000 as timestamp) as time,
 facet1(1),
-facet1(substring(cast(meta_timestamp/1000 as timestamp),0,13)) from ServiceRequestData group by meta_application_type, meta_server_address, service_class, substring(cast(meta_timestamp/1000 as timestamp),0,13);
+facet1(substring(cast(meta_timestamp/1000 as timestamp),0,16)),
+facet1(service_class) from ServiceRequestData group by meta_application_type, meta_server_address, service_class, substring(cast(meta_timestamp/1000 as timestamp),0,16);
 
 CREATE TEMPORARY TABLE MSS_NODES USING CarbonAnalytics OPTIONS (tableName "MSS_NODES",
 schema "server_address string -i",
@@ -67,7 +69,7 @@ meta_server_address as server_address,
 count(request_uri) as avg_request_count,
 http_status_code,
 cast(meta_timestamp/1000 as timestamp) as time,
-facet2(service_class,server_address) from ServiceRequestData group by meta_server_address, service_class, http_status_code, substring(cast(meta_timestamp/1000 as timestamp),0,13);
+facet2(service_class,server_address) from ServiceRequestData group by meta_server_address, service_class, http_status_code, substring(cast(meta_timestamp/1000 as timestamp),0,16);
 
 
 CREATE TEMPORARY TABLE MSS_SERVICE_CONTEXT_FINAL USING CarbonAnalytics OPTIONS (tableName "MSS_SERVICE_CONTEXT",
@@ -85,7 +87,7 @@ meta_server_address as server_address,
 count(request_uri) as avg_request_count,
 service_context,
 cast(meta_timestamp/1000 as timestamp) as time,
-facet2(service_class,server_address) from ServiceRequestData group by meta_server_address, service_class, service_context, substring(cast(meta_timestamp/1000 as timestamp),0,13);
+facet2(service_class,server_address) from ServiceRequestData group by meta_server_address, service_class, service_context, substring(cast(meta_timestamp/1000 as timestamp),0,16);
 
 
 </Script>
