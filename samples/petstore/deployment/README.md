@@ -1,5 +1,9 @@
 # Automated deployment of the Petstore sample
 
+## Support Operating Systems
+ * Linux
+ * MacOS X
+
 ## Pre-requisites
 
  * **[Vagrant](https://www.vagrantup.com)**
@@ -20,6 +24,10 @@ brew install wget
 
 Download WSO2 Identity server pack (zip) and copy into packs folder
 
+Run the following commands.
+```
+export KUBERNETES_MASTER=http://172.17.8.101:8080
+```
 ```
 ./run.sh 
 ```
