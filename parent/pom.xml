@@ -180,9 +180,20 @@
                 <type>zip</type>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.mss</groupId>
+                <artifactId>org.wso2.carbon.spi.fly.feature</artifactId>
+                <version>${carbon.mss.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
                 <groupId>javax.ws.rs</groupId>
                 <artifactId>javax.ws.rs-api</artifactId>
                 <version>${rs-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.orbit.javax.ws.rs</groupId>
+                <artifactId>javax.ws.rs-api.fragment</artifactId>
+                <version>${carbon.mss.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.transport</groupId>
@@ -353,6 +364,24 @@
                 <version>${logback.version}</version>
                 <scope>test</scope>
             </dependency>
+
+            <!--SPI-fly dependencies-->
+            <dependency>
+                <groupId>org.apache.aries.spifly</groupId>
+                <artifactId>org.apache.aries.spifly.dynamic.bundle</artifactId>
+                <version>${aries.spifly.dynamic.bundle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.aries</groupId>
+                <artifactId>org.apache.aries.util</artifactId>
+                <version>${aries.util.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-all</artifactId>
+                <version>${asm.all.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -373,6 +402,7 @@
         <!-- Dependencies -->
         <carbon.kernel.version>5.0.0-beta</carbon.kernel.version>
         <org.wso2.carbon.transport.http.netty.version>1.0.0-SNAPSHOT</org.wso2.carbon.transport.http.netty.version>
+        <carbon.mss.version>1.0.0-SNAPSHOT</carbon.mss.version>
         <carbon.mss.version>1.0.0-SNAPSHOT</carbon.mss.version>
         <carbon.metrics.version>1.2.0-m2</carbon.metrics.version>
         <carbon.mss.osgi.version>1.0.0.SNAPSHOT</carbon.mss.osgi.version>
@@ -395,6 +425,10 @@
         <logback.version>1.0.9</logback.version>
         <nimbus.jose.jwt.version>2.25</nimbus.jose.jwt.version>
         <axiom.impl.version>1.2.11</axiom.impl.version>
+
+        <aries.spifly.dynamic.bundle.version>1.0.8</aries.spifly.dynamic.bundle.version>
+        <aries.util.version>1.1.1</aries.util.version>
+        <asm.all.version>5.0.4</asm.all.version>
 
         <osgi.framework.import.version.range>[1.8.0, 2.0.0)</osgi.framework.import.version.range>
         <osgi.service.tracker.import.version.range>[1.5.1, 2.0.0)</osgi.service.tracker.import.version.range>
