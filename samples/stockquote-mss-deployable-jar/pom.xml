@@ -23,9 +23,9 @@
 
     <parent>
         <groupId>org.wso2.carbon.mss</groupId>
-        <artifactId>mss-service-parent</artifactId>
+        <artifactId>mss-jar-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../../mss-service-parent/pom.xml</relativePath>
+        <relativePath>../../mss-jar-parent/pom.xml</relativePath>
     </parent>
 
     <groupId>org.wso2.carbon.mss.example</groupId>
@@ -35,33 +35,8 @@
     <name>StockQuote MSS Deployable Jar</name>
 
     <properties>
-        <microservice.mainClass>org.wso2.carbon.mss.example.Application</microservice.mainClass>
-        <baseimage.name>java:openjdk-8u66-jre</baseimage.name>
-        <maven.dockerplugin.version>0.3.5</maven.dockerplugin.version>
+        <microservice.resourceClasses>org.wso2.carbon.mss.example.StockQuoteService</microservice.resourceClasses>
     </properties>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>com.spotify</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <version>${maven.dockerplugin.version}</version>
-                <configuration>
-                    <imageName>${project.artifactId}:${project.version}</imageName>
-                    <baseImage>${baseimage.name}</baseImage>
-                    <entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
-                    <!-- copy the service's jar file from target into the root directory of the image -->
-                    <resources>
-                        <resource>
-                            <targetPath>/</targetPath>
-                            <directory>${project.build.directory}</directory>
-                            <include>${project.build.finalName}.jar</include>
-                        </resource>
-                    </resources>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
     
 </project>
 

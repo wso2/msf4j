@@ -22,9 +22,9 @@
 
     <parent>
         <groupId>org.wso2.carbon.mss</groupId>
-        <artifactId>mss-service-parent</artifactId>
+        <artifactId>mss-lite-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../../../../mss-service-parent/pom.xml</relativePath>
+        <relativePath>../../../../mss-lite-parent/pom.xml</relativePath>
     </parent>
 
     <artifactId>petstore-fileserver</artifactId>
