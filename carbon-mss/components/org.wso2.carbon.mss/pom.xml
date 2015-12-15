@@ -315,5 +315,6 @@
             org.wso2.carbon.kernel.transports.*,
             org.wso2.carbon.transport.http.netty.listener.*,
         </import.package>
+        <SPI-Provider>javax.ws.rs.ext.RuntimeDelegate</SPI-Provider>
     </properties>
 </project>

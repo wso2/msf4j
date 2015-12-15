@@ -58,6 +58,12 @@
             <version>${carbon.mss.version}</version>
             <type>zip</type>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.mss</groupId>
+            <artifactId>org.wso2.carbon.spi.fly.feature</artifactId>
+            <version>${carbon.mss.version}</version>
+            <type>zip</type>
+        </dependency>
     </dependencies>
 
     <build>
@@ -126,6 +132,10 @@
                                     <id>org.wso2.carbon.mss.feature</id>
                                     <version>${carbon.mss.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.spi.fly.feature</id>
+                                    <version>${carbon.mss.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>
@@ -184,6 +194,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.mss.feature.group</id>
+                                    <version>${carbon.mss.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.spi.fly.feature</id>
                                     <version>${carbon.mss.version}</version>
                                 </feature>
                             </features>
