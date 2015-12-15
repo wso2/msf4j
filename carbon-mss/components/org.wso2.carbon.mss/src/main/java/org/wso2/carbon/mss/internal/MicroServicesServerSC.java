@@ -27,7 +27,7 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.mss.HttpHandler;
+import org.wso2.carbon.mss.Microservice;
 import org.wso2.carbon.transport.http.netty.listener.CarbonNettyServerInitializer;
 
 import java.util.Hashtable;
@@ -58,21 +58,21 @@ public class MicroServicesServerSC {
             new Thread(() -> {
                 while (true) {
                     if (microservicesRegistry.getServiceCount() == jaxRsServiceCount) {
-                        LOG.info("Starting micro services server...");
+                        LOG.info("Starting micro services server ++++++++++++ ...");
 
                         // Create an OSGi services (HTTP/HTTPS) & register it with the relevant CHANNEL_ID_KEY
 
                         Hashtable<String, String> httpInitParams = new Hashtable<>();
-                        httpInitParams.put(CHANNEL_ID_KEY, "netty-jaxrs-http");
+                        httpInitParams.put(CHANNEL_ID_KEY, "jaxrs-http");
                         bundleContext.registerService(CarbonNettyServerInitializer.class,
                                 new MSSNettyServerInitializer(MicroservicesRegistry.getInstance()), httpInitParams);
 
-                        Hashtable<String, String> httpsInitParams = new Hashtable<>();
+                        /*Hashtable<String, String> httpsInitParams = new Hashtable<>();
                         httpsInitParams.put(CHANNEL_ID_KEY, "netty-jaxrs-https");
                         bundleContext.
                                 registerService(CarbonNettyServerInitializer.class,
                                         new MSSNettyServerInitializer(MicroservicesRegistry.getInstance()),
-                                        httpsInitParams);
+                                        httpsInitParams);*/
 
                         LOG.info("Micro services server started");
                         break;
@@ -101,17 +101,17 @@ public class MicroServicesServerSC {
     }
 
     @Reference(
-            name = "netty-http.handler",
-            service = HttpHandler.class,
+            name = "microservice",
+            service = Microservice.class,
             cardinality = ReferenceCardinality.MULTIPLE,
             policy = ReferencePolicy.DYNAMIC,
             unbind = "removeHttpService"
     )
-    protected void addHttpService(HttpHandler httpService) {
+    protected void addHttpService(Microservice httpService) {
         microservicesRegistry.addHttpService(httpService);
     }
 
-    protected void removeHttpService(HttpHandler httpService) {
+    protected void removeHttpService(Microservice httpService) {
         microservicesRegistry.removeHttpService(httpService);
     }
 }

@@ -19,7 +19,7 @@
 
 package org.wso2.carbon.mss;
 
-import org.wso2.carbon.mss.internal.router.HttpResourceHandler;
+import org.wso2.carbon.mss.internal.router.Microservice;
 
 import java.util.Map;
 
@@ -27,7 +27,7 @@ import java.util.Map;
  * Place holder for information about the environment. Will be passed in during lifecycle management calls of
  * HttpHandlers. Currently has methods to get RunTimeArguments.
  */
-public interface HandlerContext {
+public interface ServiceContext {
 
     /**
      * @return Key Value pairs of runtime arguments.
@@ -35,8 +35,8 @@ public interface HandlerContext {
     Map<String, String> getRuntimeArguments();
 
     /**
-     * @return the {@link org.wso2.carbon.mss.internal.router.HttpResourceHandler} associated with this context,
+     * @return the {@link Microservice} associated with this context,
      * used to let one handler call another internally.
      */
-    HttpResourceHandler getHttpResourceHandler();
+    Microservice getHttpResourceHandler();
 }

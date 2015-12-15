@@ -21,8 +21,8 @@ package org.wso2.carbon.mss.internal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.mss.internal.router.ExceptionHandler;
-import org.wso2.carbon.mss.internal.router.HttpResourceHandler;
 import org.wso2.carbon.mss.internal.router.Interceptor;
+import org.wso2.carbon.mss.internal.router.Microservice;
 import org.wso2.carbon.mss.internal.router.URLRewriter;
 
 import java.lang.reflect.InvocationTargetException;
@@ -48,8 +48,8 @@ public class MicroservicesRegistry {
     private final Set<Object> httpServices = new HashSet<>();
     private final List<Interceptor> interceptors = new ArrayList<>();
     private URLRewriter urlRewriter = null;
-    private volatile HttpResourceHandler httpResourceHandler =
-            new HttpResourceHandler(Collections.emptyList(),
+    private volatile Microservice httpResourceHandler =
+            new Microservice(Collections.emptyList(),
                     interceptors, urlRewriter, new ExceptionHandler());
 
     private MicroservicesRegistry() {
@@ -84,7 +84,7 @@ public class MicroservicesRegistry {
         updateHttpResourceHandler();
     }
 
-    public HttpResourceHandler getHttpResourceHandler() {
+    public Microservice getHttpResourceHandler() {
         return httpResourceHandler;
     }
 
@@ -109,7 +109,7 @@ public class MicroservicesRegistry {
 
     private void updateHttpResourceHandler() {
         httpResourceHandler =
-                new HttpResourceHandler(Collections.unmodifiableSet(httpServices),
+                new Microservice(Collections.unmodifiableSet(httpServices),
                         interceptors, urlRewriter, new ExceptionHandler());
     }
 
@@ -153,6 +153,6 @@ public class MicroservicesRegistry {
 
     private boolean isValidLifecycleMethod(Optional<Method> method, Class lcAnnotation) {
         return method.filter(m -> Modifier.isPublic(m.getModifiers())
-                                  && m.getAnnotation(lcAnnotation) != null).isPresent();
+                && m.getAnnotation(lcAnnotation) != null).isPresent();
     }
 }

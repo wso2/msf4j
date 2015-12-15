@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Contains information about {@link org.wso2.carbon.mss.HttpHandler} method.
+ * Contains information about {@link Microservice} method.
  */
 public class HandlerInfo {
 
@@ -48,7 +48,7 @@ public class HandlerInfo {
 
     /**
      * Returns the value of the named attribute as an Object, or null if no attribute of the given name exists.
-     * 
+     *
      * @param name a {@link String} specifying the name of the attribute
      * @return an {@link Object} containing the value of the attribute, or null if the attribute does not exist
      */
@@ -58,9 +58,9 @@ public class HandlerInfo {
 
     /**
      * Stores an attribute in this request.
-     * 
+     *
      * @param name a {@link String} specifying the name of the attribute
-     * @param obj the {@link Object} to be stored
+     * @param obj  the {@link Object} to be stored
      */
     public void setAttribute(String name, Object obj) {
         attributes.put(name, obj);

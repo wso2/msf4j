@@ -28,8 +28,6 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.mss.HandlerContext;
-import org.wso2.carbon.mss.HttpHandler;
 import org.wso2.carbon.mss.HttpResponder;
 
 import java.lang.reflect.Method;
@@ -52,9 +50,9 @@ import javax.ws.rs.Path;
  * HttpResourceHandler handles the http request. HttpResourceHandler looks up all Jax-rs annotations in classes
  * and dispatches to appropriate method on receiving requests.
  */
-public final class HttpResourceHandler implements HttpHandler {
+public final class Microservice implements org.wso2.carbon.mss.Microservice {
 
-    private static final Logger log = LoggerFactory.getLogger(HttpResourceHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(org.wso2.carbon.mss.internal.router.Microservice.class);
 
     private final PatternPathRouterWithGroups<HttpResourceModel> patternRouter = PatternPathRouterWithGroups.create();
     private final Iterable<Object> handlers;
@@ -70,8 +68,8 @@ public final class HttpResourceHandler implements HttpHandler {
      * @param urlRewriter      URL re-writer.
      * @param exceptionHandler Exception handler
      */
-    public HttpResourceHandler(Iterable<? extends Object> handlers, Iterable<? extends Interceptor> interceptors,
-                               URLRewriter urlRewriter, ExceptionHandler exceptionHandler) {
+    public Microservice(Iterable<? extends Object> handlers, Iterable<? extends Interceptor> interceptors,
+                        URLRewriter urlRewriter, ExceptionHandler exceptionHandler) {
         //Store the handlers to call init and destroy on all handlers.
         this.handlers = ImmutableList.copyOf(handlers);
         this.interceptors = ImmutableList.copyOf(interceptors);
@@ -272,23 +270,5 @@ public final class HttpResourceHandler implements HttpHandler {
             }
         }
         return count;
-    }
-
-    @Override
-    public void init(HandlerContext context) {
-        for (Object handler : handlers) {
-            if (handler instanceof HttpHandler) {
-                ((HttpHandler) handler).init(context);
-            }
-        }
-    }
-
-    @Override
-    public void destroy(HandlerContext context) {
-        for (Object handler : handlers) {
-            if (handler instanceof HttpHandler) {
-                ((HttpHandler) handler).destroy(context);
-            }
-        }
     }
 }

@@ -19,17 +19,17 @@
 package org.wso2.carbon.mss.internal.router;
 
 import com.google.common.collect.ImmutableMap;
-import org.wso2.carbon.mss.HandlerContext;
+import org.wso2.carbon.mss.ServiceContext;
 
 import java.util.Map;
 
 /**
  * BasicHandlerContext returns an empty runtime arguments.
  */
-public class BasicHandlerContext implements HandlerContext {
-    private final HttpResourceHandler httpResourceHandler;
+public class BasicServiceContext implements ServiceContext {
+    private final Microservice httpResourceHandler;
 
-    public BasicHandlerContext(HttpResourceHandler httpResourceHandler) {
+    public BasicServiceContext(Microservice httpResourceHandler) {
         this.httpResourceHandler = httpResourceHandler;
     }
 
@@ -39,7 +39,7 @@ public class BasicHandlerContext implements HandlerContext {
     }
 
     @Override
-    public HttpResourceHandler getHttpResourceHandler() {
+    public Microservice getHttpResourceHandler() {
         return httpResourceHandler;
     }
 }

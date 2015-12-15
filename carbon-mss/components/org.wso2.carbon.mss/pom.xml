@@ -134,44 +134,6 @@
     </dependencies>
 
     <build>
-        <pluginManagement>
-            <plugins>
-
-                <!-- Bundle plugin -->
-                <plugin>
-                    <groupId>org.apache.felix</groupId>
-                    <artifactId>maven-bundle-plugin</artifactId>
-                    <extensions>true</extensions>
-                    <configuration>
-                        <instructions>
-                            <Bundle-Vendor>WSO2</Bundle-Vendor>
-                            <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-                            <Private-Package>org.wso2.carbon.mss.internal.*</Private-Package>
-                            <Export-Package>
-                                !org.wso2.carbon.mss.internal.*,
-                                org.wso2.carbon.mss*;version="1.0.0"
-                            </Export-Package>
-                            <Import-Package>
-                                org.wso2.carbon.kernel.deployment.*,
-                                io.netty.*,
-                                com.google.gson.*,
-                                com.google.common.*,
-                                javax.annotation.*,
-                                javax.ws.rs.*,
-                                org.slf4j.*,
-                                javax.net.ssl.*,
-                                org.apache.commons.beanutils.*,
-                                org.osgi.framework.*;version="${osgi.framework.import.version.range}",
-                                org.osgi.util.tracker; version="${osgi.service.tracker.import.version.range}",
-                                org.wso2.carbon.transport.http.netty.listener.*,
-                            </Import-Package>
-                            <_dsannotations>*</_dsannotations>
-                        </instructions>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -331,4 +293,25 @@
         </profile>
     </profiles>
 
+    <properties>
+        <private.package>org.wso2.carbon.mss.internal.*,</private.package>
+        <export.package>
+            !org.wso2.carbon.mss.internal.*,
+            org.wso2.carbon.mss.*;version="1.0.0",
+        </export.package>
+        <import.package>
+            org.wso2.carbon.kernel.deployment.*,
+            io.netty.*,
+            com.google.gson.*,
+            com.google.common.*,
+            javax.annotation.*,
+            javax.ws.rs.*,
+            org.slf4j.*,
+            javax.net.ssl.*,
+            org.apache.commons.beanutils.*,
+            org.osgi.framework.*;version="${osgi.framework.import.version.range}",
+            org.osgi.util.tracker; version="${osgi.service.tracker.import.version.range}",
+            org.wso2.carbon.transport.http.netty.listener.*,
+        </import.package>
+    </properties>
 </project>

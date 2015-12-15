@@ -33,11 +33,10 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.junit.Assert;
 import org.wso2.carbon.mss.ChunkResponder;
-import org.wso2.carbon.mss.HandlerContext;
-import org.wso2.carbon.mss.HttpHandler;
 import org.wso2.carbon.mss.HttpResponder;
 import org.wso2.carbon.mss.HttpStreamHandler;
 import org.wso2.carbon.mss.HttpStreamer;
+import org.wso2.carbon.mss.Microservice;
 
 import java.io.File;
 import java.io.IOException;
@@ -64,7 +63,7 @@ import javax.ws.rs.core.Response;
  */
 @SuppressWarnings("UnusedParameters")
 @Path("/test/v1")
-public class TestHandler implements HttpHandler {
+public class TestHandler implements Microservice {
 
     private static final Gson GSON = new Gson();
 
@@ -442,14 +441,6 @@ public class TestHandler implements HttpHandler {
     @POST
     public void testCustomException() throws CustomException {
         throw new CustomException();
-    }
-
-    @Override
-    public void init(HandlerContext context) {
-    }
-
-    @Override
-    public void destroy(HandlerContext context) {
     }
 
     /**

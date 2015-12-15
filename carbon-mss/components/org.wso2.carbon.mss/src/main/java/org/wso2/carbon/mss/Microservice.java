@@ -28,40 +28,7 @@ package org.wso2.carbon.mss;
  * annotations from the base class (if extended) will not be applied to the given handler object.
  * Note: The framework that calls the handler assumes that the implementation is threadsafe.
  * Note: If the HttpHandler implementation is extended, the annotations are not inherited from the base class.
- *
- * Example:
- * public class ApiHandler implements HttpHandler{
- * {@literal @}Override
- * public void init(HandlerContext context){
- * //Perform bootstrap operations before any of the handlers in this class gets called.
- * }
- * {@literal @}Override
- * public void destroy(HandlerContext context){
- * //Perform teardown operations before the server shuts down.
- * }
- *
- * {@literal @}Path("/common/v1/widgets")
- * {@literal @}GET
- * public void handleGet(HttpRequest request, HttpResponder responder){
- * //Handle Http request
- * }
- * }
  */
-public interface HttpHandler {
+public interface Microservice {
 
-    /**
-     * init method will be called before the netty pipeline is setup. Any initialization operation can be performed
-     * in this method.
-     *
-     * @param context instance of HandlerContext.
-     */
-    void init(HandlerContext context);
-
-    /**
-     * destroy method will be called before shutdown. Any teardown task can be performed in this method.
-     * At this point the server will not accept any more new requests.
-     *
-     * @param context instance of HandlerContext.
-     */
-    void destroy(HandlerContext context);
 }
