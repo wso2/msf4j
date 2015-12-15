@@ -105,6 +105,6 @@ public class StockQuoteService implements Microservice {
 
     @Override
     public String toString() {
-        return "StockQuoteService2{}";
+        return "StockQuoteService-OSGi-bundle";
     }
 }
