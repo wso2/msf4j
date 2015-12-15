@@ -84,7 +84,7 @@ public class MSSDeployer implements Deployer {
         String artifactPath = artifactFile.getAbsolutePath();
         if (isSupportedFile(artifactFile)) {
             log.info("Deploying artifact: {}", artifactPath);
-            List<Object> resourcesList = null;
+            List<Object> resourcesList;
             try {
                 resourcesList = new MSSJarProcessor().setArtifact(artifactFile).process().getResourceInstances();
             } catch (MSSJarProcessorException e) {
