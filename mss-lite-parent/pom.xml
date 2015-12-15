@@ -9,7 +9,7 @@
         <relativePath>../parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>mss-service-parent</artifactId>
+    <artifactId>mss-lite-parent</artifactId>
     <packaging>pom</packaging>
 
     <name>Parent POM for MSS Microservices</name>

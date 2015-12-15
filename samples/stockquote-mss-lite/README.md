@@ -1,6 +1,8 @@
 # SimpleStockQuote Executable jar Sample
 
-This sample shows the use of @Produces and @Consumes annotations for bean conversions.
+This sample shows the use of @Produces and @Consumes annotations for bean conversions. In addition to that this 
+demonstrates how to develop a microservice with WSO2 MSS in serverless mss lite mode.
+See also.. [mss deployable jar](../stockquote-mss-deployable-jar), [mss bundle](../stockquote-mss-bundle)
 
 ### How @Produces work
 
