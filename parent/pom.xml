@@ -403,7 +403,6 @@
         <carbon.kernel.version>5.0.0-beta</carbon.kernel.version>
         <org.wso2.carbon.transport.http.netty.version>1.0.0-SNAPSHOT</org.wso2.carbon.transport.http.netty.version>
         <carbon.mss.version>1.0.0-SNAPSHOT</carbon.mss.version>
-        <carbon.mss.version>1.0.0-SNAPSHOT</carbon.mss.version>
         <carbon.metrics.version>1.2.0-m2</carbon.metrics.version>
         <carbon.mss.osgi.version>1.0.0.SNAPSHOT</carbon.mss.osgi.version>
         <carbon.ldap.server.version>5.0.0</carbon.ldap.server.version>
