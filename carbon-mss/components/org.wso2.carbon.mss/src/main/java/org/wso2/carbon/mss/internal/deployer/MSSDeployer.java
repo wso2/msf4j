@@ -31,6 +31,7 @@ import org.wso2.carbon.mss.internal.MicroservicesRegistry;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -48,6 +49,7 @@ import java.util.List;
 public class MSSDeployer implements Deployer {
     private static final Logger log = LoggerFactory.getLogger(MSSDeployer.class);
     private static final String DEPLOYMENT_PATH = "file:mss";
+    private static final String SUPPORTED_EXTENSIONS[] = {"jar", "zip"};
     private URL deploymentLocation;
     private ArtifactType artifactType;
     private HashMap<Object, List<Object>> deployedArtifacts = new HashMap<>();
@@ -80,22 +82,24 @@ public class MSSDeployer implements Deployer {
     public Object deploy(Artifact artifact) throws CarbonDeploymentException {
         File artifactFile = artifact.getFile();
         String artifactPath = artifactFile.getAbsolutePath();
-        log.info("Deploying artifact: {}", artifactPath);
-        List<Object> resourcesList = null;
-        try {
-            resourcesList = new MSSJarProcessor().setArtifact(artifactFile).process().getResourceInstances();
-        } catch (MSSJarProcessorException e) {
-            throw new CarbonDeploymentException("Error while processing the artifact: " + artifactPath, e);
-        }
-        if (resourcesList.size() == 0) {
-            throw new CarbonDeploymentException("No classes to initialize in artifact: " + artifactPath);
-        }
-        artifact.setKey(artifactPath);
-        deployedArtifacts.put(artifactPath, resourcesList);
-        MicroservicesRegistry msRegistry = MicroservicesRegistry.getInstance();
-        for (Object resource : resourcesList) {
-            msRegistry.addHttpService(resource);
-            msRegistry.initService(resource);
+        if (isSupportedFile(artifactFile)) {
+            log.info("Deploying artifact: {}", artifactPath);
+            List<Object> resourcesList = null;
+            try {
+                resourcesList = new MSSJarProcessor().setArtifact(artifactFile).process().getResourceInstances();
+            } catch (MSSJarProcessorException e) {
+                throw new CarbonDeploymentException("Error while processing the artifact: " + artifactPath, e);
+            }
+            if (resourcesList.size() == 0) {
+                throw new CarbonDeploymentException("No classes to initialize in artifact: " + artifactPath);
+            }
+            artifact.setKey(artifactPath);
+            deployedArtifacts.put(artifactPath, resourcesList);
+            MicroservicesRegistry msRegistry = MicroservicesRegistry.getInstance();
+            for (Object resource : resourcesList) {
+                msRegistry.addHttpService(resource);
+                msRegistry.initService(resource);
+            }
         }
         return artifactPath;
     }
@@ -109,19 +113,23 @@ public class MSSDeployer implements Deployer {
     public void undeploy(Object key) throws CarbonDeploymentException {
         log.info("Undeploying artifact: {}", key);
         List<Object> resourcesList = deployedArtifacts.get(key);
-        MicroservicesRegistry msRegistry = MicroservicesRegistry.getInstance();
-        for (Object resource : resourcesList) {
-            msRegistry.removeHttpService(resource);
-            msRegistry.preDestroyService(resource);
+        if (resourcesList != null) {
+            MicroservicesRegistry msRegistry = MicroservicesRegistry.getInstance();
+            for (Object resource : resourcesList) {
+                msRegistry.removeHttpService(resource);
+                msRegistry.preDestroyService(resource);
+            }
         }
     }
 
     public Object update(Artifact artifact) throws CarbonDeploymentException {
         File artifactFile = artifact.getFile();
         String artifactPath = artifactFile.getAbsolutePath();
-        log.info("Updating artifact: {}", artifactPath);
-        undeploy(artifact.getKey());
-        deploy(artifact);
+        if (isSupportedFile(artifactFile)) {
+            log.info("Updating artifact: {}", artifactPath);
+            undeploy(artifact.getKey());
+            deploy(artifact);
+        }
         return artifactPath;
     }
 
@@ -138,5 +146,25 @@ public class MSSDeployer implements Deployer {
      */
     public ArtifactType getArtifactType() {
         return artifactType;
+    }
+
+    private boolean isSupportedFile(File file) {
+        return Arrays
+                .stream(SUPPORTED_EXTENSIONS)
+                .filter(
+                        s -> s.equalsIgnoreCase(getFileExtension(file))
+                ).findAny().isPresent();
+    }
+
+    private String getFileExtension(File file) {
+        String fileName = file.getName();
+        String extension = "";
+        if (file.isFile()) {
+            int i = fileName.lastIndexOf('.');
+            if (i > 0) {
+                extension = fileName.substring(i + 1);
+            }
+        }
+        return extension;
     }
 }
