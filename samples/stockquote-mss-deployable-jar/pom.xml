@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!--
   ~ Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
   ~
@@ -24,19 +23,20 @@
 
     <parent>
         <groupId>org.wso2.carbon.mss</groupId>
-        <artifactId>mss-lite-parent</artifactId>
+        <artifactId>mss-jar-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../../mss-jar-parent/pom.xml</relativePath>
     </parent>
 
-    <groupId>org.wso2.carbon.mss.perftest.echo</groupId>
-    <artifactId>wso2mss-echo-message</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <groupId>org.wso2.carbon.mss.example</groupId>
+    <artifactId>stockquote-mss-deployable-jar</artifactId>
     <packaging>jar</packaging>
 
-    <name>WSO2 MSS Microservice Sample</name>
+    <name>StockQuote MSS Deployable Jar</name>
 
     <properties>
-        <microservice.mainClass>org.wso2.carbon.mss.perftest.echo.wso2mss.Application</microservice.mainClass>
+        <microservice.resourceClasses>org.wso2.carbon.mss.example.StockQuoteService</microservice.resourceClasses>
     </properties>
-
+    
 </project>
+

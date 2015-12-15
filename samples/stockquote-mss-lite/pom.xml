@@ -23,16 +23,16 @@
 
     <parent>
         <groupId>org.wso2.carbon.mss</groupId>
-        <artifactId>mss-service-parent</artifactId>
+        <artifactId>mss-lite-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../../mss-service-parent/pom.xml</relativePath>
+        <relativePath>../../mss-lite-parent/pom.xml</relativePath>
     </parent>
 
     <groupId>org.wso2.carbon.mss.example</groupId>
-    <artifactId>stockquote-service</artifactId>
+    <artifactId>stockquote-mss-lite</artifactId>
     <packaging>jar</packaging>
 
-    <name>StockQuote Microservice Sample</name>
+    <name>StockQuote MSS Lite</name>
 
     <properties>
         <microservice.mainClass>org.wso2.carbon.mss.example.Application</microservice.mainClass>

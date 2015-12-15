@@ -17,9 +17,9 @@ Check the following [Hello-Service]
 (samples/helloworld) sample.
 
 ####pom.xml
-This pom file inherits from mss-service-parent/pom.xml. It provides a way of setting up things quickly with minimum 
+This pom file inherits from mss-lite-parent/pom.xml. It provides a way of setting up things quickly with minimum 
 amount of 
-configuration. [More info](mss-service-parent).
+configuration. [More info](mss-lite-parent).
 
 ```xml
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -27,10 +27,10 @@ configuration. [More info](mss-service-parent).
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
-        <artifactId>mss-service-parent</artifactId>
+        <artifactId>mss-lite-parent</artifactId>
         <groupId>org.wso2.carbon.mss</groupId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../../mss-service-parent/pom.xml</relativePath>
+        <relativePath>../../mss-lite-parent/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
