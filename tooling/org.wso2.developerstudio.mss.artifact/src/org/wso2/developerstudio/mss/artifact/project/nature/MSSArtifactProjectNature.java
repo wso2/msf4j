@@ -16,15 +16,30 @@
 
 package org.wso2.developerstudio.mss.artifact.project.nature;
 
+import static org.wso2.developerstudio.mss.artifact.util.MSSArtifactConstants.DEFAULT_MAIN_CLASS_PROPERTY_VALUE;
+import static org.wso2.developerstudio.mss.artifact.util.MSSArtifactConstants.JAVAX_SERVLET_DEPENDENCY_ARTIFACT_ID;
+import static org.wso2.developerstudio.mss.artifact.util.MSSArtifactConstants.JAVAX_SERVLET_DEPENDENCY_GROUP_ID;
+import static org.wso2.developerstudio.mss.artifact.util.MSSArtifactConstants.JAVAX_SERVLET_DEPENDENCY_VERSION;
+import static org.wso2.developerstudio.mss.artifact.util.MSSArtifactConstants.MAVEN_DEPENDENCY_RESOLVER_TAG;
+import static org.wso2.developerstudio.mss.artifact.util.MSSArtifactConstants.MICRO_SERVICE_MAIN_CLASS_PROPERTY;
+import static org.wso2.developerstudio.mss.artifact.util.MSSArtifactConstants.MSS_SERVICE_PARENT_ARTIFACT_ID;
+import static org.wso2.developerstudio.mss.artifact.util.MSSArtifactConstants.MSS_SERVICE_PARENT_GROUP_ID;
+import static org.wso2.developerstudio.mss.artifact.util.MSSArtifactConstants.MSS_SERVICE_PARENT_VERSION;
+import static org.wso2.developerstudio.mss.artifact.util.MSSArtifactConstants.POM_FILE;
+import static org.wso2.developerstudio.mss.artifact.util.MSSArtifactConstants.SWAGGER_ANNOTATIONS_DEPENDENCY_ARTIFACT_ID;
+import static org.wso2.developerstudio.mss.artifact.util.MSSArtifactConstants.SWAGGER_ANNOTATIONS_DEPENDENCY_GROUP_ID;
+import static org.wso2.developerstudio.mss.artifact.util.MSSArtifactConstants.SWAGGER_ANNOTATIONS_DEPENDENCY_VERSION;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.maven.model.Dependency;
-import org.apache.maven.model.Plugin;
-import org.apache.maven.model.PluginExecution;
+import org.apache.maven.model.Parent;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.util.xml.Xpp3Dom;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -34,95 +49,75 @@ import org.wso2.developerstudio.eclipse.logging.core.Logger;
 import org.wso2.developerstudio.eclipse.maven.util.MavenUtils;
 import org.wso2.developerstudio.eclipse.platform.core.nature.AbstractWSO2ProjectNature;
 import org.wso2.developerstudio.mss.artifact.Activator;
+import org.wso2.developerstudio.mss.artifact.util.MSSMavenDependencyResolverJob;
 
 /**
  * Class for represent the nature of a Microservices project inside Eclipse workspace
  */
 public class MSSArtifactProjectNature extends AbstractWSO2ProjectNature {
-	private static IDeveloperStudioLog log = Logger.getLog(Activator.PLUGIN_ID);
 
-	@Override
-	public void configure() throws CoreException {
-		try {
-			updatePom(getProject());
-		} catch (Exception e) {
-			log.error("Error while updating pom.xml file of created Microservices project", e);
-			IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-					"Error while updating pom.xml file of created Microservices project");
-			throw new CoreException(status);
-		}
-	}
+    private static IDeveloperStudioLog log = Logger.getLog(Activator.PLUGIN_ID);
 
-	@Override
-	public void deconfigure() throws CoreException {
+    @Override
+    public void configure() throws CoreException {
+        try {
+            updatePom(getProject());
+        } catch (IOException | XmlPullParserException e) {
+            log.error("Error while updating pom.xml file of created Microservices project", e);
+            IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+                    "Error while updating pom.xml file of created Microservices project");
+            throw new CoreException(status);
+        }
+    }
 
-	}
+    @Override
+    public void deconfigure() throws CoreException {
 
-	/**
-	 * Update created pom.xml file with necessary dependencies and plugins so that it works with WSO2 Microservices
-	 * server
-	 * 
-	 * @throws XmlPullParserException
-	 */
-	private void updatePom(IProject project) throws Exception {
-		File mavenProjectPomLocation = project.getFile("pom.xml").getLocation().toFile();
-		MavenProject mavenProject = MavenUtils.getMavenProject(mavenProjectPomLocation);
+    }
 
-		// Adding required dependencies
-		List<Dependency> dependencyList = new ArrayList<Dependency>();
-		Dependency mssDependency = new Dependency();
-		mssDependency.setGroupId("org.wso2.carbon.mss");
-		mssDependency.setArtifactId("org.wso2.carbon.mss");
-		mssDependency.setVersion("1.0.0-SNAPSHOT");
-		dependencyList.add(mssDependency);
+    /**
+     * Update created pom.xml file with necessary dependencies and plug-ins so that it works with WSO2 Microservices
+     * server
+     * @throws IOException
+     * @throws XmlPullParserException
+     *
+     */
+    private void updatePom(IProject project) throws IOException, XmlPullParserException {
+        File mavenProjectPomLocation = project.getFile(POM_FILE).getLocation().toFile();
+        MavenProject mavenProject = MavenUtils.getMavenProject(mavenProjectPomLocation);
+        Parent mssServiceParent = new Parent();
+        mssServiceParent.setGroupId(MSS_SERVICE_PARENT_GROUP_ID);
+        mssServiceParent.setArtifactId(MSS_SERVICE_PARENT_ARTIFACT_ID);
+        mssServiceParent.setVersion(MSS_SERVICE_PARENT_VERSION);
+        mavenProject.getModel().setParent(mssServiceParent);
 
-		Dependency javaxDependency = new Dependency();
-		javaxDependency.setGroupId("javax.ws.rs");
-		javaxDependency.setArtifactId("javax.ws.rs-api");
-		javaxDependency.setVersion("2.0.1");
-		dependencyList.add(javaxDependency);
+        List<Dependency> generatedDependencyList = mavenProject.getModel().getDependencies();
+        mavenProject.getModel().removeDependency(generatedDependencyList.get(0));
 
-		Dependency servletDependency = new Dependency();
-		servletDependency.setGroupId("javax.servlet");
-		servletDependency.setArtifactId("servlet-api");
-		servletDependency.setVersion("2.5");
-		dependencyList.add(servletDependency);
+        Properties generatedProperties = mavenProject.getModel().getProperties();
+        generatedProperties.clear();
 
-		MavenUtils.addMavenDependency(mavenProject, dependencyList);
+        mavenProject.getModel().addProperty(MICRO_SERVICE_MAIN_CLASS_PROPERTY, DEFAULT_MAIN_CLASS_PROPERTY_VALUE);
+        Dependency servletDependency = new Dependency();
+        servletDependency.setGroupId(JAVAX_SERVLET_DEPENDENCY_GROUP_ID);
+        servletDependency.setArtifactId(JAVAX_SERVLET_DEPENDENCY_ARTIFACT_ID);
+        servletDependency.setVersion(JAVAX_SERVLET_DEPENDENCY_VERSION);
+        List<Dependency> dependencyList = new ArrayList<>();
+        Dependency swaggerAnotationDependency = new Dependency();
+        swaggerAnotationDependency.setGroupId(SWAGGER_ANNOTATIONS_DEPENDENCY_GROUP_ID);
+        swaggerAnotationDependency.setArtifactId(SWAGGER_ANNOTATIONS_DEPENDENCY_ARTIFACT_ID);
+        swaggerAnotationDependency.setVersion(SWAGGER_ANNOTATIONS_DEPENDENCY_VERSION);
+        dependencyList.add(servletDependency);
+        dependencyList.add(swaggerAnotationDependency);
 
-		// Adding required plugin
-		Plugin plugin = MavenUtils.createPluginEntry(mavenProject, "org.apache.maven.plugins", "maven-shade-plugin",
-				"2.4.1", false);
-		PluginExecution execution = new PluginExecution();
-		plugin.addExecution(execution);
+        // Save updated pom.xml
+        MavenUtils.addMavenDependency(mavenProject, dependencyList);
+        MavenUtils.saveMavenProject(mavenProject, mavenProjectPomLocation);
 
-		execution.setPhase("package");
-		execution.addGoal("shade");
+        MSSMavenDependencyResolverJob dependencyResolver = new MSSMavenDependencyResolverJob(
+                MAVEN_DEPENDENCY_RESOLVER_TAG, project);
+        dependencyResolver.schedule();
 
-		Xpp3Dom configurationNode = MavenUtils.createMainConfigurationNode();
-		Xpp3Dom filtersNode = MavenUtils.createXpp3Node(configurationNode, "filters");
-		Xpp3Dom filterNode = MavenUtils.createXpp3Node(filtersNode, "filter");
-		Xpp3Dom artifactNode = MavenUtils.createXpp3Node(filterNode, "artifact");
-		artifactNode.setValue("*:*");
-		Xpp3Dom excludesNode = MavenUtils.createXpp3Node(filterNode, "excludes");
-		Xpp3Dom excludeNodeSF = MavenUtils.createXpp3Node(excludesNode, "exclude");
-		excludeNodeSF.setValue("META-INF/*.SF");
-		Xpp3Dom excludeNodeDSA = MavenUtils.createXpp3Node(excludesNode, "exclude");
-		excludeNodeDSA.setValue("META-INF/*.DSA");
-		Xpp3Dom excludeNodeRSA = MavenUtils.createXpp3Node(excludesNode, "exclude");
-		excludeNodeRSA.setValue("META-INF/*.RSA");
-
-		Xpp3Dom transformersNode = MavenUtils.createXpp3Node(configurationNode, "transformers");
-		Xpp3Dom transformerNode = MavenUtils.createXpp3Node(transformersNode, "transformer");
-		transformerNode.setAttribute("implementation",
-				"org.apache.maven.plugins.shade.resource.ManifestResourceTransformer");
-		Xpp3Dom mainClassNode = MavenUtils.createXpp3Node(transformerNode, "mainClass");
-		mainClassNode.setValue("TODO : Update this place with fully qualified service class name");
-
-		execution.setConfiguration(configurationNode);
-
-		// Save updated pom.xml
-		MavenUtils.saveMavenProject(mavenProject, mavenProjectPomLocation);
-	}
+    }
 
 }

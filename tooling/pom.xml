@@ -33,7 +33,7 @@
                 <checksumPolicy>ignore</checksumPolicy>
             </releases>
             <id>Eclipse-kernel-p2</id>
-            <url>http://builder1.us1.wso2.org/~developerstudio/developer-studio-kernel/4.0.0/M0/p2/</url>
+            <url>http://builder1.us1.wso2.org/~developerstudio/devs-kernel/4.0.0/releases/rc2/p2/</url>
             <layout>p2</layout>
         </repository>
     </repositories>

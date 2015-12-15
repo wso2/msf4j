@@ -5,7 +5,8 @@ Bundle-SymbolicName: org.wso2.developerstudio.mss.artifact;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.wso2.developerstudio.mss.artifact.Activator
 Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ org.eclipse.m2e.core;bundle-version="1.5.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Import-Package: com.google.common.base,
@@ -16,8 +17,10 @@ Import-Package: com.google.common.base,
  org.apache.maven.model,
  org.apache.maven.model.io.xpp3,
  org.apache.maven.project,
+ org.apache.maven.shared.invoker,
  org.codehaus.plexus.util,
  org.codehaus.plexus.util.xml,
+ org.codehaus.plexus.util.xml.pull,
  org.eclipse.core.resources,
  org.eclipse.emf.common.ui.dialogs,
  org.eclipse.jdt.core,
