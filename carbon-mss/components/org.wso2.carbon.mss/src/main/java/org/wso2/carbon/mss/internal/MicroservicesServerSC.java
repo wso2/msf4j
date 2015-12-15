@@ -43,9 +43,9 @@ import org.wso2.carbon.mss.Microservice;
         }
 )
 @SuppressWarnings("unused")
-public class MSServerSC implements RequiredCapabilityListener {
+public class MicroservicesServerSC implements RequiredCapabilityListener {
     public static final String CHANNEL_ID_KEY = "channel.id";
-    private static final Logger log = LoggerFactory.getLogger(MSServerSC.class);
+    private static final Logger log = LoggerFactory.getLogger(MicroservicesServerSC.class);
     private final MicroservicesRegistry microservicesRegistry = MicroservicesRegistry.getInstance();
 
     @Activate
@@ -84,7 +84,7 @@ public class MSServerSC implements RequiredCapabilityListener {
 
     @Override
     public void onAllRequiredCapabilitiesAvailable() {
-        DataHolder.getInstance().getBundleContext().registerService(MSServerSC.class, this, null);
+        DataHolder.getInstance().getBundleContext().registerService(MicroservicesServerSC.class, this, null);
         log.info("All microservices are available");
     }
 }
