@@ -18,7 +18,6 @@
  */
 package org.wso2.carbon.mss.internal;
 
-import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -29,9 +28,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.mss.Microservice;
 import org.wso2.carbon.transport.http.netty.listener.CarbonNettyServerInitializer;
+import org.wso2.carbon.transport.http.netty.listener.TransportsMetadata;
 
 import java.util.Hashtable;
-import java.util.concurrent.TimeUnit;
 
 /**
  * OSGi service component for MicroServicesServer.
@@ -43,60 +42,24 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("unused")
 public class MicroServicesServerSC {
     public static final String CHANNEL_ID_KEY = "channel.id";
-    private static final Logger LOG = LoggerFactory.getLogger(MicroServicesServerSC.class);
+    private static final Logger log = LoggerFactory.getLogger(MicroServicesServerSC.class);
     private final MicroservicesRegistry microservicesRegistry = MicroservicesRegistry.getInstance();
-
-    private BundleContext bundleContext;
-    private int jaxRsServiceCount;
+    private TransportsMetadata trpMetadata;
 
     @Activate
     protected void start(final BundleContext bundleContext) {
-        this.bundleContext = bundleContext;
         try {
-            countJaxrsServices();
+            log.info("Starting micro services server...");
+            for (String id : trpMetadata.getTransportIDs()) {
+                Hashtable<String, String> httpInitParams = new Hashtable<>();
+                httpInitParams.put(CHANNEL_ID_KEY, id);
+                bundleContext.registerService(CarbonNettyServerInitializer.class,
+                        new MSSNettyServerInitializer(MicroservicesRegistry.getInstance()), httpInitParams);
 
-            new Thread(() -> {
-                while (true) {
-                    if (microservicesRegistry.getServiceCount() == jaxRsServiceCount) {
-                        LOG.info("Starting micro services server ++++++++++++ ...");
-
-                        // Create an OSGi services (HTTP/HTTPS) & register it with the relevant CHANNEL_ID_KEY
-
-                        Hashtable<String, String> httpInitParams = new Hashtable<>();
-                        httpInitParams.put(CHANNEL_ID_KEY, "jaxrs-http");
-                        bundleContext.registerService(CarbonNettyServerInitializer.class,
-                                new MSSNettyServerInitializer(MicroservicesRegistry.getInstance()), httpInitParams);
-
-                        /*Hashtable<String, String> httpsInitParams = new Hashtable<>();
-                        httpsInitParams.put(CHANNEL_ID_KEY, "netty-jaxrs-https");
-                        bundleContext.
-                                registerService(CarbonNettyServerInitializer.class,
-                                        new MSSNettyServerInitializer(MicroservicesRegistry.getInstance()),
-                                        httpsInitParams);*/
-
-                        LOG.info("Micro services server started");
-                        break;
-                    } else {
-                        try {
-                            TimeUnit.MILLISECONDS.sleep(10);
-                        } catch (InterruptedException ignored) {
-                        }
-                    }
-                }
-            }).start();
-        } catch (Throwable e) {
-            LOG.error("Could not start MicroServicesServerSC", e);
-        }
-    }
-
-
-    private void countJaxrsServices() {
-        Bundle[] bundles = bundleContext.getBundles();
-        for (Bundle bundle : bundles) {
-            String jaxRsServices = bundle.getHeaders().get("JAXRS-Services");
-            if (jaxRsServices != null) {
-                jaxRsServiceCount += Integer.parseInt(jaxRsServices);
             }
+            log.info("Micro services server started");
+        } catch (Throwable e) {
+            log.error("Could not start MicroServicesServerSC", e);
         }
     }
 
@@ -113,5 +76,20 @@ public class MicroServicesServerSC {
 
     protected void removeHttpService(Microservice httpService) {
         microservicesRegistry.removeHttpService(httpService);
+    }
+
+    @Reference(
+            name = "trpMetadata",
+            service = TransportsMetadata.class,
+            cardinality = ReferenceCardinality.MANDATORY,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "removeTransportsMetadata"
+    )
+    protected void addTransportsMetadata(TransportsMetadata trpMetadata) {
+        this.trpMetadata = trpMetadata;
+    }
+
+    protected void removeTransportsMetadata(TransportsMetadata trpMetadata) {
+        this.trpMetadata = null;
     }
 }
