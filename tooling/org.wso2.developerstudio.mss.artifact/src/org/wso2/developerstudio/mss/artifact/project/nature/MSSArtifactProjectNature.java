@@ -31,6 +31,7 @@ import static org.wso2.developerstudio.mss.artifact.util.MSSArtifactConstants.SW
 import static org.wso2.developerstudio.mss.artifact.util.MSSArtifactConstants.SWAGGER_ANNOTATIONS_DEPENDENCY_VERSION;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -38,6 +39,7 @@ import java.util.Properties;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Parent;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -60,7 +62,7 @@ public class MSSArtifactProjectNature extends AbstractWSO2ProjectNature {
     public void configure() throws CoreException {
         try {
             updatePom(getProject());
-        } catch (Exception e) {
+        } catch (IOException | XmlPullParserException e) {
             log.error("Error while updating pom.xml file of created Microservices project", e);
             IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID,
                     "Error while updating pom.xml file of created Microservices project");
@@ -76,10 +78,11 @@ public class MSSArtifactProjectNature extends AbstractWSO2ProjectNature {
     /**
      * Update created pom.xml file with necessary dependencies and plug-ins so that it works with WSO2 Microservices
      * server
-     * 
+     * @throws IOException
      * @throws XmlPullParserException
+     *
      */
-    private void updatePom(IProject project) throws Exception {
+    private void updatePom(IProject project) throws IOException, XmlPullParserException {
         File mavenProjectPomLocation = project.getFile(POM_FILE).getLocation().toFile();
         MavenProject mavenProject = MavenUtils.getMavenProject(mavenProjectPomLocation);
         Parent mssServiceParent = new Parent();
