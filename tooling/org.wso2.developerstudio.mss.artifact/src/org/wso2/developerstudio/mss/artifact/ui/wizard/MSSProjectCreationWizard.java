@@ -60,162 +60,128 @@ import org.wso2.developerstudio.mss.artifact.util.MSSImageUtils;
  * Class for creating Microservices Server project
  */
 public class MSSProjectCreationWizard extends AbstractWSO2ProjectCreationWizard {
-	private static IDeveloperStudioLog log = Logger.getLog(Activator.PLUGIN_ID);
+    private static IDeveloperStudioLog log = Logger.getLog(Activator.PLUGIN_ID);
 
-	private MSSProjectModel mssArtifactModel;
+    private MSSProjectModel mssArtifactModel;
 
-	public MSSProjectCreationWizard() {
-		setMssModel(new MSSProjectModel());
-		setModel(getMssModel());
-		setWindowTitle(PROJECT_WIZARD_WINDOW_TITLE);
-		setDefaultPageImageDescriptor(MSSImageUtils.getInstance()
-				.getImageDescriptor(IMAGE_FILE));
-	}
+    public MSSProjectCreationWizard() {
+        setMssModel(new MSSProjectModel());
+        setModel(getMssModel());
+        setWindowTitle(PROJECT_WIZARD_WINDOW_TITLE);
+        setDefaultPageImageDescriptor(MSSImageUtils.getInstance().getImageDescriptor(IMAGE_FILE));
+    }
 
-	public void init(IWorkbench workbench, IStructuredSelection selection) {
-		super.init(workbench, selection);
-	}
+    public void init(IWorkbench workbench, IStructuredSelection selection) {
+        super.init(workbench, selection);
+    }
 
-	@Override
-	public boolean performFinish() {
-		try {
-			if (getModel().getSelectedOption().equals(
-					NEW_MSS_PROJECT_CREATION_OPTION)) {
+    @Override
+    public boolean performFinish() {
+        try {
+            if (getModel().getSelectedOption().equals(NEW_MSS_PROJECT_CREATION_OPTION)) {
 
-				// Creating new Eclipse project
-				IProject project = createNewProject();
-				mssArtifactModel.setGeneratedCodeLocation(project.getLocation()
-						.toOSString());
-				mssArtifactModel.setProject(project);
+                // Creating new Eclipse project
+                IProject project = createNewProject();
+                mssArtifactModel.setGeneratedCodeLocation(project.getLocation().toOSString());
+                mssArtifactModel.setProject(project);
 
-				ProgressMonitorDialog progressMonitorDialog = new ProgressMonitorDialog(
-						getShell());
-				progressMonitorDialog.create();
-				progressMonitorDialog.open();
-				progressMonitorDialog.run(false, false, new CodegenJob());
-				ProjectUtils.addNatureToProject(project, false,
-						MAVEN2_PROJECT_NATURE);
-				ProjectUtils.addNatureToProject(project, false,
-						MSS_PROJECT_NATURE);
-			} else {
-				log.error("Unsupported Microservices project creation option"
-						+ getModel().getSelectedOption());
-				MessageDialog errorDialog = new MessageDialog(getShell(),
-						"Error", null,
-						"Unsupported Microserices project creation option",
-						MessageDialog.ERROR, new String[] { OK_BUTTON }, 0);
-				errorDialog.open();
-				return false;
-			}
-		} catch (CoreException | InvocationTargetException
-				| InterruptedException e) {
-			log.error(
-					"Error while creating Microservices project for given Swagger API",
-					e);
-			MessageDialog errorDialog = new MessageDialog(
-					getShell(),
-					"Error",
-					null,
-					"Error while creating Microservices project for given Swagger API",
-					MessageDialog.ERROR, new String[] { OK_BUTTON }, 0);
-			errorDialog.open();
-			return false;
-		}
-		return true;
-	}
+                ProgressMonitorDialog progressMonitorDialog = new ProgressMonitorDialog(getShell());
+                progressMonitorDialog.create();
+                progressMonitorDialog.open();
+                progressMonitorDialog.run(false, false, new CodegenJob());
+                ProjectUtils.addNatureToProject(project, false, MAVEN2_PROJECT_NATURE);
+                ProjectUtils.addNatureToProject(project, false, MSS_PROJECT_NATURE);
+            } else {
+                log.error("Unsupported Microservices project creation option" + getModel().getSelectedOption());
+                MessageDialog errorDialog = new MessageDialog(getShell(), "Error", null,
+                        "Unsupported Microserices project creation option", MessageDialog.ERROR,
+                        new String[] { OK_BUTTON }, 0);
+                errorDialog.open();
+                return false;
+            }
+        } catch (CoreException | InvocationTargetException | InterruptedException e) {
+            log.error("Error while creating Microservices project for given Swagger API", e);
+            MessageDialog errorDialog = new MessageDialog(getShell(), "Error", null,
+                    "Error while creating Microservices project for given Swagger API", MessageDialog.ERROR,
+                    new String[] { OK_BUTTON }, 0);
+            errorDialog.open();
+            return false;
+        }
+        return true;
+    }
 
-	@Override
-	public IResource getCreatedResource() {
-		return null;
-	}
+    @Override
+    public IResource getCreatedResource() {
+        return null;
+    }
 
-	/**
-	 * Class responsible for running Codegen job for creation of JAX-RS services
-	 */
-	private class CodegenJob implements IRunnableWithProgress {
-		
-		public void run(IProgressMonitor monitor)
-				throws InvocationTargetException, InterruptedException {
-			String operationText = MICROSERVICES_PROJECT_CREATION_TASK;
-			monitor.beginTask(operationText, 100);
-			monitor.subTask(PROCESSING_CONFIGURATION_TASK);
-			monitor.worked(10);
-			try {
-				monitor.subTask(CODE_GENERATION_TASK);
-				monitor.worked(75);
+    /**
+     * Class responsible for running Codegen job for creation of JAX-RS services
+     */
+    private class CodegenJob implements IRunnableWithProgress {
 
-				// Generating Microservices JAX-RS source code from given
-				// Swagger API definition
-				String swaggerFilePath = mssArtifactModel.getSwaggerFile()
-						.getAbsolutePath();
-				SwaggerToJavaGenerator sourceGenerator = new SwaggerToJavaGenerator(
-						swaggerFilePath,
-						mssArtifactModel.getGeneratedCodeLocation(),
-						mssArtifactModel.getPackageName());
-				sourceGenerator.setGroupId(mssArtifactModel.getMavenInfo()
-						.getGroupId());
-				sourceGenerator.setArtifactId(mssArtifactModel.getMavenInfo()
-						.getArtifactId());
-				sourceGenerator.setArtifactVersion(mssArtifactModel
-						.getMavenInfo().getVersion());
-				sourceGenerator.generateService();
+        public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+            String operationText = MICROSERVICES_PROJECT_CREATION_TASK;
+            monitor.beginTask(operationText, 100);
+            monitor.subTask(PROCESSING_CONFIGURATION_TASK);
+            monitor.worked(10);
+            try {
+                monitor.subTask(CODE_GENERATION_TASK);
+                monitor.worked(75);
 
-				// Renaming generated folder structure to match with WSO2
-				// conventional directory structure
-				IFolder resourceFolder = ProjectUtils.getWorkspaceFolder(
-						mssArtifactModel.getProject(), SRC_DIRECTORY,
-						MAIN_DIRECTORY);
-				File resourcePhysicalFolder = resourceFolder.getRawLocation()
-						.makeAbsolute().toFile();
-				File newResourcePhysicalFolder = new File(
-						resourcePhysicalFolder.getParent() + File.separator
-								+ RESOURCES_DIRECTORY);
-				resourcePhysicalFolder.renameTo(newResourcePhysicalFolder);
+                // Generating Microservices JAX-RS source code from given
+                // Swagger API definition
+                String swaggerFilePath = mssArtifactModel.getSwaggerFile().getAbsolutePath();
+                SwaggerToJavaGenerator sourceGenerator = new SwaggerToJavaGenerator(swaggerFilePath,
+                        mssArtifactModel.getGeneratedCodeLocation(), mssArtifactModel.getPackageName());
+                sourceGenerator.setGroupId(mssArtifactModel.getMavenInfo().getGroupId());
+                sourceGenerator.setArtifactId(mssArtifactModel.getMavenInfo().getArtifactId());
+                sourceGenerator.setArtifactVersion(mssArtifactModel.getMavenInfo().getVersion());
+                sourceGenerator.generateService();
 
-				IFolder sourceFolder = ProjectUtils.getWorkspaceFolder(
-						mssArtifactModel.getProject(), SRC_DIRECTORY,
-						GEN_DIRECTORY);
-				File sourcePhysicalFolder = sourceFolder.getRawLocation()
-						.makeAbsolute().toFile();
-				File newSourcePhysicalFolder = new File(
-						sourcePhysicalFolder.getParent() + File.separator
-								+ MAIN_DIRECTORY);
-				sourcePhysicalFolder.renameTo(newSourcePhysicalFolder);
+                // Renaming generated folder structure to match with WSO2
+                // conventional directory structure
+                IFolder resourceFolder = ProjectUtils.getWorkspaceFolder(mssArtifactModel.getProject(), SRC_DIRECTORY,
+                        MAIN_DIRECTORY);
+                File resourcePhysicalFolder = resourceFolder.getRawLocation().makeAbsolute().toFile();
+                File newResourcePhysicalFolder = new File(resourcePhysicalFolder.getParent() + File.separator
+                        + RESOURCES_DIRECTORY);
+                resourcePhysicalFolder.renameTo(newResourcePhysicalFolder);
 
-				// Moving src/resources to src/main
-				resourceFolder = ProjectUtils.getWorkspaceFolder(
-						mssArtifactModel.getProject(), SRC_DIRECTORY,
-						RESOURCES_DIRECTORY);
-				resourcePhysicalFolder = resourceFolder.getRawLocation()
-						.makeAbsolute().toFile();
-				sourceFolder = ProjectUtils.getWorkspaceFolder(
-						mssArtifactModel.getProject(), SRC_DIRECTORY,
-						MAIN_DIRECTORY);
-				sourcePhysicalFolder = sourceFolder.getRawLocation()
-						.makeAbsolute().toFile();
-				FileUtils.moveDirectoryToDirectory(resourcePhysicalFolder,
-						sourcePhysicalFolder, true);
+                IFolder sourceFolder = ProjectUtils.getWorkspaceFolder(mssArtifactModel.getProject(), SRC_DIRECTORY,
+                        GEN_DIRECTORY);
+                File sourcePhysicalFolder = sourceFolder.getRawLocation().makeAbsolute().toFile();
+                File newSourcePhysicalFolder = new File(sourcePhysicalFolder.getParent() + File.separator
+                        + MAIN_DIRECTORY);
+                sourcePhysicalFolder.renameTo(newSourcePhysicalFolder);
 
-				// Adding Java support to the source folder src/main/java
-				IFolder mainFolder = ProjectUtils.getWorkspaceFolder(
-						mssArtifactModel.getProject(), SRC_DIRECTORY,
-						MAIN_DIRECTORY, JAVA_DIRECTORY);
-				JavaUtils.addJavaSupportAndSourceFolder(
-						mssArtifactModel.getProject(), mainFolder);
+                // Moving src/resources to src/main
+                resourceFolder = ProjectUtils.getWorkspaceFolder(mssArtifactModel.getProject(), SRC_DIRECTORY,
+                        RESOURCES_DIRECTORY);
+                resourcePhysicalFolder = resourceFolder.getRawLocation().makeAbsolute().toFile();
+                sourceFolder = ProjectUtils.getWorkspaceFolder(mssArtifactModel.getProject(), SRC_DIRECTORY,
+                        MAIN_DIRECTORY);
+                sourcePhysicalFolder = sourceFolder.getRawLocation().makeAbsolute().toFile();
+                FileUtils.moveDirectoryToDirectory(resourcePhysicalFolder, sourcePhysicalFolder, true);
 
-				monitor.done();
-			} catch (CoreException | IOException e) {
-				throw new InvocationTargetException(e);
-			}
-		}
-	}
+                // Adding Java support to the source folder src/main/java
+                IFolder mainFolder = ProjectUtils.getWorkspaceFolder(mssArtifactModel.getProject(), SRC_DIRECTORY,
+                        MAIN_DIRECTORY, JAVA_DIRECTORY);
+                JavaUtils.addJavaSupportAndSourceFolder(mssArtifactModel.getProject(), mainFolder);
 
-	public MSSProjectModel getMssModel() {
-		return mssArtifactModel;
-	}
+                monitor.done();
+            } catch (CoreException | IOException e) {
+                throw new InvocationTargetException(e);
+            }
+        }
+    }
 
-	public void setMssModel(MSSProjectModel mssModel) {
-		this.mssArtifactModel = mssModel;
-	}
+    public MSSProjectModel getMssModel() {
+        return mssArtifactModel;
+    }
+
+    public void setMssModel(MSSProjectModel mssModel) {
+        this.mssArtifactModel = mssModel;
+    }
 
 }

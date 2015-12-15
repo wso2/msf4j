@@ -50,83 +50,71 @@ import org.wso2.developerstudio.mss.artifact.Activator;
 import org.wso2.developerstudio.mss.artifact.util.MSSMavenDependencyResolverJob;
 
 /**
- * Class for represent the nature of a Microservices project inside Eclipse
- * workspace
+ * Class for represent the nature of a Microservices project inside Eclipse workspace
  */
 public class MSSArtifactProjectNature extends AbstractWSO2ProjectNature {
 
-	private static IDeveloperStudioLog log = Logger.getLog(Activator.PLUGIN_ID);
+    private static IDeveloperStudioLog log = Logger.getLog(Activator.PLUGIN_ID);
 
-	@Override
-	public void configure() throws CoreException {
-		try {
-			updatePom(getProject());
-		} catch (Exception e) {
-			log.error(
-					"Error while updating pom.xml file of created Microservices project",
-					e);
-			IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-					"Error while updating pom.xml file of created Microservices project");
-			throw new CoreException(status);
-		}
-	}
+    @Override
+    public void configure() throws CoreException {
+        try {
+            updatePom(getProject());
+        } catch (Exception e) {
+            log.error("Error while updating pom.xml file of created Microservices project", e);
+            IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+                    "Error while updating pom.xml file of created Microservices project");
+            throw new CoreException(status);
+        }
+    }
 
-	@Override
-	public void deconfigure() throws CoreException {
+    @Override
+    public void deconfigure() throws CoreException {
 
-	}
+    }
 
-	/**
-	 * Update created pom.xml file with necessary dependencies and plug-ins so
-	 * that it works with WSO2 Microservices server
-	 * 
-	 * @throws XmlPullParserException
-	 */
-	private void updatePom(IProject project) throws Exception {
-		File mavenProjectPomLocation = project.getFile(POM_FILE).getLocation()
-				.toFile();
-		MavenProject mavenProject = MavenUtils
-				.getMavenProject(mavenProjectPomLocation);
-		Parent mssServiceParent = new Parent();
-		mssServiceParent.setGroupId(MSS_SERVICE_PARENT_GROUP_ID);
-		mssServiceParent.setArtifactId(MSS_SERVICE_PARENT_ARTIFACT_ID);
-		mssServiceParent.setVersion(MSS_SERVICE_PARENT_VERSION);
-		mavenProject.getModel().setParent(mssServiceParent);
+    /**
+     * Update created pom.xml file with necessary dependencies and plug-ins so that it works with WSO2 Microservices
+     * server
+     * 
+     * @throws XmlPullParserException
+     */
+    private void updatePom(IProject project) throws Exception {
+        File mavenProjectPomLocation = project.getFile(POM_FILE).getLocation().toFile();
+        MavenProject mavenProject = MavenUtils.getMavenProject(mavenProjectPomLocation);
+        Parent mssServiceParent = new Parent();
+        mssServiceParent.setGroupId(MSS_SERVICE_PARENT_GROUP_ID);
+        mssServiceParent.setArtifactId(MSS_SERVICE_PARENT_ARTIFACT_ID);
+        mssServiceParent.setVersion(MSS_SERVICE_PARENT_VERSION);
+        mavenProject.getModel().setParent(mssServiceParent);
 
-		List<Dependency> generatedDependencyList = mavenProject.getModel()
-				.getDependencies();
-		mavenProject.getModel()
-				.removeDependency(generatedDependencyList.get(0));
+        List<Dependency> generatedDependencyList = mavenProject.getModel().getDependencies();
+        mavenProject.getModel().removeDependency(generatedDependencyList.get(0));
 
-		Properties generatedProperties = mavenProject.getModel()
-				.getProperties();
-		generatedProperties.clear();
+        Properties generatedProperties = mavenProject.getModel().getProperties();
+        generatedProperties.clear();
 
-		mavenProject.getModel().addProperty(MICRO_SERVICE_MAIN_CLASS_PROPERTY,
-				DEFAULT_MAIN_CLASS_PROPERTY_VALUE);
-		Dependency servletDependency = new Dependency();
-		servletDependency.setGroupId(JAVAX_SERVLET_DEPENDENCY_GROUP_ID);
-		servletDependency.setArtifactId(JAVAX_SERVLET_DEPENDENCY_ARTIFACT_ID);
-		servletDependency.setVersion(JAVAX_SERVLET_DEPENDENCY_VERSION);
-		List<Dependency> dependencyList = new ArrayList<>();
-		Dependency swaggerAnotationDependency = new Dependency();
-		swaggerAnotationDependency
-				.setGroupId(SWAGGER_ANNOTATIONS_DEPENDENCY_GROUP_ID);
-		swaggerAnotationDependency
-				.setArtifactId(SWAGGER_ANNOTATIONS_DEPENDENCY_ARTIFACT_ID);
-		swaggerAnotationDependency
-				.setVersion(SWAGGER_ANNOTATIONS_DEPENDENCY_VERSION);
-		dependencyList.add(servletDependency);
-		dependencyList.add(swaggerAnotationDependency);
+        mavenProject.getModel().addProperty(MICRO_SERVICE_MAIN_CLASS_PROPERTY, DEFAULT_MAIN_CLASS_PROPERTY_VALUE);
+        Dependency servletDependency = new Dependency();
+        servletDependency.setGroupId(JAVAX_SERVLET_DEPENDENCY_GROUP_ID);
+        servletDependency.setArtifactId(JAVAX_SERVLET_DEPENDENCY_ARTIFACT_ID);
+        servletDependency.setVersion(JAVAX_SERVLET_DEPENDENCY_VERSION);
+        List<Dependency> dependencyList = new ArrayList<>();
+        Dependency swaggerAnotationDependency = new Dependency();
+        swaggerAnotationDependency.setGroupId(SWAGGER_ANNOTATIONS_DEPENDENCY_GROUP_ID);
+        swaggerAnotationDependency.setArtifactId(SWAGGER_ANNOTATIONS_DEPENDENCY_ARTIFACT_ID);
+        swaggerAnotationDependency.setVersion(SWAGGER_ANNOTATIONS_DEPENDENCY_VERSION);
+        dependencyList.add(servletDependency);
+        dependencyList.add(swaggerAnotationDependency);
 
-		// Save updated pom.xml
-		MavenUtils.addMavenDependency(mavenProject, dependencyList);
-		MavenUtils.saveMavenProject(mavenProject, mavenProjectPomLocation);
+        // Save updated pom.xml
+        MavenUtils.addMavenDependency(mavenProject, dependencyList);
+        MavenUtils.saveMavenProject(mavenProject, mavenProjectPomLocation);
 
-		MSSMavenDependencyResolverJob dependencyResolver = new MSSMavenDependencyResolverJob(
-				MAVEN_DEPENDENCY_RESOLVER_TAG, project);
-		dependencyResolver.schedule();
+        MSSMavenDependencyResolverJob dependencyResolver = new MSSMavenDependencyResolverJob(
+                MAVEN_DEPENDENCY_RESOLVER_TAG, project);
+        dependencyResolver.schedule();
 
-	}
+    }
 
 }
