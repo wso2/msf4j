@@ -26,6 +26,7 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.kernel.startupresolver.RequiredCapabilityListener;
 import org.wso2.carbon.kernel.transports.CarbonTransport;
 import org.wso2.carbon.mss.Microservice;
 
@@ -34,12 +35,17 @@ import org.wso2.carbon.mss.Microservice;
  */
 @Component(
         name = "org.wso2.carbon.mss.internal.MicroServicesServerSC",
-        immediate = true
+        immediate = true,
+        service = RequiredCapabilityListener.class,
+        property = {
+                "capability-name=org.wso2.carbon.mss.Microservice",
+                "component-key=wso2-microservices-server"
+        }
 )
 @SuppressWarnings("unused")
-public class MicroservicesServerSC {
+public class MSServerSC implements RequiredCapabilityListener {
     public static final String CHANNEL_ID_KEY = "channel.id";
-    private static final Logger log = LoggerFactory.getLogger(MicroservicesServerSC.class);
+    private static final Logger log = LoggerFactory.getLogger(MSServerSC.class);
     private final MicroservicesRegistry microservicesRegistry = MicroservicesRegistry.getInstance();
 
     @Activate
@@ -74,5 +80,11 @@ public class MicroservicesServerSC {
 
     protected void removeCarbonTransport(CarbonTransport carbonTransport) {
         DataHolder.getInstance().removeCarbonTransport(carbonTransport);
+    }
+
+    @Override
+    public void onAllRequiredCapabilitiesAvailable() {
+        DataHolder.getInstance().getBundleContext().registerService(MSServerSC.class, this, null);
+        log.info("All microservices are available");
     }
 }

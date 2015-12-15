@@ -313,8 +313,14 @@
             org.osgi.framework.*;version="${osgi.framework.import.version.range}",
             org.osgi.util.tracker; version="${osgi.service.tracker.import.version.range}",
             org.wso2.carbon.kernel.transports.*,
+            org.wso2.carbon.kernel.startupresolver.*,
             org.wso2.carbon.transport.http.netty.listener.*,
         </import.package>
+        <provide.capability>
+            osgi.service;effective:=active;
+            objectClass="org.wso2.carbon.mss.internal.MicroservicesServerSC";
+            dependent-component-key="carbon-transport-mgt",
+        </provide.capability>
         <SPI-Provider>javax.ws.rs.ext.RuntimeDelegate</SPI-Provider>
     </properties>
 </project>

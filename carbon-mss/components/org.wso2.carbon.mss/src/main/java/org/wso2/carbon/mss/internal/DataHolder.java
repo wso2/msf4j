@@ -48,6 +48,10 @@ public class DataHolder {
         return instance;
     }
 
+    public BundleContext getBundleContext() {
+        return bundleContext;
+    }
+
     public void setBundleContext(BundleContext bundleContext) {
         this.bundleContext = bundleContext;
     }
