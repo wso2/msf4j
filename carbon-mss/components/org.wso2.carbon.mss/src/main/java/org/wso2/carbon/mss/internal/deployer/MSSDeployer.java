@@ -48,7 +48,7 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class MSSDeployer implements Deployer {
     private static final Logger log = LoggerFactory.getLogger(MSSDeployer.class);
-    private static final String DEPLOYMENT_PATH = "file:mss";
+    private static final String DEPLOYMENT_PATH = "file:microservices";
     private static final String SUPPORTED_EXTENSIONS[] = {"jar", "zip"};
     private URL deploymentLocation;
     private ArtifactType artifactType;
