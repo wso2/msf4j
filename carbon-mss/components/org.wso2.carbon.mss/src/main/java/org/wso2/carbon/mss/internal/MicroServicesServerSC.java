@@ -26,11 +26,8 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.kernel.transports.CarbonTransport;
 import org.wso2.carbon.mss.Microservice;
-import org.wso2.carbon.transport.http.netty.listener.CarbonNettyServerInitializer;
-import org.wso2.carbon.transport.http.netty.listener.TransportsMetadata;
-
-import java.util.Hashtable;
 
 /**
  * OSGi service component for MicroServicesServer.
@@ -40,27 +37,13 @@ import java.util.Hashtable;
         immediate = true
 )
 @SuppressWarnings("unused")
-public class MicroServicesServerSC {
+public class MicroservicesServerSC {
     public static final String CHANNEL_ID_KEY = "channel.id";
-    private static final Logger log = LoggerFactory.getLogger(MicroServicesServerSC.class);
+    private static final Logger log = LoggerFactory.getLogger(MicroservicesServerSC.class);
     private final MicroservicesRegistry microservicesRegistry = MicroservicesRegistry.getInstance();
-    private TransportsMetadata trpMetadata;
 
     @Activate
     protected void start(final BundleContext bundleContext) {
-        try {
-            log.info("Starting micro services server...");
-            for (String id : trpMetadata.getTransportIDs()) {
-                Hashtable<String, String> httpInitParams = new Hashtable<>();
-                httpInitParams.put(CHANNEL_ID_KEY, id);
-                bundleContext.registerService(CarbonNettyServerInitializer.class,
-                        new MSSNettyServerInitializer(MicroservicesRegistry.getInstance()), httpInitParams);
-
-            }
-            log.info("Micro services server started");
-        } catch (Throwable e) {
-            log.error("Could not start MicroServicesServerSC", e);
-        }
     }
 
     @Reference(
@@ -79,17 +62,17 @@ public class MicroServicesServerSC {
     }
 
     @Reference(
-            name = "trpMetadata",
-            service = TransportsMetadata.class,
-            cardinality = ReferenceCardinality.MANDATORY,
+            name = "carbon-transport",
+            service = CarbonTransport.class,
+            cardinality = ReferenceCardinality.AT_LEAST_ONE,
             policy = ReferencePolicy.DYNAMIC,
-            unbind = "removeTransportsMetadata"
+            unbind = "removeCarbonTransport"
     )
-    protected void addTransportsMetadata(TransportsMetadata trpMetadata) {
-        this.trpMetadata = trpMetadata;
+    protected void addCarbonTransport(CarbonTransport carbonTransport) {
+        DataHolder.getInstance().addCarbonTransport(carbonTransport);
     }
 
-    protected void removeTransportsMetadata(TransportsMetadata trpMetadata) {
-        this.trpMetadata = null;
+    protected void removeCarbonTransport(CarbonTransport carbonTransport) {
+        DataHolder.getInstance().removeCarbonTransport(carbonTransport);
     }
 }

@@ -294,6 +294,7 @@
     </profiles>
 
     <properties>
+        <bundle.activator>org.wso2.carbon.mss.internal.MicroservicesServerActivator</bundle.activator>
         <private.package>org.wso2.carbon.mss.internal.*,</private.package>
         <export.package>
             !org.wso2.carbon.mss.internal.*,
@@ -311,6 +312,7 @@
             org.apache.commons.beanutils.*,
             org.osgi.framework.*;version="${osgi.framework.import.version.range}",
             org.osgi.util.tracker; version="${osgi.service.tracker.import.version.range}",
+            org.wso2.carbon.kernel.transports.*,
             org.wso2.carbon.transport.http.netty.listener.*,
         </import.package>
     </properties>
