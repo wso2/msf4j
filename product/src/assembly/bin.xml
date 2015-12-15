@@ -39,15 +39,15 @@
         </fileSet>
 
         <fileSet>
-            <directory>carbon-home/repository/conf/transports</directory>
+            <directory>carbon-home/conf/transports</directory>
             <!--todo version-->
-            <outputDirectory>repository/conf/transports</outputDirectory>
+            <outputDirectory>conf/transports</outputDirectory>
             <fileMode>644</fileMode>
         </fileSet>
 
         <fileSet>
-            <directory>carbon-home/repository/deployment/server/mss</directory>
-            <outputDirectory>repository/deployment/server/mss</outputDirectory>
+            <directory>carbon-home/deployment/microservices</directory>
+            <outputDirectory>deployment/microservices</outputDirectory>
             <fileMode>644</fileMode>
         </fileSet>
 

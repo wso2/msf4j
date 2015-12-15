@@ -47,7 +47,7 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class MSSDeployer implements Deployer {
     private static final Logger log = LoggerFactory.getLogger(MSSDeployer.class);
-    private static final String DEPLOYMENT_PATH = "file:mss";
+    private static final String DEPLOYMENT_PATH = "file:microservices";
     private URL deploymentLocation;
     private ArtifactType artifactType;
     private HashMap<Object, List<Object>> deployedArtifacts = new HashMap<>();
@@ -81,7 +81,7 @@ public class MSSDeployer implements Deployer {
         File artifactFile = artifact.getFile();
         String artifactPath = artifactFile.getAbsolutePath();
         log.info("Deploying artifact: {}", artifactPath);
-        List<Object> resourcesList = null;
+        List<Object> resourcesList;
         try {
             resourcesList = new MSSJarProcessor().setArtifact(artifactFile).process().getResourceInstances();
         } catch (MSSJarProcessorException e) {
