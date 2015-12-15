@@ -19,7 +19,6 @@
                     description="Select how would you like to create your new project"
                     error="Please select a method to create the project">
         <option id="new.MSS" default="true">Create New Microservices Project Using Swagger</option>
-        <option id="import.MSS">Import an existing Microservices Project</option>
     </projectOptions>
 
     <projectOptionSettings>
@@ -33,18 +32,6 @@
             <data modelProperty="service.class.package.name" type="string"
                   fieldController="org.wso2.developerstudio.mss.artifact.validators.MSSArtifactFieldController"
                   group="paramGroup">Package Name</data>
-            <group id="paramGroup"/>
-            <projectNatures>
-                <nature>org.eclipse.jdt.core.javanature</nature>
-            </projectNatures>
-        </settings>
-
-        <settings optionId="import.MSS" title="Microservices Project"
-                  description="Import Microservices Project" error="Please give a name to the project">
-            <data modelProperty="import.file" type="file" filter="*.json"
-                  fieldController="org.wso2.developerstudio.mss.artifact.validators.MSSArtifactFieldController">Swagger File</data>
-            <data group="paramGroup" modelProperty="project.name" type="string"
-                  fieldController="org.wso2.developerstudio.mss.artifact.validators.MSSArtifactFieldController">Project Name</data>
             <group id="paramGroup"/>
             <projectNatures>
                 <nature>org.eclipse.jdt.core.javanature</nature>
