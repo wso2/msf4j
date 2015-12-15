@@ -92,8 +92,9 @@
         <module>template-engines/mss-mustache-template</module>
         <module>mss-service-parent</module>
         <module>samples/helloworld</module>
-        <module>samples/stockquote-service</module>
-        <module>samples/stockquote-service-bundle</module>
+        <module>samples/stockquote-mss-lite</module>
+        <module>samples/stockquote-mss-deployable-jar</module>
+        <module>samples/stockquote-mss-bundle</module>
         <module>samples/security</module>
         <module>samples/metrics</module>
         <module>samples/petstore</module>

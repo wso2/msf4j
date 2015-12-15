@@ -29,10 +29,10 @@
     </parent>
 
     <groupId>org.wso2.carbon.mss.example</groupId>
-    <artifactId>stockquote-service</artifactId>
+    <artifactId>stockquote-mss-deployable-jar</artifactId>
     <packaging>jar</packaging>
 
-    <name>StockQuote Microservice Sample</name>
+    <name>StockQuote MSS Deployable Jar</name>
 
     <properties>
         <microservice.mainClass>org.wso2.carbon.mss.example.Application</microservice.mainClass>

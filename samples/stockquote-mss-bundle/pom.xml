@@ -9,10 +9,10 @@
         <relativePath>../../parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>stockquote-service-bundle</artifactId>
+    <artifactId>stockquote-mss-bundle</artifactId>
     <packaging>bundle</packaging>
 
-    <name>MSS Sample OSGi bundle</name>
+    <name>Stockquote MSS OSGi Bundle</name>
     <url>http://maven.apache.org</url>
     <dependencies>
         <dependency>
