@@ -17,7 +17,7 @@ listenerConfigurations:
  -
   id: "jaxrs-http"
   host: "127.0.0.1"
-  port: 7777
+  port: 8080
   bossThreadPoolSize: 2
   workerThreadPoolSize: 250
   execHandlerThreadPoolSize: 60
