@@ -29,18 +29,18 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ServiceMethodInfo {
 
-    private final String handlerName;
+    private final String methodName;
     private final Method method;
 
     private Map<String, Object> attributes = new ConcurrentHashMap<>();
 
-    public ServiceMethodInfo(String handlerName, Method method) {
-        this.handlerName = handlerName;
+    public ServiceMethodInfo(String methodName, Method method) {
+        this.methodName = methodName;
         this.method = method;
     }
 
-    public String getHandlerName() {
-        return handlerName;
+    public String getMethodName() {
+        return methodName;
     }
 
     public Method getMethod() {
