@@ -27,14 +27,14 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Contains information about service method details.
  */
-public class HandlerInfo {
+public class ServiceMethodInfo {
 
     private final String handlerName;
     private final Method method;
 
     private Map<String, Object> attributes = new ConcurrentHashMap<>();
 
-    public HandlerInfo(String handlerName, Method method) {
+    public ServiceMethodInfo(String handlerName, Method method) {
         this.handlerName = handlerName;
         this.method = method;
     }

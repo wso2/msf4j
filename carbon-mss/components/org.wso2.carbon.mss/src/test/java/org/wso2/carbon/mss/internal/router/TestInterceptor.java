@@ -20,9 +20,9 @@ package org.wso2.carbon.mss.internal.router;
 
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
-import org.wso2.carbon.mss.HandlerInfo;
 import org.wso2.carbon.mss.HttpResponder;
 import org.wso2.carbon.mss.Interceptor;
+import org.wso2.carbon.mss.ServiceMethodInfo;
 
 /**
  * TODO : add class level comment.
@@ -45,7 +45,7 @@ public class TestInterceptor implements Interceptor {
     }
 
     @Override
-    public boolean preCall(HttpRequest request, HttpResponder responder, HandlerInfo handlerInfo) {
+    public boolean preCall(HttpRequest request, HttpResponder responder, ServiceMethodInfo serviceMethodInfo) {
         ++numPreCalls;
 
         String header = request.headers().get("X-Request-Type");
@@ -62,7 +62,7 @@ public class TestInterceptor implements Interceptor {
     }
 
     @Override
-    public void postCall(HttpRequest request, HttpResponseStatus status, HandlerInfo handlerInfo) {
+    public void postCall(HttpRequest request, HttpResponseStatus status, ServiceMethodInfo serviceMethodInfo) {
         ++numPostCalls;
         String header = request.headers().get("X-Request-Type");
         if (header != null && header.equals("PostException")) {

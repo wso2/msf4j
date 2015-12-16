@@ -29,9 +29,9 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.mss.HandlerInfo;
 import org.wso2.carbon.mss.HttpResponder;
 import org.wso2.carbon.mss.Interceptor;
+import org.wso2.carbon.mss.ServiceMethodInfo;
 import org.wso2.carbon.mss.util.SystemVariableUtil;
 
 import java.io.IOException;
@@ -61,7 +61,7 @@ public class JWTSecurityInterceptor implements Interceptor {
     private static final String ALIAS = SystemVariableUtil.getValue("PETSTORE_KEY_ALIAS", "wso2carbon");
     private static final String KEYSTORE_PASSWORD = SystemVariableUtil.getValue("PETSTORE_KEYSTORE_PASS", "wso2carbon");
 
-    public boolean preCall(HttpRequest request, HttpResponder responder, HandlerInfo handlerInfo) {
+    public boolean preCall(HttpRequest request, HttpResponder responder, ServiceMethodInfo serviceMethodInfo) {
         HttpHeaders headers = request.headers();
         boolean isValidSignature;
         if (headers != null) {
@@ -80,7 +80,7 @@ public class JWTSecurityInterceptor implements Interceptor {
         return false;
     }
 
-    public void postCall(HttpRequest request, HttpResponseStatus status, HandlerInfo handlerInfo) {
+    public void postCall(HttpRequest request, HttpResponseStatus status, ServiceMethodInfo serviceMethodInfo) {
         // Nothing to do
     }
 

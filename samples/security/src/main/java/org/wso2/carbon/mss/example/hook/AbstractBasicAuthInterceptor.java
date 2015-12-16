@@ -25,7 +25,7 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.mss.HandlerInfo;
+import org.wso2.carbon.mss.ServiceMethodInfo;
 import org.wso2.carbon.mss.HttpResponder;
 import org.wso2.carbon.mss.Interceptor;
 
@@ -45,7 +45,7 @@ public abstract class AbstractBasicAuthInterceptor implements Interceptor {
     private static final int AUTH_TYPE_BASIC_LENGTH = AUTH_TYPE_BASIC.length();
 
     @Override
-    public boolean preCall(HttpRequest request, HttpResponder responder, HandlerInfo handlerInfo) {
+    public boolean preCall(HttpRequest request, HttpResponder responder, ServiceMethodInfo serviceMethodInfo) {
         HttpHeaders headers = request.headers();
         if (headers != null) {
             String authHeader = headers.get(HttpHeaders.Names.AUTHORIZATION);
@@ -72,7 +72,7 @@ public abstract class AbstractBasicAuthInterceptor implements Interceptor {
     }
 
     @Override
-    public void postCall(HttpRequest request, HttpResponseStatus status, HandlerInfo handlerInfo) {
+    public void postCall(HttpRequest request, HttpResponseStatus status, ServiceMethodInfo serviceMethodInfo) {
 
     }
 

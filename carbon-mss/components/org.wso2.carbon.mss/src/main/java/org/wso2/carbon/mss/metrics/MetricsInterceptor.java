@@ -20,9 +20,9 @@ import org.wso2.carbon.metrics.manager.MetricManager;
 import org.wso2.carbon.metrics.manager.Timer;
 import org.wso2.carbon.metrics.manager.Timer.Context;
 import org.wso2.carbon.metrics.manager.internal.ServiceReferenceHolder;
-import org.wso2.carbon.mss.HandlerInfo;
 import org.wso2.carbon.mss.HttpResponder;
 import org.wso2.carbon.mss.Interceptor;
+import org.wso2.carbon.mss.ServiceMethodInfo;
 
 import java.lang.reflect.Method;
 import java.util.HashSet;
@@ -84,8 +84,8 @@ public class MetricsInterceptor implements Interceptor {
     }
 
     @Override
-    public boolean preCall(HttpRequest request, HttpResponder responder, HandlerInfo handlerInfo) {
-        Method method = handlerInfo.getMethod();
+    public boolean preCall(HttpRequest request, HttpResponder responder, ServiceMethodInfo serviceMethodInfo) {
+        Method method = serviceMethodInfo.getMethod();
         Set<Interceptor> interceptors = map.get(method);
         if (interceptors == null) {
             if (method.isAnnotationPresent(Timed.class)) {
@@ -129,7 +129,7 @@ public class MetricsInterceptor implements Interceptor {
 
         if (interceptors != null) {
             for (Interceptor interceptor : interceptors) {
-                interceptor.preCall(request, responder, handlerInfo);
+                interceptor.preCall(request, responder, serviceMethodInfo);
             }
         }
 
@@ -137,12 +137,12 @@ public class MetricsInterceptor implements Interceptor {
     }
 
     @Override
-    public void postCall(HttpRequest request, HttpResponseStatus status, HandlerInfo handlerInfo) {
-        Method method = handlerInfo.getMethod();
+    public void postCall(HttpRequest request, HttpResponseStatus status, ServiceMethodInfo serviceMethodInfo) {
+        Method method = serviceMethodInfo.getMethod();
         Set<Interceptor> interceptors = map.get(method);
         if (interceptors != null) {
             for (Interceptor interceptor : interceptors) {
-                interceptor.postCall(request, status, handlerInfo);
+                interceptor.postCall(request, status, serviceMethodInfo);
             }
         }
     }
@@ -184,15 +184,15 @@ public class MetricsInterceptor implements Interceptor {
         }
 
         @Override
-        public boolean preCall(HttpRequest request, HttpResponder responder, HandlerInfo handlerInfo) {
+        public boolean preCall(HttpRequest request, HttpResponder responder, ServiceMethodInfo serviceMethodInfo) {
             Context context = timer.start();
-            handlerInfo.setAttribute(TIMER_CONTEXT, context);
+            serviceMethodInfo.setAttribute(TIMER_CONTEXT, context);
             return true;
         }
 
         @Override
-        public void postCall(HttpRequest request, HttpResponseStatus status, HandlerInfo handlerInfo) {
-            Context context = (Context) handlerInfo.getAttribute(TIMER_CONTEXT);
+        public void postCall(HttpRequest request, HttpResponseStatus status, ServiceMethodInfo serviceMethodInfo) {
+            Context context = (Context) serviceMethodInfo.getAttribute(TIMER_CONTEXT);
             context.stop();
         }
     }
@@ -206,13 +206,13 @@ public class MetricsInterceptor implements Interceptor {
         }
 
         @Override
-        public boolean preCall(HttpRequest request, HttpResponder responder, HandlerInfo handlerInfo) {
+        public boolean preCall(HttpRequest request, HttpResponder responder, ServiceMethodInfo serviceMethodInfo) {
             meter.mark();
             return true;
         }
 
         @Override
-        public void postCall(HttpRequest request, HttpResponseStatus status, HandlerInfo handlerInfo) {
+        public void postCall(HttpRequest request, HttpResponseStatus status, ServiceMethodInfo serviceMethodInfo) {
         }
     }
 
@@ -227,13 +227,13 @@ public class MetricsInterceptor implements Interceptor {
         }
 
         @Override
-        public boolean preCall(HttpRequest request, HttpResponder responder, HandlerInfo handlerInfo) {
+        public boolean preCall(HttpRequest request, HttpResponder responder, ServiceMethodInfo serviceMethodInfo) {
             counter.inc();
             return true;
         }
 
         @Override
-        public void postCall(HttpRequest request, HttpResponseStatus status, HandlerInfo handlerInfo) {
+        public void postCall(HttpRequest request, HttpResponseStatus status, ServiceMethodInfo serviceMethodInfo) {
             if (!monotonic) {
                 counter.dec();
             }

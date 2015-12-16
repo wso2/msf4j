@@ -27,9 +27,9 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.mss.ChunkResponder;
-import org.wso2.carbon.mss.HandlerInfo;
 import org.wso2.carbon.mss.HttpResponder;
 import org.wso2.carbon.mss.Interceptor;
+import org.wso2.carbon.mss.ServiceMethodInfo;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,14 +46,14 @@ final class WrappedHttpResponder implements HttpResponder {
     private final HttpResponder delegate;
     private final Iterable<? extends Interceptor> interceptors;
     private final HttpRequest httpRequest;
-    private final HandlerInfo handlerInfo;
+    private final ServiceMethodInfo serviceMethodInfo;
 
     public WrappedHttpResponder(HttpResponder delegate, Iterable<? extends Interceptor> interceptors,
-                                HttpRequest httpRequest, HandlerInfo handlerInfo) {
+                                HttpRequest httpRequest, ServiceMethodInfo serviceMethodInfo) {
         this.delegate = delegate;
         this.interceptors = interceptors;
         this.httpRequest = httpRequest;
-        this.handlerInfo = handlerInfo;
+        this.serviceMethodInfo = serviceMethodInfo;
     }
 
 
@@ -149,7 +149,7 @@ final class WrappedHttpResponder implements HttpResponder {
     private void runInterceptor(HttpResponseStatus status) {
         for (Interceptor interceptor : interceptors) {  //TODO: Fixme Azeez
             try {
-                interceptor.postCall(httpRequest, status, handlerInfo);
+                interceptor.postCall(httpRequest, status, serviceMethodInfo);
             } catch (Throwable t) {
                 LOG.error("Post handler hook threw exception: ", t);
             }

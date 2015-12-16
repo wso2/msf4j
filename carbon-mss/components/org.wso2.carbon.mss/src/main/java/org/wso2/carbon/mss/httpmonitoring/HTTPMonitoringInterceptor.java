@@ -29,9 +29,9 @@ import org.wso2.carbon.databridge.agent.exception.DataEndpointException;
 import org.wso2.carbon.databridge.commons.Event;
 import org.wso2.carbon.databridge.commons.exception.TransportException;
 import org.wso2.carbon.databridge.commons.utils.DataBridgeCommonsUtils;
-import org.wso2.carbon.mss.HandlerInfo;
 import org.wso2.carbon.mss.HttpResponder;
 import org.wso2.carbon.mss.Interceptor;
+import org.wso2.carbon.mss.ServiceMethodInfo;
 import org.wso2.carbon.mss.util.SystemVariableUtil;
 
 import java.lang.reflect.Method;
@@ -194,8 +194,8 @@ public class HTTPMonitoringInterceptor implements Interceptor {
     }
 
     @Override
-    public boolean preCall(HttpRequest request, HttpResponder responder, HandlerInfo handlerInfo) {
-        Method method = handlerInfo.getMethod();
+    public boolean preCall(HttpRequest request, HttpResponder responder, ServiceMethodInfo serviceMethodInfo) {
+        Method method = serviceMethodInfo.getMethod();
         Interceptor interceptor = map.get(method);
         if (interceptor == null) {
             if (method.isAnnotationPresent(HTTPMonitoring.class)
@@ -206,18 +206,18 @@ public class HTTPMonitoringInterceptor implements Interceptor {
         }
 
         if (interceptor != null) {
-            interceptor.preCall(request, responder, handlerInfo);
+            interceptor.preCall(request, responder, serviceMethodInfo);
         }
 
         return true;
     }
 
     @Override
-    public void postCall(HttpRequest request, HttpResponseStatus status, HandlerInfo handlerInfo) {
-        Method method = handlerInfo.getMethod();
+    public void postCall(HttpRequest request, HttpResponseStatus status, ServiceMethodInfo serviceMethodInfo) {
+        Method method = serviceMethodInfo.getMethod();
         Interceptor interceptor = map.get(method);
         if (interceptor != null) {
-            interceptor.postCall(request, status, handlerInfo);
+            interceptor.postCall(request, status, serviceMethodInfo);
         }
     }
 
@@ -234,12 +234,12 @@ public class HTTPMonitoringInterceptor implements Interceptor {
         }
 
         @Override
-        public boolean preCall(HttpRequest request, HttpResponder responder, HandlerInfo handlerInfo) {
+        public boolean preCall(HttpRequest request, HttpResponder responder, ServiceMethodInfo serviceMethodInfo) {
             HTTPMonitoringEvent httpMonitoringEvent = new HTTPMonitoringEvent();
             httpMonitoringEvent.setTimestamp(System.currentTimeMillis());
             httpMonitoringEvent.setStartNanoTime(System.nanoTime());
             if (serviceClass == null) {
-                Method method = handlerInfo.getMethod();
+                Method method = serviceMethodInfo.getMethod();
                 Class<?> serviceClass = method.getDeclaringClass();
                 this.serviceClass = serviceClass.getName();
                 serviceName = serviceClass.getSimpleName();
@@ -265,14 +265,15 @@ public class HTTPMonitoringInterceptor implements Interceptor {
             }
             httpMonitoringEvent.setReferrer(httpHeaders.get(HttpHeaders.Names.REFERER));
 
-            handlerInfo.setAttribute(MONITORING_EVENT, httpMonitoringEvent);
+            serviceMethodInfo.setAttribute(MONITORING_EVENT, httpMonitoringEvent);
 
             return true;
         }
 
         @Override
-        public void postCall(HttpRequest request, HttpResponseStatus status, HandlerInfo handlerInfo) {
-            HTTPMonitoringEvent httpMonitoringEvent = (HTTPMonitoringEvent) handlerInfo.getAttribute(MONITORING_EVENT);
+        public void postCall(HttpRequest request, HttpResponseStatus status, ServiceMethodInfo serviceMethodInfo) {
+            HTTPMonitoringEvent httpMonitoringEvent = (HTTPMonitoringEvent)
+                    serviceMethodInfo.getAttribute(MONITORING_EVENT);
             httpMonitoringEvent.setResponseTime(
                     TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - httpMonitoringEvent.getStartNanoTime()));
             httpMonitoringEvent.setResponseHttpStatusCode(status.code());

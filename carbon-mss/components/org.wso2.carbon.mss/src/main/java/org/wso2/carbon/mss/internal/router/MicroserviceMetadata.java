@@ -28,9 +28,9 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.mss.HandlerInfo;
 import org.wso2.carbon.mss.HttpResponder;
 import org.wso2.carbon.mss.Interceptor;
+import org.wso2.carbon.mss.ServiceMethodInfo;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -168,10 +168,10 @@ public final class MicroserviceMetadata {
 
                 // Call preCall method of handler interceptors.
                 boolean terminated = false;
-                HandlerInfo handlerInfo = new HandlerInfo(httpResourceModel.getMethod().getDeclaringClass().getName(),
-                                                          httpResourceModel.getMethod());
+                ServiceMethodInfo serviceMethodInfo = new ServiceMethodInfo(httpResourceModel.getMethod().
+                        getDeclaringClass().getName(), httpResourceModel.getMethod());
                 for (Interceptor interceptor : interceptors) {
-                    if (!interceptor.preCall(request, responder, handlerInfo)) {
+                    if (!interceptor.preCall(request, responder, serviceMethodInfo)) {
                         // Terminate further request processing if preCall returns false.
                         terminated = true;
                         break;
@@ -181,7 +181,7 @@ public final class MicroserviceMetadata {
                 // Call httpresource handle method, return the HttpMethodInfo Object.
                 if (!terminated) {
                     // Wrap responder to make post hook calls.
-                    responder = new WrappedHttpResponder(responder, interceptors, request, handlerInfo);
+                    responder = new WrappedHttpResponder(responder, interceptors, request, serviceMethodInfo);
                     return HttpMethodInfoBuilder
                             .getInstance()
                             .httpResourceModel(httpResourceModel)

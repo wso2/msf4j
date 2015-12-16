@@ -5,7 +5,7 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.mss.HandlerInfo;
+import org.wso2.carbon.mss.ServiceMethodInfo;
 import org.wso2.carbon.mss.HttpResponder;
 import org.wso2.carbon.mss.Interceptor;
 
@@ -25,7 +25,7 @@ public class LogInterceptor implements Interceptor {
     private static final Logger log = LoggerFactory.getLogger(LogInterceptor.class);
 
     @Override
-    public boolean preCall(HttpRequest request, HttpResponder responder, HandlerInfo handlerInfo) {
+    public boolean preCall(HttpRequest request, HttpResponder responder, ServiceMethodInfo serviceMethodInfo) {
         Iterator<Map.Entry<String, String>> itr = request.headers().iterator();
         while (itr.hasNext()) {
             Map.Entry<String, String> entry = itr.next();
@@ -35,7 +35,7 @@ public class LogInterceptor implements Interceptor {
     }
 
     @Override
-    public void postCall(HttpRequest request, HttpResponseStatus status, HandlerInfo handlerInfo) {
+    public void postCall(HttpRequest request, HttpResponseStatus status, ServiceMethodInfo serviceMethodInfo) {
 
     }
 }

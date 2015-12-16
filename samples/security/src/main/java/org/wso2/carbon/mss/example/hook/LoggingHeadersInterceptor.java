@@ -22,7 +22,7 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.mss.HandlerInfo;
+import org.wso2.carbon.mss.ServiceMethodInfo;
 import org.wso2.carbon.mss.HttpResponder;
 import org.wso2.carbon.mss.Interceptor;
 
@@ -37,7 +37,7 @@ public class LoggingHeadersInterceptor implements Interceptor {
     private final Log log = LogFactory.getLog(LoggingHeadersInterceptor.class);
 
     @Override
-    public boolean preCall(HttpRequest request, HttpResponder responder, HandlerInfo handlerInfo) {
+    public boolean preCall(HttpRequest request, HttpResponder responder, ServiceMethodInfo serviceMethodInfo) {
         Iterator<Map.Entry<String, String>> itr = request.headers().iterator();
         while (itr.hasNext()) {
             Map.Entry<String, String> entry = itr.next();
@@ -47,6 +47,6 @@ public class LoggingHeadersInterceptor implements Interceptor {
     }
 
     @Override
-    public void postCall(HttpRequest request, HttpResponseStatus status, HandlerInfo handlerInfo) {
+    public void postCall(HttpRequest request, HttpResponseStatus status, ServiceMethodInfo serviceMethodInfo) {
     }
 }
