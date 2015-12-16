@@ -22,7 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.mss.internal.router.ExceptionHandler;
 import org.wso2.carbon.mss.internal.router.Interceptor;
-import org.wso2.carbon.mss.internal.router.Microservice;
+import org.wso2.carbon.mss.internal.router.MicroserviceMetadata;
 import org.wso2.carbon.mss.internal.router.URLRewriter;
 
 import java.lang.reflect.InvocationTargetException;
@@ -48,8 +48,8 @@ public class MicroservicesRegistry {
     private final Set<Object> httpServices = new HashSet<>();
     private final List<Interceptor> interceptors = new ArrayList<>();
     private URLRewriter urlRewriter = null;
-    private volatile Microservice httpResourceHandler =
-            new Microservice(Collections.emptyList(),
+    private volatile MicroserviceMetadata httpResourceHandler =
+            new MicroserviceMetadata(Collections.emptyList(),
                     interceptors, urlRewriter, new ExceptionHandler());
 
     private MicroservicesRegistry() {
@@ -84,7 +84,7 @@ public class MicroservicesRegistry {
         updateHttpResourceHandler();
     }
 
-    public Microservice getHttpResourceHandler() {
+    public MicroserviceMetadata getHttpResourceHandler() {
         return httpResourceHandler;
     }
 
@@ -109,7 +109,7 @@ public class MicroservicesRegistry {
 
     private void updateHttpResourceHandler() {
         httpResourceHandler =
-                new Microservice(Collections.unmodifiableSet(httpServices),
+                new MicroserviceMetadata(Collections.unmodifiableSet(httpServices),
                         interceptors, urlRewriter, new ExceptionHandler());
     }
 

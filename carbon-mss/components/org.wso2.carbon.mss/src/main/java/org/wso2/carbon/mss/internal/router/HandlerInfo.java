@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Contains information about {@link Microservice} method.
+ * Contains information about {@link MicroserviceMetadata} method.
  */
 public class HandlerInfo {
 

@@ -47,12 +47,12 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 
 /**
- * HttpResourceHandler handles the http request. HttpResourceHandler looks up all Jax-rs annotations in classes
+ * MicroserviceMetadata handles the http request. HttpResourceHandler looks up all Jax-rs annotations in classes
  * and dispatches to appropriate method on receiving requests.
  */
-public final class Microservice implements org.wso2.carbon.mss.Microservice {
+public final class MicroserviceMetadata {
 
-    private static final Logger log = LoggerFactory.getLogger(org.wso2.carbon.mss.internal.router.Microservice.class);
+    private static final Logger log = LoggerFactory.getLogger(MicroserviceMetadata.class);
 
     private final PatternPathRouterWithGroups<HttpResourceModel> patternRouter = PatternPathRouterWithGroups.create();
     private final Iterable<Object> handlers;
@@ -68,8 +68,8 @@ public final class Microservice implements org.wso2.carbon.mss.Microservice {
      * @param urlRewriter      URL re-writer.
      * @param exceptionHandler Exception handler
      */
-    public Microservice(Iterable<? extends Object> handlers, Iterable<? extends Interceptor> interceptors,
-                        URLRewriter urlRewriter, ExceptionHandler exceptionHandler) {
+    public MicroserviceMetadata(Iterable<? extends Object> handlers, Iterable<? extends Interceptor> interceptors,
+                                URLRewriter urlRewriter, ExceptionHandler exceptionHandler) {
         //Store the handlers to call init and destroy on all handlers.
         this.handlers = ImmutableList.copyOf(handlers);
         this.interceptors = ImmutableList.copyOf(interceptors);

@@ -27,9 +27,9 @@ import java.util.Map;
  * BasicHandlerContext returns an empty runtime arguments.
  */
 public class BasicServiceContext implements ServiceContext {
-    private final Microservice httpResourceHandler;
+    private final MicroserviceMetadata httpResourceHandler;
 
-    public BasicServiceContext(Microservice httpResourceHandler) {
+    public BasicServiceContext(MicroserviceMetadata httpResourceHandler) {
         this.httpResourceHandler = httpResourceHandler;
     }
 
@@ -39,7 +39,7 @@ public class BasicServiceContext implements ServiceContext {
     }
 
     @Override
-    public Microservice getHttpResourceHandler() {
+    public MicroserviceMetadata getHttpResourceHandler() {
         return httpResourceHandler;
     }
 }

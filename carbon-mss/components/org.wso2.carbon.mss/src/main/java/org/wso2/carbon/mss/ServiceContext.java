@@ -19,7 +19,7 @@
 
 package org.wso2.carbon.mss;
 
-import org.wso2.carbon.mss.internal.router.Microservice;
+import org.wso2.carbon.mss.internal.router.MicroserviceMetadata;
 
 import java.util.Map;
 
@@ -35,8 +35,8 @@ public interface ServiceContext {
     Map<String, String> getRuntimeArguments();
 
     /**
-     * @return the {@link Microservice} associated with this context,
+     * @return the {@link MicroserviceMetadata} associated with this context,
      * used to let one handler call another internally.
      */
-    Microservice getHttpResourceHandler();
+    MicroserviceMetadata getHttpResourceHandler();
 }

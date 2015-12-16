@@ -67,14 +67,6 @@
             <artifactId>netty-codec-http</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
         </dependency>
@@ -154,14 +146,6 @@
                                 <bundle>
                                     <symbolicName>org.wso2.carbon.transport.http.netty</symbolicName>
                                     <version>${org.wso2.carbon.transport.http.netty.version}</version>
-                                </bundle>
-                                <bundle>
-                                    <symbolicName>slf4j.api</symbolicName>
-                                    <version>${slf4j.version}</version>
-                                </bundle>
-                                <bundle>
-                                    <symbolicName>slf4j.log4j12</symbolicName>
-                                    <version>${slf4j.log4j.version}</version>
                                 </bundle>
                                 <bundle>
                                     <symbolicName>com.google.guava</symbolicName>

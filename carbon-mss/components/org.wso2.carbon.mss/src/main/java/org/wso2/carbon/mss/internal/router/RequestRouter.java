@@ -49,14 +49,14 @@ public class RequestRouter extends SimpleChannelInboundHandler<HttpObject> {
     private static final Logger log = LoggerFactory.getLogger(RequestRouter.class);
 
     private final int chunkMemoryLimit;
-    private final Microservice httpMethodHandler;
+    private final MicroserviceMetadata httpMethodHandler;
     private final AtomicBoolean exceptionRaised;
 
     public static final String METHOD_INFO_BUILDER = "METHOD_INFO_BUILDER";
 
     private HttpMethodInfoBuilder httpMethodInfoBuilder;
 
-    public RequestRouter(Microservice methodHandler, int chunkMemoryLimit) {
+    public RequestRouter(MicroserviceMetadata methodHandler, int chunkMemoryLimit) {
         this.httpMethodHandler = methodHandler;
         this.chunkMemoryLimit = chunkMemoryLimit;
         this.exceptionRaised = new AtomicBoolean(false);
