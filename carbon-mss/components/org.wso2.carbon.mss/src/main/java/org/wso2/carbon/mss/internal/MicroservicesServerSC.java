@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.kernel.startupresolver.RequiredCapabilityListener;
 import org.wso2.carbon.kernel.transports.CarbonTransport;
+import org.wso2.carbon.mss.Interceptor;
 import org.wso2.carbon.mss.Microservice;
 
 /**
@@ -38,7 +39,7 @@ import org.wso2.carbon.mss.Microservice;
         immediate = true,
         service = RequiredCapabilityListener.class,
         property = {
-                "capability-name=org.wso2.carbon.mss.Microservice",
+                "capability-name=org.wso2.carbon.mss.Microservice, org.wso2.carbon.mss.Interceptor",
                 "component-key=wso2-microservices-server"
         }
 )
@@ -80,6 +81,21 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
 
     protected void removeCarbonTransport(CarbonTransport carbonTransport) {
         DataHolder.getInstance().removeCarbonTransport(carbonTransport);
+    }
+
+    @Reference(
+            name = "interceptor",
+            service = Interceptor.class,
+            cardinality = ReferenceCardinality.MULTIPLE,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "removeInterceptor"
+    )
+    protected void addInterceptor(Interceptor interceptor) {
+        microservicesRegistry.addInterceptor(interceptor);
+    }
+
+    protected void removeInterceptor(Interceptor interceptor) {
+        microservicesRegistry.removeInterceptor(interceptor);
     }
 
     @Override
