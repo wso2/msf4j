@@ -22,17 +22,12 @@ set -e
 config_dir=$(dirname "$0")
 
 das_dir=""
-mysql_user="root"
-mysql_passwd="root"
-
 function help {
     echo ""
     echo "Usage: "
-    echo "setup-das.sh -d <DAS_HOME> -u <mysql-user>"
+    echo "setup-das.sh -d <DAS_HOME>"
     echo ""
-    echo "-d: WSO22 Data Analytics Server (DAS) home directory"
-    echo "-u: MySQL User (Default: root)"
-    echo "-p: Prompt MySQL password (Default: root)"
+    echo "-d: WSO2 Data Analytics Server (DAS) home directory"
     echo ""
 }
 
@@ -40,18 +35,11 @@ checkcommand () {
     command -v $1 >/dev/null 2>&1 || { echo >&2 "Command $1 not found."; exit 1; }
 }
 
-while getopts "d:u:p" opts
+while getopts "d:" opts
 do
   case $opts in
     d)
         das_dir=${OPTARG}
-        ;;
-    u)
-        mysql_user=${OPTARG}
-        ;;
-    p)
-        read -s -p "MySQL Password: " mysql_passwd
-        echo ""
         ;;
     \?)
         help
@@ -66,22 +54,7 @@ if [[ ! -d $das_dir ]]; then
     exit 1
 fi
 
-checkcommand mysql 
 checkcommand unzip
-
-echo "Creating MySQL Database for HTTP Monitoring."
-mysql -u $mysql_user -p$mysql_passwd < $config_dir/sql/http-mon-mysql.sql
-
-echo "Copying Datasources."
-cp $config_dir/datasources/httpmon-datasources.xml $das_dir/repository/conf/datasources/
-
-sed -i -e "s|<username>.*</username>|<username>$mysql_user</username>|g" $das_dir/repository/conf/datasources/httpmon-datasources.xml
-sed -i -e "s|<password>.*</password>|<password>$mysql_passwd</password>|g" $das_dir/repository/conf/datasources/httpmon-datasources.xml
-
-if [[ ! -f $das_dir/repository/components/lib/mysql-connector-java-5.1.37.jar ]]; then
-    echo "Downloading MySQL connector."
-    wget http://repo1.maven.org/maven2/mysql/mysql-connector-java/5.1.37/mysql-connector-java-5.1.37.jar -P $das_dir/repository/components/lib/
-fi
 
 echo "Copying Carbon Apps to DAS."
 mkdir -p $das_dir/repository/deployment/server/carbonapps

@@ -2,10 +2,6 @@
 
 This directory contains the files related to publishing metrics to WSO2 Data Analytics Server (DAS)
 
-Install MySQL RDBMS
-------------------------------------------
-Download and install MySQL. This will be used as the data store for DAS as well as the analytics dashboards.
-
 Download WSO2 DAS
 ------------------------------------------
 [Download](http://wso2.com/products/data-analytics-server/) WSO2 DAS and unpack it to some directory.
@@ -13,9 +9,8 @@ This will be the DAS_HOME directory.
 
 Configure DAS
 ------------------------------------------
-Run "das-setup/setup.sh" to script copy required files to DAS as well as setup all the schemas in MySQL. Note that the
-DAS Home directory in the above step has to be provided as an input to that script. You will also need to
-provide your MySQL username & password to setup the database schemas.
+Run "das-setup/setup.sh" to setup DAS. Note that the DAS Home directory in the above step has to 
+be provided as an input to that script.
 
 The setup script will also copy the already built MSS HTTP Monitoring Carbon App (CAPP) to DAS.
 
