@@ -25,9 +25,9 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.mss.HandlerInfo;
 import org.wso2.carbon.mss.HttpResponder;
-import org.wso2.carbon.mss.internal.router.HandlerInfo;
-import org.wso2.carbon.mss.internal.router.Interceptor;
+import org.wso2.carbon.mss.Interceptor;
 
 import java.nio.charset.Charset;
 import java.util.Base64;

@@ -17,14 +17,15 @@
  *
  */
 
-package org.wso2.carbon.mss.internal.router;
+package org.wso2.carbon.mss;
+
 
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Contains information about {@link MicroserviceMetadata} method.
+ * Contains information about service method details.
  */
 public class HandlerInfo {
 

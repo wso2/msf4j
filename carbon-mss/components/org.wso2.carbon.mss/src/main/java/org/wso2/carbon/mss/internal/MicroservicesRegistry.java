@@ -20,8 +20,8 @@ package org.wso2.carbon.mss.internal;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.mss.Interceptor;
 import org.wso2.carbon.mss.internal.router.ExceptionHandler;
-import org.wso2.carbon.mss.internal.router.Interceptor;
 import org.wso2.carbon.mss.internal.router.MicroserviceMetadata;
 import org.wso2.carbon.mss.internal.router.URLRewriter;
 
