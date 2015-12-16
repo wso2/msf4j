@@ -103,6 +103,7 @@
         <module>samples/petstore</module>
         <module>samples/fileserver</module>
         <module>samples/template</module>
+        <module>samples/log-interceptor-bundle</module>
         <module>product</module>
         <!--<module>tests/osgi-tests</module>-->
     </modules>
