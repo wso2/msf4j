@@ -28,7 +28,9 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.mss.HandlerInfo;
 import org.wso2.carbon.mss.HttpResponder;
+import org.wso2.carbon.mss.Interceptor;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -167,7 +169,7 @@ public final class MicroserviceMetadata {
                 // Call preCall method of handler interceptors.
                 boolean terminated = false;
                 HandlerInfo handlerInfo = new HandlerInfo(httpResourceModel.getMethod().getDeclaringClass().getName(),
-                        httpResourceModel.getMethod());
+                                                          httpResourceModel.getMethod());
                 for (Interceptor interceptor : interceptors) {
                     if (!interceptor.preCall(request, responder, handlerInfo)) {
                         // Terminate further request processing if preCall returns false.

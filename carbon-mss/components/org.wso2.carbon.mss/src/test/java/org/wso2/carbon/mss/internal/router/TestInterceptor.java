@@ -20,12 +20,14 @@ package org.wso2.carbon.mss.internal.router;
 
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
+import org.wso2.carbon.mss.HandlerInfo;
 import org.wso2.carbon.mss.HttpResponder;
+import org.wso2.carbon.mss.Interceptor;
 
 /**
  * TODO : add class level comment.
  */
-public class TestInterceptor extends AbstractInterceptor {
+public class TestInterceptor implements Interceptor {
     private volatile int numPreCalls = 0;
     private volatile int numPostCalls = 0;
 

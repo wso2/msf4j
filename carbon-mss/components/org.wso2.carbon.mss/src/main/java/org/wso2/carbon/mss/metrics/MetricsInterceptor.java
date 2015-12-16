@@ -2,7 +2,6 @@ package org.wso2.carbon.mss.metrics;
 
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.metrics.annotation.Counted;
@@ -21,9 +20,9 @@ import org.wso2.carbon.metrics.manager.MetricManager;
 import org.wso2.carbon.metrics.manager.Timer;
 import org.wso2.carbon.metrics.manager.Timer.Context;
 import org.wso2.carbon.metrics.manager.internal.ServiceReferenceHolder;
+import org.wso2.carbon.mss.HandlerInfo;
 import org.wso2.carbon.mss.HttpResponder;
-import org.wso2.carbon.mss.internal.router.HandlerInfo;
-import org.wso2.carbon.mss.internal.router.Interceptor;
+import org.wso2.carbon.mss.Interceptor;
 
 import java.lang.reflect.Method;
 import java.util.HashSet;

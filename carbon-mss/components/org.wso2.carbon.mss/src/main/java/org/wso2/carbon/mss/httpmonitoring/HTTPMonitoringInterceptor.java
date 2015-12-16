@@ -18,7 +18,6 @@ package org.wso2.carbon.mss.httpmonitoring;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.databridge.agent.AgentHolder;
@@ -30,9 +29,9 @@ import org.wso2.carbon.databridge.agent.exception.DataEndpointException;
 import org.wso2.carbon.databridge.commons.Event;
 import org.wso2.carbon.databridge.commons.exception.TransportException;
 import org.wso2.carbon.databridge.commons.utils.DataBridgeCommonsUtils;
+import org.wso2.carbon.mss.HandlerInfo;
 import org.wso2.carbon.mss.HttpResponder;
-import org.wso2.carbon.mss.internal.router.HandlerInfo;
-import org.wso2.carbon.mss.internal.router.Interceptor;
+import org.wso2.carbon.mss.Interceptor;
 import org.wso2.carbon.mss.util.SystemVariableUtil;
 
 import java.lang.reflect.Method;
@@ -45,7 +44,6 @@ import java.util.Enumeration;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
-
 import javax.ws.rs.Path;
 
 /**

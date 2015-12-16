@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import org.wso2.carbon.kernel.transports.TransportManager;
 import org.wso2.carbon.mss.internal.MSSNettyServerInitializer;
 import org.wso2.carbon.mss.internal.MicroservicesRegistry;
-import org.wso2.carbon.mss.internal.router.Interceptor;
 import org.wso2.carbon.transport.http.netty.internal.NettyTransportDataHolder;
 import org.wso2.carbon.transport.http.netty.internal.config.ListenerConfiguration;
 import org.wso2.carbon.transport.http.netty.internal.config.TransportsConfiguration;
