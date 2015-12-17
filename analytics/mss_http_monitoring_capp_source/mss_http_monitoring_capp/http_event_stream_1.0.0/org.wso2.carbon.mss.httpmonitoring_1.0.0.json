@@ -9,7 +9,7 @@
       "type": "LONG"
     },
     {
-      "name": "server_addess",
+      "name": "server_address",
       "type": "STRING"
     },
     {

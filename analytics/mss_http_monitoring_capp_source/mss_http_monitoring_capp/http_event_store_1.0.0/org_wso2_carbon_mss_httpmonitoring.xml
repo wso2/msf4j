@@ -24,7 +24,7 @@
             <Type>LONG</Type>
         </ColumnDefinition>
         <ColumnDefinition>
-            <Name>meta_server_addess</Name>
+            <Name>meta_server_address</Name>
             <EnableIndexing>true</EnableIndexing>
             <IsPrimaryKey>false</IsPrimaryKey>
             <EnableScoreParam>false</EnableScoreParam>
@@ -120,6 +120,13 @@
             <IsPrimaryKey>false</IsPrimaryKey>
             <EnableScoreParam>false</EnableScoreParam>
             <Type>LONG</Type>
+        </ColumnDefinition>
+        <ColumnDefinition>
+            <Name>group_by</Name>
+            <EnableIndexing>true</EnableIndexing>
+            <IsPrimaryKey>false</IsPrimaryKey>
+            <EnableScoreParam>false</EnableScoreParam>
+            <Type>FACET</Type>
         </ColumnDefinition>
     </TableSchema>
     <Source>
