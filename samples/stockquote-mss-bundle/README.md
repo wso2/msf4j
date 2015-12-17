@@ -33,7 +33,6 @@ required by the framework.
 
 
 ## How to build the sample
-------------------------------------------
 
 From this directory, run
 
@@ -42,7 +41,6 @@ mvn clean install
 ```
 
 ## How to run the sample
-------------------------------------------
 
 Unzip wso2 MSS product and navigate to the bin directory. Then run the following command to start the MSS server.
 ```
@@ -69,7 +67,6 @@ will be exposed as a REST service.
 
 
 ## How to test the sample
-------------------------------------------
 
 Use following cURL commands.
 ```
