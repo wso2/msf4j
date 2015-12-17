@@ -68,13 +68,13 @@ $ kubectl get svc
 ```
 $ kubectl describe svc/admin-fe
 ```
-Point your browser to http://172.17.8.102:
+Point your browser to http://172.17.8.102: # get relevant port from above `kubectl describe svc/admin-fe` command
 
-#### Access Petstore Admin UI
+#### Access Petstore Store UI
 ```
 $ kubectl describe svc/store-fe
 ```
-Point your browser to http://172.17.8.102:
+Point your browser to http://172.17.8.102: # get relevant port from above `kubectl describe svc/admin-fe` command
 
 
 ## Troubleshooting
