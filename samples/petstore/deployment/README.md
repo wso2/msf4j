@@ -74,7 +74,7 @@ Point your browser to http://172.17.8.102: # get relevant port from above `kubec
 ```
 $ kubectl describe svc/store-fe
 ```
-Point your browser to http://172.17.8.102: # get relevant port from above `kubectl describe svc/admin-fe` command
+Point your browser to http://172.17.8.102: # get relevant port from above `kubectl describe svc/store-fe` command
 
 
 ## Troubleshooting
