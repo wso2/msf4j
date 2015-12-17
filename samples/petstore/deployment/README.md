@@ -50,6 +50,33 @@ Deploy k8s resources for petstore sample.
 ```
  Clean all k8s resources and stop all CoreOS nodes
 
+### Useful k8s commands
+
+#### List out all k8s nodes
+```
+$ kubectl get nodes
+```
+#### List all k8s pods
+```
+$ kubectl get pods
+```
+#### List all k8s services
+```
+$ kubectl get svc
+```
+#### Access Petstore Admin UI
+```
+$ kubectl describe svc/admin-fe
+```
+Point your browser to http://172.17.8.102:
+
+#### Access Petstore Admin UI
+```
+$ kubectl describe svc/store-fe
+```
+Point your browser to http://172.17.8.102:
+
+
 ## Troubleshooting
 
 #### I'm getting errors while waiting for Kubernetes master to become ready on a MacOS host!
