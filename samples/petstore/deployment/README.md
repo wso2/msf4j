@@ -52,7 +52,7 @@ Deploy k8s resources for petstore sample.
 
 ### Useful k8s commands
 
-#### List out all k8s nodes
+#### List all k8s nodes
 ```
 $ kubectl get nodes
 NAME           LABELS                                             STATUS    AGE
