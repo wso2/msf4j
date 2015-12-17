@@ -51,9 +51,8 @@ Install the target/stockquote-mss-bundle-1.0.0-SNAPSHOT.jar as an OSGi bundle to
 OSGi console with the following command.
 
 ```
-install file:///<path to target directory>//stockquote-mss-bundle-1.0.0-SNAPSHOT.jar
+install file://<path to target directory>/stockquote-mss-bundle-1.0.0-SNAPSHOT.jar
 ```
-Note the additional forward slash used in the path.
 
 When the installation of the bundle is successful, use the bundle ID of the installed bundle to start  
 it. Use the following command in the OSGi console for that.
