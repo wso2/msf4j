@@ -59,6 +59,20 @@ $ kubectl get nodes
 #### List all k8s pods
 ```
 $ kubectl get pods
+NAME                   READY     STATUS    RESTARTS   AGE
+admin-fe-povyi         1/1       Running   0          39s
+fileserver-mrxhj       1/1       Running   0          39s
+pet-jdd2u              1/1       Running   0          40s
+redis-0kfqa            1/1       Running   0          1m
+redis-lgem8            1/1       Running   0          2m
+redis-master-sstyy     1/1       Running   0          39s
+redis-sentinel-kvv69   1/1       Running   0          1m
+redis-sentinel-m7t08   1/1       Running   0          1m
+redis-sentinel-ur0za   1/1       Running   0          39s
+redis-y5o9d            1/1       Running   0          2m
+security-rslsf         1/1       Running   0          39s
+store-fe-8xyzh         1/1       Running   0          39s
+txn-5csjp              1/1       Running   0          39s
 ```
 #### List all k8s services
 ```
