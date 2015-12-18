@@ -42,6 +42,8 @@ mvn clean install
 
 ## How to run the sample
 
+### Using OSGi Console
+
 Unzip wso2 MSS product and navigate to the bin directory. Then run the following command to start the MSS server.
 ```
 ./carbon.sh
@@ -61,8 +63,19 @@ it. Use the following command in the OSGi console for that.
 start <bundle ID>
 ```
 
-When the bundle is started, the microservice which is exposed as an OSGi service will be picked by the runtime and 
+When the bundle is started, the microservice that is exposed as an OSGi service will be picked by the runtime and 
 will be exposed as a REST service.
+
+### Using dropins directory
+Unzip wso2 MSS product and copy target/stockquote-mss-bundle-1.0.0-SNAPSHOT.jar bundle to the 
+"[SERVER-HOME]/osgi/dropins" directory.
+
+Then navigate to the bin directory and run the following command to start WSO2 MSS server.
+```
+./carbon.sh
+```
+When the server is being started, the bundle in the dropins directory will be automatically 
+loaded and it's microservices that are there as OSGi services will be exposed as REST services.
 
 
 ## How to test the sample
