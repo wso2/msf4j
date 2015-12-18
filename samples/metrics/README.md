@@ -91,11 +91,11 @@ How to test the sample
 
 Use following cURL commands.
 ```
-curl -v http://localhost:8080/test/rand/500
+curl -v http://localhost:8080/demo/rand/500
 
-curl -v http://localhost:8080/test/total/10
+curl -v http://localhost:8080/demo/total/10
 
-curl -v http://localhost:8080/test/echo/test
+curl -v http://localhost:8080/demo/echo/test
 
 curl -v http://localhost:8080/student/910760234V
 

@@ -18,8 +18,8 @@ package org.wso2.carbon.mss.example;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.mss.MicroservicesRunner;
+import org.wso2.carbon.mss.example.service.DemoService;
 import org.wso2.carbon.mss.example.service.StudentService;
-import org.wso2.carbon.mss.example.service.TestService;
 import org.wso2.carbon.mss.httpmonitoring.HTTPMonitoringInterceptor;
 import org.wso2.carbon.mss.metrics.MetricsInterceptor;
 
@@ -33,7 +33,7 @@ public class Application {
     public static void main(String[] args) {
         logger.info("Starting the Microservice with Metrics");
         new MicroservicesRunner().addInterceptor(new HTTPMonitoringInterceptor())
-                .addInterceptor(new MetricsInterceptor()).deploy(new StudentService()).deploy(new TestService())
+                .addInterceptor(new MetricsInterceptor()).deploy(new StudentService()).deploy(new DemoService())
                 .start();
     }
 }

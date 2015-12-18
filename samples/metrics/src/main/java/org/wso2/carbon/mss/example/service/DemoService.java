@@ -32,11 +32,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
 /**
- * TestService class.
+ * Demonstrating the use of Metrics Annotations
  */
-@Path("/test")
+@Path("/demo")
 @HTTPMonitoring
-public class TestService {
+public class DemoService {
 
     private final Random random = new Random();
 
