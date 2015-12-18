@@ -23,35 +23,24 @@ import org.wso2.carbon.mss.httpmonitoring.HTTPMonitoringDataPublisher;
 import org.wso2.carbon.mss.metrics.MetricReporter;
 import org.wso2.carbon.mss.metrics.Metrics;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Random;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 
 /**
- * StudentService class.
+ * Demonstrating the use of Metrics Annotations
  */
-@Path("/student")
-public class StudentService {
+@Path("/demo")
+@HTTPMonitoring
+public class DemoService {
 
-    private Map<String, Student> students = new ConcurrentHashMap<>();
+    private final Random random = new Random();
 
-    public StudentService() {
-        Student student = new Student();
-        student.setNic("910760234V");
-        student.setFirstName("Joseph");
-        student.setLastName("Rodgers");
-        student.setAge(14);
-        addStudent(student);
-    }
+    private long total = 0L;
 
     @PostConstruct
     public void init() {
@@ -66,28 +55,28 @@ public class StudentService {
     }
 
     @GET
-    @Path("/{nic}")
-    @Produces("application/json")
-    @Timed
-    @HTTPMonitoring
-    public Student getStudent(@PathParam("nic") String nic) {
-        return students.get(nic);
-    }
-
-    @POST
-    @Consumes("application/json")
+    @Path("/rand/{bound}")
     @Metered
-    @HTTPMonitoring
-    public void addStudent(Student student) {
-        students.put(student.getNic(), student);
+    public int getRandomInt(@PathParam("bound") int bound) {
+        return random.nextInt(bound);
     }
 
     @GET
-    @Produces("application/json")
-    @Counted
-    @HTTPMonitoring
-    public Collection<Student> getAll() {
-        return students.values();
+    @Path("/echo/{string}")
+    @Timed
+    public String echo(@PathParam("string") String string) {
+        try {
+            Thread.sleep(random.nextInt(5000));
+        } catch (InterruptedException e) {
+        }
+        return string;
+    }
+
+    @GET
+    @Path("/total/{number}")
+    @Counted(monotonic = true)
+    public long getTotal(@PathParam("number") int number) {
+        return total = total + number;
     }
 
 }
