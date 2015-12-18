@@ -21,6 +21,9 @@ package org.wso2.carbon.mss.examples.petstore.security;
 import org.wso2.carbon.ldap.server.util.EmbeddingLDAPException;
 import org.wso2.carbon.mss.MicroservicesRunner;
 import org.wso2.carbon.mss.examples.petstore.security.ldap.server.ApacheDirectoryServerActivator;
+import org.wso2.carbon.mss.httpmonitoring.HTTPMonitoringInterceptor;
+import org.wso2.carbon.mss.metrics.MetricReporter;
+import org.wso2.carbon.mss.metrics.MetricsInterceptor;
 
 import java.io.IOException;
 
@@ -32,6 +35,10 @@ public class Runner {
     public static void main(String[] args) throws IOException, EmbeddingLDAPException {
         ApacheDirectoryServerActivator apacheDS = new ApacheDirectoryServerActivator();
         apacheDS.start();
-        new MicroservicesRunner().deploy(new UserAuthenticationService()).start();
+        new MicroservicesRunner().
+                addInterceptor(new HTTPMonitoringInterceptor().init()).
+                addInterceptor(new MetricsInterceptor().init(
+                        MetricReporter.CONSOLE, MetricReporter.JMX, MetricReporter.DAS)).
+                deploy(new UserAuthenticationService()).start();
     }
 }

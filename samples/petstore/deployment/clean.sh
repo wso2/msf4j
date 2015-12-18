@@ -3,8 +3,9 @@
 # exporting paths
 source path.sh
 
-cd $HOME/packs
-cd ${IS_PACK%.zip}/bin/
+cd $HOME/packs/${IS_PACK%.zip}/bin/
+./wso2server.sh stop
+cd $HOME/packs/${DAS_PACK%.zip}/bin/
 ./wso2server.sh stop
 
 

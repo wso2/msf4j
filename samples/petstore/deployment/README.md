@@ -22,7 +22,7 @@ brew install wget
 
 ##Run automated deployment 
 
-Download WSO2 Identity server pack (zip) and copy into packs folder
+Download WSO2 Identity server pack (zip) and WSO2 Data Analytics Server pack (zip) into packs folder
 
 Run the following commands.
 ```

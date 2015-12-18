@@ -20,8 +20,10 @@ package org.wso2.carbon.mss.examples.petstore.pet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.metrics.annotation.Timed;
 import org.wso2.carbon.mss.examples.petstore.util.JedisUtil;
 import org.wso2.carbon.mss.examples.petstore.util.model.Category;
+import org.wso2.carbon.mss.httpmonitoring.HTTPMonitoring;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -37,12 +39,14 @@ import javax.ws.rs.core.Response;
 /**
  * Pet category microservice.
  */
+@HTTPMonitoring
 @Path("/category")
 public class PetCategoryService {
     private static final Logger log = LoggerFactory.getLogger(PetCategoryService.class);
 
     @POST
     @Consumes("application/json")
+    @Timed
     public Response addCategory(Category category) {
         String name = category.getName();
         JedisUtil.sadd(PetConstants.CATEGORIES_KEY, name);
@@ -52,6 +56,7 @@ public class PetCategoryService {
 
     @DELETE
     @Path("/{name}")
+    @Timed
     public Response deleteCategory(@PathParam("name") String name) {
         if (!JedisUtil.smembers(PetConstants.CATEGORIES_KEY).contains(name)) {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -66,6 +71,7 @@ public class PetCategoryService {
     @GET
     @Produces("application/json")
     @Path("/{name}")
+    @Timed
     public Response getCategory(@PathParam("name") String name) {
         if (!JedisUtil.smembers(PetConstants.CATEGORIES_KEY).contains(name)) {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -77,6 +83,7 @@ public class PetCategoryService {
     @GET
     @Path("/all")
     @Produces("application/json")
+    @Timed
     public Set<Category> getAllCategories() {
         Set<String> smembers = JedisUtil.smembers(PetConstants.CATEGORIES_KEY);
         Set<Category> categories = new HashSet<>(smembers.size());

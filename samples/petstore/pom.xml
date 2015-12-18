@@ -35,4 +35,9 @@
         <module>microservices/security</module>
         <module>microservices/fileserver</module>
     </modules>
+
+    <properties>
+        <mss.version></mss.version>
+    </properties>
+
 </project>
