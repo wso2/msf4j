@@ -1,3 +1,18 @@
+/*
+ * Copyright 2015 WSO2 Inc. (http://wso2.org)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.wso2.carbon.mss.metrics;
 
 import io.netty.handler.codec.http.HttpRequest;
@@ -8,18 +23,11 @@ import org.wso2.carbon.metrics.annotation.Counted;
 import org.wso2.carbon.metrics.annotation.Level;
 import org.wso2.carbon.metrics.annotation.Metered;
 import org.wso2.carbon.metrics.annotation.Timed;
-import org.wso2.carbon.metrics.impl.MetricServiceImpl;
-import org.wso2.carbon.metrics.impl.MetricsLevelConfigException;
-import org.wso2.carbon.metrics.impl.MetricsLevelConfiguration;
-import org.wso2.carbon.metrics.impl.util.ConsoleReporterBuilder;
-import org.wso2.carbon.metrics.impl.util.DASReporterBuilder;
-import org.wso2.carbon.metrics.impl.util.JmxReporterBuilder;
 import org.wso2.carbon.metrics.manager.Counter;
 import org.wso2.carbon.metrics.manager.Meter;
 import org.wso2.carbon.metrics.manager.MetricManager;
 import org.wso2.carbon.metrics.manager.Timer;
 import org.wso2.carbon.metrics.manager.Timer.Context;
-import org.wso2.carbon.metrics.manager.internal.ServiceReferenceHolder;
 import org.wso2.carbon.mss.HttpResponder;
 import org.wso2.carbon.mss.Interceptor;
 import org.wso2.carbon.mss.ServiceMethodInfo;
@@ -39,48 +47,10 @@ public class MetricsInterceptor implements Interceptor {
 
     private Map<Method, Set<Interceptor>> map = new ConcurrentHashMap<>();
 
-    private final MetricServiceImpl metricServiceImpl;
-
-    private final MetricsEnvConfiguration metricsEnvConfiguration;
-
-    public MetricsInterceptor(MetricReporter... metricReporters) {
+    public MetricsInterceptor() {
         if (logger.isDebugEnabled()) {
             logger.debug("Creating Metrics Interceptor");
         }
-        metricsEnvConfiguration = new MetricsEnvConfiguration();
-        MetricsLevelConfiguration metricsLevelConfiguration = new MetricsLevelConfiguration();
-        try {
-            metricsLevelConfiguration.loadFromSystemPropertyFile();
-        } catch (MetricsLevelConfigException e) {
-            if (logger.isWarnEnabled()) {
-                logger.warn("Error loading metrics level configuration", e);
-            }
-        }
-        MetricServiceImpl.Builder builder = new MetricServiceImpl.Builder().setEnabled(true)
-                .setRootLevel(org.wso2.carbon.metrics.manager.Level.INFO);
-        for (MetricReporter metricReporter : metricReporters) {
-            switch (metricReporter) {
-            case CONSOLE:
-                builder.addReporterBuilder(
-                        new ConsoleReporterBuilder().setEnabled(true).configure(metricsEnvConfiguration));
-                break;
-            case DAS:
-                builder.addReporterBuilder(
-                        new DASReporterBuilder().setEnabled(true).configure(metricsEnvConfiguration));
-                break;
-            case JMX:
-                builder.addReporterBuilder(
-                        new JmxReporterBuilder().setEnabled(true).configure(metricsEnvConfiguration));
-                break;
-            default:
-                break;
-
-            }
-        }
-        metricServiceImpl = (MetricServiceImpl) builder.build(metricsLevelConfiguration);
-        // TODO Find a way to keep the MetricService
-        ServiceReferenceHolder.getInstance().setMetricService(metricServiceImpl);
-        MetricManager.registerMXBean();
     }
 
     @Override
