@@ -129,7 +129,7 @@ public class HTTPMonitoringInterceptor implements Interceptor {
             httpMonitoringEvent.setResponseTime(
                     TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - httpMonitoringEvent.getStartNanoTime()));
             httpMonitoringEvent.setResponseHttpStatusCode(status.code());
-            HTTPMonitoringModule.publishEvent(httpMonitoringEvent);
+            HTTPMonitoringDataPublisher.publishEvent(httpMonitoringEvent);
         }
     }
 }
