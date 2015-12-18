@@ -19,9 +19,9 @@ import org.wso2.carbon.metrics.annotation.Counted;
 import org.wso2.carbon.metrics.annotation.Metered;
 import org.wso2.carbon.metrics.annotation.Timed;
 import org.wso2.carbon.mss.httpmonitoring.HTTPMonitoring;
-import org.wso2.carbon.mss.httpmonitoring.HTTPMonitoringModule;
+import org.wso2.carbon.mss.httpmonitoring.HTTPMonitoringDataPublisher;
 import org.wso2.carbon.mss.metrics.MetricReporter;
-import org.wso2.carbon.mss.metrics.MetricsModule;
+import org.wso2.carbon.mss.metrics.Metrics;
 
 import java.util.Random;
 
@@ -44,14 +44,14 @@ public class TestService {
 
     @PostConstruct
     public void init() {
-        MetricsModule.init(MetricReporter.CONSOLE, MetricReporter.JMX, MetricReporter.DAS);
-        HTTPMonitoringModule.init();
+        Metrics.init(MetricReporter.CONSOLE, MetricReporter.JMX, MetricReporter.DAS);
+        HTTPMonitoringDataPublisher.init();
     }
 
     @PreDestroy
     public void destroy() {
-        MetricsModule.destroy();
-        HTTPMonitoringModule.destroy();
+        Metrics.destroy();
+        HTTPMonitoringDataPublisher.destroy();
     }
 
     @GET

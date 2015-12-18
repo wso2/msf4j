@@ -28,15 +28,15 @@ import org.wso2.carbon.metrics.manager.MetricService;
 import org.wso2.carbon.metrics.manager.internal.ServiceReferenceHolder;
 
 /**
- * Metrics Module to initialize/destroy Metric Service
+ * A utility class to initialize/destroy Metric Service
  */
-public final class MetricsModule {
+public final class Metrics {
 
-    private static final Logger logger = LoggerFactory.getLogger(MetricsModule.class);
+    private static final Logger logger = LoggerFactory.getLogger(Metrics.class);
 
     private static MetricService metricService;
 
-    private MetricsModule() {
+    private Metrics() {
     }
 
     public static synchronized void init(MetricReporter... metricReporters) {

@@ -36,11 +36,11 @@ import java.net.UnknownHostException;
 import java.util.Enumeration;
 
 /**
- * HTTP Monitoring Module to initialize/destroy Data Publisher for DAS
+ * A utility class to initialize/destroy HTTP Monitoring Data Publisher for DAS
  */
-public final class HTTPMonitoringModule {
+public final class HTTPMonitoringDataPublisher {
 
-    private static final Logger logger = LoggerFactory.getLogger(HTTPMonitoringModule.class);
+    private static final Logger logger = LoggerFactory.getLogger(HTTPMonitoringDataPublisher.class);
 
     private static final String HTTP_MONITORING_DAS_TYPE = "HTTP_MONITORING_DAS_TYPE";
     private static final String HTTP_MONITORING_DAS_RECEIVER_URL = "HTTP_MONITORING_DAS_RECEIVERURL";
@@ -71,7 +71,7 @@ public final class HTTPMonitoringModule {
         }
     }
 
-    private HTTPMonitoringModule() {
+    private HTTPMonitoringDataPublisher() {
     }
 
     public static InetAddress getLocalAddress() throws SocketException, UnknownHostException {
