@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: pet
+  labels:
+    name: pet
+spec:
+  replicas: 1
+  selector:
+    name: pet
+  template:
+    metadata:
+      labels:
+        name: pet
+    spec:
+      containers:
+      - name: pet
+        image: wso2mss/petstore-pet
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+          # If your cluster config does not include a dns service, then to
+          # instead access environment variables to find service host
+          # info, comment out the 'value: dns' line above, and uncomment the
+          # line below.
+          # value: env
+        - name: SENTINEL1_HOST
+          value: redis-sentinel
+        - name: SENTINEL1_PORT
+          value: "26379"
+        ports:
+        - containerPort: 8080

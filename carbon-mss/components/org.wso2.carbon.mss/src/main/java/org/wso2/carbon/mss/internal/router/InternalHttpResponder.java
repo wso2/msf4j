@@ -28,11 +28,11 @@ import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.wso2.carbon.mss.ChunkResponder;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import javax.annotation.Nullable;
 
 /**
  * InternalHttpResponder is used when a handler is being called internally by some other handler, and thus there
@@ -87,7 +87,7 @@ public class InternalHttpResponder extends AbstractHttpResponder {
     }
 
     @Override
-    public void sendFile(File file, @Nullable Multimap<String, String> headers) {
+    public void sendFile(File file, String contentType, @Nullable Multimap<String, String> headers) {
         statusCode = HttpResponseStatus.OK.code();
         inputSupplier = Files.newInputStreamSupplier(file);
     }
@@ -99,12 +99,24 @@ public class InternalHttpResponder extends AbstractHttpResponder {
     private InputSupplier<InputStream> createContentSupplier(ByteBuf content) {
         final ByteBuf responseContent = content.duplicate();    // Have independent pointers.
         responseContent.markReaderIndex();
-        return new InputSupplier<InputStream>() {
-            @Override
-            public InputStream getInput() throws IOException {
-                responseContent.resetReaderIndex();
-                return new ByteBufInputStream(responseContent);
-            }
-        };
+        return new HttpResponderInputSupplier(responseContent).invoke();
+    }
+
+    private static class HttpResponderInputSupplier {
+        private final ByteBuf responseContent;
+
+        public HttpResponderInputSupplier(ByteBuf responseContent) {
+            this.responseContent = responseContent;
+        }
+
+        public InputSupplier<InputStream> invoke() {
+            return new InputSupplier<InputStream>() {
+                @Override
+                public InputStream getInput() throws IOException {
+                    responseContent.resetReaderIndex();
+                    return new ByteBufInputStream(responseContent);
+                }
+            };
+        }
     }
 }

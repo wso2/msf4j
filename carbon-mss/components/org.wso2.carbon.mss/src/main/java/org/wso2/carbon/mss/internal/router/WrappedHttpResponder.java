@@ -28,12 +28,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.mss.ChunkResponder;
 import org.wso2.carbon.mss.HttpResponder;
+import org.wso2.carbon.mss.Interceptor;
+import org.wso2.carbon.mss.ServiceMethodInfo;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
+import javax.annotation.Nullable;
 
 /**
  * Wrap HttpResponder to call post handler hook.
@@ -42,71 +44,71 @@ final class WrappedHttpResponder implements HttpResponder {
     private static final Logger LOG = LoggerFactory.getLogger(WrappedHttpResponder.class);
 
     private final HttpResponder delegate;
-    private final Iterable<? extends HandlerHook> handlerHooks;
+    private final Iterable<? extends Interceptor> interceptors;
     private final HttpRequest httpRequest;
-    private final HandlerInfo handlerInfo;
+    private final ServiceMethodInfo serviceMethodInfo;
 
-    public WrappedHttpResponder(HttpResponder delegate, Iterable<? extends HandlerHook> handlerHooks,
-                                HttpRequest httpRequest, HandlerInfo handlerInfo) {
+    public WrappedHttpResponder(HttpResponder delegate, Iterable<? extends Interceptor> interceptors,
+                                HttpRequest httpRequest, ServiceMethodInfo serviceMethodInfo) {
         this.delegate = delegate;
-        this.handlerHooks = handlerHooks;
+        this.interceptors = interceptors;
         this.httpRequest = httpRequest;
-        this.handlerInfo = handlerInfo;
+        this.serviceMethodInfo = serviceMethodInfo;
     }
 
 
     @Override
     public void sendJson(HttpResponseStatus status, Object object) {
         delegate.sendJson(status, object);
-        runHook(status);
+        runInterceptor(status);
     }
 
     @Override
     public void sendJson(HttpResponseStatus status, Object object, Type type) {
         delegate.sendJson(status, object, type);
-        runHook(status);
+        runInterceptor(status);
     }
 
     @Override
     public void sendJson(HttpResponseStatus status, Object object, Type type, Gson gson) {
         delegate.sendJson(status, object, type, gson);
-        runHook(status);
+        runInterceptor(status);
     }
 
     @Override
     public void sendString(HttpResponseStatus status, String data) {
         delegate.sendString(status, data);
-        runHook(status);
+        runInterceptor(status);
     }
 
     @Override
     public void sendString(HttpResponseStatus status, String data, @Nullable Multimap<String, String> headers) {
         delegate.sendString(status, data, headers);
-        runHook(status);
+        runInterceptor(status);
     }
 
     @Override
     public void sendStatus(HttpResponseStatus status) {
         delegate.sendStatus(status);
-        runHook(status);
+        runInterceptor(status);
     }
 
     @Override
     public void sendStatus(HttpResponseStatus status, Multimap<String, String> headers) {
         delegate.sendStatus(status, headers);
-        runHook(status);
+        runInterceptor(status);
     }
 
     @Override
     public void sendByteArray(HttpResponseStatus status, byte[] bytes, Multimap<String, String> headers) {
         delegate.sendByteArray(status, bytes, headers);
-        runHook(status);
+        runInterceptor(status);
     }
 
     @Override
     public void sendBytes(HttpResponseStatus status, ByteBuffer buffer, Multimap<String, String> headers) {
         delegate.sendBytes(status, buffer, headers);
-        runHook(status);
+        runInterceptor(status);
     }
 
     @Override
@@ -126,7 +128,7 @@ final class WrappedHttpResponder implements HttpResponder {
             @Override
             public void close() throws IOException {
                 chunkResponder.close();
-                runHook(status);
+                runInterceptor(status);
             }
         };
     }
@@ -135,19 +137,19 @@ final class WrappedHttpResponder implements HttpResponder {
     public void sendContent(HttpResponseStatus status, ByteBuf content, String contentType,
                             Multimap<String, String> headers) {
         delegate.sendContent(status, content, contentType, headers);
-        runHook(status);
+        runInterceptor(status);
     }
 
     @Override
-    public void sendFile(File file, Multimap<String, String> headers) {
-        delegate.sendFile(file, headers);
-        runHook(HttpResponseStatus.OK);
+    public void sendFile(File file, String contentType, Multimap<String, String> headers) throws IOException {
+        delegate.sendFile(file, contentType, headers);
+        runInterceptor(HttpResponseStatus.OK);
     }
 
-    private void runHook(HttpResponseStatus status) {
-        for (HandlerHook hook : handlerHooks) {  //TODO: Fixme Azeez
+    private void runInterceptor(HttpResponseStatus status) {
+        for (Interceptor interceptor : interceptors) {  //TODO: Fixme Azeez
             try {
-                hook.postCall(httpRequest, status, handlerInfo);
+                interceptor.postCall(httpRequest, status, serviceMethodInfo);
             } catch (Throwable t) {
                 LOG.error("Post handler hook threw exception: ", t);
             }

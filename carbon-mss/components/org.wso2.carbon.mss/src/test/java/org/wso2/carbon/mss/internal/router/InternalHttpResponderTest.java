@@ -38,88 +38,88 @@ import java.io.InputStreamReader;
  */
 public class InternalHttpResponderTest {
 
-  @Test
-  public void testSendJson() throws IOException {
-    InternalHttpResponder responder = new InternalHttpResponder();
-    JsonObject output = new JsonObject();
-    output.addProperty("data", "this is some data");
-    responder.sendJson(HttpResponseStatus.OK, output);
+    @Test
+    public void testSendJson() throws IOException {
+        InternalHttpResponder responder = new InternalHttpResponder();
+        JsonObject output = new JsonObject();
+        output.addProperty("data", "this is some data");
+        responder.sendJson(HttpResponseStatus.OK, output);
 
-    InternalHttpResponse response = responder.getResponse();
-    Assert.assertEquals(HttpResponseStatus.OK.code(), response.getStatusCode());
-    JsonObject responseData = new Gson().fromJson(
-      new InputStreamReader(response.getInputSupplier().getInput()), JsonObject.class);
-    Assert.assertEquals(output, responseData);
-  }
-
-  @Test
-  public void testSendString() throws IOException {
-    InternalHttpResponder responder = new InternalHttpResponder();
-    responder.sendString(HttpResponseStatus.BAD_REQUEST, "bad request");
-
-    validateResponse(responder.getResponse(), HttpResponseStatus.BAD_REQUEST, "bad request");
-  }
-
-  @Test
-  public void testSendStatus() throws IOException {
-    InternalHttpResponder responder = new InternalHttpResponder();
-    responder.sendStatus(HttpResponseStatus.NOT_FOUND);
-
-    validateResponse(responder.getResponse(), HttpResponseStatus.NOT_FOUND, null);
-  }
-
-  @Test
-  public void testSendByteArray() throws IOException {
-    InternalHttpResponder responder = new InternalHttpResponder();
-    responder.sendByteArray(
-      HttpResponseStatus.OK, "abc".getBytes(Charsets.UTF_8), HashMultimap.<String, String>create());
-
-    validateResponse(responder.getResponse(), HttpResponseStatus.OK, "abc");
-  }
-
-  @Test
-  public void testSendError() throws IOException {
-    InternalHttpResponder responder = new InternalHttpResponder();
-    responder.sendString(HttpResponseStatus.NOT_FOUND, "not found");
-
-    validateResponse(responder.getResponse(), HttpResponseStatus.NOT_FOUND, "not found");
-  }
-
-  @Test
-  public void testChunks() throws IOException {
-    InternalHttpResponder responder = new InternalHttpResponder();
-    ChunkResponder chunkResponder = responder.sendChunkStart(HttpResponseStatus.OK, null);
-    chunkResponder.sendChunk(Unpooled.wrappedBuffer("a".getBytes(Charsets.UTF_8)));
-    chunkResponder.sendChunk(Unpooled.wrappedBuffer("b".getBytes(Charsets.UTF_8)));
-    chunkResponder.sendChunk(Unpooled.wrappedBuffer("c".getBytes(Charsets.UTF_8)));
-    chunkResponder.close();
-
-    validateResponse(responder.getResponse(), HttpResponseStatus.OK, "abc");
-  }
-
-  @Test
-  public void testSendContent() throws IOException {
-    InternalHttpResponder responder = new InternalHttpResponder();
-    responder.sendContent(HttpResponseStatus.OK, Unpooled.wrappedBuffer("abc".getBytes(Charsets.UTF_8)),
-                          "contentType", HashMultimap.<String, String>create());
-
-    validateResponse(responder.getResponse(), HttpResponseStatus.OK, "abc");
-  }
-
-  private void validateResponse(InternalHttpResponse response, HttpResponseStatus expectedStatus, String expectedData)
-    throws IOException {
-    int code = response.getStatusCode();
-    Assert.assertEquals(expectedStatus.code(), code);
-    if (expectedData != null) {
-      // read it twice to make sure the input supplier gives the full stream more than once.
-      for (int i = 0; i < 2; i++) {
-        try (
-          BufferedReader reader = new BufferedReader(new InputStreamReader(response.getInputSupplier().getInput()))
-        ) {
-          String data = reader.readLine();
-          Assert.assertEquals(expectedData, data);
-        }
-      }
+        InternalHttpResponse response = responder.getResponse();
+        Assert.assertEquals(HttpResponseStatus.OK.code(), response.getStatusCode());
+        JsonObject responseData = new Gson().fromJson(
+                new InputStreamReader(response.getInputSupplier().getInput()), JsonObject.class);
+        Assert.assertEquals(output, responseData);
     }
-  }
+
+    @Test
+    public void testSendString() throws IOException {
+        InternalHttpResponder responder = new InternalHttpResponder();
+        responder.sendString(HttpResponseStatus.BAD_REQUEST, "bad request");
+
+        validateResponse(responder.getResponse(), HttpResponseStatus.BAD_REQUEST, "bad request");
+    }
+
+    @Test
+    public void testSendStatus() throws IOException {
+        InternalHttpResponder responder = new InternalHttpResponder();
+        responder.sendStatus(HttpResponseStatus.NOT_FOUND);
+
+        validateResponse(responder.getResponse(), HttpResponseStatus.NOT_FOUND, null);
+    }
+
+    @Test
+    public void testSendByteArray() throws IOException {
+        InternalHttpResponder responder = new InternalHttpResponder();
+        responder.sendByteArray(
+                HttpResponseStatus.OK, "abc".getBytes(Charsets.UTF_8), HashMultimap.<String, String>create());
+
+        validateResponse(responder.getResponse(), HttpResponseStatus.OK, "abc");
+    }
+
+    @Test
+    public void testSendError() throws IOException {
+        InternalHttpResponder responder = new InternalHttpResponder();
+        responder.sendString(HttpResponseStatus.NOT_FOUND, "not found");
+
+        validateResponse(responder.getResponse(), HttpResponseStatus.NOT_FOUND, "not found");
+    }
+
+    @Test
+    public void testChunks() throws IOException {
+        InternalHttpResponder responder = new InternalHttpResponder();
+        ChunkResponder chunkResponder = responder.sendChunkStart(HttpResponseStatus.OK, null);
+        chunkResponder.sendChunk(Unpooled.wrappedBuffer("a".getBytes(Charsets.UTF_8)));
+        chunkResponder.sendChunk(Unpooled.wrappedBuffer("b".getBytes(Charsets.UTF_8)));
+        chunkResponder.sendChunk(Unpooled.wrappedBuffer("c".getBytes(Charsets.UTF_8)));
+        chunkResponder.close();
+
+        validateResponse(responder.getResponse(), HttpResponseStatus.OK, "abc");
+    }
+
+    @Test
+    public void testSendContent() throws IOException {
+        InternalHttpResponder responder = new InternalHttpResponder();
+        responder.sendContent(HttpResponseStatus.OK, Unpooled.wrappedBuffer("abc".getBytes(Charsets.UTF_8)),
+                "contentType", HashMultimap.<String, String>create());
+
+        validateResponse(responder.getResponse(), HttpResponseStatus.OK, "abc");
+    }
+
+    private void validateResponse(InternalHttpResponse response, HttpResponseStatus expectedStatus, String expectedData)
+            throws IOException {
+        int code = response.getStatusCode();
+        Assert.assertEquals(expectedStatus.code(), code);
+        if (expectedData != null) {
+            // read it twice to make sure the input supplier gives the full stream more than once.
+            for (int i = 0; i < 2; i++) {
+                try (BufferedReader reader =
+                                new BufferedReader(new InputStreamReader(response.getInputSupplier().getInput()))
+                ) {
+                    String data = reader.readLine();
+                    Assert.assertEquals(expectedData, data);
+                }
+            }
+        }
+    }
 }

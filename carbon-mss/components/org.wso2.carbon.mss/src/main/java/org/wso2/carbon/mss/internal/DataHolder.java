@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -18,41 +18,61 @@
  */
 package org.wso2.carbon.mss.internal;
 
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.mss.HttpHandler;
+import org.wso2.carbon.kernel.transports.CarbonTransport;
+import org.wso2.carbon.transport.http.netty.listener.CarbonNettyServerInitializer;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
 
 /**
- * DataHolder for the MSS component
+ * DataHolder for MSS.
  */
 public class DataHolder {
+    private static final Logger log = LoggerFactory.getLogger(DataHolder.class);
 
-    private static final Logger LOG = LoggerFactory.getLogger(DataHolder.class);
-    private volatile Set<HttpHandler> httpServices = new HashSet<>();
+    private static final String CHANNEL_ID_KEY = "channel.id";
 
     private static DataHolder instance = new DataHolder();
+    private BundleContext bundleContext;
+    private Map<String, ServiceRegistration<CarbonNettyServerInitializer>> carbonTransports = new HashMap<>();
 
     private DataHolder() {
     }
 
-    static DataHolder getInstance() {
+    public static DataHolder getInstance() {
         return instance;
     }
 
-    void addHttpService(HttpHandler httpHandler) {
-        httpServices.add(httpHandler);
-        LOG.info("Added HTTP Service: " + httpHandler);
+    public BundleContext getBundleContext() {
+        return bundleContext;
     }
 
-    void removeHttpService(HttpHandler httpService) {
-        httpServices.remove(httpService);
+    public void setBundleContext(BundleContext bundleContext) {
+        this.bundleContext = bundleContext;
     }
 
-    Set<HttpHandler> getHttpServices() {
-        return Collections.unmodifiableSet(httpServices);
+    public void addCarbonTransport(CarbonTransport carbonTransport) {
+        if (bundleContext == null) {
+            log.error("BundleContext is null. Transport dispatching will fail.");
+            return;
+        }
+        String channelKey = carbonTransport.getId();
+        Hashtable<String, String> httpInitParams = new Hashtable<>();
+        httpInitParams.put(CHANNEL_ID_KEY, channelKey);
+        MSSNettyServerInitializer gatewayNettyInitializer =
+                new MSSNettyServerInitializer(MicroservicesRegistry.getInstance());
+        ServiceRegistration<CarbonNettyServerInitializer> service =
+                bundleContext.registerService(CarbonNettyServerInitializer.class,
+                        gatewayNettyInitializer, httpInitParams);
+        carbonTransports.put(channelKey, service);
+    }
+
+    public void removeCarbonTransport(CarbonTransport carbonTransport) {
+        carbonTransports.get(carbonTransport.getId()).unregister();
     }
 }

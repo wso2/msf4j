@@ -7,181 +7,109 @@
     <parent>
         <groupId>org.wso2</groupId>
         <artifactId>wso2</artifactId>
-        <version>1</version>
+        <version>2</version>
     </parent>
 
-    <groupId>org.wso2.carbon</groupId>
-    <artifactId>org.wso2.carbon.mss.parent</artifactId>
+    <groupId>org.wso2.carbon.mss</groupId>
+    <artifactId>mss</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0-SNAPSHOT</version>
 
-    <repositories>
-        <repository>
-            <id>wso2-nexus</id>
-            <name>WSO2 internal Repository</name>
-            <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-                <checksumPolicy>ignore</checksumPolicy>
-            </releases>
-        </repository>
-    </repositories>
+    <scm>
+        <url>https://github.com/wso2/product-mss.git</url>
+        <developerConnection>scm:git:https://github.com/wso2/product-mss.git</developerConnection>
+        <connection>scm:git:https://github.com/wso2/product-mss.git</connection>
+        <tag>HEAD</tag>
+    </scm>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>wso2-maven2-repository-1</id>
-            <url>http://dist.wso2.org/maven2</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>wso2-maven2-repository-2</id>
-            <url>http://dist.wso2.org/snapshots/maven2</url>
-        </pluginRepository>
-    </pluginRepositories>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>javax.ws.rs</groupId>
-                <artifactId>javax.ws.rs-api</artifactId>
-                <version>${rs-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.transport.http.netty</artifactId>
-                <version>${org.wso2.carbon.transport.http.netty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-common</artifactId>
-                <version>${netty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-buffer</artifactId>
-                <version>${netty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-transport</artifactId>
-                <version>${netty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-handler</artifactId>
-                <version>${netty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-codec</artifactId>
-                <version>${netty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-codec-http</artifactId>
-                <version>${netty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.osgi</groupId>
-                <artifactId>org.eclipse.osgi</artifactId>
-                <version>${equinox.osgi.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.osgi</groupId>
-                <artifactId>org.eclipse.osgi.services</artifactId>
-                <version>${equinox.osgi.services.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>${slf4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-log4j12</artifactId>
-                <version>${slf4j.log4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.code.gson</groupId>
-                <artifactId>gson</artifactId>
-                <version>${gson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>13.0.1</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.code.findbugs</groupId>
-                <artifactId>jsr305</artifactId>
-                <version>${findbugs.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.servicemix.bundles</groupId>
-                <artifactId>org.apache.servicemix.bundles.commons-beanutils</artifactId>
-                <version>${beanutils.version}</version>
-            </dependency>
-
-            <!-- Test dependencies -->
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${junit.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-core</artifactId>
-                <version>${logback.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>${logback.version}</version>
-                <scope>test</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+    <developers>
+        <developer>
+            <name>WSO2</name>
+            <email>architecture@wso2.org</email>
+            <organization>WSO2 Inc</organization>
+            <organizationUrl>https://github.com/wso2/product-mss</organizationUrl>
+        </developer>
+    </developers>
 
     <build>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh</artifactId>
+            </extension>
+        </extensions>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven.checkstyleplugin.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>${maven.findbugsplugin.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
+                    <preparationGoals>clean install</preparationGoals>
+                    <autoVersionSubmodules>false</autoVersionSubmodules>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>docs</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>javadoc</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
 
-    <properties>
-        <equinox.osgi.version>3.9.1.v20130814-1242</equinox.osgi.version>
-        <equinox.osgi.services.version>3.3.100.v20130513-1956</equinox.osgi.services.version>
-        <rs-api.version>2.0</rs-api.version>
-        <netty.version>4.0.30.Final</netty.version>
-        <slf4j.version>1.7.5</slf4j.version>
-        <slf4j.log4j.version>1.6.0</slf4j.log4j.version>
-        <gson.version>2.2.4</gson.version>
-        <org.wso2.carbon.transport.http.netty.version>1.0.0-SNAPSHOT</org.wso2.carbon.transport.http.netty.version>
-        <guava.version>13.0.1</guava.version>
-        <findbugs.version>2.0.1</findbugs.version>
-        <beanutils.version>1.8.3_2</beanutils.version>
-        <junit.version>4.11</junit.version>
-        <logback.version>1.0.9</logback.version>
-
-        <osgi.framework.import.version.range>[1.7.0, 1.8.0)</osgi.framework.import.version.range>
-        <osgi.service.tracker.import.version.range>[1.5.1, 1.6.0)</osgi.service.tracker.import.version.range>
-        <carbon.p2.plugin.version>1.5.4</carbon.p2.plugin.version>
-    </properties>
-
     <modules>
+        <module>parent</module>
         <module>carbon-mss/components/org.wso2.carbon.mss</module>
+        <module>carbon-mss/components/org.wso2.orbit.javax.ws.rs</module>
         <module>carbon-mss/features/org.wso2.carbon.mss.feature</module>
-        <module>samples/example</module>
-        <module>samples/example2</module>
+        <module>carbon-mss/features/org.wso2.carbon.spi.fly.feature</module>
+        <module>template-engines/mss-mustache-template</module>
+        <module>mss-jar-parent</module>
+        <module>mss-lite-parent</module>
+        <module>samples/helloworld</module>
+        <module>samples/stockquote-mss-lite</module>
+        <module>samples/stockquote-mss-deployable-jar</module>
+        <module>samples/stockquote-mss-bundle</module>
+        <module>samples/security</module>
+        <module>samples/metrics</module>
+        <module>samples/petstore</module>
+        <module>samples/fileserver</module>
+        <module>samples/template</module>
+        <module>samples/log-interceptor-bundle</module>
+        <module>product</module>
+        <module>tests/osgi-tests</module>
     </modules>
+
+    <properties>
+        <maven.checkstyleplugin.version>2.16</maven.checkstyleplugin.version>
+        <maven.findbugsplugin.version>3.0.2</maven.findbugsplugin.version>
+    </properties>
 </project>

@@ -28,7 +28,12 @@ import org.wso2.carbon.mss.HttpResponder;
  */
 public class ExceptionHandler {
     public void handle(Throwable t, HttpRequest request, HttpResponder responder) {
-        String message = String.format("Exception encountered while processing request : %s", t.getMessage());
-        responder.sendString(HttpResponseStatus.INTERNAL_SERVER_ERROR, message);
+        if (t instanceof HandlerException) {
+            HandlerException handlerException = (HandlerException) t;
+            responder.sendString(handlerException.getFailureStatus(), handlerException.getMessage());
+        } else {
+            String message = String.format("Exception encountered while processing request : %s", t.getMessage());
+            responder.sendString(HttpResponseStatus.INTERNAL_SERVER_ERROR, message);
+        }
     }
 }

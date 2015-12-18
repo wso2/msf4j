@@ -14,68 +14,36 @@
   License for the specific language governing permissions and limitations under
   the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    
+
     <parent>
-        <groupId>org.wso2.carbon</groupId>
-        <artifactId>org.wso2.carbon.mss.parent</artifactId>
+        <groupId>org.wso2.carbon.mss</groupId>
+        <artifactId>mss-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../../../pom.xml</relativePath>
+        <relativePath>../../../parent/pom.xml</relativePath>
     </parent>
 
     <artifactId>org.wso2.carbon.mss</artifactId>
     <packaging>bundle</packaging>
 
-    <name>Netty based path router</name>
-    <description>Netty based path router</description>
+    <name>WSO2 Microservices Server OSGi bundle</name>
+    <description>WSO2 Microservices Server OSGi bundle</description>
     <url>https://github.com/wso2/product-mss</url>
-
-    <licenses>
-        <license>
-            <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-        </license>
-    </licenses>
-
-    <developers>
-        <developer>
-            <name>WSO2</name>
-            <email>architecture@wso2.org</email>
-            <organization>WSO2 Inc</organization>
-            <organizationUrl>https://github.com/wso2/product-mss</organizationUrl>
-        </developer>
-    </developers>
-
-    <scm>
-        <connection>scm:git:git@github.com:caskdata/netty-http.git</connection>
-        <url>scm:git:git://github.com/wso2/product-mss.git</url>
-        <developerConnection>scm:git:git@github.com:wso2/product-mss.git</developerConnection>
-    </scm>
-
-    <distributionManagement>
-        <repository>
-            <id>sonatype.release</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-        </repository>
-        <snapshotRepository>
-            <id>sonatype.snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
 
     <dependencies>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.transport</groupId>
             <artifactId>org.wso2.carbon.transport.http.netty</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.eclipse.osgi</groupId>
+            <groupId>org.wso2.eclipse.osgi</groupId>
             <artifactId>org.eclipse.osgi</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.eclipse.osgi</groupId>
+            <groupId>org.wso2.eclipse.osgi</groupId>
             <artifactId>org.eclipse.osgi.services</artifactId>
         </dependency>
         <dependency>
@@ -111,6 +79,10 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
         </dependency>
@@ -125,6 +97,22 @@
         <dependency>
             <groupId>org.apache.servicemix.bundles</groupId>
             <artifactId>org.apache.servicemix.bundles.commons-beanutils</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.metrics</groupId>
+            <artifactId>org.wso2.carbon.metrics.manager</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.metrics</groupId>
+            <artifactId>org.wso2.carbon.metrics.impl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.metrics</groupId>
+            <artifactId>org.wso2.carbon.metrics.annotation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
         </dependency>
 
         <!-- Test dependencies -->
@@ -146,161 +134,30 @@
     </dependencies>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <!-- Compiler -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.1</version>
-                    <configuration>
-                        <source>1.7</source>
-                        <target>1.7</target>
-                        <compilerArgs>
-                            <arg>-Xlint</arg>
-                        </compilerArgs>
-                    </configuration>
-                </plugin>
-
-                <!-- License RAT check -->
-                <plugin>
-                    <groupId>org.apache.rat</groupId>
-                    <artifactId>apache-rat-plugin</artifactId>
-                    <version>0.10</version>
-                    <executions>
-                        <execution>
-                            <id>rat-check</id>
-                            <phase>validate</phase>
-                            <goals>
-                                <goal>check</goal>
-                            </goals>
-                            <configuration>
-                                <excludes>
-                                    <exclude>LICENSE</exclude>
-                                    <exclude>build-number.txt</exclude>
-                                </excludes>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-
-                <!-- Checkstyle -->
-                <!--<plugin>
-                  <groupId>org.apache.maven.plugins</groupId>
-                  <artifactId>maven-checkstyle-plugin</artifactId>
-                  <version>2.11</version>
-                  <executions>
-                    <execution>
-                      <id>validate</id>
-                      <phase>validate</phase>
-                      <configuration>
-                        <configLocation>checkstyle.xml</configLocation>
-                        <suppressionsLocation>suppressions.xml</suppressionsLocation>
-                        <encoding>UTF-8</encoding>
-                        <consoleOutput>true</consoleOutput>
-                        <failsOnError>true</failsOnError>
-                        <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                      </configuration>
-                      <goals>
-                        <goal>check</goal>
-                      </goals>
-                    </execution>
-                  </executions>
-                </plugin>-->
-
-                <!-- Surefire -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.14.1</version>
-                    <configuration>
-                        <argLine>-Xmx512m</argLine>
-                        <redirectTestOutputToFile>${surefire.redirectTestOutputToFile}</redirectTestOutputToFile>
-                        <systemPropertyVariables>
-                            <java.io.tmpdir>${project.build.directory}</java.io.tmpdir>
-                        </systemPropertyVariables>
-                        <includes>
-                            <include>**/*TestSuite.java</include>
-                            <include>**/Test*.java</include>
-                            <include>**/*Test.java</include>
-                            <include>**/*TestCase.java</include>
-                        </includes>
-                    </configuration>
-                </plugin>
-
-                <!-- Deploy plugin -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-deploy-plugin</artifactId>
-                    <version>2.8</version>
-                    <configuration>
-                        <deployAtEnd>true</deployAtEnd>
-                    </configuration>
-                </plugin>
-
-                <!-- Bundle plugin -->
-                <plugin>
-                    <groupId>org.apache.felix</groupId>
-                    <artifactId>maven-bundle-plugin</artifactId>
-                    <extensions>true</extensions>
-                    <configuration>
-                        <instructions>
-                            <Bundle-Vendor>WSO2</Bundle-Vendor>
-                            <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-                            <Private-Package>org.wso2.carbon.mss.internal.*</Private-Package>
-                            <Export-Package>
-                                !org.wso2.carbon.mss.internal.*,
-                                org.wso2.carbon.mss*;version="1.0.0"
-                            </Export-Package>
-                            <Import-Package>
-                                io.netty.*,
-                                com.google.gson.*,
-                                com.google.common.*,
-                                javax.ws.rs.*,
-                                org.slf4j.*,
-                                javax.net.ssl.*,
-                                org.apache.commons.beanutils.*,
-                                org.osgi.framework.*;version="${osgi.framework.import.version.range}",
-                                org.osgi.util.tracker; version="${osgi.service.tracker.import.version.range}",
-                                org.wso2.carbon.transport.http.netty.listener.*,
-                            </Import-Package>
-                            <_dsannotations>*</_dsannotations>
-                        </instructions>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.rat</groupId>
                 <artifactId>apache-rat-plugin</artifactId>
-                <version>0.10</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>2.11</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.14.1</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.8</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>2.5.4</version>
             </plugin>
         </plugins>
     </build>
@@ -315,7 +172,6 @@
                         <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-surefire-plugin</artifactId>
-                            <version>2.14.1</version>
                             <configuration>
                                 <argLine>${argLine} -Xmx512m</argLine>
                             </configuration>
@@ -323,7 +179,6 @@
                         <plugin>
                             <groupId>org.jacoco</groupId>
                             <artifactId>jacoco-maven-plugin</artifactId>
-                            <version>0.7.1.201405082137</version>
                             <executions>
                                 <execution>
                                     <id>prepare-agent</id>
@@ -347,7 +202,6 @@
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.7.1.201405082137</version>
                     </plugin>
                 </plugins>
             </build>
@@ -363,7 +217,6 @@
                         <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-source-plugin</artifactId>
-                            <version>2.2.1</version>
                             <configuration>
                                 <excludeResources>true</excludeResources>
                             </configuration>
@@ -382,7 +235,6 @@
                         <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-javadoc-plugin</artifactId>
-                            <version>2.9</version>
                             <configuration>
                                 <detectJavaApiLink>true</detectJavaApiLink>
                                 <links>
@@ -408,7 +260,6 @@
                         <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-gpg-plugin</artifactId>
-                            <version>1.5</version>
                             <configuration>
                                 <passphrase>${gpg.passphrase}</passphrase>
                                 <useAgent>${gpg.useagent}</useAgent>
@@ -421,20 +272,6 @@
                                 </execution>
                             </executions>
                         </plugin>
-
-                        <!-- Nexus deploy plugin -->
-                        <plugin>
-                            <groupId>org.sonatype.plugins</groupId>
-                            <artifactId>nexus-staging-maven-plugin</artifactId>
-                            <version>1.6.2</version>
-                            <extensions>true</extensions>
-                            <configuration>
-                                <nexusUrl>https://oss.sonatype.org</nexusUrl>
-                                <serverId>sonatype.release</serverId>
-                                <stagingProfileId>655dc88dc770c3</stagingProfileId>
-                            </configuration>
-                        </plugin>
-
                     </plugins>
                 </pluginManagement>
 
@@ -442,26 +279,48 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>2.2.1</version>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>2.9.1</version>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.5</version>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.2</version>
                     </plugin>
                 </plugins>
             </build>
         </profile>
     </profiles>
 
+    <properties>
+        <bundle.activator>org.wso2.carbon.mss.internal.MicroservicesServerActivator</bundle.activator>
+        <private.package>org.wso2.carbon.mss.internal.*,</private.package>
+        <export.package>
+            !org.wso2.carbon.mss.internal.*,
+            org.wso2.carbon.mss.*;version="1.0.0",
+        </export.package>
+        <import.package>
+            org.wso2.carbon.kernel.deployment.*,
+            io.netty.*,
+            com.google.gson.*,
+            com.google.common.*,
+            javax.annotation.*,
+            javax.ws.rs.*,
+            org.slf4j.*,
+            javax.net.ssl.*,
+            org.apache.commons.beanutils.*,
+            org.osgi.framework.*;version="${osgi.framework.import.version.range}",
+            org.osgi.util.tracker; version="${osgi.service.tracker.import.version.range}",
+            org.wso2.carbon.kernel.transports.*,
+            org.wso2.carbon.kernel.startupresolver.*,
+            org.wso2.carbon.transport.http.netty.listener.*,
+        </import.package>
+        <provide.capability>
+            osgi.service;effective:=active;
+            objectClass="org.wso2.carbon.mss.internal.MicroservicesServerSC";
+            dependent-component-key="carbon-transport-mgt",
+        </provide.capability>
+        <SPI-Provider>javax.ws.rs.ext.RuntimeDelegate</SPI-Provider>
+    </properties>
 </project>

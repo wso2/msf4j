@@ -1,0 +1,16 @@
+{
+    "kind": "Service",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "identity-server"
+    },
+    "spec": {
+        "ports": [
+            {
+                "protocol": "TCP",
+                "port": 9443,
+                "targetPort": 9443
+            }
+        ]
+    }
+}

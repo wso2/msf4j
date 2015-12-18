@@ -1,0 +1,17 @@
+{
+    "kind": "Endpoints",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "identity-server"
+    },
+    "subsets": [
+        {
+            "addresses": [
+                { "ip": "172.17.8.1" }
+             ],
+            "ports": [
+                { "port": 9443 }
+             ]
+         }
+    ]
+}

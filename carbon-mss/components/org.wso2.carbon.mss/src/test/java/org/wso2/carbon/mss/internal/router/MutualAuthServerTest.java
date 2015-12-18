@@ -18,51 +18,48 @@
  */
 package org.wso2.carbon.mss.internal.router;
 
-import com.google.common.collect.Lists;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
-import com.google.common.util.concurrent.Service;
-import org.junit.Assert;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.wso2.carbon.mss.HttpHandler;
+import org.wso2.carbon.mss.MicroservicesRunner;
+import org.wso2.carbon.transport.http.netty.internal.config.YAMLTransportConfigurationBuilder;
 
 import java.io.File;
 import java.net.URI;
-import java.util.List;
 
 /**
  * Test the HttpsServer with mutual authentication.
  */
 public class MutualAuthServerTest extends HttpsServerTest {
 
-  @BeforeClass
-  public static void setup() throws Exception {
-    List<HttpHandler> handlers = Lists.newArrayList();
-    handlers.add(new TestHandler());
+    private static final TestHandler testHandler = new TestHandler();
+    private static MicroservicesRunner microservicesRunner;
 
-    NettyHttpService.Builder builder = createBaseNettyHttpServiceBuilder();
+    private static String hostname = Constants.HOSTNAME;
+    private static final int port = Constants.PORT + 5;
 
-    File keyStore = tmpFolder.newFile();
-    ByteStreams.copy(Resources.newInputStreamSupplier(Resources.getResource("cert.jks")),
-                     Files.newOutputStreamSupplier(keyStore));
-    File trustKeyStore = tmpFolder.newFile();
-    ByteStreams.copy(Resources.newInputStreamSupplier(Resources.getResource("client.jks")),
-                     Files.newOutputStreamSupplier(trustKeyStore));
 
-    String keyStorePassword = "secret";
-    String trustKeyStorePassword = "password";
-    builder.enableSSL(SSLConfig.builder(keyStore, keyStorePassword).setTrustKeyStore(trustKeyStore)
-                        .setTrustKeyStorePassword(trustKeyStorePassword)
-                        .build());
+    @BeforeClass
+    public static void setup() throws Exception {
+        baseURI = URI.create(String.format("https://%s:%d", hostname, port));
+        File trustKeyStore = tmpFolder.newFile();
+        ByteStreams.copy(Resources.newInputStreamSupplier(Resources.getResource("client.jks")),
+                Files.newOutputStreamSupplier(trustKeyStore));
+        String trustKeyStorePassword = "password";
+        setSslClientContext(new SSLClientContext(trustKeyStore, trustKeyStorePassword));
 
-    setSslClientContext(new SSLClientContext(trustKeyStore, trustKeyStorePassword));
-    service = builder.build();
-    service.startAndWait();
-    Service.State state = service.state();
-    Assert.assertEquals(Service.State.RUNNING, state);
+        System.setProperty(YAMLTransportConfigurationBuilder.NETTY_TRANSPORT_CONF,
+                Resources.getResource("netty-transports-2.yml").getPath());
+        microservicesRunner = new MicroservicesRunner();
+        microservicesRunner
+                .deploy(testHandler)
+                .start();
+    }
 
-    int port = service.getBindAddress().getPort();
-    baseURI = URI.create(String.format("https://localhost:%d", port));
-  }
+    @AfterClass
+    public static void teardown() throws Exception {
+        microservicesRunner.stop();
+    }
 }

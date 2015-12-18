@@ -24,10 +24,11 @@ import com.google.gson.Gson;
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.HttpResponseStatus;
 
-import javax.annotation.Nullable;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
+import javax.annotation.Nullable;
 
 /**
  * HttpResponder is used to send response back to clients.
@@ -118,6 +119,7 @@ public interface HttpResponder {
      *
      * @param status  the status code to respond with
      * @param headers additional headers to send with the response. May be null.
+     * @return ChunkResponder
      */
     ChunkResponder sendChunkStart(HttpResponseStatus status, @Nullable Multimap<String, String> headers);
 
@@ -139,5 +141,6 @@ public interface HttpResponder {
      * @param file    The file to send
      * @param headers Headers to be sent back.
      */
-    void sendFile(File file, @Nullable Multimap<String, String> headers);
+    void sendFile(File file, String contentType,
+                  @Nullable Multimap<String, String> headers) throws IOException;
 }

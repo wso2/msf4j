@@ -22,15 +22,14 @@ package org.wso2.carbon.mss.internal.router;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
-import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.HttpResponse;
 
 /**
  * Test ChannelHandler that adds a default header to every response.
  */
 public class TestChannelHandler extends ChannelOutboundHandlerAdapter {
-  protected static final String HEADER_FIELD = "testHeaderField";
-  protected static final String HEADER_VALUE = "testHeaderValue";
+    protected static final String HEADER_FIELD = "testHeaderField";
+    protected static final String HEADER_VALUE = "testHeaderValue";
 
   /*@Override
   public void writeRequested(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
@@ -45,9 +44,9 @@ public class TestChannelHandler extends ChannelOutboundHandlerAdapter {
   }*/
 
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) {
-       HttpResponse response = (HttpResponse) msg;
-       response.headers().add(HEADER_FIELD, HEADER_VALUE);
-       ctx.write(response, promise);
+        HttpResponse response = (HttpResponse) msg;
+        response.headers().add(HEADER_FIELD, HEADER_VALUE);
+        ctx.write(response, promise);
     }
 
 //    @Override

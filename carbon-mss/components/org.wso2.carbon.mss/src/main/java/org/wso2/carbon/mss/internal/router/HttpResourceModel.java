@@ -21,30 +21,31 @@ package org.wso2.carbon.mss.internal.router;
 
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import io.netty.handler.codec.http.HttpMethod;
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.HttpResponseStatus;
-import io.netty.handler.codec.http.QueryStringDecoder;
-import org.wso2.carbon.mss.HttpHandler;
-import org.wso2.carbon.mss.HttpResponder;
+import org.wso2.carbon.mss.HttpStreamer;
 
-import javax.annotation.Nullable;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import javax.annotation.Nullable;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 
 /**
  * HttpResourceModel contains information needed to handle Http call for a given path. Used as a destination in
@@ -53,31 +54,74 @@ import java.util.Set;
 public final class HttpResourceModel {
 
     private static final Set<Class<? extends Annotation>> SUPPORTED_PARAM_ANNOTATIONS =
-            ImmutableSet.of(PathParam.class, QueryParam.class, HeaderParam.class);
+            ImmutableSet.of(PathParam.class, QueryParam.class, HeaderParam.class, Context.class);
+    private static final String[] ANY_MEDIA_TYPE = new String[]{"*/*"};
+    private static final int STREAMING_REQ_UNKNOWN = 0, STREAMING_REQ_SUPPORTED = 1, STREAMING_REQ_UNSUPPORTED = 2;
 
     private final Set<HttpMethod> httpMethods;
     private final String path;
     private final Method method;
-    private final HttpHandler handler;
-    private final List<Map<Class<? extends Annotation>, ParameterInfo<?>>> paramsInfo;
+    private final Object handler;
+    private final List<ParameterInfo<?>> paramInfoList;
     private final ExceptionHandler exceptionHandler;
+    private List<String> consumesMediaTypes;
+    private List<String> producesMediaTypes;
+    private int isStreamingReqSupported = STREAMING_REQ_UNKNOWN;
+
 
     /**
      * Construct a resource model with HttpMethod, method that handles httprequest, Object that contains the method.
      *
-     * @param httpMethods Set of http methods that is handled by the resource.
-     * @param path        path associated with this model.
-     * @param method      handler that handles the http request.
-     * @param handler     instance {@code HttpHandler}.
+     * @param path    path associated with this model.
+     * @param method  handler that handles the http request.
+     * @param handler instance {@code HttpHandler}.
+     * @param exceptionHandler instance {@code ExceptionHandler} to handle exceptions.
      */
-    public HttpResourceModel(Set<HttpMethod> httpMethods, String path, Method method, HttpHandler handler,
+    public HttpResourceModel(String path, Method method, Object handler,
                              ExceptionHandler exceptionHandler) {
-        this.httpMethods = httpMethods;
+        this.httpMethods = getHttpMethods(method);
         this.path = path;
         this.method = method;
         this.handler = handler;
-        this.paramsInfo = createParametersInfos(method);
+        this.paramInfoList = makeParamInfoList(method);
         this.exceptionHandler = exceptionHandler;
+        consumesMediaTypes = parseConsumesMediaTypes();
+        producesMediaTypes = parseProducesMediaTypes();
+    }
+
+    private List<String> parseConsumesMediaTypes() {
+        String[] consumesMediaTypeArr = (method.isAnnotationPresent(Consumes.class)) ?
+                method.getAnnotation(Consumes.class).value() :
+                (handler.getClass().isAnnotationPresent(Consumes.class)) ?
+                        handler.getClass().getAnnotation(Consumes.class).value() :
+                        ANY_MEDIA_TYPE;
+        return Arrays.asList(consumesMediaTypeArr);
+    }
+
+    private List<String> parseProducesMediaTypes() {
+        String[] producesMediaTypeArr = (method.isAnnotationPresent(Produces.class)) ?
+                method.getAnnotation(Produces.class).value() :
+                (handler.getClass().isAnnotationPresent(Produces.class)) ?
+                        handler.getClass().getAnnotation(Produces.class).value() :
+                        ANY_MEDIA_TYPE;
+        return Arrays.asList(producesMediaTypeArr);
+    }
+
+    public boolean matchConsumeMediaType(String consumesMediaType) {
+        return consumesMediaType == null
+                || consumesMediaType.isEmpty()
+                || consumesMediaType.equals("*/*")
+                || this.consumesMediaTypes.contains("*/*")
+                || this.consumesMediaTypes.contains(consumesMediaType);
+    }
+
+    public boolean matchProduceMediaType(List<String> producesMediaTypes) {
+        return producesMediaTypes == null
+                || producesMediaTypes.contains("*/*")
+                || this.producesMediaTypes.contains("*/*")
+                || this.producesMediaTypes
+                .stream().filter
+                        (producesMediaTypes::contains).findAny().isPresent();
     }
 
     /**
@@ -104,52 +148,8 @@ public final class HttpResourceModel {
     /**
      * @return instance of {@code HttpHandler}.
      */
-    public HttpHandler getHttpHandler() {
+    public Object getHttpHandler() {
         return handler;
-    }
-
-    /**
-     * Handle http Request.
-     *
-     * @param request     HttpRequest to be handled.
-     * @param responder   HttpResponder to write the response.
-     * @param groupValues Values needed for the invocation.
-     */
-    @SuppressWarnings("unchecked")
-    public HttpMethodInfo handle(HttpRequest request, HttpResponder responder, Map<String, String> groupValues)
-            throws Exception {
-
-        //TODO: Refactor group values.
-        try {
-            if (httpMethods.contains(request.getMethod())) {
-                //Setup args for reflection call
-                Object[] args = new Object[paramsInfo.size()];
-
-                int idx = 0;
-                for (Map<Class<? extends Annotation>, ParameterInfo<?>> info : paramsInfo) {
-                    if (info.containsKey(PathParam.class)) {
-                        args[idx] = getPathParamValue(info, groupValues);
-                    }
-                    if (info.containsKey(QueryParam.class)) {
-                        args[idx] = getQueryParamValue(info, request.getUri());
-                    }
-                    if (info.containsKey(HeaderParam.class)) {
-                        args[idx] = getHeaderParamValue(info, request);
-                    }
-                    idx++;
-                }
-
-                return new HttpMethodInfo(method, handler, request, responder, args, exceptionHandler);
-            } else {
-                //Found a matching resource but could not find the right HttpMethod so return 405
-                throw new HandlerException(HttpResponseStatus.METHOD_NOT_ALLOWED, String.format
-                        ("Problem accessing: %s. Reason: Method Not Allowed", request.getUri()));
-            }
-        } catch (Throwable e) {
-            throw new HandlerException(HttpResponseStatus.INTERNAL_SERVER_ERROR,
-                    String.format("Error in executing request: %s %s", request.getMethod(),
-                            request.getUri()), e);
-        }
     }
 
     @Override
@@ -162,120 +162,139 @@ public final class HttpResourceModel {
                 .toString();
     }
 
-    @SuppressWarnings("unchecked")
-    private Object getPathParamValue(Map<Class<? extends Annotation>, ParameterInfo<?>> annotations,
-                                     Map<String, String> groupValues) {
-        ParameterInfo<String> info = (ParameterInfo<String>) annotations.get(PathParam.class);
-        PathParam pathParam = info.getAnnotation();
-        String value = groupValues.get(pathParam.value());
-        Preconditions.checkArgument(value != null, "Could not resolve value for parameter %s", pathParam.value());
-        return info.convert(value);
-    }
-
-    @SuppressWarnings("unchecked")
-    private Object getQueryParamValue(Map<Class<? extends Annotation>, ParameterInfo<?>> annotations, String uri) {
-        ParameterInfo<List<String>> info = (ParameterInfo<List<String>>) annotations.get(QueryParam.class);
-        QueryParam queryParam = info.getAnnotation();
-        List<String> values = new QueryStringDecoder(uri).parameters().get(queryParam.value());
-
-        return (values == null) ? info.convert(defaultValue(annotations)) : info.convert(values);
-    }
-
-    @SuppressWarnings("unchecked")
-    private Object getHeaderParamValue(Map<Class<? extends Annotation>, ParameterInfo<?>> annotations,
-                                       HttpRequest request) {
-        ParameterInfo<List<String>> info = (ParameterInfo<List<String>>) annotations.get(HeaderParam.class);
-        HeaderParam headerParam = info.getAnnotation();
-        String headerName = headerParam.value();
-        List<String> headers = request.headers().getAll(headerParam.value());
-
-        return (request.headers().contains(headerName)) ? info.convert(headers) : info.convert(defaultValue(annotations));
-    }
-
     /**
-     * Returns a List of String created based on the {@link DefaultValue} if it is presented in the annotations Map.
+     * Fetches the HttpMethod from annotations and returns String representation of HttpMethod.
+     * Return emptyString if not present.
      *
-     * @return a List of String or an empty List if {@link DefaultValue} is not presented
+     * @param method Method handling the http request.
+     * @return String representation of HttpMethod from annotations or emptyString as a default.
      */
-    private List<String> defaultValue(Map<Class<? extends Annotation>, ParameterInfo<?>> annotations) {
-        List<String> values = ImmutableList.of();
-
-        ParameterInfo<?> defaultInfo = annotations.get(DefaultValue.class);
-        if (defaultInfo != null) {
-            DefaultValue defaultValue = defaultInfo.getAnnotation();
-            values = ImmutableList.of(defaultValue.value());
+    private Set<HttpMethod> getHttpMethods(Method method) {
+        Set<HttpMethod> httpMethods = Sets.newHashSet();
+        if (method.isAnnotationPresent(GET.class)) {
+            httpMethods.add(HttpMethod.GET);
         }
-        return values;
+        if (method.isAnnotationPresent(PUT.class)) {
+            httpMethods.add(HttpMethod.PUT);
+        }
+        if (method.isAnnotationPresent(POST.class)) {
+            httpMethods.add(HttpMethod.POST);
+        }
+        if (method.isAnnotationPresent(DELETE.class)) {
+            httpMethods.add(HttpMethod.DELETE);
+        }
+        return ImmutableSet.copyOf(httpMethods);
     }
 
     /**
      * Gathers all parameters' annotations for the given method, starting from the third parameter.
      */
-    private List<Map<Class<? extends Annotation>, ParameterInfo<?>>> createParametersInfos(Method method) {
-        if (method.getParameterTypes().length <= 2) {
-            return ImmutableList.of();
-        }
+    private List<ParameterInfo<?>> makeParamInfoList(Method method) {
+        List<ParameterInfo<?>> paramInfoList = new ArrayList<>();
 
-        ImmutableList.Builder<Map<Class<? extends Annotation>, ParameterInfo<?>>> result = ImmutableList.builder();
-        Type[] parameterTypes = method.getGenericParameterTypes();
-        Annotation[][] parameterAnnotations = method.getParameterAnnotations();
+        Type[] paramTypes = method.getGenericParameterTypes();
+        Annotation[][] paramAnnotations = method.getParameterAnnotations();
 
-        for (int i = 2; i < parameterAnnotations.length; i++) {
-            Annotation[] annotations = parameterAnnotations[i];
-            Map<Class<? extends Annotation>, ParameterInfo<?>> paramAnnotations = Maps.newIdentityHashMap();
+        for (int i = 0; i < paramAnnotations.length; i++) {
+            Annotation[] annotations = paramAnnotations[i];
 
-            for (Annotation annotation : annotations) {
-                Class<? extends Annotation> annotationType = annotation.annotationType();
-                ParameterInfo<?> parameterInfo;
-
-                if (PathParam.class.isAssignableFrom(annotationType)) {
-                    parameterInfo = ParameterInfo.create(annotation,
-                            ParamConvertUtils.createPathParamConverter(parameterTypes[i]));
-                } else if (QueryParam.class.isAssignableFrom(annotationType)) {
-                    parameterInfo = ParameterInfo.create(annotation,
-                            ParamConvertUtils.createQueryParamConverter(parameterTypes[i]));
-                } else if (HeaderParam.class.isAssignableFrom(annotationType)) {
-                    parameterInfo = ParameterInfo.create(annotation,
-                            ParamConvertUtils.createHeaderParamConverter(parameterTypes[i]));
-                } else {
-                    parameterInfo = ParameterInfo.create(annotation, null);
-                }
-
-                paramAnnotations.put(annotationType, parameterInfo);
-            }
-
-            // Must have either @PathParam, @QueryParam or @HeaderParam, but not two or more.
-            if (Sets.intersection(SUPPORTED_PARAM_ANNOTATIONS, paramAnnotations.keySet()).size() != 1) {
+            //Can have only one from @PathParam, @QueryParam, @HeaderParam or @Context.
+            if (Sets.intersection(SUPPORTED_PARAM_ANNOTATIONS, ImmutableSet.of(annotations)).size() > 1) {
                 throw new IllegalArgumentException(
                         String.format("Must have exactly one annotation from %s for parameter %d in method %s",
                                 SUPPORTED_PARAM_ANNOTATIONS, i, method));
             }
 
-            result.add(Collections.unmodifiableMap(paramAnnotations));
+            Annotation annotation = null;
+            Type parameterType = paramTypes[i];
+            Function<?, Object> converter = null;
+            String defaultVal = null;
+            for (Annotation annotation0 : annotations) {
+                annotation = annotation0;
+                Class<? extends Annotation> annotationType = annotation.annotationType();
+                if (PathParam.class.isAssignableFrom(annotationType)) {
+                    converter = ParamConvertUtils.createPathParamConverter(parameterType);
+                } else if (QueryParam.class.isAssignableFrom(annotationType)) {
+                    converter = ParamConvertUtils.createQueryParamConverter(parameterType);
+                } else if (HeaderParam.class.isAssignableFrom(annotationType)) {
+                    converter = ParamConvertUtils.createHeaderParamConverter(parameterType);
+                } else if (DefaultValue.class.isAssignableFrom(annotationType)) {
+                    defaultVal = ((DefaultValue) annotation).value();
+                }
+            }
+            ParameterInfo<?> parameterInfo = ParameterInfo.create(parameterType, annotation, defaultVal, converter);
+            paramInfoList.add(parameterInfo);
         }
 
-        return result.build();
+        return Collections.unmodifiableList(paramInfoList);
+    }
+
+    public boolean isStreamingReqSupported() {
+        if (isStreamingReqSupported == STREAMING_REQ_SUPPORTED) {
+            return true;
+        } else if (isStreamingReqSupported == STREAMING_REQ_UNSUPPORTED) {
+            return false;
+        } else if (paramInfoList.stream().filter(parameterInfo -> parameterInfo
+                .getParameterType().equals(HttpStreamer.class))
+                .findAny().isPresent()) {
+            isStreamingReqSupported = STREAMING_REQ_SUPPORTED;
+            return true;
+        } else {
+            isStreamingReqSupported = STREAMING_REQ_UNSUPPORTED;
+            return false;
+        }
+    }
+
+    public List<ParameterInfo<?>> getParamInfoList() {
+        return paramInfoList;
+    }
+
+    public ExceptionHandler getExceptionHandler() {
+        return exceptionHandler;
+    }
+
+    public List<String> getConsumesMediaTypes() {
+        return consumesMediaTypes;
+    }
+
+    public List<String> getProducesMediaTypes() {
+        return producesMediaTypes;
     }
 
     /**
      * A container class to hold information about a handler method parameters.
      */
-    private static final class ParameterInfo<T> {
+    public static final class ParameterInfo<T> {
         private final Annotation annotation;
         private final Function<T, Object> converter;
+        private final Type parameterType;
+        private final String defaultVal;
 
-        static <V> ParameterInfo<V> create(Annotation annotation, @Nullable Function<V, Object> converter) {
-            return new ParameterInfo<>(annotation, converter);
+        private ParameterInfo(Type parameterType, Annotation annotation, String defaultVal, @Nullable Function<T,
+                Object>
+                converter) {
+            this.parameterType = parameterType;
+            this.annotation = annotation;
+            this.defaultVal = defaultVal;
+            this.converter = converter;
         }
 
-        private ParameterInfo(Annotation annotation, @Nullable Function<T, Object> converter) {
-            this.annotation = annotation;
-            this.converter = converter;
+        static <V> ParameterInfo<V> create(Type parameterType, Annotation annotation, String defaultVal,
+                                           @Nullable Function<V, Object> converter) {
+            return new ParameterInfo<>(parameterType, annotation, defaultVal, converter);
         }
 
         @SuppressWarnings("unchecked")
         <V extends Annotation> V getAnnotation() {
             return (V) annotation;
+        }
+
+        public Type getParameterType() {
+            return parameterType;
+        }
+
+        public String getDefaultVal() {
+            return defaultVal;
         }
 
         Object convert(T input) {

@@ -31,10 +31,6 @@ import com.google.common.primitives.Primitives;
 import com.google.common.reflect.TypeToken;
 import org.apache.commons.beanutils.ConvertUtils;
 
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.ext.ParamConverterProvider;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -65,9 +61,16 @@ public final class ParamConvertUtils {
         PRIMITIVES_PARSE_METHODS = methods;
     }
 
+    private ParamConvertUtils() {
+    }
+
     /**
      * Creates a converter function that converts a path segment into the given result type.
-     * Current implementation doesn't follow the {@link PathParam} specification to maintain backward compatibility.
+     * Current implementation doesn't follow the {@link javax.ws.rs.PathParam} specification to maintain backward
+     * compatibility.
+     *
+     * @param resultType Result type
+     * @return Function the function
      */
     public static Function<String, Object> createPathParamConverter(final Type resultType) {
         if (!(resultType instanceof Class)) {
@@ -83,10 +86,13 @@ public final class ParamConvertUtils {
 
     /**
      * Creates a converter function that converts header value into an object of the given result type.
-     * It follows the supported types of {@link HeaderParam} with the following exceptions:
+     * It follows the supported types of {@link javax.ws.rs.HeaderParam} with the following exceptions:
      * <ol>
-     * <li>Does not support types registered with {@link ParamConverterProvider}</li>
+     * <li>Does not support types registered with {@link javax.ws.rs.ext.ParamConverterProvider}</li>
      * </ol>
+     *
+     * @param resultType Result type
+     * @return Function the function
      */
     public static Function<List<String>, Object> createHeaderParamConverter(Type resultType) {
         return createListConverter(resultType);
@@ -94,18 +100,23 @@ public final class ParamConvertUtils {
 
     /**
      * Creates a converter function that converts query parameter into an object of the given result type.
-     * It follows the supported types of {@link QueryParam} with the following exceptions:
+     * It follows the supported types of {@link javax.ws.rs.QueryParam} with the following exceptions:
      * <ol>
-     * <li>Does not support types registered with {@link ParamConverterProvider}</li>
+     * <li>Does not support types registered with {@link javax.ws.rs.ext.ParamConverterProvider}</li>
      * </ol>
+     *
+     * @param resultType Result type
+     * @return Function the function
      */
     public static Function<List<String>, Object> createQueryParamConverter(Type resultType) {
         return createListConverter(resultType);
     }
 
     /**
-     * Common helper method to convert value for {@link HeaderParam} and {@link QueryParam}.
+     * Common helper method to convert value for {@link javax.ws.rs.HeaderParam} and {@link javax.ws.rs.QueryParam}.
      *
+     * @param resultType Result type
+     * @return Function the function
      * @see #createHeaderParamConverter(Type)
      * @see #createQueryParamConverter(Type)
      */
@@ -154,10 +165,10 @@ public final class ParamConvertUtils {
         throw new IllegalArgumentException("Unsupported type " + typeToken);
     }
 
-
     /**
      * Creates a converter function that converts value into primitive type.
      *
+     * @param resultClass The result class
      * @return A converter function or {@code null} if the given type is not primitive type
      */
     private static Function<List<String>, Object> createPrimitiveTypeConverter(Class<?> resultClass) {
@@ -187,10 +198,10 @@ public final class ParamConvertUtils {
         };
     }
 
-
     /**
      * Creates a converter function that converts value using a constructor that accepts a single String argument.
      *
+     * @param resultClass Result class
      * @return A converter function or {@code null} if the given type doesn't have a public constructor that accepts
      * a single String argument.
      */
@@ -203,7 +214,7 @@ public final class ParamConvertUtils {
                     return constructor.newInstance(value);
                 }
             };
-        } catch (Exception e) {
+        } catch (NoSuchMethodException e) {
             return null;
         }
     }
@@ -212,6 +223,7 @@ public final class ParamConvertUtils {
      * Creates a converter function that converts value using a public static method named
      * {@code valueOf} or {@code fromString} that accepts a single String argument.
      *
+     * @param resultClass Result class
      * @return A converter function or {@code null} if the given type doesn't have a public static method
      * named {@code valueOf} or {@code fromString} that accepts a single String argument.
      */
@@ -219,10 +231,10 @@ public final class ParamConvertUtils {
         Method method;
         try {
             method = resultClass.getMethod("valueOf", String.class);
-        } catch (Exception e) {
+        } catch (NoSuchMethodException e) {
             try {
                 method = resultClass.getMethod("fromString", String.class);
-            } catch (Exception ex) {
+            } catch (NoSuchMethodException ex) {
                 return null;
             }
         }
@@ -239,8 +251,9 @@ public final class ParamConvertUtils {
     /**
      * Creates a converter function that converts value into a {@link List}, {@link Set} or {@link SortedSet}.
      *
-     * @return A converter function or {@code null} if the given type is not a {@link ParameterizedType} with raw type as
-     * {@link List}, {@link Set} or {@link SortedSet}. Also, for {@link SortedSet} type, if the element type
+     * @param resultType Result type
+     * @return A converter function or {@code null} if the given type is not a {@link ParameterizedType} with raw type
+     * as {@link List}, {@link Set} or {@link SortedSet}. Also, for {@link SortedSet} type, if the element type
      * doesn't implements {@link Comparable}, {@code null} is returned.
      */
     private static Function<List<String>, Object> createCollectionConverter(TypeToken<?> resultType) {
@@ -270,9 +283,6 @@ public final class ParamConvertUtils {
 
         // Get the converter for the collection element.
         final Function<List<String>, Object> elementConverter = createQueryParamConverter(elementType);
-        if (elementConverter == null) {
-            return null;
-        }
 
         return new Function<List<String>, Object>() {
             @Override
@@ -286,8 +296,10 @@ public final class ParamConvertUtils {
                     builder = ImmutableSortedSet.naturalOrder();
                 }
 
-                for (String value : values) {
-                    add(builder, elementConverter.apply(ImmutableList.of(value)));
+                if (values != null) {
+                    for (String value : values) {
+                        add(builder, elementConverter.apply(ImmutableList.of(value)));
+                    }
                 }
                 return builder.build();
             }
@@ -312,7 +324,7 @@ public final class ParamConvertUtils {
 
         @Override
         public final Object apply(List<String> values) {
-            if (values.isEmpty()) {
+            if (values == null || values.isEmpty()) {
                 return getDefaultValue();
             }
             try {
@@ -327,8 +339,5 @@ public final class ParamConvertUtils {
         }
 
         protected abstract Object convert(String value) throws Exception;
-    }
-
-    private ParamConvertUtils() {
     }
 }

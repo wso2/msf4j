@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata: 
+  labels: 
+    name: fileserver
+  name: fileserver
+spec: 
+  ports:
+    - port: 80
+      targetPort: 8080
+      "nodePort": 31111
+  type: NodePort
+  selector: 
+    name: fileserver

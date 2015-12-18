@@ -1,0 +1,45 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.wso2.carbon.mss</groupId>
+        <artifactId>mss-lite-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../../../../mss-lite-parent/pom.xml</relativePath>
+    </parent>
+
+    <artifactId>petstore-security</artifactId>
+    <packaging>jar</packaging>
+
+    <name>Pet store microservices example - security microservice</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.mss</groupId>
+            <artifactId>petstore-util</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.axiom</groupId>
+            <artifactId>axiom-impl</artifactId>
+        </dependency>        
+        <dependency>
+            <groupId>org.wso2.carbon.identity</groupId>
+            <artifactId>org.wso2.carbon.ldap.server</artifactId> 
+        </dependency>
+    </dependencies>
+
+    <properties>
+        <microservice.mainClass>org.wso2.carbon.mss.examples.petstore.security.Runner</microservice.mainClass>
+    </properties>
+</project>

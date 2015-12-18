@@ -19,17 +19,17 @@
 
 package org.wso2.carbon.mss.internal.router;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableMultimap;
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.HttpContent;
-import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.LastHttpContent;
-import org.wso2.carbon.mss.HttpHandler;
 import org.wso2.carbon.mss.HttpResponder;
+import org.wso2.carbon.mss.HttpStreamHandler;
+import org.wso2.carbon.mss.HttpStreamer;
+import org.wso2.carbon.mss.internal.router.beanconversion.BeanConversionException;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -41,151 +41,145 @@ import java.lang.reflect.Method;
 class HttpMethodInfo {
 
     private final Method method;
-    private final HttpHandler handler;
-    private final boolean isChunkedRequest;
-    private final ByteBuf requestContent;
+    private final Object handler;
     private final HttpRequest request;
     private final HttpResponder responder;
     private final Object[] args;
-    private final boolean isStreaming;
     private final ExceptionHandler exceptionHandler;
+    private final String mediaType;
 
-    private BodyConsumer bodyConsumer;
+    private HttpStreamHandler httpStreamHandler;
 
-    HttpMethodInfo(Method method, HttpHandler handler, HttpRequest request, HttpResponder responder, Object[] args,
-                   ExceptionHandler exceptionHandler) {
+    HttpMethodInfo(Method method, Object handler, HttpRequest request,
+                   HttpResponder responder, Object[] args,
+                   ExceptionHandler exceptionHandler, String mediaType) {
         this.method = method;
         this.handler = handler;
-        this.isChunkedRequest = request instanceof HttpContent;
-        if (request instanceof HttpContent) {
-            requestContent = ((HttpContent) request).content();
-        } else {
-            this.requestContent = null;
-        }
-        this.isStreaming = BodyConsumer.class.isAssignableFrom(method.getReturnType());
-        this.request = rewriteRequest(request, isStreaming);
+        this.request = request;
         this.responder = responder;
         this.exceptionHandler = exceptionHandler;
+        this.mediaType = mediaType;
 
         // The actual arguments list to invoke handler method
-        this.args = new Object[args.length + 2];
-        this.args[0] = request;
-        this.args[1] = responder;
-        System.arraycopy(args, 0, this.args, 2, args.length);
+        this.args = args;
+    }
+
+    HttpMethodInfo(Method method, Object handler, HttpRequest request,
+                   HttpResponder responder, Object[] args,
+                   ExceptionHandler exceptionHandler, String mediaType,
+                   HttpStreamer httpStreamer) throws HandlerException {
+        this(method, handler, request, responder, args, exceptionHandler, mediaType);
+
+        if (!method.getReturnType().equals(Void.TYPE)) {
+            throw new HandlerException(HttpResponseStatus.INTERNAL_SERVER_ERROR,
+                    "Resource method should be void if it accepts chunked requests");
+        }
+        try {
+            method.invoke(handler, args);
+        } catch (InvocationTargetException e) {
+            throw new HandlerException(HttpResponseStatus.INTERNAL_SERVER_ERROR,
+                    "Resource method invocation failed", e.getTargetException());
+        } catch (IllegalAccessException e) {
+            throw new HandlerException(HttpResponseStatus.INTERNAL_SERVER_ERROR,
+                    "Resource method invocation access failed", e);
+        }
+        httpStreamHandler = httpStreamer.getHttpStreamHandler();
+        if (httpStreamHandler == null) {
+            throw new HandlerException(HttpResponseStatus.INTERNAL_SERVER_ERROR,
+                    "Streaming unsupported");
+        }
     }
 
     /**
      * Calls the httpHandler method.
      */
-    void invoke() throws Exception {
-        if (isStreaming) {
-            // Casting guarantee to be succeeded.
-            bodyConsumer = (BodyConsumer) method.invoke(handler, args);
-            if (bodyConsumer != null) {
-                if (requestContent.isReadable()) {
-                    bodyConsumerChunk(requestContent);
-                }
-                if (!isChunkedRequest) {
-                    bodyConsumerFinish();
-                }
-            }
-        } else {
-            // Actually <T> would be void
-            bodyConsumer = null;
-            try {
-                method.invoke(handler, args);
-            } catch (InvocationTargetException e) {
-                exceptionHandler.handle(e.getTargetException(), request, responder);
-            }
+    void invoke() {
+        try {
+            Object returnVal = method.invoke(handler, args);
+            //sending return value as output
+            new HttpMethodResponseHandler()
+                    .setResponder(responder)
+                    .setEntity(returnVal)
+                    .setMediaType(mediaType)
+                    .send();
+        } catch (InvocationTargetException e) {
+            exceptionHandler.handle(e.getTargetException(), request, responder);
+        } catch (IllegalAccessException | BeanConversionException | IOException e) {
+            exceptionHandler.handle(e, request, responder);
         }
     }
 
-    void chunk(HttpContent chunk) throws Exception {
-        if (bodyConsumer == null) {
-            // If the handler method doesn't want to handle chunk request, the bodyConsumer will be null.
+    void chunk(HttpContent chunk) {
+        if (httpStreamHandler == null) {
+            // If the handler method doesn't want to handle chunk request, the httpStreamHandler will be null.
             // It applies to case when the handler method inspects the request and decides to decline it.
             // Usually the handler also closes the connection after declining the request.
             // However, depending on the closing time and the request,
             // there may be some chunk of data already sent by the client.
             return;
         }
-        if (chunk instanceof LastHttpContent) {  //TODO: azeez
-            bodyConsumerFinish();
-        } else {
-            bodyConsumerChunk(chunk.content());
+        try {
+            if (chunk instanceof LastHttpContent) {
+                bodyConsumerFinish(chunk.content());
+            } else {
+                bodyConsumerChunk(chunk.content());
+            }
+        } catch (HandlerException e) {
+            exceptionHandler.handle(e, request, responder);
+        }
+    }
+
+    void error(Throwable e) {
+        try {
+            if (httpStreamHandler != null) {
+                bodyConsumerError(e);
+            }
+            exceptionHandler.handle(e, request, responder);
+        } catch (HandlerException ex) {
+            exceptionHandler.handle(ex, request, responder);
         }
     }
 
     /**
-     * Calls the {@link BodyConsumer#chunk(ByteBuf, HttpResponder)} method. If the chunk method call
-     * throws exception, the {@link BodyConsumer#handleError(Throwable)} will be called and this method will
-     * throw {@link HandlerException}.
+     * Calls the {@link HttpStreamHandler#chunk(io.netty.buffer.ByteBuf,
+     * org.wso2.carbon.mss.HttpResponder)} method.
+     * <p/>
+     * If the chunk method calls throws exception,
+     * the {@link HttpStreamHandler#error(Throwable)} will be called and
+     * this method will throw {@link org.wso2.carbon.mss.internal.router.HandlerException}.
      */
     private void bodyConsumerChunk(ByteBuf buffer) throws HandlerException {
         try {
-            bodyConsumer.chunk(buffer, responder);
+            httpStreamHandler.chunk(buffer, responder);
         } catch (Throwable t) {
-            throw bodyConsumerError(t);
+            bodyConsumerError(t);
         }
     }
 
     /**
-     * Calls {@link BodyConsumer#finished(HttpResponder)} method. The current bodyConsumer will be set to {@code null}
-     * after the call.
+     * Calls {@link HttpStreamHandler#finished(io.netty.buffer.ByteBuf, org.wso2.carbon.mss.HttpResponder)}
+     * method. The current httpStreamHandler will be set to {@code null} after the call.
      */
-    private void bodyConsumerFinish() {
-        BodyConsumer consumer = bodyConsumer;
-        bodyConsumer = null;
-        consumer.finished(responder);
-    }
-
-    /**
-     * Calls {@link BodyConsumer#handleError(Throwable)} and throws {@link HandlerException}. The current
-     * bodyConsumer will be set to {@code null} after the call.
-     */
-    private HandlerException bodyConsumerError(Throwable cause) throws HandlerException {
-        BodyConsumer consumer = bodyConsumer;
-        bodyConsumer = null;
-        consumer.handleError(cause);
-
-        throw new HandlerException(HttpResponseStatus.INTERNAL_SERVER_ERROR, "", cause);
-    }
-
-    /**
-     * Sends the error to responder.
-     */
-    void sendError(HttpResponseStatus status, Throwable ex) {
-        String msg;
-
-        if (ex instanceof InvocationTargetException) {
-            msg = String.format("Exception Encountered while processing request : %s",
-                    Objects.firstNonNull(ex.getCause(), ex).getMessage());
-        } else {
-            msg = String.format("Exception Encountered while processing request: %s", ex.getMessage());
+    private void bodyConsumerFinish(ByteBuf buffer) throws HandlerException {
+        try {
+            HttpStreamHandler consumer = httpStreamHandler;
+            httpStreamHandler = null;
+            consumer.finished(buffer, responder);
+        } catch (Throwable t) {
+            bodyConsumerError(t);
         }
-
-        // Send the status and message, followed by closing of the connection.
-        responder.sendString(status, msg, ImmutableMultimap.of(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE));
     }
 
     /**
-     * Returns true if the handler method's return type is BodyConsumer.
+     * Calls {@link HttpStreamHandler#error(Throwable)} and
+     * throws {@link org.wso2.carbon.mss.internal.router.HandlerException}. The current httpStreamHandler will be set
+     * to {@code null} after the call.
      */
-    boolean isStreaming() {
-        return isStreaming;
-    }
+    private void bodyConsumerError(Throwable cause) throws HandlerException {
+        HttpStreamHandler consumer = httpStreamHandler;
+        httpStreamHandler = null;
+        consumer.error(cause);
 
-    private HttpRequest rewriteRequest(HttpRequest request, boolean isStreaming) {
-        if (!isStreaming) {
-            return request;
-        }
-
-        //TODO: Azeez handle chunks
-    /*boolean isChunked = request.headers().contains(HttpHeaderNames.TRANSFER_ENCODING, HttpHeaderValues.CHUNKED, true)
-    if (!isChunked || request.content().readable()) {
-      request.setChunked(true);
-      request.setContent(Unpooled.EMPTY_BUFFER);
-    }*/
-        return request;
+        throw new HandlerException(HttpResponseStatus.INTERNAL_SERVER_ERROR, cause.getMessage(), cause);
     }
 }
