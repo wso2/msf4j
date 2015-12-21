@@ -1,0 +1,42 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.wso2.developerstudio.mss</groupId>
+        <artifactId>mss-tool-parent</artifactId>
+    	<version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>wso2-developerstudio-mss-plugins</artifactId>
+    <packaging>pom</packaging>
+    <name>WSO2 MSS Tooling Plugins</name>
+  
+    <modules>
+   	<module>org.wso2.developerstudio.mss.artifact</module>
+    </modules>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-eclipse-plugin</artifactId>
+                <version>2.10</version>
+                <configuration>
+                    <projectnatures>
+                        <projectnature>org.eclipse.jdt.core.javanature</projectnature>
+                        <projectnature>org.eclipse.pde.PluginNature</projectnature>
+                    </projectnatures>
+                    <buildcommands>
+                        <buildcommand>org.eclipse.jdt.core.javabuilder</buildcommand>
+                        <buildcommand>org.eclipse.pde.ManifestBuilder</buildcommand>
+                        <buildcommand>org.eclipse.pde.SchemaBuilder</buildcommand>
+                    </buildcommands>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>    
+
+
+</project>
