@@ -47,6 +47,13 @@ public class HTTPMonitoringInterceptor implements Interceptor {
 
     public HTTPMonitoringInterceptor init() {
         HTTPMonitoringDataPublisher.init();
+        // Destroy the publisher at shutdown
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                HTTPMonitoringDataPublisher.destroy();
+            }
+        });
         return this;
     }
 

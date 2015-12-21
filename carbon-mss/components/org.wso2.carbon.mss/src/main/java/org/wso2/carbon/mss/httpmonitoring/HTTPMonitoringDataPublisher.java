@@ -92,7 +92,7 @@ public final class HTTPMonitoringDataPublisher {
         return InetAddress.getLocalHost();
     }
 
-    public static synchronized void init() {
+    static synchronized void init() {
         // This method is synchronized to make sure that Data Publisher is created only once.
         if (dataPublisher != null) {
             if (logger.isDebugEnabled()) {
@@ -142,7 +142,7 @@ public final class HTTPMonitoringDataPublisher {
         }
     }
 
-    public static synchronized void destroy() {
+    static synchronized void destroy() {
         if (dataPublisher != null) {
             try {
                 dataPublisher.shutdownWithAgent();
