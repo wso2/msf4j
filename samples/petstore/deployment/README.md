@@ -19,6 +19,21 @@ brew update
 brew install wget
 ```
 
+### Linux OS 
+
+**Install Vagrant**
+
+```
+sudo apt-get install vagrant
+```
+
+**Install VirtualBox**
+
+```
+sudo apt-get install virtualbox
+```
+
+After installing Vagrant and VirtualBox, run automated deployment.
 
 ##Run automated deployment 
 
