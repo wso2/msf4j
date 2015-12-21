@@ -74,7 +74,7 @@ public final class HTTPMonitoringDataPublisher {
     private HTTPMonitoringDataPublisher() {
     }
 
-    public static InetAddress getLocalAddress() throws SocketException, UnknownHostException {
+    private static InetAddress getLocalAddress() throws SocketException, UnknownHostException {
         Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
         while (interfaces.hasMoreElements()) {
             NetworkInterface iface = interfaces.nextElement();

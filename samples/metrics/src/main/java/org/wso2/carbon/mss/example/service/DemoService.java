@@ -19,14 +19,9 @@ import org.wso2.carbon.metrics.annotation.Counted;
 import org.wso2.carbon.metrics.annotation.Metered;
 import org.wso2.carbon.metrics.annotation.Timed;
 import org.wso2.carbon.mss.httpmonitoring.HTTPMonitoring;
-import org.wso2.carbon.mss.httpmonitoring.HTTPMonitoringDataPublisher;
-import org.wso2.carbon.mss.metrics.MetricReporter;
-import org.wso2.carbon.mss.metrics.Metrics;
 
 import java.util.Random;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -41,18 +36,6 @@ public class DemoService {
     private final Random random = new Random();
 
     private long total = 0L;
-
-    @PostConstruct
-    public void init() {
-        Metrics.init(MetricReporter.CONSOLE, MetricReporter.JMX, MetricReporter.DAS);
-        HTTPMonitoringDataPublisher.init();
-    }
-
-    @PreDestroy
-    public void destroy() {
-        Metrics.destroy();
-        HTTPMonitoringDataPublisher.destroy();
-    }
 
     @GET
     @Path("/rand/{bound}")

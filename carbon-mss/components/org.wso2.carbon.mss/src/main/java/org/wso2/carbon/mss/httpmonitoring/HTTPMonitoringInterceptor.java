@@ -45,6 +45,11 @@ public class HTTPMonitoringInterceptor implements Interceptor {
         }
     }
 
+    public HTTPMonitoringInterceptor init() {
+        HTTPMonitoringDataPublisher.init();
+        return this;
+    }
+
     @Override
     public boolean preCall(HttpRequest request, HttpResponder responder, ServiceMethodInfo serviceMethodInfo) {
         Method method = serviceMethodInfo.getMethod();

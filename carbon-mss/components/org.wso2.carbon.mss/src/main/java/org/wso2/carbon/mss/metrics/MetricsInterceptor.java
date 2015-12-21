@@ -53,6 +53,11 @@ public class MetricsInterceptor implements Interceptor {
         }
     }
 
+    public MetricsInterceptor init(MetricReporter... metricReporters) {
+        Metrics.init(metricReporters);
+        return this;
+    }
+
     @Override
     public boolean preCall(HttpRequest request, HttpResponder responder, ServiceMethodInfo serviceMethodInfo) {
         Method method = serviceMethodInfo.getMethod();

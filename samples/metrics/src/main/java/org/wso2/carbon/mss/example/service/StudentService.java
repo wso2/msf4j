@@ -19,16 +19,11 @@ import org.wso2.carbon.metrics.annotation.Counted;
 import org.wso2.carbon.metrics.annotation.Metered;
 import org.wso2.carbon.metrics.annotation.Timed;
 import org.wso2.carbon.mss.httpmonitoring.HTTPMonitoring;
-import org.wso2.carbon.mss.httpmonitoring.HTTPMonitoringDataPublisher;
-import org.wso2.carbon.mss.metrics.MetricReporter;
-import org.wso2.carbon.mss.metrics.Metrics;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -51,18 +46,6 @@ public class StudentService {
         student.setLastName("Rodgers");
         student.setAge(14);
         addStudent(student);
-    }
-
-    @PostConstruct
-    public void init() {
-        Metrics.init(MetricReporter.CONSOLE, MetricReporter.JMX, MetricReporter.DAS);
-        HTTPMonitoringDataPublisher.init();
-    }
-
-    @PreDestroy
-    public void destroy() {
-        Metrics.destroy();
-        HTTPMonitoringDataPublisher.destroy();
     }
 
     @GET
