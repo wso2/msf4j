@@ -431,7 +431,7 @@
 
         <osgi.framework.import.version.range>[1.8.0, 2.0.0)</osgi.framework.import.version.range>
         <osgi.service.tracker.import.version.range>[1.5.1, 2.0.0)</osgi.service.tracker.import.version.range>
-        <carbon.feature.plugin.version>2.0.0-beta</carbon.feature.plugin.version>
+        <carbon.feature.plugin.version>2.0.0</carbon.feature.plugin.version>
 
         <!-- Dependencies for OSGi PAX exam tests -->
         <!--PAX Logging related dependency versions-->
