@@ -25,7 +25,7 @@ sudo apt-get install vagrant
 
 **Installing VirtualBox**
 ```
-sudo apt-get install virtalbox
+sudo apt-get install virtualbox
 ```
 
 After installing Vagrant and VirtualBox, run automated deployment.
