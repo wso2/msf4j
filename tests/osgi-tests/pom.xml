@@ -18,13 +18,13 @@
     <parent>
         <groupId>org.wso2.carbon.mss</groupId>
         <artifactId>mss-parent</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.0-SNAPSHOT</version>
         <relativePath>../../parent/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>mss-osgi-tests</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0-SNAPSHOT</version>
     <name>WSO2 MSS - OSGi Tests</name>
     <description>OSGi Tests for MSS</description>
     <url>http://wso2.com</url>
