@@ -1,7 +1,10 @@
 # Metrics and HTTP Monitoring MSS Bundle Sample
 
 This sample demonstrates how to create a microservice as an OSGi bundle.
-See also [Metrics and HTTP Monitoring Executable Jar Sample](../metrics-httpmon-mss-lite) and [Metrics and HTTP Monitoring MSS Deployable Jar](../metrics-httpmon-mss-deployable-jar) 
+
+Please see [Metrics and HTTP Monitoring Executable Jar Sample](../metrics-httpmon-mss-lite) for configuring WSO2 Data Analytics Server (DAS) and using annotations.
+
+See also [Metrics and HTTP Monitoring MSS Deployable Jar](../metrics-httpmon-mss-deployable-jar).
 
 In this sample we have exposed the DemoService as an OSGi service.
 

@@ -1,7 +1,10 @@
 # Metrics and HTTP Monitoring MSS Deployable Jar Sample
 
 This sample shows how to develop and deploy a microservice as a mss deployable jar.
-See also [Metrics and HTTP Monitoring Executable Jar Sample](../metrics-httpmon-mss-lite) and [Metrics and HTTP Monitoring MSS Bundle Sample](../metrics-httpmon-mss-bundle) 
+
+Please see [Metrics and HTTP Monitoring Executable Jar Sample](../metrics-httpmon-mss-lite) for configuring WSO2 Data Analytics Server (DAS) and using annotations.
+
+See also [Metrics and HTTP Monitoring MSS Bundle Sample](../metrics-httpmon-mss-bundle).
 
 
 ## How to build the sample

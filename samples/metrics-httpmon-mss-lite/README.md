@@ -65,7 +65,7 @@ new MicroservicesRunner()
 Use @HTTPMonitoring annotation when you want to monitor each HTTP request. 
 
 
-See following examples:
+See following example for using the annotation in the Class level.
 
 ```java
 @Path("/demo")
@@ -74,6 +74,9 @@ public class DemoService {
 
 }
 ```
+
+See following example for using the annotation in the Method level
+
 
 ```java
     @GET
@@ -189,7 +192,7 @@ events for each request.
 Use following command to run the application
 
 ```
-java -DMETRICS_REPORTING_DAS_DATAAGENTCONFIGPATH="data-agent-conf.xml" -DHTTP_MONITORING_DAS_DATAAGENTCONFIGPATH="data-agent-conf.xml" -jar target/metrics-1.0.0.jar
+java -DMETRICS_REPORTING_DAS_DATAAGENTCONFIGPATH="data-agent-conf.xml" -DHTTP_MONITORING_DAS_DATAAGENTCONFIGPATH="data-agent-conf.xml" -jar target/metrics-httpmon-mss-lite*.jar
 ```
 
 You can also run as follows.
@@ -197,7 +200,7 @@ You can also run as follows.
 ```
 export METRICS_REPORTING_DAS_DATAAGENTCONFIGPATH="data-agent-conf.xml"
 export HTTP_MONITORING_DAS_DATAAGENTCONFIGPATH="data-agent-conf.xml"
-java -jar target/metrics-*.jar
+java -jar target/metrics-httpmon-mss-lite*.jar
 ```
 
 
