@@ -90,24 +90,10 @@
         </file>
 
         <file>
-            <source>carbon-home/INSTALL.txt</source>
-            <outputDirectory></outputDirectory>
-            <fileMode>644</fileMode>
-            <filtered>true</filtered>
-        </file>
-
-        <file>
             <source>carbon-home/README.txt</source>
             <outputDirectory></outputDirectory>
             <fileMode>644</fileMode>
-            <filtered>true</filtered>
-        </file>
-
-        <file>
-            <source>carbon-home/release-notes.html</source>
-            <outputDirectory></outputDirectory>
-            <fileMode>644</fileMode>
-            <filtered>true</filtered>
+            <filtered>false</filtered>
         </file>
     </files>
 </assembly>
