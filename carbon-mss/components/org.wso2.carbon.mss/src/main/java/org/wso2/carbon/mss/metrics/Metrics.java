@@ -25,7 +25,7 @@ import org.wso2.carbon.metrics.impl.util.DASReporterBuilder;
 import org.wso2.carbon.metrics.impl.util.JmxReporterBuilder;
 import org.wso2.carbon.metrics.manager.MetricManager;
 import org.wso2.carbon.metrics.manager.MetricService;
-import org.wso2.carbon.metrics.manager.internal.ServiceReferenceHolder;
+import org.wso2.carbon.metrics.manager.ServiceReferenceHolder;
 
 /**
  * A utility class to initialize/destroy Metric Service
@@ -46,8 +46,8 @@ public final class Metrics {
             }
             return;
         }
-        if (logger.isDebugEnabled()) {
-            logger.debug("Initializing Metrics");
+        if (logger.isInfoEnabled()) {
+            logger.info("Initializing Metrics Service");
         }
         MetricsEnvConfiguration metricsEnvConfiguration = new MetricsEnvConfiguration();
         MetricsLevelConfiguration metricsLevelConfiguration = new MetricsLevelConfiguration();

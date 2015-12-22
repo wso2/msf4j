@@ -82,6 +82,64 @@
             <groupId>org.wso2.carbon.mss</groupId>
             <artifactId>org.wso2.carbon.mss</artifactId>
         </dependency>
+        <!-- Metrics Dependencies - Start -->
+        <dependency>
+            <groupId>org.wso2.carbon.metrics</groupId>
+            <artifactId>org.wso2.carbon.metrics.annotation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.metrics</groupId>
+            <artifactId>org.wso2.carbon.metrics.common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.metrics</groupId>
+            <artifactId>org.wso2.carbon.metrics.manager</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.metrics</groupId>
+            <artifactId>org.wso2.carbon.metrics.impl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.metrics</groupId>
+            <artifactId>org.wso2.carbon.metrics.das.reporter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.analytics-common</groupId>
+            <artifactId>org.wso2.carbon.databridge.agent</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.analytics-common</groupId>
+            <artifactId>org.wso2.carbon.databridge.commons</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.analytics-common</groupId>
+            <artifactId>org.wso2.carbon.databridge.commons.thrift</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.orbit.com.lmax</groupId>
+            <artifactId>disruptor</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.dropwizard.metrics</groupId>
+            <artifactId>metrics-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.dropwizard.metrics</groupId>
+            <artifactId>metrics-jvm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io.wso2</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>libthrift.wso2</groupId>
+            <artifactId>libthrift</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-pool.wso2</groupId>
+            <artifactId>commons-pool</artifactId>
+        </dependency>
+        <!-- Metrics Dependencies - End -->
     </dependencies>
 
     <build>
@@ -159,6 +217,64 @@
                                     <symbolicName>org.apache.servicemix.bundles.commons-beanutils</symbolicName>
                                     <version>${beanutils.osgi.version}</version>
                                 </bundle>
+                                <!-- Metrics Bundles - Start -->
+                                <bundle>
+                                    <symbolicName>org.wso2.carbon.metrics.annotation</symbolicName>
+                                    <version>${carbon.metrics.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>org.wso2.carbon.metrics.common</symbolicName>
+                                    <version>${carbon.metrics.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>org.wso2.carbon.metrics.manager</symbolicName>
+                                    <version>${carbon.metrics.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>org.wso2.carbon.metrics.impl</symbolicName>
+                                    <version>${carbon.metrics.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>org.wso2.carbon.metrics.das.reporter</symbolicName>
+                                    <version>${carbon.metrics.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>org.wso2.carbon.databridge.agent</symbolicName>
+                                    <version>${carbon.analytics.common.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>org.wso2.carbon.databridge.commons</symbolicName>
+                                    <version>${carbon.analytics.common.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>org.wso2.carbon.databridge.commons.thrift</symbolicName>
+                                    <version>${carbon.analytics.common.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>disruptor</symbolicName>
+                                    <version>${disruptor.orbit.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>io.dropwizard.metrics.core</symbolicName>
+                                    <version>${metrics.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>io.dropwizard.metrics.jvm</symbolicName>
+                                    <version>${metrics.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>commons-io</symbolicName>
+                                    <version>${commons-io.wso2.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>libthrift</symbolicName>
+                                    <version>${libthrift.wso2.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>commons-pool</symbolicName>
+                                    <version>${commons.pool.version}</version>
+                                </bundle>
+                                <!-- Metrics Bundles - End -->
                             </bundles>
                         </configuration>
                     </execution>

@@ -314,7 +314,14 @@
             org.osgi.util.tracker; version="${osgi.service.tracker.import.version.range}",
             org.wso2.carbon.kernel.transports.*,
             org.wso2.carbon.kernel.startupresolver.*,
+            org.wso2.carbon.kernel.utils.*,
             org.wso2.carbon.transport.http.netty.listener.*,
+            org.wso2.carbon.metrics.annotation.*,
+            org.wso2.carbon.metrics.common.*,
+            org.wso2.carbon.metrics.manager.*,
+            org.wso2.carbon.metrics.impl.*,
+            org.wso2.carbon.databridge.agent.*,
+            org.wso2.carbon.databridge.commons.*
         </import.package>
         <provide.capability>
             osgi.service;effective:=active;

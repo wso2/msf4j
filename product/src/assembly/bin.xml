@@ -46,6 +46,18 @@
         </fileSet>
 
         <fileSet>
+            <directory>carbon-home/conf/osgi</directory>
+            <outputDirectory>conf/osgi</outputDirectory>
+            <fileMode>644</fileMode>
+        </fileSet>
+
+        <fileSet>
+            <directory>carbon-home/conf/data-bridge</directory>
+            <outputDirectory>conf/data-bridge</outputDirectory>
+            <fileMode>644</fileMode>
+        </fileSet>
+
+        <fileSet>
             <directory>carbon-home/deployment/microservices</directory>
             <outputDirectory>deployment/microservices</outputDirectory>
             <fileMode>644</fileMode>

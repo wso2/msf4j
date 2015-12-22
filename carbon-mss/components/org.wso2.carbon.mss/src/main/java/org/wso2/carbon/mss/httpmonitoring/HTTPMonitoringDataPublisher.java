@@ -96,12 +96,12 @@ public final class HTTPMonitoringDataPublisher {
         // This method is synchronized to make sure that Data Publisher is created only once.
         if (dataPublisher != null) {
             if (logger.isDebugEnabled()) {
-                logger.debug("HTTP Monitoring is already initialized");
+                logger.debug("HTTP Monitoring Data Publisher is already initialized");
             }
             return;
         }
-        if (logger.isDebugEnabled()) {
-            logger.debug("Initializing HTTP Monitoring");
+        if (logger.isInfoEnabled()) {
+            logger.info("Initializing HTTP Monitoring Data Publisher");
         }
 
         String type = "thrift";
