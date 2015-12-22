@@ -27,7 +27,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
 /**
- * Demonstrating the use of Metrics & HTTP Monitoring Annotations
+ * Demonstrating the use of Metrics and HTTP Monitoring Annotations.
  */
 @Path("/demo-jar")
 @HTTPMonitoring
