@@ -13,7 +13,7 @@
         <module>plugins</module>
         <module>features</module>
         <module>repository</module>
-	<!--<module>installed-distribution</module>-->
+	<module>installed-distribution</module>
     </modules>
 
     <repositories>
