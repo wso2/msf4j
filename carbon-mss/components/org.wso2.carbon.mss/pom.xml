@@ -301,27 +301,27 @@
             org.wso2.carbon.mss.*;version="1.0.0",
         </export.package>
         <import.package>
-            org.wso2.carbon.kernel.deployment.*,
-            io.netty.*,
-            com.google.gson.*,
-            com.google.common.*,
+            org.wso2.carbon.kernel.deployment.*;version="${carbon.kernel.version.range}",
+            io.netty.*;version="${netty.version.range}",
+            com.google.gson.*;version="${gson.version.range}",
+            com.google.common.*;version="${guava.version.range}",
             javax.annotation.*,
             javax.ws.rs.*,
-            org.slf4j.*,
+            org.slf4j.*;version="${slf4j.version.range}",
             javax.net.ssl.*,
-            org.apache.commons.beanutils.*,
+            org.apache.commons.beanutils.*;version="${beanutils.version.range}",
             org.osgi.framework.*;version="${osgi.framework.import.version.range}",
             org.osgi.util.tracker; version="${osgi.service.tracker.import.version.range}",
-            org.wso2.carbon.kernel.transports.*,
-            org.wso2.carbon.kernel.startupresolver.*,
-            org.wso2.carbon.kernel.utils.*,
-            org.wso2.carbon.transport.http.netty.listener.*,
-            org.wso2.carbon.metrics.annotation.*,
-            org.wso2.carbon.metrics.common.*,
-            org.wso2.carbon.metrics.manager.*,
-            org.wso2.carbon.metrics.impl.*,
-            org.wso2.carbon.databridge.agent.*,
-            org.wso2.carbon.databridge.commons.*
+            org.wso2.carbon.kernel.transports.*;version="${carbon.kernel.version.range}",
+            org.wso2.carbon.kernel.startupresolver.*;version="${carbon.kernel.version.range}",
+            org.wso2.carbon.kernel.utils.*;version="${carbon.kernel.version.range}",
+            org.wso2.carbon.transport.http.netty.listener.*;version="${org.wso2.carbon.transport.http.netty.version.range}",
+            org.wso2.carbon.metrics.annotation.*;version="${carbon.metrics.version.range}",
+            org.wso2.carbon.metrics.common.*;version="${carbon.metrics.version.range}",
+            org.wso2.carbon.metrics.manager.*;version="${carbon.metrics.version.range}",
+            org.wso2.carbon.metrics.impl.*;version="${carbon.metrics.version.range}",
+            org.wso2.carbon.databridge.agent.*;version="${carbon.analytics.common.version.range}",
+            org.wso2.carbon.databridge.commons.*;version="${carbon.analytics.common.version.range}"
         </import.package>
         <provide.capability>
             osgi.service;effective:=active;
