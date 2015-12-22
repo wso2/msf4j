@@ -40,7 +40,6 @@
 
         <fileSet>
             <directory>carbon-home/conf/transports</directory>
-            <!--todo version-->
             <outputDirectory>conf/transports</outputDirectory>
             <fileMode>644</fileMode>
         </fileSet>
@@ -61,16 +60,6 @@
             <directory>carbon-home/deployment/microservices</directory>
             <outputDirectory>deployment/microservices</outputDirectory>
             <fileMode>644</fileMode>
-        </fileSet>
-
-        <!-- Copy the README.md & LICENSE files -->
-        <fileSet>
-            <directory>..</directory>
-            <outputDirectory>.</outputDirectory>
-            <includes>
-                <include>README.md</include>
-                <include>LICENSE</include>
-            </includes>
         </fileSet>
 
         <!-- Copy the samples -->
@@ -105,6 +94,18 @@
     </fileSets>
 
     <files>
+        <file>
+            <source>carbon-home/LICENSE.txt</source>
+            <outputDirectory></outputDirectory>
+            <fileMode>644</fileMode>
+            <filtered>false</filtered>
+        </file>
 
+        <file>
+            <source>carbon-home/README.txt</source>
+            <outputDirectory></outputDirectory>
+            <fileMode>644</fileMode>
+            <filtered>false</filtered>
+        </file>
     </files>
 </assembly>
