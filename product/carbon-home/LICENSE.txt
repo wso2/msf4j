@@ -26,7 +26,7 @@ io.netty.codec_4.0.30.Final.jar                                                 
 io.netty.common_4.0.30.Final.jar                                                bundle         apache2   1541      
 io.netty.handler_4.0.30.Final.jar                                               bundle         apache2   1540      
 io.netty.transport_4.0.30.Final.jar                                             bundle         apache2   1539      
-javax.ws.rs-api.fragment_1.0.0.SNAPSHOT.jar                                     bundle         cddl+gpl  1604      
+javax.ws.rs-api.fragment_1.0.0.jar                                              bundle         cddl+gpl  1604
 javax.ws.rs-api_2.0.0.jar                                                       bundle         cddl+gpl  1538      
 libthrift_0.8.0.wso2v1.jar                                                      bundle         apache2   1117      
 org.apache.aries.spifly.dynamic.bundle_1.0.8.jar                                bundle         apache2   1603      
@@ -66,7 +66,7 @@ org.wso2.carbon.metrics.common_1.2.0.jar                                        
 org.wso2.carbon.metrics.das.reporter_1.2.0.jar                                  bundle         apache2   6888      
 org.wso2.carbon.metrics.impl_1.2.0.jar                                          bundle         apache2   6887      
 org.wso2.carbon.metrics.manager_1.2.0.jar                                       bundle         apache2   6886      
-org.wso2.carbon.mss_1.0.0.SNAPSHOT.jar                                          bundle         apache2   6884      
+org.wso2.carbon.mss_1.0.0.jar                                                   bundle         apache2   6884
 org.wso2.carbon.tools-5.0.0.jar                                                 bundle         apache2   6881      
 org.wso2.carbon.transport.http.netty_1.0.0.jar                                  bundle         apache2   6883      
 snakeyaml_1.16.0.wso2v1.jar                                                     bundle         apache2   6274      
