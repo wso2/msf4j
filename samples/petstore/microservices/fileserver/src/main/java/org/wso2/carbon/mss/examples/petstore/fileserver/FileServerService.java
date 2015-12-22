@@ -22,9 +22,11 @@ import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.metrics.annotation.Timed;
 import org.wso2.carbon.mss.HttpResponder;
 import org.wso2.carbon.mss.HttpStreamHandler;
 import org.wso2.carbon.mss.HttpStreamer;
+import org.wso2.carbon.mss.httpmonitoring.HTTPMonitoring;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -43,6 +45,7 @@ import javax.ws.rs.core.Response;
  * FileServer service class. This uses request streaming
  * to save the submitted files in the server.
  */
+@HTTPMonitoring
 @Path("/")
 public class FileServerService {
 
@@ -51,6 +54,7 @@ public class FileServerService {
 
     @POST
     @Path("/{fileName}")
+    @Timed
     public void postFile(@Context HttpStreamer httpStreamer,
                          @PathParam("fileName") String fileName)
             throws IOException {
@@ -59,6 +63,7 @@ public class FileServerService {
 
     @GET
     @Path("/{fileName}")
+    @Timed
     public Response getFile(@PathParam("fileName") String fileName) {
         File file = Paths.get(MOUNT_PATH, fileName).toFile();
         if (file.exists()) {

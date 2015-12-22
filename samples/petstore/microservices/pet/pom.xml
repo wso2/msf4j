@@ -24,6 +24,11 @@
             <artifactId>petstore-util</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.mss</groupId>
+            <artifactId>org.wso2.carbon.mss</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <properties>

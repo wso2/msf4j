@@ -25,6 +25,16 @@ WORKDIR /opt
 # Copy scripts, packages & plugins
 # --------------------------------
 COPY packages/petstore-security.jar /opt/
+COPY packages/client-truststore.jks /opt/
+COPY packages/data-agent-conf.xml /opt/
+
+# --------------------------------
+# HTTP Monitoring and metrics specific config
+# --------------------------------
+ENV METRICS_REPORTING_DAS_DATAAGENTCONFIGPATH data-agent-conf.xml
+ENV METRICS_REPORTING_DAS_RECEIVERURL "tcp://172.17.8.1:7612"
+ENV HTTP_MONITORING_DAS_DATAAGENTCONFIGPATH data-agent-conf.xml
+ENV HTTP_MONITORING_DAS_RECEIVERURL "tcp://172.17.8.1:7612"
 
 # ----------------------
 # Expose container ports

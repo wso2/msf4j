@@ -3,6 +3,7 @@
 
 PRE_REQ=1
 IS_PACK="wso2is-5.0.0.zip"
+DAS_PACK="wso2das-3.0.0.zip"
 HOME=`pwd`
 VAGRANT_HOME="$HOME/kubernetes-vagrant-coreos-cluster"
 SHARE_FOLDER="$VAGRANT_HOME/docker/"

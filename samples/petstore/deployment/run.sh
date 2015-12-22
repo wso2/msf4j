@@ -50,6 +50,8 @@ cd $HOME
 cp -fr $PET_HOME/container/docker $SHARE_FOLDER/pet
 [ ! -d $SHARE_FOLDER/pet/docker/packages ] && mkdir -p $SHARE_FOLDER/pet/docker/packages
 cp -f $PET_HOME/target/petstore-pet-*.jar $SHARE_FOLDER/pet/docker/packages/petstore-pet.jar
+cp -f $PET_HOME/data-agent-conf.xml $SHARE_FOLDER/pet/docker/packages/data-agent-conf.xml
+cp -f $PET_HOME/client-truststore.jks $SHARE_FOLDER/pet/docker/packages/client-truststore.jks
 
 
 echo "--------------------------------------------------------------"
@@ -60,6 +62,8 @@ cd $HOME
 cp -fr $FILESERVER_HOME/container/docker $SHARE_FOLDER/fileserver
 [ ! -d $SHARE_FOLDER/fileserver/docker/packages ] && mkdir -p $SHARE_FOLDER/fileserver/docker/packages
 cp -f $FILESERVER_HOME/target/petstore-fileserver-*.jar $SHARE_FOLDER/fileserver/docker/packages/petstore-fileserver.jar
+cp -f $FILESERVER_HOME/data-agent-conf.xml $SHARE_FOLDER/fileserver/docker/packages/data-agent-conf.xml
+cp -f $FILESERVER_HOME/client-truststore.jks $SHARE_FOLDER/fileserver/docker/packages/client-truststore.jks
 
 echo "--------------------------------------------------------------"
 echo "Copy FrontEnd Admin"
@@ -117,6 +121,8 @@ echo "--------------------------------------------------------------"
 cp -fr $SECURITY/container/docker $SHARE_FOLDER/security
 [ ! -d $SHARE_FOLDER/security/docker/packages ] && mkdir -p $SHARE_FOLDER/security/docker/packages
 cp -f $SECURITY/target/petstore-security-*.jar $SHARE_FOLDER/security/docker/packages/petstore-security.jar
+cp -f $SECURITY/data-agent-conf.xml $SHARE_FOLDER/security/docker/packages/data-agent-conf.xml
+cp -f $SECURITY/client-truststore.jks $SHARE_FOLDER/security/docker/packages/client-truststore.jks
 
 
 echo "--------------------------------------------------------------"
@@ -126,6 +132,8 @@ echo "--------------------------------------------------------------"
 cp -fr $TRANSACTION/container/docker $SHARE_FOLDER/transaction
 [ ! -d $SHARE_FOLDER/transaction/docker/packages ] && mkdir -p $SHARE_FOLDER/transaction/docker/packages
 cp -f $TRANSACTION/target/petstore-txn-*.jar $SHARE_FOLDER/transaction/docker/packages/petstore-txn.jar
+cp -f $TRANSACTION/data-agent-conf.xml $SHARE_FOLDER/transaction/docker/packages/data-agent-conf.xml
+cp -f $TRANSACTION/client-truststore.jks $SHARE_FOLDER/transaction/docker/packages/client-truststore.jks
 
 #echo "--------------------------------------------------------------"
 #echo "Cleaning up old docker files"

@@ -19,6 +19,21 @@ echo "Starting WSO2 Identity Server"
 echo "--------------------------------------------------------------"
 ./wso2server.sh start
 
+cd $HOME/packs
+[ -d ${DAS_PACK%.zip} ] && rm -fr ${DAS_PACK%.*}
+unzip $DAS_PACK
+echo "--------------------------------------------------------------"
+echo "Setting up WSO2 Data Analytics Server"
+echo "--------------------------------------------------------------"
+echo "DAS Pack:"${DAS_PACK%.zip}
+../../../../analytics/das-setup/./setup.sh -d ${DAS_PACK%.zip}
+pwd
+echo "--------------------------------------------------------------"
+echo "Starting WSO2 Data Analytics Server"
+echo "--------------------------------------------------------------"
+cd ${DAS_PACK%.zip}/bin/
+./wso2server.sh start -DportOffset=1
+
 echo "--------------------------------------------------------------"
 echo "Creating Kube-System Namespace, Kube-DNS, Kube-UI"
 echo "--------------------------------------------------------------"
