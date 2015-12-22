@@ -90,7 +90,7 @@
                                     <version>${asm.all.version}</version>
                                 </bundle> <bundle>
                                     <symbolicName>javax.ws.rs-api.fragment</symbolicName>
-                                    <version>${carbon.mss.osgi.version}</version>
+                                    <version>${carbon.mss.version}</version>
                                 </bundle>
                             </bundles>
                         </configuration>

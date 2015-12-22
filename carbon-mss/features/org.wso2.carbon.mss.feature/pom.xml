@@ -113,7 +113,7 @@
                             <bundles>
                                 <bundle>
                                     <symbolicName>org.wso2.carbon.mss</symbolicName>
-                                    <version>${carbon.mss.osgi.version}</version>
+                                    <version>${carbon.mss.version}</version>
                                 </bundle>
                                 <bundle>
                                     <symbolicName>javax.ws.rs-api</symbolicName>
