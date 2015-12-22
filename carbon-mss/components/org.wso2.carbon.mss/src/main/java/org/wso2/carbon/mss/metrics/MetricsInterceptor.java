@@ -53,6 +53,18 @@ public class MetricsInterceptor implements Interceptor {
         }
     }
 
+    public MetricsInterceptor init(MetricReporter... metricReporters) {
+        Metrics.init(metricReporters);
+        // Destroy the Metric Service at shutdown
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                Metrics.destroy();
+            }
+        });
+        return this;
+    }
+
     @Override
     public boolean preCall(HttpRequest request, HttpResponder responder, ServiceMethodInfo serviceMethodInfo) {
         Method method = serviceMethodInfo.getMethod();

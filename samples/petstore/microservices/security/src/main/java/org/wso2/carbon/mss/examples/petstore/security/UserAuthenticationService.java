@@ -20,8 +20,10 @@ package org.wso2.carbon.mss.examples.petstore.security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.metrics.annotation.Timed;
 import org.wso2.carbon.mss.examples.petstore.security.ldap.LDAPUserStoreManager;
 import org.wso2.carbon.mss.examples.petstore.util.model.User;
+import org.wso2.carbon.mss.httpmonitoring.HTTPMonitoring;
 import org.wso2.carbon.mss.util.SystemVariableUtil;
 
 import javax.naming.NamingException;
@@ -34,6 +36,7 @@ import javax.ws.rs.core.Response;
 /**
  * UserAuthentication micro service.
  */
+@HTTPMonitoring
 @Path("/user")
 public class UserAuthenticationService {
 
@@ -47,6 +50,7 @@ public class UserAuthenticationService {
     @POST
     @Consumes("application/json")
     @Path("/login")
+    @Timed
     public Response authenticate(User user) {
         String name = user.getName();
         log.info("Authenticating user " + name + " ..");
@@ -79,6 +83,7 @@ public class UserAuthenticationService {
     @POST
     @Consumes("application/json")
     @Path("/add")
+    @Timed
     public Response addUser(User user) {
         String name = user.getName();
         log.info("Adding new user " + name + " ..");
@@ -108,6 +113,7 @@ public class UserAuthenticationService {
     @POST
     @Consumes("application/json")
     @Path("/ldapgroup/{name}/{description}")
+    @Timed
     public Response addLDAPGroup(@PathParam("name") String name, @PathParam("description") String description) {
         log.info("Adding new ldap group " + name + " ..");
         LDAPUserStoreManager ldapUserStoreManager;

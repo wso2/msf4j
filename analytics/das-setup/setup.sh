@@ -25,7 +25,7 @@ das_dir=""
 function help {
     echo ""
     echo "Usage: "
-    echo "setup-das.sh -d <DAS_HOME>"
+    echo "setup.sh -d <DAS_HOME>"
     echo ""
     echo "-d: WSO2 Data Analytics Server (DAS) home directory"
     echo ""

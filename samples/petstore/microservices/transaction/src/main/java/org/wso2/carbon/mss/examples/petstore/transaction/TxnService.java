@@ -21,8 +21,10 @@ package org.wso2.carbon.mss.examples.petstore.transaction;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.metrics.annotation.Timed;
 import org.wso2.carbon.mss.examples.petstore.util.JedisUtil;
 import org.wso2.carbon.mss.examples.petstore.util.model.Order;
+import org.wso2.carbon.mss.httpmonitoring.HTTPMonitoring;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,12 +39,14 @@ import javax.ws.rs.core.Response;
 /**
  * Transaction microservice.
  */
+@HTTPMonitoring
 @Path("/transaction")
 public class TxnService {
     private static final Logger log = LoggerFactory.getLogger(TxnService.class);
 
     @POST
     @Consumes("application/json")
+    @Timed
     public Response addOrder(Order order) {
         String orderId = order.getId();
         if (!JedisUtil.smembers(TxnConstants.ORDERS_KEY).contains(orderId)) {
@@ -64,6 +68,7 @@ public class TxnService {
     @GET
     @Path("/all")
     @Produces("application/json")
+    @Timed
     public List<Order> getOrders(String txnId) {
         Set<String> orderKeys = JedisUtil.smembers(TxnConstants.ORDERS_KEY);
         List<Order> result = new ArrayList<>(orderKeys.size());

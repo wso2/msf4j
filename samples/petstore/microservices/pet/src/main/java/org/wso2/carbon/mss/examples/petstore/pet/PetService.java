@@ -21,8 +21,10 @@ package org.wso2.carbon.mss.examples.petstore.pet;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.metrics.annotation.Timed;
 import org.wso2.carbon.mss.examples.petstore.util.JedisUtil;
 import org.wso2.carbon.mss.examples.petstore.util.model.Pet;
+import org.wso2.carbon.mss.httpmonitoring.HTTPMonitoring;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +42,7 @@ import javax.ws.rs.core.Response;
 /**
  * Pet microservice.
  */
+@HTTPMonitoring
 @Path("/pet")
 public class PetService {
     private static final Logger log = LoggerFactory.getLogger(PetService.class);
@@ -51,6 +54,7 @@ public class PetService {
 
     @POST
     @Consumes("application/json")
+    @Timed
     public Response addPet(Pet pet) {
         String categoryName = pet.getCategory().getName();
         if (!JedisUtil.smembers(PetConstants.CATEGORIES_KEY).contains(categoryName)) {
@@ -72,6 +76,7 @@ public class PetService {
 
     @DELETE
     @Path("/{id}")
+    @Timed
     public Response deletePet(@PathParam("id") String id) {
         String petKey = PetConstants.PET_ID_KEY_PREFIX + id;
         String petValue = JedisUtil.get(petKey);
@@ -88,6 +93,7 @@ public class PetService {
 
     @PUT
     @Consumes("application/json")
+    @Timed
     public Response updatePet(Pet pet) {
         String id = pet.getId();
         String petKey = PetConstants.PET_ID_KEY_PREFIX + id;
@@ -104,6 +110,7 @@ public class PetService {
     @GET
     @Produces("application/json")
     @Path("/{id}")
+    @Timed
     public Response getPet(@PathParam("id") String id) {
         String json = JedisUtil.get(PetConstants.PET_ID_KEY_PREFIX + id);
         if (json == null || json.isEmpty()) {
@@ -116,6 +123,7 @@ public class PetService {
     @GET
     @Path("/all")
     @Produces("application/json")
+    @Timed
     public List<Pet> getAllPets() {
         List<Pet> result = new ArrayList<>();
         Set<String> categories = JedisUtil.smembers(PetConstants.CATEGORIES_KEY);
