@@ -1,3 +1,4 @@
+
 This product is licensed by WSO2 Inc. under Apache License 2.0. The license
 can be downloaded from the following locations:
 	http://www.apache.org/licenses/LICENSE-2.0.html
@@ -14,14 +15,20 @@ Name                                                                            
 ---------------------------------------------------------------------------------------------------------
 com.google.gson_2.2.4.jar                                                       bundle         apache2   914       
 com.google.guava_13.0.1.jar								       apache2
+commons-io_2.4.0.wso2v1.jar                                                     bundle         apache2   4217      
+commons-pool_1.5.6.wso2v1.jar                                                   bundle         apache2   1009      
+disruptor_3.3.2.wso2v2.jar                                                      bundle         apache2   4377      
+io.dropwizard.metrics.core_3.1.2.jar                                            bundle         apache2   1305      
+io.dropwizard.metrics.jvm_3.1.2.jar                                             bundle         apache2   1302      
 io.netty.buffer_4.0.30.Final.jar                                                bundle         apache2   1544      
 io.netty.codec-http_4.0.30.Final.jar                                            bundle         apache2   1543      
 io.netty.codec_4.0.30.Final.jar                                                 bundle         apache2   1542      
 io.netty.common_4.0.30.Final.jar                                                bundle         apache2   1541      
 io.netty.handler_4.0.30.Final.jar                                               bundle         apache2   1540      
 io.netty.transport_4.0.30.Final.jar                                             bundle         apache2   1539      
-javax.ws.rs-api.fragment_1.0.0.jar                                              bundle         cddl+gpl  1604
+javax.ws.rs-api.fragment_1.0.0.SNAPSHOT.jar                                     bundle         cddl+gpl  1604      
 javax.ws.rs-api_2.0.0.jar                                                       bundle         cddl+gpl  1538      
+libthrift_0.8.0.wso2v1.jar                                                      bundle         apache2   1117      
 org.apache.aries.spifly.dynamic.bundle_1.0.8.jar                                bundle         apache2   1603      
 org.apache.aries.util_1.1.1.jar                                                 bundle         apache2   1602      
 org.apache.felix.gogo.command_0.10.0.v201209301215.jar                          bundle         apache2   1134      
@@ -50,8 +57,16 @@ org.ops4j.pax.logging.pax-logging-api_1.8.4.jar                                 
 org.ops4j.pax.logging.pax-logging-log4j2_1.8.4.jar                              bundle         apache2   1409      
 org.osgi.core-6.0.0.jar                                                         bundle         apache2   1407      
 org.wso2.carbon.core_5.0.0.jar                                                  bundle         apache2   6885      
+org.wso2.carbon.databridge.agent_5.0.6.jar                                      bundle         apache2   6893      
+org.wso2.carbon.databridge.commons.thrift_5.0.6.jar                             bundle         apache2   6892      
+org.wso2.carbon.databridge.commons_5.0.6.jar                                    bundle         apache2   6891      
 org.wso2.carbon.launcher-5.0.0.jar                                              bundle         apache2   6882      
-org.wso2.carbon.mss_1.0.0.jar                                                   bundle         apache2   6884
+org.wso2.carbon.metrics.annotation_1.2.0.jar                                    bundle         apache2   6890      
+org.wso2.carbon.metrics.common_1.2.0.jar                                        bundle         apache2   6889      
+org.wso2.carbon.metrics.das.reporter_1.2.0.jar                                  bundle         apache2   6888      
+org.wso2.carbon.metrics.impl_1.2.0.jar                                          bundle         apache2   6887      
+org.wso2.carbon.metrics.manager_1.2.0.jar                                       bundle         apache2   6886      
+org.wso2.carbon.mss_1.0.0.SNAPSHOT.jar                                          bundle         apache2   6884      
 org.wso2.carbon.tools-5.0.0.jar                                                 bundle         apache2   6881      
 org.wso2.carbon.transport.http.netty_1.0.0.jar                                  bundle         apache2   6883      
 snakeyaml_1.16.0.wso2v1.jar                                                     bundle         apache2   6274      
