@@ -56,11 +56,20 @@ public class OAuth2SecurityInterceptor implements Interceptor {
     private static final String BEARER_PREFIX = "bearer";
     private static final String AUTH_SERVER_URL_KEY = "AUTH_SERVER_URL";
     private static final String AUTH_SERVER_URL;
+    private static final String TRUST_STORE = "TRUST_STORE";
+    private static final String TRUST_STORE_PASSWORD = "TRUST_STORE_PASSWORD";
 
     static {
         AUTH_SERVER_URL = SystemVariableUtil.getValue(AUTH_SERVER_URL_KEY, null);
         if (AUTH_SERVER_URL == null) {
             throw new RuntimeException(AUTH_SERVER_URL_KEY + " is not specified.");
+        }
+        String trustStore = SystemVariableUtil.getValue(TRUST_STORE, null);
+        String trustStorePassword = SystemVariableUtil.getValue(TRUST_STORE_PASSWORD, null);
+        if (trustStore != null && !trustStore.isEmpty() &&
+                trustStorePassword != null && !trustStorePassword.isEmpty()) {
+            System.setProperty("javax.net.ssl.trustStore", trustStore);
+            System.setProperty("javax.net.ssl.trustStorePassword", trustStorePassword);
         }
     }
 
