@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <category-def name="org.wso2.developerstudio.mss" label="MSS Tool">
+	   <description>
+		This is the MSS Tools Feature for the Developer Studio. This provides tooling support for WSO2 MSS Artifact creation with Developer Studio.
+	   </description>
+   </category-def>
+
+   <!-- MSS prodcut feature (itself)-->
+   <feature url="features/org.wso2.developerstudio.mss.feature_1.0.0.qualifier.jar" id="org.wso2.developerstudio.mss.feature" version="1.0.0.qualifier">
+      <category name="org.wso2.developerstudio.mss"/>
+   </feature>
+   
+   <!-- Kernel Features and category-->	
+   <feature id="org.wso2.developerstudio.kernel.core.feature" version="0.0.0">
+      <category name="org.wso2.developerstudio.mss"/>
+   </feature>
+   <feature id="org.wso2.developerstudio.kernel.core.ui.feature" version="0.0.0">
+      <category name="org.wso2.developerstudio.mss"/>
+   </feature>
+   <feature id="org.wso2.developerstudio.kernel.tools.feature" version="0.0.0">
+      <category name="org.wso2.developerstudio.mss"/>
+   </feature>
+   <feature id="org.wso2.developerstudio.kernel.utils.feature" version="0.0.0">
+      <category name="org.wso2.developerstudio.mss"/>
+   </feature>
+  
+   <!-- Kernel core Features and category-->	
+   <!--feature id="org.wso2.developerstudio.capp.feature" version="0.0.0">
+      <category name="org.wso2.developerstudio.mss"/>
+   </feature>
+   <feature id="org.wso2.developerstudio.kernel.registry.feature" version="0.0.0">
+      <category name="org.wso2.developerstudio.mss"/>
+   </feature>
+   <feature id="org.wso2.developerstudio.kernel.security.feature" version="0.0.0">
+      <category name="org.wso2.developerstudio.kernel.common"/>
+   </feature-->
+
+</site>

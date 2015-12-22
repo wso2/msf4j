@@ -10,9 +10,10 @@
     <name>MSS Tool</name>
 
     <modules>
-        <module>org.wso2.developerstudio.mss.artifact</module>
-        <module>org.wso2.developerstudio.mss.feature</module>
+        <module>plugins</module>
+        <module>features</module>
         <module>repository</module>
+	<module>installed-distribution</module>
     </modules>
 
     <repositories>
@@ -33,7 +34,7 @@
                 <checksumPolicy>ignore</checksumPolicy>
             </releases>
             <id>Eclipse-kernel-p2</id>
-            <url>http://builder1.us1.wso2.org/~developerstudio/devs-kernel/4.0.0/releases/rc2/p2/</url>
+            <url>http://product-dist.wso2.com/p2/developer-studio-kernel/4.0.0/kernel/releases/main/</url>
             <layout>p2</layout>
         </repository>
     </repositories>

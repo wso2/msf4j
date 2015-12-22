@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ ~ Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
+ ~
+ ~ Licensed under the Apache License, Version 2.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~      http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>    
+    <parent>
+        <groupId>org.wso2.developerstudio.mss</groupId>
+        <artifactId>wso2-developer-studio-eclipse-mss-installed-distributions</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+	<relativePath>../pom.xml</relativePath>
+    </parent>
+    <groupId>org.wso2.developerstudio.mss</groupId>
+    <artifactId>developer-studio-eclipse-jee-luna-linux-gtk-x86_64</artifactId>
+  
+    <packaging>pom</packaging>
+    <name>WSO2 Developer Studio Eclipse MSS Tools distribution-linux-gtk-x86_64</name>
+    <url>http://wso2.org</url>
+    <repositories>
+    	<repository>
+    		<id>wso2-maven2-repo</id>
+    		<name>WSO2 Maven2 Repo</name>
+    		<url>http://dist.wso2.org/maven2/</url>
+    	</repository>
+	<repository>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+            <id>DevS-Deps-p2-Repository</id>
+            <url>http://product-dist.wso2.com/p2/developer-studio-kernel/4.0.0/kernel/releases/main/</url>
+            <layout>p2</layout>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>wso2-maven2-repository</id>
+            <url>http://dist.wso2.org/maven2</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>wso2-maven2-snapshot-repository</id>
+            <url>http://dist.wso2.org/snapshots/maven2</url>
+        </pluginRepository>
+    </pluginRepositories>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.4</version>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <id>1-unpack-p2-agent-distribution</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.eclipse</groupId>
+                                    <artifactId>eclipse-jee-luna-linux-gtk-x86_64</artifactId>
+                                    <version>4.4.2</version>
+                                    <type>tar.gz</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>target</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.wso2.developerstudio.mss</groupId>
+                                    <artifactId>wso2-developer-studio-mss-tool-p2-composite</artifactId>
+				    <version>1.0.0-SNAPSHOT</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>target/p2-repo</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+					<id>install-eclipse</id>
+					<phase>package</phase>
+					<goals>
+						<goal>run</goal>
+					</goals>
+					<configuration>
+					<tasks>
+						<java classname="org.eclipse.equinox.launcher.Main" fork="true"
+							spawn="false" failonerror="true" maxmemory="1024m">
+						<classpath>
+							<fileset dir="${project.basedir}/target/eclipse/plugins" includes="org.eclipse.equinox.launcher*.jar" />
+						</classpath>
+						<arg value="-nosplash" />
+						<arg value="-application" />
+						<arg value="org.eclipse.equinox.p2.director" />
+						<arg value="-repository" />
+						<arg value="file:${project.basedir}/target/p2-repo,http://product-dist.wso2.com/p2/developer-studio-kernel/4.0.0/kernel/releases/main/" />
+						<arg value="-destination" />
+						<arg value="${project.basedir}/target/eclipse" />
+						<arg value="-installIU" />						
+						<arg value="org.wso2.developerstudio.kernel.core.feature.feature.group" />
+						<arg value="-installIU" />
+						<arg value="org.wso2.developerstudio.kernel.core.ui.feature.feature.group" />
+						<arg value="-installIU" />
+						<arg value="org.wso2.developerstudio.kernel.tools.feature.feature.group" />
+						<arg value="-installIU" />
+						<arg value="org.wso2.developerstudio.kernel.utils.feature.feature.group" />
+						<arg value="-installIU" />
+						<arg value="org.wso2.developerstudio.mss.feature.feature.group"/>
+					</java>
+					</tasks>
+				</configuration>
+				</execution>
+			</executions>
+		</plugin>
+	    <plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-antrun-plugin</artifactId>
+		<version>1.1</version>
+		<executions>
+    			<execution>
+        			<phase>package</phase>
+        			<configuration>
+            				<tasks>
+						<replace token="512m" value="1024m"
+                         dir="target/eclipse">
+                                                        <include name="**/eclipse.ini"/>
+                                                </replace>
+						<replace token="40m" value="512m"
+                         dir="target/eclipse">
+                                                        <include name="**/eclipse.ini"/>
+                                                </replace>
+						<replace token="256m" value="512m"
+                         dir="target/eclipse">
+                                                        <include name="**/eclipse.ini"/>
+                                                </replace>
+            				</tasks>
+        			</configuration>
+        			<goals>
+            				<goal>run</goal>
+        			</goals>
+    			</execution>
+		</executions>
+	    </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.4</version>
+                <executions>
+                    <execution>
+                        <id>assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attached</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>${basedir}/src/assembly/dist.xml</descriptor>
+                            </descriptors>
+			    <appendAssemblyId>false</appendAssemblyId>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

@@ -1,0 +1,63 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  
+    <modelVersion>4.0.0</modelVersion><parent>
+        <groupId>org.wso2.developerstudio.mss</groupId>
+        <artifactId>mss-tool-parent</artifactId>
+    	<version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>wso2-developer-studio-eclipse-mss-installed-distributions</artifactId>
+    <packaging>pom</packaging>
+    <name>WSO2 Developer Studio MSS Tools Installed Eclipse Distributions</name>
+    <repositories>
+    	<repository>
+    		<id>wso2-maven2-repo</id>
+    		<name>WSO2 Maven2 Repo</name>
+    		<url>http://dist.wso2.org/maven2/</url>
+    	</repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>wso2-maven2-repository</id>
+            <url>http://dist.wso2.org/maven2</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>wso2-maven2-snapshot-repository</id>
+            <url>http://dist.wso2.org/snapshots/maven2</url>
+        </pluginRepository>
+    </pluginRepositories>
+    <distributionManagement>
+        <repository>
+            <id>wso2-maven2-repository</id>
+            <name>WSO2 Maven2 Repository</name>
+            <url>scp://dist.wso2.org/home/httpd/dist.wso2.org/maven2/</url>
+        </repository>
+    </distributionManagement>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                   <groupId>org.wso2.developerstudio.mss</groupId>
+    		   <artifactId>mss-tool-parent</artifactId>
+    		   <version>1.0.0-SNAPSHOT</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>wso2-p2-agent</artifactId>
+                <version>3.1.0</version>
+                <type>zip</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>    
+    <modules>
+        <module>developer-studio-eclipse-jee-luna-linux-gtk</module>
+        <module>developer-studio-eclipse-jee-luna-linux-gtk-x86_64</module>
+        <module>developer-studio-eclipse-jee-luna-macosx-cocoa</module>
+        <module>developer-studio-eclipse-jee-luna-macosx-cocoa-x86_64</module>
+        <module>developer-studio-eclipse-jee-luna-win32</module>
+        <module>developer-studio-eclipse-jee-luna-win64-x86_64</module>
+    </modules>        
+</project>
