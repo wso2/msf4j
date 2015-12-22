@@ -404,7 +404,6 @@
         <org.wso2.carbon.transport.http.netty.version>1.0.0-SNAPSHOT</org.wso2.carbon.transport.http.netty.version>
         <carbon.mss.version>1.0.0-SNAPSHOT</carbon.mss.version>
         <carbon.metrics.version>1.2.0-m2</carbon.metrics.version>
-        <carbon.mss.osgi.version>1.0.0.SNAPSHOT</carbon.mss.osgi.version>
         <carbon.ldap.server.version>5.0.0</carbon.ldap.server.version>
 
         <osgi.api.version>6.0.0</osgi.api.version>
@@ -431,7 +430,7 @@
 
         <osgi.framework.import.version.range>[1.8.0, 2.0.0)</osgi.framework.import.version.range>
         <osgi.service.tracker.import.version.range>[1.5.1, 2.0.0)</osgi.service.tracker.import.version.range>
-        <carbon.feature.plugin.version>2.0.0-beta</carbon.feature.plugin.version>
+        <carbon.feature.plugin.version>2.0.0</carbon.feature.plugin.version>
 
         <!-- Dependencies for OSGi PAX exam tests -->
         <!--PAX Logging related dependency versions-->
