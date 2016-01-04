@@ -276,6 +276,7 @@
                 <artifactId>org.apache.servicemix.bundles.commons-beanutils</artifactId>
                 <version>${beanutils.version}</version>
             </dependency>
+            <!-- Metrics Dependencies - Start -->
             <dependency>
                 <groupId>org.wso2.carbon.metrics</groupId>
                 <artifactId>org.wso2.carbon.metrics.manager</artifactId>
@@ -324,6 +325,78 @@
                 <version>${carbon.metrics.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.metrics</groupId>
+                <artifactId>org.wso2.carbon.metrics.common</artifactId>
+                <version>${carbon.metrics.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.geronimo.specs</groupId>
+                        <artifactId>geronimo-stax-api_1.0_spec</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.ws.commons.axiom</groupId>
+                        <artifactId>axiom-api</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.metrics</groupId>
+                <artifactId>org.wso2.carbon.metrics.das.reporter</artifactId>
+                <version>${carbon.metrics.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.analytics-common</groupId>
+                <artifactId>org.wso2.carbon.databridge.agent</artifactId>
+                <version>${carbon.analytics.common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.analytics-common</groupId>
+                <artifactId>org.wso2.carbon.databridge.commons</artifactId>
+                <version>${carbon.analytics.common.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.wso2.carbon</groupId>
+                        <artifactId>org.wso2.carbon.logging</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.analytics-common</groupId>
+                <artifactId>org.wso2.carbon.databridge.commons.thrift</artifactId>
+                <version>${carbon.analytics.common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.orbit.com.lmax</groupId>
+                <artifactId>disruptor</artifactId>
+                <version>${disruptor.orbit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.dropwizard.metrics</groupId>
+                <artifactId>metrics-core</artifactId>
+                <version>${metrics.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.dropwizard.metrics</groupId>
+                <artifactId>metrics-jvm</artifactId>
+                <version>${metrics.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io.wso2</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.wso2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>libthrift.wso2</groupId>
+                <artifactId>libthrift</artifactId>
+                <version>${libthrift.wso2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-pool.wso2</groupId>
+                <artifactId>commons-pool</artifactId>
+                <version>${commons.pool.version}</version>
+            </dependency>
+            <!-- Metrics Dependencies - End -->
+            <dependency>
                 <groupId>com.nimbusds</groupId>
                 <artifactId>nimbus-jose-jwt</artifactId>
                 <version>${nimbus.jose.jwt.version}</version>
@@ -344,7 +417,6 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-
             <!-- Test dependencies -->
             <dependency>
                 <groupId>junit</groupId>
@@ -401,9 +473,19 @@
 
         <!-- Dependencies -->
         <carbon.kernel.version>5.0.0</carbon.kernel.version>
+        <carbon.kernel.version.range>[5.0,6)</carbon.kernel.version.range>
         <org.wso2.carbon.transport.http.netty.version>1.0.0</org.wso2.carbon.transport.http.netty.version>
+        <org.wso2.carbon.transport.http.netty.version.range>[1.0,2)</org.wso2.carbon.transport.http.netty.version.range>
         <carbon.mss.version>1.0.0-SNAPSHOT</carbon.mss.version>
-        <carbon.metrics.version>1.2.0-m2</carbon.metrics.version>
+        <carbon.metrics.version>1.2.0</carbon.metrics.version>
+        <carbon.metrics.version.range>[1.2,2)</carbon.metrics.version.range>
+        <carbon.analytics.common.version>5.0.6</carbon.analytics.common.version>
+        <carbon.analytics.common.version.range>[5.0,6)</carbon.analytics.common.version.range>
+        <disruptor.orbit.version>3.3.2.wso2v2</disruptor.orbit.version>
+        <metrics.version>3.1.2</metrics.version>
+        <commons-io.wso2.version>2.4.0.wso2v1</commons-io.wso2.version>
+        <libthrift.wso2.version>0.8.0.wso2v1</libthrift.wso2.version>
+        <commons.pool.version>1.5.6.wso2v1</commons.pool.version>
         <carbon.ldap.server.version>5.0.0</carbon.ldap.server.version>
 
         <osgi.api.version>6.0.0</osgi.api.version>
@@ -411,13 +493,17 @@
         <equinox.osgi.services.version>3.4.0.v20140312-2051</equinox.osgi.services.version>
         <rs-api.version>2.0</rs-api.version>
         <netty.version>4.0.30.Final</netty.version>
+        <netty.version.range>[4.0,5)</netty.version.range>
         <slf4j.version>1.7.5</slf4j.version>
+        <slf4j.version.range>[1.7,2)</slf4j.version.range>
         <slf4j.log4j.version>1.6.0</slf4j.log4j.version>
         <gson.version>2.2.4</gson.version>
+        <gson.version.range>[2.2,3)</gson.version.range>
         <guava.version>13.0.1</guava.version>
-        <guava.version>13.0.1</guava.version>
+        <guava.version.range>[13.0,14)</guava.version.range>
         <jsr305.version>2.0.1</jsr305.version>
         <beanutils.version>1.8.3_2</beanutils.version>
+        <beanutils.version.range>[1.8,2)</beanutils.version.range>
         <beanutils.osgi.version>1.8.3.2</beanutils.osgi.version>
         <junit.version>4.11</junit.version>
         <logback.version>1.0.9</logback.version>

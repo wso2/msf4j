@@ -18,6 +18,8 @@ package org.wso2.carbon.mss.httpmonitoring;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
+
+import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.mss.HttpResponder;
@@ -33,6 +35,10 @@ import javax.ws.rs.Path;
 /**
  * Monitor HTTP Requests for methods with {@link HTTPMonitoring} annotations.
  */
+@Component(
+    name = "org.wso2.carbon.mss.httpmonitoring.HTTPMonitoringInterceptor",
+    service = Interceptor.class,
+    immediate = true)
 public class HTTPMonitoringInterceptor implements Interceptor {
 
     private static final Logger logger = LoggerFactory.getLogger(HTTPMonitoringInterceptor.class);

@@ -27,7 +27,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
 /**
- * Demonstrating the use of Metrics Annotations
+ * Demonstrating the use of Metrics & HTTP Monitoring Annotations
  */
 @Path("/demo")
 @HTTPMonitoring
@@ -57,7 +57,7 @@ public class DemoService {
 
     @GET
     @Path("/total/{number}")
-    @Counted(monotonic = true)
+    @Counted
     public long getTotal(@PathParam("number") int number) {
         return total = total + number;
     }

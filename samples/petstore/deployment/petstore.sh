@@ -3,22 +3,6 @@
 # exporting paths
 source path.sh
 
-
-# checking IS pack availability
-if [ ! -f packs/$IS_PACK ];then
-    echo "WSO2 Identity Server pack is not available at packs directry. Please copy Identity Server pack, update path.sh and re-run petstore.sh"
-    exit
-fi
-
-cd $HOME/packs
-[ -d ${IS_PACK%.zip} ] && rm -fr ${IS_PACK%.*}
-unzip $IS_PACK
-cd ${IS_PACK%.zip}/bin/
-echo "--------------------------------------------------------------"
-echo "Starting WSO2 Identity Server"
-echo "--------------------------------------------------------------"
-./wso2server.sh start
-
 cd $HOME/packs
 [ -d ${DAS_PACK%.zip} ] && rm -fr ${DAS_PACK%.*}
 unzip $DAS_PACK

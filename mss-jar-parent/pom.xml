@@ -20,18 +20,6 @@
             <artifactId>org.wso2.carbon.mss</artifactId>
             <exclusions>
                 <exclusion>
-                    <groupId>org.wso2.carbon.metrics</groupId>
-                    <artifactId>org.wso2.carbon.metrics.manager</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.wso2.carbon.metrics</groupId>
-                    <artifactId>org.wso2.carbon.metrics.impl</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.wso2.carbon.metrics</groupId>
-                    <artifactId>org.wso2.carbon.metrics.annotation</artifactId>
-                </exclusion>
-                <exclusion>
                     <groupId>com.nimbusds</groupId>
                     <artifactId>nimbus-jose-jwt</artifactId>
                 </exclusion>

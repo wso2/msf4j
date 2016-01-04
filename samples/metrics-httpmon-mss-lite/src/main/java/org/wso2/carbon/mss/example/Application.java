@@ -36,6 +36,6 @@ public class Application {
         new MicroservicesRunner().addInterceptor(new HTTPMonitoringInterceptor().init())
                 .addInterceptor(
                         new MetricsInterceptor().init(MetricReporter.CONSOLE, MetricReporter.JMX, MetricReporter.DAS))
-                .deploy(new StudentService()).deploy(new DemoService()).start();
+                .deploy(new DemoService()).deploy(new StudentService()).start();
     }
 }

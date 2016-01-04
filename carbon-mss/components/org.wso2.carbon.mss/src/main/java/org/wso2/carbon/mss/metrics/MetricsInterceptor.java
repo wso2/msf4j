@@ -17,6 +17,8 @@ package org.wso2.carbon.mss.metrics;
 
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
+
+import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.metrics.annotation.Counted;
@@ -41,6 +43,10 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Collecting Metrics via annotations.
  */
+@Component(
+    name = "org.wso2.carbon.mss.metrics.MetricsInterceptor",
+    service = Interceptor.class,
+    immediate = true)
 public class MetricsInterceptor implements Interceptor {
 
     private static final Logger logger = LoggerFactory.getLogger(MetricsInterceptor.class);
@@ -53,6 +59,12 @@ public class MetricsInterceptor implements Interceptor {
         }
     }
 
+    /**
+     * Initialize the Metrics Service
+     * 
+     * @param metricReporters Specifiy {@link MetricReporter} types to initialize
+     * @return This {@link MetricsInterceptor} instance
+     */
     public MetricsInterceptor init(MetricReporter... metricReporters) {
         Metrics.init(metricReporters);
         // Destroy the Metric Service at shutdown

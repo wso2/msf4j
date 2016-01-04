@@ -13,12 +13,6 @@ if [ $PRE_REQ -eq 0 ];then
     exit;
 fi
 
-# checking IS pack availability
-if [ ! -f packs/$IS_PACK ];then
-    echo "WSO2 Identity Server pack is not available at packs directry. Please copy Identity Server pack, update path.sh and re run the script"
-    exit
-fi
-
 #git pull
 
 echo "--------------------------------------------------------------"

@@ -100,6 +100,7 @@
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>target</outputDirectory>
+                                    <excludes>**/conf/osgi/launch.properties</excludes>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
