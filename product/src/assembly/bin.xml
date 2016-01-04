@@ -72,6 +72,7 @@
                 <exclude>**/.vagrant/**</exclude>
                 <exclude>**/kubernetes-vagrant-coreos-cluster/docker/**</exclude>
                 <exclude>**/VirtualBox VMs/**</exclude>
+                <exclude>**/dependency-reduced-pom.xml</exclude>
                 <exclude>**/*.iml</exclude>
                 <exclude>**/*.ipr</exclude>
                 <exclude>**/*.iwr</exclude>
