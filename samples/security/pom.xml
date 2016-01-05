@@ -30,21 +30,6 @@
     <packaging>jar</packaging>
     <description>Demostrates how to secure microservices in WSO2 MSS</description>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.wso2.carbon.metrics</groupId>
-            <artifactId>org.wso2.carbon.metrics.manager</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.metrics</groupId>
-            <artifactId>org.wso2.carbon.metrics.impl</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.metrics</groupId>
-            <artifactId>org.wso2.carbon.metrics.annotation</artifactId>
-        </dependency>
-    </dependencies>
-
     <properties>
         <microservice.mainClass>org.wso2.carbon.mss.example.Application</microservice.mainClass>
     </properties>
