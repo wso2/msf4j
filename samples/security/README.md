@@ -10,7 +10,9 @@ Here we use WSO2 Identity server as the authorization server.
 
 2) Copy resources/introspect.war to wso2is-5.1.0/repository/deployment/server/webapps directory.
 
-3) Create a Service Provider by following the instructions in the this document https://docs.wso2.com/display/IS510/Configuring+a+Service+Provider
+3) Create a Service Provider by following the instructions in the this document
+ [https://docs.wso2.com/display/IS510/Configuring+a+Service+Provider]
+ (https://docs.wso2.com/display/IS510/Configuring+a+Service+Provider)
 
 4) Then under the "configure inbound authentication" section, create an OAuth2 application which represents your
 client application. Instructions are available in the above documentation link. Once the OAuth2 application is created,
