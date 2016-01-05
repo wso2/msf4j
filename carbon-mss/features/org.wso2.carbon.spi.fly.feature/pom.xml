@@ -88,9 +88,10 @@
                                 <bundle>
                                     <symbolicName>org.objectweb.asm.all</symbolicName>
                                     <version>${asm.all.version}</version>
-                                </bundle> <bundle>
+                                </bundle>
+                                <bundle>
                                     <symbolicName>javax.ws.rs-api.fragment</symbolicName>
-                                    <version>${carbon.mss.version}</version>
+                                    <version>${javax.ws.rs-api.fragment.version}</version>
                                 </bundle>
                             </bundles>
                         </configuration>
