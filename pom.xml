@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -13,13 +11,13 @@
     <groupId>org.wso2.carbon.mss</groupId>
     <artifactId>mss</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <scm>
         <url>https://github.com/wso2/product-mss.git</url>
         <developerConnection>scm:git:https://github.com/wso2/product-mss.git</developerConnection>
         <connection>scm:git:https://github.com/wso2/product-mss.git</connection>
-        <tag>HEAD</tag>
+        <tag>v1.0.0-RC2</tag>
     </scm>
 
     <developers>

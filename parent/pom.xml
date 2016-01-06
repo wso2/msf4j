@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
         <groupId>org.wso2</groupId>
         <artifactId>wso2</artifactId>
         <version>2</version>
-        <relativePath/>
+        <relativePath />
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wso2.carbon.mss</groupId>
     <artifactId>mss-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>WSO2 MSS - Parent Pom</name>
     <description>WSO2 Product-MSS Parent Pom</description>
     <url>http://wso2.org</url>
@@ -464,7 +462,7 @@
         <carbon.kernel.version.range>[5.0,6)</carbon.kernel.version.range>
         <org.wso2.carbon.transport.http.netty.version>1.0.0</org.wso2.carbon.transport.http.netty.version>
         <org.wso2.carbon.transport.http.netty.version.range>[1.0,2)</org.wso2.carbon.transport.http.netty.version.range>
-        <carbon.mss.version>1.0.0-SNAPSHOT</carbon.mss.version>
+        <carbon.mss.version>1.0.0</carbon.mss.version>
         <carbon.metrics.version>1.2.0</carbon.metrics.version>
         <carbon.metrics.version.range>[1.2,2)</carbon.metrics.version.range>
         <carbon.analytics.common.version>5.0.6</carbon.analytics.common.version>
@@ -549,4 +547,8 @@
     </properties>
 
 
+
+  <scm>
+    <tag>v1.0.0-RC2</tag>
+  </scm>
 </project>
