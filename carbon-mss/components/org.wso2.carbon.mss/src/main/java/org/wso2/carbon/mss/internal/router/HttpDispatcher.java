@@ -36,6 +36,11 @@ public class HttpDispatcher extends SimpleChannelInboundHandler<HttpObject> {
     private HttpMethodInfoBuilder httpMethodInfoBuilder;
 
     @Override
+    public void channelReadComplete(ChannelHandlerContext ctx) {
+        ctx.flush();
+    }
+
+    @Override
     protected void channelRead0(ChannelHandlerContext ctx, HttpObject msg) throws HandlerException {
         Object httpMethodInfoBuilderObj = ctx.pipeline()
                 .context(RequestRouter.class)

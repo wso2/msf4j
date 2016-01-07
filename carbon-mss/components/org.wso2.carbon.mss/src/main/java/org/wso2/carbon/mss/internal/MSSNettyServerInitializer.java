@@ -36,7 +36,8 @@ import java.util.Map;
  */
 public class MSSNettyServerInitializer implements CarbonNettyServerInitializer {
 
-    private DefaultEventExecutorGroup eventExecutorGroup;
+    private DefaultEventExecutorGroup eventExecutorGroup =
+            new DefaultEventExecutorGroup(MSSConstants.DEFAULT_EXECUTOR_THREAD_POOL_SIZE);
 
     private MicroservicesRegistry microservicesRegistry;
 
@@ -46,7 +47,8 @@ public class MSSNettyServerInitializer implements CarbonNettyServerInitializer {
 
     @Override
     public void setup(Map<String, String> map) {
-        eventExecutorGroup = new DefaultEventExecutorGroup(200);
+        eventExecutorGroup =
+                new DefaultEventExecutorGroup(Integer.parseInt(map.get(MSSConstants.EXECUTOR_THREAD_POOL_SIZE_KEY)));
     }
 
     public void initChannel(SocketChannel channel) {
@@ -55,7 +57,7 @@ public class MSSNettyServerInitializer implements CarbonNettyServerInitializer {
         pipeline.addLast("decoder", new HttpRequestDecoder());
         pipeline.addLast("encoder", new HttpResponseEncoder());
         pipeline.addLast("streamer", new ChunkedWriteHandler());
-        pipeline.addLast(eventExecutorGroup, "router",
+        pipeline.addLast("router",
                 new RequestRouter(microservicesRegistry.getHttpResourceHandler(), 0));
         pipeline.addLast(eventExecutorGroup, "dispatcher", new HttpDispatcher());
     }
