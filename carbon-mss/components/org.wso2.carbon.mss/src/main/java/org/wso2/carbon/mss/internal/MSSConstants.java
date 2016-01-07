@@ -23,6 +23,5 @@ package org.wso2.carbon.mss.internal;
  */
 public class MSSConstants {
 
-    public static final int DEFAULT_EXECUTOR_THREAD_POOL_SIZE = 60;
     public static final String EXECUTOR_THREAD_POOL_SIZE_KEY = "execThreadPoolSize";
 }
