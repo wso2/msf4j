@@ -36,8 +36,7 @@ import java.util.Map;
  */
 public class MSSNettyServerInitializer implements CarbonNettyServerInitializer {
 
-    private DefaultEventExecutorGroup eventExecutorGroup =
-            new DefaultEventExecutorGroup(MSSConstants.DEFAULT_EXECUTOR_THREAD_POOL_SIZE);
+    private DefaultEventExecutorGroup eventExecutorGroup;
 
     private MicroservicesRegistry microservicesRegistry;
 
