@@ -63,11 +63,6 @@ public class RequestRouter extends SimpleChannelInboundHandler<HttpObject> {
     }
 
     @Override
-    public void channelReadComplete(ChannelHandlerContext ctx) {
-        ctx.flush();
-    }
-
-    @Override
     protected void channelRead0(ChannelHandlerContext ctx, HttpObject msg) throws Exception {
         Channel channel = ctx.channel();
         if (msg instanceof HttpRequest) {

@@ -25,7 +25,4 @@ public class Constants {
 
     public static final String HOSTNAME = "localhost";
     public static final int PORT = 8080;
-    public static final int SERVER_START_WAIT = 5;
-    public static final int SERVER_STOP_WAIT = 5;
-
 }
