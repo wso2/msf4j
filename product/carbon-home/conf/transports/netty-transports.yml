@@ -21,6 +21,11 @@ listenerConfigurations:
   bossThreadPoolSize: 2
   workerThreadPoolSize: 250
   execHandlerThreadPoolSize: 60
+  parameters:
+    -
+     name: "execThreadPoolSize"
+     value: 60
+
 # -
 #  id: "jaxrs-https"
 #  host: "127.0.0.1"

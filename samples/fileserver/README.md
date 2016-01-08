@@ -1,8 +1,7 @@
 # File handling
 
 
-Serve Files with WSO2 MSS
------------------------------------------
+## Serve Files with WSO2 MSS
 
 You can serve files from the resource methods by returning a java.io.File or 
 by returning a javax.ws.rs.core.Response object with a java.io.File entity.
@@ -20,8 +19,8 @@ See the following sample.
     }
 ```
 
-Chunked HTTP Request Handling
-------------------------------------------
+## Chunked HTTP Request Handling
+
 
 With WSO2 Microservices server, you can handle chunked requests in two ways.
 
@@ -75,16 +74,16 @@ aggregates all the chunks of the request and presents it as a full http request 
 ```
 
 
-How to build the sample
-------------------------------------------
+## How to build the sample
+
 From this directory, run
 
 ```
 mvn clean package
 ```
 
-How to run the sample
-------------------------------------------
+## How to run the sample
+
 Use following command to run the application
 ```
 java -jar target/fileserver-*.jar
@@ -92,8 +91,7 @@ java -jar target/fileserver-*.jar
 Note: /var/www/html/upload directory should be available with write permissions
 
 
-How to test the sample
-------------------------------------------
+## How to test the sample
 
 Run the following curl command to upload file
 ```

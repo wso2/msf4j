@@ -24,24 +24,23 @@ Following resource method renders the resources/templates/hello.mustache templat
     }
 ```
 
-How to build the sample
-------------------------------------------
+## How to build the sample
+
 From this directory, run the following maven command
 
 ```
 mvn clean package
 ```
 
-How to run the sample
-------------------------------------------
+## How to run the sample
+
 Use following command to run the application
 
 ```
 java -jar target/template-*.jar
 ```
 
-How to tests the sample
-------------------------------------------
+## How to tests the sample
 
 After the service is started you can use the following curl command to test the service.
 

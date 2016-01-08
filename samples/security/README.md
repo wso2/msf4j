@@ -2,8 +2,8 @@
 
 This sample shows how to secure microservices deployed on WSO2 MSS using OAuth2.
 
-Setting up the Authorization Server.
-------------------------------------------
+## Setting up the Authorization Server.
+
 Here we use WSO2 Identity server as the authorization server.
 
 1) Download and unzip the latest version of the WSO2 Identity Server from http://wso2.com/products/identity-server.
@@ -37,16 +37,16 @@ This command should return with a JSON response which contains the access token.
 
 Note the access_token value.
 
-How to build the sample
-------------------------------------------
+## How to build the sample
+
 From this directory, run
 
 ```
 mvn clean install
 ```
 
-How to run the sample
-------------------------------------------
+## How to run the sample
+
 When you start the MSS server, you need to pass a system property with the endpoint of the authorization server.
 
 e.g. AUTH_SERVER_URL=http://localhost:9763/introspect
@@ -60,8 +60,8 @@ Use following command to run the application
 java -DAUTH_SERVER_URL=http://localhost:9763/introspect -jar target/security-*.jar
 ```
 
-How to tests the sample
-------------------------------------------
+## How to tests the sample
+
 Use following cURL commands.
 
 ```
