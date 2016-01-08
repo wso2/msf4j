@@ -4,6 +4,11 @@ This sample shows the use of @Produces and @Consumes annotations for bean conver
 demonstrates how to develop a microservice with WSO2 MSS in serverless mss lite mode.
 See also.. [mss deployable jar](../stockquote-mss-deployable-jar), [mss bundle](../stockquote-mss-bundle)
 
+## pom.xml in deployable jar project
+------------------------------------------
+You have to inherit from [mss-lite-parent](../../mss-lite-parent) when creating the pom.xml for deployable jars. 
+See details [here](../../mss-lite-parent).
+
 ### How @Produces work
 
 When you need to return a bean from a resource method you can specify @Produces annotation with mime types you need to 
