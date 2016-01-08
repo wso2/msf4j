@@ -17,23 +17,23 @@ You can notice following 2 lifecycle methods on Helloworld service class.
 
 ```
 
-How to build the sample
-------------------------------------------
+## How to build the sample
+
 From this directory, run
 
 ```
 mvn clean package
 ```
 
-How to run the sample
-------------------------------------------
+## How to run the sample
+
 Use following command to run the application
 ```
 java -jar target/lifecycle-*.jar
 ```
 
-How to tests the sample
-------------------------------------------
+## How to tests the sample
+
 
 During the service startup you should able to see following output.
 ```
