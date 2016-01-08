@@ -5,7 +5,7 @@ demonstrates how to develop a microservice with WSO2 MSS in serverless mss lite 
 See also.. [mss deployable jar](../stockquote-mss-deployable-jar), [mss bundle](../stockquote-mss-bundle)
 
 ## pom.xml in deployable jar project
-------------------------------------------
+
 You have to inherit from [mss-lite-parent](../../mss-lite-parent) when creating the pom.xml for deployable jars. 
 See details [here](../../mss-lite-parent).
 
@@ -51,7 +51,7 @@ resource method.
 
 
 ## How to build the sample
-------------------------------------------
+
 
 From this directory, run
 
@@ -60,7 +60,7 @@ mvn clean install
 ```
 
 ## How to run the sample
-------------------------------------------
+
 
 Use following command to run the application
 ```
@@ -68,7 +68,7 @@ java -jar target/stockquote-service-*.jar
 ```
 
 ## How to test the sample
-------------------------------------------
+
 
 Use following cURL commands.
 ```

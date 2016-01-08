@@ -5,13 +5,15 @@ See also.. [mss lite](../stockquote-mss-lite), [mss bundle](../stockquote-mss-bu
 
 
 ## pom.xml in deployable jar project
-------------------------------------------
+
+
 You have to inherit from [mss-jar-parent](../../mss-jar-parent) when creating the pom.xml for deployable jars. 
 See details [here](../../mss-jar-parent).
 
 
 ## Using classes of other OSGi bundles
-------------------------------------------
+
+
 If you need to use classes of other OSGi bundles in the service classes of a deployable jar you have to 
 create a dummy OSGi fragment bundle as workaround.
 
@@ -66,7 +68,8 @@ Now you can deploy jars that use the classes in packages you imported in the fra
 
 
 ## How to build the sample
-------------------------------------------
+
+
 
 From this directory, run
 
@@ -75,7 +78,8 @@ mvn clean install
 ```
 
 ## How to run the sample
-------------------------------------------
+
+
 
 Unzip wso2 MSS product and navigate to the bin directory. Then run the following command to start the MSS server.
 ```
@@ -87,7 +91,8 @@ Then the jar will be automatically deployed to the server runtime.
 
 
 ## How to test the sample
-------------------------------------------
+
+
 
 Use following cURL commands.
 ```

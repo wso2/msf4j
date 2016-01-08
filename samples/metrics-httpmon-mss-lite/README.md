@@ -95,7 +95,7 @@ new MicroservicesRunner().addInterceptor(new HTTPMonitoringInterceptor().init())
 ```
 
 ## How to build the sample
-------------------------------------------
+
 From this directory, run
 
 ```
@@ -103,7 +103,7 @@ mvn clean install
 ```
 
 ## How to run the sample
-------------------------------------------
+
 You must configure WSO2 Data Analytics Server (DAS) first and run it to recieve the events published by this sample.
 Please refer the [analytics documentation](../../analytics) 
 for more information on configuring WSO2 DAS.
@@ -182,7 +182,7 @@ export HTTP_MONITORING_DAS_DATAAGENTCONFIGPATH="data-agent-conf.xml"
 
 Here also the `HTTP_MONITORING_DAS_DATAAGENTCONFIGPATH` is a required configuration and others have default values.
 
-**Running the sample**
+## Running the sample
 
 Note: Console and WSO2 DAS Reporters have a "Polling Period" in seconds. This is the period for 
 polling metrics from the metric registry and reporting to Console and WSO2 DAS. The HTTP Monitoring Interceptor sends 
@@ -204,8 +204,9 @@ java -jar target/metrics-httpmon-mss-lite*.jar
 ```
 
 
-How to test the sample
-------------------------------------------
+## How to test the sample
+
+
 
 Use following cURL commands.
 ```
@@ -226,12 +227,14 @@ curl -v http://localhost:8080/student
 ```
 
 Console Output
-------------------------------------------
+
+
 After running the above cURL commands, you should see metrics output to the console periodically.
 
 
 Analytics Dashboard in WSO2 Data Analytics Server
-------------------------------------------
+
+
 
 The HTTP Monitoring events sent by this sample can be seen from the HTTP Monitoring Dashboard in WSO2 DAS.
 You can access the dashboard from [http://localhost:9763/monitoring/](http://localhost:9763/monitoring/)

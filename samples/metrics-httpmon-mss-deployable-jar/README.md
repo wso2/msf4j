@@ -8,7 +8,8 @@ See also [Metrics and HTTP Monitoring MSS Bundle Sample](../metrics-httpmon-mss-
 
 
 ## How to build the sample
-------------------------------------------
+
+
 
 From this directory, run
 
@@ -17,7 +18,8 @@ mvn clean install
 ```
 
 ## How to run the sample
-------------------------------------------
+
+
 
 Unzip WSO2 MSS product and navigate to the bin directory. Then run the following command to start the MSS server.
 ```
@@ -31,7 +33,8 @@ Then the jar will be automatically deployed to the server runtime.
 
 
 ## How to test the sample
-------------------------------------------
+
+
 
 Use following cURL commands.
 ```
