@@ -2,23 +2,23 @@
 
 This is the WSO2 Microservices Server Hello World sample
 
-How to build the sample
-------------------------------------------
+## How to build the sample
+
 From this directory, run
 
 ```
 mvn clean install
 ```
 
-How to run the sample
-------------------------------------------
+## How to run the sample
+
 From the target directory, run
 ```
 java -jar helloworld-*.jar
 ```
 
-How to test the sample
-------------------------------------------
+## How to test the sample
+
 We will use the cURL command line tool for testing. You could use any appropriate HTTP or REST client too.
 
 ```

@@ -24,7 +24,8 @@ public class DemoService implements Microservice {
 ```
 
 ## How to build the sample
-------------------------------------------
+
+
 
 From this directory, run
 
@@ -33,7 +34,8 @@ mvn clean install
 ```
 
 ## How to run the sample
-------------------------------------------
+
+
 
 ### Using OSGi Console
 
