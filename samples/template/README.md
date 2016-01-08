@@ -8,7 +8,7 @@ First you have to add the following dependency to the pom.
      <dependency>
         <groupId>org.wso2.carbon.mss</groupId>
         <artifactId>mss-mustache-template</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0</version>
      </dependency>
 ```
 

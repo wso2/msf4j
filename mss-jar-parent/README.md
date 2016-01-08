@@ -12,7 +12,7 @@ MSS Service Parent POM.
     <parent>
         <groupId>org.wso2.carbon.mss</groupId>
         <artifactId>mss-jar-parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0</version>
         <relativePath>../../mss-jar-parent/pom.xml</relativePath>
     </parent>
 

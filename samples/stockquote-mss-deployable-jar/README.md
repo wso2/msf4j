@@ -21,7 +21,7 @@ Unzip wso2 MSS product and navigate to the bin directory. Then run the following
 ./wso2server.sh
 ```
 
-The copy the target/stockquote-mss-deployable-jar-1.0.0-SNAPSHOT.jar to deployment/microservices directory of WSO2 MSS.
+The copy the target/stockquote-mss-deployable-jar-1.0.0.jar to deployment/microservices directory of WSO2 MSS.
 Then the jar will be automatically deployed to the server runtime.
 
 

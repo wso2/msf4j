@@ -44,11 +44,11 @@ Unzip WSO2 MSS product and navigate to the bin directory. Then run the following
 
 Note that we have passed two parameters to enable Metrics Service and HTTP Monitoring Data Publisher.
 
-Install the target/metrics-httpmon-mss-bundle-1.0.0-SNAPSHOT.jar as an OSGi bundle to WSO2 MSS product using it's 
+Install the target/metrics-httpmon-mss-bundle-1.0.0.jar as an OSGi bundle to WSO2 MSS product using it's 
 OSGi console with the following command.
 
 ```
-install file://<path to target directory>/metrics-httpmon-mss-bundle-1.0.0-SNAPSHOT.jar
+install file://<path to target directory>/metrics-httpmon-mss-bundle-1.0.0.jar
 ```
 
 When the installation of the bundle is successful, use the bundle ID of the installed bundle to start  
@@ -62,7 +62,7 @@ When the bundle is started, the microservice that is exposed as an OSGi service 
 will be exposed as a REST service.
 
 ### Using dropins directory
-Unzip WSO2 MSS product and copy target/metrics-httpmon-mss-bundle-1.0.0-SNAPSHOT.jar bundle to the 
+Unzip WSO2 MSS product and copy target/metrics-httpmon-mss-bundle-1.0.0.jar bundle to the 
 "[SERVER-HOME]/osgi/dropins" directory.
 
 Then navigate to the bin directory and run the following command to start WSO2 MSS server.

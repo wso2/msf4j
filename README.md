@@ -29,7 +29,7 @@ configuration. [More info](mss-lite-parent).
     <parent>
         <artifactId>mss-lite-parent</artifactId>
         <groupId>org.wso2.carbon.mss</groupId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0</version>
         <relativePath>../../mss-lite-parent/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -77,7 +77,7 @@ public class Application {
 
 
 ###Build the Service
-Run following Maven command. This will create the uber jar **Hello-Service-1.0.0-SNAPSHOT.jar** in **target** directory.
+Run following Maven command. This will create the uber jar **Hello-Service-1.0.0.jar** in **target** directory.
 ```
 mvn package
 ```
