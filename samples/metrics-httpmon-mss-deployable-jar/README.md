@@ -28,7 +28,7 @@ Unzip WSO2 MSS product and navigate to the bin directory. Then run the following
 
 Note that we have passed two parameters to enable Metrics Service and HTTP Monitoring Data Publisher.
 
-The copy the target/metrics-httpmon-mss-deployable-jar-1.0.0-SNAPSHOT.jar to deployment/microservices directory of WSO2 MSS.
+The copy the target/metrics-httpmon-mss-deployable-jar-1.0.0.jar to deployment/microservices directory of WSO2 MSS.
 Then the jar will be automatically deployed to the server runtime.
 
 
