@@ -37,6 +37,7 @@ public class XmlConverter implements MediaTypeConverter {
             JAXBContext jaxbContext = JAXBContext.newInstance(object.getClass());
             Marshaller marshaller = jaxbContext.createMarshaller();
             StringWriter stringWriter = new StringWriter();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(object, stringWriter);
             return stringWriter.toString();
         } catch (JAXBException e) {
