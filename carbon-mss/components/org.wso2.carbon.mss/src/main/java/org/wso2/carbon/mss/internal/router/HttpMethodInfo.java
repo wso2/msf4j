@@ -29,9 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.wso2.carbon.mss.HttpResponder;
 import org.wso2.carbon.mss.HttpStreamHandler;
 import org.wso2.carbon.mss.HttpStreamer;
-import org.wso2.carbon.mss.internal.router.beanconversion.BeanConversionException;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -107,7 +105,7 @@ class HttpMethodInfo {
         } catch (InvocationTargetException e) {
             log.error("Resource method threw an exception", e);
             exceptionHandler.handle(e.getTargetException(), request, responder);
-        } catch (IllegalAccessException | BeanConversionException | IOException e) {
+        } catch (Throwable e) {
             log.error("Exception while invoking resource method", e);
             exceptionHandler.handle(e, request, responder);
         }
