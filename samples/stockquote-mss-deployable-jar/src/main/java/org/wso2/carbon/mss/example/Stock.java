@@ -32,6 +32,12 @@ public class Stock {
     private double low;
     private double high;
 
+    /**
+     * No arg constructor is required for xml marshalling
+     */
+    public Stock() {
+    }
+
     public Stock(String symbol, String name) {
         this.symbol = symbol;
         this.name = name;
