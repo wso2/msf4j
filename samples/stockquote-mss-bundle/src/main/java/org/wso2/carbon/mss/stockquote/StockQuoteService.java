@@ -8,9 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.mss.Microservice;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -44,12 +42,12 @@ public class StockQuoteService implements Microservice {
     }
 
     @Activate
-    protected void activate(BundleContext bundleContext){
+    protected void activate(BundleContext bundleContext) {
         // Nothing to do
     }
 
     @Deactivate
-    protected void deactivate(BundleContext bundleContext){
+    protected void deactivate(BundleContext bundleContext) {
         // Nothing to do
     }
 
@@ -97,10 +95,8 @@ public class StockQuoteService implements Microservice {
     @GET
     @Path("/all")
     @Produces({"application/json", "text/xml"})
-    public List<Stock> getAllStocks() {
-        List<Stock> stocks = new ArrayList<>();
-        stocks.addAll(stockQuotes.values());
-        return stocks;
+    public Stocks getAllStocks() {
+        return new Stocks(stockQuotes.values());
     }
 
     @Override
