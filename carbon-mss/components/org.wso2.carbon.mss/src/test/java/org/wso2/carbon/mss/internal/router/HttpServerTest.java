@@ -39,6 +39,8 @@ import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.wso2.carbon.mss.MicroservicesRunner;
+import org.wso2.carbon.mss.internal.router.beanconversion.BeanConversionException;
+import org.wso2.carbon.mss.internal.router.beanconversion.BeanConverter;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -566,6 +568,24 @@ public class HttpServerTest {
         writeContent(urlConn, str);
         Assert.assertEquals(HttpResponseStatus.OK.code(), urlConn.getResponseCode());
         Assert.assertEquals(str + "-processed", getContent(urlConn));
+        urlConn.disconnect();
+    }
+
+    @Test
+    public void testConsumeXmlProduceXml() throws IOException, BeanConversionException {
+        HttpURLConnection urlConn = request("/test/v1/textConsumeTextProduceXml", HttpMethod.POST);
+        urlConn.setRequestProperty(HttpHeaders.Names.CONTENT_TYPE, "text/xml");
+        XmlBean xmlBean = new XmlBean();
+        xmlBean.setName("send-something");
+        xmlBean.setId(10);
+        xmlBean.setValue(15);
+        writeContent(urlConn, (String) BeanConverter.instance("text/xml").toMedia(xmlBean));
+        Assert.assertEquals(HttpResponseStatus.OK.code(), urlConn.getResponseCode());
+        String respBody = getContent(urlConn);
+        XmlBean xmlBean2 = (XmlBean) BeanConverter.instance("text/xml").toObject((String) respBody, XmlBean.class);
+        Assert.assertEquals(xmlBean.getName(), xmlBean2.getName());
+        Assert.assertEquals(xmlBean.getId(), xmlBean2.getId());
+        Assert.assertEquals(xmlBean.getValue(), xmlBean2.getValue());
         urlConn.disconnect();
     }
 
