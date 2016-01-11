@@ -307,6 +307,7 @@
             com.google.common.*;version="${guava.version.range}",
             javax.annotation.*,
             javax.ws.rs.*,
+            javax.xml.bind.*,
             org.slf4j.*;version="${slf4j.version.range}",
             javax.net.ssl.*,
             org.apache.commons.beanutils.*;version="${beanutils.version.range}",
