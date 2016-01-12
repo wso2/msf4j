@@ -18,10 +18,13 @@
  */
 package org.wso2.carbon.mss.stockquote;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  * Represents a stock item. @XmlRootElement is used to support xml conversion.
  */
 @SuppressWarnings("unused")
+@XmlRootElement
 public class Stock {
 
     private String symbol;
