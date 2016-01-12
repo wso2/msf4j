@@ -17,9 +17,7 @@
  */
 package org.wso2.carbon.mss.example;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -91,9 +89,7 @@ public class StockQuoteService {
     @GET
     @Path("/all")
     @Produces({"application/json", "text/xml"})
-    public List<Stock> getAllStocks() {
-        List<Stock> stocks = new ArrayList<>();
-        stocks.addAll(stockQuotes.values());
-        return stocks;
+    public Stocks getAllStocks() {
+        return new Stocks(stockQuotes.values());
     }
 }

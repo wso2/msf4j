@@ -24,12 +24,12 @@ import io.netty.handler.codec.http.HttpContent;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.LastHttpContent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wso2.carbon.mss.HttpResponder;
 import org.wso2.carbon.mss.HttpStreamHandler;
 import org.wso2.carbon.mss.HttpStreamer;
-import org.wso2.carbon.mss.internal.router.beanconversion.BeanConversionException;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -47,8 +47,8 @@ class HttpMethodInfo {
     private final Object[] args;
     private final ExceptionHandler exceptionHandler;
     private final String mediaType;
-
     private HttpStreamHandler httpStreamHandler;
+    private static final Logger log = LoggerFactory.getLogger(ChannelChunkResponder.class);
 
     HttpMethodInfo(Method method, Object handler, HttpRequest request,
                    HttpResponder responder, Object[] args,
@@ -103,8 +103,10 @@ class HttpMethodInfo {
                     .setMediaType(mediaType)
                     .send();
         } catch (InvocationTargetException e) {
+            log.error("Resource method threw an exception", e);
             exceptionHandler.handle(e.getTargetException(), request, responder);
-        } catch (IllegalAccessException | BeanConversionException | IOException e) {
+        } catch (Throwable e) {
+            log.error("Exception while invoking resource method", e);
             exceptionHandler.handle(e, request, responder);
         }
     }
@@ -125,6 +127,7 @@ class HttpMethodInfo {
                 bodyConsumerChunk(chunk.content());
             }
         } catch (HandlerException e) {
+            log.error("Exception while invoking streaming handlers", e);
             exceptionHandler.handle(e, request, responder);
         }
     }
@@ -143,7 +146,7 @@ class HttpMethodInfo {
     /**
      * Calls the {@link HttpStreamHandler#chunk(io.netty.buffer.ByteBuf,
      * org.wso2.carbon.mss.HttpResponder)} method.
-     * <p/>
+     * <p>
      * If the chunk method calls throws exception,
      * the {@link HttpStreamHandler#error(Throwable)} will be called and
      * this method will throw {@link org.wso2.carbon.mss.internal.router.HandlerException}.

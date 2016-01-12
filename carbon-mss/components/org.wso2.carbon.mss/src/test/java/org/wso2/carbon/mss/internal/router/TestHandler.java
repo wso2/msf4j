@@ -113,6 +113,14 @@ public class TestHandler implements Microservice {
         return input + "-processed";
     }
 
+    @Path("textConsumeTextProduceXml")
+    @POST
+    @Consumes("text/xml")
+    @Produces("text/xml")
+    public XmlBean textConsume03(XmlBean input) {
+        return input;
+    }
+
     @Path("sleep/{seconds}")
     @GET
     public Response testSleep(@PathParam("seconds") int seconds) {
