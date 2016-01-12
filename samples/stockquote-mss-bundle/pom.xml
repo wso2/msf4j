@@ -63,6 +63,7 @@
             org.osgi.framework.*;version="${osgi.framework.import.version.range}",
             org.wso2.carbon.mss.*,
             javax.ws.rs.*,
+            javax.xml.bind*,
             org.slf4j.*,
         </import.package>
     </properties>
