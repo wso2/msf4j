@@ -131,6 +131,10 @@
             <artifactId>logback-classic</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.messaging</groupId>
+            <artifactId>org.wso2.carbon.messaging</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -321,7 +325,8 @@
             org.wso2.carbon.metrics.manager.*;version="${carbon.metrics.version.range}",
             org.wso2.carbon.metrics.impl.*;version="${carbon.metrics.version.range}",
             org.wso2.carbon.databridge.agent.*;version="${carbon.analytics.common.version.range}",
-            org.wso2.carbon.databridge.commons.*;version="${carbon.analytics.common.version.range}"
+            org.wso2.carbon.databridge.commons.*;version="${carbon.analytics.common.version.range}",
+            org.wso2.carbon.messaging.*;version="${org.wso2.carbon.messaging.version.range}"
         </import.package>
         <provide.capability>
             osgi.service;effective:=active;

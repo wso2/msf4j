@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.wso2.carbon.kernel.transports.TransportManager;
 import org.wso2.carbon.mss.internal.MSSNettyServerInitializer;
 import org.wso2.carbon.mss.internal.MicroservicesRegistry;
-import org.wso2.carbon.transport.http.netty.internal.NettyTransportDataHolder;
+import org.wso2.carbon.transport.http.netty.internal.NettyTransportContextHolder;
 import org.wso2.carbon.transport.http.netty.internal.config.ListenerConfiguration;
 import org.wso2.carbon.transport.http.netty.internal.config.TransportsConfiguration;
 import org.wso2.carbon.transport.http.netty.internal.config.YAMLTransportConfigurationBuilder;
@@ -52,7 +52,7 @@ public class MicroservicesRunner {
      */
     public MicroservicesRunner(int... ports) {
         for (int port : ports) {
-            NettyTransportDataHolder nettyTransportDataHolder = NettyTransportDataHolder.getInstance();
+            NettyTransportContextHolder nettyTransportDataHolder = NettyTransportContextHolder.getInstance();
             ListenerConfiguration listenerConfiguration =
                     new ListenerConfiguration("netty-" + port, "0.0.0.0", port);
             NettyListener listener = new NettyListener(listenerConfiguration);
@@ -74,7 +74,7 @@ public class MicroservicesRunner {
     public MicroservicesRunner() {
         TransportsConfiguration trpConfig = YAMLTransportConfigurationBuilder.build();
         Set<ListenerConfiguration> listenerConfigurations = trpConfig.getListenerConfigurations();
-        NettyTransportDataHolder nettyTransportDataHolder = NettyTransportDataHolder.getInstance();
+        NettyTransportContextHolder nettyTransportDataHolder = NettyTransportContextHolder.getInstance();
         for (ListenerConfiguration listenerConfiguration : listenerConfigurations) {
             NettyListener listener = new NettyListener(listenerConfiguration);
             transportManager.registerTransport(listener);

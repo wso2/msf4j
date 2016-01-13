@@ -453,7 +453,11 @@
                 <artifactId>asm-all</artifactId>
                 <version>${asm.all.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.wso2.carbon.messaging</groupId>
+                <artifactId>org.wso2.carbon.messaging</artifactId>
+                <version>${org.wso2.carbon.messaging.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -474,8 +478,10 @@
         <!-- Dependencies -->
         <carbon.kernel.version>5.0.0</carbon.kernel.version>
         <carbon.kernel.version.range>[5.0,6)</carbon.kernel.version.range>
-        <org.wso2.carbon.transport.http.netty.version>1.0.0</org.wso2.carbon.transport.http.netty.version>
-        <org.wso2.carbon.transport.http.netty.version.range>[1.0,2)</org.wso2.carbon.transport.http.netty.version.range>
+        <org.wso2.carbon.transport.http.netty.version>2.0.0-SNAPSHOT</org.wso2.carbon.transport.http.netty.version>
+        <org.wso2.carbon.transport.http.netty.version.range>[2.0, 2.1)</org.wso2.carbon.transport.http.netty.version.range>
+        <org.wso2.carbon.messaging.version>1.0.0-alpha</org.wso2.carbon.messaging.version>
+        <org.wso2.carbon.messaging.version.range>[1.0.0, 2.0.0)</org.wso2.carbon.messaging.version.range>
         <carbon.mss.version>1.0.0-SNAPSHOT</carbon.mss.version>
         <carbon.metrics.version>1.2.0</carbon.metrics.version>
         <carbon.metrics.version.range>[1.2,2)</carbon.metrics.version.range>
