@@ -56,6 +56,8 @@ $(document).ready(function () {
                 success: function (data) {
                     if (data.status === 1) {
                             window.location = 'index.php';
+                    }else if(data.status == "error"){
+                        var n = noty({text: data.message, layout: 'bottomRight', type: 'error'});
                     } else {
                         form_error.show().html(data.message);
                     }

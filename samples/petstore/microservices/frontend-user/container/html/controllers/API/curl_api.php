@@ -22,17 +22,16 @@ function callAuthApiLogin($url, $data){
 
     $header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
     $header = substr($curl_response, 0, $header_size);
-
     if($info['http_code'] === 200){
         $get_token = explode("\r\n",$header);
         session_start();
         $_SESSION['username'] = 'user';
         $_SESSION['authtoken'] = trim(explode(':',$get_token[3])[1]);
         echo json_encode(array('status' => 1));
-    }else if($info['http_code'] === 401){
-        echo 'User unauthorized';
+    }else if($info['http_code'] == 401){
+        echo json_encode(array('status' => 'error', 'message' => 'User unauthorized'));
     }else{
-        echo 'Something went wrong';
+        echo json_encode(array('status' => 'error', 'message' => 'Something went wrong'));
     }
 
 }
@@ -60,9 +59,9 @@ function callAuthApigetPets($url, $token){
     if($info['http_code'] === 200) {
         return json_decode($body, true);
     }else if($info['http_code'] === 401){
-        echo 'Authorization failed';
+        echo json_encode(array('status' => 'error', 'message' => 'User unauthorized'));
     }else{
-        echo 'Something went wrong';
+        echo json_encode(array('status' => 'error', 'message' => 'Something went wrong'));
     }
 }
 
