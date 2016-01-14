@@ -14,26 +14,30 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss;
+package org.wso2.carbon.mss.stockquote;
 
-import org.wso2.carbon.mss.internal.router.MicroserviceMetadata;
-
-import java.util.Map;
+import java.util.Collection;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Place holder for information about the environment. Will be passed in during lifecycle management calls of
- * HttpHandlers. Currently has methods to get RunTimeArguments.
+ * Represents a list of Stock objects. This wrapper is
+ * required for proper xml list marshaling.
  */
-public interface ServiceContext {
+@XmlRootElement
+public class Stocks {
+
+    @XmlElement(name = "stock")
+    private Collection<Stock> stocks;
 
     /**
-     * @return Key Value pairs of runtime arguments.
+     * No arg constructor is required for xml marshalling
      */
-    Map<String, String> getRuntimeArguments();
+    public Stocks() {
+    }
 
-    /**
-     * @return the {@link MicroserviceMetadata} associated with this context,
-     * used to let one handler call another internally.
-     */
-    MicroserviceMetadata getHttpResourceHandler();
+    public Stocks(Collection<Stock> stocks) {
+        this.stocks = stocks;
+    }
+
 }
