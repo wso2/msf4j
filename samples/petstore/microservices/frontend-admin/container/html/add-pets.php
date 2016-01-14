@@ -149,7 +149,6 @@ include('includes/navbar.php');
             formData.append('pet-age-months', $('#pet-age-months').val());
             formData.append('pet-price', $('#pet-price').val());
 
-            console.log(formData);
             $.ajax({
                 type: "POST",
                 url:  "controllers/rest.php",
@@ -158,6 +157,7 @@ include('includes/navbar.php');
                 processData:false,
                 contentType: false,
                 success: function (data, textStatus, jqXHR) {
+                    data = jQuery.parseJSON(data);
                     if (data.status == 'error') {
                         var n = noty({text: data.message, layout: 'bottomRight', type: 'error'});
                         window.setTimeout(function(){
@@ -181,8 +181,6 @@ include('includes/navbar.php');
         function addPets(btn){
             btn.button('loading');
             var formData = new FormData(this);
-                //formData.append('api_type', 'addPets');
-            console.log(formData)
 
         }
 
