@@ -1,7 +1,7 @@
 <?php
 session_start();
 if(!isset($_SESSION['username'])){
-    // header("location:login.php");
+    header("location:login.php");
 }
 //return page breadcrumbs
 $breadcrumbs = array("pet-types.php"=>'Pet Types', "add-pet-types.php"=>'Add');
@@ -107,7 +107,12 @@ include('includes/navbar.php');
         // handle the add pet type button click event
         $('#pet-type-btn').click(function () {
             var btn = $(this); //get current clicked button
-            addPetType(btn);
+            if(petCategoryName.val() == ''){
+                var n = noty({text: 'Add proper pet category name', layout: 'bottomRight', type: 'error'});
+            }else{
+                addPetType(btn);
+            }
+
         });
 
         function addPetType(btn){
