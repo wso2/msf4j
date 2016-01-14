@@ -30,9 +30,9 @@ function callAuthApiLogin($url, $data){
         $_SESSION['authtoken'] = trim(explode(':',$get_token[3])[1]);
         echo json_encode(array('status' => 1));
     }else if($info['http_code'] === 401){
-        echo 'User unauthorized';
+        echo json_encode(array('status' => 'error', 'message' => 'User unauthorized'));
     }else{
-        echo 'Something went wrong';
+        echo json_encode(array('status' => 'error', 'message' => 'Something went wrong'));
     }
 
 }
@@ -191,9 +191,9 @@ function callAuthApigetPets($url, $token){
     if($info['http_code'] === 200) {
         return json_decode($body, true);
     }else if($info['http_code'] === 401){
-        echo 'Authorization failed';
+        echo json_encode(array('status' => 'error', 'message' => 'User unauthorized'));
     }else{
-        echo 'Something went wrong';
+        echo json_encode(array('status' => 'error', 'message' => 'Something went wrong'));
     }
 }
 
@@ -220,9 +220,9 @@ function callAuthApigetPetTypes($url, $token){
     if($info['http_code'] === 200) {
        return json_decode($body, true);
     }else if($info['http_code'] === 401){
-        echo 'Authorization failed';
+        echo json_encode(array('status' => 'error', 'message' => 'User unauthorized'));
     }else{
-        echo 'Something went wrong'.$info['http_code'];
+        echo json_encode(array('status' => 'error', 'message' => 'Something went wrong'));
     }
 }
 
