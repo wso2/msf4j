@@ -5,7 +5,14 @@ include('API/curl_api.php');
 include('../config/config.php');
 
 $api_type = htmlspecialchars($_POST["api_type"]);
-$token = preg_replace('/\s+/', '', $_SESSION['authtoken']);
+
+if(isset($_SESSION['authtoken'])){
+    $token = preg_replace('/\s+/', '', $_SESSION['authtoken']);
+}else{
+    echo json_encode(array('status' => 'error', 'message' => 'User unauthorized'));
+    die;
+}
+
 
 switch ($api_type) {
     case "addPetTypes":
