@@ -29,6 +29,7 @@ import com.google.gson.JsonObject;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpResponseStatus;
+import org.apache.commons.io.IOUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -617,6 +618,29 @@ public class HttpServerTest {
         InputStream downStream = urlConn.getInputStream();
         File file = new File(Resources.getResource("testTxtFile.txt").toURI());
         Assert.assertTrue(isStreamEqual(downStream, new FileInputStream(file)));
+    }
+
+    @Test
+    public void testGzipCompressionWithNoGzipAccept() throws Exception {
+        HttpURLConnection urlConn = request("/test/v1/gzipfile", HttpMethod.GET);
+        Assert.assertEquals(HttpResponseStatus.OK.code(), urlConn.getResponseCode());
+        String contentEncoding = urlConn.getHeaderField(HttpHeaders.Names.CONTENT_ENCODING);
+        Assert.assertTrue(contentEncoding == null || !contentEncoding.contains("gzip"));
+        InputStream downStream = urlConn.getInputStream();
+        Assert.assertTrue(IOUtils.toByteArray(downStream).length ==
+                IOUtils.toByteArray(Resources.getResource("testJpgFile.jpg").openStream()).length);
+    }
+
+    @Test
+    public void testGzipCompressionWithGzipAccept() throws Exception {
+        HttpURLConnection urlConn = request("/test/v1/gzipfile", HttpMethod.GET);
+        urlConn.addRequestProperty(HttpHeaders.Names.ACCEPT_ENCODING, "gzip");
+        Assert.assertEquals(HttpResponseStatus.OK.code(), urlConn.getResponseCode());
+        String contentEncoding = urlConn.getHeaderField(HttpHeaders.Names.CONTENT_ENCODING);
+        Assert.assertTrue("gzip".equalsIgnoreCase(contentEncoding));
+        InputStream downStream = urlConn.getInputStream();
+        Assert.assertTrue(IOUtils.toByteArray(downStream).length <
+                IOUtils.toByteArray(Resources.getResource("testJpgFile.jpg").openStream()).length);
     }
 
     protected Socket createRawSocket(URL url) throws IOException {
