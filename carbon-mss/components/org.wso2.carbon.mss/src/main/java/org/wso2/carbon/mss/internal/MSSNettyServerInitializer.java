@@ -49,9 +49,9 @@ public class MSSNettyServerInitializer implements CarbonNettyServerInitializer {
 
     public void initChannel(SocketChannel channel) {
         ChannelPipeline pipeline = channel.pipeline();
-        pipeline.addLast("compressor", new HttpContentCompressor());
         pipeline.addLast("decoder", new HttpRequestDecoder());
         pipeline.addLast("encoder", new HttpResponseEncoder());
+        pipeline.addLast("compressor", new HttpContentCompressor());
         pipeline.addLast("streamer", new ChunkedWriteHandler());
         pipeline.addLast("router",
                 new RequestRouter(microservicesRegistry.getHttpResourceHandler(), 0));
