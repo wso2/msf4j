@@ -37,6 +37,7 @@ import org.wso2.carbon.mss.Microservice;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.SortedSet;
@@ -373,6 +374,13 @@ public class TestHandler implements Microservice {
             chunker.sendChunk(content.readSlice(1));
         }
         chunker.close();
+    }
+
+    @Path("/gzipfile")
+    @GET
+    public Response gzipFile() throws IOException, URISyntaxException {
+        File file = new File(Resources.getResource("testJpgFile.jpg").toURI());
+        return Response.ok().entity(file).build();
     }
 
     @Path("/uexception")
