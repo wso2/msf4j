@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.internal.router;
+package org.wso2.msf4j.internal.router;
 
 import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
@@ -23,10 +23,10 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.mss.ChunkResponder;
-import org.wso2.carbon.mss.HttpResponder;
-import org.wso2.carbon.mss.Interceptor;
-import org.wso2.carbon.mss.ServiceMethodInfo;
+import org.wso2.msf4j.ChunkResponder;
+import org.wso2.msf4j.HttpResponder;
+import org.wso2.msf4j.Interceptor;
+import org.wso2.msf4j.ServiceMethodInfo;
 
 import java.io.File;
 import java.io.IOException;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss;
+package org.wso2.msf4j;
 
 import com.google.common.collect.Multimap;
 import com.google.gson.Gson;

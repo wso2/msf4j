@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.internal.router;
+package org.wso2.msf4j.internal.router;
 
 import com.google.common.io.Closeables;
 import io.netty.handler.ssl.SslHandler;

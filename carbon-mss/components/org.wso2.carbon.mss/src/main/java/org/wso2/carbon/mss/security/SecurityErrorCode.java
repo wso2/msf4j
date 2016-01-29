@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.security;
+package org.wso2.msf4j.security;
 
 /**
  * Enum class which represent security error codes

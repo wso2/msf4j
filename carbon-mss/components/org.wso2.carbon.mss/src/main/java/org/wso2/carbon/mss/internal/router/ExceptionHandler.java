@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.internal.router;
+package org.wso2.msf4j.internal.router;
 
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
-import org.wso2.carbon.mss.HttpResponder;
+import org.wso2.msf4j.HttpResponder;
 
 /**
- * Handles exceptions and provides a response via the {@link org.wso2.carbon.mss.HttpResponder}.
+ * Handles exceptions and provides a response via the {@link org.wso2.msf4j.HttpResponder}.
  */
 public class ExceptionHandler {
     public void handle(Throwable t, HttpRequest request, HttpResponder responder) {

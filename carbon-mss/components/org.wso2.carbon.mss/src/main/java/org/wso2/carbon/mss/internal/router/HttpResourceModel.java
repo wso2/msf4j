@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.internal.router;
+package org.wso2.msf4j.internal.router;
 
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import io.netty.handler.codec.http.HttpMethod;
-import org.wso2.carbon.mss.HttpStreamer;
+import org.wso2.msf4j.HttpStreamer;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;

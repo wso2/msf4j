@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.mss.perftest.echo.spark;
+package org.wso2.msf4j.perftest.echo.spark;
 
 import static spark.Spark.port;
 import static spark.Spark.post;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.carbon.mss.security.oauth2;
+package org.wso2.msf4j.security.oauth2;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.ArrayListMultimap;
@@ -27,12 +27,12 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.mss.HttpResponder;
-import org.wso2.carbon.mss.Interceptor;
-import org.wso2.carbon.mss.ServiceMethodInfo;
-import org.wso2.carbon.mss.security.MSSSecurityException;
-import org.wso2.carbon.mss.security.SecurityErrorCode;
-import org.wso2.carbon.mss.util.SystemVariableUtil;
+import org.wso2.msf4j.HttpResponder;
+import org.wso2.msf4j.Interceptor;
+import org.wso2.msf4j.ServiceMethodInfo;
+import org.wso2.msf4j.security.MSSSecurityException;
+import org.wso2.msf4j.security.SecurityErrorCode;
+import org.wso2.msf4j.util.SystemVariableUtil;
 
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;

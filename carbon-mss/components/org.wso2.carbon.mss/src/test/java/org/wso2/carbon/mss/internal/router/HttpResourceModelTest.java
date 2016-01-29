@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.internal.router;
+package org.wso2.msf4j.internal.router;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.wso2.carbon.mss.HttpStreamer;
+import org.wso2.msf4j.HttpStreamer;
 
 /**
  * Tests functionality fo HttpResourceModel.

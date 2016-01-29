@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.examples.petstore.util.model;
+package org.wso2.msf4j.examples.petstore.util.model;
 
 import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;

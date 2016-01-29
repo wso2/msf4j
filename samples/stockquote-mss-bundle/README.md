@@ -4,11 +4,11 @@ This sample demonstrates how to create a microservice as an OSGi bundle.
 See also.. [mss lite](../stockquote-mss-lite), [mss deployable jar](../stockquote-mss-deployable-jar)
 
 In this sample we have exposed the StockQuoteService as an OSGi service that implements 
-org.wso2.carbon.mss.Microservice interface as shown in the following code.
+org.wso2.msf4j.Microservice interface as shown in the following code.
 
 ```java
 @Component(
-        name = "org.wso2.carbon.mss.stockquote.StockQuoteService",
+        name = "org.wso2.msf4j.stockquote.StockQuoteService",
         service = Microservice.class,
         immediate = true
 )

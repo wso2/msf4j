@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.internal.router;
+package org.wso2.msf4j.internal.router;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.HttpContent;
@@ -23,9 +23,9 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.LastHttpContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.mss.HttpResponder;
-import org.wso2.carbon.mss.HttpStreamHandler;
-import org.wso2.carbon.mss.HttpStreamer;
+import org.wso2.msf4j.HttpResponder;
+import org.wso2.msf4j.HttpStreamHandler;
+import org.wso2.msf4j.HttpStreamer;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -142,11 +142,11 @@ class HttpMethodInfo {
 
     /**
      * Calls the {@link HttpStreamHandler#chunk(io.netty.buffer.ByteBuf,
-     * org.wso2.carbon.mss.HttpResponder)} method.
+     * org.wso2.msf4j.HttpResponder)} method.
      * <p>
      * If the chunk method calls throws exception,
      * the {@link HttpStreamHandler#error(Throwable)} will be called and
-     * this method will throw {@link org.wso2.carbon.mss.internal.router.HandlerException}.
+     * this method will throw {@link org.wso2.msf4j.internal.router.HandlerException}.
      */
     private void bodyConsumerChunk(ByteBuf buffer) throws HandlerException {
         try {
@@ -157,7 +157,7 @@ class HttpMethodInfo {
     }
 
     /**
-     * Calls {@link HttpStreamHandler#finished(io.netty.buffer.ByteBuf, org.wso2.carbon.mss.HttpResponder)}
+     * Calls {@link HttpStreamHandler#finished(io.netty.buffer.ByteBuf, org.wso2.msf4j.HttpResponder)}
      * method. The current httpStreamHandler will be set to {@code null} after the call.
      */
     private void bodyConsumerFinish(ByteBuf buffer) throws HandlerException {
@@ -172,7 +172,7 @@ class HttpMethodInfo {
 
     /**
      * Calls {@link HttpStreamHandler#error(Throwable)} and
-     * throws {@link org.wso2.carbon.mss.internal.router.HandlerException}. The current httpStreamHandler will be set
+     * throws {@link org.wso2.msf4j.internal.router.HandlerException}. The current httpStreamHandler will be set
      * to {@code null} after the call.
      */
     private void bodyConsumerError(Throwable cause) throws HandlerException {

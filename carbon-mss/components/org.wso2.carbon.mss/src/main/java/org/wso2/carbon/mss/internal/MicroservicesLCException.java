@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.internal;
+package org.wso2.msf4j.internal;
 
 /**
  * This Exception can be used with Lifecycle methods.

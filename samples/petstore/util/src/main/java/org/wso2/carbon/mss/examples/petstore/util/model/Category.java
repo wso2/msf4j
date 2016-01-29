@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.carbon.mss.examples.petstore.util.model;
+package org.wso2.msf4j.examples.petstore.util.model;
 
 /**
  * The pet category; such as dog, cat, bird, reptile, fish etc.

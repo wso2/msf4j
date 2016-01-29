@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.carbon.mss.metrics;
+package org.wso2.msf4j.metrics;
 
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
@@ -30,9 +30,9 @@ import org.wso2.carbon.metrics.manager.Meter;
 import org.wso2.carbon.metrics.manager.MetricManager;
 import org.wso2.carbon.metrics.manager.Timer;
 import org.wso2.carbon.metrics.manager.Timer.Context;
-import org.wso2.carbon.mss.HttpResponder;
-import org.wso2.carbon.mss.Interceptor;
-import org.wso2.carbon.mss.ServiceMethodInfo;
+import org.wso2.msf4j.HttpResponder;
+import org.wso2.msf4j.Interceptor;
+import org.wso2.msf4j.ServiceMethodInfo;
 
 import java.lang.reflect.Method;
 import java.util.HashSet;
@@ -44,7 +44,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Collecting Metrics via annotations.
  */
 @Component(
-    name = "org.wso2.carbon.mss.metrics.MetricsInterceptor",
+    name = "org.wso2.msf4j.metrics.MetricsInterceptor",
     service = Interceptor.class,
     immediate = true)
 public class MetricsInterceptor implements Interceptor {

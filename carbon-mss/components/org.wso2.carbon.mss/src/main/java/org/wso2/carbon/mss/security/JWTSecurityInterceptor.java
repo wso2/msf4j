@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.security;
+package org.wso2.msf4j.security;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -27,10 +27,10 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.mss.HttpResponder;
-import org.wso2.carbon.mss.Interceptor;
-import org.wso2.carbon.mss.ServiceMethodInfo;
-import org.wso2.carbon.mss.util.SystemVariableUtil;
+import org.wso2.msf4j.HttpResponder;
+import org.wso2.msf4j.Interceptor;
+import org.wso2.msf4j.ServiceMethodInfo;
+import org.wso2.msf4j.util.SystemVariableUtil;
 
 import java.io.IOException;
 import java.io.InputStream;

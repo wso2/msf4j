@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.internal.mime;
+package org.wso2.msf4j.internal.mime;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.internal.router;
+package org.wso2.msf4j.internal.router;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableMap;
@@ -30,8 +30,8 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.wso2.carbon.mss.HttpResponder;
-import org.wso2.carbon.mss.MicroservicesRunner;
+import org.wso2.msf4j.HttpResponder;
+import org.wso2.msf4j.MicroservicesRunner;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;

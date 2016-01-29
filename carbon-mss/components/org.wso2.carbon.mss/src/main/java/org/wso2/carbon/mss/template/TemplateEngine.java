@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.template;
+package org.wso2.msf4j.template;
 
 /**
  * MSS template engines should implement this interface.

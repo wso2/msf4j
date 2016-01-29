@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.examples.petstore.security;
+package org.wso2.msf4j.examples.petstore.security;
 
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
@@ -24,7 +24,7 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.mss.examples.petstore.util.model.User;
+import org.wso2.msf4j.examples.petstore.util.model.User;
 
 import java.io.IOException;
 import java.io.InputStream;

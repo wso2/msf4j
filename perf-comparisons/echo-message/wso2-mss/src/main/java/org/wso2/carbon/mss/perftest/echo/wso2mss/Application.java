@@ -16,9 +16,9 @@
  * under the License.
  */
 
-package org.wso2.carbon.mss.perftest.echo.wso2mss;
+package org.wso2.msf4j.perftest.echo.wso2mss;
 
-import org.wso2.carbon.mss.MicroservicesRunner;
+import org.wso2.msf4j.MicroservicesRunner;
 
 /**
  * Application entry point

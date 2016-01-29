@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.examples.petstore.security.ldap.server;
+package org.wso2.msf4j.examples.petstore.security.ldap.server;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -28,7 +28,7 @@ import org.wso2.carbon.apacheds.PartitionInfo;
 import org.wso2.carbon.apacheds.PartitionManager;
 import org.wso2.carbon.ldap.server.exception.DirectoryServerException;
 import org.wso2.carbon.ldap.server.util.EmbeddingLDAPException;
-import org.wso2.carbon.mss.util.SystemVariableUtil;
+import org.wso2.msf4j.util.SystemVariableUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;

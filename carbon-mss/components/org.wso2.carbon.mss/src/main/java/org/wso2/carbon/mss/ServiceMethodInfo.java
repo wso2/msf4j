@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss;
+package org.wso2.msf4j;
 
 
 import java.lang.reflect.Method;

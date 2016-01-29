@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.internal.router;
+package org.wso2.msf4j.internal.router;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
@@ -36,9 +36,9 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.wso2.carbon.mss.MicroservicesRunner;
-import org.wso2.carbon.mss.internal.router.beanconversion.BeanConversionException;
-import org.wso2.carbon.mss.internal.router.beanconversion.BeanConverter;
+import org.wso2.msf4j.MicroservicesRunner;
+import org.wso2.msf4j.internal.router.beanconversion.BeanConversionException;
+import org.wso2.msf4j.internal.router.beanconversion.BeanConverter;
 
 import java.io.BufferedInputStream;
 import java.io.File;

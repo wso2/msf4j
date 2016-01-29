@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.carbon.mss.httpmonitoring;
+package org.wso2.msf4j.httpmonitoring;
 
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpRequest;
@@ -22,9 +22,9 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.mss.HttpResponder;
-import org.wso2.carbon.mss.Interceptor;
-import org.wso2.carbon.mss.ServiceMethodInfo;
+import org.wso2.msf4j.HttpResponder;
+import org.wso2.msf4j.Interceptor;
+import org.wso2.msf4j.ServiceMethodInfo;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -36,7 +36,7 @@ import javax.ws.rs.Path;
  * Monitor HTTP Requests for methods with {@link HTTPMonitoring} annotations.
  */
 @Component(
-    name = "org.wso2.carbon.mss.httpmonitoring.HTTPMonitoringInterceptor",
+    name = "org.wso2.msf4j.httpmonitoring.HTTPMonitoringInterceptor",
     service = Interceptor.class,
     immediate = true)
 public class HTTPMonitoringInterceptor implements Interceptor {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.examples.petstore.util.fe.view;
+package org.wso2.msf4j.examples.petstore.util.fe.view;
 
 import java.io.Serializable;
 import javax.faces.bean.ManagedBean;

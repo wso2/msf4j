@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.mss.perftest.echo.dropwizard;
+package org.wso2.msf4j.perftest.echo.dropwizard;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.carbon.mss.security;
+package org.wso2.msf4j.security;
 
 /**
  * The class {@code MSSSecurityException} and its subclasses are a form of

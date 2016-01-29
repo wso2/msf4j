@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.examples.petstore.fileserver;
+package org.wso2.msf4j.examples.petstore.fileserver;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.metrics.annotation.Timed;
-import org.wso2.carbon.mss.HttpResponder;
-import org.wso2.carbon.mss.HttpStreamHandler;
-import org.wso2.carbon.mss.HttpStreamer;
-import org.wso2.carbon.mss.httpmonitoring.HTTPMonitoring;
+import org.wso2.msf4j.HttpResponder;
+import org.wso2.msf4j.HttpStreamHandler;
+import org.wso2.msf4j.HttpStreamer;
+import org.wso2.msf4j.httpmonitoring.HTTPMonitoring;
 
 import java.io.BufferedOutputStream;
 import java.io.File;

@@ -20,7 +20,7 @@
 <suite name="Carbon-Kernel-Core_OSGI-Test-Suite">
     <test name="carbon-core-osgi-tests" preserve-order="true" parallel="false">
         <classes>
-            <class name="org.wso2.carbon.mss.BaseOSGiTest" />
+            <class name="org.wso2.msf4j.BaseOSGiTest" />
         </classes>
     </test>
 </suite>

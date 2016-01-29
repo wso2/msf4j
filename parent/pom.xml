@@ -26,7 +26,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.wso2.carbon.mss</groupId>
+    <groupId>org.wso2.msf4j</groupId>
     <artifactId>mss-parent</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0-SNAPSHOT</version>
@@ -185,20 +185,20 @@
                 <type>zip</type>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.mss</groupId>
-                <artifactId>org.wso2.carbon.mss</artifactId>
-                <version>${carbon.mss.version}</version>
+                <groupId>org.wso2.msf4j</groupId>
+                <artifactId>org.wso2.msf4j</artifactId>
+                <version>${msf4j.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.mss</groupId>
-                <artifactId>org.wso2.carbon.mss.feature</artifactId>
-                <version>${carbon.mss.version}</version>
+                <groupId>org.wso2.msf4j</groupId>
+                <artifactId>org.wso2.msf4j.feature</artifactId>
+                <version>${msf4j.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.mss</groupId>
+                <groupId>org.wso2.msf4j</groupId>
                 <artifactId>org.wso2.carbon.spi.fly.feature</artifactId>
-                <version>${carbon.mss.version}</version>
+                <version>${msf4j.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
@@ -492,7 +492,7 @@
         <carbon.kernel.version.range>[5.0,6)</carbon.kernel.version.range>
         <org.wso2.carbon.transport.http.netty.version>1.0.0</org.wso2.carbon.transport.http.netty.version>
         <org.wso2.carbon.transport.http.netty.version.range>[1.0,2)</org.wso2.carbon.transport.http.netty.version.range>
-        <carbon.mss.version>1.0.0-SNAPSHOT</carbon.mss.version>
+        <msf4j.version>1.0.0-SNAPSHOT</msf4j.version>
         <carbon.metrics.version>1.2.0</carbon.metrics.version>
         <carbon.metrics.version.range>[1.2,2)</carbon.metrics.version.range>
         <carbon.analytics.common.version>5.0.6</carbon.analytics.common.version>

@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.example;
+package org.wso2.msf4j.example;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.mss.MicroservicesRunner;
-import org.wso2.carbon.mss.example.service.Helloworld;
-import org.wso2.carbon.mss.security.oauth2.OAuth2SecurityInterceptor;
+import org.wso2.msf4j.MicroservicesRunner;
+import org.wso2.msf4j.example.service.Helloworld;
+import org.wso2.msf4j.security.oauth2.OAuth2SecurityInterceptor;
 
 /**
  * Main Application Class.

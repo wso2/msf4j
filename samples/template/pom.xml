@@ -21,24 +21,24 @@
 
     <parent>
         <artifactId>mss-lite-parent</artifactId>
-        <groupId>org.wso2.carbon.mss</groupId>
+        <groupId>org.wso2.msf4j</groupId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../../mss-lite-parent/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.wso2.carbon.mss.sample</groupId>
+    <groupId>org.wso2.msf4j.sample</groupId>
     <artifactId>template</artifactId>
 
     <name>Template Microservice Sample</name>
 
     <properties>
-        <microservice.mainClass>org.wso2.carbon.mss.example.Application</microservice.mainClass>
+        <microservice.mainClass>org.wso2.msf4j.example.Application</microservice.mainClass>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>org.wso2.carbon.mss</groupId>
+            <groupId>org.wso2.msf4j</groupId>
             <artifactId>mss-mustache-template</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>

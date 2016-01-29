@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.internal.router;
+package org.wso2.msf4j.internal.router;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
@@ -26,7 +26,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.HttpResponseStatus;
-import org.wso2.carbon.mss.HttpResponder;
+import org.wso2.msf4j.HttpResponder;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -35,7 +35,7 @@ import java.nio.ByteBuffer;
 import javax.annotation.Nullable;
 
 /**
- * Base implementation of {@link org.wso2.carbon.mss.HttpResponder} to simplify child implementations.
+ * Base implementation of {@link org.wso2.msf4j.HttpResponder} to simplify child implementations.
  */
 public abstract class AbstractHttpResponder implements HttpResponder {
 

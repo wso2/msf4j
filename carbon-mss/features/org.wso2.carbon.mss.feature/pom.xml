@@ -18,14 +18,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
-        <groupId>org.wso2.carbon.mss</groupId>
+        <groupId>org.wso2.msf4j</groupId>
         <artifactId>mss-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../../../parent/pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.carbon.mss.feature</artifactId>
+    <artifactId>org.wso2.msf4j.feature</artifactId>
     <packaging>carbon-feature</packaging>
     <name>WSO2 Carbon - MSS Feature</name>
     <url>http://wso2.org</url>
@@ -79,8 +79,8 @@
             <artifactId>org.apache.servicemix.bundles.commons-beanutils</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.mss</groupId>
-            <artifactId>org.wso2.carbon.mss</artifactId>
+            <groupId>org.wso2.msf4j</groupId>
+            <artifactId>org.wso2.msf4j</artifactId>
         </dependency>
         <!-- Metrics Dependencies - Start -->
         <dependency>
@@ -170,8 +170,8 @@
                             </adviceFileContents>
                             <bundles>
                                 <bundle>
-                                    <symbolicName>org.wso2.carbon.mss</symbolicName>
-                                    <version>${carbon.mss.version}</version>
+                                    <symbolicName>org.wso2.msf4j</symbolicName>
+                                    <version>${msf4j.version}</version>
                                 </bundle>
                                 <bundle>
                                     <symbolicName>javax.ws.rs-api</symbolicName>

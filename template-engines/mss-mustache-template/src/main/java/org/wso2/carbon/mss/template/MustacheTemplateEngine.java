@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.template;
+package org.wso2.msf4j.template;
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
@@ -25,7 +25,7 @@ import java.io.StringWriter;
 
 /**
  * Wrapper for mustache template engine that implements
- * org.wso2.carbon.mss.template.TemplateEngine.
+ * org.wso2.msf4j.template.TemplateEngine.
  */
 public class MustacheTemplateEngine implements TemplateEngine {
 

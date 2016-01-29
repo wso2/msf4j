@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.internal.router;
+package org.wso2.msf4j.internal.router;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.Multimap;
@@ -23,9 +23,9 @@ import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.junit.Assert;
 import org.junit.Test;
-import org.wso2.carbon.mss.ChunkResponder;
-import org.wso2.carbon.mss.HttpResponder;
-import org.wso2.carbon.mss.internal.router.beanconversion.BeanConversionException;
+import org.wso2.msf4j.ChunkResponder;
+import org.wso2.msf4j.HttpResponder;
+import org.wso2.msf4j.internal.router.beanconversion.BeanConversionException;
 
 import java.io.File;
 import java.io.IOException;

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.examples.petstore.util.fe.security;
+package org.wso2.msf4j.examples.petstore.util.fe.security;
 
-import org.wso2.carbon.mss.examples.petstore.util.fe.view.LoginBean;
+import org.wso2.msf4j.examples.petstore.util.fe.view.LoginBean;
 
 import java.io.IOException;
 import java.util.Collections;

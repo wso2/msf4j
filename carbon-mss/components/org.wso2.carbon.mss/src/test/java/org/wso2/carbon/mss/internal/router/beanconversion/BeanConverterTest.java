@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.internal.router.beanconversion;
+package org.wso2.msf4j.internal.router.beanconversion;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.wso2.carbon.mss.internal.router.Category;
-import org.wso2.carbon.mss.internal.router.Pet;
-import org.wso2.carbon.mss.internal.router.XmlBean;
+import org.wso2.msf4j.internal.router.Category;
+import org.wso2.msf4j.internal.router.Pet;
+import org.wso2.msf4j.internal.router.XmlBean;
 
 /**
  * Tests the functionality of BeanConverter.

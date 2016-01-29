@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.examples.petstore.security.ldap.server;
+package org.wso2.msf4j.examples.petstore.security.ldap.server;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;

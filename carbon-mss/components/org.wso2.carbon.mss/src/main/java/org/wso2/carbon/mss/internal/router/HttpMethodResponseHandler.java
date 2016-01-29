@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.internal.router;
+package org.wso2.msf4j.internal.router;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.LinkedListMultimap;
@@ -23,11 +23,11 @@ import com.google.common.io.Files;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.HttpResponseStatus;
-import org.wso2.carbon.mss.HttpResponder;
-import org.wso2.carbon.mss.internal.mime.MimeMapper;
-import org.wso2.carbon.mss.internal.mime.MimeMappingException;
-import org.wso2.carbon.mss.internal.router.beanconversion.BeanConversionException;
-import org.wso2.carbon.mss.internal.router.beanconversion.BeanConverter;
+import org.wso2.msf4j.HttpResponder;
+import org.wso2.msf4j.internal.mime.MimeMapper;
+import org.wso2.msf4j.internal.mime.MimeMappingException;
+import org.wso2.msf4j.internal.router.beanconversion.BeanConversionException;
+import org.wso2.msf4j.internal.router.beanconversion.BeanConverter;
 
 import java.io.File;
 import java.io.IOException;

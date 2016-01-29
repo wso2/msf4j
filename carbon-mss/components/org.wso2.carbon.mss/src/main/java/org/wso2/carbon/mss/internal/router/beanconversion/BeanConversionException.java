@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.internal.router.beanconversion;
+package org.wso2.msf4j.internal.router.beanconversion;
 
 /**
  * Exception that is thrown when a bean conversion is failed.

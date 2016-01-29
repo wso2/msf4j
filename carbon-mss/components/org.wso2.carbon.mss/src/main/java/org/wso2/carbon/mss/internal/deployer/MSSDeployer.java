@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.internal.deployer;
+package org.wso2.msf4j.internal.deployer;
 
 
 import org.osgi.framework.BundleContext;
@@ -26,7 +26,7 @@ import org.wso2.carbon.kernel.deployment.Artifact;
 import org.wso2.carbon.kernel.deployment.ArtifactType;
 import org.wso2.carbon.kernel.deployment.Deployer;
 import org.wso2.carbon.kernel.deployment.exception.CarbonDeploymentException;
-import org.wso2.carbon.mss.internal.MicroservicesRegistry;
+import org.wso2.msf4j.internal.MicroservicesRegistry;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -41,7 +41,7 @@ import java.util.List;
  * MSS POJO artifacts.
  */
 @Component(
-        name = "org.wso2.carbon.mss.internal.deployer.MSSDeployer",
+        name = "org.wso2.msf4j.internal.deployer.MSSDeployer",
         service = Deployer.class,
         immediate = true
 )

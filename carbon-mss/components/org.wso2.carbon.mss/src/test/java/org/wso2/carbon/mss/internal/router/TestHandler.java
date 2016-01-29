@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.internal.router;
+package org.wso2.msf4j.internal.router;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
@@ -29,11 +29,11 @@ import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.junit.Assert;
-import org.wso2.carbon.mss.ChunkResponder;
-import org.wso2.carbon.mss.HttpResponder;
-import org.wso2.carbon.mss.HttpStreamHandler;
-import org.wso2.carbon.mss.HttpStreamer;
-import org.wso2.carbon.mss.Microservice;
+import org.wso2.msf4j.ChunkResponder;
+import org.wso2.msf4j.HttpResponder;
+import org.wso2.msf4j.HttpStreamHandler;
+import org.wso2.msf4j.HttpStreamer;
+import org.wso2.msf4j.Microservice;
 
 import java.io.File;
 import java.io.IOException;

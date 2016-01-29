@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.carbon.mss.util;
+package org.wso2.msf4j.util;
 
 /**
  * A utility which allows reading variables from the environment or System properties.

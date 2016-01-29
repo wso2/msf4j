@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.internal.router;
+package org.wso2.msf4j.internal.router;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -22,14 +22,14 @@ import io.netty.channel.Channel;
 import io.netty.handler.codec.http.DefaultHttpContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.mss.ChunkResponder;
+import org.wso2.msf4j.ChunkResponder;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * A {@link org.wso2.carbon.mss.ChunkResponder} that writes chunks to a {@link Channel}.
+ * A {@link org.wso2.msf4j.ChunkResponder} that writes chunks to a {@link Channel}.
  */
 final class ChannelChunkResponder implements ChunkResponder {
     private static final Logger log = LoggerFactory.getLogger(ChannelChunkResponder.class);

@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.example;
+package org.wso2.msf4j.example;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.mss.HttpResponder;
-import org.wso2.carbon.mss.HttpStreamHandler;
-import org.wso2.carbon.mss.HttpStreamer;
+import org.wso2.msf4j.HttpResponder;
+import org.wso2.msf4j.HttpStreamHandler;
+import org.wso2.msf4j.HttpStreamer;
 
 import java.io.BufferedOutputStream;
 import java.io.File;

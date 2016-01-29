@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss;
+package org.wso2.msf4j;
 
-import org.wso2.carbon.mss.internal.router.MicroserviceMetadata;
+import org.wso2.msf4j.internal.router.MicroserviceMetadata;
 
 import java.util.Map;
 

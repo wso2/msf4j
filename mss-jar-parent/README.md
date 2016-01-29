@@ -10,20 +10,20 @@ mss-jar-parent POM.
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.wso2.carbon.mss</groupId>
+        <groupId>org.wso2.msf4j</groupId>
         <artifactId>mss-jar-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../../mss-jar-parent/pom.xml</relativePath>
     </parent>
 
-    <groupId>org.wso2.carbon.mss.example</groupId>
+    <groupId>org.wso2.msf4j.example</groupId>
     <artifactId>stockquote-mss-deployable-jar</artifactId>
     <packaging>jar</packaging>
 
     <name>StockQuote MSS Deployable Jar</name>
 
     <properties>
-        <microservice.resourceClasses>org.wso2.carbon.mss.example.StockQuoteService</microservice.resourceClasses>
+        <microservice.resourceClasses>org.wso2.msf4j.example.StockQuoteService</microservice.resourceClasses>
     </properties>
     
 </project>

@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.examples.petstore.security;
+package org.wso2.msf4j.examples.petstore.security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.metrics.annotation.Timed;
-import org.wso2.carbon.mss.examples.petstore.security.ldap.LDAPUserStoreManager;
-import org.wso2.carbon.mss.examples.petstore.util.model.User;
-import org.wso2.carbon.mss.httpmonitoring.HTTPMonitoring;
-import org.wso2.carbon.mss.util.SystemVariableUtil;
+import org.wso2.msf4j.examples.petstore.security.ldap.LDAPUserStoreManager;
+import org.wso2.msf4j.examples.petstore.util.model.User;
+import org.wso2.msf4j.httpmonitoring.HTTPMonitoring;
+import org.wso2.msf4j.util.SystemVariableUtil;
 
 import javax.naming.NamingException;
 import javax.ws.rs.Consumes;

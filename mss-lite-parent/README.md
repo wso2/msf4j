@@ -10,13 +10,13 @@ MSS Service Parent POM.
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.wso2.carbon.mss</groupId>
+        <groupId>org.wso2.msf4j</groupId>
         <artifactId>mss-lite-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../../mss-lite-parent/pom.xml</relativePath>
     </parent>
 
-    <groupId>org.wso2.carbon.mss.example</groupId>
+    <groupId>org.wso2.msf4j.example</groupId>
     <artifactId>stockquote-mss-lite</artifactId>
     <packaging>jar</packaging>
 
@@ -24,7 +24,7 @@ MSS Service Parent POM.
     <name>Executable Jar Microservice Sample</name>
 
     <properties>
-        <microservice.mainClass>org.wso2.carbon.mss.example.StockQuoteService</microservice.mainClass>
+        <microservice.mainClass>org.wso2.msf4j.example.StockQuoteService</microservice.mainClass>
     </properties>
 </project>
 ```

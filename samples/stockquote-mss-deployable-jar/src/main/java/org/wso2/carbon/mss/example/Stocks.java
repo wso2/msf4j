@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.example;
+package org.wso2.msf4j.example;
 
 import java.util.Collection;
 import javax.xml.bind.annotation.XmlElement;

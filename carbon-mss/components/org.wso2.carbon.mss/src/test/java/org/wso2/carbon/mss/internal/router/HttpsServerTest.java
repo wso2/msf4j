@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.internal.router;
+package org.wso2.msf4j.internal.router;
 
 import com.google.common.io.Resources;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpMethod;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.wso2.carbon.mss.MicroservicesRunner;
+import org.wso2.msf4j.MicroservicesRunner;
 import org.wso2.carbon.transport.http.netty.internal.config.YAMLTransportConfigurationBuilder;
 
 import java.io.IOException;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.internal.deployer;
+package org.wso2.msf4j.internal.deployer;
 
 /**
  * Exception that is thrown when processing jar files

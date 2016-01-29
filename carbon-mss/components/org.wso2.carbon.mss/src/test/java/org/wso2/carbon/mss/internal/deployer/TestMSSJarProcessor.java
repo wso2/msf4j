@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.internal.deployer;
+package org.wso2.msf4j.internal.deployer;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -30,7 +30,7 @@ public class TestMSSJarProcessor {
     @Test
     public void testJAXRSJarObjectInitialization() throws MSSJarProcessorException {
         MSSJarProcessor mssJarProcessor = new MSSJarProcessor();
-        String name = "/org.wso2.carbon.mss.jaxrs.sample.simplestockquote-1.0.zip";
+        String name = "/org.wso2.msf4j.jaxrs.sample.simplestockquote-1.0.zip";
         File jar = new File(TestMSSJarProcessor.class.getResource(name).getPath());
         Assert.assertTrue("Resource jar does not exist", jar.exists());
         List<Object> instances = mssJarProcessor.setArtifact(jar).process().getResourceInstances();

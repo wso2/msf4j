@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.carbon.mss.internal.router;
+package org.wso2.msf4j.internal.router;
 
 import com.google.common.collect.ImmutableMap;
-import org.wso2.carbon.mss.ServiceContext;
+import org.wso2.msf4j.ServiceContext;
 
 import java.util.Map;
 

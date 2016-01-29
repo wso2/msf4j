@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.carbon.mss.internal;
+package org.wso2.msf4j.internal;
 
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -22,8 +22,8 @@ import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
-import org.wso2.carbon.mss.internal.router.HttpDispatcher;
-import org.wso2.carbon.mss.internal.router.RequestRouter;
+import org.wso2.msf4j.internal.router.HttpDispatcher;
+import org.wso2.msf4j.internal.router.RequestRouter;
 import org.wso2.carbon.transport.http.netty.listener.CarbonNettyServerInitializer;
 
 import java.util.Map;

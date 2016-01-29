@@ -18,7 +18,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.wso2.carbon.mss</groupId>
+        <groupId>org.wso2.msf4j</groupId>
         <artifactId>mss-lite-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../../mss-lite-parent/pom.xml</relativePath>
@@ -29,6 +29,6 @@
     <description>Demostrates how to secure microservices in WSO2 MSS</description>
 
     <properties>
-        <microservice.mainClass>org.wso2.carbon.mss.example.Application</microservice.mainClass>
+        <microservice.mainClass>org.wso2.msf4j.example.Application</microservice.mainClass>
     </properties>
 </project>

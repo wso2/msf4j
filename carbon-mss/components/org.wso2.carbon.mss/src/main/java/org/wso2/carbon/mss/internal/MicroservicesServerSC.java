@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.carbon.mss.internal;
+package org.wso2.msf4j.internal;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
@@ -25,18 +25,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.kernel.startupresolver.RequiredCapabilityListener;
 import org.wso2.carbon.kernel.transports.CarbonTransport;
-import org.wso2.carbon.mss.Interceptor;
-import org.wso2.carbon.mss.Microservice;
+import org.wso2.msf4j.Interceptor;
+import org.wso2.msf4j.Microservice;
 
 /**
  * OSGi service component for MicroServicesServer.
  */
 @Component(
-        name = "org.wso2.carbon.mss.internal.MicroServicesServerSC",
+        name = "org.wso2.msf4j.internal.MicroServicesServerSC",
         immediate = true,
         service = RequiredCapabilityListener.class,
         property = {
-                "capability-name=org.wso2.carbon.mss.Microservice, org.wso2.carbon.mss.Interceptor",
+                "capability-name=org.wso2.msf4j.Microservice, org.wso2.msf4j.Interceptor",
                 "component-key=wso2-microservices-server"
         }
 )

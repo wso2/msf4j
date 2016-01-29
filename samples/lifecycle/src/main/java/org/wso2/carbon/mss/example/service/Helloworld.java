@@ -16,7 +16,7 @@
  *  under the License.
  */
 
-package org.wso2.carbon.mss.example.service;
+package org.wso2.msf4j.example.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

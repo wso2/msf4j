@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.carbon.mss.example.service;
+package org.wso2.msf4j.example.service;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
@@ -22,8 +22,8 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.wso2.carbon.metrics.annotation.Counted;
 import org.wso2.carbon.metrics.annotation.Metered;
 import org.wso2.carbon.metrics.annotation.Timed;
-import org.wso2.carbon.mss.httpmonitoring.HTTPMonitoring;
-import org.wso2.carbon.mss.Microservice;
+import org.wso2.msf4j.httpmonitoring.HTTPMonitoring;
+import org.wso2.msf4j.Microservice;
 
 import java.util.Random;
 
@@ -37,7 +37,7 @@ import javax.ws.rs.PathParam;
 @Path("/demo-bundle")
 @HTTPMonitoring
 @Component(
-        name = "org.wso2.carbon.mss.example.service.DemoService",
+        name = "org.wso2.msf4j.example.service.DemoService",
         service = Microservice.class,
         immediate = true
 )

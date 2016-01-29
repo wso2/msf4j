@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.security.oauth2;
+package org.wso2.msf4j.security.oauth2;
 
 /**
  * Introspection response bean class

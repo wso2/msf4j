@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss;
+package org.wso2.msf4j;
 
 /**
  * Interface that needs to be implemented for handling HTTP methods. init and destroy methods can be used to manage

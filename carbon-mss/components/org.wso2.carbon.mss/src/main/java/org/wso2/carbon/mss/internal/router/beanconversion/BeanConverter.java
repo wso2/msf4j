@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.internal.router.beanconversion;
+package org.wso2.msf4j.internal.router.beanconversion;
 
 /**
  * Factory class for getting correct media type conversion

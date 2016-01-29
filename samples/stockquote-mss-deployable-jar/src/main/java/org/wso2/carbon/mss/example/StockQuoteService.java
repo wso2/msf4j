@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.carbon.mss.example;
+package org.wso2.msf4j.example;
 
 import java.util.HashMap;
 import java.util.Map;

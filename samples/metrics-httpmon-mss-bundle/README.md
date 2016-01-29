@@ -14,7 +14,7 @@ See following example:
 @Path("/demo")
 @HTTPMonitoring
 @Component(
-        name = "org.wso2.carbon.mss.example.service.DemoService",
+        name = "org.wso2.msf4j.example.service.DemoService",
         service = Microservice.class,
         immediate = true
 )

@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.carbon.mss;
+package org.wso2.msf4j;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.kernel.transports.TransportManager;
-import org.wso2.carbon.mss.internal.MSSNettyServerInitializer;
-import org.wso2.carbon.mss.internal.MicroservicesRegistry;
+import org.wso2.msf4j.internal.MSSNettyServerInitializer;
+import org.wso2.msf4j.internal.MicroservicesRegistry;
 import org.wso2.carbon.transport.http.netty.internal.NettyTransportDataHolder;
 import org.wso2.carbon.transport.http.netty.internal.config.ListenerConfiguration;
 import org.wso2.carbon.transport.http.netty.internal.config.TransportsConfiguration;

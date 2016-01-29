@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.stockquote;
+package org.wso2.msf4j.stockquote;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
@@ -22,7 +22,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.mss.Microservice;
+import org.wso2.msf4j.Microservice;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,7 +38,7 @@ import javax.ws.rs.core.Response;
  * StockQuote microservice.
  */
 @Component(
-        name = "org.wso2.carbon.mss.stockquote.StockQuoteService",
+        name = "org.wso2.msf4j.stockquote.StockQuoteService",
         service = Microservice.class,
         immediate = true
 )

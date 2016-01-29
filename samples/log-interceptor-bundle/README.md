@@ -2,7 +2,7 @@
 
 This sample demonstrates how to create an Interceptor as an OSGi bundle.
 
-In this sample we have exposed an OSGi service that implements org.wso2.carbon.mss.Interceptor interface. This 
+In this sample we have exposed an OSGi service that implements org.wso2.msf4j.Interceptor interface. This 
 interceptor logs the headers of all http requests that arrives to the hosted microservices.
 
 

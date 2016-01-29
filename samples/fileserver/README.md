@@ -26,7 +26,7 @@ With WSO2 Microservices server, you can handle chunked requests in two ways.
 
 ### 1. Handle requests using HttpStreamHandler
 
-First way is to implement org.wso2.carbon.mss.HttpStreamHandler as shown in the below example to handle chunked http 
+First way is to implement org.wso2.msf4j.HttpStreamHandler as shown in the below example to handle chunked http 
 requests in a zero copy manner.
 
 ```java

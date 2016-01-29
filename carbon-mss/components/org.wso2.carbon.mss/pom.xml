@@ -20,13 +20,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.wso2.carbon.mss</groupId>
+        <groupId>org.wso2.msf4j</groupId>
         <artifactId>mss-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../../../parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>org.wso2.carbon.mss</artifactId>
+    <artifactId>org.wso2.msf4j</artifactId>
     <packaging>bundle</packaging>
 
     <name>WSO2 Microservices Server OSGi bundle</name>
@@ -294,11 +294,11 @@
     </profiles>
 
     <properties>
-        <bundle.activator>org.wso2.carbon.mss.internal.MicroservicesServerActivator</bundle.activator>
-        <private.package>org.wso2.carbon.mss.internal.*,</private.package>
+        <bundle.activator>org.wso2.msf4j.internal.MicroservicesServerActivator</bundle.activator>
+        <private.package>org.wso2.msf4j.internal.*,</private.package>
         <export.package>
-            !org.wso2.carbon.mss.internal.*,
-            org.wso2.carbon.mss.*;version="1.0.0",
+            !org.wso2.msf4j.internal.*,
+            org.wso2.msf4j.*;version="1.0.0",
         </export.package>
         <import.package>
             org.wso2.carbon.kernel.deployment.*;version="${carbon.kernel.version.range}",
@@ -327,7 +327,7 @@
         </import.package>
         <provide.capability>
             osgi.service;effective:=active;
-            objectClass="org.wso2.carbon.mss.internal.MicroservicesServerSC";
+            objectClass="org.wso2.msf4j.internal.MicroservicesServerSC";
             dependent-component-key="carbon-transport-mgt",
         </provide.capability>
         <SPI-Provider>javax.ws.rs.ext.RuntimeDelegate</SPI-Provider>

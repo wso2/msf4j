@@ -23,7 +23,7 @@ To create the OSGi fragment bundle you have to create the following pom.xml
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.wso2.carbon.mss</groupId>
+    <groupId>org.wso2.msf4j</groupId>
     <artifactId>deployable-jar-fragment</artifactId>
     <version>1.0.0</version>
     <packaging>bundle</packaging>
@@ -47,7 +47,7 @@ To create the OSGi fragment bundle you have to create the following pom.xml
 
                         <Private-Package>
                         </Private-Package>
-                        <Fragment-Host>org.wso2.carbon.mss</Fragment-Host>
+                        <Fragment-Host>org.wso2.msf4j</Fragment-Host>
                     </instructions>
                 </configuration>
             </plugin>

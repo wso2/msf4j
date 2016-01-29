@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.internal.router;
+package org.wso2.msf4j.internal.router;
 
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.junit.AfterClass;
@@ -22,7 +22,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.wso2.carbon.mss.MicroservicesRunner;
+import org.wso2.msf4j.MicroservicesRunner;
 
 import java.net.URI;
 import java.util.concurrent.TimeUnit;

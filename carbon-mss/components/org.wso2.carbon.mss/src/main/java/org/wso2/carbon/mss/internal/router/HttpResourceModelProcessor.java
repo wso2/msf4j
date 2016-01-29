@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.internal.router;
+package org.wso2.msf4j.internal.router;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
@@ -22,9 +22,9 @@ import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.QueryStringDecoder;
-import org.wso2.carbon.mss.HttpResponder;
-import org.wso2.carbon.mss.HttpStreamer;
-import org.wso2.carbon.mss.internal.router.beanconversion.BeanConverter;
+import org.wso2.msf4j.HttpResponder;
+import org.wso2.msf4j.HttpStreamer;
+import org.wso2.msf4j.internal.router.beanconversion.BeanConverter;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;

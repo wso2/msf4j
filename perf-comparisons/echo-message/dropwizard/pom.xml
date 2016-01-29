@@ -20,7 +20,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.wso2.carbon.mss.perftest.echo</groupId>
+    <groupId>org.wso2.msf4j.perftest.echo</groupId>
     <artifactId>dropwizard-echo-message</artifactId>
     <version>1.0-SNAPSHOT</version>
 
@@ -70,7 +70,7 @@
                                         implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>org.wso2.carbon.mss.perftest.echo.dropwizard.AppStart</mainClass>
+                                    <mainClass>org.wso2.msf4j.perftest.echo.dropwizard.AppStart</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>

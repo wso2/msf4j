@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.carbon.mss.httpmonitoring;
+package org.wso2.msf4j.httpmonitoring;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.wso2.carbon.kernel.utils.Utils;
-import org.wso2.carbon.mss.util.SystemVariableUtil;
+import org.wso2.msf4j.util.SystemVariableUtil;
 
 import java.io.File;
 
@@ -27,7 +27,7 @@ import java.io.File;
  * HTTP Monitoring OSGi Component to Initialize/Destroy Data Publisher
  */
 @Component(
-    name = "org.wso2.carbon.mss.httpmonitoring.HTTPMonitoringComponent",
+    name = "org.wso2.msf4j.httpmonitoring.HTTPMonitoringComponent",
     immediate = true)
 public class HTTPMonitoringComponent {
 

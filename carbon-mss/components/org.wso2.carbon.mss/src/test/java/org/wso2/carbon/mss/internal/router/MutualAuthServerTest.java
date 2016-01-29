@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.carbon.mss.internal.router;
+package org.wso2.msf4j.internal.router;
 
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.wso2.carbon.mss.MicroservicesRunner;
+import org.wso2.msf4j.MicroservicesRunner;
 import org.wso2.carbon.transport.http.netty.internal.config.YAMLTransportConfigurationBuilder;
 
 import java.io.File;

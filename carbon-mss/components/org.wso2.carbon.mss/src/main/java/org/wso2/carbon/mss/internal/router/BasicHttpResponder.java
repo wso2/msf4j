@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.internal.router;
+package org.wso2.msf4j.internal.router;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Multimap;
@@ -30,7 +30,7 @@ import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
 import io.netty.handler.stream.ChunkedFile;
-import org.wso2.carbon.mss.ChunkResponder;
+import org.wso2.msf4j.ChunkResponder;
 
 import java.io.File;
 import java.io.IOException;

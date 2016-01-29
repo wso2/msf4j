@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.example;
+package org.wso2.msf4j.example;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

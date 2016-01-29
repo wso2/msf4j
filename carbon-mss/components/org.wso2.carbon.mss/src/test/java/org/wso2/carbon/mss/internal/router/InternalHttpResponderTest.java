@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.internal.router;
+package org.wso2.msf4j.internal.router;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.HashMultimap;
@@ -24,7 +24,7 @@ import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.junit.Assert;
 import org.junit.Test;
-import org.wso2.carbon.mss.ChunkResponder;
+import org.wso2.msf4j.ChunkResponder;
 
 import java.io.BufferedReader;
 import java.io.IOException;

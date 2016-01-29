@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.carbon.mss.example.service;
+package org.wso2.msf4j.example.service;
 
 import org.wso2.carbon.metrics.annotation.Counted;
 import org.wso2.carbon.metrics.annotation.Metered;
 import org.wso2.carbon.metrics.annotation.Timed;
-import org.wso2.carbon.mss.httpmonitoring.HTTPMonitoring;
+import org.wso2.msf4j.httpmonitoring.HTTPMonitoring;
 
 import java.util.Collection;
 import java.util.Map;

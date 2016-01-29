@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.examples.petstore.security.ldap;
+package org.wso2.msf4j.examples.petstore.security.ldap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.mss.util.SystemVariableUtil;
+import org.wso2.msf4j.util.SystemVariableUtil;
 
 import java.util.HashMap;
 import java.util.List;

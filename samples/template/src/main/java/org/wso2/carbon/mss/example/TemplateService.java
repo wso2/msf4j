@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.example;
+package org.wso2.msf4j.example;
 
-import org.wso2.carbon.mss.template.MustacheTemplateEngine;
+import org.wso2.msf4j.template.MustacheTemplateEngine;
 
 import java.util.HashMap;
 import java.util.Map;
