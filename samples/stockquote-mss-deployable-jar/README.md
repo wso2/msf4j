@@ -7,8 +7,8 @@ See also.. [mss lite](../stockquote-mss-lite), [mss bundle](../stockquote-mss-bu
 ## pom.xml in deployable jar project
 
 
-You have to inherit from [mss-jar-parent](../../mss-jar-parent) when creating the pom.xml for deployable jars. 
-See details [here](../../mss-jar-parent).
+You have to inherit from [msf4j-jar-parent](../../msf4j-jar-parent) when creating the pom.xml for deployable jars. 
+See details [here](../../msf4j-jar-parent).
 
 
 ## Using classes of other OSGi bundles

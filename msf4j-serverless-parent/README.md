@@ -11,9 +11,9 @@ MSS Service Parent POM.
 
     <parent>
         <groupId>org.wso2.msf4j</groupId>
-        <artifactId>mss-lite-parent</artifactId>
+        <artifactId>msf4j-serverless-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../../mss-lite-parent/pom.xml</relativePath>
+        <relativePath>../../msf4j-serverless-parent/pom.xml</relativePath>
     </parent>
 
     <groupId>org.wso2.msf4j.example</groupId>

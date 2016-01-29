@@ -6,8 +6,8 @@ See also.. [mss deployable jar](../stockquote-mss-deployable-jar), [mss bundle](
 
 ## pom.xml in deployable jar project
 
-You have to inherit from [mss-lite-parent](../../mss-lite-parent) when creating the pom.xml for deployable jars. 
-See details [here](../../mss-lite-parent).
+You have to inherit from [msf4j-serverless-parent](../../msf4j-serverless-parent) when creating the pom.xml for deployable jars. 
+See details [here](../../msf4j-serverless-parent).
 
 ### How @Produces work
 
