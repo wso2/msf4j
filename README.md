@@ -1,9 +1,9 @@
-#WSO2 Microservices Server (MSS)
+#WSO2 Microservices Server (MSF4J)
 
 WSO2 Microservices Server is a lightweight high performance runtime for hosting microservices.
 
-WSO2 MSS is one of the highest performing lightweight microservices frameworks. The following graphs show the 
-throughput & memory consumption characteristics of MSS against other microservies frameworks.
+WSO2 MSF4J is one of the highest performing lightweight microservices frameworks. The following graphs show the 
+throughput & memory consumption characteristics of MSF4J against other microservies frameworks.
  
 ![Throughput](docs/images/tps.png) 
 
@@ -153,7 +153,7 @@ Inject additional objects to a resource method. Currently supports injection of 
 * org.wso2.msf4j.HttpResponder - 
     This object can be used to send HTTP responses. You can make responses more clean way by returning an instance of 
     javax.ws.rs.core.Response or a POJO. See the [StockQuote-Service]
-    (https://github.com/wso2/product-mss/tree/master/samples/stockquote-service) sample.
+    (https://github.com/wso2/product-msf4j/tree/master/samples/stockquote-service) sample.
 
 #####@PathParam
 /StockQuote/{symbol} to get value of symbol. The value will be automatically converted to the corresponding parameter
@@ -179,7 +179,7 @@ Invoke by the container on newly constructed service instances after all depende
 #####@PreDestroy
 Invoke by the container during server shutdown before the  container removes the service instance.
 
-For detailed example refer lifecycle sample from [here](https://github.com/wso2/product-mss/tree/master/samples/lifecycle). 
+For detailed example refer lifecycle sample from [here](https://github.com/wso2/product-msf4j/tree/master/samples/lifecycle). 
 
 
 ###Complete Feature List

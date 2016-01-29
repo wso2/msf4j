@@ -1,6 +1,6 @@
 # Security Sample
 
-This sample shows how to secure microservices deployed on WSO2 MSS using OAuth2.
+This sample shows how to secure microservices deployed on WSO2 MSF4J using OAuth2.
 
 ## Setting up the Authorization Server.
 
@@ -47,7 +47,7 @@ mvn clean install
 
 ## How to run the sample
 
-When you start the MSS server, you need to pass a system property with the endpoint of the authorization server.
+When you start the MSF4J server, you need to pass a system property with the endpoint of the authorization server.
 
 e.g. AUTH_SERVER_URL=http://localhost:9763/introspect
 

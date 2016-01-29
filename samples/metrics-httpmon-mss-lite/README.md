@@ -1,6 +1,6 @@
 # Metrics and HTTP Monitoring Executable Jar Sample
 
-This sample shows the use of Metrics Interceptor and HTTP Monitoring Interceptor with MicroservicesRunner. See also [Metrics and HTTP Monitoring MSS Deployable Jar](../metrics-httpmon-mss-deployable-jar) and [Metrics and HTTP Monitoring MSS Bundle](../metrics-httpmon-mss-bundle)
+This sample shows the use of Metrics Interceptor and HTTP Monitoring Interceptor with MicroservicesRunner. See also [Metrics and HTTP Monitoring MSF4J Deployable Jar](../metrics-httpmon-msf4j-deployable-jar) and [Metrics and HTTP Monitoring MSF4J Bundle](../metrics-httpmon-msf4j-bundle)
 
 HTTP Monitoring events are published to WSO2 Data Analytics Server (DAS). Metrics can also be published to WSO2 DAS
 
@@ -123,7 +123,7 @@ Configuration options can be provided as environment variables or system propert
 | METRICS_REPORTING_DAS_ENABLED             | This property sets the enabled status for the DAS Reporter | 
 | METRICS_REPORTING_DAS_SOURCE              | The source for metrics. The hostname is used by default. | 
 | METRICS_REPORTING_DAS_TYPE                | The DAS event protocol used for data publishing. Default value is "thrift" | 
-| METRICS_REPORTING_DAS_RECEIVERURL         | The URL of the DAS receiver that receives the metrics published by MSS. Default value is "tcp://localhost:7611" | 
+| METRICS_REPORTING_DAS_RECEIVERURL         | The URL of the DAS receiver that receives the metrics published by MSF4J. Default value is "tcp://localhost:7611" | 
 | METRICS_REPORTING_DAS_AUTHURL             | The authorization URL used to access DAS. | 
 | METRICS_REPORTING_DAS_USERNAME            | The username used to access DAS. Default is "admin" | 
 | METRICS_REPORTING_DAS_PASSWORD            | The password used to access DAS. Default is "admin" | 
@@ -163,7 +163,7 @@ Following are the configuration options.
 | Property                                | Purpose      |
 | --------------------------------------- | ------------ |
 | HTTP_MONITORING_DAS_TYPE                | The DAS event protocol used for data publishing. Default value is "thrift" | 
-| HTTP_MONITORING_DAS_RECEIVERURL         | The URL of the DAS receiver that receives the metrics published by MSS. Default value is "tcp://localhost:7611" | 
+| HTTP_MONITORING_DAS_RECEIVERURL         | The URL of the DAS receiver that receives the metrics published by MSF4J. Default value is "tcp://localhost:7611" | 
 | HTTP_MONITORING_DAS_AUTHURL             | The authorization URL used to access DAS. | 
 | HTTP_MONITORING_DAS_USERNAME            | The username used to access DAS. Default is "admin" | 
 | HTTP_MONITORING_DAS_PASSWORD            | The password used to access DAS. Default is "admin" | 
@@ -192,7 +192,7 @@ events for each request.
 Use following command to run the application
 
 ```
-java -DMETRICS_REPORTING_DAS_DATAAGENTCONFIGPATH="data-agent-conf.xml" -DHTTP_MONITORING_DAS_DATAAGENTCONFIGPATH="data-agent-conf.xml" -jar target/metrics-httpmon-mss-lite*.jar
+java -DMETRICS_REPORTING_DAS_DATAAGENTCONFIGPATH="data-agent-conf.xml" -DHTTP_MONITORING_DAS_DATAAGENTCONFIGPATH="data-agent-conf.xml" -jar target/metrics-httpmon-msf4j-lite*.jar
 ```
 
 You can also run as follows.
@@ -200,7 +200,7 @@ You can also run as follows.
 ```
 export METRICS_REPORTING_DAS_DATAAGENTCONFIGPATH="data-agent-conf.xml"
 export HTTP_MONITORING_DAS_DATAAGENTCONFIGPATH="data-agent-conf.xml"
-java -jar target/metrics-httpmon-mss-lite*.jar
+java -jar target/metrics-httpmon-msf4j-lite*.jar
 ```
 
 

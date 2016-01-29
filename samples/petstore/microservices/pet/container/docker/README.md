@@ -5,10 +5,10 @@
 3. From this directory, run:
 
 ```
-docker build -t wso2mss/petstore-pet .
+docker build -t wso2msf4j/petstore-pet .
 ```
 
 4. From the ssh directory, run
 ```
-docker build -t wso2mss/ssh .
+docker build -t wso2msf4j/ssh .
 ```

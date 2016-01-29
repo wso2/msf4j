@@ -16,10 +16,10 @@ mvn clean install
 
 ## How to run the sample
 
-Unzip wso2 MSS product and copy the bundle that was built in previous step to the 
+Unzip wso2 MSF4J product and copy the bundle that was built in previous step to the 
 "[SERVER-HOME]/osgi/dropins" directory.
 
-Then navigate to the bin directory and run the following command to start WSO2 MSS server.
+Then navigate to the bin directory and run the following command to start WSO2 MSF4J server.
 ```
 ./carbon.sh
 ```
@@ -28,7 +28,7 @@ When the server is being started, LogInterceptor will be registered as an interc
 
 ## How to test the sample
 
-Install the [stockquote-mss-bundle](../stockquote-mss-bundle) sample to WSO2 MSS server as described in it's readme 
+Install the [stockquote-msf4j-bundle](../stockquote-msf4j-bundle) sample to WSO2 MSF4J server as described in it's readme 
 in order to test the interceptor.
 
 Then run the following command to make a request to the installed microservice.
@@ -36,4 +36,4 @@ Then run the following command to make a request to the installed microservice.
 curl http://localhost:8080/stockquote/IBM
 ```
 
-The HTTP headers of the request should be logged in WSO2 MSS console.
+The HTTP headers of the request should be logged in WSO2 MSF4J console.

@@ -1,7 +1,7 @@
 # File handling
 
 
-## Serve Files with WSO2 MSS
+## Serve Files with WSO2 MSF4J
 
 You can serve files from the resource methods by returning a java.io.File or 
 by returning a javax.ws.rs.core.Response object with a java.io.File entity.

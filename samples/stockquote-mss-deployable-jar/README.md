@@ -1,7 +1,7 @@
 # SimpleStockQuote Deployable jar Sample
 
-This sample shows how to develop and deploy a microservice as a mss deployable jar.
-See also.. [mss lite](../stockquote-mss-lite), [mss bundle](../stockquote-mss-bundle)
+This sample shows how to develop and deploy a microservice as a msf4j deployable jar.
+See also.. [msf4j lite](../stockquote-msf4j-lite), [msf4j bundle](../stockquote-msf4j-bundle)
 
 
 ## pom.xml in deployable jar project
@@ -63,7 +63,7 @@ To create the fragment bundle from the above pom run
 mvn clean install
 ```
 
-After creating the bundle copy it to "[MSS-SERVER-HOME]/osgi/dropins" directory and restart the server.
+After creating the bundle copy it to "[MSF4J-SERVER-HOME]/osgi/dropins" directory and restart the server.
 Now you can deploy jars that use the classes in packages you imported in the fragment bundle.
 
 
@@ -81,12 +81,12 @@ mvn clean install
 
 
 
-Unzip wso2 MSS product and navigate to the bin directory. Then run the following command to start the MSS server.
+Unzip wso2 MSF4J product and navigate to the bin directory. Then run the following command to start the MSF4J server.
 ```
 ./wso2server.sh
 ```
 
-The copy the target/stockquote-mss-deployable-jar-1.0.0-SNAPSHOT.jar to deployment/microservices directory of WSO2 MSS.
+The copy the target/stockquote-msf4j-deployable-jar-1.0.0-SNAPSHOT.jar to deployment/microservices directory of WSO2 MSF4J.
 Then the jar will be automatically deployed to the server runtime.
 
 

@@ -1,7 +1,7 @@
-# SimpleStockQuote MSS Bundle Sample
+# SimpleStockQuote MSF4J Bundle Sample
 
 This sample demonstrates how to create a microservice as an OSGi bundle.
-See also.. [mss lite](../stockquote-mss-lite), [mss deployable jar](../stockquote-mss-deployable-jar)
+See also.. [msf4j lite](../stockquote-msf4j-lite), [msf4j deployable jar](../stockquote-msf4j-deployable-jar)
 
 In this sample we have exposed the StockQuoteService as an OSGi service that implements 
 org.wso2.msf4j.Microservice interface as shown in the following code.
@@ -44,16 +44,16 @@ mvn clean install
 
 ### Using OSGi Console
 
-Unzip wso2 MSS product and navigate to the bin directory. Then run the following command to start the MSS server.
+Unzip wso2 MSF4J product and navigate to the bin directory. Then run the following command to start the MSF4J server.
 ```
 ./carbon.sh
 ```
 
-Install the target/stockquote-mss-bundle-1.0.0-SNAPSHOT.jar as an OSGi bundle to WSO2 MSS product using it's 
+Install the target/stockquote-msf4j-bundle-1.0.0-SNAPSHOT.jar as an OSGi bundle to WSO2 MSF4J product using it's 
 OSGi console with the following command.
 
 ```
-install file://<path to target directory>/stockquote-mss-bundle-1.0.0-SNAPSHOT.jar
+install file://<path to target directory>/stockquote-msf4j-bundle-1.0.0-SNAPSHOT.jar
 ```
 
 When the installation of the bundle is successful, use the bundle ID of the installed bundle to start  
@@ -67,10 +67,10 @@ When the bundle is started, the microservice that is exposed as an OSGi service 
 will be exposed as a REST service.
 
 ### Using dropins directory
-Unzip wso2 MSS product and copy target/stockquote-mss-bundle-1.0.0-SNAPSHOT.jar bundle to the 
+Unzip wso2 MSF4J product and copy target/stockquote-msf4j-bundle-1.0.0-SNAPSHOT.jar bundle to the 
 "[SERVER-HOME]/osgi/dropins" directory.
 
-Then navigate to the bin directory and run the following command to start WSO2 MSS server.
+Then navigate to the bin directory and run the following command to start WSO2 MSF4J server.
 ```
 ./carbon.sh
 ```

@@ -1,8 +1,8 @@
 # WSO2 Microservices Server - Parent POM for Microservices
 
-This parent POM file makes life easy for developers who write microservices using WSO2 MSS. The following example
-from the [stockquote-mss-lite](../samples/stockquote-mss-lite) microservice example, demonstrates how to quickly write a POM for your microservice using the
-MSS Service Parent POM.
+This parent POM file makes life easy for developers who write microservices using WSO2 MSF4J. The following example
+from the [stockquote-msf4j-lite](../samples/stockquote-msf4j-lite) microservice example, demonstrates how to quickly write a POM for your microservice using the
+MSF4J Service Parent POM.
 
 ```xml
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
@@ -17,10 +17,10 @@ MSS Service Parent POM.
     </parent>
 
     <groupId>org.wso2.msf4j.example</groupId>
-    <artifactId>stockquote-mss-lite</artifactId>
+    <artifactId>stockquote-msf4j-lite</artifactId>
     <packaging>jar</packaging>
 
-    <name>StockQuote MSS Lite</name>
+    <name>StockQuote MSF4J Lite</name>
     <name>Executable Jar Microservice Sample</name>
 
     <properties>

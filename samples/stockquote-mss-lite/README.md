@@ -1,8 +1,8 @@
 # SimpleStockQuote Executable jar Sample
 
 This sample shows the use of @Produces and @Consumes annotations for bean conversions. In addition to that this 
-demonstrates how to develop a microservice with WSO2 MSS in serverless mss lite mode.
-See also.. [mss deployable jar](../stockquote-mss-deployable-jar), [mss bundle](../stockquote-mss-bundle)
+demonstrates how to develop a microservice with WSO2 MSF4J in serverless msf4j lite mode.
+See also.. [msf4j deployable jar](../stockquote-msf4j-deployable-jar), [msf4j bundle](../stockquote-msf4j-bundle)
 
 ## pom.xml in deployable jar project
 
@@ -12,7 +12,7 @@ See details [here](../../msf4j-serverless-parent).
 ### How @Produces work
 
 When you need to return a bean from a resource method you can specify @Produces annotation with mime types you need to 
-support. In this case, at runtime WSO2 MSS framework matches the request's Accept header with the @Produce annotation 
+support. In this case, at runtime WSO2 MSF4J framework matches the request's Accept header with the @Produce annotation 
 and dispatches the correct resource method. Then, when the response is sent, the returned bean will be automatically 
 serialized to the matched mime type. See the following example.
 

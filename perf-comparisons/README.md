@@ -1,1 +1,1 @@
-This directory contains the performance comparisons of WSO2 MSS with other microservices frameworks.
+This directory contains the performance comparisons of WSO2 MSF4J with other microservices frameworks.
