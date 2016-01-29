@@ -103,9 +103,9 @@
 
     <modules>
         <module>parent</module>
-        <module>carbon-mss/components/org.wso2.msf4j</module>
-        <module>carbon-mss/features/org.wso2.msf4j.feature</module>
-        <module>carbon-mss/features/org.wso2.carbon.spi.fly.feature</module>
+        <module>msf4j/components/org.wso2.msf4j</module>
+        <module>msf4j/features/org.wso2.msf4j.feature</module>
+        <module>msf4j/features/org.wso2.carbon.spi.fly.feature</module>
         <module>template-engines/mss-mustache-template</module>
         <module>mss-jar-parent</module>
         <module>mss-lite-parent</module>
