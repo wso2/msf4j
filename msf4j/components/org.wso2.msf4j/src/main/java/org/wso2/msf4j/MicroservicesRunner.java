@@ -18,13 +18,13 @@ package org.wso2.msf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.kernel.transports.TransportManager;
-import org.wso2.msf4j.internal.MSSNettyServerInitializer;
-import org.wso2.msf4j.internal.MicroservicesRegistry;
 import org.wso2.carbon.transport.http.netty.internal.NettyTransportDataHolder;
 import org.wso2.carbon.transport.http.netty.internal.config.ListenerConfiguration;
 import org.wso2.carbon.transport.http.netty.internal.config.TransportsConfiguration;
 import org.wso2.carbon.transport.http.netty.internal.config.YAMLTransportConfigurationBuilder;
 import org.wso2.carbon.transport.http.netty.listener.NettyListener;
+import org.wso2.msf4j.internal.MSSNettyServerInitializer;
+import org.wso2.msf4j.internal.MicroservicesRegistry;
 
 import java.util.Set;
 
@@ -63,9 +63,9 @@ public class MicroservicesRunner {
     /**
      * Default constructor which will take care of initializing Netty transports in the file pointed to by the
      * System property <code>transports.netty.conf</code>.
-     *
+     * <p>
      * If that System property is not specified, it will start a single Netty transport on port 8080.
-     *
+     * <p>
      * {@link #MicroservicesRunner(int...)}
      */
     public MicroservicesRunner() {

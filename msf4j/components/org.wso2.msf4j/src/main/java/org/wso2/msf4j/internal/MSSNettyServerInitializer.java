@@ -22,9 +22,9 @@ import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
+import org.wso2.carbon.transport.http.netty.listener.CarbonNettyServerInitializer;
 import org.wso2.msf4j.internal.router.HttpDispatcher;
 import org.wso2.msf4j.internal.router.RequestRouter;
-import org.wso2.carbon.transport.http.netty.listener.CarbonNettyServerInitializer;
 
 import java.util.Map;
 
