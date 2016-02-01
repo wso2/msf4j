@@ -27,7 +27,7 @@ import java.util.Hashtable;
 import java.util.Map;
 
 /**
- * DataHolder for MSS.
+ * DataHolder for MSF4J.
  */
 public class DataHolder {
     private static final Logger log = LoggerFactory.getLogger(DataHolder.class);
@@ -61,8 +61,8 @@ public class DataHolder {
         String channelKey = carbonTransport.getId();
         Hashtable<String, String> httpInitParams = new Hashtable<>();
         httpInitParams.put(CHANNEL_ID_KEY, channelKey);
-        MSSNettyServerInitializer gatewayNettyInitializer =
-                new MSSNettyServerInitializer(MicroservicesRegistry.getInstance());
+        MSF4JNettyServerInitializer gatewayNettyInitializer =
+                new MSF4JNettyServerInitializer(MicroservicesRegistry.getInstance());
         ServiceRegistration<CarbonNettyServerInitializer> service =
                 bundleContext.registerService(CarbonNettyServerInitializer.class,
                         gatewayNettyInitializer, httpInitParams);

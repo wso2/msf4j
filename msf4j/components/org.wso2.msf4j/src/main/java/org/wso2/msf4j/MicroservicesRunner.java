@@ -23,7 +23,7 @@ import org.wso2.carbon.transport.http.netty.internal.config.ListenerConfiguratio
 import org.wso2.carbon.transport.http.netty.internal.config.TransportsConfiguration;
 import org.wso2.carbon.transport.http.netty.internal.config.YAMLTransportConfigurationBuilder;
 import org.wso2.carbon.transport.http.netty.listener.NettyListener;
-import org.wso2.msf4j.internal.MSSNettyServerInitializer;
+import org.wso2.msf4j.internal.MSF4JNettyServerInitializer;
 import org.wso2.msf4j.internal.MicroservicesRegistry;
 
 import java.util.Set;
@@ -56,7 +56,7 @@ public class MicroservicesRunner {
             transportManager.registerTransport(listener);
             nettyTransportDataHolder.
                     addNettyChannelInitializer(listenerConfiguration.getId(),
-                            new MSSNettyServerInitializer(msRegistry));
+                            new MSF4JNettyServerInitializer(msRegistry));
         }
     }
 
@@ -77,7 +77,7 @@ public class MicroservicesRunner {
             transportManager.registerTransport(listener);
             nettyTransportDataHolder.
                     addNettyChannelInitializer(listenerConfiguration.getId(),
-                            new MSSNettyServerInitializer(msRegistry));
+                            new MSF4JNettyServerInitializer(msRegistry));
         }
     }
 

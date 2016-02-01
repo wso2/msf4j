@@ -16,10 +16,10 @@
 package org.wso2.msf4j.security;
 
 /**
- * The class {@code MSSSecurityException} and its subclasses are a form of
+ * The class {@code MSF4JSecurityException} and its subclasses are a form of
  * {@code Exception} that indicates security related error conditions.
  */
-public class MSSSecurityException extends Exception {
+public class MSF4JSecurityException extends Exception {
 
     private SecurityErrorCode errorCode;
 
@@ -29,7 +29,7 @@ public class MSSSecurityException extends Exception {
      * @param errorCode SecurityErrorCode
      * @param message   error message
      */
-    public MSSSecurityException(SecurityErrorCode errorCode, String message) {
+    public MSF4JSecurityException(SecurityErrorCode errorCode, String message) {
         super(message);
         this.errorCode = errorCode;
     }
@@ -44,7 +44,7 @@ public class MSSSecurityException extends Exception {
      *                  permitted, and indicates that the cause is nonexistent or
      *                  unknown.)
      */
-    public MSSSecurityException(SecurityErrorCode errorCode, String message, Throwable cause) {
+    public MSF4JSecurityException(SecurityErrorCode errorCode, String message, Throwable cause) {
         super(message, cause);
         this.errorCode = errorCode;
     }

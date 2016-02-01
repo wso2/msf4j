@@ -31,20 +31,20 @@ import java.util.Map;
 /**
  * Netty Transport ServerInitializer for the Microservices Server.
  */
-public class MSSNettyServerInitializer implements CarbonNettyServerInitializer {
+public class MSF4JNettyServerInitializer implements CarbonNettyServerInitializer {
 
     private DefaultEventExecutorGroup eventExecutorGroup;
 
     private MicroservicesRegistry microservicesRegistry;
 
-    public MSSNettyServerInitializer(MicroservicesRegistry microservicesRegistry) {
+    public MSF4JNettyServerInitializer(MicroservicesRegistry microservicesRegistry) {
         this.microservicesRegistry = microservicesRegistry;
     }
 
     @Override
     public void setup(Map<String, String> map) {
         eventExecutorGroup =
-                new DefaultEventExecutorGroup(Integer.parseInt(map.get(MSSConstants.EXECUTOR_THREAD_POOL_SIZE_KEY)));
+                new DefaultEventExecutorGroup(Integer.parseInt(map.get(MSF4JConstants.EXECUTOR_THREAD_POOL_SIZE_KEY)));
     }
 
     public void initChannel(SocketChannel channel) {

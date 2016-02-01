@@ -17,7 +17,7 @@
 package org.wso2.msf4j.template;
 
 /**
- * MSS template engines should implement this interface.
+ * MSF4J template engines should implement this interface.
  */
 public interface TemplateEngine {
 

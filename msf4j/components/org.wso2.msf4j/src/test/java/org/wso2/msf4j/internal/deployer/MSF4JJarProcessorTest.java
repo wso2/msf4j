@@ -23,15 +23,15 @@ import java.io.File;
 import java.util.List;
 
 /**
- * TODO: add a class level comment.
+ * Test MSSJarProcessor.
  */
-public class TestMSSJarProcessor {
+public class MSF4JJarProcessorTest {
 
     @Test
-    public void testJAXRSJarObjectInitialization() throws MSSJarProcessorException {
-        MSSJarProcessor mssJarProcessor = new MSSJarProcessor();
+    public void testJAXRSJarObjectInitialization() throws MSF4JJarProcessorException {
+        MSF4JJarProcessor mssJarProcessor = new MSF4JJarProcessor();
         String name = "/org.wso2.carbon.mss.jaxrs.sample.simplestockquote-1.0.zip";
-        File jar = new File(TestMSSJarProcessor.class.getResource(name).getPath());
+        File jar = new File(MSF4JJarProcessorTest.class.getResource(name).getPath());
         Assert.assertTrue("Resource jar does not exist", jar.exists());
         List<Object> instances = mssJarProcessor.setArtifact(jar).process().getResourceInstances();
         Assert.assertTrue("No classes were loaded", !instances.isEmpty());

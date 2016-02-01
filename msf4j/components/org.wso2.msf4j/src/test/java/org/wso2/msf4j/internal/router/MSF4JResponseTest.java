@@ -24,9 +24,9 @@ import java.util.Arrays;
 import javax.ws.rs.core.Response;
 
 /**
- * Test MSSResponse and MSS ResponseBuilder.
+ * Test MSF4JResponse and MSS ResponseBuilder.
  */
-public class MSSResponseTest {
+public class MSF4JResponseTest {
 
     @Test
     public void testStatusOk() {

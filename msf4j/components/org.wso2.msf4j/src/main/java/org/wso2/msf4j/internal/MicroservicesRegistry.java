@@ -36,7 +36,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 /**
- * MicroservicesRegistry for the MSS component.
+ * MicroservicesRegistry for the MSF4J component.
  */
 public class MicroservicesRegistry {
 

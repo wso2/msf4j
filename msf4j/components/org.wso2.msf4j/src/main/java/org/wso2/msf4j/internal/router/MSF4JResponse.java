@@ -35,9 +35,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Variant;
 
 /**
- * Trimmed MSS implementation of javax.ws.rs.core.Response.
+ * Trimmed MSF4J implementation of javax.ws.rs.core.Response.
  */
-public class MSSResponse extends Response {
+public class MSF4JResponse extends Response {
 
     private Object entity;
     private int status;
@@ -191,7 +191,7 @@ public class MSSResponse extends Response {
     }
 
     /**
-     * Trimmed Convenient builder for MSSResponse instances.
+     * Trimmed Convenient builder for MSF4JResponse instances.
      */
     public static class Builder extends ResponseBuilder {
 
@@ -202,7 +202,7 @@ public class MSSResponse extends Response {
 
         @Override
         public Response build() {
-            MSSResponse mssResponse = new MSSResponse();
+            MSF4JResponse mssResponse = new MSF4JResponse();
             mssResponse.setStatus(status);
             mssResponse.setEntity(entity);
             mssResponse.setHeaders(headers);

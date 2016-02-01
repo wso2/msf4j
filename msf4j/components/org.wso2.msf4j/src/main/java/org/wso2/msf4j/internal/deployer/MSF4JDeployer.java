@@ -36,18 +36,18 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Implementation of the MSS service deployer. This will be picked by the
+ * Implementation of the MSF4J service deployer. This will be picked by the
  * DeploymentEngine service according to the whiteboard pattern to deploy
- * MSS POJO artifacts.
+ * MSF4J POJO artifacts.
  */
 @Component(
-        name = "org.wso2.msf4j.internal.deployer.MSSDeployer",
+        name = "org.wso2.msf4j.internal.deployer.MSF4JDeployer",
         service = Deployer.class,
         immediate = true
 )
 @SuppressWarnings("unused")
-public class MSSDeployer implements Deployer {
-    private static final Logger log = LoggerFactory.getLogger(MSSDeployer.class);
+public class MSF4JDeployer implements Deployer {
+    private static final Logger log = LoggerFactory.getLogger(MSF4JDeployer.class);
     private static final String DEPLOYMENT_PATH = "file:microservices";
     private static final String SUPPORTED_EXTENSIONS[] = {"jar", "zip"};
     private URL deploymentLocation;
@@ -63,12 +63,12 @@ public class MSSDeployer implements Deployer {
     }
 
     public void init() {
-        log.info("MSSDeployer initializing");
-        artifactType = new ArtifactType<>("MSS");
+        log.info("MSF4J Deployer initializing");
+        artifactType = new ArtifactType<>("MSF4J");
         try {
             deploymentLocation = new URL(DEPLOYMENT_PATH);
         } catch (MalformedURLException e) {
-            log.error("MSS deployer location error");
+            log.error("MSF4J deployer location error");
         }
     }
 
@@ -86,8 +86,8 @@ public class MSSDeployer implements Deployer {
             log.info("Deploying artifact: {}", artifactPath);
             List<Object> resourcesList;
             try {
-                resourcesList = new MSSJarProcessor().setArtifact(artifactFile).process().getResourceInstances();
-            } catch (MSSJarProcessorException e) {
+                resourcesList = new MSF4JJarProcessor().setArtifact(artifactFile).process().getResourceInstances();
+            } catch (MSF4JJarProcessorException e) {
                 throw new CarbonDeploymentException("Error while processing the artifact: " + artifactPath, e);
             }
             if (resourcesList.size() == 0) {

@@ -18,14 +18,14 @@ package org.wso2.msf4j.internal.deployer;
 
 /**
  * Exception that is thrown when processing jar files
- * by MSSJarProcessor.
+ * by MSF4JJarProcessor.
  */
-public class MSSJarProcessorException extends Exception {
-    public MSSJarProcessorException(String message) {
+public class MSF4JJarProcessorException extends Exception {
+    public MSF4JJarProcessorException(String message) {
         super(message);
     }
 
-    public MSSJarProcessorException(String message, Exception e) {
+    public MSF4JJarProcessorException(String message, Exception e) {
         super(message, e);
     }
 }

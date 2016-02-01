@@ -20,7 +20,7 @@ import org.osgi.framework.BundleContext;
 
 
 /**
- * OSGi Bundle Activator of the MSS Carbon component.
+ * OSGi Bundle Activator of the MSF4J component.
  */
 public class MicroservicesServerActivator implements BundleActivator {
 

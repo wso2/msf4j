@@ -30,7 +30,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.msf4j.HttpResponder;
 import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.ServiceMethodInfo;
-import org.wso2.msf4j.security.MSSSecurityException;
+import org.wso2.msf4j.security.MSF4JSecurityException;
 import org.wso2.msf4j.security.SecurityErrorCode;
 import org.wso2.msf4j.util.SystemVariableUtil;
 
@@ -81,10 +81,10 @@ public class OAuth2SecurityInterceptor implements Interceptor {
                 String authHeader = headers.get(AUTHORIZATION_HTTP_HEADER);
                 return validateToken(authHeader);
             } else {
-                throw new MSSSecurityException(SecurityErrorCode.AUTHENTICATION_FAILURE,
+                throw new MSF4JSecurityException(SecurityErrorCode.AUTHENTICATION_FAILURE,
                         "Missing Authorization header is the request.`");
             }
-        } catch (MSSSecurityException e) {
+        } catch (MSF4JSecurityException e) {
             errorCode = e.getErrorCode();
             log.error(e.getMessage() + " Requested Path: " + request.getUri());
         }
@@ -105,7 +105,7 @@ public class OAuth2SecurityInterceptor implements Interceptor {
      * @param authHeader Authorization Bearer header which contains the access token
      * @return true if the token is a valid token
      */
-    private boolean validateToken(String authHeader) throws MSSSecurityException {
+    private boolean validateToken(String authHeader) throws MSF4JSecurityException {
         // 1. Check whether this token is bearer token, if not return false
         String accessToken = extractAccessToken(authHeader);
 
@@ -117,7 +117,7 @@ public class OAuth2SecurityInterceptor implements Interceptor {
 
         // 3. Process the response and return true if the token is valid.
         if (!Boolean.parseBoolean(responseData.get(IntrospectionResponse.ACTIVE))) {
-            throw new MSSSecurityException(SecurityErrorCode.AUTHENTICATION_FAILURE,
+            throw new MSF4JSecurityException(SecurityErrorCode.AUTHENTICATION_FAILURE,
                     "Invalid Access token.");
         }
 
@@ -131,7 +131,7 @@ public class OAuth2SecurityInterceptor implements Interceptor {
      * @param authHeader Authorization Bearer header which contains the access token
      * @return access token
      */
-    private String extractAccessToken(String authHeader) throws MSSSecurityException {
+    private String extractAccessToken(String authHeader) throws MSF4JSecurityException {
         authHeader = authHeader.trim();
         if (authHeader.toLowerCase().startsWith(BEARER_PREFIX)) {
             // Split the auth header to get the access token.
@@ -142,7 +142,7 @@ public class OAuth2SecurityInterceptor implements Interceptor {
             }
         }
 
-        throw new MSSSecurityException(SecurityErrorCode.INVALID_AUTHORIZATION_HEADER,
+        throw new MSF4JSecurityException(SecurityErrorCode.INVALID_AUTHORIZATION_HEADER,
                 "Invalid Authorization header: " + authHeader);
     }
 
@@ -152,7 +152,7 @@ public class OAuth2SecurityInterceptor implements Interceptor {
      * @param accessToken AccessToken to be validated.
      * @return the response from the key manager server.
      */
-    private String getValidatedTokenResponse(String accessToken) throws MSSSecurityException {
+    private String getValidatedTokenResponse(String accessToken) throws MSF4JSecurityException {
         URL url;
         try {
             url = new URL(AUTH_SERVER_URL);
@@ -163,7 +163,7 @@ public class OAuth2SecurityInterceptor implements Interceptor {
             return new String(ByteStreams.toByteArray(urlConn.getInputStream()), Charsets.UTF_8);
         } catch (java.io.IOException e) {
             log.error("Error invoking Authorization Server", e);
-            throw new MSSSecurityException(SecurityErrorCode.GENERIC_ERROR, "Error invoking Authorization Server", e);
+            throw new MSF4JSecurityException(SecurityErrorCode.GENERIC_ERROR, "Error invoking Authorization Server", e);
         }
     }
 

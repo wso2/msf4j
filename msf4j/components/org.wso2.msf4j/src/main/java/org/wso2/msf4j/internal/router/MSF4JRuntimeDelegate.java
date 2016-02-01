@@ -30,7 +30,7 @@ import javax.ws.rs.ext.RuntimeDelegate;
  * <p>
  * This class will be loaded by javax.ws.rs.ext.RuntimeDelegate
  */
-public class MSSRuntimeDelegate extends RuntimeDelegate {
+public class MSF4JRuntimeDelegate extends RuntimeDelegate {
 
 
     @Override
@@ -40,7 +40,7 @@ public class MSSRuntimeDelegate extends RuntimeDelegate {
 
     @Override
     public ResponseBuilder createResponseBuilder() {
-        return new MSSResponse.Builder();
+        return new MSF4JResponse.Builder();
     }
 
     @Override
