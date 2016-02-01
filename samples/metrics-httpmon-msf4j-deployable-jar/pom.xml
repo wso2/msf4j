@@ -22,7 +22,7 @@
         <groupId>org.wso2.msf4j</groupId>
         <artifactId>msf4j-jar-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../../msf4j-jar-parent/pom.xml</relativePath>
+        <relativePath>../../poms/msf4j-jar-parent/pom.xml</relativePath>
     </parent>
 
     <groupId>org.wso2.msf4j.example</groupId>

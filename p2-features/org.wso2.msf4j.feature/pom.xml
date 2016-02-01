@@ -80,7 +80,7 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.msf4j</groupId>
-            <artifactId>org.wso2.msf4j</artifactId>
+            <artifactId>msf4j-core</artifactId>
         </dependency>
         <!-- Metrics Dependencies - Start -->
         <dependency>
@@ -170,7 +170,7 @@
                             </adviceFileContents>
                             <bundles>
                                 <bundle>
-                                    <symbolicName>org.wso2.msf4j</symbolicName>
+                                    <symbolicName>msf4j-core</symbolicName>
                                     <version>${msf4j.version}</version>
                                 </bundle>
                                 <bundle>

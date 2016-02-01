@@ -181,7 +181,7 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.msf4j</groupId>
-            <artifactId>org.wso2.msf4j</artifactId>
+            <artifactId>msf4j-core</artifactId>
             <scope>test</scope>
         </dependency>
 
