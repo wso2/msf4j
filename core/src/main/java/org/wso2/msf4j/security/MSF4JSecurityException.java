@@ -50,7 +50,7 @@ public class MSF4JSecurityException extends Exception {
     }
 
     /**
-     * Returns the associate {@code SecurityErrorCode} value
+     * Returns the associate {@code SecurityErrorCode} value.
      *
      * @return an instances of the SecurityErrorCode
      */

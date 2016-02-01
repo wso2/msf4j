@@ -60,7 +60,7 @@ public class MetricsInterceptor implements Interceptor {
     }
 
     /**
-     * Initialize the Metrics Service
+     * Initialize the Metrics Service.
      * 
      * @param metricReporters Specifiy {@link MetricReporter} types to initialize
      * @return This {@link MetricsInterceptor} instance

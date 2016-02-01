@@ -16,7 +16,7 @@
 package org.wso2.msf4j.internal;
 
 /**
- * MSF4J Constants
+ * MSF4J Constants.
  */
 public class MSF4JConstants {
 

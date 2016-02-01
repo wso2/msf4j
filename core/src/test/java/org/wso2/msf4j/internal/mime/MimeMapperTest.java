@@ -20,7 +20,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Test the functionality of MimeMapper
+ * Test the functionality of MimeMapper.
  */
 public class MimeMapperTest {
 
