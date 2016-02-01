@@ -1,4 +1,4 @@
-# WSO2 Microservices Server - Parent POM for Microservices
+# WSO2 MSF4J - Parent POM for Microservices
 
 This parent POM file makes life easy for developers who write microservices using WSO2 MSF4J. The following example
 from the [stockquote-msf4j-lite](../samples/stockquote-msf4j-lite) microservice example, demonstrates how to quickly write a POM for your microservice using the

@@ -1,4 +1,4 @@
-# WSO2 Microservices Server - Analytics with WSO2 Data Analytics Server (DAS)
+# WSO2 MSF4J - Analytics with WSO2 Data Analytics Server (DAS)
 
 This directory contains the files related to publishing metrics to WSO2 Data Analytics Server (DAS)
 

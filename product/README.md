@@ -1,4 +1,4 @@
-# WSO2 Microservices Server (MSF4J) Product Distribution
+# WSO2 Microservices Framework for Java (MSF4J) Product Distribution
 
 This distribution contains all the relevant runtime as well as development time libraries to build microservices using
 WSO2 MSF4J.

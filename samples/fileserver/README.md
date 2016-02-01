@@ -22,7 +22,7 @@ See the following sample.
 ## Chunked HTTP Request Handling
 
 
-With WSO2 Microservices server, you can handle chunked requests in two ways.
+With WSO2 MSF4J, you can handle chunked requests in two ways.
 
 ### 1. Handle requests using HttpStreamHandler
 
@@ -61,7 +61,7 @@ finished() method is called. error() method will be called if an error occurs wh
 
 ### 2. Handle requests by aggregating chunks 
 Second way of handling chunked requests is to implement a normal resource method to handle the request ignoring the 
-whether the requests is chunked as shown in the below example. In this case WSO2 Microservices Server internally 
+whether the requests is chunked as shown in the below example. In this case MSF4J internally 
 aggregates all the chunks of the request and presents it as a full http request to the resource method.
 
 ```java

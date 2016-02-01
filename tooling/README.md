@@ -1,4 +1,4 @@
-#WSO2 Developer Studio Kernel Plugin for WSO2 Microservices Server
+#WSO2 Developer Studio Kernel Plugin for WSO2 Microservices Framework for Java (MSF4J)
 
 This directory provides an Eclipse plugin installable with Eclipse Luna
 

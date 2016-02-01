@@ -3,7 +3,7 @@
 WSO2 Microservices Framework for Java (MSF4J) is a lightweight high performance framework for developing
 & running microservices.
 
-WSO2 MSF4J is one of the highest performing lightweight microservices frameworks. The following graphs show the 
+WSO2 MSF4J is one of the highest performing lightweight Java microservices frameworks. The following graphs show the 
 throughput & memory consumption characteristics of MSF4J against other microservices frameworks.
  
 ![Throughput](docs/images/tps.png) 
@@ -22,7 +22,7 @@ More details about the performance test can found [here](perf-comparisons)
 
 ##Getting Started
 
-It is really easy to define & deploy a microservice using WSO2 Microservices Server. 
+It is really easy to define & deploy a Java microservice using WSO2 MSF4J. 
 You simply need to annotate your service and deploy it using a single line of code. 
 Check the following [Hello-Service]
 (samples/helloworld) sample.
@@ -75,7 +75,7 @@ public class HelloService {
 
 
 ####Application.java
-This is the one-liner to deploy your service using WSO2 Microservices Server.
+This is the one-liner to deploy your service using WSO2 MSF4J.
 ```java
 public class Application {
     public static void main(String[] args) {
