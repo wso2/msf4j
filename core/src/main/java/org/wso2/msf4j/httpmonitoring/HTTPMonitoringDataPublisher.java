@@ -36,7 +36,7 @@ import java.net.UnknownHostException;
 import java.util.Enumeration;
 
 /**
- * A utility class to initialize/destroy HTTP Monitoring Data Publisher for DAS
+ * A utility class to initialize/destroy HTTP Monitoring Data Publisher for DAS.
  */
 public final class HTTPMonitoringDataPublisher {
 

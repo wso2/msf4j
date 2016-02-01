@@ -17,7 +17,7 @@
 package org.wso2.msf4j.security.oauth2;
 
 /**
- * Introspection response bean class
+ * Introspection response bean class.
  */
 public final class IntrospectionResponse {
 

@@ -24,7 +24,7 @@ import org.wso2.msf4j.util.SystemVariableUtil;
 import java.io.File;
 
 /**
- * Metrics OSGi Component to Initialize/Destroy Metrics
+ * Metrics OSGi Component to Initialize/Destroy Metrics.
  */
 @Component(
     name = "org.wso2.msf4j.metrics.MetricsComponent",

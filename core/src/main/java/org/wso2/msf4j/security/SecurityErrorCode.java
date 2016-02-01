@@ -17,7 +17,7 @@
 package org.wso2.msf4j.security;
 
 /**
- * Enum class which represent security error codes
+ * Enum class which represent security error codes.
  */
 public enum SecurityErrorCode {
     INVALID_AUTHORIZATION_HEADER(1),

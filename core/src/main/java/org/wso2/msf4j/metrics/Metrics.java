@@ -28,7 +28,7 @@ import org.wso2.carbon.metrics.manager.MetricService;
 import org.wso2.carbon.metrics.manager.ServiceReferenceHolder;
 
 /**
- * A utility class to initialize/destroy Metric Service
+ * A utility class to initialize/destroy Metric Service.
  */
 public final class Metrics {
 

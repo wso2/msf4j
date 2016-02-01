@@ -24,7 +24,7 @@ import org.wso2.msf4j.util.SystemVariableUtil;
 import java.io.File;
 
 /**
- * HTTP Monitoring OSGi Component to Initialize/Destroy Data Publisher
+ * HTTP Monitoring OSGi Component to Initialize/Destroy Data Publisher.
  */
 @Component(
     name = "org.wso2.msf4j.httpmonitoring.HTTPMonitoringComponent",

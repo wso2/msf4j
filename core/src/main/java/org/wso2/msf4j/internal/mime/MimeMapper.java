@@ -25,7 +25,7 @@ import java.util.Properties;
 
 /**
  * This class lazily loads the mime-map.properties file
- * and maps file extension to mime type using the file
+ * and maps file extension to mime type using the file.
  */
 public class MimeMapper {
 

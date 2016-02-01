@@ -18,7 +18,7 @@ package org.wso2.msf4j.template;
 
 /**
  * This runtime exception will be thrown if a runtime
- * error is occurred while processing a template
+ * error is occurred while processing a template.
  */
 public class RuntimeTemplateException extends RuntimeException {
 

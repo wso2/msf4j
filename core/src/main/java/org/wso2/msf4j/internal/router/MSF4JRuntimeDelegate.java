@@ -28,7 +28,7 @@ import javax.ws.rs.ext.RuntimeDelegate;
  * Implementation of the RuntimeDelegate which is
  * required for the javax.ws.rs.core.Response.
  * <p>
- * This class will be loaded by javax.ws.rs.ext.RuntimeDelegate
+ * This class will be loaded by javax.ws.rs.ext.RuntimeDelegate.
  */
 public class MSF4JRuntimeDelegate extends RuntimeDelegate {
 
