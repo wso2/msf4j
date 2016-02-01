@@ -1,6 +1,6 @@
 # Lifecycle Sample
 
-This sample shows how to use service lifecycle methods on WSO2 MSS.
+This sample shows how to use service lifecycle methods on WSO2 MSF4J.
 
 You can notice following 2 lifecycle methods on Helloworld service class.
 

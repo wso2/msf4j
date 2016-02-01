@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.carbon.mss.examples.petstore.transaction;
+package org.wso2.msf4j.examples.petstore.transaction;
 
 /**
  * Constants used in the transaction service.

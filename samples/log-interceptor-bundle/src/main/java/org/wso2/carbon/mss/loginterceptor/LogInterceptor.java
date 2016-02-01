@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.loginterceptor;
+package org.wso2.msf4j.loginterceptor;
 
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.mss.ServiceMethodInfo;
-import org.wso2.carbon.mss.HttpResponder;
-import org.wso2.carbon.mss.Interceptor;
+import org.wso2.msf4j.ServiceMethodInfo;
+import org.wso2.msf4j.HttpResponder;
+import org.wso2.msf4j.Interceptor;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -32,7 +32,7 @@ import java.util.Map;
  * Sample Interceptor which logs HTTP headers of the request.
  */
 @Component(
-        name = "org.wso2.carbon.mss.loginterceptor.LogInterceptor",
+        name = "org.wso2.msf4j.loginterceptor.LogInterceptor",
         service = Interceptor.class,
         immediate = true
 )

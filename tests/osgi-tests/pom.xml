@@ -18,17 +18,17 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>org.wso2.carbon.mss</groupId>
-        <artifactId>mss-parent</artifactId>
+        <groupId>org.wso2.msf4j</groupId>
+        <artifactId>msf4j-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../../parent/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>mss-osgi-tests</artifactId>
+    <artifactId>msf4j-osgi-tests</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>WSO2 MSS - OSGi Tests</name>
-    <description>OSGi Tests for MSS</description>
+    <name>WSO2 MSF4J - OSGi Tests</name>
+    <description>OSGi Tests for MSF4J</description>
     <url>http://wso2.com</url>
 
     <dependencies>
@@ -180,8 +180,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.mss</groupId>
-            <artifactId>org.wso2.carbon.mss</artifactId>
+            <groupId>org.wso2.msf4j</groupId>
+            <artifactId>org.wso2.msf4j</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -242,8 +242,8 @@
 
         <!-- Test artifacts -->
         <dependency>
-            <groupId>org.wso2.carbon.mss</groupId>
-            <artifactId>stockquote-mss-bundle</artifactId>
+            <groupId>org.wso2.msf4j</groupId>
+            <artifactId>stockquote-msf4j-bundle</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
@@ -358,10 +358,10 @@
                                             </executiondata>
                                             <structure name="Carbon Core OSGi Tests">
                                                 <classfiles>
-                                                    <fileset dir="../../carbon-mss/components/org.wso2.carbon.mss/target/classes" />
+                                                    <fileset dir="../../carbon-msf4j/components/org.wso2.msf4j/target/classes" />
                                                 </classfiles>
                                                 <sourcefiles encoding="UTF-8">
-                                                    <fileset dir="../../carbon-mss/components/org.wso2.carbon.mss/src" />
+                                                    <fileset dir="../../carbon-msf4j/components/org.wso2.msf4j/src" />
                                                 </sourcefiles>
                                             </structure>
                                             <html destdir="${project.build.directory}/site/jacoco" />

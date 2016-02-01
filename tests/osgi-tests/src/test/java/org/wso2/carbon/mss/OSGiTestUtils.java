@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.carbon.mss;
+package org.wso2.msf4j;
 
 import org.ops4j.pax.exam.Option;
 import org.slf4j.Logger;
@@ -139,8 +139,8 @@ public class OSGiTestUtils {
     }
 
     private static void setRequiredSystemProperties() {
-        System.setProperty("server.key", "wso2-mss");
-        System.setProperty("server.name", "WSO2 MSS");
+        System.setProperty("server.key", "wso2-msf4j");
+        System.setProperty("server.name", "WSO2 MSF4J");
         System.setProperty("server.version", "1.0.0");
     }
 

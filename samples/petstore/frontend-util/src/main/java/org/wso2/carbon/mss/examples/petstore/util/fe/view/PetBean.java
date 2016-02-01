@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.examples.petstore.util.fe.view;
+package org.wso2.msf4j.examples.petstore.util.fe.view;
 
-import org.wso2.carbon.mss.examples.petstore.util.fe.client.ImageServiceClient;
-import org.wso2.carbon.mss.examples.petstore.util.fe.dao.PetService;
-import org.wso2.carbon.mss.examples.petstore.util.fe.model.ImageServiceException;
-import org.wso2.carbon.mss.examples.petstore.util.fe.model.PetServiceException;
-import org.wso2.carbon.mss.examples.petstore.util.model.Category;
-import org.wso2.carbon.mss.examples.petstore.util.model.Pet;
+import org.wso2.msf4j.examples.petstore.util.fe.client.ImageServiceClient;
+import org.wso2.msf4j.examples.petstore.util.fe.dao.PetService;
+import org.wso2.msf4j.examples.petstore.util.fe.model.ImageServiceException;
+import org.wso2.msf4j.examples.petstore.util.fe.model.PetServiceException;
+import org.wso2.msf4j.examples.petstore.util.model.Category;
+import org.wso2.msf4j.examples.petstore.util.model.Pet;
 
 import java.io.IOException;
 import java.util.logging.Level;

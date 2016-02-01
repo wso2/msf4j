@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.examples.petstore.util.fe.dao;
+package org.wso2.msf4j.examples.petstore.util.fe.dao;
 
-import org.wso2.carbon.mss.examples.petstore.util.fe.model.PetServiceException;
-import org.wso2.carbon.mss.examples.petstore.util.model.Category;
-import org.wso2.carbon.mss.examples.petstore.util.model.Pet;
+import org.wso2.msf4j.examples.petstore.util.fe.model.PetServiceException;
+import org.wso2.msf4j.examples.petstore.util.model.Category;
+import org.wso2.msf4j.examples.petstore.util.model.Pet;
 
 import java.util.List;
 

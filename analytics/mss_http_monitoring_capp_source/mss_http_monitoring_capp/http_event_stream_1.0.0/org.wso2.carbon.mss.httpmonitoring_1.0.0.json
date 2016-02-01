@@ -1,5 +1,5 @@
 {
-  "name": "org.wso2.carbon.mss.httpmonitoring",
+  "name": "org.wso2.msf4j.httpmonitoring",
   "version": "1.0.0",
   "nickName": "mss_http_monitoring",
   "description": "MSS HTTP Monitoring",

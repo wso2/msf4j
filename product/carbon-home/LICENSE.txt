@@ -66,7 +66,7 @@ org.wso2.carbon.metrics.common_1.2.0.jar                                        
 org.wso2.carbon.metrics.das.reporter_1.2.0.jar                                  bundle         apache2   6888      
 org.wso2.carbon.metrics.impl_1.2.0.jar                                          bundle         apache2   6887      
 org.wso2.carbon.metrics.manager_1.2.0.jar                                       bundle         apache2   6886      
-org.wso2.carbon.mss_1.0.0.jar                                                   bundle         apache2   6884
+org.wso2.msf4j_1.0.0.jar                                                   bundle         apache2   6884
 org.wso2.carbon.tools-5.0.0.jar                                                 bundle         apache2   6881      
 org.wso2.carbon.transport.http.netty_1.0.0.jar                                  bundle         apache2   6883      
 snakeyaml_1.16.0.wso2v1.jar                                                     bundle         apache2   6274      

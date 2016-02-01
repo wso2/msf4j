@@ -1,7 +1,7 @@
 # File handling
 
 
-## Serve Files with WSO2 MSS
+## Serve Files with WSO2 MSF4J
 
 You can serve files from the resource methods by returning a java.io.File or 
 by returning a javax.ws.rs.core.Response object with a java.io.File entity.
@@ -26,7 +26,7 @@ With WSO2 Microservices server, you can handle chunked requests in two ways.
 
 ### 1. Handle requests using HttpStreamHandler
 
-First way is to implement org.wso2.carbon.mss.HttpStreamHandler as shown in the below example to handle chunked http 
+First way is to implement org.wso2.msf4j.HttpStreamHandler as shown in the below example to handle chunked http 
 requests in a zero copy manner.
 
 ```java

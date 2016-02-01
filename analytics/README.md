@@ -12,7 +12,7 @@ Configure DAS
 Run "das-setup/setup.sh" to setup DAS. Note that the DAS Home directory in the above step has to 
 be provided as an input to that script.
 
-The setup script will also copy the already built MSS HTTP Monitoring Carbon App (CAPP) to DAS.
+The setup script will also copy the already built MSF4J HTTP Monitoring Carbon App (CAPP) to DAS.
 
 Start DAS
 ------------------------------------------
@@ -21,7 +21,7 @@ From DAS_HOME, run, bin/wso2server.sh to start DAS and make sure that it starts 
 
 Run a sample that publishes data to DAS
 ------------------------------------------
-Run the [metrics sample](https://github.com/wso2/product-mss/tree/master/samples/metrics)
+Run the [metrics sample](https://github.com/wso2/product-msf4j/tree/master/samples/metrics)
 included in the distribution. This sample will publish data to DAS.
 
 Accessing the dashboard
@@ -39,5 +39,5 @@ If you are an advanced WSO2 DAS user, you can go to the DAS Management Console a
 Once you login, you can view and manually execute the *http_event_script*  in the console to immediately see
 the results in the dashboard.
 
-The sources for MSS HTTP Monitoring Carbon Application (CAPP) can be found inside "mss_http_monitoring_capp_source" 
+The sources for MSF4J HTTP Monitoring Carbon Application (CAPP) can be found inside "msf4j_http_monitoring_capp_source" 
 directory. This CAPP is already built and copied to WSO2 DAS when you Configure DAS as mentioned above.

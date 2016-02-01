@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.examples.petstore.util.fe.client;
+package org.wso2.msf4j.examples.petstore.util.fe.client;
 
 import com.google.gson.Gson;
-import org.wso2.carbon.mss.examples.petstore.util.fe.model.Cart;
-import org.wso2.carbon.mss.examples.petstore.util.fe.model.Configuration;
-import org.wso2.carbon.mss.examples.petstore.util.fe.model.OrderServiceException;
-import org.wso2.carbon.mss.examples.petstore.util.fe.view.LoginBean;
-import org.wso2.carbon.mss.examples.petstore.util.model.CreditCard;
-import org.wso2.carbon.mss.examples.petstore.util.model.Order;
-import org.wso2.carbon.mss.examples.petstore.util.model.Pet;
+import org.wso2.msf4j.examples.petstore.util.fe.model.Cart;
+import org.wso2.msf4j.examples.petstore.util.fe.model.Configuration;
+import org.wso2.msf4j.examples.petstore.util.fe.model.OrderServiceException;
+import org.wso2.msf4j.examples.petstore.util.fe.view.LoginBean;
+import org.wso2.msf4j.examples.petstore.util.model.CreditCard;
+import org.wso2.msf4j.examples.petstore.util.model.Order;
+import org.wso2.msf4j.examples.petstore.util.model.Pet;
 
 import java.util.ArrayList;
 import java.util.List;

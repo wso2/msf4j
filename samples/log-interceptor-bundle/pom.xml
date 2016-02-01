@@ -19,8 +19,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.wso2.carbon.mss</groupId>
-        <artifactId>mss-parent</artifactId>
+        <groupId>org.wso2.msf4j</groupId>
+        <artifactId>msf4j-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../../parent/pom.xml</relativePath>
     </parent>
@@ -36,8 +36,8 @@
             <artifactId>org.eclipse.osgi</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.mss</groupId>
-            <artifactId>org.wso2.carbon.mss</artifactId>
+            <groupId>org.wso2.msf4j</groupId>
+            <artifactId>org.wso2.msf4j</artifactId>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
@@ -66,10 +66,10 @@
     </dependencies>
 
     <properties>
-        <private.package>org.wso2.carbon.mss.loginterceptor.*</private.package>
+        <private.package>org.wso2.msf4j.loginterceptor.*</private.package>
         <import.package>
             org.osgi.framework.*;version="${osgi.framework.import.version.range}",
-            org.wso2.carbon.mss.*,
+            org.wso2.msf4j.*,
             io.netty.handler.codec.http.*,
             org.slf4j.*,
         </import.package>

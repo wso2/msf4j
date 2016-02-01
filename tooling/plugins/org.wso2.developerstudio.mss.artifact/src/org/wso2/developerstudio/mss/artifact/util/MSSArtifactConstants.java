@@ -24,7 +24,7 @@ public class MSSArtifactConstants {
     public static final Object NEW_MSS_PROJECT_CREATION_OPTION = "new.MSS";
     public static final String POM_FILE = "pom.xml";
 
-    public static final String MSS_SERVICE_PARENT_GROUP_ID = "org.wso2.carbon.mss";
+    public static final String MSS_SERVICE_PARENT_GROUP_ID = "org.wso2.msf4j";
     public static final String MSS_SERVICE_PARENT_ARTIFACT_ID = "mss-service-parent";
     public static final String MSS_SERVICE_PARENT_VERSION = "1.0.0-SNAPSHOT";
     public static final String JAVAX_SERVLET_DEPENDENCY_GROUP_ID = "javax.servlet";

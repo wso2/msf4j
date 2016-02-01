@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.examples.petstore.util.fe.client;
+package org.wso2.msf4j.examples.petstore.util.fe.client;
 
 import com.google.gson.Gson;
-import org.wso2.carbon.mss.examples.petstore.util.fe.model.Configuration;
-import org.wso2.carbon.mss.examples.petstore.util.fe.model.UserServiceException;
-import org.wso2.carbon.mss.examples.petstore.util.fe.view.LoginBean;
-import org.wso2.carbon.mss.examples.petstore.util.model.User;
+import org.wso2.msf4j.examples.petstore.util.fe.model.Configuration;
+import org.wso2.msf4j.examples.petstore.util.fe.model.UserServiceException;
+import org.wso2.msf4j.examples.petstore.util.fe.view.LoginBean;
+import org.wso2.msf4j.examples.petstore.util.model.User;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
