@@ -30,7 +30,7 @@
     <groupId>org.wso2.msf4j.sample</groupId>
     <artifactId>template</artifactId>
 
-    <name>Template Microservice Sample</name>
+    <name>Sample: Template Microservice</name>
 
     <properties>
         <microservice.mainClass>org.wso2.msf4j.example.Application</microservice.mainClass>

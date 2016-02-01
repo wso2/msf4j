@@ -27,7 +27,7 @@
     <artifactId>msf4j-mustache-template</artifactId>
     <packaging>jar</packaging>
 
-    <name>wso2 msf4j mustache</name>
+    <name>WSO2 MSF4J Mustache template engine integration</name>
 
     <!-- Test dependencies -->
     <dependencies>

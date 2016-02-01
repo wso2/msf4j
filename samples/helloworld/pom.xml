@@ -30,7 +30,7 @@
     <groupId>org.wso2.msf4j.sample</groupId>
     <artifactId>helloworld</artifactId>
 
-    <name>Hello World Microservice Sample</name>
+    <name>Sample: Hello World Microservice</name>
 
     <properties>
         <microservice.mainClass>org.wso2.msf4j.example.Application</microservice.mainClass>

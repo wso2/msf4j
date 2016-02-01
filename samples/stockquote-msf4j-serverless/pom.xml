@@ -30,7 +30,7 @@
     <artifactId>stockquote-msf4j-serverless</artifactId>
     <packaging>jar</packaging>
 
-    <name>StockQuote MSF4J Serverless</name>
+    <name>Sample: StockQuote MSF4J (Serverless mode)</name>
 
     <properties>
         <microservice.mainClass>org.wso2.msf4j.example.Application</microservice.mainClass>

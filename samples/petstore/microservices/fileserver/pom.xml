@@ -28,7 +28,7 @@
     <artifactId>petstore-fileserver</artifactId>
     <packaging>jar</packaging>
 
-    <name>Pet store microservices example - file server microservice</name>
+    <name>Sample: [Pet Store] - Pet store microservices example - file server microservice</name>
 
     <dependencies>
         <dependency>

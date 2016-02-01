@@ -29,8 +29,8 @@
     <artifactId>org.wso2.msf4j</artifactId>
     <packaging>bundle</packaging>
 
-    <name>WSO2 Microservices Server OSGi bundle</name>
-    <description>WSO2 Microservices Server OSGi bundle</description>
+    <name>WSO2 MSF4J core</name>
+    <description>WSO2 MSF4J core</description>
     <url>https://github.com/wso2/msf4j</url>
 
     <dependencies>

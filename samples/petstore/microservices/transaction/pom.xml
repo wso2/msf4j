@@ -28,7 +28,7 @@
     <artifactId>petstore-txn</artifactId>
     <packaging>jar</packaging>
 
-    <name>Pet store microservices example - transaction microservice</name>
+    <name>Sample: [Pet Store] - Pet store microservices example - transaction microservice</name>
 
     <dependencies>
         <dependency>

@@ -27,8 +27,8 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>wso2msf4j</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Microservices Server - Distribution</name>
-    <description>WSO2 Microservices Server - Distribution</description>
+    <name>WSO2 MSF4J Server - Distribution</name>
+    <description>WSO2 MSF4J Server - Distribution</description>
     <url>http://wso2.org</url>
 
     <dependencies>

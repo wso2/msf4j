@@ -28,7 +28,7 @@
     <artifactId>petstore-security</artifactId>
     <packaging>jar</packaging>
 
-    <name>Pet store microservices example - security microservice</name>
+    <name>Sample: [Pet Store] - Pet store microservices example - security microservice</name>
 
     <dependencies>
         <dependency>

@@ -30,7 +30,7 @@
     <groupId>org.wso2.msf4j.example</groupId>
     <artifactId>fileserver</artifactId>
 
-    <name>File server Microservice Sample</name>
+    <name>Sample: File server Microservice</name>
 
     <properties>
         <microservice.mainClass>org.wso2.msf4j.example.Application</microservice.mainClass>

@@ -28,7 +28,7 @@
     <artifactId>petstore</artifactId>
     <packaging>pom</packaging>
 
-    <name>Pet Store Microservices Solution example</name>
+    <name>Sample: [Pet Store] - Pet Store Microservices Solution</name>
     <url>http://wso2.org</url>
 
     <dependencyManagement>

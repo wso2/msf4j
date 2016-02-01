@@ -29,7 +29,7 @@
     <artifactId>metrics-httpmon-msf4j-deployable-jar</artifactId>
     <packaging>jar</packaging>
 
-    <name>Metrics and HTTP Monitoring MSF4J Deployable Jar</name>
+    <name>Sample: Metrics and HTTP Monitoring MSF4J (Deployable Jar)</name>
 
     <properties>
         <microservice.resourceClasses>org.wso2.msf4j.example.service.DemoService</microservice.resourceClasses>

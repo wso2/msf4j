@@ -28,7 +28,7 @@
     <artifactId>log-interceptor-bundle</artifactId>
     <packaging>bundle</packaging>
 
-    <name>Log Interceptor OSGi Bundle</name>
+    <name>Sample: Log Interceptor</name>
     <url>http://maven.apache.org</url>
     <dependencies>
         <dependency>
