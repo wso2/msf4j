@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.msf4j.examples.petstore.security.ldap.server;
+package org.wso2.carbon.mss.examples.petstore.security.ldap.server;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
@@ -39,10 +39,10 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 
 /**
-* This class is responsible for building LDAP and KDC configurations. Given a file
-* name this will read configuration values and populate them into configuration classes.
-* Related configuration file is embedded-ldap.xml.
-*/
+ * This class is responsible for building LDAP and KDC configurations. Given a file
+ * name this will read configuration values and populate them into configuration classes.
+ * Related configuration file is embedded-ldap.xml.
+ */
 public class LDAPServerConfigurationBuilder {
 
     private Logger logger = Logger.getLogger(LDAPServerConfigurationBuilder.class);
@@ -160,7 +160,6 @@ public class LDAPServerConfigurationBuilder {
      *
      * @param propertyMap : containing properties of EmbeddedLDAP Element.
      * @throws org.wso2.carbon.ldap.server.util.EmbeddingLDAPException
-     *
      */
     private void buildConnectionPassword(Map<String, String> propertyMap)
             throws EmbeddingLDAPException {
@@ -168,7 +167,7 @@ public class LDAPServerConfigurationBuilder {
         connectionPassword = propertyMap.get("connectionPassword");
         if (connectionPassword == null) {
             throw new EmbeddingLDAPException("Connection password not specified in the " +
-                                             "configuration file.");
+                    "configuration file.");
         }
 
     }
@@ -179,7 +178,6 @@ public class LDAPServerConfigurationBuilder {
      *
      * @param embeddedLDAP: part of the XML config file named: EmbeddedLDAP
      * @throws org.wso2.carbon.ldap.server.util.EmbeddingLDAPException
-     *
      */
     private void buildLDAPConfigurations(OMElement embeddedLDAP) throws EmbeddingLDAPException {
         /*Read the properties of EmbeddedLDAP XML element.*/
@@ -258,18 +256,18 @@ public class LDAPServerConfigurationBuilder {
      *
      * @param documentElement: whole config file read as an OMElement.
      *                         Following parts are read from the config file:
-     *                       <p>
+     *                         <p>
      *                         Default partition configurations
-     *                       <p>
+     *                         <p>
      *                         &lt;DefaultPartition&gt;
      *                         &lt;Property name="id"&gt;root &lt;/Property&gt;
      *                         &lt;Property name="realm"&gt;wso2.com &lt;/Property&gt;
      *                         &lt;Property name="kdcPassword"&gt;secret &lt;/Property&gt;
      *                         &lt;Property name="ldapServerPrinciplePassword"&gt;randall &lt;/Property&gt;
      *                         &lt;/DefaultPartition&gt;
-     *                       <p>
+     *                         <p>
      *                         Default partition admin configurations
-     *                       <p>
+     *                         <p>
      *                         &lt;PartitionAdmin&gt;
      *                         &lt;Property name="uid"&gt;admin&lt;/Property&gt;
      *                         &lt;Property name="commonName"&gt;admin&lt;/Property&gt;
@@ -278,9 +276,9 @@ public class LDAPServerConfigurationBuilder {
      *                         &lt;Property name="password"&gt;admin&lt;/Property&gt;
      *                         &lt;Property name="passwordType"&gt;SHA&lt;/Property&gt;
      *                         &lt;/PartitionAdmin>
-     *                        <p>
+     *                         <p>
      *                         Default partition admin's group configuration
-     *                        <p>
+     *                         <p>
      *                         &lt;PartitionAdminGroup&gt;
      *                         &lt;Property name="adminRoleName"&gt;admin&lt;/Property&gt;
      *                         &lt;Property name="groupNameAttribute"&gt;cn&lt;/Property&gt;
@@ -391,19 +389,18 @@ public class LDAPServerConfigurationBuilder {
      * kdcConfigurations object.
      *
      * @param kdcConfigElement
-     * @throws org.wso2.carbon.ldap.server.util.EmbeddingLDAPException
-     *         <p>
-     *          KDC configurations
-     *          <p>
-     *          &lt;KDCServer&gt;
-     *          &lt;Property name="name"&gt;defaultKDC&lt;/Property&gt;
-     *          &lt;Property name="enabled"&gt;false&lt;/Property&gt;
-     *          &lt;Property name="protocol"&gt;UDP&lt;/Property&gt;
-     *          &lt;Property name="host"&gt;localhost&lt;/Property&gt;
-     *          &lt;Property name="maximumTicketLifeTime"&gt;8640000&lt;/Property&gt;
-     *          &lt;Property name="maximumRenewableLifeTime"&gt;604800000&lt;/Property&gt;
-     *          &lt;Property name="preAuthenticationTimeStampEnabled"&gt;true&lt;/Property&gt;
-     *          &lt;/KDCServer&gt;
+     * @throws org.wso2.carbon.ldap.server.util.EmbeddingLDAPException <p>
+     *                                                                 KDC configurations
+     *                                                                 <p>
+     *                                                                 &lt;KDCServer&gt;
+     *                                                                 &lt;Property name="name"&gt;defaultKDC&lt;/Property&gt;
+     *                                                                 &lt;Property name="enabled"&gt;false&lt;/Property&gt;
+     *                                                                 &lt;Property name="protocol"&gt;UDP&lt;/Property&gt;
+     *                                                                 &lt;Property name="host"&gt;localhost&lt;/Property&gt;
+     *                                                                 &lt;Property name="maximumTicketLifeTime"&gt;8640000&lt;/Property&gt;
+     *                                                                 &lt;Property name="maximumRenewableLifeTime"&gt;604800000&lt;/Property&gt;
+     *                                                                 &lt;Property name="preAuthenticationTimeStampEnabled"&gt;true&lt;/Property&gt;
+     *                                                                 &lt;/KDCServer&gt;
      */
     private void buildKDCConfigurations(OMElement kdcConfigElement)
             throws EmbeddingLDAPException {
@@ -434,8 +431,8 @@ public class LDAPServerConfigurationBuilder {
         int port = Integer.parseInt(propertyMap.get("port"));
         if (port == -1) {
             logger.warn("KDC port defined in carbon.xml's " + CARBON_KDC_PORT_CONFIG_SECTION +
-                        " config section or embedded-ldap.xml is invalid. " +
-                        "Setting KDC server port to default - " + DEFAULT_KDC_SERVER_PORT);
+                    " config section or embedded-ldap.xml is invalid. " +
+                    "Setting KDC server port to default - " + DEFAULT_KDC_SERVER_PORT);
             port = DEFAULT_KDC_SERVER_PORT;
         }
 

@@ -14,7 +14,6 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -27,10 +26,10 @@
     </parent>
 
     <groupId>org.wso2.msf4j.example</groupId>
-    <artifactId>stockquote-mss-lite</artifactId>
+    <artifactId>metrics-httpmon-msf4j-serverless</artifactId>
     <packaging>jar</packaging>
 
-    <name>StockQuote MSS Lite</name>
+    <name>Metrics and HTTP Monitoring MSS Lite</name>
 
     <properties>
         <microservice.mainClass>org.wso2.msf4j.example.Application</microservice.mainClass>
@@ -60,6 +59,4 @@
             </plugin>
         </plugins>
     </build>
-    
 </project>
-

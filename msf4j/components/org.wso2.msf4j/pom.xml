@@ -31,7 +31,7 @@
 
     <name>WSO2 Microservices Server OSGi bundle</name>
     <description>WSO2 Microservices Server OSGi bundle</description>
-    <url>https://github.com/wso2/product-mss</url>
+    <url>https://github.com/wso2/msf4j</url>
 
     <dependencies>
         <dependency>

@@ -13,8 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package org.wso2.msf4j.examples.petstore.security.ldap.server;
+package org.wso2.carbon.mss.examples.petstore.security.ldap.server;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -143,7 +142,7 @@ public class ApacheDirectoryServerActivator {
     private void setSchemaLocation() throws EmbeddingLDAPException {
 
         String schemaLocation = "repository" + File.separator + "data" + File.separator +
-                                "is-default-schema.zip";
+                "is-default-schema.zip";
         File dataDir = new File(getCarbonHome(), schemaLocation);
 
         // Set schema location
@@ -157,7 +156,7 @@ public class ApacheDirectoryServerActivator {
     private File getLdapConfigurationFile() throws EmbeddingLDAPException {
 
         String configurationFilePath = "repository" + File.separator + "conf" + File.separator +
-                                       "embedded-ldap.xml";
+                "embedded-ldap.xml";
         return new File(getCarbonHome(), configurationFilePath);
     }
 
