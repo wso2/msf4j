@@ -21,7 +21,6 @@ package org.wso2.msf4j.example;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.MicroservicesRunner;
-import org.wso2.msf4j.example.service.Helloworld;
 
 /**
  * Main Application Class.
