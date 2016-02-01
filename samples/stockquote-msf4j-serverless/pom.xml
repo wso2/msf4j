@@ -30,7 +30,7 @@
     <artifactId>stockquote-msf4j-serverless</artifactId>
     <packaging>jar</packaging>
 
-    <name>StockQuote MSS Lite</name>
+    <name>StockQuote MSF4J Serverless</name>
 
     <properties>
         <microservice.mainClass>org.wso2.msf4j.example.Application</microservice.mainClass>

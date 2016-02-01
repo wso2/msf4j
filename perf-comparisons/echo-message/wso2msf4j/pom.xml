@@ -31,7 +31,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>WSO2 MSS Microservice Sample</name>
+    <name>WSO2 MSF4J Microservice Sample</name>
 
     <properties>
         <microservice.mainClass>org.wso2.msf4j.perftest.echo.wso2msf4j.Application</microservice.mainClass>

@@ -28,7 +28,7 @@
     <artifactId>stockquote-msf4j-bundle</artifactId>
     <packaging>bundle</packaging>
 
-    <name>Stockquote MSS OSGi Bundle</name>
+    <name>Stockquote MSF4J OSGi Bundle</name>
     <url>http://maven.apache.org</url>
     <dependencies>
         <dependency>

@@ -29,7 +29,7 @@
     <packaging>carbon-feature</packaging>
     <name>WSO2 Carbon - SPI fly Feature</name>
     <url>http://wso2.org</url>
-    <description>This feature contains the core bundles required by the MSS feature
+    <description>This feature contains the core bundles required by the MSF4J feature
     </description>
 
     <dependencies>

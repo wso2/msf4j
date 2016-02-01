@@ -28,7 +28,7 @@
     <artifactId>metrics-httpmon-msf4j-bundle</artifactId>
     <packaging>bundle</packaging>
 
-    <name>Metrics and HTTP Monitoring MSS OSGi Bundle</name>
+    <name>Metrics and HTTP Monitoring MSF4J OSGi Bundle</name>
     <url>http://maven.apache.org</url>
     <dependencies>
         <dependency>

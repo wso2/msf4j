@@ -26,7 +26,7 @@
 
     <artifactId>security</artifactId>
     <packaging>jar</packaging>
-    <description>Demostrates how to secure microservices in WSO2 MSS</description>
+    <description>Demostrates how to secure microservices in WSO2 MSF4J</description>
 
     <properties>
         <microservice.mainClass>org.wso2.msf4j.example.Application</microservice.mainClass>

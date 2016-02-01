@@ -27,8 +27,8 @@
 
     <artifactId>msf4j-osgi-tests</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>WSO2 MSS - OSGi Tests</name>
-    <description>OSGi Tests for MSS</description>
+    <name>WSO2 MSF4J - OSGi Tests</name>
+    <description>OSGi Tests for MSF4J</description>
     <url>http://wso2.com</url>
 
     <dependencies>

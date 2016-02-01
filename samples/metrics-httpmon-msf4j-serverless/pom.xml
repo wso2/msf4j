@@ -29,7 +29,7 @@
     <artifactId>metrics-httpmon-msf4j-serverless</artifactId>
     <packaging>jar</packaging>
 
-    <name>Metrics and HTTP Monitoring MSS Lite</name>
+    <name>Metrics and HTTP Monitoring MSF4J serverless mode</name>
 
     <properties>
         <microservice.mainClass>org.wso2.msf4j.example.Application</microservice.mainClass>

@@ -30,7 +30,7 @@
     <artifactId>stockquote-msf4j-deployable-jar</artifactId>
     <packaging>jar</packaging>
 
-    <name>StockQuote MSS Deployable Jar</name>
+    <name>StockQuote MSF4J Deployable Jar</name>
 
     <properties>
         <microservice.resourceClasses>org.wso2.msf4j.example.StockQuoteService</microservice.resourceClasses>
