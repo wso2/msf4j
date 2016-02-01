@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.msf4j.perftest.echo.wso2mss;
+package org.wso2.msf4j.perftest.echo.wso2msf4j;
 
 import org.wso2.msf4j.MicroservicesRunner;
 
