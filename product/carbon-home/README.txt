@@ -9,7 +9,7 @@ Running & Installation
 -----------------------------
 There are two modes of running WSO2 MSF4J. See the documentation
 for more details.
-https://docs.wso2.com/display/MSS100/Key+Concepts#KeyConcepts-MSSliteandserverruntime
+http://docs.wso2.com/microservices-framework-for-java/Key+Concepts#KeyConcepts-MSSliteandserverruntime
 
 
 Support
@@ -37,12 +37,12 @@ http://stackoverflow.com/questions/tagged/wso2
 How To Contribute
 -----------------------------
 You can find comprehensive instructions on how to contribute from the Getting Involved guide
-https://docs.wso2.com/display/MSS100/Get+Involved
+http://docs.wso2.com/microservices-framework-for-java/Get+Involved
 
 
 For further details
 -----------------------------
-- https://docs.wso2.com/display/MSS100
+- http://docs.wso2.org/microservices-framework-for-java
 - https://github.com/wso2/msf4j
 
 
