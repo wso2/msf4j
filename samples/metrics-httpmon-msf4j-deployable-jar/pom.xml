@@ -26,7 +26,7 @@
     </parent>
 
     <groupId>org.wso2.msf4j.example</groupId>
-    <artifactId>metrics-httpmon-mss-deployable-jar</artifactId>
+    <artifactId>metrics-httpmon-msf4j-deployable-jar</artifactId>
     <packaging>jar</packaging>
 
     <name>Metrics and HTTP Monitoring MSS Deployable Jar</name>

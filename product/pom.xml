@@ -19,7 +19,7 @@
 
     <parent>
         <groupId>org.wso2.msf4j</groupId>
-        <artifactId>mss-parent</artifactId>
+        <artifactId>msf4j-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../parent/pom.xml</relativePath>
     </parent>

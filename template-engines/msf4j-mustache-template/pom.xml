@@ -19,15 +19,15 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.wso2.msf4j</groupId>
-        <artifactId>mss-parent</artifactId>
+        <artifactId>msf4j-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../../parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>mss-mustache-template</artifactId>
+    <artifactId>msf4j-mustache-template</artifactId>
     <packaging>jar</packaging>
 
-    <name>wso2 mss mustache</name>
+    <name>wso2 msf4j mustache</name>
 
     <!-- Test dependencies -->
     <dependencies>

@@ -27,14 +27,14 @@
     </parent>
 
     <groupId>org.wso2.msf4j.perftest.echo</groupId>
-    <artifactId>wso2mss-echo-message</artifactId>
+    <artifactId>wso2msf4j-echo-message</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>WSO2 MSS Microservice Sample</name>
 
     <properties>
-        <microservice.mainClass>org.wso2.msf4j.perftest.echo.wso2mss.Application</microservice.mainClass>
+        <microservice.mainClass>org.wso2.msf4j.perftest.echo.wso2msf4j.Application</microservice.mainClass>
     </properties>
 
 </project>
