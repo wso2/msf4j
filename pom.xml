@@ -121,6 +121,7 @@
         <module>samples/fileserver</module>
         <module>samples/template</module>
         <module>samples/log-interceptor-bundle</module>
+        <module>samples/lifecycle</module>
         <module>product</module>
         <module>tests/osgi-tests</module>
     </modules>
