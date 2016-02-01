@@ -40,15 +40,15 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 /**
- * This start the EmbeddedLDAP-server. Needs to have "MSS_HOME" system variable configured by
- * pointing to the directory that ldap data and config files get stored. If the "MSS_HOME" is not set
- * current working directory will use as the MSS_HOME".
+ * This start the EmbeddedLDAP-server. Needs to have "MSF4J_HOME" system variable configured by
+ * pointing to the directory that ldap data and config files get stored. If the "MSF4J_HOME" is not set
+ * current working directory will use as the MSF4J_HOME".
  */
 public class ApacheDirectoryServerActivator {
 
     private static final Logger log = LoggerFactory.getLogger(ApacheDirectoryServerActivator.class);
 
-    private String mssHome = SystemVariableUtil.getValue("MSS_HOME", System.getProperty("user.dir"));
+    private String msf4jHome = SystemVariableUtil.getValue("MSF4J_HOME", System.getProperty("user.dir"));
     private LDAPServer ldapServer;
     private KDCServer kdcServer;
 
@@ -150,7 +150,7 @@ public class ApacheDirectoryServerActivator {
     }
 
     private String getCarbonHome() throws EmbeddingLDAPException {
-        return mssHome;
+        return msf4jHome;
     }
 
     private File getLdapConfigurationFile() throws EmbeddingLDAPException {

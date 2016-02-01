@@ -57,7 +57,7 @@ public class JWTGenerator {
         claimsSet.setSubject(user.getName());
         claimsSet.setClaim("email", user.getEmail());
         claimsSet.setClaim("roles", user.getRoles());
-        claimsSet.setIssuer("wso2.org/products/mss");
+        claimsSet.setIssuer("wso2.org/products/msf4j");
         claimsSet.setExpirationTime(new Date(new Date().getTime() + 60 * 60 * 1000)); //60 min
 
         SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.RS256), claimsSet);

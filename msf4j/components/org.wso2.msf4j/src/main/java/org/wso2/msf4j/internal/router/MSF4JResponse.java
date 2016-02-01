@@ -202,12 +202,12 @@ public class MSF4JResponse extends Response {
 
         @Override
         public Response build() {
-            MSF4JResponse mssResponse = new MSF4JResponse();
-            mssResponse.setStatus(status);
-            mssResponse.setEntity(entity);
-            mssResponse.setHeaders(headers);
-            mssResponse.setType(type);
-            return mssResponse;
+            MSF4JResponse msf4jResponse = new MSF4JResponse();
+            msf4jResponse.setStatus(status);
+            msf4jResponse.setEntity(entity);
+            msf4jResponse.setHeaders(headers);
+            msf4jResponse.setType(type);
+            return msf4jResponse;
         }
 
         @Override

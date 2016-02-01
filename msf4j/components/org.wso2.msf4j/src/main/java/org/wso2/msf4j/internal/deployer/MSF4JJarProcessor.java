@@ -62,7 +62,7 @@ public class MSF4JJarProcessor {
      */
     public MSF4JJarProcessor process() throws MSF4JJarProcessorException {
         String jarPath = file.getAbsolutePath();
-        final String[] mssClassNames = readMSSManifestEntry(jarPath);
+        final String[] msf4jClassNames = readMSF4JManifestEntry(jarPath);
 
         //Parent class loader is required to provide classes that are outside of the jar
         try {
@@ -71,7 +71,7 @@ public class MSF4JJarProcessor {
                     try {
                         URLClassLoader classLoader =
                                 new URLClassLoader(new URL[]{file.toURI().toURL()}, this.getClass().getClassLoader());
-                        for (String className : mssClassNames) {
+                        for (String className : msf4jClassNames) {
                             try {
                                 Class classToLoad = classLoader.loadClass(className);
                                 resourceInstances.add(classToLoad.newInstance());
@@ -107,7 +107,7 @@ public class MSF4JJarProcessor {
      * @param jarPath absolute path to the jar file
      * @return String array of fully qualified class names
      */
-    private String[] readMSSManifestEntry(String jarPath) throws MSF4JJarProcessorException {
+    private String[] readMSF4JManifestEntry(String jarPath) throws MSF4JJarProcessorException {
         JarFile jarFile = null;
         try {
             jarFile = new JarFile(jarPath);
@@ -116,11 +116,11 @@ public class MSF4JJarProcessor {
                 throw new MSF4JJarProcessorException("Error retrieving manifest: " + jarPath);
             }
             Attributes mainAttributes = manifest.getMainAttributes();
-            String mssEntry = mainAttributes.getValue(MICROSERVICES_MANIFEST_KEY);
-            if (mssEntry == null) {
+            String msf4jEntry = mainAttributes.getValue(MICROSERVICES_MANIFEST_KEY);
+            if (msf4jEntry == null) {
                 throw new MSF4JJarProcessorException("Manifest entry 'microservices' not found: " + jarPath);
             }
-            return mssEntry.split("\\s*,\\s*");
+            return msf4jEntry.split("\\s*,\\s*");
         } catch (IOException e) {
             throw new MSF4JJarProcessorException("Error retrieving manifest: " + jarPath, e);
         } finally {
