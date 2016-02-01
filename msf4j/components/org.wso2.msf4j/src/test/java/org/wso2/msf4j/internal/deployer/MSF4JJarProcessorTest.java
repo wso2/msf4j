@@ -23,7 +23,7 @@ import java.io.File;
 import java.util.List;
 
 /**
- * Test MSSJarProcessor.
+ * Test MSF4JJarProcessor.
  */
 public class MSF4JJarProcessorTest {
 
