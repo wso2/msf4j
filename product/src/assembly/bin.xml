@@ -15,8 +15,8 @@
   -->
 <assembly>
     <includeBaseDirectory>true</includeBaseDirectory>
-    <baseDirectory>wso2mss-${project.version}</baseDirectory>
-    <id>mss</id>
+    <baseDirectory>wso2msf4j-${project.version}</baseDirectory>
+    <id>msf4j</id>
     <formats>
         <format>zip</format>
     </formats>

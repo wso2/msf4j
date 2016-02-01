@@ -2,7 +2,7 @@ WSO2 Microservices Server
 -----------------------------
 
 WSO2 Microservices Server is a lightweight high performance runtime for hosting microservices.
-WSO2 MSS is one of the highest performing lightweight microservices frameworks.
+WSO2 MSF4J is one of the highest performing lightweight microservices frameworks.
 
 
 Running & Installation
@@ -43,7 +43,7 @@ https://docs.wso2.com/display/MSS100/Get+Involved
 For further details
 -----------------------------
 - https://docs.wso2.com/display/MSS100
-- https://github.com/wso2/product-mss
+- https://github.com/wso2/msf4j
 
 
 ---------------------------------------------------------------------------

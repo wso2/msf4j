@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: stockquote
-        image: wso2mss/v1
+        image: wso2msf4j/v1
         env:
         - name: GET_HOSTS_FROM
           value: dns
