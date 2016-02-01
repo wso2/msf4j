@@ -111,13 +111,13 @@
         <module>poms/msf4j-jar-parent</module>
         <module>poms/msf4j-serverless-parent</module>
         <module>samples/helloworld</module>
-        <module>samples/stockquote-msf4j-serverless</module>
-        <module>samples/stockquote-msf4j-deployable-jar</module>
-        <module>samples/stockquote-msf4j-bundle</module>
+        <module>samples/stockquote/stockquote-msf4j-serverless</module>
+        <module>samples/stockquote/stockquote-msf4j-deployable-jar</module>
+        <module>samples/stockquote/stockquote-msf4j-bundle</module>
         <module>samples/security</module>
-        <module>samples/metrics-httpmon-msf4j-serverless</module>
-        <module>samples/metrics-httpmon-msf4j-deployable-jar</module>
-        <module>samples/metrics-httpmon-msf4j-bundle</module>
+        <module>samples/metrics/metrics-httpmon-msf4j-serverless</module>
+        <module>samples/metrics/metrics-httpmon-msf4j-deployable-jar</module>
+        <module>samples/metrics/metrics-httpmon-msf4j-bundle</module>
         <module>samples/petstore</module>
         <module>samples/fileserver</module>
         <module>samples/template</module>
