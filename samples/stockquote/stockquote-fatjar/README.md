@@ -1,12 +1,15 @@
-# SimpleStockQuote Executable jar Sample
+# SimpleStockQuote Fat jar Sample
+
+A fat jar is a jar file which includes all the dependencies in one fat (uber) jar.
 
 This sample shows the use of @Produces and @Consumes annotations for bean conversions. In addition to that this 
 demonstrates how to develop a microservice with WSO2 MSF4J, create a fat jar & run it.
-See also.. [msf4j thin jar](../stockquote-thinjar), [msf4j bundle](../stockquote-bundle)
 
-## pom.xml in deployable jar project
+See also; [msf4j thin jar](../stockquote-thinjar), [msf4j bundle](../stockquote-bundle)
 
-Your POM can inherit from [msf4j-service](../../../poms/msf4j-service) when creating the pom.xml for deployable jars. 
+## Writing the pom.xml 
+
+Your POM can inherit from [msf4j-service](../../../poms/msf4j-service). 
 See details [here](../../../poms/msf4j-service).
 
 ### How @Produces work
