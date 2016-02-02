@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <artifactId>msf4j-service</artifactId>
+    <groupId>org.wso2.msf4j</groupId>
+    <version>1.0.0-SNAPSHOT</version>
+    <relativePath>../../../poms/msf4j-service/pom.xml</relativePath>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.wso2.msf4j.example</groupId>
+  <artifactId>metrics-httpmon-fatjar</artifactId>
+  <name>Sample: Metrics and HTTP Monitoring MSF4J (serverless mode)</name>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.spotify</groupId>
+        <artifactId>docker-maven-plugin</artifactId>
+        <version>${maven.dockerplugin.version}</version>
+        <configuration>
+          <imageName>${project.artifactId}:${project.version}</imageName>
+          <baseImage>${baseimage.name}</baseImage>
+          <entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
+          <resources>
+            <resource>
+              <targetPath>/</targetPath>
+              <directory>${project.build.directory}</directory>
+              <include>${project.build.finalName}.jar</include>
+            </resource>
+          </resources>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <properties>
+    <baseimage.name>java:openjdk-8u66-jre</baseimage.name>
+    <microservice.mainClass>org.wso2.carbon.mss.example.Application</microservice.mainClass>
+    <maven.dockerplugin.version>0.3.5</maven.dockerplugin.version>
+  </properties>
+</project>
+
