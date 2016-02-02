@@ -1,7 +1,6 @@
 ##Echo message performance test
 
-In this test, a message of a certain size (1kB) is sent to the microservice and get it back again form the service as 
-the response.
+In this test an echo service was written in each microservices framework. Then, requests with 1kB payload were sent to each service in varying concurrency levels. Then, the average throughput was measured for each concurrency level for each microservices framework.
 
 ###How to Run
 
