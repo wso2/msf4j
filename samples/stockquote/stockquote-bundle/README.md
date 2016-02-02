@@ -1,7 +1,7 @@
 # SimpleStockQuote MSF4J Bundle Sample
 
 This sample demonstrates how to create a microservice as an OSGi bundle.
-See also.. [msf4j lite](../stockquote-msf4j-lite), [msf4j deployable jar](../stockquote-msf4j-deployable-jar)
+See also.. [msf4j lite](../stockquote-thinjar), [msf4j deployable jar](../stockquote-fatjar)
 
 In this sample we have exposed the StockQuoteService as an OSGi service that implements 
 org.wso2.msf4j.Microservice interface as shown in the following code.
@@ -53,7 +53,7 @@ Install the target/stockquote-msf4j-bundle-1.0.0-SNAPSHOT.jar as an OSGi bundle 
 OSGi console with the following command.
 
 ```
-install file://<path to target directory>/stockquote-msf4j-bundle-1.0.0-SNAPSHOT.jar
+install file://<path to target directory>/stockquote-bundle-1.0.0-SNAPSHOT.jar
 ```
 
 When the installation of the bundle is successful, use the bundle ID of the installed bundle to start  
