@@ -30,7 +30,7 @@
     <artifactId>stockquote-thinjar</artifactId>
     <packaging>jar</packaging>
 
-    <name>Sample: StockQuote microservice (Deployable Jar)</name>
+    <name>Sample: StockQuote microservice (Thin jar mode)</name>
 
     <properties>
         <microservice.resourceClasses>org.wso2.msf4j.example.StockQuoteService</microservice.resourceClasses>

@@ -30,7 +30,7 @@
     <artifactId>stockquote-fatjar</artifactId>
     <packaging>jar</packaging>
 
-    <name>Sample: StockQuote MSF4J (Serverless mode)</name>
+    <name>Sample: StockQuote MSF4J (Fat jar mode)</name>
 
     <properties>
         <microservice.mainClass>org.wso2.msf4j.example.Application</microservice.mainClass>

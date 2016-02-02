@@ -29,7 +29,7 @@
     <artifactId>metrics-httpmon-fatjar</artifactId>
     <packaging>jar</packaging>
 
-    <name>Sample: Metrics and HTTP Monitoring MSF4J (serverless mode)</name>
+    <name>Sample: Metrics and HTTP Monitoring MSF4J (Fat jar mode)</name>
 
     <properties>
         <microservice.mainClass>org.wso2.carbon.mss.example.Application</microservice.mainClass>
