@@ -110,13 +110,13 @@
         <module>templating/msf4j-mustache-template</module>
         <module>poms/msf4j-service</module>
         <module>samples/helloworld</module>
-        <module>samples/stockquote/stockquote-msf4j-fatjar</module>
-        <module>samples/stockquote/stockquote-msf4j-thinjar</module>
-        <module>samples/stockquote/stockquote-msf4j-bundle</module>
+        <module>samples/stockquote/stockquote-fatjar</module>
+        <module>samples/stockquote/stockquote-thinjar</module>
+        <module>samples/stockquote/stockquote-bundle</module>
         <module>samples/security</module>
-        <module>samples/metrics/metrics-httpmon-msf4j-fatjar</module>
-        <module>samples/metrics/metrics-httpmon-msf4j-thinjar</module>
-        <module>samples/metrics/metrics-httpmon-msf4j-bundle</module>
+        <module>samples/metrics/metrics-httpmon-fatjar</module>
+        <module>samples/metrics/metrics-httpmon-thinjar</module>
+        <module>samples/metrics/metrics-httpmon-bundle</module>
         <module>samples/petstore</module>
         <module>samples/fileserver</module>
         <module>samples/template</module>

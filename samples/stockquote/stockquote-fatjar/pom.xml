@@ -27,7 +27,7 @@
     </parent>
 
     <groupId>org.wso2.msf4j.example</groupId>
-    <artifactId>stockquote-msf4j-fatjar</artifactId>
+    <artifactId>stockquote-fatjar</artifactId>
     <packaging>jar</packaging>
 
     <name>Sample: StockQuote MSF4J (Serverless mode)</name>

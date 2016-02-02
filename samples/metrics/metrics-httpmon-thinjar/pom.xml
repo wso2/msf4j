@@ -14,7 +14,6 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -27,15 +26,15 @@
     </parent>
 
     <groupId>org.wso2.msf4j.example</groupId>
-    <artifactId>stockquote-msf4j-thinjar</artifactId>
+    <artifactId>metrics-httpmon-thinjar</artifactId>
     <packaging>jar</packaging>
 
-    <name>Sample: StockQuote microservice (Deployable Jar)</name>
+    <name>Sample: Metrics and HTTP Monitoring MSF4J (Deployable Jar)</name>
 
     <properties>
-        <microservice.resourceClasses>org.wso2.msf4j.example.StockQuoteService</microservice.resourceClasses>
+        <microservice.resourceClasses>org.wso2.carbon.mss.example.service.DemoService</microservice.resourceClasses>
         <mode>thinjar</mode>
     </properties>
-    
+
 </project>
 

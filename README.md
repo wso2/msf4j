@@ -18,7 +18,7 @@ Memory usage for each framework was observed after running the 1KB payload echo 
 sending a number of requests at different concurrency levels to each service. 
 The graph above shows the averaged out values after several runs for each framework. 
 
-More details about the performance test can found [here](perf-comparisons)
+More details about the performance test can found [here](perf-benchmark)
 
 ##Getting Started
 
@@ -28,9 +28,9 @@ Check the following [Hello-Service]
 (samples/helloworld) sample.
 
 ####pom.xml
-This pom file inherits from msf4j-serverless-parent/pom.xml. It provides a way of setting up things quickly with minimum 
+This pom file inherits from msf4j-service/pom.xml. It provides a way of setting up things quickly with minimum 
 amount of 
-configuration. [More info](msf4j-serverless-parent).
+configuration. [More info](msf4j-service).
 
 ```xml
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -164,7 +164,7 @@ Inject additional objects to a resource method. Currently supports injection of 
 * org.wso2.msf4j.HttpResponder - 
     This object can be used to send HTTP responses. You can make responses more clean way by returning an instance of 
     javax.ws.rs.core.Response or a POJO. See the [StockQuote-Service]
-    (https://github.com/wso2/product-msf4j/tree/master/samples/stockquote-service) sample.
+    (https://github.com/wso2/msf4j/tree/master/samples/stockquote/stockquote-thinjar) sample.
 
 #####@PathParam
 /StockQuote/{symbol} to get value of symbol. The value will be automatically converted to the corresponding parameter
@@ -190,7 +190,7 @@ Invoke by the container on newly constructed service instances after all depende
 #####@PreDestroy
 Invoke by the container during server shutdown before the  container removes the service instance.
 
-For detailed example refer lifecycle sample from [here](https://github.com/wso2/product-msf4j/tree/master/samples/lifecycle). 
+For a detailed example check out the lifecycle sample from [here](https://github.com/wso2/msf4j/tree/master/samples/lifecycle). 
 
 
 ###Complete Feature List

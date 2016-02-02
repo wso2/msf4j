@@ -25,7 +25,7 @@
         <relativePath>../../../poms/parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>stockquote-msf4j-bundle</artifactId>
+    <artifactId>stockquote-bundle</artifactId>
     <packaging>bundle</packaging>
 
     <name>Sample: Stockquote microservice (OSGi Bundle)</name>
