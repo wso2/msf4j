@@ -9,7 +9,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.wso2.msf4j.example</groupId>
   <artifactId>metrics-httpmon-fatjar</artifactId>
-  <name>Sample: Metrics and HTTP Monitoring MSF4J (serverless mode)</name>
+  <name>Sample: Metrics and HTTP Monitoring MSF4J (Fat jar mode)</name>
   <build>
     <plugins>
       <plugin>

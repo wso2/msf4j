@@ -1,13 +1,13 @@
 # SimpleStockQuote Executable jar Sample
 
 This sample shows the use of @Produces and @Consumes annotations for bean conversions. In addition to that this 
-demonstrates how to develop a microservice with WSO2 MSF4J in serverless msf4j lite mode.
-See also.. [msf4j deployable jar](../stockquote-msf4j-deployable-jar), [msf4j bundle](../stockquote-msf4j-bundle)
+demonstrates how to develop a microservice with WSO2 MSF4J, create a fat jar & run it.
+See also.. [msf4j deployable jar](../stockquote-msf4j-thinjar), [msf4j bundle](../stockquote-bundle)
 
 ## pom.xml in deployable jar project
 
-You have to inherit from [msf4j-serverless-parent](../../msf4j-serverless-parent) when creating the pom.xml for deployable jars. 
-See details [here](../../msf4j-serverless-parent).
+Your POM can inherit from [msf4j-service](../../poms/msf4j-service) when creating the pom.xml for deployable jars. 
+See details [here](../../poms/msf4j-service).
 
 ### How @Produces work
 

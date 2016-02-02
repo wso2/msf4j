@@ -38,10 +38,10 @@ configuration. [More info](msf4j-service).
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
-        <artifactId>msf4j-serverless-parent</artifactId>
         <groupId>org.wso2.msf4j</groupId>
-        <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../../msf4j-serverless-parent/pom.xml</relativePath>
+        <artifactId>msf4j-servicet</artifactId>
+        <version>1.0.0</version>
+        <relativePath>../../msf4j-service/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
