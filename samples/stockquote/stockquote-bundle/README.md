@@ -1,7 +1,7 @@
 # SimpleStockQuote MSF4J Bundle Sample
 
 This sample demonstrates how to create a microservice as an OSGi bundle.
-See also.. [msf4j lite](../stockquote-thinjar), [msf4j deployable jar](../stockquote-fatjar)
+See also.. [msf4j thinjar](../stockquote-thinjar), [msf4j fatjar](../stockquote-fatjar)
 
 In this sample we have exposed the StockQuoteService as an OSGi service that implements 
 org.wso2.msf4j.Microservice interface as shown in the following code.
