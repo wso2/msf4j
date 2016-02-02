@@ -4,7 +4,7 @@ A thin jar is a jar which contains only the compiled code of the microservice Ma
 
 This sample shows how to develop and deploy a microservice as thin jar on a WSO2 Carbon server runtime.
 
-See also.. [msf4j lite](../stockquote-thinjar), [msf4j bundle](../stockquote-bundle)
+See also; [msf4j fatjar](../stockquote-fatjar), [msf4j bundle](../stockquote-bundle)
 
 ## Writing the pom.xml
 
@@ -26,7 +26,7 @@ To create the OSGi fragment bundle you have to create the following pom.xml
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wso2.msf4j</groupId>
-    <artifactId>deployable-jar-fragment</artifactId>
+    <artifactId>msf4j-core-fragment</artifactId>
     <version>1.0.0</version>
     <packaging>bundle</packaging>
 
@@ -49,7 +49,7 @@ To create the OSGi fragment bundle you have to create the following pom.xml
 
                         <Private-Package>
                         </Private-Package>
-                        <Fragment-Host>org.wso2.msf4j</Fragment-Host>
+                        <Fragment-Host>msf4j-core</Fragment-Host>
                     </instructions>
                 </configuration>
             </plugin>
