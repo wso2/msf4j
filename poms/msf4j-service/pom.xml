@@ -25,15 +25,14 @@
         <relativePath>../parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>msf4j-composite-parent</artifactId>
+    <artifactId>msf4j-service</artifactId>
     <packaging>pom</packaging>
 
     <name>Parent POM for MSF4J Microservices</name>
 
-
     <profiles>
         <profile>
-            <id>msf4j-serverless</id>
+            <id>fatjar</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -98,11 +97,11 @@
             </build>
         </profile>
         <profile>
-            <id>msf4j-jar</id>
+            <id>thinjar</id>
             <activation>
                 <property>
                     <name>mode</name>
-                    <value>msf4j-jar</value>
+                    <value>thinjar</value>
                 </property>
             </activation>
             <dependencies>
