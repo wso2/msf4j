@@ -1,20 +1,22 @@
-# SimpleStockQuote Deployable jar Sample
+# SimpleStockQuote Thin jar Sample
 
-This sample shows how to develop and deploy a microservice as a msf4j deployable jar.
-See also.. [msf4j lite](../stockquote-msf4j-lite), [msf4j bundle](../stockquote-msf4j-bundle)
+A thin jar is a jar which contains only the compiled code of the microservice Maven module.
 
+This sample shows how to develop and deploy a microservice as thin jar on a WSO2 Carbon server runtime.
 
-## pom.xml in deployable jar project
+See also.. [msf4j lite](../stockquote-thinjar), [msf4j bundle](../stockquote-bundle)
 
+## Writing the pom.xml
 
-You have to inherit from [msf4j-jar-parent](../../msf4j-jar-parent) when creating the pom.xml for deployable jars. 
-See details [here](../../msf4j-jar-parent).
+Your POM can inherit from [msf4j-service](../../../poms/msf4j-service). You will need to specify the Maven property, mode
+to have the value thinjar, in order to create a thin jar.
+See details [here](../../../poms/msf4j-service).
 
 
 ## Using classes of other OSGi bundles
 
 
-If you need to use classes of other OSGi bundles in the service classes of a deployable jar you have to 
+If you need to use classes of other OSGi bundles in the service classes of a thin jar you have to 
 create a dummy OSGi fragment bundle as workaround.
 
 To create the OSGi fragment bundle you have to create the following pom.xml
@@ -57,7 +59,7 @@ To create the OSGi fragment bundle you have to create the following pom.xml
 </project>
 ```
 
-In the above pom you can specify the packages that you want to use in the deployable jar. 
+In the above pom you can specify the packages that you want to use in the thin jar. 
 To create the fragment bundle from the above pom run
 ```
 mvn clean install
@@ -86,7 +88,7 @@ Unzip wso2 MSF4J product and navigate to the bin directory. Then run the followi
 ./wso2server.sh
 ```
 
-The copy the target/stockquote-msf4j-deployable-jar-1.0.0-SNAPSHOT.jar to deployment/microservices directory of WSO2 MSF4J.
+The copy the target/stockquote-thinjar-1.0.0.jar to deployment/microservices directory of WSO2 MSF4J.
 Then the jar will be automatically deployed to the server runtime.
 
 

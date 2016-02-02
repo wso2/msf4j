@@ -1,6 +1,7 @@
 # SimpleStockQuote Fat jar Sample
 
-A fat jar is a jar file which includes all the dependencies in one fat (uber) jar.
+A fat jar is a jar file which includes all the dependencies in one fat (uber) jar. This mode of creating a fat jar
+and running it in a Java process is also referred to as server-less execution.
 
 This sample shows the use of @Produces and @Consumes annotations for bean conversions. In addition to that this 
 demonstrates how to develop a microservice with WSO2 MSF4J, create a fat jar & run it.
