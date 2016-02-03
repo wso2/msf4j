@@ -4,7 +4,7 @@ A thin jar is a jar which contains only the compiled code of the microservice Ma
 
 This sample shows how to develop and deploy a microservice as thin jar on a WSO2 Carbon server runtime.
 
-See also; [msf4j fatjar](../stockquote-fatjar), [msf4j bundle](../stockquote-bundle)
+See also; [msf4j fatjar](../fatjar), [msf4j bundle](../bundle)
 
 ## Writing the pom.xml
 

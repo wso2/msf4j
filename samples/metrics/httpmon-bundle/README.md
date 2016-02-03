@@ -1,10 +1,11 @@
-# Metrics and HTTP Monitoring MSF4J Bundle Sample
+# Metrics and HTTP Monitoring MSF4J OSGi Bundle Sample
 
-This sample demonstrates how to create a microservice as an OSGi bundle.
+This sample demonstrates how to create an MSF4J microservice as an OSGi bundle & enable monitoring of HTTP requests.
 
-Please see [Metrics and HTTP Monitoring Executable Jar Sample](../metrics-httpmon-msf4j-lite) for configuring WSO2 Data Analytics Server (DAS) and using annotations.
+Please see [Metrics and HTTP Monitoring Fat Jar Sample](../httpmon-fatjar) for configuring 
+WSO2 Data Analytics Server (DAS) and using annotations.
 
-See also [Metrics and HTTP Monitoring MSF4J Deployable Jar](../metrics-httpmon-msf4j-deployable-jar).
+See also [Metrics and HTTP Monitoring Thin Jar](../httpmon-thinjar).
 
 In this sample we have exposed the DemoService as an OSGi service.
 
@@ -46,11 +47,11 @@ Unzip WSO2 MSF4J product and navigate to the bin directory. Then run the followi
 
 Note that we have passed two parameters to enable Metrics Service and HTTP Monitoring Data Publisher.
 
-Install the target/metrics-httpmon-msf4j-bundle-1.0.0-SNAPSHOT.jar as an OSGi bundle to WSO2 MSF4J product using it's 
+Install the target/metrics-httpmon-bundle-1.0.0.jar as an OSGi bundle to WSO2 MSF4J product using it's 
 OSGi console with the following command.
 
 ```
-install file://<path to target directory>/metrics-httpmon-msf4j-bundle-1.0.0-SNAPSHOT.jar
+install file://<path to target directory>/metrics-httpmon-bundle-1.0.0.jar
 ```
 
 When the installation of the bundle is successful, use the bundle ID of the installed bundle to start  
@@ -64,7 +65,7 @@ When the bundle is started, the microservice that is exposed as an OSGi service 
 will be exposed as a REST service.
 
 ### Using dropins directory
-Unzip WSO2 MSF4J product and copy target/metrics-httpmon-msf4j-bundle-1.0.0-SNAPSHOT.jar bundle to the 
+Unzip WSO2 MSF4J product and copy target/metrics-httpmon-bundle-1.0.0.jar bundle to the 
 "[SERVER-HOME]/osgi/dropins" directory.
 
 Then navigate to the bin directory and run the following command to start WSO2 MSF4J server.

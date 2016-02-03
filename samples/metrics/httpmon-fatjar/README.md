@@ -1,6 +1,8 @@
-# Metrics and HTTP Monitoring Executable Jar Sample
+# Metrics and HTTP Monitoring Fat Jar Sample
 
-This sample shows the use of Metrics Interceptor and HTTP Monitoring Interceptor with MicroservicesRunner. See also [Metrics and HTTP Monitoring MSF4J Deployable Jar](../metrics-httpmon-msf4j-deployable-jar) and [Metrics and HTTP Monitoring MSF4J Bundle](../metrics-httpmon-msf4j-bundle)
+This sample shows the use of Metrics Interceptor and HTTP Monitoring Interceptor with MicroservicesRunner. 
+See also [Metrics and HTTP Monitoring MSF4J Thin Jar](../httpmon-thinjar) and
+ [Metrics and HTTP Monitoring MSF4J Bundle](../httpmon-bundle)
 
 HTTP Monitoring events are published to WSO2 Data Analytics Server (DAS). Metrics can also be published to WSO2 DAS
 
@@ -192,7 +194,7 @@ events for each request.
 Use following command to run the application
 
 ```
-java -DMETRICS_REPORTING_DAS_DATAAGENTCONFIGPATH="data-agent-conf.xml" -DHTTP_MONITORING_DAS_DATAAGENTCONFIGPATH="data-agent-conf.xml" -jar target/metrics-httpmon-msf4j-lite*.jar
+java -DMETRICS_REPORTING_DAS_DATAAGENTCONFIGPATH="data-agent-conf.xml" -DHTTP_MONITORING_DAS_DATAAGENTCONFIGPATH="data-agent-conf.xml" -jar target/metrics-httpmon-fatjar*.jar
 ```
 
 You can also run as follows.
@@ -200,7 +202,7 @@ You can also run as follows.
 ```
 export METRICS_REPORTING_DAS_DATAAGENTCONFIGPATH="data-agent-conf.xml"
 export HTTP_MONITORING_DAS_DATAAGENTCONFIGPATH="data-agent-conf.xml"
-java -jar target/metrics-httpmon-msf4j-lite*.jar
+java -jar target/metrics-httpmon-fatjar*.jar
 ```
 
 

@@ -6,7 +6,7 @@ and running it in a Java process is also referred to as server-less execution.
 This sample shows the use of @Produces and @Consumes annotations for bean conversions. In addition to that this 
 demonstrates how to develop a microservice with WSO2 MSF4J, create a fat jar & run it.
 
-See also; [msf4j thin jar](../stockquote-thinjar), [msf4j bundle](../stockquote-bundle)
+See also; [msf4j thin jar](../thinjar), [msf4j bundle](../bundle)
 
 ## Writing the pom.xml 
 
