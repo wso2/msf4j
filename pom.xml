@@ -111,11 +111,9 @@
         <module>poms/msf4j-service</module>
         <module>samples/helloworld</module>
         <module>samples/stockquote/fatjar</module>
-        <module>samples/stockquote/thinjar</module>
         <module>samples/stockquote/bundle</module>
         <module>samples/security</module>
         <module>samples/metrics/httpmon-fatjar</module>
-        <module>samples/metrics/httpmon-thinjar</module>
         <module>samples/metrics/httpmon-bundle</module>
         <module>samples/petstore</module>
         <module>samples/fileserver</module>

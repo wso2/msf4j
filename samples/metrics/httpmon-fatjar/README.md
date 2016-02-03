@@ -1,8 +1,7 @@
 # Metrics and HTTP Monitoring Fat Jar Sample
 
 This sample shows the use of Metrics Interceptor and HTTP Monitoring Interceptor with MicroservicesRunner. 
-See also [Metrics and HTTP Monitoring MSF4J Thin Jar](../httpmon-thinjar) and
- [Metrics and HTTP Monitoring MSF4J Bundle](../httpmon-bundle)
+See also [Metrics and HTTP Monitoring MSF4J Bundle](../httpmon-bundle)
 
 HTTP Monitoring events are published to WSO2 Data Analytics Server (DAS). Metrics can also be published to WSO2 DAS
 

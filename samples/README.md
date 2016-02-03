@@ -9,9 +9,8 @@ This directory contain a comprehensive suite of samples demonstrating the capabi
 #Samples
 * [Hello World](helloworld) - Running a Basic Microservice
 * [StockQuote (Fat jar)](stockquote/stockquote-fatjar) - Developing a Microservice in Lite Mode
-* [StockQuote (Thin jar)](stockquote/stockquote-thinjar) - Developing a Microservice as a Deployable JAR
 * [StockQuote (OSGi bundle)](stockquote/stockquote-bundle) - Creating a Microservice as an OSGi Bundle
-* [Metrics fat jar](metrics/metrics-httpmon-fatjar) / [Deployable thin jar](metrics/metrics-httpmon-thinjar) / [OSGi bundle](metrics/metrics-httpmon-bundle) - Using Metrics and HTTP Monitoring Interceptors
+* [Metrics fat jar](metrics/metrics-httpmon-fatjar) / [OSGi bundle](metrics/metrics-httpmon-bundle) - Using Metrics and HTTP Monitoring Interceptors
 * [File Server](fileserver) - Handling Files
 * [Lifecycle](lifecycle) - Using Service Lifecycle Methods
 * [Log-interceptor](log-interceptor-bundle) - Creating an Interceptor as an OSGi Bundle

@@ -164,7 +164,7 @@ Inject additional objects to a resource method. Currently supports injection of 
 * org.wso2.msf4j.HttpResponder - 
     This object can be used to send HTTP responses. You can make responses more clean way by returning an instance of 
     javax.ws.rs.core.Response or a POJO. See the [StockQuote-Service]
-    (https://github.com/wso2/msf4j/tree/master/samples/stockquote/stockquote-thinjar) sample.
+    (https://github.com/wso2/msf4j/tree/master/samples/stockquote/fatjar) sample.
 
 #####@PathParam
 /StockQuote/{symbol} to get value of symbol. The value will be automatically converted to the corresponding parameter
