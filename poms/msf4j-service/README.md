@@ -1,7 +1,7 @@
 # WSO2 MSF4J - Parent POM for Microservices
 
 This parent POM file makes life easy for developers who write microservices using WSO2 MSF4J. The following example
-from the [stockquote-msf4j-lite](../samples/stockquote/fatjar) microservice example, 
+from the [stockquote-fatjar](../samples/stockquote/fatjar) microservice example, 
 demonstrates how to quickly write a POM for your microservice using the
 MSF4J Service Parent POM.
 
@@ -18,11 +18,10 @@ MSF4J Service Parent POM.
     </parent>
 
     <groupId>org.wso2.msf4j.example</groupId>
-    <artifactId>stockquote-msf4j-lite</artifactId>
+    <artifactId>stockquote-fatjar</artifactId>
     <packaging>jar</packaging>
 
-    <name>StockQuote MSF4J Lite</name>
-    <name>Executable Jar Microservice Sample</name>
+    <name>StockQuote Service</name>
 
     <properties>
         <microservice.mainClass>org.wso2.msf4j.example.StockQuoteService</microservice.mainClass>
