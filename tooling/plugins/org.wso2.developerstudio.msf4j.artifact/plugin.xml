@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<!--
+  ~ Copyright (c) 2016, WSO2 Inc. (http://wso2.com) All Rights Reserved.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<plugin>
+
+    <extension point="org.eclipse.ui.newWizards">
+        <category name="Service Hosting" id="org.wso2.developerstudio.eclipse.service.hosting.msf4j"
+                  parentCategory="org.wso2.developerstudio.eclipse.capp.project">
+        </category>
+        <wizard name="MSF4J Project"
+                category="org.wso2.developerstudio.eclipse.capp.project/org.wso2.developerstudio.eclipse.service.hosting.msf4j"
+                class="org.wso2.developerstudio.msf4j.artifact.ui.wizard.MSF4JProjectCreationWizard"
+                wizardManifest="project_wizard.xml"
+                id="org.wso2.developerstudio.msf4j.artifact.newmsf4jartifact"
+                descriptionImage="icons/msf4j-wizard.png"
+                project="true" icon="icons/msf4j.png">
+            <description>MSF4J Project</description>
+        </wizard>
+    </extension>
+
+    <extension point="org.wso2.developerstudio.eclipse.platform.core.intro.ui.dashboard">
+        <wizardCategory category="org.wso2.developerstudio.eclipse.service.hosting.msf4j"/>
+        <category id="dashboard.category.msf4j" showTitle="true"
+                  title="MSF4J"
+                  priority="8">
+        </category>
+        <wizardLink category="dashboard.category.msf4j" id="1dashboard.wizardLink.msf4j"
+                    wizard="org.wso2.developerstudio.msf4j.artifact.newmsf4jartifact"
+                    priority="1">
+        </wizardLink>
+    </extension>
+
+    <extension point="org.eclipse.core.resources.natures"
+               id="org.wso2.developerstudio.eclipse.msf4j.project.nature" name="MSF4J Project Nature">
+        <runtime>
+            <run class="org.wso2.developerstudio.msf4j.artifact.project.nature.MSF4JArtifactProjectNature"/>
+        </runtime>
+    </extension>
+
+    <extension point="org.eclipse.ui.ide.projectNatureImages">
+        <image id="org.wso2.developerstudio.eclipse.msf4j.project.natureImage"
+               natureId="org.wso2.developerstudio.eclipse.msf4j.project.nature" icon="icons/msf4j-nature.png">
+        </image>
+    </extension>
+
+</plugin>

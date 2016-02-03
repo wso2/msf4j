@@ -17,14 +17,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.wso2.developerstudio.mss</groupId>
-        <artifactId>mss-tool-parent</artifactId>
+        <groupId>org.wso2.developerstudio.msf4j</groupId>
+        <artifactId>msf4j-tool-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>wso2-developer-studio-mss-tool-p2-parent</artifactId>
+    <artifactId>wso2-developer-studio-msf4j-tool-p2-parent</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Developer Studio - MSS-Tools P2 Repositories</name>
+    <name>WSO2 Developer Studio - MSF4J-Tools P2 Repositories</name>
     <url>http://wso2.org</url>
     <modules>
 	<module>main</module>

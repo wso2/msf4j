@@ -19,15 +19,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   
     <modelVersion>4.0.0</modelVersion><parent>
-        <groupId>org.wso2.developerstudio.mss</groupId>
-        <artifactId>mss-tool-parent</artifactId>
+        <groupId>org.wso2.developerstudio.msf4j</groupId>
+        <artifactId>msf4j-tool-parent</artifactId>
     	<version>1.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>wso2-developer-studio-eclipse-mss-installed-distributions</artifactId>
+    <artifactId>wso2-developer-studio-eclipse-msf4j-installed-distributions</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Developer Studio MSS Tools Installed Eclipse Distributions</name>
+    <name>WSO2 Developer Studio MSF4J Tools Installed Eclipse Distributions</name>
     <repositories>
     	<repository>
     		<id>wso2-maven2-repo</id>
@@ -55,8 +55,8 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                   <groupId>org.wso2.developerstudio.mss</groupId>
-    		   <artifactId>mss-tool-parent</artifactId>
+                   <groupId>org.wso2.developerstudio.msf4j</groupId>
+    		   <artifactId>msf4j-tool-parent</artifactId>
     		   <version>1.0.0-SNAPSHOT</version>
                 <type>zip</type>
             </dependency>

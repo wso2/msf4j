@@ -20,16 +20,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>    
     <parent>
-        <groupId>org.wso2.developerstudio.mss</groupId>
-        <artifactId>wso2-developer-studio-eclipse-mss-installed-distributions</artifactId>
+        <groupId>org.wso2.developerstudio.msf4j</groupId>
+        <artifactId>wso2-developer-studio-eclipse-msf4j-installed-distributions</artifactId>
         <version>1.0.0-SNAPSHOT</version>
 	<relativePath>../pom.xml</relativePath>
     </parent>
-    <groupId>org.wso2.developerstudio.mss</groupId>
+    <groupId>org.wso2.developerstudio.msf4j</groupId>
 
     <artifactId>developer-studio-eclipse-jee-luna-macosx-cocoa-x86_64</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Developer Studio Eclipse MSS Tools distribution-macosx-cocoa-x86_64</name>
+    <name>WSO2 Developer Studio Eclipse MSF4J Tools distribution-macosx-cocoa-x86_64</name>
     <url>http://wso2.org</url>
     <repositories>
     	<repository>
@@ -84,8 +84,8 @@
                                     <outputDirectory>target</outputDirectory>
                                 </artifactItem>
                                 <artifactItem>
-                                    <groupId>org.wso2.developerstudio.mss</groupId>
-                                    <artifactId>wso2-developer-studio-mss-tool-p2-composite</artifactId>
+                                    <groupId>org.wso2.developerstudio.msf4j</groupId>
+                                    <artifactId>wso2-developer-studio-msf4j-tool-p2-composite</artifactId>
 				    <version>1.0.0-SNAPSHOT</version>
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
@@ -116,19 +116,11 @@
 						<arg value="-application" />
 						<arg value="org.eclipse.equinox.p2.director" />
 						<arg value="-repository" />
-						<arg value="file:${project.basedir}/target/p2-repo,http://product-dist.wso2.com/p2/developer-studio-kernel/4.0.0/kernel/releases/main/" />
+						<arg value="file:${project.basedir}/target/p2-repo" />
 						<arg value="-destination" />
 						<arg value="${project.basedir}/target/eclipse" />
-						<arg value="-installIU" />						
-						<arg value="org.wso2.developerstudio.kernel.core.feature.feature.group" />
 						<arg value="-installIU" />
-						<arg value="org.wso2.developerstudio.kernel.core.ui.feature.feature.group" />
-						<arg value="-installIU" />
-						<arg value="org.wso2.developerstudio.kernel.tools.feature.feature.group" />
-						<arg value="-installIU" />
-						<arg value="org.wso2.developerstudio.kernel.utils.feature.feature.group" />
-						<arg value="-installIU" />
-						<arg value="org.wso2.developerstudio.mss.feature.feature.group"/>
+						<arg value="Q:everything.select(x | x.properties ~= filter('(org.eclipse.equinox.p2.type.group=true)'))"/>
 					</java>
 					</tasks>
 				</configuration>
