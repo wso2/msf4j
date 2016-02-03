@@ -82,6 +82,10 @@
             <groupId>org.wso2.msf4j</groupId>
             <artifactId>msf4j-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.msf4j</groupId>
+            <artifactId>jaxrs-delegates</artifactId>
+        </dependency>
         <!-- Metrics Dependencies - Start -->
         <dependency>
             <groupId>org.wso2.carbon.metrics</groupId>
@@ -171,6 +175,10 @@
                             <bundles>
                                 <bundle>
                                     <symbolicName>msf4j-core</symbolicName>
+                                    <version>${msf4j.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>jaxrs-delegates</symbolicName>
                                     <version>${msf4j.version}</version>
                                 </bundle>
                                 <bundle>
