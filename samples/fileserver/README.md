@@ -55,12 +55,12 @@ requests in a zero copy manner.
     }
 ```
 
-In the above example the when request chunks arrive, chunk() method is called. When the last chunk is arrived the 
+In the above example when the request chunks arrive, chunk() method is called. When the last chunk is arrived the 
 finished() method is called. error() method will be called if an error occurs while processing the request.
 
 
 ### 2. Handle requests by aggregating chunks 
-Second way of handling chunked requests is to implement a normal resource method to handle the request ignoring the 
+Second way of handling chunked requests is to implement a normal resource method to handle the request ignoring 
 whether the requests is chunked as shown in the below example. In this case MSF4J internally 
 aggregates all the chunks of the request and presents it as a full http request to the resource method.
 

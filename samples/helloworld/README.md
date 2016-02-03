@@ -1,6 +1,6 @@
 # Hello Service Sample
 
-This is the MSF4J Server Hello World sample
+This is the MSF4J Hello World sample
 
 ## How to build the sample
 
