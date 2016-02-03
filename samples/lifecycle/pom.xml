@@ -24,8 +24,9 @@
         <relativePath>../../poms/msf4j-service/pom.xml</relativePath>
     </parent>
 
+    <groupId>org.wso2.msf4j.sample</groupId>
     <artifactId>lifecycle</artifactId>
-    <packaging>jar</packaging>
+
     <name>Sample: MSF4J Microservice Lifecycle Management</name>
     <description>Demonstrates how to use service lifecycle methods in microservices in WSO2 MSF4J</description>
 

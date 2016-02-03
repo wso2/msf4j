@@ -1,6 +1,6 @@
 # Security Sample
 
-This sample shows how to secure microservices deployed on WSO2 MSF4J using OAuth2.
+This sample shows how to secure microservices deployed in WSO2 MSF4J using OAuth2.
 
 ## Setting up the Authorization Server.
 

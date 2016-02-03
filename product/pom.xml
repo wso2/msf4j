@@ -58,12 +58,6 @@
             <version>${msf4j.version}</version>
             <type>zip</type>
         </dependency>
-        <dependency>
-            <groupId>org.wso2.msf4j</groupId>
-            <artifactId>org.wso2.carbon.spi.fly.feature</artifactId>
-            <version>${msf4j.version}</version>
-            <type>zip</type>
-        </dependency>
     </dependencies>
 
     <build>
@@ -133,10 +127,6 @@
                                     <id>org.wso2.msf4j.feature</id>
                                     <version>${msf4j.version}</version>
                                 </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.spi.fly.feature</id>
-                                    <version>${msf4j.version}</version>
-                                </feature>
                             </features>
                         </configuration>
                     </execution>
@@ -195,10 +185,6 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.msf4j.feature.group</id>
-                                    <version>${msf4j.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.spi.fly.feature</id>
                                     <version>${msf4j.version}</version>
                                 </feature>
                             </features>

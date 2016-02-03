@@ -27,7 +27,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.wso2.msf4j.example</groupId>
+    <groupId>org.wso2.msf4j.sample</groupId>
     <artifactId>fileserver</artifactId>
 
     <name>Sample: File server Microservice</name>

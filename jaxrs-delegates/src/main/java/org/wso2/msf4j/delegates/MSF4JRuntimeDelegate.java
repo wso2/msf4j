@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.msf4j.internal.router;
+package org.wso2.msf4j.delegates;
 
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Link;
