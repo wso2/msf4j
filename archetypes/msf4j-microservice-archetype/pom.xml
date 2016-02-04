@@ -14,29 +14,4 @@
     <name>WSO2 MSF4J - Microservice Archetype</name>
     <description>This an archetype for a microservice based on WSO2 MSF4J</description>
 
-    <build>
-        <resources>
-            <resource>
-                <directory>${project.basedir}/src/main/resources</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>**/*</include>
-                </includes>
-            </resource>
-        </resources>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <configuration>
-
-                    <delimiters>
-                        <delimiter>^*^</delimiter>
-                    </delimiters>
-                    <useDefaultDelimiters>false</useDefaultDelimiters>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
 </project>
