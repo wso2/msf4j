@@ -108,11 +108,11 @@ public class Application {
 
 
 ###Build the Service
-Run the following Maven command. This will create the uber jar **Hello-Service-1.0.0-SNAPSHOT.jar** in the **target** directory.
+Run the following Maven command. This will create the fat jar **Hello-Service-1.0.0-SNAPSHOT.jar** in the **target** directory.
 ```
 mvn package
 ```
-
+This fat jar is a jar file that contains your microservice as well as all its dependencies.
 
 ###Run the Service
 You just have to run the following command to get your service up and running.
@@ -132,7 +132,8 @@ You should see a response that prints "Hello wso2"
 
 ##Supported Annotations
 
-For defining services, we support a subset of the JAXRS annotations.
+In this section, we will look at the annotations used in MSF4J microservices. As you may have already noticed,
+ we support a subset of the JAXRS annotations.
 
 ###Class level annotations
 #####@Path
