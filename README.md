@@ -122,10 +122,10 @@ java -jar target/Hello-Service-*.jar
 
 
 ###Test the Service with cURL
-Run the following command or simply go to [http://localhost:8080/hello/Microservices]
+Run the following command or simply go to [http://localhost:8080/hello/wso2]
 (http://localhost:8080/hello/wso2) from your browser.
 ```
-curl [http://localhost:8080/hello/wso2](http://localhost:8080/hello/wso2)
+curl http://localhost:8080/hello/wso2
 ```
 
 You should see a response that prints "Hello wso2"
