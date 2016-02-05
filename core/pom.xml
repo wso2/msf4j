@@ -295,6 +295,7 @@
         <private.package>org.wso2.msf4j.internal.*,</private.package>
         <export.package>
             !org.wso2.msf4j.internal.*,
+            !org.wso2.msf4j.delegates.*,
             org.wso2.msf4j.*;version="1.0.0",
         </export.package>
         <import.package>
