@@ -1,7 +1,7 @@
 # Metrics and HTTP Monitoring Fat Jar Sample
 
 This sample shows the use of Metrics Interceptor and HTTP Monitoring Interceptor with MicroservicesRunner. 
-See also [Metrics and HTTP Monitoring MSF4J Bundle](../httpmon-bundle).
+See also [Metrics and HTTP Monitoring MSF4J Bundle](../metrics-httpmon-bundle).
 
 HTTP Monitoring events are published to WSO2 Data Analytics Server (DAS). Metrics can also be published to WSO2 DAS.
 
@@ -226,15 +226,12 @@ curl -v http://localhost:8080/student
 
 ```
 
-Console Output
-
+**Console Output**
 
 After running the above cURL commands, you should see the metrics output to the console periodically.
 
 
-Analytics Dashboard in WSO2 Data Analytics Server
-
-
+**Analytics Dashboard in WSO2 Data Analytics Server**
 
 The HTTP Monitoring events sent by this sample can be seen from the HTTP Monitoring Dashboard in WSO2 DAS.
 You can access the dashboard from [http://localhost:9763/monitoring/](http://localhost:9763/monitoring/).

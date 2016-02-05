@@ -21,7 +21,7 @@ From DAS_HOME, run, bin/wso2server.sh to start DAS and make sure that it starts 
 
 Run a sample that publishes data to DAS
 ------------------------------------------
-Run the [metrics sample](https://github.com/wso2/product-msf4j/tree/master/samples/metrics)
+Run the [Metrics and HTTP Monitoring Sample](../samples/metrics-httpmon/metrics-httpmon-fatjar)
 included in the distribution. This sample will publish data to DAS.
 
 Accessing the dashboard

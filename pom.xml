@@ -112,8 +112,8 @@
         <module>samples/stockquote/fatjar</module>
         <module>samples/stockquote/bundle</module>
         <module>samples/security</module>
-        <module>samples/metrics/httpmon-fatjar</module>
-        <module>samples/metrics/httpmon-bundle</module>
+        <module>samples/metrics-httpmon/metrics-httpmon-fatjar</module>
+        <module>samples/metrics-httpmon/metrics-httpmon-bundle</module>
         <module>samples/petstore</module>
         <module>samples/fileserver</module>
         <module>samples/template</module>
