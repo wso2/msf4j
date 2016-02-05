@@ -12,7 +12,7 @@ Following are the properties you need to pass in your command which describe the
 
 To read more on what other properties you can use when generating a project from an archetype please refer [1]
 
-Following are the properties you need to pass in your command which describe project you are creating using
+Following are the properties you need to pass in your command which describe the project you are creating using
 this archetype.
 
 | Property   | Description                          | Default value               |
