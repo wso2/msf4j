@@ -24,7 +24,7 @@ import org.wso2.carbon.metrics.annotation.Timed;
 import org.wso2.msf4j.HttpResponder;
 import org.wso2.msf4j.HttpStreamHandler;
 import org.wso2.msf4j.HttpStreamer;
-import org.wso2.msf4j.httpmonitoring.HTTPMonitoring;
+import org.wso2.msf4j.httpmonitoring.HTTPMonitored;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -43,7 +43,7 @@ import javax.ws.rs.core.Response;
  * FileServer service class. This uses request streaming
  * to save the submitted files in the server.
  */
-@HTTPMonitoring
+@HTTPMonitored
 @Path("/")
 public class FileServerService {
 

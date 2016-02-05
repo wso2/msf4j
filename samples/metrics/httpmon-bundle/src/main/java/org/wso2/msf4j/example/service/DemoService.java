@@ -22,7 +22,7 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.wso2.carbon.metrics.annotation.Counted;
 import org.wso2.carbon.metrics.annotation.Metered;
 import org.wso2.carbon.metrics.annotation.Timed;
-import org.wso2.msf4j.httpmonitoring.HTTPMonitoring;
+import org.wso2.msf4j.httpmonitoring.HTTPMonitored;
 import org.wso2.msf4j.Microservice;
 
 import java.util.Random;
@@ -35,7 +35,7 @@ import javax.ws.rs.PathParam;
  * Demonstrating the use of Metrics & HTTP Monitoring Annotations
  */
 @Path("/demo-bundle")
-@HTTPMonitoring
+@HTTPMonitored
 @Component(
         name = "org.wso2.msf4j.example.service.DemoService",
         service = Microservice.class,

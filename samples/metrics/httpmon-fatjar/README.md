@@ -63,14 +63,14 @@ new MicroservicesRunner()
 
 ### HTTP Monitoring Annotation
 
-Use @HTTPMonitoring annotation when you want to monitor each HTTP request. 
+Use @HTTPMonitored annotation when you want to monitor each HTTP request. 
 
 
 See following example for using the annotation in the Class level.
 
 ```java
 @Path("/demo")
-@HTTPMonitoring
+@HTTPMonitored
 public class DemoService {
 
 }
@@ -83,7 +83,7 @@ See following example for using the annotation in the Method level
     @GET
     @Path("/{nic}")
     @Produces("application/json")
-    @HTTPMonitoring
+    @HTTPMonitored
     public Student getStudent(@PathParam("nic") String nic) {
         return students.get(nic);
     }
