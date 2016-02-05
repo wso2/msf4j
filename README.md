@@ -37,6 +37,7 @@ mvn archetype:generate -DarchetypeGroupId=org.wso2.msf4j \
 -Dpackage=org.example.service -DserviceClass=HelloService
 ```
 
+This will generate a project structure for you to quickly get started.
 Next navigate to the Hello-Service directory. You will find a pom.xml file and also an src directory.
 
 ####pom.xml
@@ -68,11 +69,12 @@ configuration. Click [here](poms/msf4j-service) for more information.
 </project>
 ```
 
+You don't need to change anything in this pom.xml file.
+
+####HelloService.java
 Change the org.example.service.HelloService class as follows to echo back the name input parameter. 
 You can remove the auto generated code and replace it with the following code segment:
 
-####HelloService.java
-This is the hello service implementation that uses JAX-RS annotations.
 ```java
 package org.example.service; 
 
