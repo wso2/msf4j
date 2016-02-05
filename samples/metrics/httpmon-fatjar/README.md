@@ -1,9 +1,9 @@
 # Metrics and HTTP Monitoring Fat Jar Sample
 
 This sample shows the use of Metrics Interceptor and HTTP Monitoring Interceptor with MicroservicesRunner. 
-See also [Metrics and HTTP Monitoring MSF4J Bundle](../httpmon-bundle)
+See also [Metrics and HTTP Monitoring MSF4J Bundle](../httpmon-bundle).
 
-HTTP Monitoring events are published to WSO2 Data Analytics Server (DAS). Metrics can also be published to WSO2 DAS
+HTTP Monitoring events are published to WSO2 Data Analytics Server (DAS). Metrics can also be published to WSO2 DAS.
 
 ### Metrics Annotations
 
@@ -14,7 +14,7 @@ Use @Timed to keep a histogram of durations of each method invocation.
 
 The @Metered annotation also keeps a count. The @Timed annotation keeps the count and rate of events as well.
 
-See following example:
+See the following example:
 
 ```java
 @Path("/demo")
@@ -63,10 +63,10 @@ new MicroservicesRunner()
 
 ### HTTP Monitoring Annotation
 
-Use @HTTPMonitoring annotation when you want to monitor each HTTP request. 
+Use the @HTTPMonitoring annotation when you want to monitor each HTTP request. 
 
 
-See following example for using the annotation in the Class level.
+See the following example to use the annotation at the Class level.
 
 ```java
 @Path("/demo")
@@ -76,7 +76,7 @@ public class DemoService {
 }
 ```
 
-See following example for using the annotation in the Method level
+See the following example to use the annotation at the Method level.
 
 
 ```java
@@ -105,8 +105,8 @@ mvn clean install
 
 ## How to run the sample
 
-You must configure WSO2 Data Analytics Server (DAS) first and run it to recieve the events published by this sample.
-Please refer the [analytics documentation](../../analytics) 
+You must first configure WSO2 Data Analytics Server (DAS) and run it in order to recieve the events published by this sample.
+Please refer the [analytics documentation](../../../analytics) 
 for more information on configuring WSO2 DAS.
 
 For "Metrics Interceptor", there are several reporters supported.
@@ -181,7 +181,7 @@ export HTTP_MONITORING_DAS_PASSWORD="admin"
 export HTTP_MONITORING_DAS_DATAAGENTCONFIGPATH="data-agent-conf.xml"
 ```
 
-Here also the `HTTP_MONITORING_DAS_DATAAGENTCONFIGPATH` is a required configuration and others have default values.
+Here, the `HTTP_MONITORING_DAS_DATAAGENTCONFIGPATH` is a required configuration as well, and the other configurations have default values.
 
 ## Running the sample
 
@@ -190,13 +190,13 @@ polling metrics from the metric registry and reporting to Console and WSO2 DAS. 
 events for each request.
 
 
-Use following command to run the application
+Use the following command to run the application,
 
 ```
 java -DMETRICS_REPORTING_DAS_DATAAGENTCONFIGPATH="data-agent-conf.xml" -DHTTP_MONITORING_DAS_DATAAGENTCONFIGPATH="data-agent-conf.xml" -jar target/metrics-httpmon-fatjar*.jar
 ```
 
-You can also run as follows.
+You can also run the following,
 
 ```
 export METRICS_REPORTING_DAS_DATAAGENTCONFIGPATH="data-agent-conf.xml"
@@ -209,7 +209,7 @@ java -jar target/metrics-httpmon-fatjar*.jar
 
 
 
-Use following cURL commands.
+Use the following cURL commands.
 ```
 curl -v http://localhost:8080/demo/rand/500
 
@@ -230,7 +230,7 @@ curl -v http://localhost:8080/student
 Console Output
 
 
-After running the above cURL commands, you should see metrics output to the console periodically.
+After running the above cURL commands, you should see the metrics output to the console periodically.
 
 
 Analytics Dashboard in WSO2 Data Analytics Server
@@ -238,4 +238,4 @@ Analytics Dashboard in WSO2 Data Analytics Server
 
 
 The HTTP Monitoring events sent by this sample can be seen from the HTTP Monitoring Dashboard in WSO2 DAS.
-You can access the dashboard from [http://localhost:9763/monitoring/](http://localhost:9763/monitoring/)
+You can access the dashboard from [http://localhost:9763/monitoring/](http://localhost:9763/monitoring/).
