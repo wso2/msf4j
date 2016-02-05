@@ -96,8 +96,8 @@ class HttpMethodInfo {
             //sending return value as output
             new HttpMethodResponseHandler()
                     .setResponder(responder)
-                    .setEntity(returnVal)
                     .setMediaType(mediaType)
+                    .setEntity(returnVal)
                     .send();
         } catch (InvocationTargetException e) {
             log.error("Resource method threw an exception", e);
