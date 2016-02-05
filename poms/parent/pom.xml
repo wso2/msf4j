@@ -59,6 +59,11 @@
                 <artifactId>wagon-ssh</artifactId>
                 <version>${maven.wagon.ssh.version}</version>
             </extension>
+            <extension>
+                <groupId>org.apache.maven.archetype</groupId>
+                <artifactId>archetype-packaging</artifactId>
+                <version>${maven.archetype.version}</version>
+            </extension>
         </extensions>
         <pluginManagement>
             <plugins>
@@ -167,6 +172,11 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-gpg-plugin</artifactId>
                     <version>${maven.gpgplugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-archetype-plugin</artifactId>
+                    <version>${maven.archetype.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -469,6 +479,7 @@
         <maven.jacocoplugin.version>0.7.1.201405082137</maven.jacocoplugin.version>
         <maven.sourceplugin.version>2.2.1</maven.sourceplugin.version>
         <maven.gpgplugin.version>1.5</maven.gpgplugin.version>
+        <maven.archetype.version>2.4</maven.archetype.version>
 
         <!-- Dependencies -->
         <carbon.kernel.version>5.0.0</carbon.kernel.version>
