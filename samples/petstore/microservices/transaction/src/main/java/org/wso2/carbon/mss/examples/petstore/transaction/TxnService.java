@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.wso2.carbon.metrics.annotation.Timed;
 import org.wso2.msf4j.examples.petstore.util.JedisUtil;
 import org.wso2.msf4j.examples.petstore.util.model.Order;
-import org.wso2.msf4j.httpmonitoring.HTTPMonitoring;
+import org.wso2.msf4j.httpmonitoring.HTTPMonitored;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ import javax.ws.rs.core.Response;
 /**
  * Transaction microservice.
  */
-@HTTPMonitoring
+@HTTPMonitored
 @Path("/transaction")
 public class TxnService {
     private static final Logger log = LoggerFactory.getLogger(TxnService.class);

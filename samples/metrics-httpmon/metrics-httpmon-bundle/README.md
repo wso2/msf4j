@@ -2,7 +2,7 @@
 
 This sample demonstrates how to create an MSF4J microservice as an OSGi bundle & enable monitoring of HTTP requests.
 
-Please see [Metrics and HTTP Monitoring Fat Jar Sample](../httpmon-fatjar) for configuring 
+Please see [Metrics and HTTP Monitoring Fat Jar Sample](../metrics-httpmon-fatjar) for configuring 
 WSO2 Data Analytics Server (DAS) and using annotations.
 
 In this sample we have exposed the DemoService as an OSGi service.

@@ -18,3 +18,6 @@ target
 .project
 *.i??
 .idea
+
+# Ignore dependency-reduced-pom.xml file created by Apache Maven Shade Plugin, see https://maven.apache.org/plugins/maven-shade-plugin/shade-mojo.html
+dependency-reduced-pom.xml

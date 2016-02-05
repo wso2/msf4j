@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.wso2.carbon.metrics.annotation.Timed;
 import org.wso2.msf4j.examples.petstore.util.JedisUtil;
 import org.wso2.msf4j.examples.petstore.util.model.Category;
-import org.wso2.msf4j.httpmonitoring.HTTPMonitoring;
+import org.wso2.msf4j.httpmonitoring.HTTPMonitored;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -36,7 +36,7 @@ import javax.ws.rs.core.Response;
 /**
  * Pet category microservice.
  */
-@HTTPMonitoring
+@HTTPMonitored
 @Path("/category")
 public class PetCategoryService {
     private static final Logger log = LoggerFactory.getLogger(PetCategoryService.class);
