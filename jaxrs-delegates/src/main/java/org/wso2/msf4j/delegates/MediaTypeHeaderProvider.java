@@ -22,8 +22,17 @@ package org.wso2.msf4j.delegates;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.RuntimeDelegate.HeaderDelegate;
 
+/**
+ * Provides conversions from MediaTypes to String and String to MediaType.
+ */
 public class MediaTypeHeaderProvider implements HeaderDelegate<MediaType> {
 
+    /**
+     * Convert a string media type to a MediaType object.
+     *
+     * @param mType media type string
+     * @return MediaType object
+     */
     public MediaType fromString(String mType) {
         if (mType == null) {
             throw new IllegalArgumentException("Media type value can not be null");
@@ -44,6 +53,12 @@ public class MediaTypeHeaderProvider implements HeaderDelegate<MediaType> {
                 subtype.trim().toLowerCase());
     }
 
+    /**
+     * Convert a media type object to a string.
+     *
+     * @param type MediaType object
+     * @return string media type
+     */
     public String toString(MediaType type) {
         if (type == null) {
             throw new IllegalArgumentException("MediaType can not be null");

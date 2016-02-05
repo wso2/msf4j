@@ -51,7 +51,8 @@ public class MediaTypeHeaderProviderTest extends Assert {
     @Test
     public void testTypeWithExtendedAndBoundaryParameter() {
         MediaType mt = MediaType.valueOf(
-                "multipart/related; type=application/dicom+xml; boundary=\"uuid:b9aecb2a-ab37-48d6-a1cd-b2f4f7fa63cb\"");
+                "multipart/related; type=application/dicom+xml; " +
+                        "boundary=\"uuid:b9aecb2a-ab37-48d6-a1cd-b2f4f7fa63cb\"");
         assertEquals("multipart", mt.getType());
         assertEquals("related", mt.getSubtype());
     }
