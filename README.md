@@ -31,8 +31,10 @@ You can use the msf4j-microservice-archetype Maven plugin to create your first M
 & run the following command.
 
 ```
-mvn archetype:generate -DarchetypeGroupId=org.wso2.msf4j -DarchetypeArtifactId=msf4j-microservice-archetype -DarchetypeVersion=1.0.0 \
--DgroupId=org.example -DartifactId=Hello-Service -Dversion=1.0.0-SNAPSHOT -Dpackage=org.example.service -DserviceClass=HelloService
+mvn archetype:generate -DarchetypeGroupId=org.wso2.msf4j \
+-DarchetypeArtifactId=msf4j-microservice-archetype -DarchetypeVersion=1.0.0 \
+-DgroupId=org.example -DartifactId=Hello-Service -Dversion=1.0.0-SNAPSHOT \
+-Dpackage=org.example.service -DserviceClass=HelloService
 ```
 
 Next navigate to the Hello-Service directory. You will find a pom.xml file and also an src directory.
