@@ -41,12 +41,13 @@ The following table lists down the properties specific to the msf4j-microservice
 
 The table below lists down the properties which are specific to the project you create.
 
-| Property   | Description                          | Default value               |
-| ---------  | ------------------------------------ | --------------------------- |
-| groupId    | The groupId of the project           | org.example                 |
-| artifactId | The artifactId of the project        | msf4j-service               |
-| version    | The version of the project           | 1.0.0-SNAPSHOT              |
-| package    | The package hierarchy of the project | org.example.service         |
+| Property        | Description                          | Default value               |
+| --------------- | ------------------------------------ | --------------------------- |
+| groupId         | The groupId of the project           | org.example                 |
+| artifactId      | The artifactId of the project        | msf4j-service               |
+| version         | The version of the project           | 1.0.0-SNAPSHOT              |
+| package         | The package hierarchy of the project | org.example.service         |
+| serviceClass    | The package hierarchy of the project | org.example.service         |
 
 For more information about Maven archetypes, see 
 [1] [http://maven.apache.org/archetype/maven-archetype-plugin/generate-mojo.html](http://maven.apache.org/archetype/maven-archetype-plugin/generate-mojo.html)
