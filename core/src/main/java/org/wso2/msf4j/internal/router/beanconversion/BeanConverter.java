@@ -28,11 +28,8 @@ public class BeanConverter {
             return new JsonConverter();
         } else if (mediaType.equalsIgnoreCase("text/xml")) {
             return new XmlConverter();
-        } else if (mediaType.equalsIgnoreCase("text/plain")) {
+        } else {
             return new TextPlainConverter();
-        } else if (mediaType.equalsIgnoreCase("*/*")) {
-            return new DefaultConverter();
         }
-        throw new BeanConversionException("Unsupported media type: " + mediaType);
     }
 }
