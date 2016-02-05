@@ -18,7 +18,7 @@ Memory usage for each framework was observed after running the 1KB payload echo 
 sending a number of requests at different concurrency levels to each service. 
 The graph above shows the averaged out values after several runs for each framework. 
 
-More details about the performance test can found [here](perf-benchmark)
+More details about the performance test can found [here](perf-benchmark).
 
 ##Hello world with MSF4J
 
@@ -37,9 +37,9 @@ mvn archetype:generate -DarchetypeGroupId=org.wso2.msf4j -DarchetypeArtifactId=m
 Next navigate to the Hello-Service directory. You will find a pom.xml file and also an src directory.
 
 ####pom.xml
-This pom file inherits from msf4j-service/pom.xml. It provides a way of setting up things quickly with minimum 
+This pom file inherits from the msf4j-service/pom.xml. It provides a way of setting things up quickly with minimum 
 amount of 
-configuration. [More info](msf4j-service).
+configuration. Click [here](poms/msf4j-service) for more information.
 
 ```xml
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -103,7 +103,7 @@ public class Application {
 
 
 ###Build the Service
-Run following Maven command. This will create the uber jar **Hello-Service-1.0.0-SNAPSHOT.jar** in **target** directory.
+Run the following Maven command. This will create the uber jar **Hello-Service-1.0.0-SNAPSHOT.jar** in the **target** directory.
 ```
 mvn package
 ```
@@ -203,7 +203,7 @@ Invoke by the container on newly constructed service instances after all depende
 #####@PreDestroy
 Invoke by the container during server shutdown before the  container removes the service instance.
 
-For a detailed example check out the lifecycle sample from [here](https://github.com/wso2/msf4j/tree/master/samples/lifecycle). 
+For a detailed example, check out the lifecycle sample [here](https://github.com/wso2/msf4j/tree/master/samples/lifecycle). 
 
 
 ###Complete Feature List
