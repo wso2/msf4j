@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.carbon.mss.example;
+package org.wso2.msf4j.example;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.MicroservicesRunner;
-import org.wso2.carbon.mss.example.service.DemoService;
-import org.wso2.carbon.mss.example.service.StudentService;
+import org.wso2.msf4j.example.service.DemoService;
+import org.wso2.msf4j.example.service.StudentService;
 import org.wso2.msf4j.httpmonitoring.HTTPMonitoringInterceptor;
 import org.wso2.msf4j.metrics.MetricReporter;
 import org.wso2.msf4j.metrics.MetricsInterceptor;
