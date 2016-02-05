@@ -14,11 +14,16 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<artifacts>
-    <artifact name="MSS_HTTP_Monitoring_CApp" version="1.0.0" type="carbon/application">
-        <dependency artifact="http_event_receiver" version="1.0.0" include="true" serverRole="DataAnalyticsServer" />
-        <dependency artifact="http_event_store" version="1.0.0" include="true" serverRole="DataAnalyticsServer" />
-        <dependency artifact="http_event_stream" version="1.0.0" include="true" serverRole="DataAnalyticsServer" />
-        <dependency artifact="spark_script" version="1.0.0" include="true" serverRole="DataAnalyticsServer" />
-    </artifact>
-</artifacts>
+<project name="create-msf4j-http-monitoring-capp" default="zip" basedir=".">
+
+    <property name="target_dir" value="target" />
+    <property name="msf4j_http_monitoring_capp_dir" value="msf4j_http_monitoring_capp" />
+
+    <target name="zip">
+        <zip destfile="${target_dir}/${msf4j_http_monitoring_capp_dir}.car">
+            <zipfileset dir="${msf4j_http_monitoring_capp_dir}" />
+        </zip>
+    </target>
+
+</project>
+

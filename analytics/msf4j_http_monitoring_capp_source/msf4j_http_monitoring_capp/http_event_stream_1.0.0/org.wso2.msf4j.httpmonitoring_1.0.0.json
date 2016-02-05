@@ -1,8 +1,8 @@
 {
   "name": "org.wso2.msf4j.httpmonitoring",
   "version": "1.0.0",
-  "nickName": "mss_http_monitoring",
-  "description": "MSS HTTP Monitoring",
+  "nickName": "msf4j_http_monitoring",
+  "description": "MSF4J HTTP Monitoring",
   "metaData": [
     {
       "name": "timestamp",

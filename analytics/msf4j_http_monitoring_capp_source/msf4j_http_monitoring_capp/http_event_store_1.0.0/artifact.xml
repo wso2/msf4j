@@ -14,16 +14,6 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<project name="create-mss-http-monitoring-capp" default="zip" basedir=".">
-
-    <property name="target_dir" value="target" />
-    <property name="mss_http_monitoring_capp_dir" value="mss_http_monitoring_capp" />
-
-    <target name="zip">
-        <zip destfile="${target_dir}/${mss_http_monitoring_capp_dir}.car">
-            <zipfileset dir="${mss_http_monitoring_capp_dir}" />
-        </zip>
-    </target>
-
-</project>
-
+<artifact name="http_event_store" version="1.0.0" type="analytics/eventstore" serverRole="DataAnalyticsServer">
+    <file>org_wso2_msf4j_httpmonitoring.xml</file>
+</artifact>
