@@ -28,9 +28,9 @@ Check the following [Hello-Service]
 (samples/helloworld) sample.
 
 ####pom.xml
-This pom file inherits from msf4j-service/pom.xml. It provides a way of setting up things quickly with minimum 
+This pom file inherits from msf4j-service/pom.xml. It provides a way of setting things up quickly with minimum 
 amount of 
-configuration. [More info](msf4j-service).
+configuration. [More info](poms/msf4j-service).
 
 ```xml
 <project xmlns="http://maven.apache.org/POM/4.0.0"
