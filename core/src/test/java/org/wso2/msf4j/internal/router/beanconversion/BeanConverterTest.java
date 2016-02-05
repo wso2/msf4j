@@ -27,11 +27,6 @@ import org.wso2.msf4j.internal.router.XmlBean;
  */
 public class BeanConverterTest {
 
-    @Test(expected = BeanConversionException.class)
-    public void testUnsupportedMediaType() throws BeanConversionException {
-        Object obj = BeanConverter.instance("unsupported/unsupported");
-    }
-
     @Test
     public void testJsonBeanConversionTextJson() throws BeanConversionException {
         Pet pet = makePet();
