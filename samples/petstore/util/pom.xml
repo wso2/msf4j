@@ -19,7 +19,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.wso2.carbon.mss</groupId>
+        <groupId>org.wso2.msf4j</groupId>
         <artifactId>petstore</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
@@ -28,7 +28,7 @@
     <artifactId>petstore-util</artifactId>
     <packaging>jar</packaging>
 
-    <name>Pet store microservices example - utils</name>
+    <name>Sample: [Pet Store] - Pet store microservices example - utils</name>
 
     <dependencies>
         <dependency>
@@ -36,8 +36,8 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.mss</groupId>
-            <artifactId>org.wso2.carbon.mss</artifactId>
+            <groupId>org.wso2.msf4j</groupId>
+            <artifactId>msf4j-core</artifactId>
         </dependency>
         <dependency>
             <groupId>redis.clients</groupId>

@@ -1,6 +1,6 @@
 # Hello Service Sample
 
-This is the WSO2 Microservices Server Hello World sample
+This is the MSF4J Hello World sample
 
 ## How to build the sample
 

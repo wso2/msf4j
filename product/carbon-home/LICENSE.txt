@@ -28,9 +28,7 @@ io.netty.handler_4.0.30.Final.jar                                               
 io.netty.transport_4.0.30.Final.jar                                             bundle         apache2   1539      
 javax.ws.rs-api.fragment_1.0.0.jar                                              bundle         cddl+gpl  1604
 javax.ws.rs-api_2.0.0.jar                                                       bundle         cddl+gpl  1538      
-libthrift_0.8.0.wso2v1.jar                                                      bundle         apache2   1117      
-org.apache.aries.spifly.dynamic.bundle_1.0.8.jar                                bundle         apache2   1603      
-org.apache.aries.util_1.1.1.jar                                                 bundle         apache2   1602      
+libthrift_0.8.0.wso2v1.jar                                                      bundle         apache2   1117
 org.apache.felix.gogo.command_0.10.0.v201209301215.jar                          bundle         apache2   1134      
 org.apache.felix.gogo.runtime_0.10.0.v201209301036.jar                          bundle         apache2   1133      
 org.apache.felix.gogo.shell_0.10.0.v201212101605.jar                            bundle         apache2   1132      
@@ -51,8 +49,7 @@ org.eclipse.equinox.simpleconfigurator_1.1.0.v20131217-1203.jar                 
 org.eclipse.equinox.util_1.0.500.v20130404-1337.jar                             bundle         epl1      1094      
 org.eclipse.osgi.compatibility.state_1.0.1.v20140709-1414.jar                   bundle         epl1      1413      
 org.eclipse.osgi.services_3.4.0.v20140312-2051.jar                              bundle         epl1      1412      
-org.eclipse.osgi_3.10.2.v20150203-1939.jar                                      bundle         epl1      1411      
-org.objectweb.asm.all_5.0.4.jar                                                 bundle         asm       1601      
+org.eclipse.osgi_3.10.2.v20150203-1939.jar                                      bundle         epl1      1411
 org.ops4j.pax.logging.pax-logging-api_1.8.4.jar                                 bundle         apache2   1410      
 org.ops4j.pax.logging.pax-logging-log4j2_1.8.4.jar                              bundle         apache2   1409      
 org.osgi.core-6.0.0.jar                                                         bundle         apache2   1407      
@@ -66,7 +63,7 @@ org.wso2.carbon.metrics.common_1.2.0.jar                                        
 org.wso2.carbon.metrics.das.reporter_1.2.0.jar                                  bundle         apache2   6888      
 org.wso2.carbon.metrics.impl_1.2.0.jar                                          bundle         apache2   6887      
 org.wso2.carbon.metrics.manager_1.2.0.jar                                       bundle         apache2   6886      
-org.wso2.carbon.mss_1.0.0.jar                                                   bundle         apache2   6884
+org.wso2.msf4j_1.0.0.jar                                                   bundle         apache2   6884
 org.wso2.carbon.tools-5.0.0.jar                                                 bundle         apache2   6881      
 org.wso2.carbon.transport.http.netty_1.0.0.jar                                  bundle         apache2   6883      
 snakeyaml_1.16.0.wso2v1.jar                                                     bundle         apache2   6274      
@@ -77,8 +74,6 @@ The license types used by the above libraries and their information is given bel
 
 apache2        Apache License Version 2.0
                http://www.apache.org/licenses/LICENSE-2.0.html
-asm            ASM License
-               http://asm.objectweb.org/license.html
 cddl+gpl       CDDL + GPLv2
                https://glassfish.dev.java.net/public/CDDL+GPL.html
 epl1           Eclipse Public License

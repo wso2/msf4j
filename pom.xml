@@ -24,17 +24,18 @@
         <groupId>org.wso2</groupId>
         <artifactId>wso2</artifactId>
         <version>2</version>
+        <relativePath/>
     </parent>
 
-    <groupId>org.wso2.carbon.mss</groupId>
-    <artifactId>mss</artifactId>
+    <groupId>org.wso2.msf4j</groupId>
+    <artifactId>msf4j</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0-SNAPSHOT</version>
 
     <scm>
-        <url>https://github.com/wso2/product-mss.git</url>
-        <developerConnection>scm:git:https://github.com/wso2/product-mss.git</developerConnection>
-        <connection>scm:git:https://github.com/wso2/product-mss.git</connection>
+        <url>https://github.com/wso2/msf4j.git</url>
+        <developerConnection>scm:git:https://github.com/wso2/msf4j.git</developerConnection>
+        <connection>scm:git:https://github.com/wso2/msf4j.git</connection>
         <tag>HEAD</tag>
     </scm>
 
@@ -43,7 +44,7 @@
             <name>WSO2</name>
             <email>architecture@wso2.org</email>
             <organization>WSO2 Inc</organization>
-            <organizationUrl>https://github.com/wso2/product-mss</organizationUrl>
+            <organizationUrl>https://github.com/wso2/msf4j</organizationUrl>
         </developer>
     </developers>
 
@@ -102,27 +103,24 @@
     </build>
 
     <modules>
-        <module>parent</module>
-        <module>carbon-mss/components/org.wso2.carbon.mss</module>
-        <module>carbon-mss/features/org.wso2.carbon.mss.feature</module>
-        <module>carbon-mss/features/org.wso2.carbon.spi.fly.feature</module>
-        <module>template-engines/mss-mustache-template</module>
-        <module>mss-jar-parent</module>
-        <module>mss-lite-parent</module>
+        <module>poms/parent</module>
+        <module>jaxrs-delegates</module>
+        <module>core</module>
+        <module>product/p2-features/org.wso2.msf4j.feature</module>
+        <module>templating/msf4j-mustache-template</module>
+        <module>poms/msf4j-service</module>
         <module>samples/helloworld</module>
-        <module>samples/stockquote-mss-lite</module>
-        <module>samples/stockquote-mss-deployable-jar</module>
-        <module>samples/stockquote-mss-bundle</module>
+        <module>samples/stockquote/fatjar</module>
+        <module>samples/stockquote/bundle</module>
         <module>samples/security</module>
-        <module>samples/metrics-httpmon-mss-lite</module>
-        <module>samples/metrics-httpmon-mss-deployable-jar</module>
-        <module>samples/metrics-httpmon-mss-bundle</module>
+        <module>samples/metrics/httpmon-fatjar</module>
+        <module>samples/metrics/httpmon-bundle</module>
         <module>samples/petstore</module>
         <module>samples/fileserver</module>
         <module>samples/template</module>
         <module>samples/log-interceptor-bundle</module>
+        <module>samples/lifecycle</module>
         <module>product</module>
-        <module>tests/osgi-tests</module>
     </modules>
 
     <properties>

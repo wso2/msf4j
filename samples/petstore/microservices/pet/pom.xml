@@ -19,16 +19,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.wso2.carbon.mss</groupId>
-        <artifactId>mss-lite-parent</artifactId>
+        <groupId>org.wso2.msf4j</groupId>
+        <artifactId>msf4j-service</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../../../../mss-lite-parent/pom.xml</relativePath>
+        <relativePath>../../../../poms/msf4j-service/pom.xml</relativePath>
     </parent>
 
     <artifactId>petstore-pet</artifactId>
     <packaging>jar</packaging>
 
-    <name>Pet store microservices example - pet microservice</name>
+    <name>Sample: [Pet Store] - Pet store microservices example - pet microservice</name>
 
     <dependencies>
         <dependency>
@@ -36,18 +36,13 @@
             <artifactId>nimbus-jose-jwt</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.mss</groupId>
+            <groupId>org.wso2.msf4j</groupId>
             <artifactId>petstore-util</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.mss</groupId>
-            <artifactId>org.wso2.carbon.mss</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
 
     <properties>
-        <microservice.mainClass>org.wso2.carbon.mss.examples.petstore.pet.Runner</microservice.mainClass>
+        <microservice.mainClass>org.wso2.msf4j.examples.petstore.pet.Runner</microservice.mainClass>
     </properties>
 </project>

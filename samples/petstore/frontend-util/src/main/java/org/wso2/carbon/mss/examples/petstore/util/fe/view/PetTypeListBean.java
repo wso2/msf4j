@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.examples.petstore.util.fe.view;
+package org.wso2.msf4j.examples.petstore.util.fe.view;
 
 import de.larmic.butterfaces.event.TableSingleSelectionListener;
 import de.larmic.butterfaces.model.table.DefaultTableModel;
 import de.larmic.butterfaces.model.table.TableModel;
-import org.wso2.carbon.mss.examples.petstore.util.fe.dao.PetService;
-import org.wso2.carbon.mss.examples.petstore.util.fe.model.PetServiceException;
-import org.wso2.carbon.mss.examples.petstore.util.model.Category;
+import org.wso2.msf4j.examples.petstore.util.fe.dao.PetService;
+import org.wso2.msf4j.examples.petstore.util.fe.model.PetServiceException;
+import org.wso2.msf4j.examples.petstore.util.model.Category;
 
 import java.util.List;
 import javax.annotation.Nullable;

@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: pet
-        image: wso2mss/petstore-pet
+        image: wso2msf4j/petstore-pet
         env:
         - name: GET_HOSTS_FROM
           value: dns

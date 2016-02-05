@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.carbon.mss.examples.petstore.pet;
+package org.wso2.msf4j.examples.petstore.pet;
 
-import org.wso2.carbon.mss.MicroservicesRunner;
-import org.wso2.carbon.mss.httpmonitoring.HTTPMonitoringInterceptor;
-import org.wso2.carbon.mss.metrics.MetricReporter;
-import org.wso2.carbon.mss.metrics.MetricsInterceptor;
-import org.wso2.carbon.mss.security.JWTSecurityInterceptor;
+import org.wso2.msf4j.MicroservicesRunner;
+import org.wso2.msf4j.httpmonitoring.HTTPMonitoringInterceptor;
+import org.wso2.msf4j.metrics.MetricReporter;
+import org.wso2.msf4j.metrics.MetricsInterceptor;
+import org.wso2.msf4j.security.JWTSecurityInterceptor;
 
 /**
  * Microservice runner for the pet microservices.

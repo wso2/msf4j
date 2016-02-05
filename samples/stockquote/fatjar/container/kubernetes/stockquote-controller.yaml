@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: stockquote
+  labels:
+    name: stockquote
+spec:
+  replicas: 2
+  selector:
+    name: stockquote
+  template:
+    metadata:
+      labels:
+        name: stockquote
+    spec:
+      containers:
+      - name: stockquote
+        image: wso2msf4j/v1
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+          # If your cluster config does not include a dns service, then to
+          # instead access environment variables to find service host
+          # info, comment out the 'value: dns' line above, and uncomment the
+          # line below.
+          # value: env
+        ports:
+        - containerPort: 80

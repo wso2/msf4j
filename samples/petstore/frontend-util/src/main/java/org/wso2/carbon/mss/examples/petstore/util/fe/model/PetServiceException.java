@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.examples.petstore.util.fe.model;
+package org.wso2.msf4j.examples.petstore.util.fe.model;
 
 /**
  * PetServiceException is used with PetServiceClient.

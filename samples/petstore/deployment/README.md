@@ -46,7 +46,7 @@ export KUBERNETES_MASTER=http://172.17.8.101:8080
 ```
 ./run.sh 
 ```
-It will download and configure CoreOS vagrant boxes and setup Kubernetes 1.1.1 in a 3 CoreOS nodes. Complied product-mss, build all docker files, deploy k8s replication controllers, services ..etc.
+It will download and configure CoreOS vagrant boxes and setup Kubernetes 1.1.1 in a 3 CoreOS nodes. Complied product-msf4j, build all docker files, deploy k8s replication controllers, services ..etc.
 
 ```
 ./clean.sh

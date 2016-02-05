@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mss.examples.petstore.util.fe.client;
+package org.wso2.msf4j.examples.petstore.util.fe.client;
 
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.MultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.media.multipart.file.StreamDataBodyPart;
-import org.wso2.carbon.mss.examples.petstore.util.fe.model.Configuration;
-import org.wso2.carbon.mss.examples.petstore.util.fe.view.LoginBean;
+import org.wso2.msf4j.examples.petstore.util.fe.model.Configuration;
+import org.wso2.msf4j.examples.petstore.util.fe.view.LoginBean;
 
 import java.io.IOException;
 import java.util.logging.Level;

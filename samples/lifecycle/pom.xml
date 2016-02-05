@@ -18,17 +18,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.wso2.carbon.mss</groupId>
-        <artifactId>mss-lite-parent</artifactId>
+        <groupId>org.wso2.msf4j</groupId>
+        <artifactId>msf4j-service</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../../mss-lite-parent/pom.xml</relativePath>
+        <relativePath>../../poms/msf4j-service/pom.xml</relativePath>
     </parent>
 
+    <groupId>org.wso2.msf4j.sample</groupId>
     <artifactId>lifecycle</artifactId>
-    <packaging>jar</packaging>
-    <description>Demostrates how to use service lifecycle methods in microservices in WSO2 MSS</description>
+
+    <name>Sample: MSF4J Microservice Lifecycle Management</name>
+    <description>Demonstrates how to use service lifecycle methods in microservices in WSO2 MSF4J</description>
 
     <properties>
-        <microservice.mainClass>org.wso2.carbon.mss.example.Application</microservice.mainClass>
+        <microservice.mainClass>org.wso2.msf4j.example.Application</microservice.mainClass>
     </properties>
 </project>
