@@ -18,7 +18,7 @@ package org.wso2.msf4j.example.service;
 import org.wso2.carbon.metrics.annotation.Counted;
 import org.wso2.carbon.metrics.annotation.Metered;
 import org.wso2.carbon.metrics.annotation.Timed;
-import org.wso2.msf4j.httpmonitoring.HTTPMonitored;
+import org.wso2.msf4j.analytics.httpmonitoring.HTTPMonitored;
 
 import java.util.Collection;
 import java.util.Map;

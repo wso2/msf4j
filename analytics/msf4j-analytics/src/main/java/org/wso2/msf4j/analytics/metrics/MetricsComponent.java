@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.msf4j.metrics;
+package org.wso2.msf4j.analytics.metrics;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -27,7 +27,7 @@ import java.io.File;
  * Metrics OSGi Component to Initialize/Destroy Metrics.
  */
 @Component(
-    name = "org.wso2.msf4j.metrics.MetricsComponent",
+    name = "org.wso2.msf4j.analytics.metrics.MetricsComponent",
     immediate = true)
 public class MetricsComponent {
 

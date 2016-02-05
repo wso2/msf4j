@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.msf4j.httpmonitoring;
+package org.wso2.msf4j.analytics.httpmonitoring;
 
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpRequest;
@@ -36,7 +36,7 @@ import javax.ws.rs.Path;
  * Monitor HTTP Requests for methods with {@link HTTPMonitored} annotations.
  */
 @Component(
-    name = "org.wso2.msf4j.httpmonitoring.HTTPMonitoringInterceptor",
+    name = "org.wso2.msf4j.analytics.httpmonitoring.HTTPMonitoringInterceptor",
     service = Interceptor.class,
     immediate = true)
 public class HTTPMonitoringInterceptor implements Interceptor {

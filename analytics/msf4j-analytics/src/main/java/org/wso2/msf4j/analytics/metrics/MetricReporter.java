@@ -13,21 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.msf4j.httpmonitoring;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package org.wso2.msf4j.analytics.metrics;
 
 /**
- * Monitor HTTP Requests.
+ * Metric Reporter Types.
  */
-@Inherited
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.TYPE, ElementType.METHOD })
-public @interface HTTPMonitored {
+public enum MetricReporter {
+    CONSOLE, JMX, DAS
 }

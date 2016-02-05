@@ -19,9 +19,9 @@ package org.wso2.msf4j.examples.petstore.security;
 import org.wso2.carbon.ldap.server.util.EmbeddingLDAPException;
 import org.wso2.msf4j.MicroservicesRunner;
 import org.wso2.msf4j.examples.petstore.security.ldap.server.ApacheDirectoryServerActivator;
-import org.wso2.msf4j.httpmonitoring.HTTPMonitoringInterceptor;
-import org.wso2.msf4j.metrics.MetricReporter;
-import org.wso2.msf4j.metrics.MetricsInterceptor;
+import org.wso2.msf4j.analytics.httpmonitoring.HTTPMonitoringInterceptor;
+import org.wso2.msf4j.analytics.metrics.MetricReporter;
+import org.wso2.msf4j.analytics.metrics.MetricsInterceptor;
 
 import java.io.IOException;
 

@@ -31,6 +31,17 @@
     <version>${version}</version>
     <name>WSO2 MSF4J Microservice</name>
 
+
+    <dependencies>
+    <!-- Uncomment the following if you want to enable metrics & monitoring -->
+    <!--
+    <dependency>
+       <groupId>org.wso2.msf4j</groupId>
+       <artifactId>msf4j-analytics</artifactId>
+    </dependency>
+    -->
+    </dependencies>
+
     <properties>
         <microservice.mainClass>${package}.Application</microservice.mainClass>
     </properties>

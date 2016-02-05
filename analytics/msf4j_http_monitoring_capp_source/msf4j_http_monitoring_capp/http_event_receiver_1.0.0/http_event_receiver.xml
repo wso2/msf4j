@@ -17,5 +17,5 @@
 <eventReceiver name="http_event_receiver" statistics="disable" trace="disable" xmlns="http://wso2.org/carbon/eventreceiver">
     <from eventAdapterType="wso2event"/>
     <mapping customMapping="disable" type="wso2event"/>
-    <to streamName="org.wso2.msf4j.httpmonitoring" version="1.0.0"/>
+    <to streamName="org.wso2.msf4j.analytics.httpmonitoring" version="1.0.0"/>
 </eventReceiver>

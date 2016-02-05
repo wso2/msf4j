@@ -31,6 +31,25 @@
 
     <name>Sample: Metrics and HTTP Monitoring MSF4J (Fat jar mode)</name>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.wso2.msf4j</groupId>
+            <artifactId>msf4j-analytics</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.metrics</groupId>
+            <artifactId>org.wso2.carbon.metrics.manager</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.metrics</groupId>
+            <artifactId>org.wso2.carbon.metrics.impl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.metrics</groupId>
+            <artifactId>org.wso2.carbon.metrics.annotation</artifactId>
+        </dependency>
+    </dependencies>
+
     <properties>
         <microservice.mainClass>org.wso2.msf4j.example.Application</microservice.mainClass>
         <baseimage.name>java:openjdk-8u66-jre</baseimage.name>

@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.wso2.carbon.metrics.annotation.Timed;
 import org.wso2.msf4j.examples.petstore.util.JedisUtil;
 import org.wso2.msf4j.examples.petstore.util.model.Category;
-import org.wso2.msf4j.httpmonitoring.HTTPMonitored;
+import org.wso2.msf4j.analytics.httpmonitoring.HTTPMonitored;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -46,7 +46,7 @@ public class PetCategoryService {
     @Timed
     public Response addCategory(Category category) {
         String name = category.getName();
-        JedisUtil.sadd(PetConstants.CATEGORIES_KEY, name);
+        JedisUtil.sadd(org.wso2.msf4j.examples.petstore.pet.PetConstants.CATEGORIES_KEY, name);
         log.info("Added category");
         return Response.status(Response.Status.OK).entity("Category with name " + name + " successfully added").build();
     }

@@ -1,5 +1,5 @@
 {
-  "name": "org.wso2.msf4j.httpmonitoring",
+  "name": "org.wso2.msf4j.analytics.httpmonitoring",
   "version": "1.0.0",
   "nickName": "msf4j_http_monitoring",
   "description": "MSF4J HTTP Monitoring",

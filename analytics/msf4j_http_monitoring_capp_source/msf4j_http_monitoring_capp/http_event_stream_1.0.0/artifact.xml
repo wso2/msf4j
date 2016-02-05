@@ -15,5 +15,5 @@
   ~ limitations under the License.
   -->
 <artifact name="http_event_stream" version="1.0.0" type="event/stream" serverRole="DataAnalyticsServer">
-    <file>org.wso2.msf4j.httpmonitoring_1.0.0.json</file>
+    <file>org.wso2.msf4j.analytics.httpmonitoring_1.0.0.json</file>
 </artifact>

@@ -23,110 +23,32 @@
         <groupId>org.wso2.msf4j</groupId>
         <artifactId>msf4j-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../poms/parent/pom.xml</relativePath>
+        <relativePath>../../poms/parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>msf4j-core</artifactId>
+    <artifactId>msf4j-analytics</artifactId>
     <packaging>bundle</packaging>
 
-    <name>WSO2 MSF4J core</name>
-    <description>WSO2 MSF4J core</description>
+    <name>WSO2 MSF4J Analytics</name>
+    <description>WSO2 MSF4J Analytics</description>
     <url>https://github.com/wso2/msf4j</url>
 
     <dependencies>
         <dependency>
-            <groupId>org.wso2.carbon.transport</groupId>
-            <artifactId>org.wso2.carbon.transport.http.netty</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.eclipse.osgi</groupId>
-            <artifactId>org.eclipse.osgi</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.eclipse.osgi</groupId>
-            <artifactId>org.eclipse.osgi.services</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.wso2.msf4j</groupId>
-            <artifactId>jaxrs-delegates</artifactId>
+            <artifactId>msf4j-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-common</artifactId>
+            <groupId>org.wso2.carbon.metrics</groupId>
+            <artifactId>org.wso2.carbon.metrics.manager</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-buffer</artifactId>
+            <groupId>org.wso2.carbon.metrics</groupId>
+            <artifactId>org.wso2.carbon.metrics.impl</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-transport</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-handler</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-codec</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-codec-http</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.servicemix.bundles</groupId>
-            <artifactId>org.apache.servicemix.bundles.commons-beanutils</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.nimbusds</groupId>
-            <artifactId>nimbus-jose-jwt</artifactId>
-        </dependency>
-
-        <!-- Test dependencies -->
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <scope>test</scope>
+            <groupId>org.wso2.carbon.metrics</groupId>
+            <artifactId>org.wso2.carbon.metrics.annotation</artifactId>
         </dependency>
     </dependencies>
 
@@ -291,35 +213,25 @@
     </profiles>
 
     <properties>
-        <bundle.activator>org.wso2.msf4j.internal.MicroservicesServerActivator</bundle.activator>
-        <private.package>org.wso2.msf4j.internal.*,</private.package>
         <export.package>
-            !org.wso2.msf4j.internal.*,
-            org.wso2.msf4j.*;version="1.0.0",
+            org.wso2.msf4j.analytics.*;version="1.0.0",
         </export.package>
         <import.package>
-            org.wso2.carbon.kernel.deployment.*;version="${carbon.kernel.version.range}",
-            io.netty.*;version="${netty.version.range}",
-            com.google.gson.*;version="${gson.version.range}",
-            com.google.common.*;version="${guava.version.range}",
             javax.annotation.*,
-            javax.ws.rs.*,
-            javax.xml.bind;resolution:=optional,
-            javax.xml.bind.annotation;resolution:=optional,
             org.slf4j.*;version="${slf4j.version.range}",
-            javax.net.ssl.*,
             org.apache.commons.beanutils.*;version="${beanutils.version.range}",
             org.osgi.framework.*;version="${osgi.framework.import.version.range}",
             org.osgi.util.tracker; version="${osgi.service.tracker.import.version.range}",
-            org.wso2.carbon.kernel.transports.*;version="${carbon.kernel.version.range}",
-            org.wso2.carbon.kernel.startupresolver.*;version="${carbon.kernel.version.range}",
             org.wso2.carbon.kernel.utils.*;version="${carbon.kernel.version.range}",
-            org.wso2.carbon.transport.http.netty.listener.*;version="${org.wso2.carbon.transport.http.netty.version.range}",
+            org.wso2.carbon.metrics.annotation.*;version="${carbon.metrics.version.range}",
+            org.wso2.carbon.metrics.common.*;version="${carbon.metrics.version.range}",
+            org.wso2.carbon.metrics.manager.*;version="${carbon.metrics.version.range}",
+            org.wso2.carbon.metrics.impl.*;version="${carbon.metrics.version.range}",
+            org.wso2.carbon.databridge.agent.*;version="${carbon.analytics.common.version.range}",
+            org.wso2.carbon.databridge.commons.*;version="${carbon.analytics.common.version.range}"
+            org.wso2.msf4j.*,
+            org.wso2.msf4j.util.*,
+            javax.ws.rs.*,
         </import.package>
-        <provide.capability>
-            osgi.service;effective:=active;
-            objectClass="org.wso2.msf4j.internal.MicroservicesServerSC";
-            dependent-component-key="carbon-transport-mgt",
-        </provide.capability>
     </properties>
 </project>

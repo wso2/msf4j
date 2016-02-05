@@ -130,7 +130,7 @@
         </ColumnDefinition>
     </TableSchema>
     <Source>
-        <StreamId>org.wso2.msf4j.httpmonitoring:1.0.0</StreamId>
+        <StreamId>org.wso2.msf4j.analytics.httpmonitoring:1.0.0</StreamId>
     </Source>
     <RecordStoreName>EVENT_STORE</RecordStoreName>
 </EventStoreConfiguration>

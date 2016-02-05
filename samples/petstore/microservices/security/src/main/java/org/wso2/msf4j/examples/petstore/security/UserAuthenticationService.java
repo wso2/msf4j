@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.wso2.carbon.metrics.annotation.Timed;
 import org.wso2.msf4j.examples.petstore.security.ldap.LDAPUserStoreManager;
 import org.wso2.msf4j.examples.petstore.util.model.User;
-import org.wso2.msf4j.httpmonitoring.HTTPMonitored;
+import org.wso2.msf4j.analytics.httpmonitoring.HTTPMonitored;
 import org.wso2.msf4j.util.SystemVariableUtil;
 
 import javax.naming.NamingException;

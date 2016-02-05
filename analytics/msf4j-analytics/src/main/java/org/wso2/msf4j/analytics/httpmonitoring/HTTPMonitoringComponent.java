@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.msf4j.httpmonitoring;
+package org.wso2.msf4j.analytics.httpmonitoring;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -27,7 +27,7 @@ import java.io.File;
  * HTTP Monitoring OSGi Component to Initialize/Destroy Data Publisher.
  */
 @Component(
-    name = "org.wso2.msf4j.httpmonitoring.HTTPMonitoringComponent",
+    name = "org.wso2.msf4j.analytics.httpmonitoring.HTTPMonitoringComponent",
     immediate = true)
 public class HTTPMonitoringComponent {
 

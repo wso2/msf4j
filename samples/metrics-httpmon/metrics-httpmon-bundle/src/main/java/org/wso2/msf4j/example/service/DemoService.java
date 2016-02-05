@@ -22,7 +22,7 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.wso2.carbon.metrics.annotation.Counted;
 import org.wso2.carbon.metrics.annotation.Metered;
 import org.wso2.carbon.metrics.annotation.Timed;
-import org.wso2.msf4j.httpmonitoring.HTTPMonitored;
+import org.wso2.msf4j.analytics.httpmonitoring.HTTPMonitored;
 import org.wso2.msf4j.Microservice;
 
 import java.util.Random;

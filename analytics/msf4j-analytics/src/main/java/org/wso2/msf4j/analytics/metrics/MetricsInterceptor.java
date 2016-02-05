@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.msf4j.metrics;
+package org.wso2.msf4j.analytics.metrics;
 
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
@@ -44,7 +44,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Collecting Metrics via annotations.
  */
 @Component(
-    name = "org.wso2.msf4j.metrics.MetricsInterceptor",
+    name = "org.wso2.msf4j.analytics.metrics.MetricsInterceptor",
     service = Interceptor.class,
     immediate = true)
 public class MetricsInterceptor implements Interceptor {

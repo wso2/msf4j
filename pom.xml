@@ -105,6 +105,7 @@
         <module>poms/parent</module>
         <module>jaxrs-delegates</module>
         <module>core</module>
+        <module>analytics/msf4j-analytics</module>
         <module>product/p2-features/org.wso2.msf4j.feature</module>
         <module>templating/msf4j-mustache-template</module>
         <module>poms/msf4j-service</module>

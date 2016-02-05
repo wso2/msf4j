@@ -24,7 +24,7 @@ import org.wso2.carbon.metrics.annotation.Timed;
 import org.wso2.msf4j.HttpResponder;
 import org.wso2.msf4j.HttpStreamHandler;
 import org.wso2.msf4j.HttpStreamer;
-import org.wso2.msf4j.httpmonitoring.HTTPMonitored;
+import org.wso2.msf4j.analytics.httpmonitoring.HTTPMonitored;
 
 import java.io.BufferedOutputStream;
 import java.io.File;

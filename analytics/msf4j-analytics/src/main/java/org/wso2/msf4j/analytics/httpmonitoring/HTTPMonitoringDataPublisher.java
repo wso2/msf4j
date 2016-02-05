@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.msf4j.httpmonitoring;
+package org.wso2.msf4j.analytics.httpmonitoring;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +49,7 @@ public final class HTTPMonitoringDataPublisher {
     private static final String HTTP_MONITORING_DAS_PASSWORD = "HTTP_MONITORING_DAS_PASSWORD";
     private static final String HTTP_MONITORING_DAS_DATAAGENTCONFIGPATH = "HTTP_MONITORING_DAS_DATAAGENTCONFIGPATH";
 
-    private static final String HTTP_MONITORING_STREAM = "org.wso2.msf4j.httpmonitoring";
+    private static final String HTTP_MONITORING_STREAM = "org.wso2.msf4j.analytics.httpmonitoring";
     private static final String VERSION = "1.0.0";
     private static final String HTTP_MONITORING_STREAM_ID;
 
