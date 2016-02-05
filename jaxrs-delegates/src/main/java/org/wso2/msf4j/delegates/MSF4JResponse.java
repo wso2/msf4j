@@ -291,7 +291,8 @@ public class MSF4JResponse extends Response {
 
         @Override
         public ResponseBuilder type(String type) {
-            throw new UnsupportedOperationException();
+            this.type = MediaType.valueOf(type);
+            return this;
         }
 
         @Override

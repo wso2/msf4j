@@ -57,6 +57,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import javax.ws.rs.core.MediaType;
 
 /**
  * Test the HttpServer.
@@ -641,6 +642,28 @@ public class HttpServerTest {
         InputStream downStream = urlConn.getInputStream();
         Assert.assertTrue(IOUtils.toByteArray(downStream).length <
                 IOUtils.toByteArray(Resources.getResource("testJpgFile.jpg").openStream()).length);
+    }
+
+    @Test
+    public void testContentTypeSetting0() throws Exception {
+        HttpURLConnection urlConn = request("/test/v1/response/typehtml", HttpMethod.GET);
+        Assert.assertEquals(HttpResponseStatus.OK.code(), urlConn.getResponseCode());
+        String contentType = urlConn.getHeaderField(HttpHeaders.Names.CONTENT_TYPE);
+        Assert.assertTrue(contentType.equalsIgnoreCase(MediaType.TEXT_HTML));
+        String content = getContent(urlConn);
+        Assert.assertEquals("Hello", content);
+        urlConn.disconnect();
+    }
+
+    @Test
+    public void testContentTypeSetting1() throws Exception {
+        HttpURLConnection urlConn = request("/test/v1/response/typehtml/str", HttpMethod.GET);
+        Assert.assertEquals(HttpResponseStatus.OK.code(), urlConn.getResponseCode());
+        String contentType = urlConn.getHeaderField(HttpHeaders.Names.CONTENT_TYPE);
+        Assert.assertTrue(contentType.equalsIgnoreCase(MediaType.TEXT_HTML));
+        String content = getContent(urlConn);
+        Assert.assertEquals("Hello", content);
+        urlConn.disconnect();
     }
 
     protected Socket createRawSocket(URL url) throws IOException {

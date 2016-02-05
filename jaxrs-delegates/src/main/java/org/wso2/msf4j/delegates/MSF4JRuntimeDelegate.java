@@ -16,8 +16,11 @@
 
 package org.wso2.msf4j.delegates;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Link;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.Variant.VariantListBuilder;
@@ -32,6 +35,11 @@ import javax.ws.rs.ext.RuntimeDelegate;
  */
 public class MSF4JRuntimeDelegate extends RuntimeDelegate {
 
+    protected Map<Class<?>, HeaderDelegate<?>> headerProviders = new HashMap<>();
+
+    public MSF4JRuntimeDelegate() {
+        headerProviders.put(MediaType.class, new MediaTypeHeaderProvider());
+    }
 
     @Override
     public UriBuilder createUriBuilder() {
@@ -55,8 +63,12 @@ public class MSF4JRuntimeDelegate extends RuntimeDelegate {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> HeaderDelegate<T> createHeaderDelegate(Class<T> type) throws IllegalArgumentException {
-        throw new UnsupportedOperationException();
+        if (type == null) {
+            throw new IllegalArgumentException("HeaderDelegate type is null");
+        }
+        return (HeaderDelegate<T>) headerProviders.get(type);
     }
 
     @Override

@@ -54,6 +54,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
@@ -128,6 +129,24 @@ public class TestHandler implements Microservice {
         } catch (InterruptedException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
+    }
+
+    @Path("response/typehtml")
+    @GET
+    public Response produceHtmlContent0() {
+        return Response.ok()
+                .type(MediaType.TEXT_HTML_TYPE)
+                .entity("Hello")
+                .build();
+    }
+
+    @Path("response/typehtml/str")
+    @GET
+    public Response produceHtmlContent1() {
+        return Response.ok()
+                .type(MediaType.TEXT_HTML)
+                .entity("Hello")
+                .build();
     }
 
     @Path("resource")

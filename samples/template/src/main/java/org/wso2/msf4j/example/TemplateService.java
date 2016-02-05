@@ -18,26 +18,31 @@ package org.wso2.msf4j.example;
 
 import org.wso2.msf4j.template.MustacheTemplateEngine;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Map;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  * Template service resource class. This service has
  * endpoints that renders content from several
  * template engines.
  */
-@Path("/template")
+@Path("/")
 public class TemplateService {
 
     @GET
-    @Path("/mustache/{name}")
-    public String helloMustache(@PathParam("name") String name) {
-        Map map = new HashMap<>();
-        map.put("name", name);
-        return MustacheTemplateEngine.instance().render("hello.mustache", map);
+    @Path("/{name}")
+    public Response helloMustache(@PathParam("name") String name) {
+        Map map = Collections.singletonMap("name", name);
+        String html = MustacheTemplateEngine.instance().render("hello.mustache", map);
+        return Response.ok()
+                .type(MediaType.TEXT_HTML)
+                .entity(html)
+                .build();
     }
 
 }
