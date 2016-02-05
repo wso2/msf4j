@@ -30,7 +30,7 @@ import javax.ws.rs.Path;
  * @since ${version}
  */
 @Path("/service")
-public class MyService {
+public class ${serviceClass} {
 
     @GET
     @Path("/")

@@ -20,12 +20,24 @@ The graph above shows the averaged out values after several runs for each framew
 
 More details about the performance test can found [here](perf-benchmark).
 
-##Getting Started
+##Hello world with MSF4J
 
 It is really easy to define & deploy a Java microservice using WSO2 MSF4J. 
 You simply need to annotate your service and deploy it using a single line of code. 
-Check the following [Hello-Service]
-(samples/helloworld) sample.
+
+Let's get started by writing a hello world MSF4J microservice. 
+
+You can use the msf4j-microservice-archetype Maven plugin to create your first MSF4J project. JDK 1.8 and Maven 3.x
+& run the following command.
+
+```
+mvn archetype:generate -DarchetypeGroupId=org.wso2.msf4j \
+-DarchetypeArtifactId=msf4j-microservice-archetype -DarchetypeVersion=1.0.0 \
+-DgroupId=org.example -DartifactId=Hello-Service -Dversion=1.0.0-SNAPSHOT \
+-Dpackage=org.example.service -DserviceClass=HelloService
+```
+
+Next navigate to the Hello-Service directory. You will find a pom.xml file and also an src directory.
 
 ####pom.xml
 This pom file inherits from the msf4j-service/pom.xml. It provides a way of setting things up quickly with minimum 
@@ -39,28 +51,35 @@ configuration. Click [here](poms/msf4j-service) for more information.
 
     <parent>
         <groupId>org.wso2.msf4j</groupId>
-        <artifactId>msf4j-servicet</artifactId>
-        <version>1.0.0</version>
-        <relativePath>../../msf4j-service/pom.xml</relativePath>
+        <artifactId>msf4j-service</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.wso2.msf4j.sample</groupId>
+    <groupId>org.example</groupId>
     <artifactId>Hello-Service</artifactId>
-    <version>1.0.0</version>
-
-    <name>Hello Microservice Sample</name>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>WSO2 MSF4J Microservice</name>
 
     <properties>
-        <microservice.mainClass>org.wso2.msf4j.example.Application</microservice.mainClass>
+        <microservice.mainClass>org.example.service.Application</microservice.mainClass>
     </properties>
 
 </project>
 ```
 
+Change the org.example.service.HelloService class as follows to echo back the name input parameter. 
+You can remove the auto generated code and replace it with the following code segment:
+
 ####HelloService.java
 This is the hello service implementation that uses JAX-RS annotations.
 ```java
+package org.example.service; 
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+
 @Path("/hello")
 public class HelloService {
 
@@ -72,7 +91,6 @@ public class HelloService {
 
 }
 ```
-
 
 ####Application.java
 This is the one-liner to deploy your service using WSO2 MSF4J.
@@ -97,18 +115,19 @@ mvn package
 ###Run the Service
 You just have to run the following command to get your service up and running.
 ```
-java -jar target/Hello-Service-1.0.0.jar
+java -jar target/Hello-Service-*.jar
 ```
 
 
 ###Test the Service with curl
 Run the following command or simply go to [http://localhost:8080/hello/Microservices]
-(http://localhost:8080/hello/Microservices) 
+(http://localhost:8080/hello/wso2) 
 from your browser.
 ```
 curl http://localhost:8080/hello/Microservices
 ```
 
+You should see a response that prints "Hello wso2"
 
 ##Supported Annotations
 
@@ -177,9 +196,6 @@ and assigned to that parameter.
 #####@HeaderParam
 To read HTTP request header values. The value will be automatically converted to the corresponding parameter type and
  assigned to that parameter.
-
-
-
 
 ###Lifecycle Callback Methods
 Support following Java lifecycle callback method annotations. 

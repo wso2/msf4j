@@ -42,5 +42,8 @@
         <requiredProperty key="package">
             <defaultValue>org.example.service</defaultValue>
         </requiredProperty>
+        <requiredProperty key="serviceClass">
+            <defaultValue>MyService</defaultValue>
+        </requiredProperty>
     </requiredProperties>
 </archetype-descriptor>
