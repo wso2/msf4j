@@ -29,7 +29,7 @@
     <groupId>${groupId}</groupId>
     <artifactId>${artifactId}</artifactId>
     <version>${version}</version>
-    <name>This is a sample for a Microservice</name>
+    <name>WSO2 MSF4J Microservice</name>
 
     <properties>
         <microservice.mainClass>${package}.Application</microservice.mainClass>

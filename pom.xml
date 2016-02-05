@@ -120,7 +120,7 @@
         <module>samples/log-interceptor-bundle</module>
         <module>samples/lifecycle</module>
         <module>product</module>
-        <module>archetypes</module>
+        <module>archetypes/microservice-archetype</module>
     </modules>
 
     <properties>

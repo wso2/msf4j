@@ -23,38 +23,41 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 
 /**
- * This is the MicroService resource class.
+ * This is the Microservice resource class.
  * See <a href="https://github.com/wso2/msf4j#getting-started">https://github.com/wso2/msf4j#getting-started</a>
  * for the usage of annotations.
  *
  * @since ${version}
  */
-@Path("/microservice")
-public class MicroService {
+@Path("/service")
+public class MyService {
 
     @GET
-    @Path("/get")
+    @Path("/")
     public String get() {
         // TODO: Implementation for HTTP GET request
-        return "Hello";
+        System.out.println("GET invoked");
+        return "Hello from WSO2 MSF4J";
     }
 
     @POST
-    @Path("/post")
+    @Path("/")
     public void post() {
         // TODO: Implementation for HTTP POST request
+        System.out.println("POST invoked");
     }
 
     @PUT
-    @Path("/put")
+    @Path("/")
     public void put() {
         // TODO: Implementation for HTTP PUT request
+        System.out.println("PUT invoked");
     }
 
     @DELETE
-    @Path("/delete")
+    @Path("/")
     public void delete() {
         // TODO: Implementation for HTTP DELETE request
+        System.out.println("DELETE invoked");
     }
-
 }
