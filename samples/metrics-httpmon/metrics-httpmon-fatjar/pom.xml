@@ -36,18 +36,6 @@
             <groupId>org.wso2.msf4j</groupId>
             <artifactId>msf4j-analytics</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.metrics</groupId>
-            <artifactId>org.wso2.carbon.metrics.manager</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.metrics</groupId>
-            <artifactId>org.wso2.carbon.metrics.impl</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.metrics</groupId>
-            <artifactId>org.wso2.carbon.metrics.annotation</artifactId>
-        </dependency>
     </dependencies>
 
     <properties>
