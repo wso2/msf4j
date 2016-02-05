@@ -21,11 +21,11 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.xml.ws.Response;
 
 /**
- * MicroService resource class.
+ * This is the MicroService resource class.
+ * See <a href="https://github.com/wso2/msf4j#getting-started">https://github.com/wso2/msf4j#getting-started</a>
+ * for the usage of annotations.
  *
  * @since ${version}
  */
@@ -35,26 +35,26 @@ public class MicroService {
     @GET
     @Path("/get")
     public String get() {
-        // Implementation for HTTP GET request
+        // TODO: Implementation for HTTP GET request
         return "Hello";
     }
 
     @POST
     @Path("/post")
     public void post() {
-        // Implementation for HTTP POST request
+        // TODO: Implementation for HTTP POST request
     }
 
     @PUT
     @Path("/put")
     public void put() {
-        // Implementation for HTTP PUT request
+        // TODO: Implementation for HTTP PUT request
     }
 
     @DELETE
     @Path("/delete")
     public void delete() {
-        // Implementation for HTTP DELETE request
+        // TODO: Implementation for HTTP DELETE request
     }
 
 }
