@@ -31,16 +31,16 @@
 
     <requiredProperties>
         <requiredProperty key="groupId">
-            <defaultValue>org.wso2.msf4j</defaultValue>
+            <defaultValue>org.example</defaultValue>
         </requiredProperty>
         <requiredProperty key="artifactId">
-            <defaultValue>org.wso2.msf4j.microservice</defaultValue>
+            <defaultValue>msf4j-service</defaultValue>
         </requiredProperty>
         <requiredProperty key="version">
             <defaultValue>1.0.0-SNAPSHOT</defaultValue>
         </requiredProperty>
         <requiredProperty key="package">
-            <defaultValue>org.wso2.msf4j.microservice</defaultValue>
+            <defaultValue>org.example.service</defaultValue>
         </requiredProperty>
     </requiredProperties>
 </archetype-descriptor>

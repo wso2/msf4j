@@ -1,8 +1,36 @@
 #Creating a Microservice using msf4j-microservice-archetype
 
-A Microservice based on WSO2 Microservices Framework can be created with one command using this archetype.
+A Microservice based on WSO2 Microservices Framework for Java (MSF4J) can be created with single command 
+using this Maven archetype.
 
-Following are the properties you need to pass in your command which describe the archetype you are going to use.
+Here is an example;
+
+```
+mvn archetype:generate -DarchetypeGroupId=org.wso2.msf4j -DarchetypeArtifactId=msf4j-microservice-archetype 
+-DarchetypeVersion=1.0.0 -DgroupId=org.example -DartifactId=myservice -Dversion=1.0.0-SNAPSHOT 
+-Dpackage=org.example.service
+
+```
+
+The above command will create an MSF4J microservice project structure for you similar to the one shown below;
+
+```
+myservice
+├── pom.xml
+└── src
+    └── main
+        └── java
+            └── org
+                └── example
+                    └── service
+                        ├── Application.java
+                        └── MyService.java
+```
+
+##Properties
+
+The following table lists down the properties specific to the msf4j-microservice-archetype;
+
 
 | Property            | Description                     | Mandatory/Optional |
 | ------------------- | ------------------------------- | ------------------ |
@@ -10,58 +38,15 @@ Following are the properties you need to pass in your command which describe the
 | archetypeArtifactId | The artifactId of the archetype | Mandatory          |
 | archetypeVersion    | The version of the archetype    | Optional           |
 
-To read more on what other properties you can use when generating a project from an archetype please refer [1]
 
-Following are the properties you need to pass in your command which describe the project you are creating using
-this archetype.
+The table below lists down the properties which are specific to the project you create.
 
 | Property   | Description                          | Default value               |
 | ---------  | ------------------------------------ | --------------------------- |
-| groupId    | The groupId of the project           | org.wso2.msf4j              |
-| artifactId | The artifactId of the project        | org.wso2.msf4j.microservice |
+| groupId    | The groupId of the project           | org.example                 |
+| artifactId | The artifactId of the project        | msf4j-service               |
 | version    | The version of the project           | 1.0.0-SNAPSHOT              |
-| package    | The package hierarchy of the project | org.wso2.msf4j.microservice |
+| package    | The package hierarchy of the project | org.example.service         |
 
-Example:
-
-If you execute the following command,
-
-```
-mvn archetype:generate -DarchetypeGroupId=org.wso2.msf4j -DarchetypeArtifactId=msf4j-microservice-archetype -DarchetypeVersion=1.0.0-SNAPSHOT -DgroupId=org.sample -DartifactId=org.sample.project -Dversion=1.0.0 -Dpackage=org.sample.project
-
-```
-and see a result similar to the following archetype generation is successful.
-
-```
-[INFO] project created from Archetype in dir: /home/manurip/Documents/Work/Tasks/RnD/mss/archetype-creation/org.sample.project
-[INFO] ------------------------------------------------------------------------
-[INFO] BUILD SUCCESS
-[INFO] ------------------------------------------------------------------------
-[INFO] Total time: 37.586 s
-[INFO] Finished at: 2016-02-04T21:07:36+05:30
-[INFO] Final Memory: 16M/981M
-[INFO] ------------------------------------------------------------------------
-
-```
-
-Following project will be created with the version 1.0.0
-
-```
-org.sample.project
-├── pom.xml
-└── src
-    └── main
-        └── java
-            └── org
-                └── sample
-                    └── project
-                        ├── Application.java
-                        └── MicroService.java
-```
-
-If you don’t pass any of the project parameters you will be provided with the option to choose default values for some or all of the variable parameters depending on your choice.
-
-
-References
-
+For more information about Maven archetypes, see 
 [1] [http://maven.apache.org/archetype/maven-archetype-plugin/generate-mojo.html](http://maven.apache.org/archetype/maven-archetype-plugin/generate-mojo.html)
