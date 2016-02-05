@@ -18,7 +18,7 @@ package org.wso2.msf4j.example.service;
 import org.wso2.carbon.metrics.annotation.Counted;
 import org.wso2.carbon.metrics.annotation.Metered;
 import org.wso2.carbon.metrics.annotation.Timed;
-import org.wso2.msf4j.httpmonitoring.HTTPMonitoring;
+import org.wso2.msf4j.httpmonitoring.HTTPMonitored;
 
 import java.util.Collection;
 import java.util.Map;
@@ -52,7 +52,7 @@ public class StudentService {
     @Path("/{nic}")
     @Produces("application/json")
     @Timed
-    @HTTPMonitoring
+    @HTTPMonitored
     public Student getStudent(@PathParam("nic") String nic) {
         return students.get(nic);
     }
@@ -60,7 +60,7 @@ public class StudentService {
     @POST
     @Consumes("application/json")
     @Metered
-    @HTTPMonitoring
+    @HTTPMonitored
     public void addStudent(Student student) {
         students.put(student.getNic(), student);
     }
@@ -68,7 +68,7 @@ public class StudentService {
     @GET
     @Produces("application/json")
     @Counted
-    @HTTPMonitoring
+    @HTTPMonitored
     public Collection<Student> getAll() {
         return students.values();
     }

@@ -15,15 +15,10 @@
  */
 package org.wso2.msf4j.example.service;
 
-import org.osgi.framework.BundleContext;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
 import org.wso2.carbon.metrics.annotation.Counted;
 import org.wso2.carbon.metrics.annotation.Metered;
 import org.wso2.carbon.metrics.annotation.Timed;
-import org.wso2.msf4j.httpmonitoring.HTTPMonitoring;
-import org.wso2.msf4j.Microservice;
+import org.wso2.msf4j.httpmonitoring.HTTPMonitored;
 
 import java.util.Random;
 
@@ -34,28 +29,13 @@ import javax.ws.rs.PathParam;
 /**
  * Demonstrating the use of Metrics & HTTP Monitoring Annotations
  */
-@Path("/demo-bundle")
-@HTTPMonitoring
-@Component(
-        name = "org.wso2.msf4j.example.service.DemoService",
-        service = Microservice.class,
-        immediate = true
-)
-public class DemoService implements Microservice {
+@Path("/demo")
+@HTTPMonitored
+public class DemoService {
 
     private final Random random = new Random();
 
     private long total = 0L;
-
-    @Activate
-    protected void activate(BundleContext bundleContext){
-        // Nothing to do
-    }
-
-    @Deactivate
-    protected void deactivate(BundleContext bundleContext){
-        // Nothing to do
-    }
 
     @GET
     @Path("/rand/{bound}")

@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 import javax.ws.rs.Path;
 
 /**
- * Monitor HTTP Requests for methods with {@link HTTPMonitoring} annotations.
+ * Monitor HTTP Requests for methods with {@link HTTPMonitored} annotations.
  */
 @Component(
     name = "org.wso2.msf4j.httpmonitoring.HTTPMonitoringInterceptor",
@@ -68,8 +68,8 @@ public class HTTPMonitoringInterceptor implements Interceptor {
         Method method = serviceMethodInfo.getMethod();
         Interceptor interceptor = map.get(method);
         if (interceptor == null) {
-            if (method.isAnnotationPresent(HTTPMonitoring.class)
-                    || method.getDeclaringClass().isAnnotationPresent(HTTPMonitoring.class)) {
+            if (method.isAnnotationPresent(HTTPMonitored.class)
+                    || method.getDeclaringClass().isAnnotationPresent(HTTPMonitored.class)) {
                 interceptor = new HTTPInterceptor();
                 map.put(method, interceptor);
             }
