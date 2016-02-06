@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.jboss.as.quickstarts.rshelloworld;
+package org.wso2.msf4j.perftest.echo.wildfly;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
