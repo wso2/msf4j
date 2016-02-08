@@ -1,4 +1,4 @@
-#Creating a Microservice using msf4j-microservice-archetype
+#Creating a Microservice using the msf4j-microservice Maven archetype
 
 A Microservice based on WSO2 Microservices Framework for Java (MSF4J) can be created with single command 
 using this Maven archetype.
@@ -6,7 +6,7 @@ using this Maven archetype.
 Here is an example;
 
 ```
-mvn archetype:generate -DarchetypeGroupId=org.wso2.msf4j -DarchetypeArtifactId=msf4j-microservice-archetype 
+mvn archetype:generate -DarchetypeGroupId=org.wso2.msf4j -DarchetypeArtifactId=msf4j-microservice 
 -DarchetypeVersion=1.0.0 -DgroupId=org.example -DartifactId=myservice -Dversion=1.0.0-SNAPSHOT 
 -Dpackage=org.example.service
 
@@ -29,7 +29,7 @@ myservice
 
 ##Properties
 
-The following table lists down the properties specific to the msf4j-microservice-archetype;
+The following table lists down the properties specific to the msf4j-microservice Maven archetype;
 
 
 | Property            | Description                     | Mandatory/Optional |
@@ -49,5 +49,4 @@ The table below lists down the properties which are specific to the project you 
 | package         | The package hierarchy of the project | org.example.service         |
 | serviceClass    | The names of the microservice class  | org.example.service         |
 
-For more information about Maven archetypes, see 
-[1] [http://maven.apache.org/archetype/maven-archetype-plugin/generate-mojo.html](http://maven.apache.org/archetype/maven-archetype-plugin/generate-mojo.html)
+For more information about Maven archetypes, see [http://maven.apache.org/archetype/maven-archetype-plugin/generate-mojo.html](http://maven.apache.org/archetype/maven-archetype-plugin/generate-mojo.html)
