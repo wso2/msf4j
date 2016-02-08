@@ -70,19 +70,19 @@
         </fileSet>
     </fileSets>
 
-    <!--<files>
+    <files>
         <file>
-            <source>carbon-home/LICENSE.txt</source>
-            <outputDirectory></outputDirectory>
+            <source>LICENSE.txt</source>
+            <outputDirectory>.</outputDirectory>
             <fileMode>644</fileMode>
             <filtered>false</filtered>
         </file>
 
         <file>
-            <source>carbon-home/README.txt</source>
-            <outputDirectory></outputDirectory>
+            <source>README.txt</source>
+            <outputDirectory>.</outputDirectory>
             <fileMode>644</fileMode>
             <filtered>false</filtered>
         </file>
-    </files>-->
+    </files>
 </assembly>
