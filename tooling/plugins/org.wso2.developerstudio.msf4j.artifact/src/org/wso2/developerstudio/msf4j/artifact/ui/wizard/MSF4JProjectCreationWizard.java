@@ -156,9 +156,6 @@ public class MSF4JProjectCreationWizard extends AbstractWSO2ProjectCreationWizar
                 File resourcePhysicalFolder = resourceFolder.getRawLocation().makeAbsolute().toFile();
                 File newResourcePhysicalFolder = new File(resourcePhysicalFolder.getParent() + File.separator
                         + RESOURCES_DIRECTORY);
-                if(resourcePhysicalFolder.exists()){
-                	System.out.println(" resourcePhysicalFolder exists !!!");
-                }
                 resourcePhysicalFolder.renameTo(newResourcePhysicalFolder);
 
                 IFolder sourceFolder = ProjectUtils.getWorkspaceFolder(msf4jArtifactModel.getProject(), SRC_DIRECTORY,
