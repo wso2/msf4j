@@ -85,9 +85,6 @@ public class MSF4JArtifactProjectNature extends AbstractWSO2ProjectNature {
         msf4jParent.setVersion(MSF4J_SERVICE_PARENT_VERSION);
         mavenProject.getModel().setParent(msf4jParent);
 
-        List<Dependency> generatedDependencyList = mavenProject.getModel().getDependencies();
-        mavenProject.getModel().removeDependency(generatedDependencyList.get(0));
-
         Properties generatedProperties = mavenProject.getModel().getProperties();
         generatedProperties.clear();
 

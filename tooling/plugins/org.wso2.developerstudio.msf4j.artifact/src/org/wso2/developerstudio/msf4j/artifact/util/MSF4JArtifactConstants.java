@@ -51,8 +51,15 @@ public class MSF4JArtifactConstants {
     public static final String JAVA_DIRECTORY = "java";
     public static final String MAIN_DIRECTORY = "main";
     public static final String SRC_DIRECTORY = "src";
+    public static final String WEBAPP_DIRECTORY = "webapp";
     public static final String MSF4J_PROJECT_CREATION_TASK = "Creating MSF4J Project...";
     public static final String PROCESSING_CONFIGURATION_TASK = "Processing configuration...";
     public static final String CODE_GENERATION_TASK = "Generating code...";
+    
+    public static final String API_EXCEPTION_JAVA = "ApiException.java";
+    public static final String API_RESPONSE_MESSAGE_JAVA = "ApiResponseMessage.java";
+    public static final String API_ORIGIN_FILTER_JAVA = "ApiOriginFilter.java";
+    public static final String NOT_FOUND_EXCEPTION_JAVA = "NotFoundException.java";
+    public static final String API = "api";
 
 }

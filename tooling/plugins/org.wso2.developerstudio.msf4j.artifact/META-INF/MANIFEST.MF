@@ -62,4 +62,4 @@ Bundle-ClassPath: lib/commons-lang3-3.0.jar,
  lib/swagger-models-1.5.4.jar,
  lib/swagger-core-1.5.4.jar,
  lib/jackson-databind-2.6.3.jar,
- lib/swagger-codegen-2.1.5-SNAPSHOT.jar
+ lib/swagger-codegen-2.1.4.jar
