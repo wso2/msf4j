@@ -27,8 +27,9 @@ You simply need to annotate your service and deploy it using a single line of co
 
 Let's get started by writing a hello world MSF4J microservice. 
 
-You can use the msf4j-microservice-archetype Maven plugin to create your first MSF4J project. JDK 1.8 and Maven 3.x
-& run the following command.
+You can use the [msf4j-microservice-archetype](https://github.com/wso2/msf4j/tree/master/archetypes)
+ Maven plugin to create your first MSF4J project. 
+ Make sure you have JDK 1.8 and Maven 3.x installed, & run the following command.
 
 ```
 mvn archetype:generate -DarchetypeGroupId=org.wso2.msf4j \
