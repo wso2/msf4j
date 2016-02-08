@@ -80,8 +80,8 @@
 
         <!-- Copy the analytics setup -->
         <fileSet>
-            <directory>../analytics/</directory>
-            <outputDirectory>analytics</outputDirectory>
+            <directory>../analytics/das-setup</directory>
+            <outputDirectory>analytics/das-setup</outputDirectory>
             <excludes>
                 <exclude>**/target/**</exclude>
                 <exclude>**/*.iml</exclude>

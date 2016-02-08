@@ -15,5 +15,5 @@
   ~ limitations under the License.
   -->
 <artifact name="http_event_store" version="1.0.0" type="analytics/eventstore" serverRole="DataAnalyticsServer">
-    <file>org_wso2_msf4j_httpmonitoring.xml</file>
+    <file>org_wso2_msf4j_analytics_httpmonitoring.xml</file>
 </artifact>
