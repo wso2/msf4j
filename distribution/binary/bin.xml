@@ -15,11 +15,20 @@
   -->
 <assembly>
     <includeBaseDirectory>true</includeBaseDirectory>
-    <baseDirectory>wso2msf4j-${project.version}</baseDirectory>
+    <baseDirectory>wso2msf4j-dist-${project.version}</baseDirectory>
     <id>msf4j</id>
     <formats>
         <format>zip</format>
     </formats>
+
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>.</outputDirectory>
+            <includes>
+                <include>org.wso2.msf4j:msf4j-all:jar</include>
+            </includes>
+        </dependencySet>
+    </dependencySets>
 
     <fileSets>
 
