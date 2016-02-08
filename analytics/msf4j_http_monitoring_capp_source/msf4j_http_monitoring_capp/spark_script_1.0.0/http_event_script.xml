@@ -19,7 +19,7 @@
     <Script>
 
         create temporary table ServiceRequestData USING CarbonAnalytics OPTIONS(tableName
-        "ORG_WSO2_MSF4J_HTTPMONITORING");
+        "ORG_WSO2_MSF4J_ANALYTICS_HTTPMONITORING");
 
         CREATE TEMPORARY TABLE MSS_REQUESTS_SUMMARY_PER_MINUTE USING CarbonAnalytics OPTIONS (tableName
         "MSS_REQUESTS_SUMMARY_PER_MINUTE",
