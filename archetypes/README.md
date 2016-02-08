@@ -49,5 +49,4 @@ The table below lists down the properties which are specific to the project you 
 | package         | The package hierarchy of the project | org.example.service         |
 | serviceClass    | The names of the microservice class  | org.example.service         |
 
-For more information about Maven archetypes, see 
-[1] [http://maven.apache.org/archetype/maven-archetype-plugin/generate-mojo.html](http://maven.apache.org/archetype/maven-archetype-plugin/generate-mojo.html)
+For more information about Maven archetypes, see [http://maven.apache.org/archetype/maven-archetype-plugin/generate-mojo.html](http://maven.apache.org/archetype/maven-archetype-plugin/generate-mojo.html)
