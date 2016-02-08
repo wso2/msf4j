@@ -24,32 +24,14 @@
     <fileSets>
 
         <fileSet>
-            <directory>carbon-home/conf/transports</directory>
-            <outputDirectory>conf/transports</outputDirectory>
-            <fileMode>644</fileMode>
-        </fileSet>
-
-        <fileSet>
-            <directory>carbon-home/conf/osgi</directory>
-            <outputDirectory>conf/osgi</outputDirectory>
-            <fileMode>644</fileMode>
-        </fileSet>
-
-        <fileSet>
-            <directory>carbon-home/conf/data-bridge</directory>
-            <outputDirectory>conf/data-bridge</outputDirectory>
-            <fileMode>644</fileMode>
-        </fileSet>
-
-        <fileSet>
-            <directory>carbon-home/deployment/microservices</directory>
-            <outputDirectory>deployment/microservices</outputDirectory>
+            <directory>conf</directory>
+            <outputDirectory>.</outputDirectory>
             <fileMode>644</fileMode>
         </fileSet>
 
         <!-- Copy the samples -->
         <fileSet>
-            <directory>../samples/</directory>
+            <directory>../../samples/</directory>
             <outputDirectory>samples</outputDirectory>
             <excludes>
                 <exclude>**/target/**</exclude>
@@ -67,7 +49,7 @@
 
         <!-- Copy the analytics setup -->
         <fileSet>
-            <directory>../analytics/das-setup</directory>
+            <directory>../../analytics/das-setup</directory>
             <outputDirectory>analytics/das-setup</outputDirectory>
             <excludes>
                 <exclude>**/target/**</exclude>
@@ -79,7 +61,7 @@
         </fileSet>
     </fileSets>
 
-    <files>
+    <!--<files>
         <file>
             <source>carbon-home/LICENSE.txt</source>
             <outputDirectory></outputDirectory>
@@ -93,5 +75,5 @@
             <fileMode>644</fileMode>
             <filtered>false</filtered>
         </file>
-    </files>
+    </files>-->
 </assembly>

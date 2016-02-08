@@ -121,6 +121,8 @@
         <module>samples/log-interceptor-bundle</module>
         <module>samples/lifecycle</module>
         <module>product</module>
+        <module>distribution/msf4j-all</module>
+        <module>distribution/binary</module>
         <module>archetypes/msf4j-microservice</module>
     </modules>
 
