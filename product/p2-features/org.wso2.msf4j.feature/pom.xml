@@ -182,6 +182,10 @@
                                     <version>${msf4j.version}</version>
                                 </bundle>
                                 <bundle>
+                                    <symbolicName>msf4j-analytics</symbolicName>
+                                    <version>${msf4j.version}</version>
+                                </bundle>
+                                <bundle>
                                     <symbolicName>jaxrs-delegates</symbolicName>
                                     <version>${msf4j.version}</version>
                                 </bundle>
