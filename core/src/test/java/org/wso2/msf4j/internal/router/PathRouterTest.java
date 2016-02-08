@@ -32,6 +32,7 @@ public class PathRouterTest {
     public void testPathRoutings() {
 
         PatternPathRouterWithGroups<String> pathRouter = PatternPathRouterWithGroups.create();
+        pathRouter.add("/", "root");
         pathRouter.add("/foo/{baz}/b", "foobarb");
         pathRouter.add("/foo/bar/baz", "foobarbaz");
         pathRouter.add("/baz/bar", "bazbar");
@@ -56,6 +57,16 @@ public class PathRouterTest {
         pathRouter.add("/**/wildcard/**/foo/{id}/**", "slash-wildcard-foo-id-2");
 
         List<PatternPathRouterWithGroups.RoutableDestination<String>> routes;
+
+        routes = pathRouter.getDestinations("");
+        Assert.assertEquals(1, routes.size());
+        Assert.assertEquals("root", routes.get(0).getDestination());
+        Assert.assertTrue(routes.get(0).getGroupNameValues().isEmpty());
+
+        routes = pathRouter.getDestinations("/");
+        Assert.assertEquals(1, routes.size());
+        Assert.assertEquals("root", routes.get(0).getDestination());
+        Assert.assertTrue(routes.get(0).getGroupNameValues().isEmpty());
 
         routes = pathRouter.getDestinations("/foo/bar/baz");
         Assert.assertEquals(1, routes.size());

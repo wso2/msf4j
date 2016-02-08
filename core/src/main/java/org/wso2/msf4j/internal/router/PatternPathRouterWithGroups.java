@@ -40,6 +40,8 @@ public final class PatternPathRouterWithGroups<T> {
     // non-greedy wild card match.
     private static final Pattern WILD_CARD_PATTERN = Pattern.compile("\\*\\*");
 
+    private static final String PATH_SLASH = "/";
+
     private final List<ImmutablePair<Pattern, RouteDestinationWithGroups>> patternRouteList;
 
     /**
@@ -62,13 +64,13 @@ public final class PatternPathRouterWithGroups<T> {
     public void add(final String source, final T destination) {
 
         // replace multiple slashes with a single slash.
-        String path = source.replaceAll("/+", "/");
+        String path = source.replaceAll("/+", PATH_SLASH);
 
-        path = (path.endsWith("/") && path.length() > 1)
+        path = (path.endsWith(PATH_SLASH) && path.length() > 1)
                 ? path.substring(0, path.length() - 1) : path;
 
 
-        String[] parts = path.split("/");
+        String[] parts = path.split(PATH_SLASH);
         StringBuilder sb = new StringBuilder();
         List<String> groupNames = Lists.newArrayList();
 
@@ -82,11 +84,13 @@ public final class PatternPathRouterWithGroups<T> {
             } else {
                 sb.append(part);
             }
-            sb.append("/");
+            sb.append(PATH_SLASH);
         }
 
         //Ignore the last "/"
-        sb.setLength(sb.length() - 1);
+        if (sb.length() > 0) {
+            sb.setLength(sb.length() - 1);
+        }
 
         Pattern pattern = Pattern.compile(sb.toString());
         patternRouteList.add(ImmutablePair.of(pattern, new RouteDestinationWithGroups(destination, groupNames)));
@@ -101,7 +105,7 @@ public final class PatternPathRouterWithGroups<T> {
      */
     public List<RoutableDestination<T>> getDestinations(String path) {
 
-        String cleanPath = (path.endsWith("/") && path.length() > 1)
+        String cleanPath = (path.endsWith(PATH_SLASH) && path.length() > 0)
                 ? path.substring(0, path.length() - 1) : path;
 
         List<RoutableDestination<T>> result = Lists.newArrayList();
