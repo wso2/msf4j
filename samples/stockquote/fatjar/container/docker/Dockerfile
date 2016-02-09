@@ -24,11 +24,11 @@ WORKDIR /opt
 # --------------------------------
 # Copy scripts, packages & plugins
 # --------------------------------
-COPY packages/stockquote-service.jar /opt/
+COPY packages/stockquote-fatjar.jar /opt/
 
 # ----------------------
 # Expose container ports
 # ----------------------
 EXPOSE 8080
 
-ENTRYPOINT java -jar /opt/stockquote-service.jar
+ENTRYPOINT java -jar /opt/stockquote-fatjar.jar
