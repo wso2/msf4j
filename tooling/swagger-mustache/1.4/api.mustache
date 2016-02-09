@@ -1,0 +1,45 @@
+package {{package}};
+
+import {{modelPackage}}.*;
+import {{package}}.{{classname}}Service;
+import {{package}}.factories.{{classname}}ServiceFactory;
+
+
+{{#imports}}import {{import}};
+{{/imports}}
+
+import java.util.List;
+
+import javax.ws.rs.core.Response;
+import javax.ws.rs.*;
+
+import org.wso2.msf4j.MicroservicesRunner;
+
+@Path("/{{baseName}}")
+{{#hasConsumes}}@Consumes({ {{#consumes}}"{{mediaType}}"{{#hasMore}}, {{/hasMore}}{{/consumes}} }){{/hasConsumes}}
+{{#hasProduces}}@Produces({ {{#produces}}"{{mediaType}}"{{#hasMore}}, {{/hasMore}}{{/produces}} }){{/hasProduces}}
+
+{{>generatedAnnotation}}
+{{#operations}}
+public class {{classname}}  {
+
+   private final {{classname}}Service delegate = {{classname}}ServiceFactory.get{{classname}}();
+
+   public static void main(String[] args) {
+       new MicroservicesRunner().deploy(new {{classname}}()).start();
+    }
+
+{{#operation}}
+    @{{httpMethod}}
+    {{#subresourceOperation}}@Path("{{path}}"){{/subresourceOperation}}
+    {{#hasConsumes}}@Consumes({ {{#consumes}}"{{mediaType}}"{{#hasMore}}, {{/hasMore}}{{/consumes}} }){{/hasConsumes}}
+    {{#hasProduces}}@Produces({ {{#produces}}"{{mediaType}}"{{#hasMore}}, {{/hasMore}}{{/produces}} }){{/hasProduces}}
+   
+    public Response {{nickname}}({{#allParams}}{{>queryParams}}{{>pathParams}}{{>headerParams}}{{>bodyParams}}{{>formParams}}{{#hasMore}},
+    {{/hasMore}}{{/allParams}}) {
+        return delegate.{{nickname}}({{#allParams}}{{#isFile}}fileDetail{{/isFile}}{{^isFile}}{{paramName}}{{/isFile}}{{#hasMore}},{{/hasMore}}{{/allParams}});
+    }
+{{/operation}}
+}
+{{/operations}}
+
