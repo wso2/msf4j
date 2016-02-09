@@ -26,5 +26,5 @@
     <artifactId>org.wso2.developerstudio.msf4j.feature</artifactId>
     <packaging>eclipse-feature</packaging>
 
-    <name>MSS Feature</name>
+    <name>MSF4J tooling Feature</name>
 </project>

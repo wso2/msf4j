@@ -18,7 +18,8 @@
 <site>
    <category-def name="org.wso2.developerstudio.msf4j" label="MSF4J Tool">
 	   <description>
-		This is the MSF4J Tools Feature for the Developer Studio. This provides tooling support for WSO2 MSS Artifact creation with Developer Studio.
+		This is the MSF4J Tools Feature for the Developer Studio. This provides
+          tooling support for WSO2 MSF4J Artifact creation with Developer Studio.
 	   </description>
    </category-def>
 
