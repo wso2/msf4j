@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ Copyright (c) 2016, WSO2 Inc. (http://wso2.com) All Rights Reserved.
   ~
@@ -15,9 +14,17 @@
   ~ limitations under the License.
   -->
 
-<site>
-   <feature url="features/org.wso2.developerstudio.msf4j.feature_1.0.0.qualifier.jar" id="org.wso2.developerstudio.msf4j.feature" version="1.0.0.qualifier">
-      <category name="org.wso2.developerstudio.msf4j"/>
-   </feature>
-   <category-def name="org.wso2.developerstudio.msf4j" label="MSF4J Tool"/>
-</site>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>org.wso2.developerstudio.msf4j</groupId>
+        <artifactId>wso2-developerstudio-msf4j-features</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>org.wso2.developerstudio.msf4j.feature</artifactId>
+    <packaging>eclipse-feature</packaging>
+
+    <name>MSS Feature</name>
+</project>
