@@ -15,7 +15,7 @@
 ################################################################################
 listenerConfigurations:
  -
-  id: "wsf4j-http"
+  id: "msf4j-http"
   host: "127.0.0.1"
   port: 8080
   bossThreadPoolSize: 2
@@ -27,7 +27,7 @@ listenerConfigurations:
      value: 60
 
 # -
-#  id: "wsf4j-https"
+#  id: "msf4j-https"
 #  host: "127.0.0.1"
 #  port: 8888
 #  bossThreadPoolSize: 2
