@@ -6,14 +6,14 @@ WSO2 Microservices Framework for Java (MSF4J) is a lightweight high performance 
 WSO2 MSF4J is one of the highest performing lightweight Java microservices frameworks. The following graphs show the 
 throughput & memory consumption characteristics of MSF4J against other microservices frameworks.
  
-![Throughput](perf-benchmark/images/tps.png) 
+![Throughput](perf-benchmark/graphs/tps.png) 
 
 An echo service which accepts a 1KB request & echoes it back was developed for the respective frameworks, and requests
 were sent for different concurrency values. The test was repeated for each concurrency value for each framework and 
 the average throughput was calculated. 
 Tests were run out of the box without any tuning on 8 core 64GB server.
 
-![Memory](perf-benchmark/images/memory.png) 
+![Memory](perf-benchmark/graphs/memory.png) 
 
 Memory usage for each framework was observed after running the 1KB payload echo microservice on each framework & 
 sending a number of requests at different concurrency levels to each service. 
