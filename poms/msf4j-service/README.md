@@ -1,9 +1,9 @@
 # WSO2 MSF4J - Parent POM for Microservices
 
 This parent POM file makes life easy for developers who write microservices using WSO2 MSF4J. The following example
-from the [stockquote-fatjar](../samples/stockquote/fatjar) microservice example, 
-demonstrates how to quickly write a POM for your microservice using the
-MSF4J Service Parent POM.
+from the [stockquote-fatjar](../samples/stockquote/fatjar) example demonstrates how to quickly write a POM for your 
+microservice using the MSF4J Service Parent POM. Please see [archtypes](../../archetypes) for easily creating an 
+MSF4J project using archtypes.
 
 ```xml
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
