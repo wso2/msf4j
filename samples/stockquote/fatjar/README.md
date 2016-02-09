@@ -68,7 +68,7 @@ mvn clean install
 
 Use following command to run the application
 ```
-java -jar target/stockquote-service-*.jar
+java -jar target/stockquote-fatjar-*.jar
 ```
 
 ## How to test the sample
@@ -78,3 +78,19 @@ Use following cURL commands.
 ```
 curl http://localhost:8080/stockquote/IBM
 ```
+
+You should get a successful response if everything worked fine.
+
+## Invoking the service via HTTPS
+Use following command to run the application
+```
+java -jar -Dtransports.netty.conf=netty-transports.yml target/stockquote-fatjar-*.jar
+```
+
+The above command will expose the service via HTTP on port 8080 & HTTPS on 8443. Invoke the service as follows:
+
+```
+curl --insecure https://localhost:8443/stockquote/IBM
+```
+
+You should get a successful response if everything worked fine.
