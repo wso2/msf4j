@@ -37,7 +37,7 @@ After installing Vagrant and VirtualBox, run automated deployment.
 
 ##Run automated deployment 
 
-Download WSO2 Identity server pack (zip) and WSO2 Data Analytics Server pack (zip) into packs folder
+WSO2 Data Analytics Server pack (zip) into packs folder
 
 Run the following commands.
 ```
