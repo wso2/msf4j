@@ -18,7 +18,7 @@ All services were run out of the box without any tuning  separately on a 8 core 
 
 For each service in [echo-samples](echo-samples) directory,
 * Build service
-* Start the service and get the service url
+* Start the service and get the service url (Refer the readme of each service)
 * Perform the test using the automated [run-test.sh](run-test.sh) script
 
 ```
@@ -40,6 +40,6 @@ average heape usage values were plotted for each framework.
 For each service in [echo-samples](echo-samples) directory,
 * Build service
 * Start the service with GC logging enabled with time stamp (-Xloggc:gc-log-file.log -verbose:gc -XX:+PrintGCDateStamps)
-* Perform the test using the automated [run-test.sh](run-test.sh) script
+* Perform the test using the automated [run-test.sh](run-test.sh) script as mentioned earlier
 * Get time range of each concurrency level from the output of the run-test.sh
 * Analyse the GC log for each concurrency level by matching the time range and calculate the average heap usage for each concurrency level
