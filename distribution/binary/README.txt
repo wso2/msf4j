@@ -12,7 +12,7 @@ Prerequisites: JDK 1.8 and Maven 3.1.x.
 
 You can simply add the msf4j-all-1.0.0.jar file in this distribution to your classpath and start writing your
 microservice. If you have Maven installed, you could navigate to the relevant samples in this distribution and
-run 'mvn clean package' to build the samples. Please follows the instructions in the README files for detailed
+run 'mvn clean package' to build the samples. Please follow the instructions in the README files for detailed
 instructions about the samples.
 
 We also have a Maven archetype called msf4j-microservice, and you can create your project using that archetype.
