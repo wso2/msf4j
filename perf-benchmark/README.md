@@ -42,4 +42,4 @@ For each service in [echo-samples](echo-samples) directory,
 * Start the service with GC logging enabled with time stamp (-Xloggc:gc-log-file.log -verbose:gc -XX:+PrintGCDateStamps)
 * Perform the test using the automated [run-test.sh](run-test.sh) script
 * Get time range of each concurrency level from the output of the run-test.sh
-* Analyse GC log for each concurrency level range and calculate the average heap usage
+* Analyse the GC log for each concurrency level by matching the time range and calculate the average heap usage for each concurrency level
