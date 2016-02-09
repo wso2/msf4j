@@ -12,15 +12,18 @@ First you have to add the following dependency to the pom.
      </dependency>
 ```
 
-Following resource method renders the resources/templates/hello.mustache template
+Following resource method renders the [resources/templates/hello.mustache] template
 
 ```java
     @GET
-    @Path("/mustache/{name}")
-    public String helloMustache(@PathParam("name") String name) {
-        Map map = new HashMap<>();
-        map.put("name", name);
-        return MustacheTemplateEngine.instance().render("hello.mustache", map);
+    @Path("/{name}")
+    public Response helloMustache(@PathParam("name") String name) {
+        Map map = Collections.singletonMap("name", name);
+        String html = MustacheTemplateEngine.instance().render("hello.mustache", map);
+        return Response.ok()
+                .type(MediaType.TEXT_HTML)
+                .entity(html)
+                .build();
     }
 ```
 
@@ -42,8 +45,4 @@ java -jar target/template-*.jar
 
 ## How to tests the sample
 
-After the service is started you can use the following curl command to test the service.
-
-```
-curl -X GET http://localhost:8080/template/mustache/world
-```
+After the service is started navigate to [http://localhost:8080/MSF4J](http://localhost:8080/MSF4J) using the browser.
