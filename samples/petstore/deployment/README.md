@@ -33,7 +33,11 @@ sudo apt-get install vagrant
 sudo apt-get install virtualbox
 ```
 
-After installing Vagrant and VirtualBox, run automated deployment.
+**Install NFS Server**
+
+```apt-get install nfs-kernel-server```
+
+After installing Vagrant, VirtualBox and NFS, run automated deployment.
 
 ##Run automated deployment 
 
