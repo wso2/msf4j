@@ -233,7 +233,7 @@ There are three metrics annotations supported. Those are @Counted, @Metered and 
 
 Each metric must have a unique name and the MSF4J will use the fully qualified method name as the metric name by default. 
 You can give a custom name by using the "name" parameter. This custom name will be appended to the fully qualified method name 
-with a dot character. You can set the "absolute" parameter to "true" if you want use only the given as the metric name. 
+with a dot character. You can set the "absolute" parameter to "true" if you want use only the given name as the metric name. 
 
 For example, see following table to understand how the final metric name is built by the Metrics runtime. Let's asssume that the 
 annotation is added to the "hello" method of "HelloService" shown above.
@@ -247,7 +247,8 @@ annotation is added to the "hello" method of "HelloService" shown above.
 The Metrics annotations can be used only at the Method level.
 
 You can also configure a level in Metrics Annotations. For more information about Metric Levels, 
-see [WSO2 Carbon Metrics](https://github.com/wso2/carbon-metrics)
+see [WSO2 Carbon Metrics](https://github.com/wso2/carbon-metrics). In MSF4J, you can load the metrics level configuration 
+via the System Propery named `metrics.level.configuration`.
 
 #####@Counted
 Count the method invocations. There is a parameter named "monotonic" and it is set to false by default. This means that the
