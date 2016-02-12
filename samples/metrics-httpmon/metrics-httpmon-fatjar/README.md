@@ -14,7 +14,7 @@ Use @Timed to keep a histogram of durations of each method invocation.
 
 The @Metered annotation also keeps a count. The @Timed annotation keeps the count and rate of events as well.
 
-See [Metrics Annotations](../../../#metrics-annotations) for more details.
+See [Metrics Annotations](../../../../../#metrics-annotations) for more details.
 
 See the following example:
 
@@ -67,7 +67,7 @@ new MicroservicesRunner()
 
 Use the @HTTPMonitored annotation when you want to monitor each HTTP request. 
 
-See [HTTP Monitoring Annotation](../../../##http-monitoring-annotation) for more details.
+See [HTTP Monitoring Annotation](../../../../../##http-monitoring-annotation) for more details.
 
 See the following example to use the annotation at the Class level.
 
