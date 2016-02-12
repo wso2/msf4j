@@ -22,7 +22,7 @@
 
     <groupId>org.wso2.msf4j.perftest.echo</groupId>
     <artifactId>springboot-echo-message</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
