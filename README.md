@@ -213,6 +213,64 @@ Invoke by the container during server shutdown before the  container removes the
 
 For a detailed example, check out the lifecycle sample [here](https://github.com/wso2/msf4j/tree/master/samples/lifecycle). 
 
+##Annotations for Analytics
+
+In this section, we will look at the annotations available for analytics purposes MSF4J microservices. There are annotations 
+for Metrics and HTTP Monitoring.
+
+You will need to configure [analytics](analytics) when you want to publish Metrics and HTTP Monitoring events to 
+WSO2 Data Analytics Server (DAS).
+
+The Metrics data will be published to WSO2 DAS periodically. However the HTTP Monitoring events are published on each request.
+
+For a detailed example, check out the [Metrics and HTTP Monitoring sample](samples/metrics-httpmon/metrics-httpmon-fatjar). 
+
+###Metrics Annotations
+
+You can use the Metrics annnotations in your MSF4J microservices to understand how your microservices work in production.
+
+There are three metrics annotations supported. Those are @Counted, @Metered and @Timed.
+
+Each metric must have a unique name and the MSF4J will use the fully qualified method name as the metric name by default. 
+You can give a custom name by using the "name" parameter. This custom name will be appended to the fully qualified method name 
+with a dot character. You can set the "absolute" parameter to "true" if you want use only the given as the metric name. 
+
+For example, see following table to understand how the final metric name is built by the Metrics runtime. Let's asssume that the 
+annotation is added to the "hello" method of "HelloService" shown above.
+
+| Metrics Annotation                               | Metric Name                                         |
+| ------------------------------------------------ | --------------------------------------------------- |
+| @Counted                                         | org.example.service.HelloService.hello              |
+| @Counted(name = "helloCounter")                  | org.example.service.HelloService.hello.helloCounter |
+| @Counted(name = "helloCounter", absolute = true) | helloCounter                                        |
+
+The Metrics annotations can be used only at the Method level.
+
+You can also configure a level in Metrics Annotations. For more information about Metric Levels, 
+see [WSO2 Carbon Metrics](https://github.com/wso2/carbon-metrics)
+
+#####@Counted
+Count the method invocations. There is a parameter named "monotonic" and it is set to false by default. This means that the
+counter is decremented when the method returns. This is useful to count the current invocations of the annotated method.
+
+Use `@Counted(monotonic = true)` when you want the counter to increase monotonically. This is useful to count the total invocations 
+of the annotated method
+
+#####@Metered
+Measure the rate of method invocations. This also keeps a count of the total invocations of the annotated method.
+
+#####@Timed
+Maintain a histogram of durations of each method invocation. This also measures the rate of method invocations and keeps a count of the 
+total invocations of the annotated method. 
+
+###HTTP Monitoring Annotation
+
+You can use the annotation provided for HTTP Monitoring when you want to monitor each HTTP request and see the summary 
+in "HTTP Monitoring Dashboard".
+
+#####@HTTPMonitored
+Monitor each HTTP request. This annotation can be used at the Class level and the Method level.
+
 
 ###Complete Feature List
 * Annotation based definition of microservices
