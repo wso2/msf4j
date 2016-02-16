@@ -41,7 +41,7 @@ After installing Vagrant, VirtualBox and NFS, run automated deployment.
 
 ##Run automated deployment 
 
-WSO2 Data Analytics Server pack (zip) into packs folder
+Copy WSO2 Data Analytics Server pack (zip) into packs folder
 
 Run the following commands.
 ```
