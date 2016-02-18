@@ -20,7 +20,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-import io.netty.handler.codec.http.HttpMethod;
 import org.wso2.msf4j.HttpStreamer;
 
 import java.lang.annotation.Annotation;
@@ -37,6 +36,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
@@ -55,7 +55,7 @@ public final class HttpResourceModel {
     private static final String[] ANY_MEDIA_TYPE = new String[]{"*/*"};
     private static final int STREAMING_REQ_UNKNOWN = 0, STREAMING_REQ_SUPPORTED = 1, STREAMING_REQ_UNSUPPORTED = 2;
 
-    private final Set<HttpMethod> httpMethods;
+    private final Set<String> httpMethods;
     private final String path;
     private final Method method;
     private final Object handler;
@@ -69,9 +69,9 @@ public final class HttpResourceModel {
     /**
      * Construct a resource model with HttpMethod, method that handles httprequest, Object that contains the method.
      *
-     * @param path    path associated with this model.
-     * @param method  handler that handles the http request.
-     * @param handler instance {@code HttpHandler}.
+     * @param path             path associated with this model.
+     * @param method           handler that handles the http request.
+     * @param handler          instance {@code HttpHandler}.
      * @param exceptionHandler instance {@code ExceptionHandler} to handle exceptions.
      */
     public HttpResourceModel(String path, Method method, Object handler,
@@ -124,7 +124,7 @@ public final class HttpResourceModel {
     /**
      * @return httpMethods.
      */
-    public Set<HttpMethod> getHttpMethod() {
+    public Set<String> getHttpMethod() {
         return httpMethods;
     }
 
@@ -166,8 +166,8 @@ public final class HttpResourceModel {
      * @param method Method handling the http request.
      * @return String representation of HttpMethod from annotations or emptyString as a default.
      */
-    private Set<HttpMethod> getHttpMethods(Method method) {
-        Set<HttpMethod> httpMethods = Sets.newHashSet();
+    private Set<String> getHttpMethods(Method method) {
+        Set<String> httpMethods = Sets.newHashSet();
         if (method.isAnnotationPresent(GET.class)) {
             httpMethods.add(HttpMethod.GET);
         }
