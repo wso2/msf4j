@@ -6,7 +6,9 @@ This directory contain a comprehensive suite of samples demonstrating the capabi
 * JDK 1.8.*
 * Maven 3.0.x
 
-#Samples
+#Samples 
+In increasing order of complexity;
+
 * [Hello World](helloworld) - Running a Basic Microservice
 * [StockQuote (Fat jar)](stockquote/stockquote-fatjar) - Developing a Microservice as a single jar which packs all the dependencies
 * [StockQuote (OSGi bundle)](stockquote/stockquote-bundle) - Creating a Microservice as an OSGi Bundle
