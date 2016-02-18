@@ -46,7 +46,7 @@ import javax.ws.rs.core.Context;
 
 /**
  * HttpResourceModel contains information needed to handle Http call for a given path. Used as a destination in
- * {@code PatternPathRouterWithGroups} to route URI paths to right Http end points.
+ * {@code PatternPathRouter} to route URI paths to right Http end points.
  */
 public final class HttpResourceModel {
 

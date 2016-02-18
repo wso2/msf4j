@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
  *
  * @param <T> represents the destination of the routes.
  */
-public final class PatternPathRouterWithGroups<T> {
+public final class PatternPathRouter<T> {
 
     //GROUP_PATTERN is used for named wild card pattern in paths which is specified within braces.
     //Example: {id}
@@ -45,14 +45,14 @@ public final class PatternPathRouterWithGroups<T> {
     private final List<ImmutablePair<Pattern, RouteDestinationWithGroups>> patternRouteList;
 
     /**
-     * Initialize PatternPathRouterWithGroups.
+     * Initialize PatternPathRouter.
      */
-    public PatternPathRouterWithGroups() {
+    public PatternPathRouter() {
         this.patternRouteList = Lists.newArrayList();
     }
 
-    public static <T> PatternPathRouterWithGroups<T> create() {
-        return new PatternPathRouterWithGroups<>();
+    public static <T> PatternPathRouter<T> create() {
+        return new PatternPathRouter<>();
     }
 
     /**
