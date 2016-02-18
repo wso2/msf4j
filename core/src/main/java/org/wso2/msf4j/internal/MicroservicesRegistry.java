@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.internal.router.ExceptionHandler;
 import org.wso2.msf4j.internal.router.MicroserviceMetadata;
-import org.wso2.msf4j.internal.router.URLRewriter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -43,11 +42,10 @@ public class MicroservicesRegistry {
     private static final Logger LOG = LoggerFactory.getLogger(MicroservicesRegistry.class);
     private static final MicroservicesRegistry instance = new MicroservicesRegistry();
     private final Set<Object> httpServices = new HashSet<>();
+
     private final List<Interceptor> interceptors = new ArrayList<>();
-    private URLRewriter urlRewriter = null;
     private volatile MicroserviceMetadata httpResourceHandler =
-            new MicroserviceMetadata(Collections.emptyList(),
-                    interceptors, urlRewriter, new ExceptionHandler());
+            new MicroserviceMetadata(Collections.emptyList(), new ExceptionHandler());
 
     private MicroservicesRegistry() {
     }
@@ -90,13 +88,12 @@ public class MicroservicesRegistry {
         updateHttpResourceHandler();
     }
 
-    public void removeInterceptor(Interceptor interceptor) {
-        interceptors.remove(interceptor);
-        updateHttpResourceHandler();
+    public List<Interceptor> getInterceptors() {
+        return interceptors;
     }
 
-    public void setUrlRewriter(URLRewriter urlRewriter) {
-        this.urlRewriter = urlRewriter;
+    public void removeInterceptor(Interceptor interceptor) {
+        interceptors.remove(interceptor);
         updateHttpResourceHandler();
     }
 
@@ -107,7 +104,7 @@ public class MicroservicesRegistry {
     private void updateHttpResourceHandler() {
         httpResourceHandler =
                 new MicroserviceMetadata(Collections.unmodifiableSet(httpServices),
-                        interceptors, urlRewriter, new ExceptionHandler());
+                        new ExceptionHandler());
     }
 
     public void initServices() {
