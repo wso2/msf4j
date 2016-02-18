@@ -33,11 +33,15 @@ sudo apt-get install vagrant
 sudo apt-get install virtualbox
 ```
 
-After installing Vagrant and VirtualBox, run automated deployment.
+**Install NFS Server**
+
+```apt-get install nfs-kernel-server```
+
+After installing Vagrant, VirtualBox and NFS, run automated deployment.
 
 ##Run automated deployment 
 
-WSO2 Data Analytics Server pack (zip) into packs folder
+Copy WSO2 Data Analytics Server pack (zip) into packs folder
 
 Run the following commands.
 ```
