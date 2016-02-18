@@ -67,7 +67,7 @@ Use following cURL commands.
 ```
 curl -v -H "Authorization: Bearer <access_token>" http://localhost:8080/hello/john
 
-> GET /hello/sameera HTTP/1.1
+> GET /hello/john HTTP/1.1
 > Host: localhost:8080
 > User-Agent: curl/7.43.0
 > Accept: */*
