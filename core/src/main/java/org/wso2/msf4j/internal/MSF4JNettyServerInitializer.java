@@ -31,7 +31,7 @@ import java.util.Map;
 /**
  * Netty Transport ServerInitializer for the Microservices Server.
  */
-public class MSF4JNettyServerInitializer implements CarbonNettyServerInitializer {
+public class MSF4JNettyServerInitializer extends CarbonNettyServerInitializer {
 
     private DefaultEventExecutorGroup eventExecutorGroup;
 

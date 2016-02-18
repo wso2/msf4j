@@ -21,7 +21,7 @@ import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpMethod;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.wso2.carbon.transport.http.netty.internal.config.YAMLTransportConfigurationBuilder;
+import org.wso2.carbon.transport.http.netty.config.YAMLTransportConfigurationBuilder;
 import org.wso2.msf4j.MicroservicesRunner;
 
 import java.io.IOException;
