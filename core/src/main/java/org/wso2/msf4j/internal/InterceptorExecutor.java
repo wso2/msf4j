@@ -16,8 +16,9 @@
 
 package org.wso2.msf4j.internal;
 
-import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.msf4j.Interceptor;
+import org.wso2.msf4j.Request;
+import org.wso2.msf4j.Response;
 import org.wso2.msf4j.ServiceMethodInfo;
 import org.wso2.msf4j.internal.router.HttpResourceModel;
 
@@ -28,14 +29,14 @@ import java.util.List;
  */
 public class InterceptorExecutor {
 
-    private CarbonMessage request;
-    private CarbonMessage response;
+    private Request request;
+    private Response response;
     private List<Interceptor> interceptors;
     private ServiceMethodInfo serviceMethodInfo;
 
     private InterceptorExecutor(HttpResourceModel httpResourceModel,
-                                CarbonMessage request,
-                                CarbonMessage response,
+                                Request request,
+                                Response response,
                                 List<Interceptor> interceptors) {
         this.request = request;
         this.response = response;
@@ -45,9 +46,9 @@ public class InterceptorExecutor {
     }
 
     public static InterceptorExecutor instance(HttpResourceModel httpResourceModel,
-                                        CarbonMessage request,
-                                        CarbonMessage response,
-                                        List<Interceptor> interceptors) {
+                                               Request request,
+                                               Response response,
+                                               List<Interceptor> interceptors) {
         return new InterceptorExecutor(httpResourceModel, request, response, interceptors);
     }
 
