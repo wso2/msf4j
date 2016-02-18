@@ -18,10 +18,10 @@ package org.wso2.msf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.kernel.transports.TransportManager;
-import org.wso2.carbon.transport.http.netty.internal.NettyTransportDataHolder;
-import org.wso2.carbon.transport.http.netty.internal.config.ListenerConfiguration;
-import org.wso2.carbon.transport.http.netty.internal.config.TransportsConfiguration;
-import org.wso2.carbon.transport.http.netty.internal.config.YAMLTransportConfigurationBuilder;
+import org.wso2.carbon.transport.http.netty.config.ListenerConfiguration;
+import org.wso2.carbon.transport.http.netty.config.TransportsConfiguration;
+import org.wso2.carbon.transport.http.netty.config.YAMLTransportConfigurationBuilder;
+import org.wso2.carbon.transport.http.netty.internal.NettyTransportContextHolder;
 import org.wso2.carbon.transport.http.netty.listener.NettyListener;
 import org.wso2.msf4j.internal.MSF4JNettyServerInitializer;
 import org.wso2.msf4j.internal.MicroservicesRegistry;
@@ -49,7 +49,7 @@ public class MicroservicesRunner {
      */
     public MicroservicesRunner(int... ports) {
         for (int port : ports) {
-            NettyTransportDataHolder nettyTransportDataHolder = NettyTransportDataHolder.getInstance();
+            NettyTransportContextHolder nettyTransportDataHolder = NettyTransportContextHolder.getInstance();
             ListenerConfiguration listenerConfiguration =
                     new ListenerConfiguration("netty-" + port, "0.0.0.0", port);
             NettyListener listener = new NettyListener(listenerConfiguration);
@@ -71,7 +71,7 @@ public class MicroservicesRunner {
     public MicroservicesRunner() {
         TransportsConfiguration trpConfig = YAMLTransportConfigurationBuilder.build();
         Set<ListenerConfiguration> listenerConfigurations = trpConfig.getListenerConfigurations();
-        NettyTransportDataHolder nettyTransportDataHolder = NettyTransportDataHolder.getInstance();
+        NettyTransportContextHolder nettyTransportDataHolder = NettyTransportContextHolder.getInstance();
         for (ListenerConfiguration listenerConfiguration : listenerConfigurations) {
             NettyListener listener = new NettyListener(listenerConfiguration);
             transportManager.registerTransport(listener);
