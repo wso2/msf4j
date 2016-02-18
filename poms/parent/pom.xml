@@ -504,8 +504,8 @@
         <!-- Dependencies -->
         <carbon.kernel.version>5.0.0</carbon.kernel.version>
         <carbon.kernel.version.range>[5.0,6)</carbon.kernel.version.range>
-        <org.wso2.carbon.transport.http.netty.version>1.0.0</org.wso2.carbon.transport.http.netty.version>
-        <org.wso2.carbon.transport.http.netty.version.range>[1.0,2)</org.wso2.carbon.transport.http.netty.version.range>
+        <org.wso2.carbon.transport.http.netty.version>2.0.0-SNAPSHOT</org.wso2.carbon.transport.http.netty.version>
+        <org.wso2.carbon.transport.http.netty.version.range>[2.0,3)</org.wso2.carbon.transport.http.netty.version.range>
         <msf4j.version>1.0.0-SNAPSHOT</msf4j.version>
         <carbon.metrics.version>1.2.0</carbon.metrics.version>
         <carbon.metrics.version.range>[1.2,2)</carbon.metrics.version.range>
