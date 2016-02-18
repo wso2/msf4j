@@ -23,7 +23,7 @@ import org.wso2.carbon.transport.http.netty.config.TransportsConfiguration;
 import org.wso2.carbon.transport.http.netty.config.YAMLTransportConfigurationBuilder;
 import org.wso2.carbon.transport.http.netty.internal.NettyTransportContextHolder;
 import org.wso2.carbon.transport.http.netty.listener.NettyListener;
-import org.wso2.msf4j.internal.MSF4JNettyServerInitializer;
+import org.wso2.msf4j.internal.MSF4JMessageProcessor;
 import org.wso2.msf4j.internal.MicroservicesRegistry;
 
 import java.util.Set;
@@ -49,14 +49,12 @@ public class MicroservicesRunner {
      */
     public MicroservicesRunner(int... ports) {
         for (int port : ports) {
-            NettyTransportContextHolder nettyTransportDataHolder = NettyTransportContextHolder.getInstance();
+            NettyTransportContextHolder nettyTransportContextHolder = NettyTransportContextHolder.getInstance();
             ListenerConfiguration listenerConfiguration =
                     new ListenerConfiguration("netty-" + port, "0.0.0.0", port);
             NettyListener listener = new NettyListener(listenerConfiguration);
+            listener.setMessageProcessor(new MSF4JMessageProcessor(msRegistry));
             transportManager.registerTransport(listener);
-            nettyTransportDataHolder.
-                    addNettyChannelInitializer(listenerConfiguration.getId(),
-                            new MSF4JNettyServerInitializer(msRegistry));
         }
     }
 
@@ -74,10 +72,8 @@ public class MicroservicesRunner {
         NettyTransportContextHolder nettyTransportDataHolder = NettyTransportContextHolder.getInstance();
         for (ListenerConfiguration listenerConfiguration : listenerConfigurations) {
             NettyListener listener = new NettyListener(listenerConfiguration);
+            listener.setMessageProcessor(new MSF4JMessageProcessor(msRegistry));
             transportManager.registerTransport(listener);
-            nettyTransportDataHolder.
-                    addNettyChannelInitializer(listenerConfiguration.getId(),
-                            new MSF4JNettyServerInitializer(msRegistry));
         }
     }
 
