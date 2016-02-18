@@ -16,16 +16,21 @@
 
 package org.wso2.msf4j.internal;
 
+import com.google.common.net.HttpHeaders;
 import org.wso2.carbon.messaging.CarbonCallback;
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.CarbonMessageProcessor;
+import org.wso2.carbon.messaging.Constants;
+import org.wso2.carbon.messaging.DefaultCarbonMessage;
 import org.wso2.carbon.messaging.TransportSender;
+import org.wso2.msf4j.internal.router.MicroserviceMetadata;
 
 /**
  * Process carbon messages for MSF4J.
  */
 public class MSF4JMessageProcessor implements CarbonMessageProcessor {
 
+    private static String MSF4J_MSG_PROC_ID = "MSF4J-CM-PROCESSOR";
     private MicroservicesRegistry microservicesRegistry;
 
     public MSF4JMessageProcessor(MicroservicesRegistry microservicesRegistry) {
@@ -34,7 +39,15 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
 
     @Override
     public boolean receive(CarbonMessage carbonMessage, CarbonCallback carbonCallback) throws Exception {
-        return false;
+        String url = (String) carbonMessage.getProperty(Constants.TO);
+        MicroserviceMetadata microserviceMetadata = microservicesRegistry.getHttpResourceHandler();
+
+        DefaultCarbonMessage cMsg = new DefaultCarbonMessage();
+        cMsg.setStringMessageBody(url);
+        //cMsg.setHeader(HttpHeaders.TRANSFER_ENCODING, io.netty.handler.codec.http.HttpHeaders.Values.CHUNKED);
+        cMsg.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(url.length()));
+        carbonCallback.done(cMsg);
+        return true;
     }
 
     @Override
@@ -44,6 +57,6 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
 
     @Override
     public String getId() {
-        return null;
+        return MSF4J_MSG_PROC_ID;
     }
 }
