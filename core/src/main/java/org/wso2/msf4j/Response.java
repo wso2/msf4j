@@ -16,6 +16,7 @@
 
 package org.wso2.msf4j;
 
+import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.DefaultCarbonMessage;
 import org.wso2.carbon.messaging.FaultHandler;
 
@@ -26,11 +27,7 @@ import java.util.Stack;
 
 public class Response {
 
-    private final DefaultCarbonMessage defaultCarbonMessage;
-
-    public Response(DefaultCarbonMessage defaultCarbonMessage) {
-        this.defaultCarbonMessage = defaultCarbonMessage;
-    }
+    private final DefaultCarbonMessage defaultCarbonMessage = new DefaultCarbonMessage();
 
     public boolean isEomAdded() {
         return defaultCarbonMessage.isEomAdded();
@@ -102,5 +99,9 @@ public class Response {
 
     public void setStringMessageBody(String stringMessageBody) {
         defaultCarbonMessage.setStringMessageBody(stringMessageBody);
+    }
+
+    public CarbonMessage getCarbonMessage() {
+        return defaultCarbonMessage;
     }
 }

@@ -1,12 +1,16 @@
 package org.wso2.msf4j;
 
 import org.wso2.carbon.messaging.CarbonMessage;
+import org.wso2.carbon.messaging.Constants;
 import org.wso2.carbon.messaging.FaultHandler;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.stream.Collectors;
+import javax.ws.rs.core.HttpHeaders;
 
 public class Request {
 
@@ -83,4 +87,29 @@ public class Request {
     public void setFaultHandlerStack(Stack<FaultHandler> faultHandlerStack) {
         carbonMessage.setFaultHandlerStack(faultHandlerStack);
     }
+
+    public String getUri() {
+        return (String) carbonMessage.getProperty(Constants.TO);
+    }
+
+    public String getHttpMethod() {
+        return (String) carbonMessage.getProperty(Constants.HTTP_METHOD);
+    }
+
+    public List<String> getAcceptTypes() {
+        String acceptHeaderStr = carbonMessage.getHeader(HttpHeaders.ACCEPT);
+        return (acceptHeaderStr != null) ?
+                Arrays.asList(acceptHeaderStr.split("\\s*,\\s*"))
+                        .stream()
+                        .map(mediaType -> mediaType.split("\\s*;\\s*")[0])
+                        .collect(Collectors.toList()) :
+                null;
+    }
+
+    public String getContentType() {
+        String contentTypeHeaderStr = carbonMessage.getHeader(HttpHeaders.CONTENT_TYPE);
+        //Trim specified charset since UTF-8 is assumed
+        return (contentTypeHeaderStr != null) ? contentTypeHeaderStr.split("\\s*;\\s*")[0] : null;
+    }
+
 }
