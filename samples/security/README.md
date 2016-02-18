@@ -15,7 +15,11 @@ Here we use WSO2 Identity server as the authorization server.
  (https://docs.wso2.com/display/IS510/Configuring+a+Service+Provider)
 
 4) Then under the "configure inbound authentication" section, create an OAuth2 application which represents your
-client application. Instructions are available in the above documentation link. Once the OAuth2 application is created,
+client application. Instructions are available in the above documentation link. 
+
+For "Callback Url", provide "https://localhost:9443/oauth2/token"
+
+Once the OAuth2 application is created,
 you will get a pair of keys called OAuth Client Key and OAuth Client Secret.
 
 5) Execute following command from the installation directory to start the server.  e.g. /home/user/wso2is-5.1.0/
