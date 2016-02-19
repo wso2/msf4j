@@ -60,7 +60,6 @@ public final class HttpResourceModel {
     private final Method method;
     private final Object handler;
     private final List<ParameterInfo<?>> paramInfoList;
-    private final ExceptionHandler exceptionHandler;
     private List<String> consumesMediaTypes;
     private List<String> producesMediaTypes;
     private int isStreamingReqSupported = STREAMING_REQ_UNKNOWN;
@@ -72,16 +71,13 @@ public final class HttpResourceModel {
      * @param path             path associated with this model.
      * @param method           handler that handles the http request.
      * @param handler          instance {@code HttpHandler}.
-     * @param exceptionHandler instance {@code ExceptionHandler} to handle exceptions.
      */
-    public HttpResourceModel(String path, Method method, Object handler,
-                             ExceptionHandler exceptionHandler) {
+    public HttpResourceModel(String path, Method method, Object handler) {
         this.httpMethods = getHttpMethods(method);
         this.path = path;
         this.method = method;
         this.handler = handler;
         this.paramInfoList = makeParamInfoList(method);
-        this.exceptionHandler = exceptionHandler;
         consumesMediaTypes = parseConsumesMediaTypes();
         producesMediaTypes = parseProducesMediaTypes();
     }
@@ -244,10 +240,6 @@ public final class HttpResourceModel {
 
     public List<ParameterInfo<?>> getParamInfoList() {
         return paramInfoList;
-    }
-
-    public ExceptionHandler getExceptionHandler() {
-        return exceptionHandler;
     }
 
     public List<String> getConsumesMediaTypes() {

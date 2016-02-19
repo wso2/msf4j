@@ -50,11 +50,9 @@ public final class MicroserviceMetadata {
      * Construct HttpResourceHandler. Reads all annotations from all the handler classes and methods passed in,
      * constructs patternPathRouter which is routable by path to {@code HttpResourceModel} as destination of the route.
      *
-     * @param handlers         Iterable of HttpHandler.
-     * @param exceptionHandler Exception handler
+     * @param handlers Iterable of HttpHandler
      */
-    public MicroserviceMetadata(Iterable<? extends Object> handlers,
-                                ExceptionHandler exceptionHandler) {
+    public MicroserviceMetadata(Iterable<? extends Object> handlers) {
         //Store the handlers to call init and destroy on all handlers.
 
         for (Object handler : handlers) {
@@ -75,7 +73,7 @@ public final class MicroserviceMetadata {
                     }
                     String absolutePath = String.format("%s/%s", basePath, relativePath);
                     patternRouter.add(absolutePath, new HttpResourceModel(absolutePath, method,
-                            handler, new ExceptionHandler()));
+                            handler));
                 } else {
                     log.trace("Not adding method {}({}) to path routing like. " +
                                     "HTTP calls will not be routed to this method",

@@ -18,7 +18,6 @@ package org.wso2.msf4j.internal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.Interceptor;
-import org.wso2.msf4j.internal.router.ExceptionHandler;
 import org.wso2.msf4j.internal.router.MicroserviceMetadata;
 
 import java.lang.reflect.InvocationTargetException;
@@ -44,8 +43,7 @@ public class MicroservicesRegistry {
     private final Set<Object> httpServices = new HashSet<>();
 
     private final List<Interceptor> interceptors = new ArrayList<>();
-    private volatile MicroserviceMetadata httpResourceHandler =
-            new MicroserviceMetadata(Collections.emptyList(), new ExceptionHandler());
+    private volatile MicroserviceMetadata httpResourceHandler = new MicroserviceMetadata(Collections.emptyList());
 
     private MicroservicesRegistry() {
     }
@@ -103,8 +101,7 @@ public class MicroservicesRegistry {
 
     private void updateHttpResourceHandler() {
         httpResourceHandler =
-                new MicroserviceMetadata(Collections.unmodifiableSet(httpServices),
-                        new ExceptionHandler());
+                new MicroserviceMetadata(Collections.unmodifiableSet(httpServices));
     }
 
     public void initServices() {
