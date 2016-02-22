@@ -63,7 +63,6 @@ public class BasicHttpResponder extends AbstractHttpResponder {
 
         setCustomHeaders(response, headers);
 
-//    response.setChunked(true);
         response.headers().set(HttpHeaders.Names.TRANSFER_ENCODING, HttpHeaders.Values.CHUNKED);
 
         boolean responseKeepAlive = setResponseKeepAlive(response);

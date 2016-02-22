@@ -287,9 +287,6 @@ public class LDAPServerConfigurationBuilder {
      */
     private void buildPartitionConfigurations(OMElement documentElement) {
 
-        //read user-mgt.xml
-        //RealmConfiguration realmConfig = getUserManagementXMLElement();
-
         this.partitionConfigurations = new PartitionInfo();
 
         OMElement defaultPartition = documentElement.getFirstChildWithName(new QName("DefaultPartition"));

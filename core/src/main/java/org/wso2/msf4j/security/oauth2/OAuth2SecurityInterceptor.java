@@ -121,9 +121,6 @@ public class OAuth2SecurityInterceptor implements Interceptor {
                     "Invalid Access token.");
         }
 
-        // 4. TODO build User principal based on the claims available in the response.
-//        String claims = responseData.get(IntrospectionResponse.SUB);
-
         return true;
     }
 

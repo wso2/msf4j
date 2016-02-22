@@ -189,7 +189,6 @@ public class LDAPUserStoreManager {
         Attribute objClasses = new BasicAttribute("objectClass");
         objClasses.add("top");
         objClasses.add("groupOfNames");
-        //objClasses.add("groupOfForethoughtNames");
 
         // Assign the name and description to the group
         Attribute cn = new BasicAttribute("cn", name);
