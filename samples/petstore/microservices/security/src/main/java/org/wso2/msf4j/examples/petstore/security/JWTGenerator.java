@@ -41,7 +41,6 @@ import java.util.Date;
  */
 public class JWTGenerator {
 
-    private static final Logger log = LoggerFactory.getLogger(JWTGenerator.class);
     private static String keyStore = "wso2carbon.jks";
     private String alias = "wso2carbon";
     private String keyStorePassword = "wso2carbon";

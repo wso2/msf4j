@@ -39,8 +39,6 @@ import javax.faces.bean.RequestScoped;
 @RequestScoped
 public class PetListBean {
 
-    private static final Logger LOGGER = Logger.getLogger(PetListBean.class.getName());
-
     @Nullable
     @ManagedProperty("#{petService}")
     private PetService petService;
