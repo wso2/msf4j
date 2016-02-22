@@ -78,7 +78,7 @@ public class HttpResourceModelProcessor {
                 String acceptType = "*/*";
                 if (!producesMediaTypes.contains("*/*") && acceptTypes != null) {
                     acceptType =
-                            (acceptTypes.contains("*/*")) ? producesMediaTypes.get(0) :
+                            acceptTypes.contains("*/*") ? producesMediaTypes.get(0) :
                                     producesMediaTypes.stream().filter(acceptTypes::contains).findFirst().get();
                 }
                 int idx = 0;

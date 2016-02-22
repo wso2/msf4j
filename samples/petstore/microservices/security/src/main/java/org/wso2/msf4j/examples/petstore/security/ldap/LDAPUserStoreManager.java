@@ -292,7 +292,7 @@ public class LDAPUserStoreManager {
         if ((username != null) && (!username.equals(""))) {
             props.put(Context.SECURITY_AUTHENTICATION, "simple");
             props.put(Context.SECURITY_PRINCIPAL, username);
-            props.put(Context.SECURITY_CREDENTIALS, ((password == null) ? "" : password));
+            props.put(Context.SECURITY_CREDENTIALS, (password == null) ? "" : password);
         }
 
         return new InitialDirContext(props);

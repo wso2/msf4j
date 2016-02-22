@@ -58,7 +58,7 @@ public class BasicHttpResponder extends AbstractHttpResponder {
     @Override
     public ChunkResponder sendChunkStart(HttpResponseStatus status, @Nullable Multimap<String, String> headers) {
         Preconditions.checkArgument(responded.compareAndSet(false, true), "Response has been already sent");
-        Preconditions.checkArgument((status.code() >= 200 && status.code() < 210), "Http Chunk Failure");
+        Preconditions.checkArgument(status.code() >= 200 && status.code() < 210, "Http Chunk Failure");
         HttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_1, status);
 
         setCustomHeaders(response, headers);
