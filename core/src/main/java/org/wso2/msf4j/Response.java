@@ -104,4 +104,8 @@ public class Response {
     public CarbonMessage getCarbonMessage() {
         return defaultCarbonMessage;
     }
+
+    public void send() {
+
+    }
 }

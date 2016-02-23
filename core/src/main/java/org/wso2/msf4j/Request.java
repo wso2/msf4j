@@ -15,9 +15,23 @@ import javax.ws.rs.core.HttpHeaders;
 public class Request {
 
     private final CarbonMessage carbonMessage;
+    private List<String> acceptTypes = null;
+    private String contentType = null;
 
     public Request(CarbonMessage carbonMessage) {
         this.carbonMessage = carbonMessage;
+        // find accept types
+        String acceptHeaderStr = carbonMessage.getHeader(HttpHeaders.ACCEPT);
+        acceptTypes = (acceptHeaderStr != null) ?
+                Arrays.asList(acceptHeaderStr.split("\\s*,\\s*"))
+                        .stream()
+                        .map(mediaType -> mediaType.split("\\s*;\\s*")[0])
+                        .collect(Collectors.toList()) :
+                null;
+        //find content type
+        String contentTypeHeaderStr = carbonMessage.getHeader(HttpHeaders.CONTENT_TYPE);
+        //Trim specified charset since UTF-8 is assumed
+        contentType = (contentTypeHeaderStr != null) ? contentTypeHeaderStr.split("\\s*;\\s*")[0] : null;
     }
 
     public boolean isEomAdded() {
@@ -97,19 +111,11 @@ public class Request {
     }
 
     public List<String> getAcceptTypes() {
-        String acceptHeaderStr = carbonMessage.getHeader(HttpHeaders.ACCEPT);
-        return (acceptHeaderStr != null) ?
-                Arrays.asList(acceptHeaderStr.split("\\s*,\\s*"))
-                        .stream()
-                        .map(mediaType -> mediaType.split("\\s*;\\s*")[0])
-                        .collect(Collectors.toList()) :
-                null;
+        return acceptTypes;
     }
 
     public String getContentType() {
-        String contentTypeHeaderStr = carbonMessage.getHeader(HttpHeaders.CONTENT_TYPE);
-        //Trim specified charset since UTF-8 is assumed
-        return (contentTypeHeaderStr != null) ? contentTypeHeaderStr.split("\\s*;\\s*")[0] : null;
+        return contentType;
     }
 
 }
