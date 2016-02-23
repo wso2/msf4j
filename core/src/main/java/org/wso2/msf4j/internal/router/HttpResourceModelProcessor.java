@@ -19,22 +19,23 @@ package org.wso2.msf4j.internal.router;
 import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 import io.netty.handler.codec.http.FullHttpRequest;
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.QueryStringDecoder;
-import org.wso2.msf4j.HttpResponder;
 import org.wso2.msf4j.HttpStreamer;
+import org.wso2.msf4j.Request;
+import org.wso2.msf4j.Response;
 import org.wso2.msf4j.internal.router.beanconversion.BeanConverter;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 
 /**
  * This class is responsible for processing the HttpResourceModel
@@ -61,91 +62,81 @@ public class HttpResourceModelProcessor {
      * @throws HandlerException If an error occurs
      */
     @SuppressWarnings("unchecked")
-    public HttpMethodInfo buildHttpMethodInfo(HttpRequest request,
-                                              HttpResponder responder,
+    public HttpMethodInfo buildHttpMethodInfo(Request request,
+                                              Response responder,
                                               Map<String, String> groupValues,
                                               String contentType,
                                               List<String> acceptTypes)
             throws HandlerException {
-
-        //TODO: Refactor group values.
         try {
-            if (httpResourceModel.getHttpMethod().contains(request.getMethod())) {
-                //Setup args for reflection call
-                List<HttpResourceModel.ParameterInfo<?>> paramInfoList = httpResourceModel.getParamInfoList();
-                List<String> producesMediaTypes = httpResourceModel.getProducesMediaTypes();
-                Object[] args = new Object[paramInfoList.size()];
-                String acceptType = "*/*";
-                if (!producesMediaTypes.contains("*/*") && acceptTypes != null) {
-                    acceptType =
-                            (acceptTypes.contains("*/*")) ? producesMediaTypes.get(0) :
-                                    producesMediaTypes.stream().filter(acceptTypes::contains).findFirst().get();
-                }
-                int idx = 0;
-                for (HttpResourceModel.ParameterInfo<?> paramInfo : paramInfoList) {
-                    if (paramInfo.getAnnotation() != null) {
-                        Class<? extends Annotation> annotationType = paramInfo.getAnnotation().annotationType();
-                        if (PathParam.class.isAssignableFrom(annotationType)) {
-                            args[idx] = getPathParamValue((HttpResourceModel.ParameterInfo<String>) paramInfo,
-                                    groupValues);
-                        } else if (QueryParam.class.isAssignableFrom(annotationType)) {
-                            args[idx] = getQueryParamValue((HttpResourceModel.ParameterInfo<List<String>>) paramInfo,
-                                    request.getUri());
-                        } else if (HeaderParam.class.isAssignableFrom(annotationType)) {
-                            args[idx] = getHeaderParamValue((HttpResourceModel.ParameterInfo<List<String>>) paramInfo,
-                                    request);
-                        } else if (Context.class.isAssignableFrom(annotationType)) {
-                            args[idx] = getContextParamValue((HttpResourceModel.ParameterInfo<Object>) paramInfo,
-                                    request, responder);
-                        }
-                    } else if (request instanceof FullHttpRequest) {
-                        // If an annotation is not present the parameter is considered a
-                        // request body data parameter
-                        String content = ((FullHttpRequest) request).content().toString(Charsets.UTF_8);
-                        Type paramType = paramInfo.getParameterType();
-                        args[idx] = BeanConverter.instance((contentType != null) ? contentType : "*/*")
-                                .toObject(content, paramType);
+            //Setup args for reflection call
+            List<HttpResourceModel.ParameterInfo<?>> paramInfoList = httpResourceModel.getParamInfoList();
+            List<String> producesMediaTypes = httpResourceModel.getProducesMediaTypes();
+            Object[] args = new Object[paramInfoList.size()];
+            String acceptType = MediaType.WILDCARD;
+            if (!producesMediaTypes.contains(MediaType.WILDCARD) && acceptTypes != null) {
+                acceptType =
+                        (acceptTypes.contains(MediaType.WILDCARD)) ? producesMediaTypes.get(0) :
+                                producesMediaTypes.stream().filter(acceptTypes::contains).findFirst().get();
+            }
+            int idx = 0;
+            for (HttpResourceModel.ParameterInfo<?> paramInfo : paramInfoList) {
+                if (paramInfo.getAnnotation() != null) {
+                    Class<? extends Annotation> annotationType = paramInfo.getAnnotation().annotationType();
+                    if (PathParam.class.isAssignableFrom(annotationType)) {
+                        args[idx] = getPathParamValue((HttpResourceModel.ParameterInfo<String>) paramInfo,
+                                groupValues);
+                    } else if (QueryParam.class.isAssignableFrom(annotationType)) {
+                        args[idx] = getQueryParamValue((HttpResourceModel.ParameterInfo<List<String>>) paramInfo,
+                                request.getUri());
+                    } else if (HeaderParam.class.isAssignableFrom(annotationType)) {
+                        args[idx] = getHeaderParamValue((HttpResourceModel.ParameterInfo<List<String>>) paramInfo,
+                                request);
+                    } else if (Context.class.isAssignableFrom(annotationType)) {
+                        args[idx] = getContextParamValue((HttpResourceModel.ParameterInfo<Object>) paramInfo,
+                                request, responder);
                     }
-                    idx++;
+                } else if (request instanceof FullHttpRequest) {
+                    // If an annotation is not present the parameter is considered a
+                    // request body data parameter
+                    String content = ((FullHttpRequest) request).content().toString(Charsets.UTF_8);
+                    Type paramType = paramInfo.getParameterType();
+                    args[idx] = BeanConverter.instance((contentType != null) ? contentType : MediaType.WILDCARD)
+                            .toObject(content, paramType);
                 }
+                idx++;
+            }
 
-                if (httpStreamer == null) {
-                    return new HttpMethodInfo(httpResourceModel.getMethod(),
-                            httpResourceModel.getHttpHandler(),
-                            request, responder,
-                            args,
-                            httpResourceModel.getExceptionHandler(),
-                            acceptType);
-                } else {
-                    return new HttpMethodInfo(httpResourceModel.getMethod(),
-                            httpResourceModel.getHttpHandler(),
-                            request, responder,
-                            args,
-                            httpResourceModel.getExceptionHandler(),
-                            acceptType,
-                            httpStreamer);
-                }
+            if (httpStreamer == null) {
+                return new HttpMethodInfo(httpResourceModel.getMethod(),
+                        httpResourceModel.getHttpHandler(),
+                        request, responder,
+                        args,
+                        acceptType);
             } else {
-                //Found a matching resource but could not find the right HttpMethod so return 405
-                throw new HandlerException(HttpResponseStatus.METHOD_NOT_ALLOWED, String.format
-                        ("Problem accessing: %s. Reason: Method Not Allowed", request.getUri()));
+                return new HttpMethodInfo(httpResourceModel.getMethod(),
+                        httpResourceModel.getHttpHandler(),
+                        request, responder,
+                        args,
+                        acceptType,
+                        httpStreamer);
             }
         } catch (Throwable e) {
-            throw new HandlerException(HttpResponseStatus.INTERNAL_SERVER_ERROR,
-                    String.format("Error in executing request: %s %s", request.getMethod(),
+            throw new HandlerException(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR,
+                    String.format("Error in executing request: %s %s", request.getHttpMethod(),
                             request.getUri()), e);
         }
     }
 
 
     @SuppressWarnings("unchecked")
-    private Object getContextParamValue(HttpResourceModel.ParameterInfo<Object> paramInfo, HttpRequest request,
-                                        HttpResponder responder) {
+    private Object getContextParamValue(HttpResourceModel.ParameterInfo<Object> paramInfo, Request request,
+                                        Response responder) {
         Type paramType = paramInfo.getParameterType();
         Object value = null;
-        if (((Class) paramType).isAssignableFrom(HttpRequest.class)) {
+        if (((Class) paramType).isAssignableFrom(Request.class)) {
             value = request;
-        } else if (((Class) paramType).isAssignableFrom(HttpResponder.class)) {
+        } else if (((Class) paramType).isAssignableFrom(Response.class)) {
             value = responder;
         } else if (((Class) paramType).isAssignableFrom(HttpStreamer.class)) {
             if (httpStreamer == null) {
@@ -185,10 +176,10 @@ public class HttpResourceModelProcessor {
     }
 
     @SuppressWarnings("unchecked")
-    private Object getHeaderParamValue(HttpResourceModel.ParameterInfo<List<String>> info, HttpRequest request) {
+    private Object getHeaderParamValue(HttpResourceModel.ParameterInfo<List<String>> info, Request request) {
         HeaderParam headerParam = info.getAnnotation();
         String headerName = headerParam.value();
-        List<String> headers = request.headers().getAll(headerName);
+        List<String> headers = Collections.singletonList(request.getHeader(headerName));
         if (headers == null || headers.isEmpty()) {
             String defaultVal = info.getDefaultVal();
             if (defaultVal != null) {
