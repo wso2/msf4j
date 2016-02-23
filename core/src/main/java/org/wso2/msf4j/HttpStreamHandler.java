@@ -16,7 +16,7 @@
 
 package org.wso2.msf4j;
 
-import io.netty.buffer.ByteBuf;
+import java.nio.ByteBuffer;
 
 /**
  * HttpHandler would extend this abstract class and implement methods to stream the body directly.
@@ -24,21 +24,21 @@ import io.netty.buffer.ByteBuf;
  * on receipt of the last chunk.
  */
 public interface HttpStreamHandler {
+
+    /**
+     * Initialize the stream handler.
+     *
+     * @param response response object that should be used to send response
+     */
+    void init(Response response);
+
     /**
      * Http request content will be streamed directly to this method.
      *
-     * @param request   The HTTP Request as a ByteBuf
-     * @param responder HttpResponder
+     * @param content content of chunks
+     * @param isEnd   specify whether this is the last content
      */
-    void chunk(ByteBuf request, HttpResponder responder) throws Exception;
-
-    /**
-     * This is called on the receipt of the last HttpChunk.
-     *
-     * @param request   The HTTP Request as a ByteBuf
-     * @param responder HttpResponder
-     */
-    void finished(ByteBuf request, HttpResponder responder) throws Exception;
+    void chunk(ByteBuffer content, boolean isEnd) throws Exception;
 
     /**
      * When there is exception on netty while streaming, it will be propagated to handler
