@@ -17,14 +17,66 @@
 package org.wso2.msf4j.internal.router.beanconversion;
 
 import java.lang.reflect.Type;
+import java.nio.ByteBuffer;
 
 /**
  * Interface of media type conversion classes.
  */
-public interface MediaTypeConverter {
+public abstract class MediaTypeConverter {
 
-    public Object toMedia(Object object) throws BeanConversionException;
+    /**
+     * Convert an object to a specific media type.
+     *
+     * @param object object that needs to be converted to a media content
+     * @return converted media content
+     * @throws BeanConversionException throws if conversion is failed
+     */
+    public ByteBuffer convertToMedia(Object object) throws BeanConversionException {
+        if (object == null) {
+            throw new BeanConversionException("Object cannot be null");
+        }
+        return toMedia(object);
+    }
 
-    public Object toObject(String content, Type targetType) throws BeanConversionException;
+    /**
+     * Create an object from a specific content.
+     *
+     * @param content    content that needs to be converted to an object
+     * @param targetType media type of the content
+     * @return created object
+     * @throws BeanConversionException throws if object creation is failed
+     */
+    public Object convertToObject(ByteBuffer content, Type targetType) throws BeanConversionException {
+        if (content == null || targetType == null) {
+            throw new BeanConversionException("Content or target type cannot be null");
+        }
+        return toObject(content, targetType);
+    }
+
+    /**
+     * Return an array of supported media types.
+     *
+     * @return String array of media types
+     */
+    public abstract String[] getSupportedMediaTypes();
+
+    /**
+     * Convert an object to a specific media type.
+     *
+     * @param object object that needs to be converted to a media content
+     * @return converted media content
+     * @throws BeanConversionException throws if conversion is failed
+     */
+    protected abstract ByteBuffer toMedia(Object object) throws BeanConversionException;
+
+    /**
+     * Create an object from a specific content.
+     *
+     * @param content    content that needs to be converted to an object
+     * @param targetType media type of the content
+     * @return created object
+     * @throws BeanConversionException throws if object creation is failed
+     */
+    protected abstract Object toObject(ByteBuffer content, Type targetType) throws BeanConversionException;
 
 }

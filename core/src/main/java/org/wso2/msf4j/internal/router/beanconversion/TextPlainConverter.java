@@ -17,19 +17,26 @@
 package org.wso2.msf4j.internal.router.beanconversion;
 
 import java.lang.reflect.Type;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 
 /**
  * Media type converter for text/plain mime type.
  */
-public class TextPlainConverter implements MediaTypeConverter {
+public class TextPlainConverter extends MediaTypeConverter {
 
     @Override
-    public Object toMedia(Object object) {
-        return object.toString();
+    public String[] getSupportedMediaTypes() {
+        return null;
     }
 
     @Override
-    public Object toObject(String content, Type targetType) {
-        return content;
+    public ByteBuffer toMedia(Object object) {
+        return ByteBuffer.wrap(object.toString().getBytes(Charset.defaultCharset()));
+    }
+
+    @Override
+    public Object toObject(ByteBuffer content, Type targetType) {
+        return new String(content.array(), Charset.defaultCharset());
     }
 }

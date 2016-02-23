@@ -19,6 +19,9 @@ package org.wso2.msf4j.internal.router.beanconversion;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.Type;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import javax.ws.rs.core.MediaType;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -26,27 +29,35 @@ import javax.xml.bind.Marshaller;
 /**
  * Media type converter for text/xml mime type.
  */
-public class XmlConverter implements MediaTypeConverter {
+public class XmlConverter extends MediaTypeConverter {
+
+    private static final String TEXT_XML = "text/xml";
 
     @Override
-    public Object toMedia(Object object) throws BeanConversionException {
+    public String[] getSupportedMediaTypes() {
+        return new String[]{MediaType.APPLICATION_XML, TEXT_XML};
+    }
+
+    @Override
+    public ByteBuffer toMedia(Object object) throws BeanConversionException {
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(object.getClass());
             Marshaller marshaller = jaxbContext.createMarshaller();
             StringWriter stringWriter = new StringWriter();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(object, stringWriter);
-            return stringWriter.toString();
+            return ByteBuffer.wrap(stringWriter.toString().getBytes(Charset.defaultCharset()));
         } catch (JAXBException e) {
             throw new BeanConversionException("Unable to perform object to xml conversion", e);
         }
     }
 
     @Override
-    public Object toObject(String content, Type targetType) throws BeanConversionException {
+    public Object toObject(ByteBuffer content, Type targetType) throws BeanConversionException {
         try {
+            String str = new String(content.array(), Charset.defaultCharset());
             JAXBContext jaxbContext = JAXBContext.newInstance((Class) targetType);
-            return jaxbContext.createUnmarshaller().unmarshal(new StringReader(content));
+            return jaxbContext.createUnmarshaller().unmarshal(new StringReader(str));
         } catch (JAXBException e) {
             throw new BeanConversionException("Unable to perform xml to object conversion", e);
         }

@@ -16,20 +16,34 @@
 
 package org.wso2.msf4j.internal.router.beanconversion;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Factory class for getting correct media type conversion
  * instance for a given mime type.
  */
 public class BeanConverter {
 
-    public static MediaTypeConverter instance(String mediaType) throws BeanConversionException {
-        if (mediaType.equalsIgnoreCase("text/json")
-                || mediaType.equalsIgnoreCase("application/json")) {
-            return new JsonConverter();
-        } else if (mediaType.equalsIgnoreCase("text/xml")) {
-            return new XmlConverter();
-        } else {
-            return new TextPlainConverter();
+    private static final MediaTypeConverter DEFAULT_CONVERTER = new TextPlainConverter();
+    private static final Map<String, MediaTypeConverter> converterMap = new HashMap<>();
+
+    static {
+        addMediaTypeConverter(new JsonConverter());
+        addMediaTypeConverter(new XmlConverter());
+    }
+
+    public static MediaTypeConverter instance(String mediaType) {
+        MediaTypeConverter mediaTypeConverter = converterMap.get(mediaType.toLowerCase());
+        if (mediaTypeConverter == null) {
+            mediaTypeConverter = DEFAULT_CONVERTER;
+        }
+        return mediaTypeConverter;
+    }
+
+    public static void addMediaTypeConverter(MediaTypeConverter mediaTypeConverter) {
+        for (String mediaType : mediaTypeConverter.getSupportedMediaTypes()) {
+            converterMap.put(mediaType.toLowerCase(), mediaTypeConverter);
         }
     }
 }

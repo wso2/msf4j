@@ -20,31 +20,40 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import java.lang.reflect.Type;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import javax.ws.rs.core.MediaType;
 
 /**
  * Media type converter for text/json,
  * application/json mime types.
  */
-public class JsonConverter implements MediaTypeConverter {
+public class JsonConverter extends MediaTypeConverter {
 
     private static final Gson gson = new Gson();
+    private static final String TEXT_JSON = "text/json";
 
     @Override
-    public Object toMedia(Object object) {
-        return gson.toJson(object);
+    public String[] getSupportedMediaTypes() {
+        return new String[]{MediaType.APPLICATION_JSON, TEXT_JSON};
     }
 
     @Override
-    public Object toObject(String content, Type targetType) throws BeanConversionException {
-        Object object;
+    public ByteBuffer toMedia(Object object) {
+        return ByteBuffer.wrap(gson.toJson(object).getBytes(Charset.defaultCharset()));
+    }
+
+    @Override
+    public Object toObject(ByteBuffer content, Type targetType) throws BeanConversionException {
         try {
-            object = gson.fromJson(content, targetType);
+            String str = new String(content.array(), Charset.defaultCharset());
+            Object object = gson.fromJson(str, targetType);
             if (object == null) {
                 throw new BeanConversionException("Unable to perform json to object conversion");
             }
+            return object;
         } catch (JsonSyntaxException ex) {
             throw new BeanConversionException("Unable to perform json to object conversion", ex);
         }
-        return gson.fromJson(content, targetType);
     }
 }
