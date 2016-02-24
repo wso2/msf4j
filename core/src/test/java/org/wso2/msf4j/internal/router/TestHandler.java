@@ -18,7 +18,6 @@ package org.wso2.msf4j.internal.router;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
 import com.google.common.io.Resources;
 import com.google.common.reflect.TypeToken;
@@ -39,6 +38,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.concurrent.TimeUnit;
@@ -329,15 +329,23 @@ public class TestHandler implements Microservice {
     public void streamUpload(@Context HttpStreamer httpStreamer) throws Exception {
         final StringBuffer sb = new StringBuffer();
         httpStreamer.callback(new HttpStreamHandler() {
+
+            private org.wso2.msf4j.Response response;
+
             @Override
-            public void chunk(ByteBuf request, HttpResponder responder) {
-                sb.append(request.toString(Charsets.UTF_8));
+            public void init(org.wso2.msf4j.Response response) {
+
+                this.response = response;
             }
 
             @Override
-            public void finished(ByteBuf request, HttpResponder responder) {
-                sb.append(request.toString(Charsets.UTF_8));
-                responder.sendString(HttpResponseStatus.OK, sb.toString());
+            public void chunk(ByteBuffer content, boolean isEnd) throws Exception {
+                sb.append(new String(content.array(), Charset.defaultCharset()));
+                if (isEnd) {
+                    response.setStatus(Response.Status.OK.getStatusCode());
+                    response.setEntity(sb.toString());
+                    response.send();
+                }
             }
 
             @Override
@@ -353,19 +361,23 @@ public class TestHandler implements Microservice {
         final int fileSize = 30 * 1024 * 1024;
 
         return new HttpStreamHandler() {
+            private org.wso2.msf4j.Response response;
             int count = 0;
             ByteBuffer offHeapBuffer = ByteBuffer.allocateDirect(fileSize);
 
             @Override
-            public void chunk(ByteBuf request, HttpResponder responder) {
-                Preconditions.checkState(count == 1, "chunk error");
-                offHeapBuffer.put(request.array());
+            public void init(org.wso2.msf4j.Response response) {
+                this.response = response;
             }
 
             @Override
-            public void finished(ByteBuf request, HttpResponder responder) {
+            public void chunk(ByteBuffer content, boolean isEnd) throws Exception {
                 int bytesUploaded = offHeapBuffer.position();
-                responder.sendString(HttpResponseStatus.OK, "Uploaded:" + bytesUploaded);
+                if (isEnd) {
+                    response.setStatus(Response.Status.OK.getStatusCode());
+                    response.setEntity("Uploaded:" + bytesUploaded);
+                    response.send();
+                }
             }
 
             @Override

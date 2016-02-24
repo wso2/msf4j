@@ -17,8 +17,9 @@ package org.wso2.msf4j.internal.router;
 
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
-import org.wso2.msf4j.HttpResponder;
 import org.wso2.msf4j.Interceptor;
+import org.wso2.msf4j.Request;
+import org.wso2.msf4j.Response;
 import org.wso2.msf4j.ServiceMethodInfo;
 
 /**
@@ -42,12 +43,13 @@ public class TestInterceptor implements Interceptor {
     }
 
     @Override
-    public boolean preCall(HttpRequest request, HttpResponder responder, ServiceMethodInfo serviceMethodInfo) {
+    public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) {
         ++numPreCalls;
 
-        String header = request.headers().get("X-Request-Type");
+        String header = request.getHeader("X-Request-Type");
         if (header != null && header.equals("Reject")) {
-            responder.sendStatus(HttpResponseStatus.NOT_ACCEPTABLE);
+            responder.setStatus(javax.ws.rs.core.Response.Status.NOT_ACCEPTABLE.getStatusCode());
+            responder.send();
             return false;
         }
 
@@ -59,9 +61,9 @@ public class TestInterceptor implements Interceptor {
     }
 
     @Override
-    public void postCall(HttpRequest request, HttpResponseStatus status, ServiceMethodInfo serviceMethodInfo) {
+    public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) {
         ++numPostCalls;
-        String header = request.headers().get("X-Request-Type");
+        String header = request.getHeader("X-Request-Type");
         if (header != null && header.equals("PostException")) {
             throw new IllegalArgumentException("PostException");
         }
