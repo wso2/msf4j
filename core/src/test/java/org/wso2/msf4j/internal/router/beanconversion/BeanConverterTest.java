@@ -22,6 +22,8 @@ import org.wso2.msf4j.internal.router.Category;
 import org.wso2.msf4j.internal.router.Pet;
 import org.wso2.msf4j.internal.router.XmlBean;
 
+import java.nio.ByteBuffer;
+
 /**
  * Tests the functionality of BeanConverter.
  */
@@ -30,10 +32,8 @@ public class BeanConverterTest {
     @Test
     public void testJsonBeanConversionTextJson() throws BeanConversionException {
         Pet pet = makePet();
-        Object json = BeanConverter.instance("text/json").toMedia(pet);
-        Assert.assertTrue(json instanceof String);
-        Pet pet1 = (Pet) BeanConverter.instance("text/json").toObject((String) json, Pet.class);
-        Assert.assertTrue(pet1 instanceof Pet);
+        ByteBuffer json = BeanConverter.instance("text/json").toMedia(pet);
+        Pet pet1 = (Pet) BeanConverter.instance("text/json").toObject(json, Pet.class);
         Assert.assertEquals(pet.getId(), pet1.getId());
         Assert.assertEquals(pet.getDetails(), pet1.getDetails());
         Assert.assertEquals(pet.getImage(), pet1.getImage());
@@ -46,10 +46,8 @@ public class BeanConverterTest {
     @Test
     public void testJsonBeanConversionApplicationJson() throws BeanConversionException {
         Pet pet = makePet();
-        Object json = BeanConverter.instance("application/json").toMedia(pet);
-        Assert.assertTrue(json instanceof String);
-        Pet pet1 = (Pet) BeanConverter.instance("application/json").toObject((String) json, Pet.class);
-        Assert.assertTrue(pet1 instanceof Pet);
+        ByteBuffer json = BeanConverter.instance("application/json").toMedia(pet);
+        Pet pet1 = (Pet) BeanConverter.instance("application/json").toObject(json, Pet.class);
         Assert.assertEquals(pet.getId(), pet1.getId());
         Assert.assertEquals(pet.getDetails(), pet1.getDetails());
         Assert.assertEquals(pet.getImage(), pet1.getImage());
@@ -62,28 +60,24 @@ public class BeanConverterTest {
     @Test
     public void testTextPlainBeanConversion() throws BeanConversionException {
         String val = "Test_String";
-        Object media = BeanConverter.instance("text/plain").toMedia(val);
-        Assert.assertTrue(media instanceof String);
-        Object obj1 = BeanConverter.instance("text/plain").toObject((String) media, null);
+        ByteBuffer media = BeanConverter.instance("text/plain").toMedia(val);
+        Object obj1 = BeanConverter.instance("text/plain").toObject(media, null);
         Assert.assertEquals(obj1, val);
     }
 
     @Test
     public void testAnyBeanConversion() throws BeanConversionException {
         String val = "Test_String";
-        Object media = BeanConverter.instance("*/*").toMedia(val);
-        Assert.assertTrue(media instanceof String);
-        Object obj1 = BeanConverter.instance("*/*").toObject((String) media, null);
+        ByteBuffer media = BeanConverter.instance("*/*").toMedia(val);
+        Object obj1 = BeanConverter.instance("*/*").toObject(media, null);
         Assert.assertEquals(obj1, val);
     }
 
     @Test
     public void testXmlBeanConversion() throws BeanConversionException {
         XmlBean xmlBean = makeXmlBan();
-        Object xml = BeanConverter.instance("text/xml").toMedia(xmlBean);
-        Assert.assertTrue(xml instanceof String);
-        XmlBean xmlBean1 = (XmlBean) BeanConverter.instance("text/xml").toObject((String) xml, XmlBean.class);
-        Assert.assertTrue(xmlBean1 instanceof XmlBean);
+        ByteBuffer xml = BeanConverter.instance("text/xml").toMedia(xmlBean);
+        XmlBean xmlBean1 = (XmlBean) BeanConverter.instance("text/xml").toObject(xml, XmlBean.class);
         Assert.assertEquals(xmlBean.getName(), xmlBean1.getName());
         Assert.assertEquals(xmlBean.getId(), xmlBean1.getId());
         Assert.assertEquals(xmlBean.getValue(), xmlBean1.getValue());
