@@ -105,10 +105,16 @@
         <module>poms/parent</module>
         <module>jaxrs-delegates</module>
         <module>core</module>
-        <module>analytics/msf4j-analytics</module>
-        <module>product/p2-features/org.wso2.msf4j.feature</module>
-        <module>templating/msf4j-mustache-template</module>
         <module>poms/msf4j-service</module>
+        <module>analytics/msf4j-analytics</module>
+        <module>templating/msf4j-mustache-template</module>
+        <module>archetypes/msf4j-microservice</module>
+        <!-- Distribution -->
+        <module>distribution/msf4j-all</module>
+        <module>distribution/binary</module>
+        <module>product/p2-features/org.wso2.msf4j.feature</module>
+        <!--<module>product</module>-->
+        <!-- MSF4J Samples -->
         <module>samples/helloworld</module>
         <module>samples/stockquote/fatjar</module>
         <module>samples/stockquote/bundle</module>
@@ -120,10 +126,6 @@
         <module>samples/template</module>
         <module>samples/log-interceptor-bundle</module>
         <module>samples/lifecycle</module>
-        <module>product</module>
-        <module>distribution/msf4j-all</module>
-        <module>distribution/binary</module>
-        <module>archetypes/msf4j-microservice</module>
     </modules>
 
     <properties>
