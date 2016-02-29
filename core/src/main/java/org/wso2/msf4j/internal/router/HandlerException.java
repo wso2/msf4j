@@ -16,39 +16,41 @@
 
 package org.wso2.msf4j.internal.router;
 
-import com.google.common.base.Charsets;
-import io.netty.buffer.Unpooled;
-import io.netty.handler.codec.http.DefaultFullHttpResponse;
-import io.netty.handler.codec.http.HttpResponse;
-import io.netty.handler.codec.http.HttpResponseStatus;
-import io.netty.handler.codec.http.HttpVersion;
+import org.wso2.carbon.messaging.CarbonMessage;
+import org.wso2.carbon.messaging.Constants;
+import org.wso2.carbon.messaging.DefaultCarbonMessage;
+
+import javax.ws.rs.core.Response;
 
 /**
  * Creating Http Response for Exception messages.
  */
-final class HandlerException extends Exception {
+public class HandlerException extends Exception {
 
-    private final transient HttpResponseStatus failureStatus;
+    private final transient Response.Status failureStatus;
     private final String message;
 
-    HandlerException(HttpResponseStatus failureStatus, String message) {
+    public HandlerException(Response.Status failureStatus, String message) {
         super(message);
         this.failureStatus = failureStatus;
         this.message = message;
     }
 
-    HandlerException(HttpResponseStatus failureStatus, String message, Throwable cause) {
+    public HandlerException(Response.Status failureStatus, String message, Throwable cause) {
         super(message, cause);
         this.failureStatus = failureStatus;
         this.message = message;
     }
 
-    HttpResponse createFailureResponse() {
-        return new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, failureStatus,
-                Unpooled.copiedBuffer(message, Charsets.UTF_8));
+    public CarbonMessage getFailureResponse() {
+        DefaultCarbonMessage response = new DefaultCarbonMessage();
+        response.setProperty(Constants.HTTP_STATUS_CODE,
+                String.valueOf(failureStatus.getStatusCode()));
+        response.setStringMessageBody(message);
+        return response;
     }
 
-    public HttpResponseStatus getFailureStatus() {
+    public Response.Status getFailureStatus() {
         return failureStatus;
     }
 }
