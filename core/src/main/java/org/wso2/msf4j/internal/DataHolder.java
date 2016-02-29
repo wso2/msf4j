@@ -53,6 +53,7 @@ public class DataHolder {
         this.bundleContext = bundleContext;
     }
 
+    // TODO: Fix OSGi mode
     public void addCarbonTransport(CarbonTransport carbonTransport) {
         if (bundleContext == null) {
             log.error("BundleContext is null. Transport dispatching will fail.");
@@ -61,8 +62,8 @@ public class DataHolder {
         String channelKey = carbonTransport.getId();
         Hashtable<String, String> httpInitParams = new Hashtable<>();
         httpInitParams.put(CHANNEL_ID_KEY, channelKey);
-        MSF4JNettyServerInitializer gatewayNettyInitializer =
-                new MSF4JNettyServerInitializer(MicroservicesRegistry.getInstance());
+        CarbonNettyServerInitializer gatewayNettyInitializer =
+                new CarbonNettyServerInitializer();
         ServiceRegistration<CarbonNettyServerInitializer> service =
                 bundleContext.registerService(CarbonNettyServerInitializer.class,
                         gatewayNettyInitializer, httpInitParams);
