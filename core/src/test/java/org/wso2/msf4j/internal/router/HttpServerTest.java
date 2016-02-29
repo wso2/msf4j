@@ -53,6 +53,8 @@ import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.net.URI;
 import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -578,10 +580,12 @@ public class HttpServerTest {
         xmlBean.setName("send-something");
         xmlBean.setId(10);
         xmlBean.setValue(15);
-        writeContent(urlConn, (String) BeanConverter.instance("text/xml").toMedia(xmlBean));
+        writeContent(urlConn, new String(BeanConverter.instance("text/xml").convertToMedia(xmlBean).array(),
+                Charset.defaultCharset()));
         Assert.assertEquals(HttpResponseStatus.OK.code(), urlConn.getResponseCode());
         String respBody = getContent(urlConn);
-        XmlBean xmlBean2 = (XmlBean) BeanConverter.instance("text/xml").toObject((String) respBody, XmlBean.class);
+        XmlBean xmlBean2 = (XmlBean) BeanConverter.instance("text/xml").convertToObject(
+                ByteBuffer.wrap(respBody.getBytes(Charset.defaultCharset())), XmlBean.class);
         Assert.assertEquals(xmlBean.getName(), xmlBean2.getName());
         Assert.assertEquals(xmlBean.getId(), xmlBean2.getId());
         Assert.assertEquals(xmlBean.getValue(), xmlBean2.getValue());
