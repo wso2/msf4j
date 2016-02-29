@@ -17,6 +17,7 @@
 package org.wso2.msf4j.internal;
 
 import org.wso2.msf4j.Interceptor;
+import org.wso2.msf4j.InterceptorException;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.ServiceMethodInfo;
@@ -58,12 +59,16 @@ public class InterceptorExecutor {
      *
      * @return true if all preCalls return true
      */
-    public boolean execPreCalls() {
-        for (Interceptor interceptor : interceptors) {
-            if (!interceptor.preCall(request, response, serviceMethodInfo)) {
-                // Terminate further request processing if preCall returns false.
-                return false;
+    public boolean execPreCalls() throws InterceptorException {
+        try {
+            for (Interceptor interceptor : interceptors) {
+                if (!interceptor.preCall(request, response, serviceMethodInfo)) {
+                    // Terminate further request processing if preCall returns false.
+                    return false;
+                }
             }
+        } catch (Exception e) {
+            throw new InterceptorException("Exception while executing preCalls", e);
         }
         return true;
     }
@@ -73,9 +78,13 @@ public class InterceptorExecutor {
      *
      * @param status status that was returned to the client
      */
-    public void execPostCalls(int status) {
-        for (Interceptor interceptor : interceptors) {
-            interceptor.postCall(request, status, serviceMethodInfo);
+    public void execPostCalls(int status) throws InterceptorException {
+        try {
+            for (Interceptor interceptor : interceptors) {
+                interceptor.postCall(request, status, serviceMethodInfo);
+            }
+        } catch (Exception e) {
+            throw new InterceptorException("Exception while executing postCalls", e);
         }
     }
 }
