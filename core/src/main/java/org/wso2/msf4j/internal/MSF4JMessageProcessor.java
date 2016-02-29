@@ -16,37 +16,89 @@
 
 package org.wso2.msf4j.internal;
 
-import com.google.common.net.HttpHeaders;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wso2.carbon.messaging.CarbonCallback;
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.CarbonMessageProcessor;
-import org.wso2.carbon.messaging.Constants;
-import org.wso2.carbon.messaging.DefaultCarbonMessage;
 import org.wso2.carbon.messaging.TransportSender;
-import org.wso2.msf4j.internal.router.MicroserviceMetadata;
+import org.wso2.msf4j.InterceptorException;
+import org.wso2.msf4j.Request;
+import org.wso2.msf4j.Response;
+import org.wso2.msf4j.internal.router.HandlerException;
+import org.wso2.msf4j.internal.router.HttpMethodInfo;
+import org.wso2.msf4j.internal.router.HttpMethodInfoBuilder;
+import org.wso2.msf4j.internal.router.HttpResourceModel;
+import org.wso2.msf4j.internal.router.PatternPathRouter;
 
 /**
  * Process carbon messages for MSF4J.
  */
 public class MSF4JMessageProcessor implements CarbonMessageProcessor {
 
-    private static String MSF4J_MSG_PROC_ID = "MSF4J-CM-PROCESSOR";
+
+    private static final Logger log = LoggerFactory.getLogger(MSF4JMessageProcessor.class);
     private MicroservicesRegistry microservicesRegistry;
+    private static final String MSF4J_MSG_PROC_ID = "MSF4J-CM-PROCESSOR";
 
     public MSF4JMessageProcessor(MicroservicesRegistry microservicesRegistry) {
         this.microservicesRegistry = microservicesRegistry;
     }
 
     @Override
-    public boolean receive(CarbonMessage carbonMessage, CarbonCallback carbonCallback) throws Exception {
-        String url = (String) carbonMessage.getProperty(Constants.TO);
-        MicroserviceMetadata microserviceMetadata = microservicesRegistry.getHttpResourceHandler();
+    public boolean receive(CarbonMessage carbonMessage, CarbonCallback carbonCallback) {
+        Request request = new Request(carbonMessage);
+        Response response = new Response(carbonCallback);
+        try {
+            PatternPathRouter.RoutableDestination<HttpResourceModel> destination = microservicesRegistry
+                    .getHttpResourceHandler()
+                    .getDestinationMethod(request.getUri(),
+                            request.getHttpMethod(),
+                            request.getContentType(),
+                            request.getAcceptTypes());
+            HttpResourceModel resourceModel = destination.getDestination();
+            InterceptorExecutor interceptorExecutor = InterceptorExecutor
+                    .instance(resourceModel,
+                            request,
+                            response,
+                            microservicesRegistry.getInterceptors());
+            if (interceptorExecutor.execPreCalls()) { // preCalls can throw exceptions
 
-        DefaultCarbonMessage cMsg = new DefaultCarbonMessage();
-        cMsg.setStringMessageBody(url);
-        //cMsg.setHeader(HttpHeaders.TRANSFER_ENCODING, io.netty.handler.codec.http.HttpHeaders.Values.CHUNKED);
-        cMsg.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(url.length()));
-        carbonCallback.done(cMsg);
+                HttpMethodInfoBuilder httpMethodInfoBuilder = HttpMethodInfoBuilder
+                        .getInstance()
+                        .httpResourceModel(resourceModel)
+                        .httpRequest(request)
+                        .httpResponder(response)
+                        .requestInfo(destination.getGroupNameValues());
+
+                HttpMethodInfo httpMethodInfo = httpMethodInfoBuilder.build();
+
+                if (request.isEomAdded()) {
+                    if (httpMethodInfo.isStreamingSupported()) {
+                        // TODO: send whole content as a chunk List/Combined
+                    } else {
+                        Object returnVal = httpMethodInfo.invoke();
+                        response.setEntity(returnVal);
+                    }
+                } else {
+                    if (httpMethodInfo.isStreamingSupported()) {
+                        // TODO: call chunks
+                    } else {
+                        // TODO: aggregate chunks
+                        Object returnVal = httpMethodInfo.invoke();
+                        response.setEntity(returnVal);
+                    }
+                }
+                response.send();
+                interceptorExecutor.execPostCalls(0); // postCalls can throw exceptions
+            }
+        } catch (HandlerException e) {
+            carbonCallback.done(e.getFailureResponse());
+        } catch (InterceptorException e) {
+            log.warn("Interceptors threw an exception", e);
+        } catch (Throwable t) {
+            log.warn("Unmapped exception", t);
+        }
         return true;
     }
 
