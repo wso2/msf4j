@@ -15,9 +15,6 @@
  */
 package org.wso2.msf4j.analytics.metrics;
 
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.HttpResponseStatus;
-
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,8 +27,9 @@ import org.wso2.carbon.metrics.manager.Meter;
 import org.wso2.carbon.metrics.manager.MetricManager;
 import org.wso2.carbon.metrics.manager.Timer;
 import org.wso2.carbon.metrics.manager.Timer.Context;
-import org.wso2.msf4j.HttpResponder;
 import org.wso2.msf4j.Interceptor;
+import org.wso2.msf4j.Request;
+import org.wso2.msf4j.Response;
 import org.wso2.msf4j.ServiceMethodInfo;
 
 import java.lang.reflect.Method;
@@ -44,9 +42,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * Collecting Metrics via annotations.
  */
 @Component(
-    name = "org.wso2.msf4j.analytics.metrics.MetricsInterceptor",
-    service = Interceptor.class,
-    immediate = true)
+        name = "org.wso2.msf4j.analytics.metrics.MetricsInterceptor",
+        service = Interceptor.class,
+        immediate = true)
 public class MetricsInterceptor implements Interceptor {
 
     private static final Logger logger = LoggerFactory.getLogger(MetricsInterceptor.class);
@@ -61,7 +59,7 @@ public class MetricsInterceptor implements Interceptor {
 
     /**
      * Initialize the Metrics Service.
-     * 
+     *
      * @param metricReporters Specifiy {@link MetricReporter} types to initialize
      * @return This {@link MetricsInterceptor} instance
      */
@@ -78,7 +76,7 @@ public class MetricsInterceptor implements Interceptor {
     }
 
     @Override
-    public boolean preCall(HttpRequest request, HttpResponder responder, ServiceMethodInfo serviceMethodInfo) {
+    public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) {
         Method method = serviceMethodInfo.getMethod();
         Set<Interceptor> interceptors = map.get(method);
         if (interceptors == null) {
@@ -131,7 +129,7 @@ public class MetricsInterceptor implements Interceptor {
     }
 
     @Override
-    public void postCall(HttpRequest request, HttpResponseStatus status, ServiceMethodInfo serviceMethodInfo) {
+    public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) {
         Method method = serviceMethodInfo.getMethod();
         Set<Interceptor> interceptors = map.get(method);
         if (interceptors != null) {
@@ -153,16 +151,16 @@ public class MetricsInterceptor implements Interceptor {
 
     private org.wso2.carbon.metrics.manager.Level toLevel(Level level) {
         switch (level) {
-        case OFF:
-            return org.wso2.carbon.metrics.manager.Level.OFF;
-        case INFO:
-            return org.wso2.carbon.metrics.manager.Level.INFO;
-        case DEBUG:
-            return org.wso2.carbon.metrics.manager.Level.DEBUG;
-        case TRACE:
-            return org.wso2.carbon.metrics.manager.Level.TRACE;
-        case ALL:
-            return org.wso2.carbon.metrics.manager.Level.ALL;
+            case OFF:
+                return org.wso2.carbon.metrics.manager.Level.OFF;
+            case INFO:
+                return org.wso2.carbon.metrics.manager.Level.INFO;
+            case DEBUG:
+                return org.wso2.carbon.metrics.manager.Level.DEBUG;
+            case TRACE:
+                return org.wso2.carbon.metrics.manager.Level.TRACE;
+            case ALL:
+                return org.wso2.carbon.metrics.manager.Level.ALL;
         }
         return org.wso2.carbon.metrics.manager.Level.INFO;
     }
@@ -178,14 +176,14 @@ public class MetricsInterceptor implements Interceptor {
         }
 
         @Override
-        public boolean preCall(HttpRequest request, HttpResponder responder, ServiceMethodInfo serviceMethodInfo) {
+        public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) {
             Context context = timer.start();
             serviceMethodInfo.setAttribute(TIMER_CONTEXT, context);
             return true;
         }
 
         @Override
-        public void postCall(HttpRequest request, HttpResponseStatus status, ServiceMethodInfo serviceMethodInfo) {
+        public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) {
             Context context = (Context) serviceMethodInfo.getAttribute(TIMER_CONTEXT);
             context.stop();
         }
@@ -200,13 +198,13 @@ public class MetricsInterceptor implements Interceptor {
         }
 
         @Override
-        public boolean preCall(HttpRequest request, HttpResponder responder, ServiceMethodInfo serviceMethodInfo) {
+        public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) {
             meter.mark();
             return true;
         }
 
         @Override
-        public void postCall(HttpRequest request, HttpResponseStatus status, ServiceMethodInfo serviceMethodInfo) {
+        public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) {
         }
     }
 
@@ -221,13 +219,13 @@ public class MetricsInterceptor implements Interceptor {
         }
 
         @Override
-        public boolean preCall(HttpRequest request, HttpResponder responder, ServiceMethodInfo serviceMethodInfo) {
+        public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) {
             counter.inc();
             return true;
         }
 
         @Override
-        public void postCall(HttpRequest request, HttpResponseStatus status, ServiceMethodInfo serviceMethodInfo) {
+        public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) {
             if (!monotonic) {
                 counter.dec();
             }

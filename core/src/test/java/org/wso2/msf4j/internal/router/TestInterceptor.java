@@ -15,12 +15,11 @@
  */
 package org.wso2.msf4j.internal.router;
 
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.HttpResponseStatus;
 import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.ServiceMethodInfo;
+import org.wso2.msf4j.internal.router.beanconversion.BeanConversionException;
 
 /**
  * TODO : add class level comment.
@@ -43,7 +42,8 @@ public class TestInterceptor implements Interceptor {
     }
 
     @Override
-    public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) {
+    public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo)
+            throws BeanConversionException {
         ++numPreCalls;
 
         String header = request.getHeader("X-Request-Type");

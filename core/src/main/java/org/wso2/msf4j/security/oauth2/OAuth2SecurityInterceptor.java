@@ -16,20 +16,17 @@
 package org.wso2.msf4j.security.oauth2;
 
 import com.google.common.base.Charsets;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import com.google.common.io.ByteStreams;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpMethod;
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.HttpResponseStatus;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.msf4j.HttpResponder;
 import org.wso2.msf4j.Interceptor;
+import org.wso2.msf4j.Request;
+import org.wso2.msf4j.Response;
 import org.wso2.msf4j.ServiceMethodInfo;
+import org.wso2.msf4j.internal.router.beanconversion.BeanConversionException;
 import org.wso2.msf4j.security.MSF4JSecurityException;
 import org.wso2.msf4j.security.SecurityErrorCode;
 import org.wso2.msf4j.util.SystemVariableUtil;
@@ -72,12 +69,13 @@ public class OAuth2SecurityInterceptor implements Interceptor {
     }
 
     @Override
-    public boolean preCall(HttpRequest request, HttpResponder responder, ServiceMethodInfo serviceMethodInfo) {
+    public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo)
+            throws BeanConversionException {
         SecurityErrorCode errorCode;
 
         try {
-            HttpHeaders headers = request.headers();
-            if (headers != null && headers.contains(AUTHORIZATION_HTTP_HEADER)) {
+            Map<String, String> headers = request.getHeaders();
+            if (headers != null && headers.containsKey(AUTHORIZATION_HTTP_HEADER)) {
                 String authHeader = headers.get(AUTHORIZATION_HTTP_HEADER);
                 return validateToken(authHeader);
             } else {
@@ -94,7 +92,7 @@ public class OAuth2SecurityInterceptor implements Interceptor {
     }
 
     @Override
-    public void postCall(HttpRequest request, HttpResponseStatus status, ServiceMethodInfo serviceMethodInfo) {
+    public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) {
 
     }
 
@@ -182,18 +180,19 @@ public class OAuth2SecurityInterceptor implements Interceptor {
      * @param errorCode Security error code
      * @param responder HttpResponder instance which is used send error messages back to the client
      */
-    private void handleSecurityError(SecurityErrorCode errorCode, HttpResponder responder) {
+    private void handleSecurityError(SecurityErrorCode errorCode, Response responder)
+            throws BeanConversionException {
         if (errorCode == SecurityErrorCode.AUTHENTICATION_FAILURE ||
                 errorCode == SecurityErrorCode.INVALID_AUTHORIZATION_HEADER) {
-            Multimap<String, String> map = ArrayListMultimap.create();
-            map.put(HttpHeaders.Names.WWW_AUTHENTICATE, AUTH_TYPE_OAUTH2);
-            responder.sendStatus(HttpResponseStatus.UNAUTHORIZED, map);
-
+            responder.setStatus(javax.ws.rs.core.Response.Status.UNAUTHORIZED.getStatusCode());
+            responder.setHeader(javax.ws.rs.core.HttpHeaders.WWW_AUTHENTICATE, AUTH_TYPE_OAUTH2);
+            responder.send();
         } else if (errorCode == SecurityErrorCode.AUTHORIZATION_FAILURE) {
-            responder.sendStatus(HttpResponseStatus.FORBIDDEN);
-
+            responder.setStatus(javax.ws.rs.core.Response.Status.FORBIDDEN.getStatusCode());
+            responder.send();
         } else {
-            responder.sendStatus(HttpResponseStatus.INTERNAL_SERVER_ERROR);
+            responder.setStatus(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+            responder.send();
         }
 
     }

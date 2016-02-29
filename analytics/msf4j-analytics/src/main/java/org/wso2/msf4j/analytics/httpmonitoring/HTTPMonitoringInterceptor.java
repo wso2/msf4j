@@ -15,15 +15,12 @@
  */
 package org.wso2.msf4j.analytics.httpmonitoring;
 
-import io.netty.handler.codec.http.HttpHeaders;
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.HttpResponseStatus;
-
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.msf4j.HttpResponder;
 import org.wso2.msf4j.Interceptor;
+import org.wso2.msf4j.Request;
+import org.wso2.msf4j.Response;
 import org.wso2.msf4j.ServiceMethodInfo;
 
 import java.lang.reflect.Method;
@@ -31,16 +28,18 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.HttpHeaders;
 
 /**
  * Monitor HTTP Requests for methods with {@link HTTPMonitored} annotations.
  */
 @Component(
-    name = "org.wso2.msf4j.analytics.httpmonitoring.HTTPMonitoringInterceptor",
-    service = Interceptor.class,
-    immediate = true)
+        name = "org.wso2.msf4j.analytics.httpmonitoring.HTTPMonitoringInterceptor",
+        service = Interceptor.class,
+        immediate = true)
 public class HTTPMonitoringInterceptor implements Interceptor {
 
+    public static final String REFERER = "Referer";
     private static final Logger logger = LoggerFactory.getLogger(HTTPMonitoringInterceptor.class);
 
     private Map<Method, Interceptor> map = new ConcurrentHashMap<>();
@@ -64,7 +63,7 @@ public class HTTPMonitoringInterceptor implements Interceptor {
     }
 
     @Override
-    public boolean preCall(HttpRequest request, HttpResponder responder, ServiceMethodInfo serviceMethodInfo) {
+    public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) {
         Method method = serviceMethodInfo.getMethod();
         Interceptor interceptor = map.get(method);
         if (interceptor == null) {
@@ -83,7 +82,7 @@ public class HTTPMonitoringInterceptor implements Interceptor {
     }
 
     @Override
-    public void postCall(HttpRequest request, HttpResponseStatus status, ServiceMethodInfo serviceMethodInfo) {
+    public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) {
         Method method = serviceMethodInfo.getMethod();
         Interceptor interceptor = map.get(method);
         if (interceptor != null) {
@@ -104,7 +103,7 @@ public class HTTPMonitoringInterceptor implements Interceptor {
         }
 
         @Override
-        public boolean preCall(HttpRequest request, HttpResponder responder, ServiceMethodInfo serviceMethodInfo) {
+        public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) {
             HTTPMonitoringEvent httpMonitoringEvent = new HTTPMonitoringEvent();
             httpMonitoringEvent.setTimestamp(System.currentTimeMillis());
             httpMonitoringEvent.setStartNanoTime(System.nanoTime());
@@ -125,15 +124,15 @@ public class HTTPMonitoringInterceptor implements Interceptor {
             httpMonitoringEvent.setRequestUri(request.getUri());
             httpMonitoringEvent.setServiceContext(servicePath);
 
-            HttpHeaders httpHeaders = request.headers();
+            Map<String, String> httpHeaders = request.getHeaders();
 
-            httpMonitoringEvent.setHttpMethod(request.getMethod().name());
-            httpMonitoringEvent.setContentType(httpHeaders.get(HttpHeaders.Names.CONTENT_TYPE));
-            String contentLength = httpHeaders.get(HttpHeaders.Names.CONTENT_LENGTH);
+            httpMonitoringEvent.setHttpMethod(request.getHttpMethod());
+            httpMonitoringEvent.setContentType(httpHeaders.get(HttpHeaders.CONTENT_TYPE));
+            String contentLength = httpHeaders.get(HttpHeaders.CONTENT_LENGTH);
             if (contentLength != null) {
                 httpMonitoringEvent.setRequestSizeBytes(Long.parseLong(contentLength));
             }
-            httpMonitoringEvent.setReferrer(httpHeaders.get(HttpHeaders.Names.REFERER));
+            httpMonitoringEvent.setReferrer(httpHeaders.get(REFERER));
 
             serviceMethodInfo.setAttribute(MONITORING_EVENT, httpMonitoringEvent);
 
@@ -141,12 +140,12 @@ public class HTTPMonitoringInterceptor implements Interceptor {
         }
 
         @Override
-        public void postCall(HttpRequest request, HttpResponseStatus status, ServiceMethodInfo serviceMethodInfo) {
+        public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) {
             HTTPMonitoringEvent httpMonitoringEvent =
                     (HTTPMonitoringEvent) serviceMethodInfo.getAttribute(MONITORING_EVENT);
             httpMonitoringEvent.setResponseTime(
                     TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - httpMonitoringEvent.getStartNanoTime()));
-            httpMonitoringEvent.setResponseHttpStatusCode(status.code());
+            httpMonitoringEvent.setResponseHttpStatusCode(status);
             HTTPMonitoringDataPublisher.publishEvent(httpMonitoringEvent);
         }
     }
