@@ -16,7 +16,6 @@
 
 package org.wso2.msf4j.internal.router;
 
-import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.QueryStringDecoder;
@@ -27,6 +26,7 @@ import org.wso2.msf4j.internal.router.beanconversion.BeanConverter;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -56,30 +56,20 @@ public class HttpResourceModelProcessor {
      * @param request     HttpRequest to be handled.
      * @param responder   HttpResponder to write the response.
      * @param groupValues Values needed for the invocation.
-     * @param contentType Content types
-     * @param acceptTypes Accept types
      * @return HttpMethodInfo
      * @throws HandlerException If an error occurs
      */
     @SuppressWarnings("unchecked")
     public HttpMethodInfo buildHttpMethodInfo(Request request,
                                               Response responder,
-                                              Map<String, String> groupValues,
-                                              String contentType,
-                                              List<String> acceptTypes)
+                                              Map<String, String> groupValues)
             throws HandlerException {
         try {
             //Setup args for reflection call
             List<HttpResourceModel.ParameterInfo<?>> paramInfoList = httpResourceModel.getParamInfoList();
-            List<String> producesMediaTypes = httpResourceModel.getProducesMediaTypes();
             Object[] args = new Object[paramInfoList.size()];
-            String acceptType = MediaType.WILDCARD;
-            if (!producesMediaTypes.contains(MediaType.WILDCARD) && acceptTypes != null) {
-                acceptType =
-                        (acceptTypes.contains(MediaType.WILDCARD)) ? producesMediaTypes.get(0) :
-                                producesMediaTypes.stream().filter(acceptTypes::contains).findFirst().get();
-            }
             int idx = 0;
+            String responseType = getResponseType(request.getAcceptTypes());
             for (HttpResourceModel.ParameterInfo<?> paramInfo : paramInfoList) {
                 if (paramInfo.getAnnotation() != null) {
                     Class<? extends Annotation> annotationType = paramInfo.getAnnotation().annotationType();
@@ -99,10 +89,14 @@ public class HttpResourceModelProcessor {
                 } else if (request instanceof FullHttpRequest) {
                     // If an annotation is not present the parameter is considered a
                     // request body data parameter
-                    String content = ((FullHttpRequest) request).content().toString(Charsets.UTF_8);
+                    // TODO: handle for chunked requests
+                    ByteBuffer content = request.getMessageBody();
                     Type paramType = paramInfo.getParameterType();
-                    args[idx] = BeanConverter.instance((contentType != null) ? contentType : MediaType.WILDCARD)
-                            .toObject(content, paramType);
+                    args[idx] = BeanConverter.instance(
+                            (request.getContentType() != null)
+                                    ? request.getContentType()
+                                    : MediaType.WILDCARD
+                    ).convertToObject(content, paramType);
                 }
                 idx++;
             }
@@ -110,15 +104,12 @@ public class HttpResourceModelProcessor {
             if (httpStreamer == null) {
                 return new HttpMethodInfo(httpResourceModel.getMethod(),
                         httpResourceModel.getHttpHandler(),
-                        request, responder,
-                        args,
-                        acceptType);
+                        args);
             } else {
                 return new HttpMethodInfo(httpResourceModel.getMethod(),
                         httpResourceModel.getHttpHandler(),
-                        request, responder,
                         args,
-                        acceptType,
+                        responder,
                         httpStreamer);
             }
         } catch (Throwable e) {
@@ -126,6 +117,24 @@ public class HttpResourceModelProcessor {
                     String.format("Error in executing request: %s %s", request.getHttpMethod(),
                             request.getUri()), e);
         }
+    }
+
+    /**
+     * Process accept type considering the produce type and the
+     * accept types of the request header.
+     *
+     * @param acceptTypes accept types of the request.
+     * @return processed accept type
+     */
+    public String getResponseType(List<String> acceptTypes) {
+        List<String> producesMediaTypes = httpResourceModel.getProducesMediaTypes();
+        String acceptType = MediaType.WILDCARD;
+        if (!producesMediaTypes.contains(MediaType.WILDCARD) && acceptTypes != null) {
+            acceptType =
+                    (acceptTypes.contains(MediaType.WILDCARD)) ? producesMediaTypes.get(0) :
+                            producesMediaTypes.stream().filter(acceptTypes::contains).findFirst().get();
+        }
+        return acceptType;
     }
 
 
