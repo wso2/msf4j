@@ -31,6 +31,9 @@ import org.wso2.msf4j.internal.router.HttpMethodInfoBuilder;
 import org.wso2.msf4j.internal.router.HttpResourceModel;
 import org.wso2.msf4j.internal.router.PatternPathRouter;
 
+import java.util.List;
+import javax.ws.rs.core.MediaType;
+
 /**
  * Process carbon messages for MSF4J.
  */
@@ -89,6 +92,8 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                         response.setEntity(returnVal);
                     }
                 }
+                response.setMediaType(getResponseType(request.getAcceptTypes(),
+                        resourceModel.getProducesMediaTypes())); // find an appropriate media type for the response
                 response.send();
                 interceptorExecutor.execPostCalls(0); // postCalls can throw exceptions
             }
@@ -100,6 +105,23 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
             log.warn("Unmapped exception", t);
         }
         return true;
+    }
+
+    /**
+     * Process accept type considering the produce type and the
+     * accept types of the request header.
+     *
+     * @param acceptTypes accept types of the request.
+     * @return processed accept type
+     */
+    private String getResponseType(List<String> acceptTypes, List<String> producesMediaTypes) {
+        String acceptType = MediaType.WILDCARD;
+        if (!producesMediaTypes.contains(MediaType.WILDCARD) && acceptTypes != null) {
+            acceptType =
+                    (acceptTypes.contains(MediaType.WILDCARD)) ? producesMediaTypes.get(0) :
+                            producesMediaTypes.stream().filter(acceptTypes::contains).findFirst().get();
+        }
+        return acceptType;
     }
 
     @Override

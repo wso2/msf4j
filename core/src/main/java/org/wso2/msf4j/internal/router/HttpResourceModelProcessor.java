@@ -69,7 +69,6 @@ public class HttpResourceModelProcessor {
             List<HttpResourceModel.ParameterInfo<?>> paramInfoList = httpResourceModel.getParamInfoList();
             Object[] args = new Object[paramInfoList.size()];
             int idx = 0;
-            String responseType = getResponseType(request.getAcceptTypes());
             for (HttpResourceModel.ParameterInfo<?> paramInfo : paramInfoList) {
                 if (paramInfo.getAnnotation() != null) {
                     Class<? extends Annotation> annotationType = paramInfo.getAnnotation().annotationType();
@@ -117,24 +116,6 @@ public class HttpResourceModelProcessor {
                     String.format("Error in executing request: %s %s", request.getHttpMethod(),
                             request.getUri()), e);
         }
-    }
-
-    /**
-     * Process accept type considering the produce type and the
-     * accept types of the request header.
-     *
-     * @param acceptTypes accept types of the request.
-     * @return processed accept type
-     */
-    public String getResponseType(List<String> acceptTypes) {
-        List<String> producesMediaTypes = httpResourceModel.getProducesMediaTypes();
-        String acceptType = MediaType.WILDCARD;
-        if (!producesMediaTypes.contains(MediaType.WILDCARD) && acceptTypes != null) {
-            acceptType =
-                    (acceptTypes.contains(MediaType.WILDCARD)) ? producesMediaTypes.get(0) :
-                            producesMediaTypes.stream().filter(acceptTypes::contains).findFirst().get();
-        }
-        return acceptType;
     }
 
 
