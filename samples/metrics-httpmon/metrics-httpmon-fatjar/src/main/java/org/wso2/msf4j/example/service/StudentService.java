@@ -52,7 +52,7 @@ public class StudentService {
     @Path("/{nic}")
     @Produces("application/json")
     @Timed
-    @HTTPMonitored
+    @HTTPMonitored (tracing = true)
     public Student getStudent(@PathParam("nic") String nic) {
         return students.get(nic);
     }
@@ -60,7 +60,7 @@ public class StudentService {
     @POST
     @Consumes("application/json")
     @Metered
-    @HTTPMonitored
+    @HTTPMonitored (tracing = true)
     public void addStudent(Student student) {
         students.put(student.getNic(), student);
     }

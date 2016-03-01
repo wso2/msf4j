@@ -44,6 +44,23 @@
             <EnableScoreParam>false</EnableScoreParam>
             <Type>STRING</Type>
         </ColumnDefinition>
+
+        <ColumnDefinition>
+            <Name>correlation_activity_id</Name>
+            <EnableIndexing>true</EnableIndexing>
+            <IsPrimaryKey>false</IsPrimaryKey>
+            <EnableScoreParam>false</EnableScoreParam>
+            <Type>FACET</Type>
+        </ColumnDefinition>
+
+        <ColumnDefinition>
+            <Name>correlation_parent_request</Name>
+            <EnableIndexing>true</EnableIndexing>
+            <IsPrimaryKey>false</IsPrimaryKey>
+            <EnableScoreParam>false</EnableScoreParam>
+            <Type>STRING</Type>
+        </ColumnDefinition>
+
         <ColumnDefinition>
             <Name>service_class</Name>
             <EnableIndexing>true</EnableIndexing>

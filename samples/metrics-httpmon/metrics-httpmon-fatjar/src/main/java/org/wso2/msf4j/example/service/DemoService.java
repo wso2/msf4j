@@ -30,7 +30,7 @@ import javax.ws.rs.PathParam;
  * Demonstrating the use of Metrics and HTTP Monitoring Annotations.
  */
 @Path("/demo")
-@HTTPMonitored
+@HTTPMonitored (tracing = true)
 public class DemoService {
 
     private final Random random = new Random();

@@ -35,6 +35,8 @@ public class HTTPMonitoringEvent {
     private String referrer;
     private long responseTime;
     private long requestSizeBytes;
+    private String activityId;
+    private String parentRequest;
 
     public long getTimestamp() {
         return timestamp;
@@ -154,6 +156,22 @@ public class HTTPMonitoringEvent {
 
     public void setRequestSizeBytes(long requestSizeBytes) {
         this.requestSizeBytes = requestSizeBytes;
+    }
+
+    public String getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(String activityId) {
+        this.activityId = activityId;
+    }
+
+    public String getParentRequest() {
+        return parentRequest;
+    }
+
+    public void setParentRequest(String parentRequest) {
+        this.parentRequest = parentRequest;
     }
 
 }

@@ -155,8 +155,14 @@ public final class HTTPMonitoringDataPublisher {
     }
 
     static void publishEvent(HTTPMonitoringEvent httpMonitoringEvent) {
-        Object[] meta =
-                new Object[] { httpMonitoringEvent.getTimestamp(), SERVER_HOST_ADDRESS, SERVER_HOSTNAME, MICROSERVICE };
+        Object[] meta = new Object[4];
+        meta[0] = httpMonitoringEvent.getTimestamp();
+        meta[1] = SERVER_HOST_ADDRESS;
+        meta[2] = SERVER_HOSTNAME;
+        meta[3] = MICROSERVICE;
+        Object[] correlation = new Object[2];
+        correlation[0] = httpMonitoringEvent.getActivityId();
+        correlation[1] = httpMonitoringEvent.getParentRequest();
         Object[] payload = new Object[11];
         payload[0] = httpMonitoringEvent.getServiceClass();
         payload[1] = httpMonitoringEvent.getServiceName();
@@ -169,7 +175,8 @@ public final class HTTPMonitoringDataPublisher {
         payload[8] = httpMonitoringEvent.getReferrer();
         payload[9] = httpMonitoringEvent.getResponseHttpStatusCode();
         payload[10] = httpMonitoringEvent.getResponseTime();
-        Event event = new Event(HTTP_MONITORING_STREAM_ID, httpMonitoringEvent.getTimestamp(), meta, null, payload);
+        Event event = new Event(HTTP_MONITORING_STREAM_ID, httpMonitoringEvent.getTimestamp(), 
+                meta, correlation, payload);
         dataPublisher.publish(event);
     }
 
