@@ -21,12 +21,12 @@ cd ${DAS_PACK%.zip}/bin/
 echo "--------------------------------------------------------------"
 echo "Creating Kube-System Namespace, Kube-DNS, Kube-UI"
 echo "--------------------------------------------------------------"
-kubectl create -f $VAGRANT_HOME/plugins/namespace/kube-system.json
-kubectl create -f $VAGRANT_HOME/plugins/dns/dns-service.yaml
-kubectl create -f $VAGRANT_HOME/plugins/dns/dns-controller.yaml
-kubectl create -f $VAGRANT_HOME/plugins/kube-ui/kube-ui-controller.yaml
-kubectl create -f $VAGRANT_HOME/plugins/kube-ui/kube-ui-service.yaml
-sleep 20
+#kubectl create -f $VAGRANT_HOME/plugins/namespace/kube-system.json
+#kubectl create -f $VAGRANT_HOME/plugins/dns/dns-service.yaml
+#kubectl create -f $VAGRANT_HOME/plugins/dns/dns-controller.yaml
+#kubectl create -f $VAGRANT_HOME/plugins/kube-ui/kube-ui-controller.yaml
+#kubectl create -f $VAGRANT_HOME/plugins/kube-ui/kube-ui-service.yaml
+#sleep 20
 
 
 echo "--------------------------------------------------------------"

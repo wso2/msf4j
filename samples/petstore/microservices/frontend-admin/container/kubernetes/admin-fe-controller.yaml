@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: admin-fe
-        image: wso2msf4j/petstore-admin-fe
+        image: wso2msf4j/petstore-admin-fe:1.0.0
         env:
         - name: GET_HOSTS_FROM
           value: dns

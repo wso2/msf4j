@@ -15,7 +15,7 @@ spec:
     spec: 
       containers: 
         - resources:
-          image: wso2msf4j/petstore-fileserver
+          image: wso2msf4j/petstore-fileserver:1.0.0
           name: fileserver
           env:
           - name: GET_HOSTS_FROM
@@ -31,6 +31,6 @@ spec:
       volumes:
         - name: fileserver-persistent-storage
           hostPath:
-             path: /home/core/fileserver
-      nodeSelector:
-        disktype: ssd
+             path: /home/core
+      #nodeSelector:
+      #  disktype: ssd
