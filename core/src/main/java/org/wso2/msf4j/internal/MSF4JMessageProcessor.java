@@ -115,13 +115,13 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
      * @return processed accept type
      */
     private String getResponseType(List<String> acceptTypes, List<String> producesMediaTypes) {
-        String acceptType = MediaType.WILDCARD;
+        String responseType = MediaType.WILDCARD;
         if (!producesMediaTypes.contains(MediaType.WILDCARD) && acceptTypes != null) {
-            acceptType =
+            responseType =
                     (acceptTypes.contains(MediaType.WILDCARD)) ? producesMediaTypes.get(0) :
                             producesMediaTypes.stream().filter(acceptTypes::contains).findFirst().get();
         }
-        return acceptType;
+        return responseType;
     }
 
     @Override
