@@ -36,17 +36,18 @@ public class HttpMethodInfo {
     private final Method method;
     private final Object handler;
     private final Object[] args;
+    private Response responder;
     private HttpStreamHandler httpStreamHandler;
     private static final Logger log = LoggerFactory.getLogger(ChannelChunkResponder.class);
 
     public HttpMethodInfo(Method method,
                           Object handler,
-                          Object[] args) {
+                          Object[] args,
+                          Response responder) {
         this.method = method;
         this.handler = handler;
-
-        // The actual arguments list to invoke handler method
-        this.args = args;
+        this.args = args; // The actual arguments list to invoke handler method
+        this.responder = responder;
     }
 
     public HttpMethodInfo(Method method,
@@ -54,7 +55,7 @@ public class HttpMethodInfo {
                           Object[] args,
                           Response responder,
                           HttpStreamer httpStreamer) throws HandlerException {
-        this(method, handler, args);
+        this(method, handler, args, responder);
 
         if (!method.getReturnType().equals(Void.TYPE)) {
             throw new HandlerException(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR,
@@ -74,15 +75,17 @@ public class HttpMethodInfo {
             throw new HandlerException(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR,
                     "Streaming unsupported");
         }
-        httpStreamHandler.init(responder);
+        httpStreamHandler.init(this.responder);
     }
 
     /**
      * Calls the http resource method.
      */
-    public Object invoke() throws Exception {
+    public void invoke() throws Exception {
         try {
-            return method.invoke(handler, args);
+            Object returnVal = method.invoke(handler, args);
+            responder.setEntity(returnVal);
+            responder.send();
         } catch (InvocationTargetException e) {
             log.error("Resource method threw an exception", e);
             throw e;
@@ -96,18 +99,27 @@ public class HttpMethodInfo {
      * If chunk handling is supported provide chunks directly.
      *
      * @param chunk chunk content
-     * @param isEnd tru if this is the last chunk
      */
-    public void chunk(ByteBuffer chunk, boolean isEnd) {
-        if (httpStreamHandler == null) {
-            // If the handler method doesn't want to handle chunk request, the httpStreamHandler will be null.
-            return;
-        }
+    public void chunk(ByteBuffer chunk) throws Exception {
         try {
-            httpStreamHandler.chunk(chunk, isEnd);
+            httpStreamHandler.chunk(chunk);
         } catch (Throwable e) {
             log.error("Exception while invoking streaming handlers", e);
             httpStreamHandler.error(e);
+            throw e;
+        }
+    }
+
+    /**
+     * If chunk handling is supported end streaming chunks.
+     */
+    public void end() throws Exception {
+        try {
+            httpStreamHandler.end();
+        } catch (Throwable e) {
+            log.error("Exception while invoking streaming handlers", e);
+            httpStreamHandler.error(e);
+            throw e;
         }
     }
 
