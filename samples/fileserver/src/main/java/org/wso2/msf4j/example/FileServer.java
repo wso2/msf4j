@@ -21,12 +21,12 @@ import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.HttpStreamHandler;
 import org.wso2.msf4j.HttpStreamer;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.nio.file.Paths;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -65,13 +65,13 @@ public class FileServer {
     }
 
     private static class HttpStreamHandlerImpl implements HttpStreamHandler {
-        private BufferedOutputStream outputStream = null;
+        private FileChannel fileChannel = null;
         private org.wso2.msf4j.Response response;
 
         public HttpStreamHandlerImpl(String fileName) throws FileNotFoundException {
             File file = Paths.get(MOUNT_PATH, fileName).toFile();
             if (file.getParentFile().exists() || file.getParentFile().mkdirs()) {
-                outputStream = new BufferedOutputStream(new FileOutputStream(file));
+                fileChannel = new FileOutputStream(file).getChannel();
             }
         }
 
@@ -82,12 +82,13 @@ public class FileServer {
 
         @Override
         public void chunk(ByteBuffer content, boolean isEnd) throws Exception {
-            if (outputStream == null) {
+            if (fileChannel == null) {
                 throw new IOException("Unable to write file");
             }
-            outputStream.write(content.array());
+            content.flip();
+            fileChannel.write(content);
             if (isEnd) {
-                outputStream.close();
+                fileChannel.close();
                 response.setStatus(Response.Status.ACCEPTED.getStatusCode());
                 response.send();
             }
@@ -96,8 +97,8 @@ public class FileServer {
         @Override
         public void error(Throwable cause) {
             try {
-                if (outputStream != null) {
-                    outputStream.close();
+                if (fileChannel != null) {
+                    fileChannel.close();
                 }
             } catch (IOException e) {
                 // Log if unable to close the output stream
