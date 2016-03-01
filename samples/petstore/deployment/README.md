@@ -4,7 +4,7 @@
 
  * Kubernetes cluster with SKY DNS support
  * Can use following link to setup kubernetes cluster
- * * https://github.com/imesh/kubernetes-vagrant-setup
+ * https://github.com/imesh/kubernetes-vagrant-setup
 
 ##Run automated deployment 
 
