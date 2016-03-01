@@ -36,9 +36,16 @@ public interface HttpStreamHandler {
      * Http request content will be streamed directly to this method.
      *
      * @param content content of chunks
-     * @param isEnd   specify whether this is the last content
      */
-    void chunk(ByteBuffer content, boolean isEnd) throws Exception;
+    void chunk(ByteBuffer content) throws Exception;
+
+    /**
+     * This method will be called when all chunks
+     * have been completely streamed.
+     *
+     * @throws Exception
+     */
+    void end() throws Exception;
 
     /**
      * When there is exception on netty while streaming, it will be propagated to handler
