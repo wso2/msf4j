@@ -31,6 +31,7 @@ import org.wso2.msf4j.internal.router.HttpMethodInfoBuilder;
 import org.wso2.msf4j.internal.router.HttpResourceModel;
 import org.wso2.msf4j.internal.router.PatternPathRouter;
 
+import java.nio.ByteBuffer;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
 
@@ -60,6 +61,8 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                             request.getContentType(),
                             request.getAcceptTypes());
             HttpResourceModel resourceModel = destination.getDestination();
+            response.setMediaType(getResponseType(request.getAcceptTypes(),
+                    resourceModel.getProducesMediaTypes()));
             InterceptorExecutor interceptorExecutor = InterceptorExecutor
                     .instance(resourceModel,
                             request,
@@ -75,26 +78,15 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                         .requestInfo(destination.getGroupNameValues());
 
                 HttpMethodInfo httpMethodInfo = httpMethodInfoBuilder.build();
-
-                if (request.isEomAdded()) {
-                    if (httpMethodInfo.isStreamingSupported()) {
-                        // TODO: send whole content as a chunk List/Combined
-                    } else {
-                        Object returnVal = httpMethodInfo.invoke();
-                        response.setEntity(returnVal);
+                if (httpMethodInfo.isStreamingSupported()) {
+                    // TODO: introduce a true async model
+                    for (ByteBuffer byteBuffer : request.getFullMessageBody()) {
+                        httpMethodInfo.chunk(byteBuffer);
                     }
+                    httpMethodInfo.end();
                 } else {
-                    if (httpMethodInfo.isStreamingSupported()) {
-                        // TODO: call chunks
-                    } else {
-                        // TODO: aggregate chunks
-                        Object returnVal = httpMethodInfo.invoke();
-                        response.setEntity(returnVal);
-                    }
+                    httpMethodInfo.invoke();
                 }
-                response.setMediaType(getResponseType(request.getAcceptTypes(),
-                        resourceModel.getProducesMediaTypes())); // find an appropriate media type for the response
-                response.send();
                 interceptorExecutor.execPostCalls(0); // postCalls can throw exceptions
             }
         } catch (HandlerException e) {

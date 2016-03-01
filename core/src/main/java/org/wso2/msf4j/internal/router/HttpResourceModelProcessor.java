@@ -23,6 +23,7 @@ import org.wso2.msf4j.HttpStreamer;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.internal.router.beanconversion.BeanConverter;
+import org.wso2.msf4j.util.BufferUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -88,14 +89,13 @@ public class HttpResourceModelProcessor {
                 } else if (request instanceof FullHttpRequest) {
                     // If an annotation is not present the parameter is considered a
                     // request body data parameter
-                    // TODO: handle for chunked requests
-                    ByteBuffer content = request.getMessageBody();
+                    ByteBuffer fullContent = BufferUtil.merge(request.getFullMessageBody());
                     Type paramType = paramInfo.getParameterType();
                     args[idx] = BeanConverter.instance(
                             (request.getContentType() != null)
                                     ? request.getContentType()
                                     : MediaType.WILDCARD
-                    ).convertToObject(content, paramType);
+                    ).convertToObject(fullContent, paramType);
                 }
                 idx++;
             }
@@ -103,7 +103,8 @@ public class HttpResourceModelProcessor {
             if (httpStreamer == null) {
                 return new HttpMethodInfo(httpResourceModel.getMethod(),
                         httpResourceModel.getHttpHandler(),
-                        args);
+                        args,
+                        responder);
             } else {
                 return new HttpMethodInfo(httpResourceModel.getMethod(),
                         httpResourceModel.getHttpHandler(),

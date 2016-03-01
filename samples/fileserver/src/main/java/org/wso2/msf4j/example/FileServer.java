@@ -81,17 +81,19 @@ public class FileServer {
         }
 
         @Override
-        public void chunk(ByteBuffer content, boolean isEnd) throws Exception {
+        public void end() throws Exception {
+            fileChannel.close();
+            response.setStatus(Response.Status.ACCEPTED.getStatusCode());
+            response.send();
+        }
+
+        @Override
+        public void chunk(ByteBuffer content) throws Exception {
             if (fileChannel == null) {
                 throw new IOException("Unable to write file");
             }
             content.flip();
             fileChannel.write(content);
-            if (isEnd) {
-                fileChannel.close();
-                response.setStatus(Response.Status.ACCEPTED.getStatusCode());
-                response.send();
-            }
         }
 
         @Override
