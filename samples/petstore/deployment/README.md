@@ -3,8 +3,9 @@
 ## Pre-requisites
 
  * Kubernetes cluster with SKY DNS support
- * Can use following link to setup kubernetes cluster
- * https://github.com/imesh/kubernetes-vagrant-setup
+ * Can use one of following links to setup kubernetes cluster
+  - https://github.com/imesh/kubernetes-vagrant-setup
+  - https://github.com/pires/kubernetes-vagrant-coreos-cluster
 
 ##Run automated deployment 
 
