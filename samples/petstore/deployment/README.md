@@ -1,9 +1,5 @@
 # Automated deployment of the Petstore sample
 
-## Support Operating Systems
- * Linux
- * MacOS X
-
 ## Pre-requisites
 
  * Kubernetes cluster with SKY DNS support
