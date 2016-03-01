@@ -16,11 +16,8 @@
 
 package org.wso2.msf4j.example;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.handler.codec.http.HttpResponseStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.msf4j.HttpResponder;
 import org.wso2.msf4j.HttpStreamHandler;
 import org.wso2.msf4j.HttpStreamer;
 
@@ -29,6 +26,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.file.Paths;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -68,6 +66,7 @@ public class FileServer {
 
     private static class HttpStreamHandlerImpl implements HttpStreamHandler {
         private BufferedOutputStream outputStream = null;
+        private org.wso2.msf4j.Response response;
 
         public HttpStreamHandlerImpl(String fileName) throws FileNotFoundException {
             File file = Paths.get(MOUNT_PATH, fileName).toFile();
@@ -77,21 +76,21 @@ public class FileServer {
         }
 
         @Override
-        public void chunk(ByteBuf request, HttpResponder responder) throws IOException {
-            if (outputStream == null) {
-                throw new IOException("Unable to write file");
-            }
-            request.readBytes(outputStream, request.capacity());
+        public void init(org.wso2.msf4j.Response response) {
+            this.response = response;
         }
 
         @Override
-        public void finished(ByteBuf request, HttpResponder responder) throws IOException {
+        public void chunk(ByteBuffer content, boolean isEnd) throws Exception {
             if (outputStream == null) {
                 throw new IOException("Unable to write file");
             }
-            request.readBytes(outputStream, request.capacity());
-            outputStream.close();
-            responder.sendStatus(HttpResponseStatus.ACCEPTED);
+            outputStream.write(content.array());
+            if (isEnd) {
+                outputStream.close();
+                response.setStatus(Response.Status.ACCEPTED.getStatusCode());
+                response.send();
+            }
         }
 
         @Override
