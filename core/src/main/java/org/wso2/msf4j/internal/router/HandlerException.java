@@ -44,8 +44,7 @@ public class HandlerException extends Exception {
 
     public CarbonMessage getFailureResponse() {
         DefaultCarbonMessage response = new DefaultCarbonMessage();
-        response.setProperty(Constants.HTTP_STATUS_CODE,
-                String.valueOf(failureStatus.getStatusCode()));
+        response.setProperty(Constants.HTTP_STATUS_CODE, failureStatus.getStatusCode());
         response.setStringMessageBody(message);
         return response;
     }
