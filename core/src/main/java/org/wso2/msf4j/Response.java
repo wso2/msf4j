@@ -214,6 +214,8 @@ public class Response {
                 }
             }
             carbonMessage.setHeader(Constants.HTTP_CONTENT_TYPE, mediaType);
+        } else {
+            setEomAdded(true);
         }
     }
 
