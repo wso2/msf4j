@@ -339,13 +339,15 @@ public class TestHandler implements Microservice {
             }
 
             @Override
-            public void chunk(ByteBuffer content, boolean isEnd) throws Exception {
+            public void chunk(ByteBuffer content) throws Exception {
                 sb.append(new String(content.array(), Charset.defaultCharset()));
-                if (isEnd) {
-                    response.setStatus(Response.Status.OK.getStatusCode());
-                    response.setEntity(sb.toString());
-                    response.send();
-                }
+            }
+
+            @Override
+            public void end() throws Exception {
+                response.setStatus(Response.Status.OK.getStatusCode());
+                response.setEntity(sb.toString());
+                response.send();
             }
 
             @Override
@@ -362,7 +364,6 @@ public class TestHandler implements Microservice {
 
         return new HttpStreamHandler() {
             private org.wso2.msf4j.Response response;
-            int count = 0;
             ByteBuffer offHeapBuffer = ByteBuffer.allocateDirect(fileSize);
 
             @Override
@@ -371,13 +372,16 @@ public class TestHandler implements Microservice {
             }
 
             @Override
-            public void chunk(ByteBuffer content, boolean isEnd) throws Exception {
+            public void chunk(ByteBuffer content) throws Exception {
+                offHeapBuffer.put(content.array());
+            }
+
+            @Override
+            public void end() throws Exception {
                 int bytesUploaded = offHeapBuffer.position();
-                if (isEnd) {
-                    response.setStatus(Response.Status.OK.getStatusCode());
-                    response.setEntity("Uploaded:" + bytesUploaded);
-                    response.send();
-                }
+                response.setStatus(Response.Status.OK.getStatusCode());
+                response.setEntity("Uploaded:" + bytesUploaded);
+                response.send();
             }
 
             @Override
