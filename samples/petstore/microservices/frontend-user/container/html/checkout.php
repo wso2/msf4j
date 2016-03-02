@@ -137,17 +137,17 @@ include('includes/header.php');
                     <div class="col-sm-12">
                         <label for="card-number" class="control-label">Cart Number </label>
                         <input type="text" class="form-control" id="card-number" min="1" max="1200"
-                               placeholder="Cart Number" required="" inputmode="numeric" autocomplete="cc-number">
+                               placeholder="Card Number" required="" inputmode="numeric" autocomplete="cc-number">
                     </div>
                     <div class="col-sm-12">
                         <label for="card-holder-name" class="control-label">Cart Holder Name </label>
                         <input type="text" class="form-control" id="card-holder-name" min="1" max="1200"
-                               placeholder="Cart Holder Name" required="">
+                               placeholder="Card Holder Name" required="">
                     </div>
                     <div class="col-sm-6">
                         <label for="card-holder-cvc" class="control-label">Cart Holder CVC </label>
                         <input type="text" class="form-control" id="card-holder-cvc" min="1" max="1200"
-                               placeholder="Cart Holder CVC" required="">
+                               placeholder="Card Holder CVC" required="">
                     </div>
                     <div class="clearfix"></div>
                     <div class="col-sm-6">
