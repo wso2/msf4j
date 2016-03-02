@@ -232,7 +232,6 @@
         </export.package>
         <import.package>
             javax.annotation.*,
-            io.netty.*;version="${netty.version.range}",
             org.slf4j.*;version="${slf4j.version.range}",
             org.apache.commons.beanutils.*;version="${beanutils.version.range}",
             org.osgi.framework.*;version="${osgi.framework.import.version.range}",

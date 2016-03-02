@@ -236,36 +236,6 @@
                 <artifactId>org.wso2.carbon.transport.http.netty</artifactId>
                 <version>${org.wso2.carbon.transport.http.netty.version}</version>
             </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-common</artifactId>
-                <version>${netty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-buffer</artifactId>
-                <version>${netty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-transport</artifactId>
-                <version>${netty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-handler</artifactId>
-                <version>${netty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-codec</artifactId>
-                <version>${netty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-codec-http</artifactId>
-                <version>${netty.version}</version>
-            </dependency>
 
             <dependency>
                 <groupId>org.osgi</groupId>
@@ -523,8 +493,6 @@
         <equinox.osgi.version>3.10.2.v20150203-1939</equinox.osgi.version>
         <equinox.osgi.services.version>3.4.0.v20140312-2051</equinox.osgi.services.version>
         <rs-api.version>2.0</rs-api.version>
-        <netty.version>4.0.30.Final</netty.version>
-        <netty.version.range>[4.0,5)</netty.version.range>
         <slf4j.version>1.7.5</slf4j.version>
         <slf4j.version.range>[1.7,2)</slf4j.version.range>
         <slf4j.log4j.version>1.6.0</slf4j.log4j.version>

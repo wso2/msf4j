@@ -40,26 +40,6 @@
             <artifactId>msf4j-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-buffer</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-transport</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-handler</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-codec</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-codec-http</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
@@ -69,8 +49,7 @@
         <private.package>org.wso2.msf4j.loginterceptor.*</private.package>
         <import.package>
             org.osgi.framework.*;version="${osgi.framework.import.version.range}",
-            org.wso2.msf4j.*,
-            io.netty.handler.codec.http.*,
+            org.wso2.msf4j.*
             org.slf4j.*,
         </import.package>
     </properties>

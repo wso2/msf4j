@@ -43,30 +43,6 @@
             <artifactId>javax.ws.rs-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-buffer</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-transport</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-handler</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-codec</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-codec-http</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
         </dependency>
@@ -192,30 +168,6 @@
                                 <bundle>
                                     <symbolicName>javax.ws.rs-api</symbolicName>
                                     <version>${rs-api.version}</version>
-                                </bundle>
-                                <bundle>
-                                    <symbolicName>io.netty.common</symbolicName>
-                                    <version>${netty.version}</version>
-                                </bundle>
-                                <bundle>
-                                    <symbolicName>io.netty.transport</symbolicName>
-                                    <version>${netty.version}</version>
-                                </bundle>
-                                <bundle>
-                                    <symbolicName>io.netty.codec</symbolicName>
-                                    <version>${netty.version}</version>
-                                </bundle>
-                                <bundle>
-                                    <symbolicName>io.netty.codec-http</symbolicName>
-                                    <version>${netty.version}</version>
-                                </bundle>
-                                <bundle>
-                                    <symbolicName>io.netty.handler</symbolicName>
-                                    <version>${netty.version}</version>
-                                </bundle>
-                                <bundle>
-                                    <symbolicName>io.netty.buffer</symbolicName>
-                                    <version>${netty.version}</version>
                                 </bundle>
                                 <bundle>
                                     <symbolicName>org.wso2.carbon.transport.http.netty</symbolicName>

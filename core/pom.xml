@@ -55,30 +55,6 @@
             <artifactId>jaxrs-delegates</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-buffer</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-transport</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-handler</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-codec</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-codec-http</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
@@ -299,8 +275,7 @@
             org.wso2.msf4j.*;version="1.0.0",
         </export.package>
         <import.package>
-            org.wso2.carbon.kernel.deployment.*;version="${carbon.kernel.version.range}",
-            io.netty.*;version="${netty.version.range}",
+            org.wso2.carbon.kernel.deployment.*;version="${carbon.kernel.version.range}"
             com.google.gson.*;version="${gson.version.range}",
             com.google.common.*;version="${guava.version.range}",
             javax.annotation.*,
