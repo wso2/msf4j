@@ -63,7 +63,7 @@ public class HTTPMonitoringInterceptor implements Interceptor {
     }
 
     @Override
-    public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) {
+    public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) throws Exception {
         Method method = serviceMethodInfo.getMethod();
         Interceptor interceptor = map.get(method);
         if (interceptor == null) {
@@ -82,7 +82,7 @@ public class HTTPMonitoringInterceptor implements Interceptor {
     }
 
     @Override
-    public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) {
+    public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) throws Exception {
         Method method = serviceMethodInfo.getMethod();
         Interceptor interceptor = map.get(method);
         if (interceptor != null) {

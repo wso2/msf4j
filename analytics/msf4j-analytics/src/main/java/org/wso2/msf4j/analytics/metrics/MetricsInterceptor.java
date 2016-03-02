@@ -76,7 +76,7 @@ public class MetricsInterceptor implements Interceptor {
     }
 
     @Override
-    public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) {
+    public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) throws Exception {
         Method method = serviceMethodInfo.getMethod();
         Set<Interceptor> interceptors = map.get(method);
         if (interceptors == null) {
@@ -129,7 +129,7 @@ public class MetricsInterceptor implements Interceptor {
     }
 
     @Override
-    public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) {
+    public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) throws Exception {
         Method method = serviceMethodInfo.getMethod();
         Set<Interceptor> interceptors = map.get(method);
         if (interceptors != null) {
