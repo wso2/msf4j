@@ -17,12 +17,12 @@
 package org.wso2.msf4j.internal.router;
 
 import com.google.common.base.Preconditions;
-import io.netty.handler.codec.http.QueryStringDecoder;
 import org.wso2.msf4j.HttpStreamer;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.internal.router.beanconversion.BeanConverter;
 import org.wso2.msf4j.util.BufferUtil;
+import org.wso2.msf4j.util.QueryStringDecoderUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -155,7 +155,7 @@ public class HttpResourceModelProcessor {
     @SuppressWarnings("unchecked")
     private Object getQueryParamValue(HttpResourceModel.ParameterInfo<List<String>> info, String uri) {
         QueryParam queryParam = info.getAnnotation();
-        List<String> values = new QueryStringDecoder(uri).parameters().get(queryParam.value());
+        List<String> values = new QueryStringDecoderUtil(uri).parameters().get(queryParam.value());
         if (values == null || values.isEmpty()) {
             String defaultVal = info.getDefaultVal();
             if (defaultVal != null) {
@@ -178,4 +178,5 @@ public class HttpResourceModelProcessor {
         }
         return info.convert(headers);
     }
+
 }

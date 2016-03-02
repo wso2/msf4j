@@ -17,7 +17,6 @@
 package org.wso2.msf4j.internal.router;
 
 import com.google.common.io.Closeables;
-import io.netty.handler.ssl.SslHandler;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -88,15 +87,5 @@ public class SSLHandlerFactory {
             Closeables.closeQuietly(is);
         }
         return ks;
-    }
-
-    /**
-     * @return instance of {@code SslHandler}
-     */
-    public SslHandler create() {
-        SSLEngine engine = serverContext.createSSLEngine();
-        engine.setNeedClientAuth(needClientAuth);
-        engine.setUseClientMode(false);
-        return new SslHandler(engine);
     }
 }

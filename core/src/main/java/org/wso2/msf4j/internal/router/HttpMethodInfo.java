@@ -38,7 +38,7 @@ public class HttpMethodInfo {
     private final Object[] args;
     private Response responder;
     private HttpStreamHandler httpStreamHandler;
-    private static final Logger log = LoggerFactory.getLogger(ChannelChunkResponder.class);
+    private static final Logger log = LoggerFactory.getLogger(HttpMethodInfo.class);
 
     public HttpMethodInfo(Method method,
                           Object handler,

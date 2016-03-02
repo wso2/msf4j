@@ -19,7 +19,6 @@ import com.google.common.base.Charsets;
 import com.google.common.io.ByteStreams;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import io.netty.handler.codec.http.HttpMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.msf4j.Interceptor;
@@ -35,6 +34,7 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
+import javax.ws.rs.HttpMethod;
 
 /**
  * Act as a security gateway for resources secured with Oauth2.
@@ -156,7 +156,7 @@ public class OAuth2SecurityInterceptor implements Interceptor {
             url = new URL(AUTH_SERVER_URL);
             HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
             urlConn.setDoOutput(true);
-            urlConn.setRequestMethod(HttpMethod.POST.name());
+            urlConn.setRequestMethod(HttpMethod.POST);
             urlConn.getOutputStream().write(("token=" + accessToken).getBytes(Charsets.UTF_8));
             return new String(ByteStreams.toByteArray(urlConn.getInputStream()), Charsets.UTF_8);
         } catch (java.io.IOException e) {
