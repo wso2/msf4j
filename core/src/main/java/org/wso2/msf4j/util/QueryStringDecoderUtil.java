@@ -17,7 +17,6 @@
 package org.wso2.msf4j.util;
 
 import java.net.URI;
-import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -294,7 +293,7 @@ public class QueryStringDecoderUtil {
      * {@code 0xC3 0xA9}) is encoded as {@code %C3%A9} or {@code %c3%a9}.
      * <p>
      * This is essentially equivalent to calling
-     * {@link URLDecoder#decode(String, String) URLDecoder.decode(s, charset.name())}
+     * URLDecoder.decode(s, charset.name())
      * except that it's over 2x faster and generates less garbage for the GC.
      * Actually this function doesn't allocate any memory if there's nothing
      * to decode, the argument itself is returned.
