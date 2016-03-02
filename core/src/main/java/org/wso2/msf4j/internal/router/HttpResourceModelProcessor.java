@@ -17,7 +17,6 @@
 package org.wso2.msf4j.internal.router;
 
 import com.google.common.base.Preconditions;
-import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import org.wso2.msf4j.HttpStreamer;
 import org.wso2.msf4j.Request;
@@ -86,7 +85,7 @@ public class HttpResourceModelProcessor {
                         args[idx] = getContextParamValue((HttpResourceModel.ParameterInfo<Object>) paramInfo,
                                 request, responder);
                     }
-                } else if (request instanceof FullHttpRequest) {
+                } else {
                     // If an annotation is not present the parameter is considered a
                     // request body data parameter
                     ByteBuffer fullContent = BufferUtil.merge(request.getFullMessageBody());
