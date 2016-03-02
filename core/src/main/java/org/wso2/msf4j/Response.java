@@ -35,10 +35,13 @@ import java.util.Stack;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
+/**
+ * Class that represents an HTTP response in MSF4J level.
+ */
 public class Response {
 
-    private final String COMMA_SEPARATOR = ", ";
-    private final int NULL_STATUS_CODE = -1;
+    private static final String COMMA_SEPARATOR = ", ";
+    private static final int NULL_STATUS_CODE = -1;
     public static final String CHUNKED = "chunked";
 
     private final CarbonMessage carbonMessage;
@@ -55,11 +58,11 @@ public class Response {
     }
 
     public boolean isEomAdded() {
-        return carbonMessage.isEomAdded();
+        return carbonMessage.isEndOfMsgAdded();
     }
 
     public void setEomAdded(boolean eomAdded) {
-        carbonMessage.setEomAdded(eomAdded);
+        carbonMessage.setEndOfMsgAdded(eomAdded);
     }
 
     public boolean isEmpty() {
@@ -203,7 +206,7 @@ public class Response {
                 mediaType = (mediaType != null) ? mediaType : MediaType.WILDCARD;
                 ByteBuffer byteBuffer = BeanConverter.instance(mediaType).convertToMedia(entity);
                 carbonMessage.addMessageBody(byteBuffer);
-                carbonMessage.setEomAdded(true);
+                carbonMessage.setEndOfMsgAdded(true);
                 if (isSendChunked) {
                     carbonMessage.setHeader(Constants.HTTP_TRANSFER_ENCODING, CHUNKED);
                 } else {

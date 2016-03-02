@@ -12,6 +12,9 @@ import java.util.Stack;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.HttpHeaders;
 
+/**
+ * Class that represents an HTTP request in MSF4J level.
+ */
 public class Request {
 
     private final CarbonMessage carbonMessage;
@@ -35,11 +38,11 @@ public class Request {
     }
 
     public boolean isEomAdded() {
-        return carbonMessage.isEomAdded();
+        return carbonMessage.isEndOfMsgAdded();
     }
 
     public void setEomAdded(boolean eomAdded) {
-        carbonMessage.setEomAdded(eomAdded);
+        carbonMessage.setEndOfMsgAdded(eomAdded);
     }
 
     public boolean isEmpty() {
