@@ -169,14 +169,14 @@ public class HttpResourceModelProcessor {
     private Object getHeaderParamValue(HttpResourceModel.ParameterInfo<List<String>> info, Request request) {
         HeaderParam headerParam = info.getAnnotation();
         String headerName = headerParam.value();
-        List<String> headers = Collections.singletonList(request.getHeader(headerName));
-        if (headers == null || headers.isEmpty()) {
+        String header = request.getHeader(headerName);
+        if (header == null || header.isEmpty()) {
             String defaultVal = info.getDefaultVal();
             if (defaultVal != null) {
-                headers = Arrays.asList(defaultVal);
+                header = defaultVal;
             }
         }
-        return info.convert(headers);
+        return info.convert(Collections.singletonList(header));
     }
 
 }
