@@ -16,6 +16,8 @@
 
 package org.wso2.msf4j.internal;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.InterceptorException;
 import org.wso2.msf4j.Request;
@@ -29,6 +31,8 @@ import java.util.List;
  * Execute Interceptors. preCall and postCall
  */
 public class InterceptorExecutor {
+
+    private static final Logger log = LoggerFactory.getLogger(InterceptorExecutor.class);
 
     private Request request;
     private Response response;
@@ -79,12 +83,12 @@ public class InterceptorExecutor {
      * @param status status that was returned to the client
      */
     public void execPostCalls(int status) throws InterceptorException {
-        try {
-            for (Interceptor interceptor : interceptors) {
+        for (Interceptor interceptor : interceptors) {
+            try {
                 interceptor.postCall(request, status, serviceMethodInfo);
+            } catch (Exception e) {
+                log.error("Exception while executing a postCall", e);
             }
-        } catch (Exception e) {
-            throw new InterceptorException("Exception while executing postCalls", e);
         }
     }
 }
