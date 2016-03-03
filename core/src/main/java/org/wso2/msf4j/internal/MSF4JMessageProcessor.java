@@ -30,6 +30,7 @@ import org.wso2.msf4j.internal.router.HttpMethodInfo;
 import org.wso2.msf4j.internal.router.HttpMethodInfoBuilder;
 import org.wso2.msf4j.internal.router.HttpResourceModel;
 import org.wso2.msf4j.internal.router.PatternPathRouter;
+import org.wso2.msf4j.util.HttpUtil;
 
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -93,8 +94,16 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
             carbonCallback.done(e.getFailureResponse());
         } catch (InterceptorException e) {
             log.warn("Interceptors threw an exception", e);
+            // TODO: improve the response
+            carbonCallback.done(HttpUtil
+                    .createTextResponse(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
+                            HttpUtil.EMPTY_BODY));
         } catch (Throwable t) {
             log.warn("Unmapped exception", t);
+            // TODO: improve the response and add exception mapping
+            carbonCallback.done(HttpUtil
+                    .createTextResponse(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
+                            HttpUtil.EMPTY_BODY));
         }
         return true;
     }

@@ -17,8 +17,7 @@
 package org.wso2.msf4j.internal.router;
 
 import org.wso2.carbon.messaging.CarbonMessage;
-import org.wso2.carbon.messaging.Constants;
-import org.wso2.carbon.messaging.DefaultCarbonMessage;
+import org.wso2.msf4j.util.HttpUtil;
 
 import javax.ws.rs.core.Response;
 
@@ -43,10 +42,7 @@ public class HandlerException extends Exception {
     }
 
     public CarbonMessage getFailureResponse() {
-        DefaultCarbonMessage response = new DefaultCarbonMessage();
-        response.setProperty(Constants.HTTP_STATUS_CODE, failureStatus.getStatusCode());
-        response.setStringMessageBody(message);
-        return response;
+        return HttpUtil.createTextResponse(failureStatus.getStatusCode(), message);
     }
 
     public Response.Status getFailureStatus() {
