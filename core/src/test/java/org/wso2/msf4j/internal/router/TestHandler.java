@@ -239,7 +239,7 @@ public class TestHandler implements Microservice {
     }
 
     private String getStringContent(Request request) throws IOException {
-        return new String(BufferUtil.merge(request.getFullMessageBody()).array(), Charset.defaultCharset());
+        return Charset.defaultCharset().decode(BufferUtil.merge(request.getFullMessageBody())).toString();
     }
 
     @Path("/multi-match/**")
@@ -335,7 +335,7 @@ public class TestHandler implements Microservice {
 
             @Override
             public void chunk(ByteBuffer content) throws Exception {
-                sb.append(new String(content.array(), Charset.defaultCharset()));
+                sb.append(Charset.defaultCharset().decode(content).toString());
             }
 
             @Override

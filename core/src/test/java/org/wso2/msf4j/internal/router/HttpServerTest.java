@@ -581,8 +581,8 @@ public class HttpServerTest {
         xmlBean.setName("send-something");
         xmlBean.setId(10);
         xmlBean.setValue(15);
-        writeContent(urlConn, new String(BeanConverter.instance("text/xml").convertToMedia(xmlBean).array(),
-                Charset.defaultCharset()));
+        writeContent(urlConn, Charset.defaultCharset()
+                .decode(BeanConverter.instance("text/xml").convertToMedia(xmlBean)).toString());
         Assert.assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
         String respBody = getContent(urlConn);
         XmlBean xmlBean2 = (XmlBean) BeanConverter.instance("text/xml").convertToObject(
