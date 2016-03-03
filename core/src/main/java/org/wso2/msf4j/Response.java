@@ -16,23 +16,17 @@
 
 package org.wso2.msf4j;
 
-import com.google.common.io.Files;
 import org.wso2.carbon.messaging.CarbonCallback;
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.Constants;
 import org.wso2.carbon.messaging.DefaultCarbonMessage;
 import org.wso2.carbon.messaging.FaultHandler;
-import org.wso2.msf4j.internal.mime.MimeMapper;
-import org.wso2.msf4j.internal.mime.MimeMappingException;
-import org.wso2.msf4j.internal.router.beanconversion.BeanConversionException;
-import org.wso2.msf4j.internal.router.beanconversion.BeanConverter;
+import org.wso2.msf4j.entitywriter.EntityWriterRegistry;
 
-import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
 /**
@@ -42,15 +36,15 @@ public class Response {
 
     private static final String COMMA_SEPARATOR = ", ";
     private static final int NULL_STATUS_CODE = -1;
-    public static final String CHUNKED = "chunked";
+    public static final int NO_CHUNK = 0;
+    public static final int DEFAULT_CHUNK_SIZE = -1;
 
     private final CarbonMessage carbonMessage;
     private final CarbonCallback carbonCallback;
     private int statusCode = NULL_STATUS_CODE;
     private String mediaType = null;
     private Object entity;
-
-    private boolean isSendChunked = false;
+    private int chunkSize = NO_CHUNK;
 
     public Response(CarbonCallback carbonCallback) {
         carbonMessage = new DefaultCarbonMessage();
@@ -165,19 +159,19 @@ public class Response {
     }
 
     /**
-     * Specify to send the response in chunks or as a whole. By default
-     * the response will be sent as a whole.
+     * Specify the chunk size to send the response.
      *
-     * @param isSendChunked true to send response in chunks
+     * @param chunkSize if 0 response will be sent without chunking
+     *                  if -1 a default chunk size will be applied
      */
-    public void setSendChunked(boolean isSendChunked) {
-        isSendChunked = isSendChunked;
+    public void setChunkSize(int chunkSize) {
+        this.chunkSize = chunkSize;
     }
 
     /**
      * Send the HTTP response using the content in this object.
      */
-    public void send() throws BeanConversionException {
+    public void send() throws Exception {
         processStatusCode();
         processEntity();
         carbonCallback.done(carbonMessage);
@@ -195,38 +189,14 @@ public class Response {
         }
     }
 
-    // TODO: come up with a way to send async file / async stream
-    private void processEntity() throws BeanConversionException {
+    @SuppressWarnings("unchecked")
+    private void processEntity() throws Exception {
         if (entity != null) {
-            if (entity instanceof File) {
-                File file = (File) entity;
-                mediaType = getMediaType(file);
-                // TODO: send file in chunks or in whole
-            } else {
-                mediaType = (mediaType != null) ? mediaType : MediaType.WILDCARD;
-                ByteBuffer byteBuffer = BeanConverter.instance(mediaType).convertToMedia(entity);
-                carbonMessage.addMessageBody(byteBuffer);
-                carbonMessage.setEndOfMsgAdded(true);
-                if (isSendChunked) {
-                    carbonMessage.setHeader(Constants.HTTP_TRANSFER_ENCODING, CHUNKED);
-                } else {
-                    carbonMessage.setHeader(Constants.HTTP_CONTENT_LENGTH, String.valueOf(byteBuffer.remaining()));
-                }
-            }
-            carbonMessage.setHeader(Constants.HTTP_CONTENT_TYPE, mediaType);
+            EntityWriterRegistry.getInstance()
+                    .getEntityWriter(entity.getClass())
+                    .writeData(carbonMessage, entity, mediaType, chunkSize);
         } else {
             setEomAdded(true);
         }
-    }
-
-    private String getMediaType(File file) {
-        if (mediaType == null || mediaType.equals(MediaType.WILDCARD)) {
-            try {
-                return MimeMapper.getMimeType(Files.getFileExtension(file.getName()));
-            } catch (MimeMappingException e) {
-                return MediaType.WILDCARD;
-            }
-        }
-        return mediaType;
     }
 }
