@@ -19,6 +19,8 @@ package org.wso2.msf4j.util;
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.Constants;
 import org.wso2.carbon.messaging.DefaultCarbonMessage;
+import org.wso2.msf4j.Request;
+import org.wso2.msf4j.Response;
 
 import javax.ws.rs.core.HttpHeaders;
 
@@ -28,6 +30,8 @@ import javax.ws.rs.core.HttpHeaders;
 public class HttpUtil {
 
     public static final String EMPTY_BODY = "";
+    public static final String CLOSE = "close";
+    public static final String KEEP_ALIVE = "keep-alive";
 
     /**
      * Create a CarbonMessage for a specific status code.
@@ -41,5 +45,21 @@ public class HttpUtil {
         response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(msg.length()));
         response.setStringMessageBody(msg);
         return response;
+    }
+
+    /**
+     * Set connection header of the response object according to the
+     * connection header of the request.
+     *
+     * @param request  HTTP request object
+     * @param response HTTP response object
+     */
+    public static void setConnectionHeader(Request request, Response response) {
+        String connection = request.getHeader(Constants.HTTP_CONNECTION);
+        if (connection != null && CLOSE.equalsIgnoreCase(connection)) {
+            response.setHeader(Constants.HTTP_CONNECTION, CLOSE);
+        } else {
+            response.setHeader(Constants.HTTP_CONNECTION, KEEP_ALIVE);
+        }
     }
 }

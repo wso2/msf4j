@@ -82,17 +82,9 @@ public class HttpMethodInfo {
      * Calls the http resource method.
      */
     public void invoke() throws Exception {
-        try {
-            Object returnVal = method.invoke(handler, args);
-            responder.setEntity(returnVal);
-            responder.send();
-        } catch (InvocationTargetException e) {
-            log.error("Resource method threw an exception", e);
-            throw e;
-        } catch (Throwable e) {
-            log.error("Exception while invoking resource method", e);
-            throw e;
-        }
+        Object returnVal = method.invoke(handler, args);
+        responder.setEntity(returnVal);
+        responder.send();
     }
 
     /**

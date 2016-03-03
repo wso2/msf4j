@@ -32,6 +32,7 @@ import org.wso2.msf4j.internal.router.HttpResourceModel;
 import org.wso2.msf4j.internal.router.PatternPathRouter;
 import org.wso2.msf4j.util.HttpUtil;
 
+import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
@@ -41,7 +42,6 @@ import javax.ws.rs.core.MediaType;
  */
 public class MSF4JMessageProcessor implements CarbonMessageProcessor {
 
-
     private static final Logger log = LoggerFactory.getLogger(MSF4JMessageProcessor.class);
     private MicroservicesRegistry microservicesRegistry;
     private static final String MSF4J_MSG_PROC_ID = "MSF4J-CM-PROCESSOR";
@@ -50,48 +50,24 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
         this.microservicesRegistry = microservicesRegistry;
     }
 
+    /**
+     * Carbon message handler.
+     */
     @Override
     public boolean receive(CarbonMessage carbonMessage, CarbonCallback carbonCallback) {
         Request request = new Request(carbonMessage);
         Response response = new Response(carbonCallback);
         try {
-            PatternPathRouter.RoutableDestination<HttpResourceModel> destination = microservicesRegistry
-                    .getHttpResourceHandler()
-                    .getDestinationMethod(request.getUri(),
-                            request.getHttpMethod(),
-                            request.getContentType(),
-                            request.getAcceptTypes());
-            HttpResourceModel resourceModel = destination.getDestination();
-            response.setMediaType(getResponseType(request.getAcceptTypes(),
-                    resourceModel.getProducesMediaTypes()));
-            InterceptorExecutor interceptorExecutor = InterceptorExecutor
-                    .instance(resourceModel,
-                            request,
-                            response,
-                            microservicesRegistry.getInterceptors());
-            if (interceptorExecutor.execPreCalls()) { // preCalls can throw exceptions
-
-                HttpMethodInfoBuilder httpMethodInfoBuilder = HttpMethodInfoBuilder
-                        .getInstance()
-                        .httpResourceModel(resourceModel)
-                        .httpRequest(request)
-                        .httpResponder(response)
-                        .requestInfo(destination.getGroupNameValues());
-
-                HttpMethodInfo httpMethodInfo = httpMethodInfoBuilder.build();
-                if (httpMethodInfo.isStreamingSupported()) {
-                    // TODO: introduce a true async model
-                    for (ByteBuffer byteBuffer : request.getFullMessageBody()) {
-                        httpMethodInfo.chunk(byteBuffer);
-                    }
-                    httpMethodInfo.end();
-                } else {
-                    httpMethodInfo.invoke();
-                }
-                interceptorExecutor.execPostCalls(0); // postCalls can throw exceptions
-            }
+            dispatchMethod(request, response);
         } catch (HandlerException e) {
-            carbonCallback.done(e.getFailureResponse());
+            handleHandlerException(e, carbonCallback);
+        } catch (InvocationTargetException e) {
+            Throwable targetException = e.getTargetException();
+            if (targetException instanceof HandlerException) {
+                handleHandlerException((HandlerException) targetException, carbonCallback);
+            } else {
+                handleThrowable(targetException, carbonCallback);
+            }
         } catch (InterceptorException e) {
             log.warn("Interceptors threw an exception", e);
             // TODO: improve the response
@@ -99,13 +75,63 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                     .createTextResponse(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
                             HttpUtil.EMPTY_BODY));
         } catch (Throwable t) {
-            log.warn("Unmapped exception", t);
-            // TODO: improve the response and add exception mapping
-            carbonCallback.done(HttpUtil
-                    .createTextResponse(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
-                            HttpUtil.EMPTY_BODY));
+            handleThrowable(t, carbonCallback);
         }
         return true;
+    }
+
+    /**
+     * Dispatch appropriate resource method.
+     */
+    private void dispatchMethod(Request request, Response response) throws Exception {
+        HttpUtil.setConnectionHeader(request, response);
+        PatternPathRouter.RoutableDestination<HttpResourceModel> destination = microservicesRegistry
+                .getHttpResourceHandler()
+                .getDestinationMethod(request.getUri(),
+                        request.getHttpMethod(),
+                        request.getContentType(),
+                        request.getAcceptTypes());
+        HttpResourceModel resourceModel = destination.getDestination();
+        response.setMediaType(getResponseType(request.getAcceptTypes(),
+                resourceModel.getProducesMediaTypes()));
+        InterceptorExecutor interceptorExecutor = InterceptorExecutor
+                .instance(resourceModel,
+                        request,
+                        response,
+                        microservicesRegistry.getInterceptors());
+        if (interceptorExecutor.execPreCalls()) { // preCalls can throw exceptions
+
+            HttpMethodInfoBuilder httpMethodInfoBuilder = HttpMethodInfoBuilder
+                    .getInstance()
+                    .httpResourceModel(resourceModel)
+                    .httpRequest(request)
+                    .httpResponder(response)
+                    .requestInfo(destination.getGroupNameValues());
+
+            HttpMethodInfo httpMethodInfo = httpMethodInfoBuilder.build();
+            if (httpMethodInfo.isStreamingSupported()) {
+                // TODO: introduce a true async model
+                for (ByteBuffer byteBuffer : request.getFullMessageBody()) {
+                    httpMethodInfo.chunk(byteBuffer);
+                }
+                httpMethodInfo.end();
+            } else {
+                httpMethodInfo.invoke();
+            }
+            interceptorExecutor.execPostCalls(0); // postCalls can throw exceptions
+        }
+    }
+
+    private void handleThrowable(Throwable t, CarbonCallback carbonCallback) {
+        log.warn("Unmapped exception", t);
+        // TODO: improve the response and add exception mapping
+        carbonCallback.done(HttpUtil
+                .createTextResponse(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
+                        HttpUtil.EMPTY_BODY));
+    }
+
+    private void handleHandlerException(HandlerException e, CarbonCallback carbonCallback) {
+        carbonCallback.done(e.getFailureResponse());
     }
 
     /**
@@ -127,7 +153,6 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
 
     @Override
     public void setTransportSender(TransportSender transportSender) {
-
     }
 
     @Override
