@@ -1,4 +1,4 @@
-# Security Sample
+# OAuth2 Security Sample
 
 This sample shows how to secure microservices deployed in WSO2 MSF4J using OAuth2.
 

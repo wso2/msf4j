@@ -24,7 +24,7 @@
         <relativePath>../../poms/msf4j-service/pom.xml</relativePath>
     </parent>
 
-    <artifactId>security</artifactId>
+    <artifactId>basicauth-security</artifactId>
     <packaging>jar</packaging>
     <name>Sample: Securing microservices in MSF4J using OAuth2</name>
     <description>Demostrates how to secure microservices in WSO2 MSF4J</description>
