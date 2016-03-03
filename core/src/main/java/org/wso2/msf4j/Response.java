@@ -55,10 +55,6 @@ public class Response {
         return carbonMessage.isEndOfMsgAdded();
     }
 
-    public void setEomAdded(boolean eomAdded) {
-        carbonMessage.setEndOfMsgAdded(eomAdded);
-    }
-
     public boolean isEmpty() {
         return carbonMessage.isEmpty();
     }
@@ -196,7 +192,8 @@ public class Response {
                     .getEntityWriter(entity.getClass())
                     .writeData(carbonMessage, entity, mediaType, chunkSize);
         } else {
-            setEomAdded(true);
+            carbonMessage.addMessageBody(ByteBuffer.allocate(0));
+            carbonMessage.setEndOfMsgAdded(true);
         }
     }
 }
