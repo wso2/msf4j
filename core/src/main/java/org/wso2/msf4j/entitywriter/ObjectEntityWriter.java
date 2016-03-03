@@ -16,7 +16,6 @@
 
 package org.wso2.msf4j.entitywriter;
 
-import org.omg.CORBA.Object;
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.Constants;
 import org.wso2.msf4j.Response;
