@@ -24,8 +24,8 @@ import java.util.Map;
  */
 public class EntityWriterRegistry {
 
-    private static EntityWriter DEFAULT_ENTITY_WRITER = new ObjectEntityWriter();
-    private static EntityWriterRegistry instance = new EntityWriterRegistry();
+    private static final EntityWriter DEFAULT_ENTITY_WRITER = new ObjectEntityWriter();
+    private static final EntityWriterRegistry INSTANCE = new EntityWriterRegistry();
 
     private final Map<Class, EntityWriter> writerMap = new HashMap<>();
 
@@ -57,7 +57,7 @@ public class EntityWriterRegistry {
      * Return a singleton instance.
      */
     public static EntityWriterRegistry getInstance() {
-        return instance;
+        return INSTANCE;
     }
 
 }

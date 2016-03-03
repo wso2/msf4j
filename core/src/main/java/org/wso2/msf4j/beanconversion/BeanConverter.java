@@ -26,7 +26,7 @@ import java.util.Map;
 public class BeanConverter {
 
     private static final MediaTypeConverter DEFAULT_CONVERTER = new TextPlainConverter();
-    private static final BeanConverter instance = new BeanConverter();
+    private static final BeanConverter INSTANCE = new BeanConverter();
 
     private final Map<String, MediaTypeConverter> converterMap = new HashMap<>();
 
@@ -62,6 +62,6 @@ public class BeanConverter {
      * Get BeanConverter singleton.
      */
     public static BeanConverter getInstance() {
-        return instance;
+        return INSTANCE;
     }
 }
