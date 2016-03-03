@@ -25,7 +25,6 @@ import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.ServiceMethodInfo;
-import org.wso2.msf4j.internal.router.beanconversion.BeanConversionException;
 import org.wso2.msf4j.security.MSF4JSecurityException;
 import org.wso2.msf4j.security.SecurityErrorCode;
 import org.wso2.msf4j.util.SystemVariableUtil;
@@ -70,7 +69,7 @@ public class OAuth2SecurityInterceptor implements Interceptor {
 
     @Override
     public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo)
-            throws BeanConversionException {
+            throws Exception {
         SecurityErrorCode errorCode;
 
         try {
@@ -181,7 +180,7 @@ public class OAuth2SecurityInterceptor implements Interceptor {
      * @param responder HttpResponder instance which is used send error messages back to the client
      */
     private void handleSecurityError(SecurityErrorCode errorCode, Response responder)
-            throws BeanConversionException {
+            throws Exception {
         if (errorCode == SecurityErrorCode.AUTHENTICATION_FAILURE ||
                 errorCode == SecurityErrorCode.INVALID_AUTHORIZATION_HEADER) {
             responder.setStatus(javax.ws.rs.core.Response.Status.UNAUTHORIZED.getStatusCode());
