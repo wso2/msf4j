@@ -37,6 +37,6 @@ public class TextPlainConverter extends MediaTypeConverter {
 
     @Override
     public Object toObject(ByteBuffer content, Type targetType) {
-        return new String(content.array(), Charset.defaultCharset());
+        return Charset.defaultCharset().decode(content).toString();
     }
 }

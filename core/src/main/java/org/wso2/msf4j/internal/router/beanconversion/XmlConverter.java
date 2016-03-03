@@ -55,7 +55,7 @@ public class XmlConverter extends MediaTypeConverter {
     @Override
     public Object toObject(ByteBuffer content, Type targetType) throws BeanConversionException {
         try {
-            String str = new String(content.array(), Charset.defaultCharset());
+            String str = Charset.defaultCharset().decode(content).toString();
             JAXBContext jaxbContext = JAXBContext.newInstance((Class) targetType);
             return jaxbContext.createUnmarshaller().unmarshal(new StringReader(str));
         } catch (JAXBException e) {

@@ -46,7 +46,7 @@ public class JsonConverter extends MediaTypeConverter {
     @Override
     public Object toObject(ByteBuffer content, Type targetType) throws BeanConversionException {
         try {
-            String str = new String(content.array(), Charset.defaultCharset());
+            String str = Charset.defaultCharset().decode(content).toString();
             Object object = gson.fromJson(str, targetType);
             if (object == null) {
                 throw new BeanConversionException("Unable to perform json to object conversion");
