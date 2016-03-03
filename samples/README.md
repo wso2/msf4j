@@ -16,7 +16,8 @@ In increasing order of complexity;
 * [File Server](fileserver) - Handling Files
 * [Lifecycle](lifecycle) - Using Service Lifecycle Methods
 * [Log-interceptor](log-interceptor-bundle) - Creating an Interceptor as an OSGi Bundle
-* [Security](security) - Securing Microservices
+* [BasicAuth Security](basicauth-security) - Securing Microservice using BasicAuth
+* [OAuth2 Security](oauth2-security) - Securing Microservice using OAuth2
 * [Template](template) - Rendering a Model from a Template
 * [Pet-store](petstore) - Running as an MSA Application
 
