@@ -35,6 +35,12 @@ public class BeanConverter {
         addMediaTypeConverter(new XmlConverter());
     }
 
+    /**
+     * Get a media type converter for a given media type string.
+     *
+     * @param mediaType media type String
+     * @return MediaTypeConverter
+     */
     public MediaTypeConverter getConverter(String mediaType) {
         MediaTypeConverter mediaTypeConverter = converterMap.get(mediaType.toLowerCase());
         if (mediaTypeConverter == null) {
@@ -43,6 +49,9 @@ public class BeanConverter {
         return mediaTypeConverter;
     }
 
+    /**
+     * Register a media type converter.
+     */
     public void addMediaTypeConverter(MediaTypeConverter mediaTypeConverter) {
         for (String mediaType : mediaTypeConverter.getSupportedMediaTypes()) {
             converterMap.put(mediaType.toLowerCase(), mediaTypeConverter);
