@@ -20,7 +20,7 @@ import com.google.common.base.Preconditions;
 import org.wso2.msf4j.HttpStreamer;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
-import org.wso2.msf4j.internal.router.beanconversion.BeanConverter;
+import org.wso2.msf4j.beanconversion.BeanConverter;
 import org.wso2.msf4j.util.BufferUtil;
 import org.wso2.msf4j.util.QueryStringDecoderUtil;
 
@@ -90,11 +90,12 @@ public class HttpResourceModelProcessor {
                     // request body data parameter
                     ByteBuffer fullContent = BufferUtil.merge(request.getFullMessageBody());
                     Type paramType = paramInfo.getParameterType();
-                    args[idx] = BeanConverter.instance(
-                            (request.getContentType() != null)
+                    args[idx] = BeanConverter
+                            .getInstance()
+                            .getConverter((request.getContentType() != null)
                                     ? request.getContentType()
-                                    : MediaType.WILDCARD
-                    ).convertToObject(fullContent, paramType);
+                                    : MediaType.WILDCARD)
+                            .convertToObject(fullContent, paramType);
                 }
                 idx++;
             }

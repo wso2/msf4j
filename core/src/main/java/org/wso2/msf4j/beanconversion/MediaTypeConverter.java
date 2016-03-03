@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.msf4j.internal.router.beanconversion;
+package org.wso2.msf4j.beanconversion;
 
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.msf4j.internal.router.beanconversion;
+package org.wso2.msf4j.beanconversion;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;

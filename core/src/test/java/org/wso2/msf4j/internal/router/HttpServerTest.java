@@ -34,8 +34,8 @@ import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.wso2.msf4j.MicroservicesRunner;
-import org.wso2.msf4j.internal.router.beanconversion.BeanConversionException;
-import org.wso2.msf4j.internal.router.beanconversion.BeanConverter;
+import org.wso2.msf4j.beanconversion.BeanConversionException;
+import org.wso2.msf4j.beanconversion.BeanConverter;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -582,10 +582,10 @@ public class HttpServerTest {
         xmlBean.setId(10);
         xmlBean.setValue(15);
         writeContent(urlConn, Charset.defaultCharset()
-                .decode(BeanConverter.instance("text/xml").convertToMedia(xmlBean)).toString());
+                .decode(BeanConverter.getInstance().getConverter("text/xml").convertToMedia(xmlBean)).toString());
         Assert.assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
         String respBody = getContent(urlConn);
-        XmlBean xmlBean2 = (XmlBean) BeanConverter.instance("text/xml").convertToObject(
+        XmlBean xmlBean2 = (XmlBean) BeanConverter.getInstance().getConverter("text/xml").convertToObject(
                 ByteBuffer.wrap(respBody.getBytes(Charset.defaultCharset())), XmlBean.class);
         Assert.assertEquals(xmlBean.getName(), xmlBean2.getName());
         Assert.assertEquals(xmlBean.getId(), xmlBean2.getId());

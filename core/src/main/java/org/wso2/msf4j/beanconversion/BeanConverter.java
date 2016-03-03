@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.msf4j.internal.router.beanconversion;
+package org.wso2.msf4j.beanconversion;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,14 +26,16 @@ import java.util.Map;
 public class BeanConverter {
 
     private static final MediaTypeConverter DEFAULT_CONVERTER = new TextPlainConverter();
-    private static final Map<String, MediaTypeConverter> converterMap = new HashMap<>();
+    private static final BeanConverter instance = new BeanConverter();
 
-    static {
+    private final Map<String, MediaTypeConverter> converterMap = new HashMap<>();
+
+    public BeanConverter() {
         addMediaTypeConverter(new JsonConverter());
         addMediaTypeConverter(new XmlConverter());
     }
 
-    public static MediaTypeConverter instance(String mediaType) {
+    public MediaTypeConverter getConverter(String mediaType) {
         MediaTypeConverter mediaTypeConverter = converterMap.get(mediaType.toLowerCase());
         if (mediaTypeConverter == null) {
             mediaTypeConverter = DEFAULT_CONVERTER;
@@ -41,9 +43,16 @@ public class BeanConverter {
         return mediaTypeConverter;
     }
 
-    public static void addMediaTypeConverter(MediaTypeConverter mediaTypeConverter) {
+    public void addMediaTypeConverter(MediaTypeConverter mediaTypeConverter) {
         for (String mediaType : mediaTypeConverter.getSupportedMediaTypes()) {
             converterMap.put(mediaType.toLowerCase(), mediaTypeConverter);
         }
+    }
+
+    /**
+     * Get BeanConverter singleton.
+     */
+    public static BeanConverter getInstance() {
+        return instance;
     }
 }

@@ -14,29 +14,19 @@
  * limitations under the License.
  */
 
-package org.wso2.msf4j.internal.router.beanconversion;
-
-import java.lang.reflect.Type;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
+package org.wso2.msf4j.beanconversion;
 
 /**
- * Media type converter for text/plain mime type.
+ * Exception that is thrown when a bean conversion is failed.
  */
-public class TextPlainConverter extends MediaTypeConverter {
+public class BeanConversionException extends Exception {
 
-    @Override
-    public String[] getSupportedMediaTypes() {
-        return null;
+    public BeanConversionException(String msg) {
+        super(msg);
     }
 
-    @Override
-    public ByteBuffer toMedia(Object object) {
-        return ByteBuffer.wrap(object.toString().getBytes(Charset.defaultCharset()));
+    public BeanConversionException(String msg, Exception cause) {
+        super(msg, cause);
     }
 
-    @Override
-    public Object toObject(ByteBuffer content, Type targetType) {
-        return Charset.defaultCharset().decode(content).toString();
-    }
 }
