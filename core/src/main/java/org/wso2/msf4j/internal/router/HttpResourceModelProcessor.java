@@ -27,7 +27,6 @@ import org.wso2.msf4j.util.QueryStringDecoderUtil;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
