@@ -48,9 +48,9 @@ public class ObjectEntityWriter implements EntityWriter<Object> {
         carbonMessage.addMessageBody(byteBuffer);
         carbonMessage.setEndOfMsgAdded(true);
         if (chunkSize == Response.NO_CHUNK) {
-            carbonMessage.setHeader(Constants.HTTP_TRANSFER_ENCODING, CHUNKED);
-        } else {
             carbonMessage.setHeader(Constants.HTTP_CONTENT_LENGTH, String.valueOf(byteBuffer.remaining()));
+        } else {
+            carbonMessage.setHeader(Constants.HTTP_TRANSFER_ENCODING, CHUNKED);
         }
         carbonMessage.setHeader(Constants.HTTP_CONTENT_TYPE, mediaType);
     }
