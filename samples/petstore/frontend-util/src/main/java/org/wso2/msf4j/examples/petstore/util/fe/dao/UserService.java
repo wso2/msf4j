@@ -32,8 +32,6 @@ import javax.faces.bean.ManagedProperty;
 @ApplicationScoped
 public class UserService {
 
-    private static final Logger LOGGER = Logger.getLogger(UserService.class.getName());
-
     @ManagedProperty("#{userServiceClient}")
     private UserServiceClient userServiceClient;
 

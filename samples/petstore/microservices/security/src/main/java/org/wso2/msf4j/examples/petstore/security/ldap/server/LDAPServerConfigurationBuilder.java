@@ -51,8 +51,6 @@ public class LDAPServerConfigurationBuilder {
 
     public static final java.lang.String ATTR_NAME_PROP_NAME = "name";
 
-    private String userMgtXMLFilePath = null;
-
     private InputStream configurationFileStream;
     /*Password to connect with the embedded-ldap server*/
     private String connectionPassword;

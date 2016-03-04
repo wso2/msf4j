@@ -54,7 +54,6 @@ public final class MicroserviceMetadata {
     private static final Logger log = LoggerFactory.getLogger(MicroserviceMetadata.class);
 
     private final PatternPathRouterWithGroups<HttpResourceModel> patternRouter = PatternPathRouterWithGroups.create();
-    private final Iterable<Object> handlers;
     private final Iterable<Interceptor> interceptors;
     private final URLRewriter urlRewriter;
 
@@ -70,7 +69,6 @@ public final class MicroserviceMetadata {
     public MicroserviceMetadata(Iterable<? extends Object> handlers, Iterable<? extends Interceptor> interceptors,
                                 URLRewriter urlRewriter, ExceptionHandler exceptionHandler) {
         //Store the handlers to call init and destroy on all handlers.
-        this.handlers = ImmutableList.copyOf(handlers);
         this.interceptors = ImmutableList.copyOf(interceptors);
         this.urlRewriter = urlRewriter;
 

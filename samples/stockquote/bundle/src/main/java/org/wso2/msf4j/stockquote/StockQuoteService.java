@@ -45,7 +45,6 @@ import javax.ws.rs.core.Response;
 @Path("/stockquote")
 public class StockQuoteService implements Microservice {
 
-    private static final Logger log = LoggerFactory.getLogger(StockQuoteService.class);
     private Map<String, Stock> stockQuotes = new HashMap<>();
 
     /**

@@ -45,7 +45,6 @@ public class RequestRouter extends SimpleChannelInboundHandler<HttpObject> {
 
     private static final Logger log = LoggerFactory.getLogger(RequestRouter.class);
 
-    private final int chunkMemoryLimit;
     private final MicroserviceMetadata httpMethodHandler;
     private final AtomicBoolean exceptionRaised;
 
@@ -55,7 +54,6 @@ public class RequestRouter extends SimpleChannelInboundHandler<HttpObject> {
 
     public RequestRouter(MicroserviceMetadata methodHandler, int chunkMemoryLimit) {
         this.httpMethodHandler = methodHandler;
-        this.chunkMemoryLimit = chunkMemoryLimit;
         this.exceptionRaised = new AtomicBoolean(false);
     }
 
