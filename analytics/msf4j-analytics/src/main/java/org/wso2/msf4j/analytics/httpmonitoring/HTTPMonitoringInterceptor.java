@@ -28,6 +28,7 @@ import org.wso2.msf4j.ServiceMethodInfo;
 
 import java.lang.reflect.Method;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.Path;
@@ -62,15 +63,29 @@ public class HTTPMonitoringInterceptor implements Interceptor {
         });
         return this;
     }
+    
+    /**
+     * Returns the final annotation that is application to the given method. For example,
+     * the {@link HTTPMonitored} annotation can be mentioned in class level, and also in 
+     * the target method, but the method only have tracing enabled. Then we should get the
+     * setting as tracing is disabled for that specific method.
+     */
+    private HTTPMonitored extractFinalAnnotation(Method method) {
+        HTTPMonitored httpMon = method.getAnnotation(HTTPMonitored.class);
+        if (httpMon == null) {
+            httpMon = method.getDeclaringClass().getAnnotation(HTTPMonitored.class);
+        }
+        return httpMon;
+    }
 
     @Override
     public boolean preCall(HttpRequest request, HttpResponder responder, ServiceMethodInfo serviceMethodInfo) {
         Method method = serviceMethodInfo.getMethod();
         Interceptor interceptor = map.get(method);
         if (interceptor == null) {
-            if (method.isAnnotationPresent(HTTPMonitored.class)
-                    || method.getDeclaringClass().isAnnotationPresent(HTTPMonitored.class)) {
-                interceptor = new HTTPInterceptor();
+            HTTPMonitored httpMon = this.extractFinalAnnotation(method);
+            if (httpMon != null) {
+                interceptor = new HTTPInterceptor(httpMon.tracing());
                 map.put(method, interceptor);
             }
         }
@@ -93,14 +108,50 @@ public class HTTPMonitoringInterceptor implements Interceptor {
 
     private class HTTPInterceptor implements Interceptor {
 
+        private static final String DEFAULT_TRACE_ID = "DEFAULT";
+        
+        private static final String DEFAULT_PARENT_REQUEST = "DEFAULT";
+
         private static final String MONITORING_EVENT = "MONITORING_EVENT";
+        
+        private static final String ACTIVITY_ID = "activity-id";
+        
+        private static final String PARENT_REQUEST = "parent-request";
 
         private String serviceClass;
         private String serviceName;
         private String serviceMethod;
         private String servicePath;
+        
+        private boolean tracing;
 
-        private HTTPInterceptor() {
+        private HTTPInterceptor(boolean tracing) {
+            this.tracing = tracing;
+        }
+        
+        public boolean isTracing() {
+            return tracing;
+        }
+        
+        private String generateTraceId() {
+            return UUID.randomUUID().toString();
+        }
+        
+        private void handleTracing(HttpRequest request, HTTPMonitoringEvent httpMonitoringEvent) {
+            String traceId, parentRequest;
+            if (this.isTracing()) {
+                HttpHeaders headers = request.headers();
+                traceId = headers.get(ACTIVITY_ID);
+                if (traceId == null) {
+                    traceId = this.generateTraceId();
+                }
+                parentRequest = headers.get(PARENT_REQUEST);
+            } else {
+                traceId = DEFAULT_TRACE_ID;
+                parentRequest = DEFAULT_PARENT_REQUEST;
+            }
+            httpMonitoringEvent.setActivityId(traceId);
+            httpMonitoringEvent.setParentRequest(parentRequest);
         }
 
         @Override
@@ -135,6 +186,8 @@ public class HTTPMonitoringInterceptor implements Interceptor {
             }
             httpMonitoringEvent.setReferrer(httpHeaders.get(HttpHeaders.Names.REFERER));
 
+            this.handleTracing(request, httpMonitoringEvent);
+            
             serviceMethodInfo.setAttribute(MONITORING_EVENT, httpMonitoringEvent);
 
             return true;

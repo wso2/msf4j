@@ -21,6 +21,16 @@
       "type": "STRING"
     }
   ],
+  "correlationData": [
+    {
+      "name": "activity_id",
+      "type": "STRING"
+    },
+    {
+      "name": "parent_request",
+      "type": "STRING"
+    }
+  ],
   "payloadData": [
     {
       "name": "service_class",
