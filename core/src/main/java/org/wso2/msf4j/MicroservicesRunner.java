@@ -178,6 +178,10 @@ public class MicroservicesRunner {
         param5.setName("share.disruptor.with.outbound");
         param5.setValue(String.valueOf(false));
 
+        Parameter param6 = new Parameter();
+        param6.setName("disruptor.consumer.external.worker.pool.size");
+        param6.setValue("60");
+
         return Arrays.asList(param1, param2, param3, param4, param5);
     }
 }
