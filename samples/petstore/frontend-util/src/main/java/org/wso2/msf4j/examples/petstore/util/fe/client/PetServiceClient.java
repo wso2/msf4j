@@ -136,12 +136,6 @@ public class PetServiceClient extends AbstractServiceClient {
         LOGGER.info("Env variable FE_FILE_SERVICE_NODE_HOST not found hence try to use HOST header");
         ExternalContext extContext = FacesContext.getCurrentInstance().getExternalContext();
         HttpServletRequest request = (HttpServletRequest) extContext.getRequest();
-        //TODO - Remove following log messages after testing.
-//        LOGGER.info("================ printing all headers =============");
-//        for (String key : Collections.list(request.getHeaderNames())) {
-//            LOGGER.info(key + "=" + request.getHeader(key));
-//        }
-//        LOGGER.info("===================================================");
         String host = request.getHeader(HTTP_HEADER_HOST);
         if (host == null || host.isEmpty()) {
             host = request.getHeader(HTTP_HEADER_ORIGIN);

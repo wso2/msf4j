@@ -71,9 +71,5 @@ final class ChannelChunkResponder implements ChunkResponder {
                 log.debug("Keep-alive enabled");
             }
         }
-    /*ChannelFuture future = channel.write(new DefaultHttpChunkTrailer());
-    if (!keepAlive) {
-      future.addListener(ChannelFutureListener.CLOSE);
-    }*/
     }
 }
