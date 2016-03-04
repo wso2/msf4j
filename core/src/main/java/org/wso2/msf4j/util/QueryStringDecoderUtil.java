@@ -209,7 +209,7 @@ public class QueryStringDecoderUtil {
     }
 
     private void decodeParams(String s) {
-        Map<String, List<String>> params = this.params = new LinkedHashMap<String, List<String>>();
+        Map<String, List<String>> params = this.params = new LinkedHashMap<>();
         nParams = 0;
         String name = null;
         int pos = 0; // Beginning of the unprocessed region
@@ -259,7 +259,7 @@ public class QueryStringDecoderUtil {
 
         List<String> values = params.get(name);
         if (values == null) {
-            values = new ArrayList<String>(1);  // Often there's only 1 value.
+            values = new ArrayList<>(1);  // Often there's only 1 value.
             params.put(name, values);
         }
         values.add(value);

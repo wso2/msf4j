@@ -118,13 +118,11 @@ public final class MicroserviceMetadata {
                     matchedDestinations = getMatchedDestination(routableDestinations, httpMethod, path);
 
             if (!matchedDestinations.isEmpty()) {
-                PatternPathRouter.RoutableDestination<HttpResourceModel>
-                        matchedDestination = matchedDestinations.stream()
-                        .filter(matchedDestination1 -> {
-                            return matchedDestination1.getDestination().matchConsumeMediaType(contentTypeHeader)
-                                    && matchedDestination1.getDestination().matchProduceMediaType(acceptHeader);
-                        }).findFirst().get();
-                return matchedDestination;
+                return matchedDestinations.stream()
+                .filter(matchedDestination1 -> {
+                    return matchedDestination1.getDestination().matchConsumeMediaType(contentTypeHeader)
+                            && matchedDestination1.getDestination().matchProduceMediaType(acceptHeader);
+                }).findFirst().get();
             } else if (!routableDestinations.isEmpty()) {
                 //Found a matching resource but could not find the right HttpMethod so return 405
                 throw new HandlerException(Response.Status.METHOD_NOT_ALLOWED, uri);

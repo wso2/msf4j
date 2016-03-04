@@ -35,8 +35,7 @@ public class HttpMethodInfoBuilder {
     private HttpMethodInfo httpMethodInfo;
 
     public static HttpMethodInfoBuilder getInstance() {
-        HttpMethodInfoBuilder httpMethodInfoBuilder = new HttpMethodInfoBuilder();
-        return httpMethodInfoBuilder;
+        return new HttpMethodInfoBuilder();
     }
 
     public HttpMethodInfoBuilder httpResourceModel(HttpResourceModel httpResourceModel) {

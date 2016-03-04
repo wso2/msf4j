@@ -121,16 +121,14 @@ public class MicroservicesRegistry {
     }
 
     private void invokeLifecycleMethods(Class lcAnnotation) {
-        httpServices.stream().forEach(httpService -> {
-            invokeLifecycleMethod(httpService, lcAnnotation);
-        });
+        httpServices.stream().forEach(httpService -> invokeLifecycleMethod(httpService, lcAnnotation));
     }
 
     private void invokeLifecycleMethod(Object httpService, Class lcAnnotation) {
         Optional<Method> lcMethod = Optional.ofNullable(getLifecycleMethod(httpService, lcAnnotation));
         if (lcMethod.isPresent()) {
             try {
-                lcMethod.get().invoke(httpService, null);
+                lcMethod.get().invoke(httpService);
             } catch (IllegalAccessException | InvocationTargetException e) {
                 throw new MicroservicesLCException("Exception occurs calling lifecycle method", e);
             }

@@ -143,13 +143,13 @@ public class HttpResourceModelProcessor {
     private Object getPathParamValue(HttpResourceModel.ParameterInfo<String> info, Map<String, String> groupValues) {
         PathParam pathParam = info.getAnnotation();
         String value = groupValues.get(pathParam.value());
-        Preconditions.checkArgument(value != null, "Could not resolve value for parameter %s", pathParam.value());
         if (value == null) {
             String defaultVal = info.getDefaultVal();
             if (defaultVal != null) {
                 value = defaultVal;
             }
         }
+        Preconditions.checkArgument(value != null, "Could not resolve value for parameter %s", pathParam.value());
         return info.convert(value);
     }
 
@@ -160,7 +160,7 @@ public class HttpResourceModelProcessor {
         if (values == null || values.isEmpty()) {
             String defaultVal = info.getDefaultVal();
             if (defaultVal != null) {
-                values = Arrays.asList(defaultVal);
+                values = Collections.singletonList(defaultVal);
             }
         }
         return info.convert(values);

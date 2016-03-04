@@ -16,6 +16,7 @@
 
 package org.wso2.msf4j.util;
 
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class BufferUtil {
         } else {
             ByteBuffer fullContent = ByteBuffer.allocate(
                     byteBuffers.stream()
-                            .mapToInt(byteBuffer -> byteBuffer.capacity())
+                            .mapToInt(Buffer::capacity)
                             .sum()
             );
             byteBuffers.forEach(fullContent::put);
