@@ -87,18 +87,18 @@ public final class HttpResourceModel {
     }
 
     private List<String> parseConsumesMediaTypes() {
-        String[] consumesMediaTypeArr = (method.isAnnotationPresent(Consumes.class)) ?
+        String[] consumesMediaTypeArr = method.isAnnotationPresent(Consumes.class) ?
                 method.getAnnotation(Consumes.class).value() :
-                (handler.getClass().isAnnotationPresent(Consumes.class)) ?
+                handler.getClass().isAnnotationPresent(Consumes.class) ?
                         handler.getClass().getAnnotation(Consumes.class).value() :
                         ANY_MEDIA_TYPE;
         return Arrays.asList(consumesMediaTypeArr);
     }
 
     private List<String> parseProducesMediaTypes() {
-        String[] producesMediaTypeArr = (method.isAnnotationPresent(Produces.class)) ?
+        String[] producesMediaTypeArr = method.isAnnotationPresent(Produces.class) ?
                 method.getAnnotation(Produces.class).value() :
-                (handler.getClass().isAnnotationPresent(Produces.class)) ?
+                handler.getClass().isAnnotationPresent(Produces.class) ?
                         handler.getClass().getAnnotation(Produces.class).value() :
                         ANY_MEDIA_TYPE;
         return Arrays.asList(producesMediaTypeArr);

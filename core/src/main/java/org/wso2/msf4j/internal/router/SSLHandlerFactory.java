@@ -81,7 +81,7 @@ public class SSLHandlerFactory {
             ks.load(is, keyStorePassword.toCharArray());
         } catch (Exception ex) {
             if (ex instanceof RuntimeException) {
-                throw ((RuntimeException) ex);
+                throw (RuntimeException) ex;
             }
             throw new IOException(ex);
         } finally {
