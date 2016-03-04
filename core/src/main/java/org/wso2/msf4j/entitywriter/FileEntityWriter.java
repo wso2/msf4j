@@ -60,6 +60,7 @@ public class FileEntityWriter implements EntityWriter<File> {
         if (chunkSize == Response.NO_CHUNK || chunkSize == Response.DEFAULT_CHUNK_SIZE) {
             chunkSize = DEFAULT_CHUNK_SIZE;
         }
+        //TODO: prevent full loading of the file to memory
         ByteBuffer buffer = ByteBuffer.allocate(chunkSize);
         while (fileChannel.read(buffer) != -1) {
             buffer.flip();

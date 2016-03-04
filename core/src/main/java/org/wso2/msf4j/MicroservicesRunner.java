@@ -157,6 +157,7 @@ public class MicroservicesRunner {
      *
      * @return disruptor parameter list
      */
+    //TODO: remove this function and set proper default configs
     private List<Parameter> getDisruptorParams() {
         Parameter param1 = new Parameter();
         param1.setName("disruptor.buffer.size");
