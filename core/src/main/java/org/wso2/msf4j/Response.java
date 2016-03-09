@@ -121,6 +121,21 @@ public class Response {
     }
 
     /**
+     * Get the status code of the HTTP response.
+     *
+     * @return status code value
+     */
+    public int getStatusCode() {
+        if (statusCode != NULL_STATUS_CODE) {
+            return statusCode;
+        } else if (entity != null) {
+            return javax.ws.rs.core.Response.Status.OK.getStatusCode();
+        } else {
+            return javax.ws.rs.core.Response.Status.NO_CONTENT.getStatusCode();
+        }
+    }
+
+    /**
      * Set HTTP media type of the response.
      *
      * @param mediaType HTTP media type string
@@ -168,21 +183,9 @@ public class Response {
      * Send the HTTP response using the content in this object.
      */
     public void send() throws Exception {
-        processStatusCode();
+        carbonMessage.setProperty(Constants.HTTP_STATUS_CODE, getStatusCode());
         processEntity();
         carbonCallback.done(carbonMessage);
-    }
-
-    private void processStatusCode() {
-        if (statusCode != NULL_STATUS_CODE) {
-            carbonMessage.setProperty(Constants.HTTP_STATUS_CODE, statusCode);
-        } else if (entity != null) {
-            carbonMessage.setProperty(Constants.HTTP_STATUS_CODE,
-                    javax.ws.rs.core.Response.Status.OK.getStatusCode());
-        } else {
-            carbonMessage.setProperty(Constants.HTTP_STATUS_CODE,
-                    javax.ws.rs.core.Response.Status.NO_CONTENT.getStatusCode());
-        }
     }
 
     @SuppressWarnings("unchecked")
