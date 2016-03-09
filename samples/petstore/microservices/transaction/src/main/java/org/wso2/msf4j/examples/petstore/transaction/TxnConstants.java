@@ -24,4 +24,5 @@ public final class TxnConstants {
 
     public static final String ORDER_KEY_PREFIX = "petstore:transaction:order.";
 
+    private TxnConstants() {}
 }

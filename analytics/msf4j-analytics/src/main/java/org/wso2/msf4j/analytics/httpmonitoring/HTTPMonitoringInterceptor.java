@@ -161,12 +161,12 @@ public class HTTPMonitoringInterceptor implements Interceptor {
             httpMonitoringEvent.setStartNanoTime(System.nanoTime());
             if (serviceClass == null) {
                 Method method = serviceMethodInfo.getMethod();
-                Class<?> serviceClass = method.getDeclaringClass();
-                this.serviceClass = serviceClass.getName();
-                serviceName = serviceClass.getSimpleName();
+                Class<?> declaringClass = method.getDeclaringClass();
+                this.serviceClass = declaringClass.getName();
+                serviceName = declaringClass.getSimpleName();
                 serviceMethod = method.getName();
-                if (serviceClass.isAnnotationPresent(Path.class)) {
-                    Path path = serviceClass.getAnnotation(Path.class);
+                if (declaringClass.isAnnotationPresent(Path.class)) {
+                    Path path = declaringClass.getAnnotation(Path.class);
                     servicePath = path.value();
                 }
             }

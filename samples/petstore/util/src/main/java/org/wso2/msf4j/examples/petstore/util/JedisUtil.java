@@ -62,6 +62,8 @@ public class JedisUtil {
 
     private static Jedis master = getJedis();
 
+    private JedisUtil() {}
+
     public static String getSentinelHost() {
         return SENTINEL1_HOST;
     }
