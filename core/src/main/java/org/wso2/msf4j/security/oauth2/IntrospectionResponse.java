@@ -110,4 +110,6 @@ public final class IntrospectionResponse {
      * understanding the error that occurred.
      */
     public static final String ERROR_DESCRIPTION = "error_description";
+
+    private IntrospectionResponse() {}
 }

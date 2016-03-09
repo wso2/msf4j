@@ -32,6 +32,8 @@ public class MimeMapper {
     private static Properties mimeMap = null;
     private static final Logger log = LoggerFactory.getLogger(MimeMapper.class);
 
+    private MimeMapper() {}
+
     private static void loadMimeMap() throws IOException {
         mimeMap = new Properties();
         InputStream inputStream = MimeMapper.class.getClassLoader()

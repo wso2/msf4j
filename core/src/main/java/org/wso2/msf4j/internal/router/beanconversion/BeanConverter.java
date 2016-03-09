@@ -22,6 +22,8 @@ package org.wso2.msf4j.internal.router.beanconversion;
  */
 public class BeanConverter {
 
+    private BeanConverter() {}
+
     public static MediaTypeConverter instance(String mediaType) throws BeanConversionException {
         if (mediaType.equalsIgnoreCase("text/json")
                 || mediaType.equalsIgnoreCase("application/json")) {

@@ -21,4 +21,6 @@ package org.wso2.msf4j.internal;
 public class MSF4JConstants {
 
     public static final String EXECUTOR_THREAD_POOL_SIZE_KEY = "execThreadPoolSize";
+
+    private MSF4JConstants() {}
 }
