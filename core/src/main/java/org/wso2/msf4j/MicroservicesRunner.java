@@ -18,6 +18,7 @@ package org.wso2.msf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.kernel.transports.TransportManager;
+import org.wso2.carbon.messaging.handler.HandlerExecutor;
 import org.wso2.carbon.transport.http.netty.common.Constants;
 import org.wso2.carbon.transport.http.netty.config.ListenerConfiguration;
 import org.wso2.carbon.transport.http.netty.config.Parameter;
@@ -56,10 +57,12 @@ public class MicroservicesRunner {
             NettyTransportContextHolder nettyTransportContextHolder = NettyTransportContextHolder.getInstance();
             ListenerConfiguration listenerConfiguration =
                     new ListenerConfiguration("netty-" + port, "0.0.0.0", port);
+            listenerConfiguration.setEnableDisruptor(String.valueOf(false));
             listenerConfiguration.setParameters(getDisruptorParams());
             NettyListener listener = new NettyListener(listenerConfiguration);
+            nettyTransportContextHolder.setHandlerExecutor(new HandlerExecutor());
             nettyTransportContextHolder.addMessageProcessor(new MSF4JMessageProcessor(msRegistry));
-            nettyTransportContextHolder.setInterceptor(new org.wso2.carbon.messaging.Interceptor());
+            //nettyTransportContextHolder.setInterceptor(new org.wso2.carbon.messaging.Interceptor());
             transportManager.registerTransport(listener);
         }
     }
@@ -77,10 +80,11 @@ public class MicroservicesRunner {
         Set<ListenerConfiguration> listenerConfigurations = trpConfig.getListenerConfigurations();
         NettyTransportContextHolder nettyTransportContextHolder = NettyTransportContextHolder.getInstance();
         for (ListenerConfiguration listenerConfiguration : listenerConfigurations) {
-            listenerConfiguration.setParameters(getDisruptorParams());
+            //listenerConfiguration.setParameters(getDisruptorParams());
             NettyListener listener = new NettyListener(listenerConfiguration);
+            nettyTransportContextHolder.setHandlerExecutor(new HandlerExecutor());
             nettyTransportContextHolder.addMessageProcessor(new MSF4JMessageProcessor(msRegistry));
-            nettyTransportContextHolder.setInterceptor(new org.wso2.carbon.messaging.Interceptor());
+            //nettyTransportContextHolder.setInterceptor(new org.wso2.carbon.messaging.Interceptor());
             transportManager.registerTransport(listener);
         }
     }
@@ -161,11 +165,11 @@ public class MicroservicesRunner {
     private List<Parameter> getDisruptorParams() {
         Parameter param1 = new Parameter();
         param1.setName("disruptor.buffer.size");
-        param1.setValue("512");
+        param1.setValue("1024");
 
         Parameter param2 = new Parameter();
         param2.setName("disruptor.count");
-        param2.setValue("1");
+        param2.setValue("5");
 
         Parameter param3 = new Parameter();
         param3.setName("disruptor.eventhandler.count");
@@ -183,6 +187,10 @@ public class MicroservicesRunner {
         param6.setName("disruptor.consumer.external.worker.pool.size");
         param6.setValue("60");
 
-        return Arrays.asList(param1, param2, param3, param4, param5);
+        Parameter param7 = new Parameter();
+        param7.setName("executor.workerpool.size");
+        param7.setValue("60");
+
+        return Arrays.asList(param1, param2, param3, param4, param5, param6, param7);
     }
 }

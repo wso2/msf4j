@@ -63,7 +63,7 @@ public class DataHolder {
         Hashtable<String, String> httpInitParams = new Hashtable<>();
         httpInitParams.put(CHANNEL_ID_KEY, channelKey);
         CarbonNettyServerInitializer gatewayNettyInitializer =
-                new CarbonNettyServerInitializer();
+                new CarbonNettyServerInitializer(null);
         ServiceRegistration<CarbonNettyServerInitializer> service =
                 bundleContext.registerService(CarbonNettyServerInitializer.class,
                         gatewayNettyInitializer, httpInitParams);
