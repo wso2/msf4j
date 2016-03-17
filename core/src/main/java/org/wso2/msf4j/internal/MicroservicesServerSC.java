@@ -42,7 +42,6 @@ import org.wso2.msf4j.Microservice;
 )
 @SuppressWarnings("unused")
 public class MicroservicesServerSC implements RequiredCapabilityListener {
-    public static final String CHANNEL_ID_KEY = "channel.id";
     private static final Logger log = LoggerFactory.getLogger(MicroservicesServerSC.class);
     private final MicroservicesRegistry microservicesRegistry = MicroservicesRegistry.getInstance();
 
@@ -73,11 +72,9 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             unbind = "removeCarbonTransport"
     )
     protected void addCarbonTransport(CarbonTransport carbonTransport) {
-        DataHolder.getInstance().addCarbonTransport(carbonTransport);
     }
 
     protected void removeCarbonTransport(CarbonTransport carbonTransport) {
-        DataHolder.getInstance().removeCarbonTransport(carbonTransport);
     }
 
     @Reference(
