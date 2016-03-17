@@ -23,7 +23,6 @@ import org.wso2.carbon.messaging.CarbonCallback;
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.CarbonMessageProcessor;
 import org.wso2.carbon.messaging.TransportSender;
-import org.wso2.msf4j.InterceptorException;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.internal.router.HandlerException;
@@ -51,6 +50,10 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
     private static final Logger log = LoggerFactory.getLogger(MSF4JMessageProcessor.class);
     private MicroservicesRegistry microservicesRegistry;
     private static final String MSF4J_MSG_PROC_ID = "MSF4J-CM-PROCESSOR";
+
+    public MSF4JMessageProcessor() {
+        this.microservicesRegistry = MicroservicesRegistry.getInstance();
+    }
 
     public MSF4JMessageProcessor(MicroservicesRegistry microservicesRegistry) {
         this.microservicesRegistry = microservicesRegistry;
