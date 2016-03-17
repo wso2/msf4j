@@ -275,7 +275,6 @@
             org.wso2.msf4j.*;version="1.0.0",
         </export.package>
         <import.package>
-            org.wso2.carbon.kernel.deployment.*;version="${carbon.kernel.version.range}"
             com.google.gson.*;version="${gson.version.range}",
             com.google.common.*;version="${guava.version.range}",
             javax.annotation.*,
