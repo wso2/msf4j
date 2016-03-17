@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.msf4j;
+package org.wso2.msf4j.internal;
 
 /**
  * Exception that will be thrown when executing interceptors

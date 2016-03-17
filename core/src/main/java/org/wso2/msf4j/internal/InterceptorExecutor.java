@@ -19,7 +19,6 @@ package org.wso2.msf4j.internal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.Interceptor;
-import org.wso2.msf4j.InterceptorException;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.ServiceMethodInfo;

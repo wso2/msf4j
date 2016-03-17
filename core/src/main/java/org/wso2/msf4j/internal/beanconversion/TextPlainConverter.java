@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, WSO2 Inc. (http://wso2.com) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package org.wso2.msf4j.beanconversion;
+package org.wso2.msf4j.internal.beanconversion;
+
+import org.wso2.msf4j.beanconversion.MediaTypeConverter;
 
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;

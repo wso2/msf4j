@@ -18,6 +18,7 @@ package org.wso2.msf4j.beanconversion;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.wso2.msf4j.internal.beanconversion.BeanConverter;
 import org.wso2.msf4j.internal.router.Category;
 import org.wso2.msf4j.internal.router.Pet;
 import org.wso2.msf4j.internal.router.XmlBean;

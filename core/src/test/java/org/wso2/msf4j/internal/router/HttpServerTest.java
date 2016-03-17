@@ -35,7 +35,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.wso2.msf4j.MicroservicesRunner;
 import org.wso2.msf4j.beanconversion.BeanConversionException;
-import org.wso2.msf4j.beanconversion.BeanConverter;
+import org.wso2.msf4j.internal.beanconversion.BeanConverter;
 
 import java.io.BufferedInputStream;
 import java.io.File;

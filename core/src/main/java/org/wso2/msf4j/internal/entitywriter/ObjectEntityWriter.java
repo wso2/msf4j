@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package org.wso2.msf4j.entitywriter;
+package org.wso2.msf4j.internal.entitywriter;
 
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.Constants;
 import org.wso2.msf4j.Response;
-import org.wso2.msf4j.beanconversion.BeanConverter;
+import org.wso2.msf4j.entitywriter.EntityWriter;
+import org.wso2.msf4j.internal.beanconversion.BeanConverter;
 
 import java.nio.ByteBuffer;
 import javax.ws.rs.core.MediaType;

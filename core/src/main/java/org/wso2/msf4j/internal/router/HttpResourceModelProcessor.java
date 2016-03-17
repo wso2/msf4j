@@ -20,7 +20,7 @@ import com.google.common.base.Preconditions;
 import org.wso2.msf4j.HttpStreamer;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
-import org.wso2.msf4j.beanconversion.BeanConverter;
+import org.wso2.msf4j.internal.beanconversion.BeanConverter;
 import org.wso2.msf4j.util.BufferUtil;
 import org.wso2.msf4j.util.QueryStringDecoderUtil;
 

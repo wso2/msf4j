@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package org.wso2.msf4j.entitywriter;
+package org.wso2.msf4j.internal.entitywriter;
+
+import org.wso2.msf4j.entitywriter.EntityWriter;
 
 import java.util.HashMap;
 import java.util.Map;

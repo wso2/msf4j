@@ -21,7 +21,7 @@ import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.Constants;
 import org.wso2.carbon.messaging.DefaultCarbonMessage;
 import org.wso2.carbon.messaging.FaultHandler;
-import org.wso2.msf4j.entitywriter.EntityWriterRegistry;
+import org.wso2.msf4j.internal.entitywriter.EntityWriterRegistry;
 
 import java.nio.ByteBuffer;
 import java.util.List;
