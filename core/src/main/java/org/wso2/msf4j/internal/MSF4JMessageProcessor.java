@@ -16,6 +16,7 @@
 
 package org.wso2.msf4j.internal;
 
+import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.messaging.CarbonCallback;
@@ -40,6 +41,11 @@ import javax.ws.rs.core.MediaType;
 /**
  * Process carbon messages for MSF4J.
  */
+@Component(
+        name = "org.wso2.msf4j.internal.MSF4JMessageProcessor",
+        immediate = true,
+        service = CarbonMessageProcessor.class
+)
 public class MSF4JMessageProcessor implements CarbonMessageProcessor {
 
     private static final Logger log = LoggerFactory.getLogger(MSF4JMessageProcessor.class);
