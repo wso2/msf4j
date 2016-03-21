@@ -12,7 +12,7 @@ each concurrency level is calculated and plotted for each framework.
 
 ![Throughput](graphs/tps.png)
 
-All services were run out of the box without any tuning  separately on a 8 core 64GB server.
+All services were run out of the box without any tuning separately on a 8 core 64GB server in JVM v1.8.0_60 with default configuration.
 
 ### Performing the throughput test
 
