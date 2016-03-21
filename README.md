@@ -11,14 +11,14 @@ throughput & memory consumption characteristics of MSF4J against other microserv
 An echo service which accepts a 1KB request & echoes it back was developed for the respective frameworks, and requests
 were sent for different concurrency values. The test was repeated for each concurrency value for each framework and 
 the average throughput was calculated. 
-Tests were run out of the box without any tuning on 8 core 64GB server in JVM v1.8.0_60 with default configuration.
+Tests were run out of the box without any tuning on 32 core 64GB server in JVM v1.8.0_60 with default configuration.
 
 ![Memory](perf-benchmark/graphs/memory.png) 
 
 Memory usage for each framework was observed after running the 1KB payload echo microservice on each framework & 
 sending a number of requests at different concurrency levels to each service. 
 The graph above shows the averaged out values after several runs for each framework. 
-Tests were run out of the box without any tuning on 8 core 64GB server in JVM v1.8.0_60 with default configuration.
+Tests were run out of the box without any tuning on 32 core 64GB server in JVM v1.8.0_60 with default configuration.
 
 More details about the performance test can found [here](perf-benchmark).
 
