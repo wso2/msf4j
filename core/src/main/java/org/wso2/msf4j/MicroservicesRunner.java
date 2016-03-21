@@ -56,6 +56,7 @@ public class MicroservicesRunner {
             NettyTransportContextHolder nettyTransportContextHolder = NettyTransportContextHolder.getInstance();
             ListenerConfiguration listenerConfiguration =
                     new ListenerConfiguration("netty-" + port, "0.0.0.0", port);
+            //TODO: remove this default param workaround when transport supports default configurations
             listenerConfiguration.setEnableDisruptor(String.valueOf(false));
             listenerConfiguration.setParameters(getDefaultTransportParams());
             NettyListener listener = new NettyListener(listenerConfiguration);
@@ -78,6 +79,18 @@ public class MicroservicesRunner {
         Set<ListenerConfiguration> listenerConfigurations = trpConfig.getListenerConfigurations();
         NettyTransportContextHolder nettyTransportContextHolder = NettyTransportContextHolder.getInstance();
         for (ListenerConfiguration listenerConfiguration : listenerConfigurations) {
+            //TODO: remove this default param workaround when transport supports default configurations
+            if (listenerConfiguration.getEnableDisruptor() == null) {
+                listenerConfiguration.setEnableDisruptor(String.valueOf(false));
+                listenerConfiguration.setParameters(getDefaultTransportParams());
+            } else if (!Boolean.valueOf(listenerConfiguration.getEnableDisruptor()) &&
+                    (listenerConfiguration.getParameters() == null || listenerConfiguration.getParameters()
+                            .stream()
+                            .filter(parameter -> Constants.EXECUTOR_WORKER_POOL_SIZE.equals(parameter.getName()))
+                            .findFirst()
+                            .isPresent())) {
+                listenerConfiguration.setParameters(getDefaultTransportParams());
+            }
             NettyListener listener = new NettyListener(listenerConfiguration);
             nettyTransportContextHolder.setHandlerExecutor(new HandlerExecutor());
             nettyTransportContextHolder.addMessageProcessor(new MSF4JMessageProcessor(msRegistry));
@@ -91,6 +104,7 @@ public class MicroservicesRunner {
      * @param microservice The microservice which is to be deployed
      * @return this MicroservicesRunner object
      */
+
     public MicroservicesRunner deploy(Object microservice) {
         checkState();
         msRegistry.addHttpService(microservice);
@@ -157,7 +171,7 @@ public class MicroservicesRunner {
      *
      * @return transports parameter list
      */
-    //TODO: remove this function and set proper default configs in carbon-transports
+    //TODO: remove this default param workaround when transport supports default configurations
     private List<Parameter> getDefaultTransportParams() {
         Parameter param1 = new Parameter();
         param1.setName(Constants.EXECUTOR_WORKER_POOL_SIZE);
