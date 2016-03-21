@@ -29,13 +29,12 @@ import org.wso2.carbon.transport.http.netty.listener.NettyListener;
 import org.wso2.msf4j.internal.MSF4JMessageProcessor;
 import org.wso2.msf4j.internal.MicroservicesRegistry;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 /**
  * This runner initializes the microservices runtime, deploys the microservices and service interceptors,
- * This runner initializes the microservices runtime, deploys the microservices &amp; service interceptors,
  * and starts the relevant transports.
  */
 public class MicroservicesRunner {
@@ -58,11 +57,10 @@ public class MicroservicesRunner {
             ListenerConfiguration listenerConfiguration =
                     new ListenerConfiguration("netty-" + port, "0.0.0.0", port);
             listenerConfiguration.setEnableDisruptor(String.valueOf(false));
-            listenerConfiguration.setParameters(getDisruptorParams());
+            listenerConfiguration.setParameters(getDefaultTransportParams());
             NettyListener listener = new NettyListener(listenerConfiguration);
             nettyTransportContextHolder.setHandlerExecutor(new HandlerExecutor());
             nettyTransportContextHolder.addMessageProcessor(new MSF4JMessageProcessor(msRegistry));
-            //nettyTransportContextHolder.setInterceptor(new org.wso2.carbon.messaging.Interceptor());
             transportManager.registerTransport(listener);
         }
     }
@@ -80,11 +78,9 @@ public class MicroservicesRunner {
         Set<ListenerConfiguration> listenerConfigurations = trpConfig.getListenerConfigurations();
         NettyTransportContextHolder nettyTransportContextHolder = NettyTransportContextHolder.getInstance();
         for (ListenerConfiguration listenerConfiguration : listenerConfigurations) {
-            //listenerConfiguration.setParameters(getDisruptorParams());
             NettyListener listener = new NettyListener(listenerConfiguration);
             nettyTransportContextHolder.setHandlerExecutor(new HandlerExecutor());
             nettyTransportContextHolder.addMessageProcessor(new MSF4JMessageProcessor(msRegistry));
-            //nettyTransportContextHolder.setInterceptor(new org.wso2.carbon.messaging.Interceptor());
             transportManager.registerTransport(listener);
         }
     }
@@ -157,40 +153,15 @@ public class MicroservicesRunner {
     }
 
     /**
-     * Temporary method to enable setup call to init connectionManager
+     * Temporary method to add default transport parameters
      *
-     * @return disruptor parameter list
+     * @return transports parameter list
      */
-    //TODO: remove this function and set proper default configs
-    private List<Parameter> getDisruptorParams() {
+    //TODO: remove this function and set proper default configs in carbon-transports
+    private List<Parameter> getDefaultTransportParams() {
         Parameter param1 = new Parameter();
-        param1.setName("disruptor.buffer.size");
+        param1.setName(Constants.EXECUTOR_WORKER_POOL_SIZE);
         param1.setValue("1024");
-
-        Parameter param2 = new Parameter();
-        param2.setName("disruptor.count");
-        param2.setValue("5");
-
-        Parameter param3 = new Parameter();
-        param3.setName("disruptor.eventhandler.count");
-        param3.setValue("1");
-
-        Parameter param4 = new Parameter();
-        param4.setName("disruptor.wait.strategy");
-        param4.setValue(Constants.SLEEP_WAITING);
-
-        Parameter param5 = new Parameter();
-        param5.setName("share.disruptor.with.outbound");
-        param5.setValue(String.valueOf(false));
-
-        Parameter param6 = new Parameter();
-        param6.setName("disruptor.consumer.external.worker.pool.size");
-        param6.setValue("60");
-
-        Parameter param7 = new Parameter();
-        param7.setName("executor.workerpool.size");
-        param7.setValue("60");
-
-        return Arrays.asList(param1, param2, param3, param4, param5, param6, param7);
+        return Collections.singletonList(param1);
     }
 }
