@@ -181,11 +181,11 @@ corresponding parameter's type.
 
 #####@Context
 Inject additional objects to a resource method. Currently supports injection of  following objects.
-* org.wso2.msf4j.HttpStreamHandler - 
+* org.wso2.msf4j.Request - 
     This object can be used to stream a chunked request body and process it while the request is streaming. 
 * io.netty.handler.codec.http.HttpRequest - 
-    This object can be used to retrieve HTTP request information. [More info](http://netty.io/4.0/api/io/netty/handler/codec/http/HttpRequest.html).
-* org.wso2.msf4j.HttpResponder - 
+    This object can be used to retrieve HTTP request information.
+* org.wso2.msf4j.Response - 
     This object can be used to send HTTP responses. You can make responses more clean way by returning an instance of 
     javax.ws.rs.core.Response or a POJO. See the [StockQuote-Service]
     (https://github.com/wso2/msf4j/tree/master/samples/stockquote/fatjar) sample.

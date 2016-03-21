@@ -62,10 +62,10 @@ public class HTTPMonitoringInterceptor implements Interceptor {
         });
         return this;
     }
-    
+
     /**
      * Returns the final annotation that is application to the given method. For example,
-     * the {@link HTTPMonitored} annotation can be mentioned in class level, and also in 
+     * the {@link HTTPMonitored} annotation can be mentioned in class level, and also in
      * the target method, but the method only have tracing enabled. Then we should get the
      * setting as tracing is disabled for that specific method.
      */
@@ -108,43 +108,42 @@ public class HTTPMonitoringInterceptor implements Interceptor {
     private class HTTPInterceptor implements Interceptor {
 
         private static final String DEFAULT_TRACE_ID = "DEFAULT";
-        
+
         private static final String DEFAULT_PARENT_REQUEST = "DEFAULT";
 
         private static final String MONITORING_EVENT = "MONITORING_EVENT";
-        
+
         private static final String ACTIVITY_ID = "activity-id";
-        
+
         private static final String PARENT_REQUEST = "parent-request";
 
         private String serviceClass;
         private String serviceName;
         private String serviceMethod;
         private String servicePath;
-        
+
         private boolean tracing;
 
         private HTTPInterceptor(boolean tracing) {
             this.tracing = tracing;
         }
-        
+
         public boolean isTracing() {
             return tracing;
         }
-        
+
         private String generateTraceId() {
             return UUID.randomUUID().toString();
         }
-        
-        private void handleTracing(HttpRequest request, HTTPMonitoringEvent httpMonitoringEvent) {
+
+        private void handleTracing(Request request, HTTPMonitoringEvent httpMonitoringEvent) {
             String traceId, parentRequest;
             if (this.isTracing()) {
-                HttpHeaders headers = request.headers();
-                traceId = headers.get(ACTIVITY_ID);
+                traceId = request.getHeader(ACTIVITY_ID);
                 if (traceId == null) {
                     traceId = this.generateTraceId();
                 }
-                parentRequest = headers.get(PARENT_REQUEST);
+                parentRequest = request.getHeader(PARENT_REQUEST);
             } else {
                 traceId = DEFAULT_TRACE_ID;
                 parentRequest = DEFAULT_PARENT_REQUEST;
@@ -186,7 +185,7 @@ public class HTTPMonitoringInterceptor implements Interceptor {
             httpMonitoringEvent.setReferrer(httpHeaders.get(REFERER));
 
             this.handleTracing(request, httpMonitoringEvent);
-            
+
             serviceMethodInfo.setAttribute(MONITORING_EVENT, httpMonitoringEvent);
 
             return true;

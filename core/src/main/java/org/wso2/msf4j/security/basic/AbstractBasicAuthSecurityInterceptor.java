@@ -16,15 +16,11 @@
 
 package org.wso2.msf4j.security.basic;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-import io.netty.handler.codec.http.HttpHeaders;
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.HttpResponseStatus;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.msf4j.HttpResponder;
 import org.wso2.msf4j.Interceptor;
+import org.wso2.msf4j.Request;
+import org.wso2.msf4j.Response;
 import org.wso2.msf4j.ServiceMethodInfo;
 
 import java.nio.charset.Charset;
@@ -45,35 +41,32 @@ public abstract class AbstractBasicAuthSecurityInterceptor implements Intercepto
     private static final int AUTH_TYPE_BASIC_LENGTH = AUTH_TYPE_BASIC.length();
 
     @Override
-    public boolean preCall(HttpRequest request, HttpResponder responder, ServiceMethodInfo serviceMethodInfo) {
-        HttpHeaders headers = request.headers();
-        if (headers != null) {
-            String authHeader = headers.get(HttpHeaders.Names.AUTHORIZATION);
-            if (authHeader != null) {
-                String authType = authHeader.substring(0, AUTH_TYPE_BASIC_LENGTH);
-                String authEncoded = authHeader.substring(AUTH_TYPE_BASIC_LENGTH).trim();
-                if (AUTH_TYPE_BASIC.equals(authType) && !authEncoded.isEmpty()) {
-                    byte[] decodedByte = authEncoded.getBytes(Charset.forName(CHARSET_UTF_8));
-                    String authDecoded = new String(Base64.getDecoder().decode(decodedByte),
-                                                    Charset.forName(CHARSET_UTF_8));
-                    String[] authParts = authDecoded.split(":");
-                    String username = authParts[0];
-                    String password = authParts[1];
-                    if (authenticate(username, password)) {
-                        return true;
-                    }
+    public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) throws Exception {
+        String authHeader = request.getHeader(javax.ws.rs.core.HttpHeaders.AUTHORIZATION);
+        if (authHeader != null) {
+            String authType = authHeader.substring(0, AUTH_TYPE_BASIC_LENGTH);
+            String authEncoded = authHeader.substring(AUTH_TYPE_BASIC_LENGTH).trim();
+            if (AUTH_TYPE_BASIC.equals(authType) && !authEncoded.isEmpty()) {
+                byte[] decodedByte = authEncoded.getBytes(Charset.forName(CHARSET_UTF_8));
+                String authDecoded = new String(Base64.getDecoder().decode(decodedByte),
+                        Charset.forName(CHARSET_UTF_8));
+                String[] authParts = authDecoded.split(":");
+                String username = authParts[0];
+                String password = authParts[1];
+                if (authenticate(username, password)) {
+                    return true;
                 }
-
             }
+
         }
-        Multimap<String, String> map = ArrayListMultimap.create();
-        map.put(HttpHeaders.Names.WWW_AUTHENTICATE, AUTH_TYPE_BASIC);
-        responder.sendStatus(HttpResponseStatus.UNAUTHORIZED, map);
+        responder.setStatus(javax.ws.rs.core.Response.Status.UNAUTHORIZED.getStatusCode());
+        responder.setHeader(javax.ws.rs.core.HttpHeaders.WWW_AUTHENTICATE, AUTH_TYPE_BASIC);
+        responder.send();
         return false;
     }
 
     @Override
-    public void postCall(HttpRequest request, HttpResponseStatus status, ServiceMethodInfo serviceMethodInfo) {
+    public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) {
 
     }
 
