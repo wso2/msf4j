@@ -16,27 +16,14 @@
 package org.wso2.msf4j.internal;
 
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceRegistration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.wso2.carbon.kernel.transports.CarbonTransport;
-import org.wso2.carbon.transport.http.netty.listener.CarbonNettyServerInitializer;
-
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
 
 /**
  * DataHolder for MSF4J.
  */
 public class DataHolder {
-    private static final Logger log = LoggerFactory.getLogger(DataHolder.class);
 
-    private static final String CHANNEL_ID_KEY = "channel.id";
-
-    private static DataHolder instance = new DataHolder();
+    private static final DataHolder instance = new DataHolder();
     private BundleContext bundleContext;
-    private Map<String, ServiceRegistration<CarbonNettyServerInitializer>> carbonTransports = new HashMap<>();
 
     private DataHolder() {
     }
@@ -51,25 +38,5 @@ public class DataHolder {
 
     public void setBundleContext(BundleContext bundleContext) {
         this.bundleContext = bundleContext;
-    }
-
-    public void addCarbonTransport(CarbonTransport carbonTransport) {
-        if (bundleContext == null) {
-            log.error("BundleContext is null. Transport dispatching will fail.");
-            return;
-        }
-        String channelKey = carbonTransport.getId();
-        Hashtable<String, String> httpInitParams = new Hashtable<>();
-        httpInitParams.put(CHANNEL_ID_KEY, channelKey);
-        MSF4JNettyServerInitializer gatewayNettyInitializer =
-                new MSF4JNettyServerInitializer(MicroservicesRegistry.getInstance());
-        ServiceRegistration<CarbonNettyServerInitializer> service =
-                bundleContext.registerService(CarbonNettyServerInitializer.class,
-                        gatewayNettyInitializer, httpInitParams);
-        carbonTransports.put(channelKey, service);
-    }
-
-    public void removeCarbonTransport(CarbonTransport carbonTransport) {
-        carbonTransports.get(carbonTransport.getId()).unregister();
     }
 }

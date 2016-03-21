@@ -35,6 +35,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.wso2.carbon.messaging</groupId>
+            <artifactId>org.wso2.carbon.messaging</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.carbon.transport</groupId>
             <artifactId>org.wso2.carbon.transport.http.netty</artifactId>
         </dependency>
@@ -53,30 +57,6 @@
         <dependency>
             <groupId>org.wso2.msf4j</groupId>
             <artifactId>jaxrs-delegates</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-buffer</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-transport</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-handler</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-codec</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-codec-http</artifactId>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -299,8 +279,6 @@
             org.wso2.msf4j.*;version="1.0.0",
         </export.package>
         <import.package>
-            org.wso2.carbon.kernel.deployment.*;version="${carbon.kernel.version.range}",
-            io.netty.*;version="${netty.version.range}",
             com.google.gson.*;version="${gson.version.range}",
             com.google.common.*;version="${guava.version.range}",
             javax.annotation.*,
@@ -315,7 +293,7 @@
             org.wso2.carbon.kernel.transports.*;version="${carbon.kernel.version.range}",
             org.wso2.carbon.kernel.startupresolver.*;version="${carbon.kernel.version.range}",
             org.wso2.carbon.kernel.utils.*;version="${carbon.kernel.version.range}",
-            org.wso2.carbon.transport.http.netty.listener.*;version="${org.wso2.carbon.transport.http.netty.version.range}",
+            org.wso2.carbon.messaging.*
         </import.package>
         <provide.capability>
             osgi.service;effective:=active;

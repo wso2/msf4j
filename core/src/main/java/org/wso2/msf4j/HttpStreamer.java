@@ -24,6 +24,11 @@ public class HttpStreamer {
 
     private HttpStreamHandler httpStreamHandler;
 
+    /**
+     * Register a streaming callback to handle body chunks.
+     *
+     * @param httpStreamHandler handler object
+     */
     public void callback(HttpStreamHandler httpStreamHandler) {
         this.httpStreamHandler = httpStreamHandler;
     }

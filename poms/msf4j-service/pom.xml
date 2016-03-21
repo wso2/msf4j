@@ -48,8 +48,20 @@
                     <artifactId>org.eclipse.osgi.services</artifactId>
                 </exclusion>
                 <exclusion>
+                    <groupId>org.wso2.carbon</groupId>
+                    <artifactId>wso2carbon-kernel</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.wso2.carbon</groupId>
+                    <artifactId>org.wso2.carbon.launcher</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>com.google.code.findbugs</groupId>
                     <artifactId>jsr305</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-pool</groupId>
+                    <artifactId>commons-pool</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

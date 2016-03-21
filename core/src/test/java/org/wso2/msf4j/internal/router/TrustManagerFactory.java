@@ -32,7 +32,7 @@ import javax.net.ssl.X509TrustManager;
  * Dummy TrustManager {@link TrustManagerFactorySpi} that accepts any certificate.
  */
 public class TrustManagerFactory extends TrustManagerFactorySpi {
-    private static final Logger log = LoggerFactory.getLogger(RequestRouter.class);
+    private static final Logger log = LoggerFactory.getLogger(TrustManagerFactory.class);
 
     private static final TrustManager DUMMY_TRUST_MANAGER = new X509TrustManager() {
         public X509Certificate[] getAcceptedIssuers() {

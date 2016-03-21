@@ -16,10 +16,9 @@
 
 package org.wso2.msf4j.internal.router;
 
-import io.netty.handler.codec.http.HttpRequest;
-import org.wso2.msf4j.HttpResponder;
+import org.wso2.msf4j.Request;
+import org.wso2.msf4j.Response;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,16 +29,13 @@ import java.util.Map;
 public class HttpMethodInfoBuilder {
 
     private HttpResourceModel httpResourceModel;
-    private HttpRequest request;
-    private HttpResponder responder;
+    private Request request;
+    private Response responder;
     private Map<String, String> groupValues;
-    private String contentType;
-    private List<String> acceptTypes;
     private HttpMethodInfo httpMethodInfo;
 
     public static HttpMethodInfoBuilder getInstance() {
-        HttpMethodInfoBuilder httpMethodInfoBuilder = new HttpMethodInfoBuilder();
-        return httpMethodInfoBuilder;
+        return new HttpMethodInfoBuilder();
     }
 
     public HttpMethodInfoBuilder httpResourceModel(HttpResourceModel httpResourceModel) {
@@ -47,29 +43,25 @@ public class HttpMethodInfoBuilder {
         return this;
     }
 
-    public HttpMethodInfoBuilder httpRequest(HttpRequest request) {
+    public HttpMethodInfoBuilder httpRequest(Request request) {
         this.request = request;
         return this;
     }
 
-    public HttpMethodInfoBuilder httpResponder(HttpResponder responder) {
+    public HttpMethodInfoBuilder httpResponder(Response responder) {
         this.responder = responder;
         return this;
     }
 
-    public HttpMethodInfoBuilder requestInfo(Map<String, String> groupValues,
-                                             String contentType,
-                                             List<String> acceptTypes) {
+    public HttpMethodInfoBuilder requestInfo(Map<String, String> groupValues) {
         this.groupValues = groupValues;
-        this.contentType = contentType;
-        this.acceptTypes = acceptTypes;
         return this;
     }
 
     public HttpMethodInfo build() throws HandlerException {
         if (httpMethodInfo == null) {
             httpMethodInfo = (new HttpResourceModelProcessor(httpResourceModel))
-                    .buildHttpMethodInfo(request, responder, groupValues, contentType, acceptTypes);
+                    .buildHttpMethodInfo(request, responder, groupValues);
         }
         return httpMethodInfo;
     }
@@ -78,11 +70,11 @@ public class HttpMethodInfoBuilder {
         return httpResourceModel;
     }
 
-    public HttpResponder getResponder() {
+    public Response getResponder() {
         return responder;
     }
 
-    public HttpRequest getRequest() {
+    public Request getRequest() {
         return request;
     }
 }

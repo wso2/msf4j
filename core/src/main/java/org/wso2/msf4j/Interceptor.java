@@ -16,9 +16,6 @@
 
 package org.wso2.msf4j;
 
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.HttpResponseStatus;
-
 /**
  * Interface that needs to be implemented to intercept handler method calls.
  */
@@ -29,22 +26,22 @@ public interface Interceptor {
      * no other subsequent preCalls will be called and the request processing will be terminated,
      * also no postCall interceptors will be called.
      *
-     * @param request     HttpRequest being processed.
-     * @param responder   HttpResponder to send response.
+     * @param request           HttpRequest being processed.
+     * @param responder         HttpResponder to send response.
      * @param serviceMethodInfo Info on handler method that will be called.
      * @return true if the request processing can continue, otherwise the hook should send response and return false to
      * stop further processing.
      */
-    boolean preCall(HttpRequest request, HttpResponder responder, ServiceMethodInfo serviceMethodInfo);
+    boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) throws Exception;
 
     /**
      * postCall is run after a handler method call is made. If any of the postCalls throw and exception then the
      * remaining postCalls will still be called. If the handler method was not called then postCall interceptors will
      * not be called.
      *
-     * @param request     HttpRequest being processed.
-     * @param status      Http status returned to the client.
+     * @param request           HttpRequest being processed.
+     * @param status            Http status returned to the client.
      * @param serviceMethodInfo Info on handler method that was called.
      */
-    void postCall(HttpRequest request, HttpResponseStatus status, ServiceMethodInfo serviceMethodInfo);
+    void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) throws Exception;
 }

@@ -17,14 +17,7 @@
 package org.wso2.msf4j;
 
 /**
- * Interface that needs to be implemented for handling HTTP methods. init and destroy methods can be used to manage
- * the lifecycle of the object. The framework will call init and destroy during startup and shutdown respectively.
- * No handles will be called before init method of the class is called or after the destroy method is called.
- * The handlers should be annotated with Jax-RS annotations to handle appropriate path and HTTP Methods.
- * Note: Only the annotations in the given handler object will be inspected and be available for routing. The
- * annotations from the base class (if extended) will not be applied to the given handler object.
- * Note: The framework that calls the handler assumes that the implementation is threadsafe.
- * Note: If the HttpHandler implementation is extended, the annotations are not inherited from the base class.
+ * Interface that needs to be implemented for handling HTTP methods.
  */
 public interface Microservice {
 

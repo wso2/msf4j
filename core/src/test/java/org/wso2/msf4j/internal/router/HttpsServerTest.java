@@ -17,11 +17,9 @@
 package org.wso2.msf4j.internal.router;
 
 import com.google.common.io.Resources;
-import io.netty.handler.codec.http.HttpHeaders;
-import io.netty.handler.codec.http.HttpMethod;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.wso2.carbon.transport.http.netty.internal.config.YAMLTransportConfigurationBuilder;
+import org.wso2.carbon.transport.http.netty.config.YAMLTransportConfigurationBuilder;
 import org.wso2.msf4j.MicroservicesRunner;
 
 import java.io.IOException;
@@ -31,6 +29,7 @@ import java.net.URI;
 import java.net.URL;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
+import javax.ws.rs.HttpMethod;
 
 /**
  * Test the HttpsServer.
@@ -64,7 +63,7 @@ public class HttpsServerTest extends HttpServerTest {
     }
 
     @Override
-    protected HttpURLConnection request(String path, HttpMethod method, boolean keepAlive) throws IOException {
+    protected HttpURLConnection request(String path, String method, boolean keepAlive) throws IOException {
         URL url = baseURI.resolve(path).toURL();
         HttpsURLConnection.setDefaultSSLSocketFactory(sslClientContext.getClientContext().getSocketFactory());
         HostnameVerifier allHostsValid = (hostname1, session) -> true;
@@ -75,9 +74,9 @@ public class HttpsServerTest extends HttpServerTest {
         if (method == HttpMethod.POST || method == HttpMethod.PUT) {
             urlConn.setDoOutput(true);
         }
-        urlConn.setRequestMethod(method.name());
+        urlConn.setRequestMethod(method);
         if (!keepAlive) {
-            urlConn.setRequestProperty(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
+            urlConn.setRequestProperty(HEADER_KEY_CONNECTION, HEADER_VAL_CLOSE);
         }
         return urlConn;
     }

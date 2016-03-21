@@ -18,14 +18,19 @@ package org.wso2.msf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.kernel.transports.TransportManager;
-import org.wso2.carbon.transport.http.netty.internal.NettyTransportDataHolder;
-import org.wso2.carbon.transport.http.netty.internal.config.ListenerConfiguration;
-import org.wso2.carbon.transport.http.netty.internal.config.TransportsConfiguration;
-import org.wso2.carbon.transport.http.netty.internal.config.YAMLTransportConfigurationBuilder;
+import org.wso2.carbon.messaging.handler.HandlerExecutor;
+import org.wso2.carbon.transport.http.netty.common.Constants;
+import org.wso2.carbon.transport.http.netty.config.ListenerConfiguration;
+import org.wso2.carbon.transport.http.netty.config.Parameter;
+import org.wso2.carbon.transport.http.netty.config.TransportsConfiguration;
+import org.wso2.carbon.transport.http.netty.config.YAMLTransportConfigurationBuilder;
+import org.wso2.carbon.transport.http.netty.internal.NettyTransportContextHolder;
 import org.wso2.carbon.transport.http.netty.listener.NettyListener;
-import org.wso2.msf4j.internal.MSF4JNettyServerInitializer;
+import org.wso2.msf4j.internal.MSF4JMessageProcessor;
 import org.wso2.msf4j.internal.MicroservicesRegistry;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -49,14 +54,16 @@ public class MicroservicesRunner {
      */
     public MicroservicesRunner(int... ports) {
         for (int port : ports) {
-            NettyTransportDataHolder nettyTransportDataHolder = NettyTransportDataHolder.getInstance();
+            NettyTransportContextHolder nettyTransportContextHolder = NettyTransportContextHolder.getInstance();
             ListenerConfiguration listenerConfiguration =
                     new ListenerConfiguration("netty-" + port, "0.0.0.0", port);
+            listenerConfiguration.setEnableDisruptor(String.valueOf(false));
+            listenerConfiguration.setParameters(getDisruptorParams());
             NettyListener listener = new NettyListener(listenerConfiguration);
+            nettyTransportContextHolder.setHandlerExecutor(new HandlerExecutor());
+            nettyTransportContextHolder.addMessageProcessor(new MSF4JMessageProcessor(msRegistry));
+            //nettyTransportContextHolder.setInterceptor(new org.wso2.carbon.messaging.Interceptor());
             transportManager.registerTransport(listener);
-            nettyTransportDataHolder.
-                    addNettyChannelInitializer(listenerConfiguration.getId(),
-                            new MSF4JNettyServerInitializer(msRegistry));
         }
     }
 
@@ -71,13 +78,14 @@ public class MicroservicesRunner {
     public MicroservicesRunner() {
         TransportsConfiguration trpConfig = YAMLTransportConfigurationBuilder.build();
         Set<ListenerConfiguration> listenerConfigurations = trpConfig.getListenerConfigurations();
-        NettyTransportDataHolder nettyTransportDataHolder = NettyTransportDataHolder.getInstance();
+        NettyTransportContextHolder nettyTransportContextHolder = NettyTransportContextHolder.getInstance();
         for (ListenerConfiguration listenerConfiguration : listenerConfigurations) {
+            //listenerConfiguration.setParameters(getDisruptorParams());
             NettyListener listener = new NettyListener(listenerConfiguration);
+            nettyTransportContextHolder.setHandlerExecutor(new HandlerExecutor());
+            nettyTransportContextHolder.addMessageProcessor(new MSF4JMessageProcessor(msRegistry));
+            //nettyTransportContextHolder.setInterceptor(new org.wso2.carbon.messaging.Interceptor());
             transportManager.registerTransport(listener);
-            nettyTransportDataHolder.
-                    addNettyChannelInitializer(listenerConfiguration.getId(),
-                            new MSF4JNettyServerInitializer(msRegistry));
         }
     }
 
@@ -146,5 +154,43 @@ public class MicroservicesRunner {
                 msRegistry.preDestroyServices();
             }
         });
+    }
+
+    /**
+     * Temporary method to enable setup call to init connectionManager
+     *
+     * @return disruptor parameter list
+     */
+    //TODO: remove this function and set proper default configs
+    private List<Parameter> getDisruptorParams() {
+        Parameter param1 = new Parameter();
+        param1.setName("disruptor.buffer.size");
+        param1.setValue("1024");
+
+        Parameter param2 = new Parameter();
+        param2.setName("disruptor.count");
+        param2.setValue("5");
+
+        Parameter param3 = new Parameter();
+        param3.setName("disruptor.eventhandler.count");
+        param3.setValue("1");
+
+        Parameter param4 = new Parameter();
+        param4.setName("disruptor.wait.strategy");
+        param4.setValue(Constants.SLEEP_WAITING);
+
+        Parameter param5 = new Parameter();
+        param5.setName("share.disruptor.with.outbound");
+        param5.setValue(String.valueOf(false));
+
+        Parameter param6 = new Parameter();
+        param6.setName("disruptor.consumer.external.worker.pool.size");
+        param6.setValue("60");
+
+        Parameter param7 = new Parameter();
+        param7.setName("executor.workerpool.size");
+        param7.setValue("60");
+
+        return Arrays.asList(param1, param2, param3, param4, param5, param6, param7);
     }
 }

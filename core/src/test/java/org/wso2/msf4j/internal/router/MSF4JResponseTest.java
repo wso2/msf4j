@@ -16,7 +16,6 @@
 
 package org.wso2.msf4j.internal.router;
 
-import io.netty.handler.codec.http.HttpResponseStatus;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -31,33 +30,33 @@ public class MSF4JResponseTest {
     @Test
     public void testStatusOk() {
         Response response = Response
-                .status(HttpResponseStatus.OK.code())
+                .status(Response.Status.OK.getStatusCode())
                 .build();
-        Assert.assertTrue(response.getStatus() == HttpResponseStatus.OK.code());
+        Assert.assertTrue(response.getStatus() == Response.Status.OK.getStatusCode());
     }
 
     @Test
     public void testStatusNotFound() {
         Response response = Response
-                .status(HttpResponseStatus.NOT_FOUND.code())
+                .status(Response.Status.NOT_FOUND.getStatusCode())
                 .build();
-        Assert.assertTrue(response.getStatus() == HttpResponseStatus.NOT_FOUND.code());
+        Assert.assertTrue(response.getStatus() == Response.Status.NOT_FOUND.getStatusCode());
     }
 
     @Test
     public void testEntity() {
         Response response = Response
-                .status(HttpResponseStatus.OK.code())
+                .status(Response.Status.OK.getStatusCode())
                 .entity("Entity")
                 .build();
-        Assert.assertTrue(response.getStatus() == HttpResponseStatus.OK.code());
+        Assert.assertTrue(response.getStatus() == Response.Status.OK.getStatusCode());
         Assert.assertEquals(response.getEntity(), "Entity");
     }
 
     @Test
     public void testSingleHeaderSingleVal() {
         Response response = Response
-                .status(HttpResponseStatus.OK.code())
+                .status(Response.Status.OK.getStatusCode())
                 .header("key1", "val1")
                 .build();
         Assert.assertEquals("val1", response.getStringHeaders().getFirst("key1"));
@@ -66,7 +65,7 @@ public class MSF4JResponseTest {
     @Test
     public void testMultipleHeaderSingleVal() {
         Response response = Response
-                .status(HttpResponseStatus.OK.code())
+                .status(Response.Status.OK.getStatusCode())
                 .header("key1", "val1")
                 .header("key2", "val2")
                 .build();
@@ -77,7 +76,7 @@ public class MSF4JResponseTest {
     @Test
     public void testSingleHeaderRepeatedSingleVal() {
         Response response = Response
-                .status(HttpResponseStatus.OK.code())
+                .status(Response.Status.OK.getStatusCode())
                 .header("key1", "val1")
                 .header("key1", "val2")
                 .build();
@@ -88,7 +87,7 @@ public class MSF4JResponseTest {
     @Test
     public void testSingleHeaderListVal() {
         Response response = Response
-                .status(HttpResponseStatus.OK.code())
+                .status(Response.Status.OK.getStatusCode())
                 .header("key1", Arrays.asList(new String[]{"val1", "val2"}))
                 .build();
         Assert.assertEquals("val1", response.getStringHeaders().get("key1").get(0));

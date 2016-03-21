@@ -30,7 +30,7 @@ public class HttpResourceModelTest {
         TestClass testObj = new TestClass();
         HttpResourceModel httpResourceModel = new HttpResourceModel("", testObj.getClass()
                 .getMethod("methodWithHttpStreaming", HttpStreamer.class),
-                testObj, null);
+                testObj);
         Assert.assertTrue(httpResourceModel.isStreamingReqSupported());
         Assert.assertTrue(httpResourceModel.isStreamingReqSupported());
     }
@@ -40,7 +40,7 @@ public class HttpResourceModelTest {
         TestClass testObj = new TestClass();
         HttpResourceModel httpResourceModel = new HttpResourceModel("", testObj.getClass()
                 .getMethod("methodWithNoHttpStreaming", Object.class),
-                testObj, null);
+                testObj);
         Assert.assertTrue(!httpResourceModel.isStreamingReqSupported());
         Assert.assertTrue(!httpResourceModel.isStreamingReqSupported());
     }
