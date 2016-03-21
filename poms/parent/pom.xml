@@ -232,6 +232,11 @@
                 <version>${javax.ws.rs-api.fragment.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.messaging</groupId>
+                <artifactId>org.wso2.carbon.messaging</artifactId>
+                <version>${carbon.messaging.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.transport</groupId>
                 <artifactId>org.wso2.carbon.transport.http.netty</artifactId>
                 <version>${org.wso2.carbon.transport.http.netty.version}</version>
@@ -474,6 +479,8 @@
         <!-- Dependencies -->
         <carbon.kernel.version>5.0.0</carbon.kernel.version>
         <carbon.kernel.version.range>[5.0,6)</carbon.kernel.version.range>
+        <carbon.messaging.version>1.0.2</carbon.messaging.version>
+        <carbon.messaging.version.range>[1.0.2,2)</carbon.messaging.version.range>
         <org.wso2.carbon.transport.http.netty.version>2.0.1</org.wso2.carbon.transport.http.netty.version>
         <org.wso2.carbon.transport.http.netty.version.range>[2.0,3)</org.wso2.carbon.transport.http.netty.version.range>
         <msf4j.version>1.0.0-SNAPSHOT</msf4j.version>

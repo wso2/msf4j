@@ -33,11 +33,6 @@
     </description>
 
     <dependencies>
-        <!-- Netty transport should be a feature of its own -->
-        <dependency>
-            <groupId>org.wso2.carbon.transport</groupId>
-            <artifactId>org.wso2.carbon.transport.http.netty</artifactId>
-        </dependency>
         <dependency>
             <groupId>javax.ws.rs</groupId>
             <artifactId>javax.ws.rs-api</artifactId>
@@ -140,7 +135,6 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-
                             <propertyFile>../etc/feature.properties</propertyFile>
                             <adviceFileContents>
                                 <advice>
@@ -168,10 +162,6 @@
                                 <bundle>
                                     <symbolicName>javax.ws.rs-api</symbolicName>
                                     <version>${rs-api.version}</version>
-                                </bundle>
-                                <bundle>
-                                    <symbolicName>org.wso2.carbon.transport.http.netty</symbolicName>
-                                    <version>${org.wso2.carbon.transport.http.netty.version}</version>
                                 </bundle>
                                 <bundle>
                                     <symbolicName>com.google.guava</symbolicName>
@@ -244,6 +234,16 @@
                                 </bundle>
                                 <!-- Metrics Bundles - End -->
                             </bundles>
+                            <importFeatures>
+                                <feature>
+                                    <id>org.wso2.carbon.transport.http.netty.feature</id>
+                                    <version>${org.wso2.carbon.transport.http.netty.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.messaging.feature</id>
+                                    <version>${carbon.messaging.version}</version>
+                                </feature>
+                            </importFeatures>
                         </configuration>
                     </execution>
                 </executions>
