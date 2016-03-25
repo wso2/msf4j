@@ -20,13 +20,11 @@ import org.wso2.carbon.messaging.CarbonCallback;
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.Constants;
 import org.wso2.carbon.messaging.DefaultCarbonMessage;
-import org.wso2.carbon.messaging.FaultHandler;
 import org.wso2.msf4j.internal.entitywriter.EntityWriterRegistry;
 
 import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 import javax.ws.rs.core.MultivaluedMap;
 
 /**
@@ -51,62 +49,116 @@ public class Response {
         this.carbonCallback = carbonCallback;
     }
 
+    /**
+     * @return true if message is fully available in the response object
+     */
     public boolean isEomAdded() {
         return carbonMessage.isEndOfMsgAdded();
     }
 
+    /**
+     * @return returns true if the message body is empty
+     */
     public boolean isEmpty() {
         return carbonMessage.isEmpty();
     }
 
+    /**
+     * @return next available message body chunk
+     */
     public ByteBuffer getMessageBody() {
         return carbonMessage.getMessageBody();
     }
 
+    /**
+     * @return complete content of the response object
+     */
     public List<ByteBuffer> getFullMessageBody() {
         return carbonMessage.getFullMessageBody();
     }
 
+    /**
+     * @return map of headers in the response object
+     */
     public Map<String, String> getHeaders() {
         return carbonMessage.getHeaders();
     }
 
+    /**
+     * Get a header of the response.
+     *
+     * @param key header neame
+     * @return value of the header
+     */
     public String getHeader(String key) {
         return carbonMessage.getHeader(key);
     }
 
+    /**
+     * Set a header in the response.
+     *
+     * @param key   header name
+     * @param value value of the header
+     */
     public void setHeader(String key, String value) {
         carbonMessage.setHeader(key, value);
     }
 
+    /**
+     * Add a set of headers to the response as a map.
+     *
+     * @param headerMap headers to be added to the response
+     */
     public void setHeaders(Map<String, String> headerMap) {
         carbonMessage.setHeaders(headerMap);
     }
 
+    /**
+     * Get a property of the CarbonMessage.
+     *
+     * @param key Property key
+     * @return property value
+     */
     public Object getProperty(String key) {
         return carbonMessage.getProperty(key);
     }
 
+    /**
+     * @return map of properties in the CarbonMessage
+     */
     public Map<String, Object> getProperties() {
         return carbonMessage.getProperties();
     }
 
+    /**
+     * Set a property in the underlining CarbonMessage object.
+     *
+     * @param key   property key
+     * @param value property value
+     */
     public void setProperty(String key, Object value) {
         carbonMessage.setProperty(key, value);
     }
 
+    /**
+     * @param key remove the header with this name
+     */
     public void removeHeader(String key) {
         carbonMessage.removeHeader(key);
     }
 
+    /**
+     * Remove a property from the underlining CarbonMessage object.
+     *
+     * @param key property key
+     */
     public void removeProperty(String key) {
         carbonMessage.removeProperty(key);
     }
 
-    public Stack<FaultHandler> getFaultHandlerStack() {
-        return carbonMessage.getFaultHandlerStack();
-    }
-
+    /**
+     * @return the underlining CarbonMessage object
+     */
     public CarbonMessage getCarbonMessage() {
         return carbonMessage;
     }

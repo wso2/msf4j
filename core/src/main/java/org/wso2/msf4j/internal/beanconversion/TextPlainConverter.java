@@ -23,20 +23,37 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
 /**
- * Media type converter for text/plain mime type.
+ * Media type converter for text/plain mime type. This will be
+ * applied by default for unsupported media types.
  */
 public class TextPlainConverter extends MediaTypeConverter {
 
+    /**
+     * Provides the supported media types for bean conversions.
+     */
     @Override
     public String[] getSupportedMediaTypes() {
         return null;
     }
 
+    /**
+     * Convert an Object to a text ByteBuffer.
+     *
+     * @param object object that needs to be converted to a media content
+     * @return Byte buffer that contains the text
+     */
     @Override
     public ByteBuffer toMedia(Object object) {
         return ByteBuffer.wrap(object.toString().getBytes(Charset.defaultCharset()));
     }
 
+    /**
+     * Convert a text ByteBuffer content to an object.
+     *
+     * @param content    content that needs to be converted to an object
+     * @param targetType media type of the content
+     * @return String object that contains the text data
+     */
     @Override
     public Object toObject(ByteBuffer content, Type targetType) {
         return Charset.defaultCharset().decode(content).toString();

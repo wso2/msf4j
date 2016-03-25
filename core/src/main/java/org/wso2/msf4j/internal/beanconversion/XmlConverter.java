@@ -36,11 +36,21 @@ public class XmlConverter extends MediaTypeConverter {
 
     private static final String TEXT_XML = "text/xml";
 
+    /**
+     * Provides the supported media types for bean conversions.
+     */
     @Override
     public String[] getSupportedMediaTypes() {
         return new String[]{MediaType.APPLICATION_XML, TEXT_XML};
     }
 
+
+    /**
+     * Convert an Object to a xml encoded ByteBuffer.
+     *
+     * @param object object that needs to be converted to a media content
+     * @return xml encoded byte buffer
+     */
     @Override
     public ByteBuffer toMedia(Object object) throws BeanConversionException {
         try {
@@ -55,6 +65,13 @@ public class XmlConverter extends MediaTypeConverter {
         }
     }
 
+    /**
+     * Convert a xml ByteBuffer content to an object.
+     *
+     * @param content    content that needs to be converted to an object
+     * @param targetType media type of the content
+     * @return Object that maps the xml data
+     */
     @Override
     public Object toObject(ByteBuffer content, Type targetType) throws BeanConversionException {
         try {

@@ -35,16 +35,33 @@ public class JsonConverter extends MediaTypeConverter {
     private static final Gson gson = new Gson();
     private static final String TEXT_JSON = "text/json";
 
+    /**
+     * Provides the supported media types for bean conversions.
+     */
     @Override
     public String[] getSupportedMediaTypes() {
         return new String[]{MediaType.APPLICATION_JSON, TEXT_JSON};
     }
 
+    /**
+     * Convert an Object to a Json encoded byte buffer.
+     *
+     * @param object object that needs to be converted to a media content
+     * @return Json encoded byte buffer
+     */
     @Override
     public ByteBuffer toMedia(Object object) {
         return ByteBuffer.wrap(gson.toJson(object).getBytes(Charset.defaultCharset()));
     }
 
+    /**
+     * Convert a Json ByteBuffer content to an object.
+     *
+     * @param content    content that needs to be converted to an object
+     * @param targetType media type of the content
+     * @return Object that maps the Json data
+     * @throws BeanConversionException
+     */
     @Override
     public Object toObject(ByteBuffer content, Type targetType) throws BeanConversionException {
         try {

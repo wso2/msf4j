@@ -2,13 +2,11 @@ package org.wso2.msf4j;
 
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.Constants;
-import org.wso2.carbon.messaging.FaultHandler;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.HttpHeaders;
 
@@ -37,86 +35,111 @@ public class Request {
         contentType = (contentTypeHeaderStr != null) ? contentTypeHeaderStr.split("\\s*;\\s*")[0] : null;
     }
 
+    /**
+     * @return returns true if the object contains the complete request body
+     */
     public boolean isEomAdded() {
         return carbonMessage.isEndOfMsgAdded();
     }
 
-    public void setEomAdded(boolean eomAdded) {
-        carbonMessage.setEndOfMsgAdded(eomAdded);
-    }
-
+    /**
+     * @return true if the request does not have body content
+     */
     public boolean isEmpty() {
         return carbonMessage.isEmpty();
     }
 
+    /**
+     * @return next available message body chunk
+     */
     public ByteBuffer getMessageBody() {
         return carbonMessage.getMessageBody();
     }
 
+    /**
+     * @return full message body of the Request
+     */
     public List<ByteBuffer> getFullMessageBody() {
         return carbonMessage.getFullMessageBody();
     }
 
-    public void addMessageBody(ByteBuffer msgBody) {
-        carbonMessage.addMessageBody(msgBody);
-    }
-
+    /**
+     * @return map of headers of the HTTP request
+     */
     public Map<String, String> getHeaders() {
         return carbonMessage.getHeaders();
     }
 
+    /**
+     * Get an HTTP header of the HTTP request.
+     *
+     * @param key name of the header
+     * @return value of the header
+     */
     public String getHeader(String key) {
         return carbonMessage.getHeader(key);
     }
 
-    public void setHeader(String key, String value) {
-        carbonMessage.setHeader(key, value);
-    }
-
-    public void setHeaders(Map<String, String> headerMap) {
-        carbonMessage.setHeaders(headerMap);
-    }
-
+    /**
+     * Set a property in the underlining Carbon Message.
+     *
+     * @param key property key
+     * @return value of the property key
+     */
     public Object getProperty(String key) {
         return carbonMessage.getProperty(key);
     }
 
+    /**
+     * @return property map of the underlining CarbonMessage
+     */
     public Map<String, Object> getProperties() {
         return carbonMessage.getProperties();
     }
 
+    /**
+     * Set a property in the underlining Carbon Message.
+     *
+     * @param key   property key
+     * @param value property value
+     */
     public void setProperty(String key, Object value) {
         carbonMessage.setProperty(key, value);
     }
 
-    public void removeHeader(String key) {
-        carbonMessage.removeHeader(key);
-    }
-
+    /**
+     * Remove a property from the underlining CarbonMessage object.
+     *
+     * @param key property key
+     */
     public void removeProperty(String key) {
         carbonMessage.removeProperty(key);
     }
 
-    public Stack<FaultHandler> getFaultHandlerStack() {
-        return carbonMessage.getFaultHandlerStack();
-    }
-
-    public void setFaultHandlerStack(Stack<FaultHandler> faultHandlerStack) {
-        carbonMessage.setFaultHandlerStack(faultHandlerStack);
-    }
-
+    /**
+     * @return URL of the request.
+     */
     public String getUri() {
         return (String) carbonMessage.getProperty(Constants.TO);
     }
 
+    /**
+     * @return HTTP method of the request.
+     */
     public String getHttpMethod() {
         return (String) carbonMessage.getProperty(Constants.HTTP_METHOD);
     }
 
+    /**
+     * @return accept type of the request.
+     */
     public List<String> getAcceptTypes() {
         return acceptTypes;
     }
 
+    /**
+     * @return request body content type.
+     */
     public String getContentType() {
         return contentType;
     }
