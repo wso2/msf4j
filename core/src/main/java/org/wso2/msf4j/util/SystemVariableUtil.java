@@ -22,6 +22,8 @@ package org.wso2.msf4j.util;
  */
 public class SystemVariableUtil {
 
+    private SystemVariableUtil() {}
+
     public static String getValue(String variableName, String defaultValue) {
         String value;
         if (System.getProperty(variableName) != null) {
