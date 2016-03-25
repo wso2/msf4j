@@ -40,16 +40,36 @@ public class HttpMethodInfo {
     private HttpStreamHandler httpStreamHandler;
     private static final Logger log = LoggerFactory.getLogger(HttpMethodInfo.class);
 
+    /**
+     * Construct HttpMethodInfo object for a handler
+     * method that does not support streaming.
+     *
+     * @param method    handler method
+     * @param handler   object of the handler method
+     * @param args      method arguments array
+     * @param responder responder object
+     */
     public HttpMethodInfo(Method method,
                           Object handler,
                           Object[] args,
                           Response responder) {
         this.method = method;
         this.handler = handler;
-        this.args = args; // The actual arguments list to invoke handler method
+        this.args = args;
         this.responder = responder;
     }
 
+    /**
+     * Construct HttpMethodInfo object for a streaming
+     * supported handler method.
+     *
+     * @param method       handler method
+     * @param handler      object of the handler method
+     * @param args         method arguments array
+     * @param responder    responder object
+     * @param httpStreamer streaming handler
+     * @throws HandlerException throws when HttpMethodInfo construction is unsuccessful
+     */
     public HttpMethodInfo(Method method,
                           Object handler,
                           Object[] args,
@@ -115,6 +135,9 @@ public class HttpMethodInfo {
         }
     }
 
+    /**
+     * Return true if the handler method supports streaming.
+     */
     public boolean isStreamingSupported() {
         return httpStreamHandler != null;
     }

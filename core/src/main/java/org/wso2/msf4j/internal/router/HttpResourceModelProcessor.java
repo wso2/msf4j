@@ -50,7 +50,7 @@ public class HttpResourceModelProcessor {
     }
 
     /**
-     * Handle http Request.
+     * Build an HttpMethodInfo object to dispatch the request.
      *
      * @param request     HttpRequest to be handled.
      * @param responder   HttpResponder to write the response.

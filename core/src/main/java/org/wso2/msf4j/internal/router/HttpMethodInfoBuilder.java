@@ -22,8 +22,8 @@ import org.wso2.msf4j.Response;
 import java.util.Map;
 
 /**
- * Container class that will hold HttpResourceModel and
- * request information inorder to process the request when all
+ * Builder for HttpMethodInfo that will hold HttpResourceModel and
+ * request information in order to process the request when all
  * data is ready.
  */
 public class HttpMethodInfoBuilder {
@@ -34,30 +34,50 @@ public class HttpMethodInfoBuilder {
     private Map<String, String> groupValues;
     private HttpMethodInfo httpMethodInfo;
 
+    /**
+     * Create a new instance of the builder and return.
+     */
     public static HttpMethodInfoBuilder getInstance() {
         return new HttpMethodInfoBuilder();
     }
 
+    /**
+     * Set the associated HttpResourceModel object.
+     */
     public HttpMethodInfoBuilder httpResourceModel(HttpResourceModel httpResourceModel) {
         this.httpResourceModel = httpResourceModel;
         return this;
     }
 
+    /**
+     * Set the associated Request object.
+     */
     public HttpMethodInfoBuilder httpRequest(Request request) {
         this.request = request;
         return this;
     }
 
+
+    /**
+     * Set the associated Response object.
+     */
     public HttpMethodInfoBuilder httpResponder(Response responder) {
         this.responder = responder;
         return this;
     }
 
+    /**
+     * Set information of the request that were processed
+     * when searching for the route.
+     */
     public HttpMethodInfoBuilder requestInfo(Map<String, String> groupValues) {
         this.groupValues = groupValues;
         return this;
     }
 
+    /**
+     * Build HttpMethodInfo instance.
+     */
     public HttpMethodInfo build() throws HandlerException {
         if (httpMethodInfo == null) {
             httpMethodInfo = (new HttpResourceModelProcessor(httpResourceModel))
