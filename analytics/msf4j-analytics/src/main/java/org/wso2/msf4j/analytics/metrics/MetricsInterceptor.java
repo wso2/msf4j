@@ -163,6 +163,8 @@ public class MetricsInterceptor implements Interceptor {
             return org.wso2.carbon.metrics.manager.Level.TRACE;
         case ALL:
             return org.wso2.carbon.metrics.manager.Level.ALL;
+        default:
+            break;
         }
         return org.wso2.carbon.metrics.manager.Level.INFO;
     }

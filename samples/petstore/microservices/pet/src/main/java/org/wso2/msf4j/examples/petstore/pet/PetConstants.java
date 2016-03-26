@@ -25,4 +25,6 @@ public final class PetConstants {
     public static final String CATEGORY_KEY_PREFIX = "petstore:pet:category.";
 
     public static final String PET_ID_KEY_PREFIX = "petstore:pet:id.";
+
+    private PetConstants() {}
 }
