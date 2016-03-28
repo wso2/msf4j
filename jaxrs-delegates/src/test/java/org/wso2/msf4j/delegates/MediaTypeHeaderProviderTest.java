@@ -24,6 +24,9 @@ import org.junit.Test;
 
 import javax.ws.rs.core.MediaType;
 
+/**
+ * Media Type Header Provider test class.
+ */
 public class MediaTypeHeaderProviderTest extends Assert {
 
     @Test(expected = IllegalArgumentException.class)
