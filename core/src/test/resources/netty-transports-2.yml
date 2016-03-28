@@ -25,7 +25,11 @@ listenerConfigurations:
   keyStoreFile: "src/test/resources/cert.jks"
   keyStorePass: secret
   certPass: secret
+  enableDisruptor: false
   parameters:
     -
      name: "execThreadPoolSize"
+     value: 60
+    -
+     name: "executor.workerpool.size"
      value: 60

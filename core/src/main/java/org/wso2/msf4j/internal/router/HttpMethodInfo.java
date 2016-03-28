@@ -16,170 +16,129 @@
 
 package org.wso2.msf4j.internal.router;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.handler.codec.http.HttpContent;
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.HttpResponseStatus;
-import io.netty.handler.codec.http.LastHttpContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.msf4j.HttpResponder;
 import org.wso2.msf4j.HttpStreamHandler;
 import org.wso2.msf4j.HttpStreamer;
+import org.wso2.msf4j.Response;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.ByteBuffer;
 
 /**
  * HttpMethodInfo is a helper class having state information about the http handler method to be invoked, the handler
  * and arguments required for invocation by the Dispatcher. RequestRouter populates this class and stores in its
  * context as attachment.
  */
-class HttpMethodInfo {
+public class HttpMethodInfo {
 
     private final Method method;
     private final Object handler;
-    private final HttpRequest request;
-    private final HttpResponder responder;
     private final Object[] args;
-    private final ExceptionHandler exceptionHandler;
-    private final String mediaType;
+    private Response responder;
     private HttpStreamHandler httpStreamHandler;
-    private static final Logger log = LoggerFactory.getLogger(ChannelChunkResponder.class);
+    private static final Logger log = LoggerFactory.getLogger(HttpMethodInfo.class);
 
-    HttpMethodInfo(Method method, Object handler, HttpRequest request,
-                   HttpResponder responder, Object[] args,
-                   ExceptionHandler exceptionHandler, String mediaType) {
+    /**
+     * Construct HttpMethodInfo object for a handler
+     * method that does not support streaming.
+     *
+     * @param method    handler method
+     * @param handler   object of the handler method
+     * @param args      method arguments array
+     * @param responder responder object
+     */
+    public HttpMethodInfo(Method method,
+                          Object handler,
+                          Object[] args,
+                          Response responder) {
         this.method = method;
         this.handler = handler;
-        this.request = request;
-        this.responder = responder;
-        this.exceptionHandler = exceptionHandler;
-        this.mediaType = mediaType;
-
-        // The actual arguments list to invoke handler method
         this.args = args;
+        this.responder = responder;
     }
 
-    HttpMethodInfo(Method method, Object handler, HttpRequest request,
-                   HttpResponder responder, Object[] args,
-                   ExceptionHandler exceptionHandler, String mediaType,
-                   HttpStreamer httpStreamer) throws HandlerException {
-        this(method, handler, request, responder, args, exceptionHandler, mediaType);
+    /**
+     * Construct HttpMethodInfo object for a streaming
+     * supported handler method.
+     *
+     * @param method       handler method
+     * @param handler      object of the handler method
+     * @param args         method arguments array
+     * @param responder    responder object
+     * @param httpStreamer streaming handler
+     * @throws HandlerException throws when HttpMethodInfo construction is unsuccessful
+     */
+    public HttpMethodInfo(Method method,
+                          Object handler,
+                          Object[] args,
+                          Response responder,
+                          HttpStreamer httpStreamer) throws HandlerException {
+        this(method, handler, args, responder);
 
         if (!method.getReturnType().equals(Void.TYPE)) {
-            throw new HandlerException(HttpResponseStatus.INTERNAL_SERVER_ERROR,
+            throw new HandlerException(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR,
                     "Resource method should be void if it accepts chunked requests");
         }
         try {
             method.invoke(handler, args);
         } catch (InvocationTargetException e) {
-            throw new HandlerException(HttpResponseStatus.INTERNAL_SERVER_ERROR,
+            throw new HandlerException(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR,
                     "Resource method invocation failed", e.getTargetException());
         } catch (IllegalAccessException e) {
-            throw new HandlerException(HttpResponseStatus.INTERNAL_SERVER_ERROR,
+            throw new HandlerException(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR,
                     "Resource method invocation access failed", e);
         }
         httpStreamHandler = httpStreamer.getHttpStreamHandler();
         if (httpStreamHandler == null) {
-            throw new HandlerException(HttpResponseStatus.INTERNAL_SERVER_ERROR,
+            throw new HandlerException(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR,
                     "Streaming unsupported");
         }
+        httpStreamHandler.init(this.responder);
     }
 
     /**
-     * Calls the httpHandler method.
+     * Calls the http resource method.
      */
-    void invoke() {
+    public void invoke() throws Exception {
+        Object returnVal = method.invoke(handler, args);
+        responder.setEntity(returnVal);
+        responder.send();
+    }
+
+    /**
+     * If chunk handling is supported provide chunks directly.
+     *
+     * @param chunk chunk content
+     */
+    public void chunk(ByteBuffer chunk) throws Exception {
         try {
-            Object returnVal = method.invoke(handler, args);
-            //sending return value as output
-            new HttpMethodResponseHandler()
-                    .setResponder(responder)
-                    .setMediaType(mediaType)
-                    .setEntity(returnVal)
-                    .send();
-        } catch (InvocationTargetException e) {
-            log.error("Resource method threw an exception", e);
-            exceptionHandler.handle(e.getTargetException(), request, responder);
+            httpStreamHandler.chunk(chunk);
         } catch (Throwable e) {
-            log.error("Exception while invoking resource method", e);
-            exceptionHandler.handle(e, request, responder);
-        }
-    }
-
-    void chunk(HttpContent chunk) {
-        if (httpStreamHandler == null) {
-            // If the handler method doesn't want to handle chunk request, the httpStreamHandler will be null.
-            // It applies to case when the handler method inspects the request and decides to decline it.
-            // Usually the handler also closes the connection after declining the request.
-            // However, depending on the closing time and the request,
-            // there may be some chunk of data already sent by the client.
-            return;
-        }
-        try {
-            if (chunk instanceof LastHttpContent) {
-                bodyConsumerFinish(chunk.content());
-            } else {
-                bodyConsumerChunk(chunk.content());
-            }
-        } catch (HandlerException e) {
             log.error("Exception while invoking streaming handlers", e);
-            exceptionHandler.handle(e, request, responder);
-        }
-    }
-
-    void error(Throwable e) {
-        try {
-            if (httpStreamHandler != null) {
-                bodyConsumerError(e);
-            }
-            exceptionHandler.handle(e, request, responder);
-        } catch (HandlerException ex) {
-            exceptionHandler.handle(ex, request, responder);
+            httpStreamHandler.error(e);
+            throw e;
         }
     }
 
     /**
-     * Calls the {@link HttpStreamHandler#chunk(io.netty.buffer.ByteBuf,
-     * org.wso2.msf4j.HttpResponder)} method.
-     * <p>
-     * If the chunk method calls throws exception,
-     * the {@link HttpStreamHandler#error(Throwable)} will be called and
-     * this method will throw {@link org.wso2.msf4j.internal.router.HandlerException}.
+     * If chunk handling is supported end streaming chunks.
      */
-    private void bodyConsumerChunk(ByteBuf buffer) throws HandlerException {
+    public void end() throws Exception {
         try {
-            httpStreamHandler.chunk(buffer, responder);
-        } catch (Throwable t) {
-            bodyConsumerError(t);
+            httpStreamHandler.end();
+        } catch (Throwable e) {
+            log.error("Exception while invoking streaming handlers", e);
+            httpStreamHandler.error(e);
+            throw e;
         }
     }
 
     /**
-     * Calls {@link HttpStreamHandler#finished(io.netty.buffer.ByteBuf, org.wso2.msf4j.HttpResponder)}
-     * method. The current httpStreamHandler will be set to {@code null} after the call.
+     * Return true if the handler method supports streaming.
      */
-    private void bodyConsumerFinish(ByteBuf buffer) throws HandlerException {
-        try {
-            HttpStreamHandler consumer = httpStreamHandler;
-            httpStreamHandler = null;
-            consumer.finished(buffer, responder);
-        } catch (Throwable t) {
-            bodyConsumerError(t);
-        }
-    }
-
-    /**
-     * Calls {@link HttpStreamHandler#error(Throwable)} and
-     * throws {@link org.wso2.msf4j.internal.router.HandlerException}. The current httpStreamHandler will be set
-     * to {@code null} after the call.
-     */
-    private void bodyConsumerError(Throwable cause) throws HandlerException {
-        HttpStreamHandler consumer = httpStreamHandler;
-        httpStreamHandler = null;
-        consumer.error(cause);
-
-        throw new HandlerException(HttpResponseStatus.INTERNAL_SERVER_ERROR, cause.getMessage(), cause);
+    public boolean isStreamingSupported() {
+        return httpStreamHandler != null;
     }
 }

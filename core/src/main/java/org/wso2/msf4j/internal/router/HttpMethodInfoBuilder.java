@@ -16,60 +16,72 @@
 
 package org.wso2.msf4j.internal.router;
 
-import io.netty.handler.codec.http.HttpRequest;
-import org.wso2.msf4j.HttpResponder;
+import org.wso2.msf4j.Request;
+import org.wso2.msf4j.Response;
 
-import java.util.List;
 import java.util.Map;
 
 /**
- * Container class that will hold HttpResourceModel and
- * request information inorder to process the request when all
+ * Builder for HttpMethodInfo that will hold HttpResourceModel and
+ * request information in order to process the request when all
  * data is ready.
  */
 public class HttpMethodInfoBuilder {
 
     private HttpResourceModel httpResourceModel;
-    private HttpRequest request;
-    private HttpResponder responder;
+    private Request request;
+    private Response responder;
     private Map<String, String> groupValues;
-    private String contentType;
-    private List<String> acceptTypes;
     private HttpMethodInfo httpMethodInfo;
 
+    /**
+     * Create a new instance of the builder and return.
+     */
     public static HttpMethodInfoBuilder getInstance() {
-        HttpMethodInfoBuilder httpMethodInfoBuilder = new HttpMethodInfoBuilder();
-        return httpMethodInfoBuilder;
+        return new HttpMethodInfoBuilder();
     }
 
+    /**
+     * Set the associated HttpResourceModel object.
+     */
     public HttpMethodInfoBuilder httpResourceModel(HttpResourceModel httpResourceModel) {
         this.httpResourceModel = httpResourceModel;
         return this;
     }
 
-    public HttpMethodInfoBuilder httpRequest(HttpRequest request) {
+    /**
+     * Set the associated Request object.
+     */
+    public HttpMethodInfoBuilder httpRequest(Request request) {
         this.request = request;
         return this;
     }
 
-    public HttpMethodInfoBuilder httpResponder(HttpResponder responder) {
+
+    /**
+     * Set the associated Response object.
+     */
+    public HttpMethodInfoBuilder httpResponder(Response responder) {
         this.responder = responder;
         return this;
     }
 
-    public HttpMethodInfoBuilder requestInfo(Map<String, String> groupValues,
-                                             String contentType,
-                                             List<String> acceptTypes) {
+    /**
+     * Set information of the request that were processed
+     * when searching for the route.
+     */
+    public HttpMethodInfoBuilder requestInfo(Map<String, String> groupValues) {
         this.groupValues = groupValues;
-        this.contentType = contentType;
-        this.acceptTypes = acceptTypes;
         return this;
     }
 
+    /**
+     * Build HttpMethodInfo instance.
+     */
     public HttpMethodInfo build() throws HandlerException {
         if (httpMethodInfo == null) {
             httpMethodInfo = (new HttpResourceModelProcessor(httpResourceModel))
-                    .buildHttpMethodInfo(request, responder, groupValues, contentType, acceptTypes);
+                    .buildHttpMethodInfo(request, responder, groupValues);
         }
         return httpMethodInfo;
     }
@@ -78,11 +90,11 @@ public class HttpMethodInfoBuilder {
         return httpResourceModel;
     }
 
-    public HttpResponder getResponder() {
+    public Response getResponder() {
         return responder;
     }
 
-    public HttpRequest getRequest() {
+    public Request getRequest() {
         return request;
     }
 }

@@ -16,7 +16,6 @@
 
 package org.wso2.msf4j.internal.router;
 
-import io.netty.handler.codec.http.HttpResponseStatus;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
@@ -26,6 +25,7 @@ import org.wso2.msf4j.MicroservicesRunner;
 
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
+import javax.ws.rs.core.Response;
 
 /**
  * Tests handler interceptors.
@@ -65,7 +65,7 @@ public class InterceptorTest extends BaseHandlerInterceptorTest {
     @Test
     public void testPreInterceptorReject() throws Exception {
         int status = doGet("/test/v1/resource", "X-Request-Type", "Reject");
-        Assert.assertEquals(HttpResponseStatus.NOT_ACCEPTABLE.code(), status);
+        Assert.assertEquals(Response.Status.NOT_ACCEPTABLE.getStatusCode(), status);
 
         // Wait for any post handlers to be called
         TimeUnit.MILLISECONDS.sleep(100);

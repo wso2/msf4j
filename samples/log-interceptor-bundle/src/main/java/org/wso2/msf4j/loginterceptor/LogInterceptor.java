@@ -16,14 +16,13 @@
 
 package org.wso2.msf4j.loginterceptor;
 
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.HttpResponseStatus;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.msf4j.ServiceMethodInfo;
-import org.wso2.msf4j.HttpResponder;
 import org.wso2.msf4j.Interceptor;
+import org.wso2.msf4j.Request;
+import org.wso2.msf4j.Response;
+import org.wso2.msf4j.ServiceMethodInfo;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -41,8 +40,8 @@ public class LogInterceptor implements Interceptor {
     private static final Logger log = LoggerFactory.getLogger(LogInterceptor.class);
 
     @Override
-    public boolean preCall(HttpRequest request, HttpResponder responder, ServiceMethodInfo serviceMethodInfo) {
-        Iterator<Map.Entry<String, String>> itr = request.headers().iterator();
+    public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) {
+        Iterator<Map.Entry<String, String>> itr = request.getHeaders().entrySet().iterator();
         while (itr.hasNext()) {
             Map.Entry<String, String> entry = itr.next();
             log.info("Header Name: " + entry.getKey() + " value : " + entry.getValue());
@@ -51,7 +50,7 @@ public class LogInterceptor implements Interceptor {
     }
 
     @Override
-    public void postCall(HttpRequest request, HttpResponseStatus status, ServiceMethodInfo serviceMethodInfo) {
+    public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) {
 
     }
 }

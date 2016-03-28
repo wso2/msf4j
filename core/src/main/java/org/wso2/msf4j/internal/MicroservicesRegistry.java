@@ -18,9 +18,7 @@ package org.wso2.msf4j.internal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.Interceptor;
-import org.wso2.msf4j.internal.router.ExceptionHandler;
 import org.wso2.msf4j.internal.router.MicroserviceMetadata;
-import org.wso2.msf4j.internal.router.URLRewriter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -43,11 +41,9 @@ public class MicroservicesRegistry {
     private static final Logger LOG = LoggerFactory.getLogger(MicroservicesRegistry.class);
     private static final MicroservicesRegistry instance = new MicroservicesRegistry();
     private final Set<Object> httpServices = new HashSet<>();
+
     private final List<Interceptor> interceptors = new ArrayList<>();
-    private URLRewriter urlRewriter = null;
-    private volatile MicroserviceMetadata httpResourceHandler =
-            new MicroserviceMetadata(Collections.emptyList(),
-                    interceptors, urlRewriter, new ExceptionHandler());
+    private volatile MicroserviceMetadata httpResourceHandler = new MicroserviceMetadata(Collections.emptyList());
 
     private MicroservicesRegistry() {
     }
@@ -90,13 +86,12 @@ public class MicroservicesRegistry {
         updateHttpResourceHandler();
     }
 
-    public void removeInterceptor(Interceptor interceptor) {
-        interceptors.remove(interceptor);
-        updateHttpResourceHandler();
+    public List<Interceptor> getInterceptors() {
+        return interceptors;
     }
 
-    public void setUrlRewriter(URLRewriter urlRewriter) {
-        this.urlRewriter = urlRewriter;
+    public void removeInterceptor(Interceptor interceptor) {
+        interceptors.remove(interceptor);
         updateHttpResourceHandler();
     }
 
@@ -106,8 +101,7 @@ public class MicroservicesRegistry {
 
     private void updateHttpResourceHandler() {
         httpResourceHandler =
-                new MicroserviceMetadata(Collections.unmodifiableSet(httpServices),
-                        interceptors, urlRewriter, new ExceptionHandler());
+                new MicroserviceMetadata(Collections.unmodifiableSet(httpServices));
     }
 
     public void initServices() {
@@ -127,16 +121,14 @@ public class MicroservicesRegistry {
     }
 
     private void invokeLifecycleMethods(Class lcAnnotation) {
-        httpServices.stream().forEach(httpService -> {
-            invokeLifecycleMethod(httpService, lcAnnotation);
-        });
+        httpServices.stream().forEach(httpService -> invokeLifecycleMethod(httpService, lcAnnotation));
     }
 
     private void invokeLifecycleMethod(Object httpService, Class lcAnnotation) {
         Optional<Method> lcMethod = Optional.ofNullable(getLifecycleMethod(httpService, lcAnnotation));
         if (lcMethod.isPresent()) {
             try {
-                lcMethod.get().invoke(httpService, null);
+                lcMethod.get().invoke(httpService);
             } catch (IllegalAccessException | InvocationTargetException e) {
                 throw new MicroservicesLCException("Exception occurs calling lifecycle method", e);
             }

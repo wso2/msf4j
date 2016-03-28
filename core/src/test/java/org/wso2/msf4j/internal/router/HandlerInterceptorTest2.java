@@ -16,7 +16,6 @@
 
 package org.wso2.msf4j.internal.router;
 
-import io.netty.handler.codec.http.HttpResponseStatus;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
@@ -26,6 +25,7 @@ import org.wso2.msf4j.MicroservicesRunner;
 
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
+import javax.ws.rs.core.Response;
 
 /**
  * Tests handler interceptor.
@@ -65,7 +65,7 @@ public class HandlerInterceptorTest2 extends BaseHandlerInterceptorTest {
     @Test
     public void testPreException() throws Exception {
         int status = doGet("/test/v1/resource", "X-Request-Type", "PreException");
-        Assert.assertEquals(HttpResponseStatus.INTERNAL_SERVER_ERROR.code(), status);
+        Assert.assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), status);
 
         // Wait for any post handlers to be called
         TimeUnit.MILLISECONDS.sleep(100);
@@ -81,7 +81,7 @@ public class HandlerInterceptorTest2 extends BaseHandlerInterceptorTest {
     @Test
     public void testPostException() throws Exception {
         int status = doGet("/test/v1/resource", "X-Request-Type", "PostException");
-        Assert.assertEquals(HttpResponseStatus.OK.code(), status);
+        Assert.assertEquals(Response.Status.OK.getStatusCode(), status);
 
         Assert.assertEquals(1, interceptor1.getNumPreCalls());
         Assert.assertEquals(1, interceptor1.getNumPostCalls());
@@ -93,7 +93,7 @@ public class HandlerInterceptorTest2 extends BaseHandlerInterceptorTest {
     @Test
     public void testUnknownPath() throws Exception {
         int status = doGet("/unknown/path/test/v1/resource");
-        Assert.assertEquals(HttpResponseStatus.NOT_FOUND.code(), status);
+        Assert.assertEquals(Response.Status.NOT_FOUND.getStatusCode(), status);
 
         // Wait for any post handlers to be called
         TimeUnit.MILLISECONDS.sleep(100);

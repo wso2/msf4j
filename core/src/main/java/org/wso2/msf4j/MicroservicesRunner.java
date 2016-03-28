@@ -18,19 +18,23 @@ package org.wso2.msf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.kernel.transports.TransportManager;
-import org.wso2.carbon.transport.http.netty.internal.NettyTransportDataHolder;
-import org.wso2.carbon.transport.http.netty.internal.config.ListenerConfiguration;
-import org.wso2.carbon.transport.http.netty.internal.config.TransportsConfiguration;
-import org.wso2.carbon.transport.http.netty.internal.config.YAMLTransportConfigurationBuilder;
+import org.wso2.carbon.messaging.handler.HandlerExecutor;
+import org.wso2.carbon.transport.http.netty.common.Constants;
+import org.wso2.carbon.transport.http.netty.config.ListenerConfiguration;
+import org.wso2.carbon.transport.http.netty.config.Parameter;
+import org.wso2.carbon.transport.http.netty.config.TransportsConfiguration;
+import org.wso2.carbon.transport.http.netty.config.YAMLTransportConfigurationBuilder;
+import org.wso2.carbon.transport.http.netty.internal.NettyTransportContextHolder;
 import org.wso2.carbon.transport.http.netty.listener.NettyListener;
-import org.wso2.msf4j.internal.MSF4JNettyServerInitializer;
+import org.wso2.msf4j.internal.MSF4JMessageProcessor;
 import org.wso2.msf4j.internal.MicroservicesRegistry;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 /**
  * This runner initializes the microservices runtime, deploys the microservices and service interceptors,
- * This runner initializes the microservices runtime, deploys the microservices &amp; service interceptors,
  * and starts the relevant transports.
  */
 public class MicroservicesRunner {
@@ -49,14 +53,16 @@ public class MicroservicesRunner {
      */
     public MicroservicesRunner(int... ports) {
         for (int port : ports) {
-            NettyTransportDataHolder nettyTransportDataHolder = NettyTransportDataHolder.getInstance();
+            NettyTransportContextHolder nettyTransportContextHolder = NettyTransportContextHolder.getInstance();
             ListenerConfiguration listenerConfiguration =
                     new ListenerConfiguration("netty-" + port, "0.0.0.0", port);
+            //TODO: remove this default param workaround when transport supports default configurations
+            listenerConfiguration.setEnableDisruptor(String.valueOf(false));
+            listenerConfiguration.setParameters(getDefaultTransportParams());
             NettyListener listener = new NettyListener(listenerConfiguration);
+            nettyTransportContextHolder.setHandlerExecutor(new HandlerExecutor());
+            nettyTransportContextHolder.addMessageProcessor(new MSF4JMessageProcessor(msRegistry));
             transportManager.registerTransport(listener);
-            nettyTransportDataHolder.
-                    addNettyChannelInitializer(listenerConfiguration.getId(),
-                            new MSF4JNettyServerInitializer(msRegistry));
         }
     }
 
@@ -71,13 +77,24 @@ public class MicroservicesRunner {
     public MicroservicesRunner() {
         TransportsConfiguration trpConfig = YAMLTransportConfigurationBuilder.build();
         Set<ListenerConfiguration> listenerConfigurations = trpConfig.getListenerConfigurations();
-        NettyTransportDataHolder nettyTransportDataHolder = NettyTransportDataHolder.getInstance();
+        NettyTransportContextHolder nettyTransportContextHolder = NettyTransportContextHolder.getInstance();
         for (ListenerConfiguration listenerConfiguration : listenerConfigurations) {
+            //TODO: remove this default param workaround when transport supports default configurations
+            if (listenerConfiguration.getEnableDisruptor() == null) {
+                listenerConfiguration.setEnableDisruptor(String.valueOf(false));
+                listenerConfiguration.setParameters(getDefaultTransportParams());
+            } else if (!Boolean.valueOf(listenerConfiguration.getEnableDisruptor()) &&
+                    (listenerConfiguration.getParameters() == null || listenerConfiguration.getParameters()
+                            .stream()
+                            .filter(parameter -> Constants.EXECUTOR_WORKER_POOL_SIZE.equals(parameter.getName()))
+                            .findFirst()
+                            .isPresent())) {
+                listenerConfiguration.setParameters(getDefaultTransportParams());
+            }
             NettyListener listener = new NettyListener(listenerConfiguration);
+            nettyTransportContextHolder.setHandlerExecutor(new HandlerExecutor());
+            nettyTransportContextHolder.addMessageProcessor(new MSF4JMessageProcessor(msRegistry));
             transportManager.registerTransport(listener);
-            nettyTransportDataHolder.
-                    addNettyChannelInitializer(listenerConfiguration.getId(),
-                            new MSF4JNettyServerInitializer(msRegistry));
         }
     }
 
@@ -87,6 +104,7 @@ public class MicroservicesRunner {
      * @param microservice The microservice which is to be deployed
      * @return this MicroservicesRunner object
      */
+
     public MicroservicesRunner deploy(Object microservice) {
         checkState();
         msRegistry.addHttpService(microservice);
@@ -146,5 +164,18 @@ public class MicroservicesRunner {
                 msRegistry.preDestroyServices();
             }
         });
+    }
+
+    /**
+     * Temporary method to add default transport parameters
+     *
+     * @return transports parameter list
+     */
+    //TODO: remove this default param workaround when transport supports default configurations
+    private List<Parameter> getDefaultTransportParams() {
+        Parameter param1 = new Parameter();
+        param1.setName(Constants.EXECUTOR_WORKER_POOL_SIZE);
+        param1.setValue("1024");
+        return Collections.singletonList(param1);
     }
 }

@@ -16,19 +16,15 @@
 
 package org.wso2.msf4j.security;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jwt.SignedJWT;
-import io.netty.handler.codec.http.HttpHeaders;
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.HttpResponseStatus;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.msf4j.HttpResponder;
 import org.wso2.msf4j.Interceptor;
+import org.wso2.msf4j.Request;
+import org.wso2.msf4j.Response;
 import org.wso2.msf4j.ServiceMethodInfo;
 import org.wso2.msf4j.util.SystemVariableUtil;
 
@@ -45,6 +41,7 @@ import java.security.cert.CertificateException;
 import java.security.interfaces.RSAPublicKey;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Verify the JWT header in request.
@@ -59,8 +56,9 @@ public class JWTSecurityInterceptor implements Interceptor {
     private static final String ALIAS = SystemVariableUtil.getValue("PETSTORE_KEY_ALIAS", "wso2carbon");
     private static final String KEYSTORE_PASSWORD = SystemVariableUtil.getValue("PETSTORE_KEYSTORE_PASS", "wso2carbon");
 
-    public boolean preCall(HttpRequest request, HttpResponder responder, ServiceMethodInfo serviceMethodInfo) {
-        HttpHeaders headers = request.headers();
+    public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo)
+            throws Exception {
+        Map<String, String> headers = request.getHeaders();
         boolean isValidSignature;
         if (headers != null) {
             String jwtHeader = headers.get(JWT_HEADER);
@@ -71,14 +69,13 @@ public class JWTSecurityInterceptor implements Interceptor {
                 }
             }
         }
-        Multimap<String, String> map = ArrayListMultimap.create();
-        map.put(HttpHeaders.Names.WWW_AUTHENTICATE, AUTH_TYPE_JWT);
-        responder.sendStatus(HttpResponseStatus.UNAUTHORIZED, map);
-
+        responder.setHeader(javax.ws.rs.core.HttpHeaders.WWW_AUTHENTICATE, AUTH_TYPE_JWT);
+        responder.setStatus(javax.ws.rs.core.Response.Status.UNAUTHORIZED.getStatusCode());
+        responder.send();
         return false;
     }
 
-    public void postCall(HttpRequest request, HttpResponseStatus status, ServiceMethodInfo serviceMethodInfo) {
+    public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) {
         // Nothing to do
     }
 

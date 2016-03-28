@@ -17,26 +17,16 @@
 package org.wso2.msf4j.internal.router;
 
 import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import io.netty.handler.codec.http.HttpHeaders;
-import io.netty.handler.codec.http.HttpMethod;
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.HttpResponseStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.msf4j.HttpResponder;
-import org.wso2.msf4j.Interceptor;
-import org.wso2.msf4j.ServiceMethodInfo;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URI;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ws.rs.DELETE;
@@ -44,6 +34,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.Response;
 
 /**
  * MicroserviceMetadata handles the http request. HttpResourceHandler looks up all Jax-rs annotations in classes
@@ -53,24 +44,16 @@ public final class MicroserviceMetadata {
 
     private static final Logger log = LoggerFactory.getLogger(MicroserviceMetadata.class);
 
-    private final PatternPathRouterWithGroups<HttpResourceModel> patternRouter = PatternPathRouterWithGroups.create();
-    private final Iterable<Interceptor> interceptors;
-    private final URLRewriter urlRewriter;
+    private final PatternPathRouter<HttpResourceModel> patternRouter = PatternPathRouter.create();
 
     /**
      * Construct HttpResourceHandler. Reads all annotations from all the handler classes and methods passed in,
      * constructs patternPathRouter which is routable by path to {@code HttpResourceModel} as destination of the route.
      *
-     * @param handlers         Iterable of HttpHandler.
-     * @param interceptors     Iterable of interceptors.
-     * @param urlRewriter      URL re-writer.
-     * @param exceptionHandler Exception handler
+     * @param handlers Iterable of HttpHandler
      */
-    public MicroserviceMetadata(Iterable<? extends Object> handlers, Iterable<? extends Interceptor> interceptors,
-                                URLRewriter urlRewriter, ExceptionHandler exceptionHandler) {
+    public MicroserviceMetadata(Iterable<? extends Object> handlers) {
         //Store the handlers to call init and destroy on all handlers.
-        this.interceptors = ImmutableList.copyOf(interceptors);
-        this.urlRewriter = urlRewriter;
 
         for (Object handler : handlers) {
             String basePath = "";
@@ -90,7 +73,7 @@ public final class MicroserviceMetadata {
                     }
                     String absolutePath = String.format("%s/%s", basePath, relativePath);
                     patternRouter.add(absolutePath, new HttpResourceModel(absolutePath, method,
-                            handler, new ExceptionHandler()));
+                            handler));
                 } else {
                     log.trace("Not adding method {}({}) to path routing like. " +
                                     "HTTP calls will not be routed to this method",
@@ -108,96 +91,49 @@ public final class MicroserviceMetadata {
     }
 
     /**
-     * Call the appropriate handler for handling the httprequest. 404 if path is not found. 405 if path is found but
-     * httpMethod does not match what's configured.
+     * Get destination resource method to match the arrived request.
+     * 404 if path is not found. 405 if httpMethod does not match what's configured.
+     * 415 if mediatype does not match.
      *
-     * @param request   instance of {@code HttpRequest}
-     * @param responder instance of {@code HttpResponder} to handle the request.
-     * @return HttpMethodInfo object, null if urlRewriter rewrite returns false, also when method cannot be invoked.
-     * @throws HandlerException If URL rewriting fails
+     * @param uri               request uri
+     * @param httpMethod        http method of the request
+     * @param contentTypeHeader content type of the request
+     * @param acceptHeader      accept type of the request
+     * @return matching resource method
+     * @throws HandlerException
      */
-    public HttpMethodInfoBuilder getDestinationMethod(HttpRequest request, HttpResponder responder)
+    public PatternPathRouter
+            .RoutableDestination<HttpResourceModel> getDestinationMethod(String uri,
+                                                                         String httpMethod,
+                                                                         String contentTypeHeader,
+                                                                         List<String> acceptHeader)
             throws HandlerException {
-        if (urlRewriter != null) {
-            try {
-                request.setUri(URI.create(request.getUri()).normalize().toString());
-                if (!urlRewriter.rewrite(request, responder)) {
-                    return null;
-                }
-            } catch (Throwable t) {
-                log.error("Exception thrown during rewriting of uri {}", request.getUri(), t);
-                throw new HandlerException(HttpResponseStatus.INTERNAL_SERVER_ERROR,
-                        String.format("Caught exception processing request. Reason: %s", t.getMessage()));
-            }
-        }
-
-        String acceptHeaderStr = request.headers().get(HttpHeaders.Names.ACCEPT);
-        List<String> acceptHeader = (acceptHeaderStr != null) ?
-                Arrays.asList(acceptHeaderStr.split("\\s*,\\s*"))
-                        .stream()
-                        .map(mediaType -> mediaType.split("\\s*;\\s*")[0])
-                        .collect(Collectors.toList()) :
-                null;
-
-        String contentTypeHeaderStr = request.headers().get(HttpHeaders.Names.CONTENT_TYPE);
-        //Trim specified charset since UTF-8 is assumed
-        String contentTypeHeader = (contentTypeHeaderStr != null) ? contentTypeHeaderStr.split("\\s*;\\s*")[0] : null;
-
         try {
-            String path = URI.create(request.getUri()).normalize().getPath();
+            String path = URI.create(uri).normalize().getPath();
 
-            List<PatternPathRouterWithGroups.RoutableDestination<HttpResourceModel>>
+            List<PatternPathRouter.RoutableDestination<HttpResourceModel>>
                     routableDestinations = patternRouter.getDestinations(path);
 
-            List<PatternPathRouterWithGroups.RoutableDestination<HttpResourceModel>>
-                    matchedDestinations = getMatchedDestination(routableDestinations, request.getMethod(), path);
+            List<PatternPathRouter.RoutableDestination<HttpResourceModel>>
+                    matchedDestinations = getMatchedDestination(routableDestinations, httpMethod, path);
 
             if (!matchedDestinations.isEmpty()) {
-                PatternPathRouterWithGroups.RoutableDestination<HttpResourceModel>
-                        matchedDestination = matchedDestinations.stream()
-                        .filter(matchedDestination1 -> {
-                            return matchedDestination1.getDestination().matchConsumeMediaType(contentTypeHeader)
-                                    && matchedDestination1.getDestination().matchProduceMediaType(acceptHeader);
-                        }).findFirst().get();
-                HttpResourceModel httpResourceModel = matchedDestination.getDestination();
-
-                // Call preCall method of handler interceptors.
-                boolean terminated = false;
-                ServiceMethodInfo serviceMethodInfo = new ServiceMethodInfo(httpResourceModel.getMethod().
-                        getDeclaringClass().getName(), httpResourceModel.getMethod());
-                for (Interceptor interceptor : interceptors) {
-                    if (!interceptor.preCall(request, responder, serviceMethodInfo)) {
-                        // Terminate further request processing if preCall returns false.
-                        terminated = true;
-                        break;
-                    }
-                }
-
-                // Call httpresource handle method, return the HttpMethodInfo Object.
-                if (!terminated) {
-                    // Wrap responder to make post hook calls.
-                    responder = new WrappedHttpResponder(responder, interceptors, request, serviceMethodInfo);
-                    return HttpMethodInfoBuilder
-                            .getInstance()
-                            .httpResourceModel(httpResourceModel)
-                            .httpRequest(request)
-                            .httpResponder(responder)
-                            .requestInfo(matchedDestination.getGroupNameValues(),
-                                    contentTypeHeader,
-                                    acceptHeader);
-                }
+                return matchedDestinations.stream()
+                .filter(matchedDestination1 -> {
+                    return matchedDestination1.getDestination().matchConsumeMediaType(contentTypeHeader)
+                            && matchedDestination1.getDestination().matchProduceMediaType(acceptHeader);
+                }).findFirst().get();
             } else if (!routableDestinations.isEmpty()) {
                 //Found a matching resource but could not find the right HttpMethod so return 405
-                throw new HandlerException(HttpResponseStatus.METHOD_NOT_ALLOWED, request.getUri());
+                throw new HandlerException(Response.Status.METHOD_NOT_ALLOWED, uri);
             } else {
-                throw new HandlerException(HttpResponseStatus.NOT_FOUND,
-                        String.format("Problem accessing: %s. Reason: Not Found", request.getUri()));
+                throw new HandlerException(Response.Status.NOT_FOUND,
+                        String.format("Problem accessing: %s. Reason: Not Found", uri));
             }
         } catch (NoSuchElementException ex) {
-            throw new HandlerException(HttpResponseStatus.UNSUPPORTED_MEDIA_TYPE,
-                    String.format("Problem accessing: %s. Reason: Unsupported Media Type", request.getUri()), ex);
+            throw new HandlerException(Response.Status.UNSUPPORTED_MEDIA_TYPE,
+                    String.format("Problem accessing: %s. Reason: Unsupported Media Type", uri), ex);
         }
-        return null;
     }
 
     /**
@@ -208,22 +144,22 @@ public final class MicroserviceMetadata {
      * @param requestUri           request URI.
      * @return RoutableDestination that matches httpMethod that needs to be handled. null if there are no matches.
      */
-    private List<PatternPathRouterWithGroups.RoutableDestination<HttpResourceModel>>
-    getMatchedDestination(List<PatternPathRouterWithGroups.RoutableDestination<HttpResourceModel>> routableDestinations,
-                          HttpMethod targetHttpMethod, String requestUri) {
+    private List<PatternPathRouter.RoutableDestination<HttpResourceModel>>
+    getMatchedDestination(List<PatternPathRouter.RoutableDestination<HttpResourceModel>> routableDestinations,
+                          String targetHttpMethod, String requestUri) {
 
         Iterable<String> requestUriParts = Splitter.on('/').omitEmptyStrings().split(requestUri);
-        List<PatternPathRouterWithGroups.RoutableDestination<HttpResourceModel>> matchedDestinations =
+        List<PatternPathRouter.RoutableDestination<HttpResourceModel>> matchedDestinations =
                 Lists.newArrayListWithExpectedSize(routableDestinations.size());
         int maxExactMatch = 0;
         int maxGroupMatch = 0;
         int maxPatternLength = 0;
 
-        for (PatternPathRouterWithGroups.RoutableDestination<HttpResourceModel> destination : routableDestinations) {
+        for (PatternPathRouter.RoutableDestination<HttpResourceModel> destination : routableDestinations) {
             HttpResourceModel resourceModel = destination.getDestination();
             int groupMatch = destination.getGroupNameValues().size();
 
-            for (HttpMethod httpMethod : resourceModel.getHttpMethod()) {
+            for (String httpMethod : resourceModel.getHttpMethod()) {
                 if (targetHttpMethod.equals(httpMethod)) {
 
                     int exactMatch = getExactPrefixMatchCount(

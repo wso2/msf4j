@@ -16,29 +16,24 @@
 
 package org.wso2.msf4j.internal.router;
 
-import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
 import com.google.common.io.Resources;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import io.netty.buffer.ByteBuf;
-import io.netty.handler.codec.http.FullHttpRequest;
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.HttpResponseStatus;
 import org.junit.Assert;
-import org.wso2.msf4j.ChunkResponder;
-import org.wso2.msf4j.HttpResponder;
 import org.wso2.msf4j.HttpStreamHandler;
 import org.wso2.msf4j.HttpStreamer;
 import org.wso2.msf4j.Microservice;
+import org.wso2.msf4j.Request;
+import org.wso2.msf4j.util.BufferUtil;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.concurrent.TimeUnit;
@@ -181,7 +176,7 @@ public class TestHandler implements Microservice {
 
     @Path("facebook/{id}/message")
     @PUT
-    public Response testPutMessage(@PathParam("id") String id, @Context HttpRequest request) {
+    public Response testPutMessage(@PathParam("id") String id, @Context Request request) {
         String message = String.format("Handled put in tweets end-point, id: %s. ", id);
         try {
             String data = getStringContent(request);
@@ -197,7 +192,7 @@ public class TestHandler implements Microservice {
 
     @Path("facebook/{id}/message")
     @POST
-    public Response testPostMessage(@PathParam("id") String id, @Context HttpRequest request) {
+    public Response testPostMessage(@PathParam("id") String id, @Context Request request) {
         String message = String.format("Handled post in tweets end-point, id: %s. ", id);
         try {
             String data = getStringContent(request);
@@ -243,8 +238,8 @@ public class TestHandler implements Microservice {
         throw new IllegalArgumentException("Illegal argument");
     }
 
-    private String getStringContent(HttpRequest request) throws IOException {
-        return ((FullHttpRequest) request).content().toString(Charsets.UTF_8);
+    private String getStringContent(Request request) throws IOException {
+        return Charset.defaultCharset().decode(BufferUtil.merge(request.getFullMessageBody())).toString();
     }
 
     @Path("/multi-match/**")
@@ -329,15 +324,25 @@ public class TestHandler implements Microservice {
     public void streamUpload(@Context HttpStreamer httpStreamer) throws Exception {
         final StringBuffer sb = new StringBuffer();
         httpStreamer.callback(new HttpStreamHandler() {
+
+            private org.wso2.msf4j.Response response;
+
             @Override
-            public void chunk(ByteBuf request, HttpResponder responder) {
-                sb.append(request.toString(Charsets.UTF_8));
+            public void init(org.wso2.msf4j.Response response) {
+
+                this.response = response;
             }
 
             @Override
-            public void finished(ByteBuf request, HttpResponder responder) {
-                sb.append(request.toString(Charsets.UTF_8));
-                responder.sendString(HttpResponseStatus.OK, sb.toString());
+            public void chunk(ByteBuffer content) throws Exception {
+                sb.append(Charset.defaultCharset().decode(content).toString());
+            }
+
+            @Override
+            public void end() throws Exception {
+                response.setStatus(Response.Status.OK.getStatusCode());
+                response.setEntity(sb.toString());
+                response.send();
             }
 
             @Override
@@ -353,19 +358,25 @@ public class TestHandler implements Microservice {
         final int fileSize = 30 * 1024 * 1024;
 
         return new HttpStreamHandler() {
-            int count = 0;
+            private org.wso2.msf4j.Response response;
             ByteBuffer offHeapBuffer = ByteBuffer.allocateDirect(fileSize);
 
             @Override
-            public void chunk(ByteBuf request, HttpResponder responder) {
-                Preconditions.checkState(count == 1, "chunk error");
-                offHeapBuffer.put(request.array());
+            public void init(org.wso2.msf4j.Response response) {
+                this.response = response;
             }
 
             @Override
-            public void finished(ByteBuf request, HttpResponder responder) {
+            public void chunk(ByteBuffer content) throws Exception {
+                offHeapBuffer.put(content.array());
+            }
+
+            @Override
+            public void end() throws Exception {
                 int bytesUploaded = offHeapBuffer.position();
-                responder.sendString(HttpResponseStatus.OK, "Uploaded:" + bytesUploaded);
+                response.setStatus(Response.Status.OK.getStatusCode());
+                response.setEntity("Uploaded:" + bytesUploaded);
+                response.send();
             }
 
             @Override
@@ -377,22 +388,10 @@ public class TestHandler implements Microservice {
 
     @Path("/aggregate/upload")
     @PUT
-    public String aggregatedUpload(@Context HttpRequest request) {
-        ByteBuf content = ((FullHttpRequest) request).content();
-        int bytesUploaded = content.readableBytes();
+    public String aggregatedUpload(@Context Request request) {
+        ByteBuffer content = BufferUtil.merge(request.getFullMessageBody());
+        int bytesUploaded = content.capacity();
         return "Uploaded:" + bytesUploaded;
-    }
-
-    @Path("/chunk")
-    @POST
-    public void chunk(HttpRequest request, HttpResponder responder) throws IOException {
-        // Echo the POST body of size 1 byte chunk
-        ByteBuf content = ((FullHttpRequest) request).content();
-        ChunkResponder chunker = responder.sendChunkStart(HttpResponseStatus.OK, null);
-        while (content.isReadable()) {
-            chunker.sendChunk(content.readSlice(1));
-        }
-        chunker.close();
     }
 
     @Path("/gzipfile")
@@ -440,7 +439,7 @@ public class TestHandler implements Microservice {
     @Path("/headerResponse")
     @GET
     public Response testHeaderResponse(@HeaderParam("name") String name) {
-        return Response.status(HttpResponseStatus.OK.code()).entity("Entity").header("name", name).build();
+        return Response.status(Response.Status.OK.getStatusCode()).entity("Entity").header("name", name).build();
     }
 
     @Path("/defaultValue")
@@ -479,6 +478,6 @@ public class TestHandler implements Microservice {
      * Custom exception class for testing exception handler.
      */
     public static final class CustomException extends Exception {
-        public static final HttpResponseStatus HTTP_RESPONSE_STATUS = HttpResponseStatus.INTERNAL_SERVER_ERROR;
+        public static final int HTTP_RESPONSE_STATUS = Response.Status.INTERNAL_SERVER_ERROR.getStatusCode();
     }
 }

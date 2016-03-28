@@ -16,21 +16,19 @@
 
 package org.wso2.msf4j.examples.petstore.fileserver;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.handler.codec.http.HttpResponseStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.metrics.annotation.Timed;
-import org.wso2.msf4j.HttpResponder;
 import org.wso2.msf4j.HttpStreamHandler;
 import org.wso2.msf4j.HttpStreamer;
 import org.wso2.msf4j.analytics.httpmonitoring.HTTPMonitored;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.nio.file.Paths;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -71,38 +69,42 @@ public class FileServerService {
     }
 
     private static class HttpStreamHandlerImpl implements HttpStreamHandler {
-        private BufferedOutputStream outputStream = null;
+        private FileChannel fileChannel = null;
+        private org.wso2.msf4j.Response response;
 
         public HttpStreamHandlerImpl(String fileName) throws FileNotFoundException {
             File file = Paths.get(MOUNT_PATH, fileName).toFile();
             if (file.getParentFile().exists() || file.getParentFile().mkdirs()) {
-                outputStream = new BufferedOutputStream(new FileOutputStream(file));
+                fileChannel = new FileOutputStream(file).getChannel();
             }
         }
 
         @Override
-        public void chunk(ByteBuf request, HttpResponder responder) throws IOException {
-            if (outputStream == null) {
-                throw new IOException("Unable to write file");
-            }
-            request.readBytes(outputStream, request.capacity());
+        public void init(org.wso2.msf4j.Response response) {
+            this.response = response;
         }
 
         @Override
-        public void finished(ByteBuf request, HttpResponder responder) throws IOException {
-            if (outputStream == null) {
+        public void end() throws Exception {
+            fileChannel.close();
+            response.setStatus(Response.Status.ACCEPTED.getStatusCode());
+            response.send();
+        }
+
+        @Override
+        public void chunk(ByteBuffer content) throws Exception {
+            if (fileChannel == null) {
                 throw new IOException("Unable to write file");
             }
-            request.readBytes(outputStream, request.capacity());
-            outputStream.close();
-            responder.sendStatus(HttpResponseStatus.ACCEPTED);
+            content.flip();
+            fileChannel.write(content);
         }
 
         @Override
         public void error(Throwable cause) {
             try {
-                if (outputStream != null) {
-                    outputStream.close();
+                if (fileChannel != null) {
+                    fileChannel.close();
                 }
             } catch (IOException e) {
                 // Log if unable to close the output stream

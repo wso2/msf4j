@@ -253,6 +253,7 @@ public final class ParamConvertUtils {
      * as {@link List}, {@link Set} or {@link SortedSet}. Also, for {@link SortedSet} type, if the element type
      * doesn't implements {@link Comparable}, {@code null} is returned.
      */
+    @SuppressWarnings("unchecked")
     private static Function<List<String>, Object> createCollectionConverter(TypeToken<?> resultType) {
         final Class<?> rawType = resultType.getRawType();
 
