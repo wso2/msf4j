@@ -167,7 +167,7 @@ public class MicroservicesRunner {
     }
 
     /**
-     * Temporary method to add default transport parameters
+     * Temporary method to add default transport parameters.
      *
      * @return transports parameter list
      */
