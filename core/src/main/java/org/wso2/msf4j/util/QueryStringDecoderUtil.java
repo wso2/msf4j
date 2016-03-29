@@ -280,7 +280,7 @@ public class QueryStringDecoderUtil {
      *                                  escape sequence.
      */
     public static String decodeComponent(final String s) {
-        return decodeComponent(s, Charset.defaultCharset());
+        return decodeComponent(s, Charset.forName("UTF-8"));
     }
 
     /**
