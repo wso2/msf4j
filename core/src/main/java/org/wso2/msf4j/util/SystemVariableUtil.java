@@ -27,7 +27,7 @@ import java.util.Properties;
  */
 public class SystemVariableUtil {
 
-    private static final String VARIABLE_PREFIX = "ARBITRARY";
+    private static final String VARIABLE_PREFIX = "CUSTOM";
 
     public static String getValue(String variableName, String defaultValue) {
         String value;
