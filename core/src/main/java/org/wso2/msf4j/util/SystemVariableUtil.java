@@ -15,12 +15,19 @@
  */
 package org.wso2.msf4j.util;
 
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
 /**
  * A utility which allows reading variables from the environment or System properties.
  * If the variable in available in the environment as well as a System property, the System property takes
  * precedence.
  */
 public class SystemVariableUtil {
+
+    private static final String VARIABLE_PREFIX = "ARBITRARY";
 
     public static String getValue(String variableName, String defaultValue) {
         String value;
@@ -32,5 +39,22 @@ public class SystemVariableUtil {
             value = defaultValue;
         }
         return value;
+    }
+
+    public static Map<String, String> getArbitraryAttributes() {
+
+        Map<String, String> arbitraryAttributes = new HashMap<>();
+
+        Map<String, String> environmentVariables = System.getenv();
+        environmentVariables.keySet().stream().filter(key -> key.startsWith(VARIABLE_PREFIX)).forEach(key -> {
+            arbitraryAttributes.put(key, environmentVariables.get(key));
+        });
+
+        Properties properties = System.getProperties();
+        properties.keySet().stream().filter(key -> ((String) key).startsWith(VARIABLE_PREFIX)).forEach((Object key) -> {
+            arbitraryAttributes.put((String) key, properties.getProperty((String) key));
+        });
+
+        return arbitraryAttributes;
     }
 }
