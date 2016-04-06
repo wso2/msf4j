@@ -18,8 +18,8 @@ package org.wso2.msf4j.internal.router;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.wso2.carbon.transport.http.netty.config.YAMLTransportConfigurationBuilder;
 import org.wso2.msf4j.MicroservicesRunner;
 
@@ -36,12 +36,14 @@ public class MutualAuthServerTest extends HttpsServerTest {
 
     private static String hostname = Constants.HOSTNAME;
     private static final int port = Constants.PORT + 5;
+    private static File trustKeyStore;
 
 
     @BeforeClass
     public static void setup() throws Exception {
         baseURI = URI.create(String.format("https://%s:%d", hostname, port));
-        File trustKeyStore = tmpFolder.newFile();
+        trustKeyStore = new File(tmpFolder, "MutualAuthServerTest.jks");
+        trustKeyStore.createNewFile();
         ByteStreams.copy(Resources.newInputStreamSupplier(Resources.getResource("client.jks")),
                 Files.newOutputStreamSupplier(trustKeyStore));
         String trustKeyStorePassword = "password";
@@ -58,5 +60,6 @@ public class MutualAuthServerTest extends HttpsServerTest {
     @AfterClass
     public static void teardown() throws Exception {
         microservicesRunner.stop();
+        trustKeyStore.delete();
     }
 }

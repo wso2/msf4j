@@ -16,11 +16,11 @@
 
 package org.wso2.msf4j.internal.router;
 
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
 import org.wso2.msf4j.MicroservicesRunner;
 
 import java.net.URI;
@@ -56,7 +56,7 @@ public class InterceptorTest extends BaseHandlerInterceptorTest {
         microservicesRunner.stop();
     }
 
-    @Before
+    @BeforeTest
     public void reset() {
         interceptor1.reset();
         interceptor2.reset();
@@ -65,7 +65,7 @@ public class InterceptorTest extends BaseHandlerInterceptorTest {
     @Test
     public void testPreInterceptorReject() throws Exception {
         int status = doGet("/test/v1/resource", "X-Request-Type", "Reject");
-        Assert.assertEquals(Response.Status.NOT_ACCEPTABLE.getStatusCode(), status);
+        Assert.assertEquals(status, Response.Status.NOT_ACCEPTABLE.getStatusCode());
 
         // Wait for any post handlers to be called
         TimeUnit.MILLISECONDS.sleep(100);

@@ -19,10 +19,9 @@ package org.wso2.msf4j.internal.router;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 import java.io.File;
 
@@ -30,31 +29,37 @@ import java.io.File;
  * Tests SSL KeyStore behaviour.
  */
 public class SSLKeyStoreTest {
-    @ClassRule
-    public static TemporaryFolder tmpFolder = new TemporaryFolder();
+
+    public static File tmpFolder;
     private static File keyStore;
 
     @BeforeClass
     public static void setup() throws Exception {
-        keyStore = tmpFolder.newFile();
+        keyStore = new File(tmpFolder, "KeyStore.jks");
+        keyStore.createNewFile();
         ByteStreams.copy(Resources.newInputStreamSupplier(Resources.getResource("cert.jks")),
                 Files.newOutputStreamSupplier(keyStore));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @AfterClass
+    public static void cleanup() {
+        keyStore.delete();
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void testSslCertPathConfiguration1() throws IllegalArgumentException {
         //Bad Certificate Path
         new SSLHandlerFactory(SSLConfig.builder(new File("badCertificate"), "secret").setCertificatePassword("secret")
                 .build());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void testSslCertPathConfiguration2() throws IllegalArgumentException {
         //Null Certificate Path
         new SSLHandlerFactory(SSLConfig.builder(null, "secret").setCertificatePassword("secret").build());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void testSslKeyStorePassConfiguration2() throws IllegalArgumentException {
         //Missing Key Pass
         new SSLHandlerFactory(SSLConfig.builder(keyStore, null).setCertificatePassword("secret").build());

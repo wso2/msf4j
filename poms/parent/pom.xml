@@ -440,9 +440,9 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${junit.version}</version>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+                <version>${testng.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -511,7 +511,7 @@
         <beanutils.version>1.8.3_2</beanutils.version>
         <beanutils.version.range>[1.8,2)</beanutils.version.range>
         <beanutils.osgi.version>1.8.3.2</beanutils.osgi.version>
-        <junit.version>4.11</junit.version>
+        <testng.version>6.9.4</testng.version>
         <logback.version>1.0.9</logback.version>
         <nimbus.jose.jwt.version>2.25</nimbus.jose.jwt.version>
         <axiom.impl.version>1.2.11</axiom.impl.version>
