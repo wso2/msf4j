@@ -21,8 +21,8 @@ limitations under the License.
 
     <test name="interceptor-unit-tests" preserve-order="true" parallel="false">
         <classes>
-            <class name="org.wso2.msf4j.internal.router.InterceptorTest" />
-            <class name="org.wso2.msf4j.internal.router.HandlerInterceptorTest2" />
+            <!--<class name="org.wso2.msf4j.internal.router.InterceptorTest" />-->
+            <!--<class name="org.wso2.msf4j.internal.router.HandlerInterceptorTest2" />-->
         </classes>
     </test>
 
