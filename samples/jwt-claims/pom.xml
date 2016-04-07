@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>msf4j-service</artifactId>
         <groupId>org.wso2.msf4j</groupId>
+        <artifactId>msf4j-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../../poms/msf4j-service/pom.xml</relativePath>
+        <relativePath>../../poms/parent/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>jwt-claims</artifactId>
-    <packaging>jar</packaging>
-    <name>Sample: Microservices in MSF4J with signed JWT</name>
-    <description>Demonstrates how to work with JWT tokens and microservices in WSO2 MSF4J</description>
+    <packaging>pom</packaging>
 
-    <properties>
-        <microservice.mainClass>org.wso2.msf4j.example.Application</microservice.mainClass>
-    </properties>
+    <modules>
+        <module>jwt-sample</module>
+        <module>sso-agent-sample</module>
+        <module>JWTAccessTokenBuilder</module>
+    </modules>
 
 </project>
