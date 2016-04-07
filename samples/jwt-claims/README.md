@@ -35,14 +35,14 @@ document:
 [https://docs.wso2.com/display/IS520/Configuring+Single+Sign-On]
 (https://docs.wso2.com/display/IS520/Configuring+Single+Sign-On)
 
-5) Configure SAML2 Bearer assertion profile for OAuth 2 with the travelocity web app following the instruction in
+5) Configure OAuth2-OpenID connect for single sign-on following the instructions in this document for the web app:
+[https://docs.wso2.com/display/IS520/Configuring+OAuth2-OpenID+Connect+Single-Sign-On]
+(https://docs.wso2.com/display/IS520/Configuring+OAuth2-OpenID+Connect+Single-Sign-On)
+
+6) Configure SAML2 Bearer assertion profile for OAuth 2 with the travelocity web app following the instruction in
 this document:
  [https://docs.wso2.com/display/IS520/SAML2+Bearer+Assertion+Profile+for+OAuth+2.0+with+WSO2+Travelocity]
  (https://docs.wso2.com/display/IS520/SAML2+Bearer+Assertion+Profile+for+OAuth+2.0+with+WSO2+Travelocity)
-
-6) Configure OAuth2-OpenID connect for single sign-on following the instructions in this document for the web app:
-[https://docs.wso2.com/display/IS520/Configuring+OAuth2-OpenID+Connect+Single-Sign-On]
-(https://docs.wso2.com/display/IS520/Configuring+OAuth2-OpenID+Connect+Single-Sign-On)
 
 ## How to test the sample
 
