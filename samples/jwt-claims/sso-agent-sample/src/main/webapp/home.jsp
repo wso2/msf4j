@@ -192,7 +192,11 @@
                             <div style="text-indent: 50px">Response from micro service: <%=responseString%> <br/></div>
             <%
                         } catch (Exception e) {
-                            //ignore
+            %>
+                            <u><b>Error</b></u>
+                            <div style="text-indent: 50px">An error occurred while calling
+                                the micro service: <%=e.getMessage()%> <br/></div>
+            <%
                         }
                     } else {
                         if(ssoAgentConfig.isOAuth2SAML2GrantEnabled()){
