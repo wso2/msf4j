@@ -16,9 +16,9 @@
 package org.wso2.msf4j.util;
 
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 /**
  * A utility which allows reading variables from the environment or System properties.
@@ -27,7 +27,7 @@ import java.util.Properties;
  */
 public class SystemVariableUtil {
 
-    private static final String VARIABLE_PREFIX = "CUSTOM_";
+    private static final String CUSTOM_VAR_PREFIX = "CUSTOM_";
 
     public static String getValue(String variableName, String defaultValue) {
         String value;
@@ -43,18 +43,21 @@ public class SystemVariableUtil {
 
     public static Map<String, String> getArbitraryAttributes() {
 
-        Map<String, String> arbitraryAttributes = new HashMap<>();
+        Map<String, String> arbitraryAttributes;
 
         Map<String, String> environmentVariables = System.getenv();
-        environmentVariables.keySet().stream().filter(key -> key.startsWith(VARIABLE_PREFIX)).forEach(key -> {
-            arbitraryAttributes.put(key, environmentVariables.get(key));
-        });
+        arbitraryAttributes = environmentVariables.entrySet()
+                .stream()
+                .filter(entry -> entry.getKey().startsWith(CUSTOM_VAR_PREFIX))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         Properties properties = System.getProperties();
-        properties.keySet().stream().filter(key -> ((String) key).startsWith(VARIABLE_PREFIX)).forEach((Object key) -> {
-            arbitraryAttributes.put((String) key, properties.getProperty((String) key));
-        });
-
+        arbitraryAttributes.putAll(
+                properties.entrySet()
+                        .stream()
+                        .filter(entry -> ((String) entry.getKey()).startsWith(CUSTOM_VAR_PREFIX))
+                        .collect(Collectors.toMap(entry -> (String) entry.getKey(), entry -> (String) entry.getValue()))
+        );
         return arbitraryAttributes;
     }
 }
