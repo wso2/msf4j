@@ -19,8 +19,10 @@
 
 package org.wso2.msf4j.delegates;
 
-import org.junit.Assert;
-import org.junit.Test;
+
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import javax.ws.rs.core.MediaType;
 
@@ -29,7 +31,7 @@ import javax.ws.rs.core.MediaType;
  */
 public class MediaTypeHeaderProviderTest extends Assert {
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void testNullValue() throws Exception {
         MediaType.valueOf(null);
     }
@@ -63,10 +65,9 @@ public class MediaTypeHeaderProviderTest extends Assert {
     @Test
     public void testSimpleType() {
         MediaType m = MediaType.valueOf("text/html");
-        assertEquals("Media type was not parsed correctly",
-                m, new MediaType("text", "html"));
-        assertEquals("Media type was not parsed correctly",
-                MediaType.valueOf("text/html "), new MediaType("text", "html"));
+        assertEquals(m, new MediaType("text", "html"), "Media type was not parsed correctly");
+        assertEquals(MediaType.valueOf("text/html "), new MediaType("text", "html"),
+                "Media type was not parsed correctly");
     }
 
     @Test
@@ -93,8 +94,8 @@ public class MediaTypeHeaderProviderTest extends Assert {
         MediaTypeHeaderProvider provider =
                 new MediaTypeHeaderProvider();
 
-        assertEquals("simple media type is not serialized", "text/plain",
-                provider.toString(new MediaType("text", "plain")));
+        assertEquals("text/plain", provider.toString(new MediaType("text", "plain")),
+                "simple media type is not serialized");
     }
 
 }

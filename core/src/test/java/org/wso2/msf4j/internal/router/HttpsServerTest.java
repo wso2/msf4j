@@ -17,8 +17,8 @@
 package org.wso2.msf4j.internal.router;
 
 import com.google.common.io.Resources;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.wso2.carbon.transport.http.netty.config.YAMLTransportConfigurationBuilder;
 import org.wso2.msf4j.MicroservicesRunner;
 

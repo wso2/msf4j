@@ -16,8 +16,9 @@
 
 package org.wso2.msf4j.util;
 
-import org.junit.Assert;
-import org.junit.Test;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -166,9 +167,8 @@ public class QueryStringDecoderUtilTest {
                 final String decoded = QueryStringDecoderUtil.decodeComponent(encoded);
                 Assert.assertEquals(expected, decoded);
             } catch (IllegalArgumentException e) {
-                Assert.assertTrue("String \"" + e.getMessage() + "\" does"
-                                + " not contain \"" + expected + '"',
-                        e.getMessage().contains(expected));
+                Assert.assertTrue(e.getMessage().contains(expected), "String " + e.getMessage() + "\" does"
+                                                                     + " not contain \"" + expected + '"');
             }
         }
     }

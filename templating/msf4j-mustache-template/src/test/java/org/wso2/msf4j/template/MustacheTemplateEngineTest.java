@@ -16,8 +16,9 @@
 
 package org.wso2.msf4j.template;
 
-import org.junit.Assert;
-import org.junit.Test;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import java.util.HashMap;
 import java.util.Map;

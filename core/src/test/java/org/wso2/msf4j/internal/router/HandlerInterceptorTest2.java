@@ -16,11 +16,11 @@
 
 package org.wso2.msf4j.internal.router;
 
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
 import org.wso2.msf4j.MicroservicesRunner;
 
 import java.net.URI;
@@ -42,7 +42,7 @@ public class HandlerInterceptorTest2 extends BaseHandlerInterceptorTest {
     private static final MicroservicesRunner microservicesRunner = new MicroservicesRunner(port);
 
     @BeforeClass
-    public static void setup() throws Exception {
+    public void setup() throws Exception {
         microservicesRunner
                 .deploy(testHandler)
                 .addInterceptor(interceptor1)
@@ -52,11 +52,11 @@ public class HandlerInterceptorTest2 extends BaseHandlerInterceptorTest {
     }
 
     @AfterClass
-    public static void teardown() throws Exception {
+    public void teardown() throws Exception {
         microservicesRunner.stop();
     }
 
-    @Before
+    @BeforeTest
     public void reset() {
         interceptor1.reset();
         interceptor2.reset();

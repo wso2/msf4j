@@ -22,7 +22,7 @@ import com.google.common.io.Resources;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import org.junit.Assert;
+import org.testng.Assert;
 import org.wso2.msf4j.HttpStreamHandler;
 import org.wso2.msf4j.HttpStreamer;
 import org.wso2.msf4j.Microservice;
