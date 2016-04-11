@@ -27,12 +27,10 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.apache.commons.io.IOUtils;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 import org.wso2.msf4j.MicroservicesRunner;
 import org.wso2.msf4j.beanconversion.BeanConversionException;
 import org.wso2.msf4j.internal.beanconversion.BeanConverter;
@@ -71,8 +69,7 @@ public class HttpServerTest {
     }.getType();
     protected static final Gson GSON = new Gson();
 
-    @ClassRule
-    public static TemporaryFolder tmpFolder = new TemporaryFolder();
+    public static File tmpFolder = Files.createTempDir();
 
     private static final TestHandler testHandler = new TestHandler();
 
@@ -118,17 +115,18 @@ public class HttpServerTest {
 
     @Test
     public void testSmallFileUpload() throws IOException {
-        testStreamUpload(10);
+        testStreamUpload(10 , "testSmallFileUpload.txt");
     }
 
     @Test
     public void testLargeFileUpload() throws IOException {
-        testStreamUpload(1000000);
+        testStreamUpload(1000000, "testLargeFileUpload.txt");
     }
 
-    protected void testStreamUpload(int size) throws IOException {
+    protected void testStreamUpload(int size, String filename) throws IOException {
         //create a random file to be uploaded.
-        File fname = tmpFolder.newFile();
+        File fname = new File(tmpFolder, filename);
+        fname.createNewFile();
         RandomAccessFile randf = new RandomAccessFile(fname, "rw");
         String contentStr = IntStream.range(0, size)
                 .mapToObj(value -> String.valueOf((int) (Math.random() * 1000)))
@@ -143,13 +141,15 @@ public class HttpServerTest {
         String contentFromServer = getContent(urlConn);
         Assert.assertEquals(contentStr, contentFromServer);
         urlConn.disconnect();
+        fname.delete();
     }
 
     //    @Test
     public void testStreamUploadFailure() throws IOException {
         //create a random file to be uploaded.
         int size = 20 * 1024;
-        File fname = tmpFolder.newFile();
+        File fname = new File(tmpFolder, "testStreamUploadFailure.txt");
+        fname.createNewFile();
         RandomAccessFile randf = new RandomAccessFile(fname, "rw");
         randf.setLength(size);
         randf.close();
@@ -158,13 +158,15 @@ public class HttpServerTest {
         Files.copy(fname, urlConn.getOutputStream());
         Assert.assertEquals(500, urlConn.getResponseCode());
         urlConn.disconnect();
+        fname.delete();
     }
 
     @Test
     public void testChunkAggregatedUpload() throws IOException {
         //create a random file to be uploaded.
         int size = 69 * 1024;
-        File fname = tmpFolder.newFile();
+        File fname = new File(tmpFolder, "testChunkAggregatedUpload.txt");
+        fname.createNewFile();
         RandomAccessFile randf = new RandomAccessFile(fname, "rw");
         randf.setLength(size);
         randf.close();
@@ -177,13 +179,15 @@ public class HttpServerTest {
 
         Assert.assertEquals(size, Integer.parseInt(getContent(urlConn).split(":")[1].trim()));
         urlConn.disconnect();
+        fname.delete();
     }
 
     //    @Test
     public void testChunkAggregatedUploadFailure() throws IOException {
         //create a random file to be uploaded.
         int size = 78 * 1024;
-        File fname = tmpFolder.newFile();
+        File fname = new File(tmpFolder, "testChunkAggregatedUploadFailure.txt");
+        fname.createNewFile();
         RandomAccessFile randf = new RandomAccessFile(fname, "rw");
         randf.setLength(size);
         randf.close();
@@ -194,6 +198,7 @@ public class HttpServerTest {
         Files.copy(fname, urlConn.getOutputStream());
         Assert.assertEquals(500, urlConn.getResponseCode());
         urlConn.disconnect();
+        fname.delete();
     }
 
     @Test
@@ -446,7 +451,7 @@ public class HttpServerTest {
         urlConn.disconnect();
     }
 
-    @Test(timeout = 5000)
+    @Test(timeOut = 5000)
     public void testConnectionClose() throws Exception {
         URL url = baseURI.resolve("/test/v1/connectionClose").toURL();
 
