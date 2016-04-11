@@ -34,6 +34,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
+import java.util.Map;
 
 /**
  * A utility class to initialize/destroy HTTP Monitoring Data Publisher for DAS.
@@ -59,6 +60,7 @@ public final class HTTPMonitoringDataPublisher {
     private static final String MICROSERVICE = "Microservice";
 
     private static DataPublisher dataPublisher;
+    private static Map<String, String> arbitraryAttributes;
 
     static {
         HTTP_MONITORING_STREAM_ID = DataBridgeCommonsUtils.generateStreamId(HTTP_MONITORING_STREAM, VERSION);
@@ -134,6 +136,7 @@ public final class HTTPMonitoringDataPublisher {
             throw new IllegalArgumentException("Data Agent Configuration Path cannot be null");
         }
         AgentHolder.setConfigPath(dataAgentConfigPath);
+        arbitraryAttributes = SystemVariableUtil.getArbitraryAttributes();
         try {
             dataPublisher = new DataPublisher(type, receiverURL, authURL, username, password);
         } catch (DataEndpointAgentConfigurationException | DataEndpointException | DataEndpointConfigurationException
@@ -175,8 +178,9 @@ public final class HTTPMonitoringDataPublisher {
         payload[8] = httpMonitoringEvent.getReferrer();
         payload[9] = httpMonitoringEvent.getResponseHttpStatusCode();
         payload[10] = httpMonitoringEvent.getResponseTime();
-        Event event = new Event(HTTP_MONITORING_STREAM_ID, httpMonitoringEvent.getTimestamp(), 
-                meta, correlation, payload);
+
+        Event event = new Event(HTTP_MONITORING_STREAM_ID, httpMonitoringEvent.getTimestamp(), meta, correlation,
+                payload, arbitraryAttributes);
         dataPublisher.publish(event);
     }
 
