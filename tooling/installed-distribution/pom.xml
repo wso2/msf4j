@@ -21,7 +21,7 @@
     <modelVersion>4.0.0</modelVersion><parent>
         <groupId>org.wso2.developerstudio.msf4j</groupId>
         <artifactId>msf4j-tool-parent</artifactId>
-    	<version>1.0.0-SNAPSHOT</version>
+    	<version>1.1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -55,9 +55,9 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                   <groupId>org.wso2.developerstudio.msf4j</groupId>
-    		   <artifactId>msf4j-tool-parent</artifactId>
-    		   <version>1.0.0-SNAPSHOT</version>
+                <groupId>org.wso2.developerstudio.msf4j</groupId>
+                <artifactId>msf4j-tool-parent</artifactId>
+                <version>1.1.0-SNAPSHOT</version>
                 <type>zip</type>
             </dependency>
             <dependency>

@@ -18,12 +18,13 @@
 
 package org.wso2.msf4j.perftest.echo.wso2msf4j;
 
+import java.util.concurrent.TimeUnit;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
-/**
+/*
  * EchoService resource class
  */
 @Path("/EchoService")

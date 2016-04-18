@@ -30,7 +30,7 @@
     <groupId>org.wso2.msf4j</groupId>
     <artifactId>msf4j-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.1.0-SNAPSHOT</version>
     <name>WSO2 MSF4J - Parent Pom</name>
     <description>WSO2 MSF4J Parent Pom</description>
     <url>http://wso2.org</url>
@@ -483,7 +483,7 @@
         <carbon.messaging.version.range>[1.0.2,2)</carbon.messaging.version.range>
         <org.wso2.carbon.transport.http.netty.version>2.0.1</org.wso2.carbon.transport.http.netty.version>
         <org.wso2.carbon.transport.http.netty.version.range>[2.0,3)</org.wso2.carbon.transport.http.netty.version.range>
-        <msf4j.version>1.0.0-SNAPSHOT</msf4j.version>
+        <msf4j.version>1.1.0-SNAPSHOT</msf4j.version>
         <carbon.metrics.version>1.2.0</carbon.metrics.version>
         <carbon.metrics.version.range>[1.2,2)</carbon.metrics.version.range>
         <carbon.analytics.common.version>5.0.6</carbon.analytics.common.version>
