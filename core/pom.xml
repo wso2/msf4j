@@ -281,7 +281,7 @@
         <export.package>
             !org.wso2.msf4j.internal.*,
             !org.wso2.msf4j.delegates.*,
-            org.wso2.msf4j.*;version="1.0.0",
+            org.wso2.msf4j.*;version="1.1.0",
         </export.package>
         <import.package>
             com.google.gson.*;version="${gson.version.range}",
