@@ -20,5 +20,5 @@ In increasing order of complexity;
 * [OAuth2 Security](oauth2-security) - Securing Microservice using OAuth2
 * [Template](template) - Rendering a Model from a Template
 * [Pet-store](petstore) - Running as an MSA Application
-* * [Hello World JPA](helloworld-JPA) - Simple JPA Hibernate based sample
+* [Hello World JPA](helloworld-JPA) - Simple JPA Hibernate based sample
 
