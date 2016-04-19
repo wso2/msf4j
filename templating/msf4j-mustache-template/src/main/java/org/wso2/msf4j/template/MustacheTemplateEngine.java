@@ -30,7 +30,7 @@ import java.io.StringWriter;
 public class MustacheTemplateEngine implements TemplateEngine {
 
     private MustacheFactory mustacheFactory;
-    private static MustacheTemplateEngine mustacheTemplateEngine = null;
+    private static MustacheTemplateEngine mustacheTemplateEngine = new MustacheTemplateEngine();
 
     /**
      * Constructs a mustache template engine
@@ -62,13 +62,6 @@ public class MustacheTemplateEngine implements TemplateEngine {
      * @return MustacheTemplateEngine singleton
      */
     public static MustacheTemplateEngine instance() {
-        if (mustacheTemplateEngine == null) {
-            synchronized (MustacheTemplateEngine.class) {
-                if (mustacheTemplateEngine == null) {
-                    mustacheTemplateEngine = new MustacheTemplateEngine();
-                }
-            }
-        }
         return mustacheTemplateEngine;
     }
 }

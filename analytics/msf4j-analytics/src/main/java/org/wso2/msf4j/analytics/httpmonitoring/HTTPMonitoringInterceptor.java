@@ -54,12 +54,7 @@ public class HTTPMonitoringInterceptor implements Interceptor {
     public HTTPMonitoringInterceptor init() {
         HTTPMonitoringDataPublisher.init();
         // Destroy the publisher at shutdown
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            @Override
-            public void run() {
-                HTTPMonitoringDataPublisher.destroy();
-            }
-        });
+        Runtime.getRuntime().addShutdownHook(new ShutdownHook());
         return this;
     }
 
@@ -105,7 +100,14 @@ public class HTTPMonitoringInterceptor implements Interceptor {
         }
     }
 
-    private class HTTPInterceptor implements Interceptor {
+    private static class ShutdownHook extends Thread {
+        @Override
+        public void run() {
+            HTTPMonitoringDataPublisher.destroy();
+        }
+    }
+
+    private static class HTTPInterceptor implements Interceptor {
 
         private static final String DEFAULT_TRACE_ID = "DEFAULT";
 
@@ -128,7 +130,7 @@ public class HTTPMonitoringInterceptor implements Interceptor {
             this.tracing = tracing;
         }
 
-        public boolean isTracing() {
+        boolean isTracing() {
             return tracing;
         }
 

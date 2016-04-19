@@ -18,6 +18,9 @@
 
 package com.wso2.jwt.token.builder;
 
+/**
+ * Constants.
+ */
 public class Constants {
 
     public static final String CUSTOMER_ID_CLAIM_URI = "customer_id";

@@ -16,8 +16,8 @@
 
 package org.wso2.msf4j.example;
 
-import java.util.Map;
-
+import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.msf4j.Interceptor;
@@ -25,9 +25,11 @@ import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.ServiceMethodInfo;
 
-import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
-import com.nimbusds.jwt.SignedJWT;
+import java.util.Map;
 
+/**
+ * Interceptor for handling custom JWT claims.
+ */
 public class CustomJWTClaimsInterceptor implements Interceptor {
 
     private static final String JWT_HEADER = "X-JWT-Assertion";

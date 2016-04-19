@@ -33,7 +33,7 @@ public class TextPlainConverter extends MediaTypeConverter {
      */
     @Override
     public String[] getSupportedMediaTypes() {
-        return null;
+        return new String[0];
     }
 
     /**

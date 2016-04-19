@@ -52,6 +52,9 @@ import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * JWTAccessTokenBuilder.
+ */
 public class JWTAccessTokenBuilder extends OauthTokenIssuerImpl {
 
     /**
@@ -232,12 +235,16 @@ public class JWTAccessTokenBuilder extends OauthTokenIssuerImpl {
                 privateKey = privateKeys.get(tenantId);
             }
             JWSSigner signer = new RSASSASigner((RSAPrivateKey) privateKey);
-            SignedJWT signedJWT = new SignedJWT(new JWSHeader((JWSAlgorithm) signatureAlgorithm), jwtClaimsSet);
-            signedJWT.sign(signer);
-            return signedJWT.serialize();
+            SignedJWT signedJWT = null;
+            if (signatureAlgorithm instanceof JWSAlgorithm) {
+                signedJWT = new SignedJWT(new JWSHeader((JWSAlgorithm) signatureAlgorithm), jwtClaimsSet);
+                signedJWT.sign(signer);
+                return signedJWT.serialize();
+            }
         } catch (JOSEException e) {
             throw new IdentityOAuth2Exception("Error occurred while signing JWT", e);
         }
+        return null;
     }
 
     protected String signJWTWithRSA(JWTClaimsSet jwtClaimsSet, OAuthAuthzReqMessageContext request)
@@ -276,12 +283,16 @@ public class JWTAccessTokenBuilder extends OauthTokenIssuerImpl {
                 privateKey = privateKeys.get(tenantId);
             }
             JWSSigner signer = new RSASSASigner((RSAPrivateKey) privateKey);
-            SignedJWT signedJWT = new SignedJWT(new JWSHeader((JWSAlgorithm) signatureAlgorithm), jwtClaimsSet);
-            signedJWT.sign(signer);
-            return signedJWT.serialize();
+            SignedJWT signedJWT = null;
+            if (signatureAlgorithm instanceof JWSAlgorithm) {
+                signedJWT = new SignedJWT(new JWSHeader((JWSAlgorithm) signatureAlgorithm), jwtClaimsSet);
+                signedJWT.sign(signer);
+                return signedJWT.serialize();
+            }
         } catch (JOSEException e) {
             throw new IdentityOAuth2Exception("Error occurred while signing JWT", e);
         }
+        return null;
     }
 
     /**

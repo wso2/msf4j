@@ -44,14 +44,6 @@ public class MSF4JResponse extends Response {
     private MultivaluedMap<String, String> headers;
     private MediaType type;
 
-    public void setEntity(Object entity) {
-        this.entity = entity;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
     public void setHeaders(MultivaluedMap<String, String> headers) {
         this.headers = headers;
     }
@@ -59,6 +51,10 @@ public class MSF4JResponse extends Response {
     @Override
     public int getStatus() {
         return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     @Override
@@ -69,6 +65,10 @@ public class MSF4JResponse extends Response {
     @Override
     public Object getEntity() {
         return entity;
+    }
+
+    public void setEntity(Object entity) {
+        this.entity = entity;
     }
 
     @Override

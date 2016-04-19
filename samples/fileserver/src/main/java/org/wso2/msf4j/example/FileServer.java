@@ -44,7 +44,7 @@ import javax.ws.rs.core.Response;
 public class FileServer {
 
     private static final Logger log = LoggerFactory.getLogger(FileServer.class);
-    private static final String MOUNT_PATH = "/var/www/html/upload";
+    private static final String MOUNT_PATH = "var/www/html/upload";
 
     @POST
     @Path("/{fileName}")

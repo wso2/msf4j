@@ -22,11 +22,10 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.wso2.carbon.metrics.annotation.Counted;
 import org.wso2.carbon.metrics.annotation.Metered;
 import org.wso2.carbon.metrics.annotation.Timed;
-import org.wso2.msf4j.analytics.httpmonitoring.HTTPMonitored;
 import org.wso2.msf4j.Microservice;
+import org.wso2.msf4j.analytics.httpmonitoring.HTTPMonitored;
 
 import java.util.Random;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -48,12 +47,12 @@ public class DemoService implements Microservice {
     private long total = 0L;
 
     @Activate
-    protected void activate(BundleContext bundleContext){
+    protected void activate(BundleContext bundleContext) {
         // Nothing to do
     }
 
     @Deactivate
-    protected void deactivate(BundleContext bundleContext){
+    protected void deactivate(BundleContext bundleContext) {
         // Nothing to do
     }
 

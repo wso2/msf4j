@@ -1,13 +1,13 @@
 /**
  * Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,33 +18,34 @@
 package org.wso2.sample.is.sso.agent;
 
 import org.wso2.carbon.identity.sso.agent.SSOAgentConstants;
-import org.wso2.carbon.identity.sso.agent.bean.SSOAgentConfig;
 import org.wso2.carbon.identity.sso.agent.SSOAgentException;
+import org.wso2.carbon.identity.sso.agent.bean.SSOAgentConfig;
 import org.wso2.carbon.identity.sso.agent.saml.SSOAgentX509Credential;
 import org.wso2.carbon.identity.sso.agent.saml.SSOAgentX509KeyStoreCredential;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 
+/**
+ * SampleContextEventListener.
+ */
 public class SampleContextEventListener implements ServletContextListener {
 
-    private static Logger LOGGER = Logger.getLogger("org.wso2.sample.is.sso.agent");
+    private static final Logger LOGGER = Logger.getLogger("org.wso2.sample.is.sso.agent");
 
-    private static Properties properties;
+    private static Properties properties = new Properties();
 
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-
-        properties = new Properties();
         try {
-            if(servletContextEvent.getServletContext().getContextPath().contains("travelocity.com")) {
+            if (servletContextEvent.getServletContext().getContextPath().contains("travelocity.com")) {
                 properties.load(servletContextEvent.getServletContext().
                         getResourceAsStream("/WEB-INF/classes/travelocity.properties"));
-            } else if(servletContextEvent.getServletContext().getContextPath().contains("avis.com")) {
+            } else if (servletContextEvent.getServletContext().getContextPath().contains("avis.com")) {
                 properties.load(servletContextEvent.getServletContext().
                         getResourceAsStream("/WEB-INF/classes/avis.properties"));
             }
@@ -62,7 +63,7 @@ public class SampleContextEventListener implements ServletContextListener {
             config.getOpenId().setAttributesRequestor(new SampleAttributesRequestor());
             servletContextEvent.getServletContext().
                     setAttribute(SSOAgentConstants.CONFIG_BEAN_NAME, config);
-        } catch (IOException e){
+        } catch (IOException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
         } catch (SSOAgentException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
@@ -77,7 +78,7 @@ public class SampleContextEventListener implements ServletContextListener {
      * Get the properties of the sample
      * @return Properties
      */
-    public static Properties getProperties(){
+    public static Properties getProperties() {
         return properties;
     }
 }

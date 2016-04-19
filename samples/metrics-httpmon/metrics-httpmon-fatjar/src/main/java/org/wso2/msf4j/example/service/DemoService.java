@@ -21,7 +21,6 @@ import org.wso2.carbon.metrics.annotation.Timed;
 import org.wso2.msf4j.analytics.httpmonitoring.HTTPMonitored;
 
 import java.util.Random;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -30,7 +29,7 @@ import javax.ws.rs.PathParam;
  * Demonstrating the use of Metrics and HTTP Monitoring Annotations.
  */
 @Path("/demo")
-@HTTPMonitored (tracing = true)
+@HTTPMonitored(tracing = true)
 public class DemoService {
 
     private final Random random = new Random();

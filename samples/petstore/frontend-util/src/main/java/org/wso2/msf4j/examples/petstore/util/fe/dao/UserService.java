@@ -20,7 +20,6 @@ import org.wso2.msf4j.examples.petstore.util.fe.client.UserServiceClient;
 import org.wso2.msf4j.examples.petstore.util.fe.model.UserServiceException;
 import org.wso2.msf4j.examples.petstore.util.model.User;
 
-import java.util.logging.Logger;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;

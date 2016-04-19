@@ -382,20 +382,20 @@ public class LDAPServerConfigurationBuilder {
     /**
      * Read properties from KDCConfiguration element in configuration and set them in the
      * kdcConfigurations object.
+     * KDC configurations
+     * <p>
+     * &lt;KDCServer&gt;
+     * &lt;Property name="name"&gt;defaultKDC&lt;/Property&gt;
+     * &lt;Property name="enabled"&gt;false&lt;/Property&gt;
+     * &lt;Property name="protocol"&gt;UDP&lt;/Property&gt;
+     * &lt;Property name="host"&gt;localhost&lt;/Property&gt;
+     * &lt;Property name="maximumTicketLifeTime"&gt;8640000&lt;/Property&gt;
+     * &lt;Property name="maximumRenewableLifeTime"&gt;604800000&lt;/Property&gt;
+     * &lt;Property name="preAuthenticationTimeStampEnabled"&gt;true&lt;/Property&gt;
+     * &lt;/KDCServer&gt;
      *
      * @param kdcConfigElement
-     * @throws org.wso2.carbon.ldap.server.util.EmbeddingLDAPException <p>
-     *                                                                 KDC configurations
-     *                                                                 <p>
-     *                                                                 &lt;KDCServer&gt;
-     *                                                                 &lt;Property name="name"&gt;defaultKDC&lt;/Property&gt;
-     *                                                                 &lt;Property name="enabled"&gt;false&lt;/Property&gt;
-     *                                                                 &lt;Property name="protocol"&gt;UDP&lt;/Property&gt;
-     *                                                                 &lt;Property name="host"&gt;localhost&lt;/Property&gt;
-     *                                                                 &lt;Property name="maximumTicketLifeTime"&gt;8640000&lt;/Property&gt;
-     *                                                                 &lt;Property name="maximumRenewableLifeTime"&gt;604800000&lt;/Property&gt;
-     *                                                                 &lt;Property name="preAuthenticationTimeStampEnabled"&gt;true&lt;/Property&gt;
-     *                                                                 &lt;/KDCServer&gt;
+     * @throws org.wso2.carbon.ldap.server.util.EmbeddingLDAPException
      */
     private void buildKDCConfigurations(OMElement kdcConfigElement)
             throws EmbeddingLDAPException {

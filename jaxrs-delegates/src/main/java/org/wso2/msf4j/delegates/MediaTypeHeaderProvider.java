@@ -19,6 +19,7 @@
 
 package org.wso2.msf4j.delegates;
 
+import java.util.Locale;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.RuntimeDelegate.HeaderDelegate;
 
@@ -49,8 +50,8 @@ public class MediaTypeHeaderProvider implements HeaderDelegate<MediaType> {
         String type = mType.substring(0, i);
         String subtype = mType.substring(i + 1, end);
 
-        return new MediaType(type.trim().toLowerCase(),
-                subtype.trim().toLowerCase());
+        return new MediaType(type.trim().toLowerCase(Locale.US),
+                subtype.trim().toLowerCase(Locale.US));
     }
 
     /**

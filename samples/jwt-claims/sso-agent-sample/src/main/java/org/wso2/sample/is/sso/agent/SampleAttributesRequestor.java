@@ -20,8 +20,14 @@ package org.wso2.sample.is.sso.agent;
 
 import org.wso2.carbon.identity.sso.agent.openid.AttributesRequestor;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+/**
+ *  SampleAttributesRequestor.
+ */
 public class SampleAttributesRequestor implements AttributesRequestor {
 
     List<String> requestedAttributes = new ArrayList<String>();
@@ -32,24 +38,24 @@ public class SampleAttributesRequestor implements AttributesRequestor {
     public void init() {
         requestedAttributes.add("nickname");
         requiredMap.put("nickname", true);
-        typeURIMap.put("nickname","http://axschema.org/namePerson/first");
-        countMap.put("nickname",1);
+        typeURIMap.put("nickname", "http://axschema.org/namePerson/first");
+        countMap.put("nickname", 1);
         requestedAttributes.add("lastname");
         requiredMap.put("lastname", true);
-        typeURIMap.put("lastname","http://axschema.org/namePerson/last");
-        countMap.put("lastname",1);
+        typeURIMap.put("lastname", "http://axschema.org/namePerson/last");
+        countMap.put("lastname", 1);
         requestedAttributes.add("email");
         requiredMap.put("email", true);
-        typeURIMap.put("email","http://axschema.org/contact/email");
-        countMap.put("email",0);
+        typeURIMap.put("email", "http://axschema.org/contact/email");
+        countMap.put("email", 0);
         requestedAttributes.add("country");
         requiredMap.put("country", true);
-        typeURIMap.put("country","http://axschema.org/contact/country/home");
-        countMap.put("country",1);
+        typeURIMap.put("country", "http://axschema.org/contact/country/home");
+        countMap.put("country", 1);
         requestedAttributes.add("dob");
         requiredMap.put("dob", true);
-        typeURIMap.put("dob","http://axschema.org/birthDate");
-        countMap.put("dob",1);
+        typeURIMap.put("dob", "http://axschema.org/birthDate");
+        countMap.put("dob", 1);
     }
 
     public String[] getRequestedAttributes(String s) {

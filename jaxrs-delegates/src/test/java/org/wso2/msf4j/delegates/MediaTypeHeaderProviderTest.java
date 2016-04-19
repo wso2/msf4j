@@ -20,7 +20,6 @@
 package org.wso2.msf4j.delegates;
 
 
-
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

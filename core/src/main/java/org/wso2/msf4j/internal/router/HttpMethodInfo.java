@@ -25,6 +25,7 @@ import org.wso2.msf4j.Response;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 /**
  * HttpMethodInfo is a helper class having state information about the http handler method to be invoked, the handler
@@ -55,7 +56,7 @@ public class HttpMethodInfo {
                           Response responder) {
         this.method = method;
         this.handler = handler;
-        this.args = args;
+        this.args = Arrays.copyOf(args, args.length);
         this.responder = responder;
     }
 

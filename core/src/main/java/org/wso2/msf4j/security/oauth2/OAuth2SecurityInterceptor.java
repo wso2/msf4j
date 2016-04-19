@@ -32,6 +32,7 @@ import org.wso2.msf4j.util.SystemVariableUtil;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Locale;
 import java.util.Map;
 import javax.ws.rs.HttpMethod;
 
@@ -127,7 +128,7 @@ public class OAuth2SecurityInterceptor implements Interceptor {
      */
     private String extractAccessToken(String authHeader) throws MSF4JSecurityException {
         authHeader = authHeader.trim();
-        if (authHeader.toLowerCase().startsWith(BEARER_PREFIX)) {
+        if (authHeader.toLowerCase(Locale.US).startsWith(BEARER_PREFIX)) {
             // Split the auth header to get the access token.
             // Value should be in this format ("Bearer" 1*SP b64token)
             String[] authHeaderParts = authHeader.split(" ");
@@ -167,8 +168,7 @@ public class OAuth2SecurityInterceptor implements Interceptor {
      */
     private Map<String, String> getResponseDataMap(String responseStr) {
         Gson gson = new Gson();
-        Type typeOfMapOfStrings = new TypeToken<Map<String, String>>() {
-        }.getType();
+        Type typeOfMapOfStrings = TypeToken.get(Map.class).getType();
         return gson.fromJson(responseStr, typeOfMapOfStrings);
     }
 

@@ -76,10 +76,14 @@ public class XmlConverter extends MediaTypeConverter {
     public Object toObject(ByteBuffer content, Type targetType) throws BeanConversionException {
         try {
             String str = Charset.defaultCharset().decode(content).toString();
-            JAXBContext jaxbContext = JAXBContext.newInstance((Class) targetType);
-            return jaxbContext.createUnmarshaller().unmarshal(new StringReader(str));
+            JAXBContext jaxbContext = null;
+            if (targetType instanceof Class) {
+                jaxbContext = JAXBContext.newInstance((Class) targetType);
+                return jaxbContext.createUnmarshaller().unmarshal(new StringReader(str));
+            }
         } catch (JAXBException e) {
             throw new BeanConversionException("Unable to perform xml to object conversion", e);
         }
+        return null;
     }
 }

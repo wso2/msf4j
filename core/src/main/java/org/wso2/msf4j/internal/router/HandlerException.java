@@ -26,7 +26,7 @@ import javax.ws.rs.core.Response;
  */
 public class HandlerException extends Exception {
 
-    private final transient Response.Status failureStatus;
+    private final Response.Status failureStatus;
     private final String message;
 
     public HandlerException(Response.Status failureStatus, String message) {

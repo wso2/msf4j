@@ -25,7 +25,6 @@ import org.wso2.msf4j.examples.petstore.util.fe.model.PetServiceException;
 import org.wso2.msf4j.examples.petstore.util.model.Pet;
 
 import java.util.List;
-import java.util.logging.Logger;
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;

@@ -19,6 +19,7 @@ package org.wso2.msf4j.internal.beanconversion;
 import org.wso2.msf4j.beanconversion.MediaTypeConverter;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -44,7 +45,7 @@ public class BeanConverter {
      * @return MediaTypeConverter
      */
     public MediaTypeConverter getConverter(String mediaType) {
-        MediaTypeConverter mediaTypeConverter = converterMap.get(mediaType.toLowerCase());
+        MediaTypeConverter mediaTypeConverter = converterMap.get(mediaType.toLowerCase(Locale.US));
         if (mediaTypeConverter == null) {
             mediaTypeConverter = DEFAULT_CONVERTER;
         }
@@ -56,7 +57,7 @@ public class BeanConverter {
      */
     public void addMediaTypeConverter(MediaTypeConverter mediaTypeConverter) {
         for (String mediaType : mediaTypeConverter.getSupportedMediaTypes()) {
-            converterMap.put(mediaType.toLowerCase(), mediaTypeConverter);
+            converterMap.put(mediaType.toLowerCase(Locale.US), mediaTypeConverter);
         }
     }
 

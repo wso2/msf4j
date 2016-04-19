@@ -66,12 +66,7 @@ public class MetricsInterceptor implements Interceptor {
     public MetricsInterceptor init(MetricReporter... metricReporters) {
         Metrics.init(metricReporters);
         // Destroy the Metric Service at shutdown
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            @Override
-            public void run() {
-                Metrics.destroy();
-            }
-        });
+        Runtime.getRuntime().addShutdownHook(new ShutdownHook());
         return this;
     }
 
@@ -229,6 +224,13 @@ public class MetricsInterceptor implements Interceptor {
             if (!monotonic) {
                 counter.dec();
             }
+        }
+    }
+
+    private static class ShutdownHook extends Thread {
+        @Override
+        public void run() {
+            Metrics.destroy();
         }
     }
 }

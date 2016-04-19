@@ -18,6 +18,9 @@ package org.wso2.msf4j.example;
 
 import org.wso2.msf4j.security.basic.AbstractBasicAuthSecurityInterceptor;
 
+/**
+ * A simple security interceptor which handled username/password based authentication
+ */
 public class UsernamePasswordSecurityInterceptor extends AbstractBasicAuthSecurityInterceptor {
 
     @Override

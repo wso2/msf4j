@@ -40,4 +40,7 @@ public class Stocks {
         this.stocks = stocks;
     }
 
+    public Collection<Stock> getStocks() {
+        return stocks;
+    }
 }

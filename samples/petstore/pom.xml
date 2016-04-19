@@ -45,7 +45,7 @@
 
     <modules>
         <module>util</module>
-        <module>frontend-util</module>
+        <!--<module>frontend-util</module>-->
         <module>microservices/pet</module>
         <module>microservices/transaction</module>
         <module>microservices/security</module>
