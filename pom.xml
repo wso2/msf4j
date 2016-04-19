@@ -105,6 +105,7 @@
         <module>poms/parent</module>
         <module>jaxrs-delegates</module>
         <module>core</module>
+        <module>spring</module>
         <module>poms/msf4j-service</module>
         <module>analytics/msf4j-analytics</module>
         <module>templating/msf4j-mustache-template</module>
@@ -127,6 +128,7 @@
         <module>samples/log-interceptor-bundle</module>
         <module>samples/lifecycle</module>
         <module>samples/jwt-claims</module>
+        <module>samples/spring-helloworld</module>
     </modules>
 
     <properties>

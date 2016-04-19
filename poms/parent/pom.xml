@@ -558,6 +558,7 @@
         <testng.version>6.9.4</testng.version>
         <maven.paxexam.plugin.version>1.2.4</maven.paxexam.plugin.version>
         <org.jacoco.ant.version>0.7.5.201505241946</org.jacoco.ant.version>
+        <org.springframework.version>4.1.7.RELEASE</org.springframework.version>
 
     </properties>
 
