@@ -18,18 +18,7 @@ mvn clean package
 java -jar target/HelloWorld-JPA-1.0.0-SNAPSHOT.jar
 ```
 
-# How to build and run using Gradle 
 
-1. Run following command 
-```shell
-gradle 
-```
- 
-2. Run the application using following java commend 
-
-```shell
-java -jar build/libs/HelloWorld-JPA-all.jar 
-```
 
 # How to test this sample 
 Use following cURL commands
