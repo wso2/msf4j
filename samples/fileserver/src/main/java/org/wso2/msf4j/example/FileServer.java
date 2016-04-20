@@ -44,7 +44,7 @@ import javax.ws.rs.core.Response;
 public class FileServer {
 
     private static final Logger log = LoggerFactory.getLogger(FileServer.class);
-    private static final String MOUNT_PATH = "var/www/html/upload";
+    private static final java.nio.file.Path MOUNT_PATH = Paths.get(File.separator + "var", "www", "html", "upload");
 
     @POST
     @Path("/{fileName}")
@@ -57,7 +57,7 @@ public class FileServer {
     @GET
     @Path("/{fileName}")
     public Response getFile(@PathParam("fileName") String fileName) {
-        File file = Paths.get(MOUNT_PATH, fileName).toFile();
+        File file = Paths.get(MOUNT_PATH.toString(), fileName).toFile();
         if (file.exists()) {
             return Response.ok(file).build();
         }
@@ -69,7 +69,7 @@ public class FileServer {
         private org.wso2.msf4j.Response response;
 
         public HttpStreamHandlerImpl(String fileName) throws FileNotFoundException {
-            File file = Paths.get(MOUNT_PATH, fileName).toFile();
+            File file = Paths.get(MOUNT_PATH.toString(), fileName).toFile();
             if (file.getParentFile().exists() || file.getParentFile().mkdirs()) {
                 fileChannel = new FileOutputStream(file).getChannel();
             }
