@@ -36,7 +36,6 @@ import org.wso2.msf4j.Microservice;
         immediate = true,
         service = RequiredCapabilityListener.class,
         property = {
-                "capability-name=org.wso2.msf4j.Microservice, org.wso2.msf4j.Interceptor",
                 "component-key=wso2-microservices-server"
         }
 )
