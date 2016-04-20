@@ -67,6 +67,6 @@
         </dependency>
     </dependencies>
     <properties>
-        <microservice.mainClass>org.wso2.msf4j.spring.example.helloworld.Application</microservice.mainClass>
+        <microservice.mainClass>org.wso2.msf4j.spring.example.helloworld.Applicationd</microservice.mainClass>
     </properties>
 </project>

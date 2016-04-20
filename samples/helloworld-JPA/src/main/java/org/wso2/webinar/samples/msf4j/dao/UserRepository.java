@@ -24,6 +24,10 @@ import org.wso2.webinar.samples.msf4j.model.User;
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
 
+/**
+ * UserRepository class which is extended from AbstractRepository class.
+ *
+ */
 public class UserRepository extends AbstractRepository<User> {
 
     public UserRepository(EntityManagerFactory emf) {

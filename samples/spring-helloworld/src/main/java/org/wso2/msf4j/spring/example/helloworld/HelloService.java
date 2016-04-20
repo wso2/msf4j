@@ -18,6 +18,9 @@ package org.wso2.msf4j.spring.example.helloworld;
 
 import org.springframework.stereotype.Component;
 
+/**
+ * HelloService class to be injected to Hello resource through Spring
+ */
 @Component
 public class HelloService {
 

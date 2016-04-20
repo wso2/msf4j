@@ -23,6 +23,10 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
+/**
+ * Hello Resource class.
+ */
+
 @Component
 @Path("/hello")
 public class Hello {

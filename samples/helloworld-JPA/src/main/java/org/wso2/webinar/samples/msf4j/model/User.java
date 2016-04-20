@@ -25,6 +25,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * JPA annotated POJO class
+ */
+
 @Entity
 @Table(name = "user")
 public class User {

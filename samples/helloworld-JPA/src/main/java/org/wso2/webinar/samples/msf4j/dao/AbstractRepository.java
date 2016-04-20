@@ -28,6 +28,11 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+/**
+ *
+ * Abstract Repository class
+ * @param <T>
+ */
 public abstract class AbstractRepository<T> {
 
     private EntityManagerFactory emf;

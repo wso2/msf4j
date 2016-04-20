@@ -27,6 +27,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
+/**
+ * Annotated Resource class.
+ */
+
 @Path("/users")
 public class UserResource {
 

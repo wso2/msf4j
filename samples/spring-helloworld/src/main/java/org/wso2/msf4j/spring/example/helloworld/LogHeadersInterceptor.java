@@ -26,6 +26,9 @@ import org.wso2.msf4j.ServiceMethodInfo;
 
 import java.util.Map;
 
+/**
+ * Spring based MSF4J Interceptor
+ */
 @Component
 public class LogHeadersInterceptor implements Interceptor {
 
