@@ -243,6 +243,7 @@
             org.wso2.carbon.metrics.impl.*;version="${carbon.metrics.version.range}",
             org.wso2.carbon.databridge.agent.*;version="${carbon.analytics.common.version.range}",
             org.wso2.carbon.databridge.commons.*;version="${carbon.analytics.common.version.range}",
+            org.wso2.carbon.kernel.startupresolver.*;version="${carbon.kernel.version.range}",
             org.wso2.msf4j.*,
             org.wso2.msf4j.util.*,
             javax.ws.rs.*,
