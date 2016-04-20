@@ -66,7 +66,7 @@ public class MSF4JSpringApplication {
 
     private void registerIfAnnotationConfigApplicationContext(ConfigurableApplicationContext context) {
         if (context instanceof AnnotationConfigApplicationContext) {
-            String packagesForScan = getPackagesForScan();
+//            String packagesForScan = getPackagesForScan();
             ((AnnotationConfigApplicationContext) context).register(MSF4JSpringConfiguration.class,
                                                                     configurationClass);
         }
@@ -100,7 +100,38 @@ public class MSF4JSpringApplication {
         return (ConfigurableApplicationContext) BeanUtils.instantiate(contextClass);
     }
 
+    public Class<?> getConfigurationClass() {
+        return configurationClass;
+    }
 
+    public void setConfigurationClass(Class<?> configurationClass) {
+        this.configurationClass = configurationClass;
+    }
+
+    public Class<? extends ConfigurableApplicationContext> getApplicationContextClass() {
+        return applicationContextClass;
+    }
+
+    public void setApplicationContextClass(
+            Class<? extends ConfigurableApplicationContext> applicationContextClass) {
+        this.applicationContextClass = applicationContextClass;
+    }
+
+    public ResourceLoader getResourceLoader() {
+        return resourceLoader;
+    }
+
+    public void setResourceLoader(ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
+    }
+
+    public List<ApplicationContextInitializer<?>> getInitializers() {
+        return initializers;
+    }
+
+    public void setInitializers(List<ApplicationContextInitializer<?>> initializers) {
+        this.initializers = initializers;
+    }
 }
 
 
