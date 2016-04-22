@@ -38,10 +38,12 @@ public class InterceptorCapabilityProvider implements CapabilityProvider {
      * 1. {@code HTTPMonitoringInterceptor}
      * 2. {@code MetricsInterceptor}
      *
+     * But here we return count as one, due to a bug in the startup launcher in Kernel.
+     *
      * @return count of {@code Interceptor} services registered by this bundle.
      */
     @Override
     public int getCount() {
-        return 2;
+        return 1;
     }
 }
