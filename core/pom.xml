@@ -301,9 +301,11 @@
             org.wso2.carbon.messaging.*
         </import.package>
         <provide.capability>
-            osgi.service;effective:=active;
-            objectClass="org.wso2.msf4j.internal.MicroservicesServerSC";
-            dependent-component-key="carbon-transport-mgt",
+            osgi.service;effective:=active;objectClass="org.wso2.msf4j.internal.MicroservicesServerSC";
+            dependent-component-key="carbon-transport-mgt"
         </provide.capability>
+        <startup.component>
+            wso2-microservices-server;required-service="org.wso2.msf4j.Microservice,org.wso2.msf4j.Interceptor"
+        </startup.component>
     </properties>
 </project>
