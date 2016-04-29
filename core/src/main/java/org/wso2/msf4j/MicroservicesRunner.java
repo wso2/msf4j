@@ -15,9 +15,6 @@
  */
 package org.wso2.msf4j;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import io.swagger.jaxrs.config.BeanConfig;
-import io.swagger.util.Json;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.kernel.transports.TransportManager;
@@ -31,12 +28,12 @@ import org.wso2.carbon.transport.http.netty.internal.NettyTransportContextHolder
 import org.wso2.carbon.transport.http.netty.listener.NettyListener;
 import org.wso2.msf4j.internal.MSF4JMessageProcessor;
 import org.wso2.msf4j.internal.MicroservicesRegistry;
+import org.wso2.msf4j.internal.swagger.MSF4JBeanConfig;
+import org.wso2.msf4j.internal.swagger.SwaggerDefinitionService;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * This runner initializes the microservices runtime, deploys the microservices and service interceptors,
@@ -49,8 +46,7 @@ public class MicroservicesRunner {
     private long startTime = System.currentTimeMillis();
     private boolean isStarted;
     private MicroservicesRegistry msRegistry = MicroservicesRegistry.newInstance();
-    private BeanConfig swaggerBeanConfig = new BeanConfig();
-    private List<String> swaggerScanPackages = new ArrayList<>();
+    private MSF4JBeanConfig swaggerBeanConfig = new MSF4JBeanConfig();
 
     /**
      * Creates a MicroservicesRunner instance which will be used for deploying microservices. Allows specifying
@@ -114,8 +110,7 @@ public class MicroservicesRunner {
 
     public MicroservicesRunner deploy(Object microservice) {
         checkState();
-        String packageName = microservice.getClass().getPackage().getName();
-        swaggerScanPackages.add(packageName);
+        swaggerBeanConfig.addServiceClass(microservice.getClass());
         msRegistry.addHttpService(microservice);
         return this;
     }
@@ -143,15 +138,10 @@ public class MicroservicesRunner {
      * Start this Microservices runner. This will startup all the Netty transports.
      */
     public void start() {
-        String scanPackages = swaggerScanPackages.stream().collect(Collectors.joining(","));
-        swaggerBeanConfig.setResourcePackage(scanPackages);
-        swaggerBeanConfig.setPrettyPrint(true);
         swaggerBeanConfig.setScan(true);
-        try {
-            log.info(Json.mapper().writerWithDefaultPrettyPrinter().writeValueAsString(swaggerBeanConfig.getSwagger()));
-        } catch (JsonProcessingException e) {
-            log.error(e.getMessage(), e);
-        }
+
+        // Deploy the Swagger definition service which will return the Swagger definition.
+        deploy(new SwaggerDefinitionService(swaggerBeanConfig));
 
         handleServiceLifecycleMethods();
         transportManager.startTransports();
