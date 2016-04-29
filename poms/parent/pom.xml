@@ -287,6 +287,39 @@
                 <artifactId>org.apache.servicemix.bundles.commons-beanutils</artifactId>
                 <version>${beanutils.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-core</artifactId>
+                <version>${io.swagger.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.yaml</groupId>
+                        <artifactId>snakeyaml</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-jaxrs</artifactId>
+                <version>${io.swagger.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.ws.rs</groupId>
+                        <artifactId>jsr311-api</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${io.swagger.version}</version>
+            </dependency>
+
             <!-- Metrics Dependencies - Start -->
             <dependency>
                 <groupId>org.wso2.carbon.metrics</groupId>
@@ -515,6 +548,7 @@
         <logback.version>1.0.9</logback.version>
         <nimbus.jose.jwt.version>2.25</nimbus.jose.jwt.version>
         <axiom.impl.version>1.2.11</axiom.impl.version>
+        <io.swagger.version>1.5.8</io.swagger.version>
 
         <osgi.framework.import.version.range>[1.8.0, 2.0.0)</osgi.framework.import.version.range>
         <osgi.service.tracker.import.version.range>[1.5.1, 2.0.0)</osgi.service.tracker.import.version.range>
