@@ -18,7 +18,6 @@
  */
 package org.wso2.msf4j.internal.swagger;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.util.Json;
 
 import javax.ws.rs.GET;
@@ -37,7 +36,7 @@ public class SwaggerDefinitionService {
     }
 
     @GET
-    public String getSwaggerDefinition() throws JsonProcessingException {
+    public String getSwaggerDefinition() throws Exception {
         return Json.mapper().
                 writerWithDefaultPrettyPrinter().writeValueAsString(swaggerBeanConfig.getSwagger());
     }

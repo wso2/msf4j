@@ -61,6 +61,18 @@
             <groupId>org.wso2.msf4j</groupId>
             <artifactId>jaxrs-delegates</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-jaxrs</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+        </dependency>
         <!-- Metrics Dependencies - Start -->
         <dependency>
             <groupId>org.wso2.carbon.metrics</groupId>
@@ -174,6 +186,18 @@
                                 <bundle>
                                     <symbolicName>org.apache.servicemix.bundles.commons-beanutils</symbolicName>
                                     <version>${beanutils.osgi.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>io.swagger.core</symbolicName>
+                                    <version>${io.swagger.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>io.swagger.jaxrs</symbolicName>
+                                    <version>${io.swagger.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>io.swagger.annotations</symbolicName>
+                                    <version>${io.swagger.version}</version>
                                 </bundle>
                                 <!-- Metrics Bundles - Start -->
                                 <bundle>
