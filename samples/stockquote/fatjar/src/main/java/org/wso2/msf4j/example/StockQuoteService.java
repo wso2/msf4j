@@ -120,7 +120,7 @@ public class StockQuoteService {
     @ApiOperation(
             value = "Get all stocks",
             notes = "Returns all stock items",
-            response = Stock.class,
+            response = Stocks.class,
             responseContainer = "List")
     public Stocks getAllStocks() {
         return new Stocks(stockQuotes.values());
