@@ -108,10 +108,9 @@ public class MicroservicesRunner {
      * @param microservice The microservice which is to be deployed
      * @return this MicroservicesRunner object
      */
-
     public MicroservicesRunner deploy(Object... microservice) {
         checkState();
-        Arrays.stream(microservice).forEach(service -> {
+        Arrays.stream(microservice).parallel().forEach(service -> {
             swaggerBeanConfig.addServiceClass(service.getClass());
             msRegistry.addHttpService(service);
         });
