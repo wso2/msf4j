@@ -32,8 +32,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>commons-io</groupId>
+            <groupId>commons-io.wso2</groupId>
             <artifactId>commons-io</artifactId>
+            <version>2.4.0.wso2v1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -53,15 +54,23 @@
         <dependency>
             <groupId>com.nimbusds</groupId>
             <artifactId>nimbus-jose-jwt</artifactId>
+            <version>2.25</version>
         </dependency>
+
         <dependency>
             <groupId>org.apache.ws.commons.axiom</groupId>
             <artifactId>axiom-impl</artifactId>
+            <version>1.2.11</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.ldap.server</artifactId>
+            <version>5.0.0</version>
             <exclusions>
+                <exclusion>
+                    <groupId>org.wso2.carbon</groupId>
+                    <artifactId>org.wso2.carbon.core</artifactId>
+                </exclusion>
                 <exclusion>
                     <groupId>bouncycastle</groupId>
                     <artifactId>bcprov-jdk15</artifactId>

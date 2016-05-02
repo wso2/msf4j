@@ -449,22 +449,6 @@
                 <artifactId>nimbus-jose-jwt</artifactId>
                 <version>${nimbus.jose.jwt.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.apache.ws.commons.axiom</groupId>
-                <artifactId>axiom-impl</artifactId>
-                <version>${axiom.impl.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity</groupId>
-                <artifactId>org.wso2.carbon.ldap.server</artifactId>
-                <version>${carbon.ldap.server.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.wso2.carbon</groupId>
-                        <artifactId>org.wso2.carbon.core</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
             <!-- Test dependencies -->
             <dependency>
                 <groupId>commons-io</groupId>
@@ -526,7 +510,6 @@
         <commons-io.wso2.version>2.4.0.wso2v1</commons-io.wso2.version>
         <libthrift.wso2.version>0.8.0.wso2v1</libthrift.wso2.version>
         <commons.pool.version>1.5.6.wso2v1</commons.pool.version>
-        <carbon.ldap.server.version>5.0.0</carbon.ldap.server.version>
         <javax.ws.rs-api.fragment.version>1.0.0.wso2v1</javax.ws.rs-api.fragment.version>
 
         <osgi.api.version>6.0.0</osgi.api.version>
@@ -547,7 +530,6 @@
         <testng.version>6.9.4</testng.version>
         <logback.version>1.0.9</logback.version>
         <nimbus.jose.jwt.version>2.25</nimbus.jose.jwt.version>
-        <axiom.impl.version>1.2.11</axiom.impl.version>
         <io.swagger.version>1.5.8</io.swagger.version>
 
         <osgi.framework.import.version.range>[1.8.0, 2.0.0)</osgi.framework.import.version.range>
