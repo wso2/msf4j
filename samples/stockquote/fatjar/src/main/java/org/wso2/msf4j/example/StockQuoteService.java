@@ -15,6 +15,13 @@
  */
 package org.wso2.msf4j.example;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Contact;
+import io.swagger.annotations.Info;
+import io.swagger.annotations.License;
+import io.swagger.annotations.SwaggerDefinition;
+
 import java.util.HashMap;
 import java.util.Map;
 import javax.ws.rs.Consumes;
@@ -29,6 +36,18 @@ import javax.ws.rs.core.Response;
  * StockQuote sample. This service will be available at.
  * http://localhost:8080/stockquote
  */
+@Api(value = "stockquote")
+@SwaggerDefinition(
+        info = @Info(
+                title = "Stockquote Swagger Definition", version = "1.0",
+                description = "Stock quote service",
+                license = @License(name = "Apache 2.0", url = "http://www.apache.org/licenses/LICENSE-2.0"),
+                contact = @Contact(
+                        name = "Afkham Azeez",
+                        email = "azeez@wso2.com",
+                        url = "http://wso2.com"
+                ))
+)
 @Path("/stockquote")
 public class StockQuoteService {
 
@@ -54,6 +73,9 @@ public class StockQuoteService {
     @GET
     @Path("/{symbol}")
     @Produces({"application/json", "text/xml"})
+    @ApiOperation(
+            value = "Return stock quote corresponding to the symbol",
+            notes = "Returns HTTP 404 if the symbol is not found")
     public Response getQuote(@PathParam("symbol") String symbol) {
         Stock stock = stockQuotes.get(symbol);
         return (stock == null) ?
@@ -73,6 +95,9 @@ public class StockQuoteService {
      */
     @POST
     @Consumes("application/json")
+    @ApiOperation(
+            value = "Add a stock item",
+            notes = "Add a valid stock item")
     public void addStock(Stock stock) {
         stockQuotes.put(stock.getSymbol(), stock);
     }
@@ -87,6 +112,11 @@ public class StockQuoteService {
     @GET
     @Path("/all")
     @Produces({"application/json", "text/xml"})
+    @ApiOperation(
+            value = "Get all stocks",
+            notes = "Returns all stock items",
+            response = Stock.class,
+            responseContainer = "List")
     public Stocks getAllStocks() {
         return new Stocks(stockQuotes.values());
     }
