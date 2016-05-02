@@ -124,9 +124,11 @@ public class MicroservicesRunner {
      * @param interceptor The interceptor to be added.
      * @return this MicroservicesRunner object
      */
-    public MicroservicesRunner addInterceptor(Interceptor interceptor) {
+    public MicroservicesRunner addInterceptor(Interceptor... interceptor) {
         checkState();
-        msRegistry.addInterceptor(interceptor);
+        Arrays.stream(interceptor).parallel().forEach(i -> {
+            msRegistry.addInterceptor(i);
+        });
         return this;
     }
 
