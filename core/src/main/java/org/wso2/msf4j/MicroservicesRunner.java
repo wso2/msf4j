@@ -141,8 +141,6 @@ public class MicroservicesRunner {
      * Start this Microservices runner. This will startup all the Netty transports.
      */
     public void start() {
-        swaggerBeanConfig.setScan(true);
-
         // Deploy the Swagger definition service which will return the Swagger definition.
         deploy(new SwaggerDefinitionService(swaggerBeanConfig));
 

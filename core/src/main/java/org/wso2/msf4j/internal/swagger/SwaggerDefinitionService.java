@@ -30,6 +30,7 @@ import javax.ws.rs.Path;
 public class SwaggerDefinitionService {
 
     private MSF4JBeanConfig swaggerBeanConfig;
+    private boolean isSwaggerScanSet;
 
     public SwaggerDefinitionService(MSF4JBeanConfig swaggerBeanConfig) {
         this.swaggerBeanConfig = swaggerBeanConfig;
@@ -37,6 +38,10 @@ public class SwaggerDefinitionService {
 
     @GET
     public String getSwaggerDefinition() throws Exception {
+        if (!isSwaggerScanSet) {
+            swaggerBeanConfig.setScan(true);
+            isSwaggerScanSet = true;
+        }
         return Json.mapper().
                 writerWithDefaultPrettyPrinter().writeValueAsString(swaggerBeanConfig.getSwagger());
     }
