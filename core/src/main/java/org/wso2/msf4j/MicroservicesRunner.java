@@ -31,6 +31,7 @@ import org.wso2.msf4j.internal.MicroservicesRegistry;
 import org.wso2.msf4j.internal.swagger.MSF4JBeanConfig;
 import org.wso2.msf4j.internal.swagger.SwaggerDefinitionService;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -108,10 +109,12 @@ public class MicroservicesRunner {
      * @return this MicroservicesRunner object
      */
 
-    public MicroservicesRunner deploy(Object microservice) {
+    public MicroservicesRunner deploy(Object... microservice) {
         checkState();
-        swaggerBeanConfig.addServiceClass(microservice.getClass());
-        msRegistry.addHttpService(microservice);
+        Arrays.stream(microservice).forEach(service -> {
+            swaggerBeanConfig.addServiceClass(service.getClass());
+            msRegistry.addHttpService(service);
+        });
         return this;
     }
 
