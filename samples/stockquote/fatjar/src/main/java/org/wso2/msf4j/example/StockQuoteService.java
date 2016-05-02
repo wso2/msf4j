@@ -17,6 +17,8 @@ package org.wso2.msf4j.example;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Contact;
 import io.swagger.annotations.Info;
 import io.swagger.annotations.License;
@@ -76,6 +78,9 @@ public class StockQuoteService {
     @ApiOperation(
             value = "Return stock quote corresponding to the symbol",
             notes = "Returns HTTP 404 if the symbol is not found")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Valid stock item found"),
+            @ApiResponse(code = 404, message = "Stock item not found")})
     public Response getQuote(@PathParam("symbol") String symbol) {
         Stock stock = stockQuotes.get(symbol);
         return (stock == null) ?
