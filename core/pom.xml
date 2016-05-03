@@ -327,8 +327,6 @@
             org.wso2.carbon.kernel.transports.*;version="${carbon.kernel.version.range}",
             org.wso2.carbon.kernel.startupresolver.*;version="${carbon.kernel.version.range}",
             org.wso2.carbon.kernel.utils.*;version="${carbon.kernel.version.range}",
-            io.swagger.util.*,
-            io.swagger.jaxrs.*,
             org.wso2.carbon.messaging.*
         </import.package>
         <provide.capability>

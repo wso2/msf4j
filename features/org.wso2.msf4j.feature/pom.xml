@@ -61,34 +61,6 @@
             <groupId>org.wso2.msf4j</groupId>
             <artifactId>jaxrs-delegates</artifactId>
         </dependency>
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-models</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-jaxrs</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-annotations</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.dataformat</groupId>
-            <artifactId>jackson-dataformat-yaml</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-        </dependency>
 
         <!-- Metrics Dependencies - Start -->
         <dependency>
@@ -203,36 +175,6 @@
                                 <bundle>
                                     <symbolicName>org.apache.servicemix.bundles.commons-beanutils</symbolicName>
                                     <version>${beanutils.osgi.version}</version>
-                                </bundle>
-                                <bundle>
-                                    <symbolicName>javax.validation.api</symbolicName>
-                                    <version>${validation-api.version}</version>
-                                </bundle>
-                                <bundle>
-                                    <symbolicName>io.swagger.models</symbolicName>
-                                    <version>${io.swagger.version}</version>
-                                </bundle>
-                                <bundle>
-                                    <symbolicName>io.swagger.core</symbolicName>
-                                    <version>${io.swagger.version}</version>
-                                </bundle>
-                                <bundle>
-                                    <symbolicName>io.swagger.jaxrs</symbolicName>
-                                    <version>${io.swagger.version}</version>
-                                </bundle>
-                                <bundle>
-                                    <symbolicName>io.swagger.annotations</symbolicName>
-                                    <version>${io.swagger.version}</version>
-                                </bundle>
-                                <bundle>
-                                    <symbolicName>
-                                        com.fasterxml.jackson.dataformat.jackson-dataformat-yaml
-                                    </symbolicName>
-                                    <version>${jackson-dataformat-yaml.version}</version>
-                                </bundle>
-                                <bundle>
-                                    <symbolicName>com.fasterxml.jackson.core.jackson-core</symbolicName>
-                                    <version>${jackson-core.version}</version>
                                 </bundle>
                                 <!-- Metrics Bundles - Start -->
                                 <bundle>

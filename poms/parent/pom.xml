@@ -289,11 +289,6 @@
             </dependency>
 
             <dependency>
-                <groupId>javax.validation</groupId>
-                <artifactId>validation-api</artifactId>
-                <version>${validation-api.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-models</artifactId>
                 <version>${io.swagger.version}</version>
@@ -328,16 +323,6 @@
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-annotations</artifactId>
                 <version>${io.swagger.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.dataformat</groupId>
-                <artifactId>jackson-dataformat-yaml</artifactId>
-                <version>${jackson-dataformat-yaml.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-core</artifactId>
-                <version>${jackson-core.version}</version>
             </dependency>
 
             <!-- Metrics Dependencies - Start -->
@@ -551,9 +536,6 @@
         <logback.version>1.0.9</logback.version>
         <nimbus.jose.jwt.version>2.25</nimbus.jose.jwt.version>
         <io.swagger.version>1.5.8</io.swagger.version>
-        <jackson-dataformat-yaml.version>2.4.5</jackson-dataformat-yaml.version>
-        <jackson-core.version>2.4.5</jackson-core.version>
-        <validation-api.version>1.1.0.Final</validation-api.version>
 
         <osgi.framework.import.version.range>[1.8.0, 2.0.0)</osgi.framework.import.version.range>
         <osgi.service.tracker.import.version.range>[1.5.1, 2.0.0)</osgi.service.tracker.import.version.range>
