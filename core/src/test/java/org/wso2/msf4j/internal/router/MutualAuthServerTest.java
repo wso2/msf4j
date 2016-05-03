@@ -16,6 +16,7 @@
 package org.wso2.msf4j.internal.router;
 
 import com.google.common.io.ByteStreams;
+import com.google.common.io.FileWriteMode;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
 import org.testng.annotations.AfterClass;
@@ -44,8 +45,9 @@ public class MutualAuthServerTest extends HttpsServerTest {
         baseURI = URI.create(String.format("https://%s:%d", hostname, port));
         trustKeyStore = new File(tmpFolder, "MutualAuthServerTest.jks");
         trustKeyStore.createNewFile();
-        ByteStreams.copy(Resources.newInputStreamSupplier(Resources.getResource("client.jks")),
-                Files.newOutputStreamSupplier(trustKeyStore));
+        ByteStreams.copy(
+                Resources.asByteSource(Resources.getResource("client.jks")).openStream(),
+                Files.asByteSink(trustKeyStore, FileWriteMode.APPEND).openStream());
         String trustKeyStorePassword = "password";
         setSslClientContext(new SSLClientContext(trustKeyStore, trustKeyStorePassword));
 

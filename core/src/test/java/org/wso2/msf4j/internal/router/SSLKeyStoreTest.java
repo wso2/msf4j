@@ -17,6 +17,7 @@
 package org.wso2.msf4j.internal.router;
 
 import com.google.common.io.ByteStreams;
+import com.google.common.io.FileWriteMode;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
 import org.testng.annotations.AfterClass;
@@ -37,8 +38,9 @@ public class SSLKeyStoreTest {
     public static void setup() throws Exception {
         keyStore = new File(tmpFolder, "KeyStore.jks");
         keyStore.createNewFile();
-        ByteStreams.copy(Resources.newInputStreamSupplier(Resources.getResource("cert.jks")),
-                Files.newOutputStreamSupplier(keyStore));
+        ByteStreams.copy(
+                Resources.asByteSource(Resources.getResource("cert.jks")).openStream(),
+                Files.asByteSink(keyStore, FileWriteMode.APPEND).openStream());
     }
 
     @AfterClass

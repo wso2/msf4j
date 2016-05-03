@@ -182,7 +182,7 @@
                                 </bundle>
                                 <bundle>
                                     <symbolicName>com.google.guava</symbolicName>
-                                    <version>13.0.1</version>
+                                    <version>${guava.version}.0</version>
                                 </bundle>
                                 <bundle>
                                     <symbolicName>com.google.gson</symbolicName>
