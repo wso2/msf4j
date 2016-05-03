@@ -290,6 +290,11 @@
 
             <dependency>
                 <groupId>io.swagger</groupId>
+                <artifactId>swagger-models</artifactId>
+                <version>${io.swagger.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger</groupId>
                 <artifactId>swagger-core</artifactId>
                 <version>${io.swagger.version}</version>
                 <exclusions>

@@ -63,6 +63,10 @@
         </dependency>
         <dependency>
             <groupId>io.swagger</groupId>
+            <artifactId>swagger-models</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
             <artifactId>swagger-core</artifactId>
         </dependency>
         <dependency>
@@ -195,6 +199,10 @@
                                 <bundle>
                                     <symbolicName>org.apache.servicemix.bundles.commons-beanutils</symbolicName>
                                     <version>${beanutils.osgi.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>io.swagger.models</symbolicName>
+                                    <version>${io.swagger.version}</version>
                                 </bundle>
                                 <bundle>
                                     <symbolicName>io.swagger.core</symbolicName>
