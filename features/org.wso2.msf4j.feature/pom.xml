@@ -62,6 +62,10 @@
             <artifactId>jaxrs-delegates</artifactId>
         </dependency>
         <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-models</artifactId>
         </dependency>
@@ -199,6 +203,10 @@
                                 <bundle>
                                     <symbolicName>org.apache.servicemix.bundles.commons-beanutils</symbolicName>
                                     <version>${beanutils.osgi.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>javax.validation.api</symbolicName>
+                                    <version>${validation-api.version}</version>
                                 </bundle>
                                 <bundle>
                                     <symbolicName>io.swagger.models</symbolicName>
