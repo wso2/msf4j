@@ -19,6 +19,7 @@
 package org.wso2.msf4j.internal.swagger;
 
 import io.swagger.util.Json;
+import org.wso2.msf4j.internal.MicroservicesRegistry;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -30,17 +31,20 @@ import javax.ws.rs.Path;
 public class SwaggerDefinitionService {
 
     private MSF4JBeanConfig swaggerBeanConfig;
-    private boolean isSwaggerScanSet;
+    private MicroservicesRegistry serviceRegistry;
 
-    public SwaggerDefinitionService(MSF4JBeanConfig swaggerBeanConfig) {
-        this.swaggerBeanConfig = swaggerBeanConfig;
+    public SwaggerDefinitionService(MicroservicesRegistry serviceRegistry) {
+        this.serviceRegistry = serviceRegistry;
+        swaggerBeanConfig = null;
     }
 
     @GET
     public String getSwaggerDefinition() throws Exception {
-        if (!isSwaggerScanSet) {
+        if (swaggerBeanConfig == null) {
+            swaggerBeanConfig = new MSF4JBeanConfig();
+            serviceRegistry.getHttpServices().stream().
+                    forEach(service -> swaggerBeanConfig.addServiceClass(service.getClass()));
             swaggerBeanConfig.setScan(true);
-            isSwaggerScanSet = true;
         }
         return Json.mapper().
                 writerWithDefaultPrettyPrinter().writeValueAsString(swaggerBeanConfig.getSwagger());

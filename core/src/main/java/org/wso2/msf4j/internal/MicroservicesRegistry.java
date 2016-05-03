@@ -66,10 +66,10 @@ public class MicroservicesRegistry {
         return new MicroservicesRegistry();
     }
 
-    public void addHttpService(Object httpHandler) {
-        httpServices.add(httpHandler);
+    public void addHttpService(Object service) {
+        httpServices.add(service);
         updateHttpResourceHandler();
-        LOG.info("Added microservice: " + httpHandler);
+        LOG.info("Added microservice: " + service);
     }
 
     public void removeHttpService(Object httpService) {
@@ -79,6 +79,10 @@ public class MicroservicesRegistry {
 
     public MicroserviceMetadata getHttpResourceHandler() {
         return httpResourceHandler;
+    }
+
+    public Set<Object> getHttpServices() {
+        return Collections.unmodifiableSet(httpServices);
     }
 
     public void addInterceptor(Interceptor interceptor) {

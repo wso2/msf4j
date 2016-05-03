@@ -77,6 +77,10 @@
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-yaml</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
 
         <!-- Metrics Dependencies - Start -->
         <dependency>
@@ -209,6 +213,10 @@
                                         com.fasterxml.jackson.dataformat.jackson-dataformat-yaml
                                     </symbolicName>
                                     <version>${jackson-dataformat-yaml.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>com.fasterxml.jackson.core.jackson-core</symbolicName>
+                                    <version>${jackson-core.version}</version>
                                 </bundle>
                                 <!-- Metrics Bundles - Start -->
                                 <bundle>

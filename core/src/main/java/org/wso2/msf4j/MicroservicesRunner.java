@@ -28,7 +28,6 @@ import org.wso2.carbon.transport.http.netty.internal.NettyTransportContextHolder
 import org.wso2.carbon.transport.http.netty.listener.NettyListener;
 import org.wso2.msf4j.internal.MSF4JMessageProcessor;
 import org.wso2.msf4j.internal.MicroservicesRegistry;
-import org.wso2.msf4j.internal.swagger.MSF4JBeanConfig;
 import org.wso2.msf4j.internal.swagger.SwaggerDefinitionService;
 
 import java.util.Arrays;
@@ -47,7 +46,6 @@ public class MicroservicesRunner {
     private long startTime = System.currentTimeMillis();
     private boolean isStarted;
     private MicroservicesRegistry msRegistry = MicroservicesRegistry.newInstance();
-    private MSF4JBeanConfig swaggerBeanConfig = new MSF4JBeanConfig();
 
     /**
      * Creates a MicroservicesRunner instance which will be used for deploying microservices. Allows specifying
@@ -110,10 +108,7 @@ public class MicroservicesRunner {
      */
     public MicroservicesRunner deploy(Object... microservice) {
         checkState();
-        Arrays.stream(microservice).parallel().forEach(service -> {
-            swaggerBeanConfig.addServiceClass(service.getClass());
-            msRegistry.addHttpService(service);
-        });
+        Arrays.stream(microservice).parallel().forEach(msRegistry::addHttpService);
         return this;
     }
 
@@ -126,9 +121,7 @@ public class MicroservicesRunner {
      */
     public MicroservicesRunner addInterceptor(Interceptor... interceptor) {
         checkState();
-        Arrays.stream(interceptor).parallel().forEach(i -> {
-            msRegistry.addInterceptor(i);
-        });
+        Arrays.stream(interceptor).parallel().forEach(msRegistry::addInterceptor);
         return this;
     }
 
@@ -143,7 +136,7 @@ public class MicroservicesRunner {
      */
     public void start() {
         // Deploy the Swagger definition service which will return the Swagger definition.
-        deploy(new SwaggerDefinitionService(swaggerBeanConfig));
+        msRegistry.addHttpService(new SwaggerDefinitionService(msRegistry));
 
         handleServiceLifecycleMethods();
         transportManager.startTransports();
