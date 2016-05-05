@@ -50,18 +50,18 @@ public final class MicroserviceMetadata {
      * Construct HttpResourceHandler. Reads all annotations from all the handler classes and methods passed in,
      * constructs patternPathRouter which is routable by path to {@code HttpResourceModel} as destination of the route.
      *
-     * @param handlers Iterable of HttpHandler
+     * @param services Iterable of HttpHandler
      */
-    public MicroserviceMetadata(Iterable<? extends Object> handlers) {
-        //Store the handlers to call init and destroy on all handlers.
+    public MicroserviceMetadata(Iterable<? extends Object> services) {
+        //Store the services to call init and destroy on all services.
 
-        for (Object handler : handlers) {
+        for (Object service : services) {
             String basePath = "";
-            if (handler.getClass().isAnnotationPresent(Path.class)) {
-                basePath = handler.getClass().getAnnotation(Path.class).value();
+            if (service.getClass().isAnnotationPresent(Path.class)) {
+                basePath = service.getClass().getAnnotation(Path.class).value();
             }
 
-            for (Method method : handler.getClass().getDeclaredMethods()) {
+            for (Method method : service.getClass().getDeclaredMethods()) {
                 if (method.isAnnotationPresent(PostConstruct.class) || method.isAnnotationPresent(PreDestroy.class)) {
                     continue;
                 }
@@ -72,8 +72,7 @@ public final class MicroserviceMetadata {
                         relativePath = method.getAnnotation(Path.class).value();
                     }
                     String absolutePath = String.format("%s/%s", basePath, relativePath);
-                    patternRouter.add(absolutePath, new HttpResourceModel(absolutePath, method,
-                            handler));
+                    patternRouter.add(absolutePath, new HttpResourceModel(absolutePath, method, service));
                 } else {
                     log.trace("Not adding method {}({}) to path routing like. " +
                                     "HTTP calls will not be routed to this method",

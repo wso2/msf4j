@@ -34,7 +34,7 @@ public class InterceptorTest extends BaseHandlerInterceptorTest {
     private static final TestInterceptor interceptor1 = new TestInterceptor();
     private static final TestInterceptor interceptor2 = new TestInterceptor();
 
-    private static final TestHandler testHandler = new TestHandler();
+    private static final TestMicroservice TEST_MICROSERVICE = new TestMicroservice();
 
     private static String hostname = Constants.HOSTNAME;
     private static final int port = Constants.PORT + 2;
@@ -44,7 +44,7 @@ public class InterceptorTest extends BaseHandlerInterceptorTest {
     @BeforeClass
     public static void setup() throws Exception {
         microservicesRunner
-                .deploy(testHandler)
+                .deploy(TEST_MICROSERVICE)
                 .addInterceptor(interceptor1)
                 .addInterceptor(interceptor2)
                 .start();

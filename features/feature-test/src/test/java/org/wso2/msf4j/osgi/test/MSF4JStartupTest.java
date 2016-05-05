@@ -64,10 +64,65 @@ public class MSF4JStartupTest {
     public Option[] createConfiguration() {
 
         List<Option> optionList = new ArrayList<>();
+        //TODO: add MSF4J specific bundles
+
         /*optionList.add(mavenBundle().artifactId("org.wso2.carbon.sample.deployer.mgt").groupId("org.wso2.carbon")
                 .versionAsInProject());
         optionList.add(mavenBundle().artifactId("org.wso2.carbon.sample.order.resolver").groupId("org.wso2.carbon")
                 .versionAsInProject());*/
+
+        /*optionList.add(
+                mavenBundle().groupId("org.wso2.msf4j").artifactId("msf4j-core").versionAsInProject());
+        optionList.add(
+                mavenBundle().groupId("javax.ws.rs").artifactId("javax.ws.rs-api").versionAsInProject());
+        optionList.add(
+                mavenBundle().groupId("com.google.code.gson").artifactId("gson").versionAsInProject());
+        optionList.add(
+                mavenBundle().groupId("com.google.guava").artifactId("guava").versionAsInProject());
+        optionList.add(
+                mavenBundle().groupId("org.apache.servicemix.bundles").
+                        artifactId("org.apache.servicemix.bundles.commons-beanutils").versionAsInProject());
+        optionList.add(
+                mavenBundle().groupId("org.wso2.msf4j").artifactId("msf4j-analytics").versionAsInProject());
+        optionList.add(
+                mavenBundle().groupId("org.wso2.msf4j").artifactId("jaxrs-delegates").versionAsInProject());
+
+        optionList.add(
+                mavenBundle().groupId("org.wso2.carbon.metrics").
+                        artifactId("org.wso2.carbon.metrics.annotation").versionAsInProject());
+        optionList.add(
+                mavenBundle().groupId("org.wso2.carbon.metrics").
+                        artifactId("org.wso2.carbon.metrics.common").versionAsInProject());
+        optionList.add(
+                mavenBundle().groupId("org.wso2.carbon.metrics").
+                        artifactId("org.wso2.carbon.metrics.manager").versionAsInProject());
+        optionList.add(
+                mavenBundle().groupId("org.wso2.carbon.metrics").
+                        artifactId("org.wso2.carbon.metrics.impl").versionAsInProject());
+        optionList.add(
+                mavenBundle().groupId("org.wso2.carbon.metrics").
+                        artifactId("org.wso2.carbon.metrics.das.reporter").versionAsInProject());
+        optionList.add(
+                mavenBundle().groupId("org.wso2.carbon.analytics-common").
+                        artifactId("org.wso2.carbon.databridge.agent").versionAsInProject());
+        optionList.add(
+                mavenBundle().groupId("org.wso2.carbon.analytics-common").
+                        artifactId("org.wso2.carbon.databridge.commons").versionAsInProject());
+        optionList.add(
+                mavenBundle().groupId("org.wso2.carbon.analytics-common").
+                        artifactId("org.wso2.carbon.databridge.commons.thrift").versionAsInProject());
+
+        optionList.add(
+                mavenBundle().groupId("org.wso2.orbit.com.lmax").artifactId("disruptor").versionAsInProject());
+        optionList.add(
+                mavenBundle().groupId("io.dropwizard.metrics").artifactId("metrics-core").versionAsInProject());
+        optionList.add(
+                mavenBundle().groupId("commons-io.wso2").artifactId("commons-io").versionAsInProject());
+        optionList.add(
+                mavenBundle().groupId("libthrift.wso2").artifactId("libthrift").versionAsInProject());
+        optionList.add(
+                mavenBundle().groupId("commons-pool.wso2").artifactId("commons-pool").versionAsInProject());*/
+
 
         String currentDir = Paths.get("").toAbsolutePath().toString();
         Path carbonHome = Paths.get(currentDir, "target", "carbon-home");
@@ -83,8 +138,8 @@ public class MSF4JStartupTest {
     }
 
     @Test
-    public void testTransportManagerExistence() {
-        Assert.assertNotNull(carbonServerInfo, "TransportManager Service is null");
+    public void testServerStarup() {
+        Assert.assertNotNull(carbonServerInfo, "CarbonServerInfo Service is null");
     }
 
 //    @Test(dependsOnMethods = {"testTransportManagerExistence"})

@@ -108,7 +108,7 @@ public class MicroservicesRunner {
      */
     public MicroservicesRunner deploy(Object... microservice) {
         checkState();
-        Arrays.stream(microservice).parallel().forEach(msRegistry::addHttpService);
+        msRegistry.addService(microservice);
         return this;
     }
 
@@ -136,7 +136,7 @@ public class MicroservicesRunner {
      */
     public void start() {
         // Deploy the Swagger definition service which will return the Swagger definition.
-        msRegistry.addHttpService(new SwaggerDefinitionService(msRegistry));
+        msRegistry.addService(new SwaggerDefinitionService(msRegistry));
 
         handleServiceLifecycleMethods();
         transportManager.startTransports();

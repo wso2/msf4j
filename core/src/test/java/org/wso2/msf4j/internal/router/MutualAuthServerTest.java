@@ -32,7 +32,7 @@ import java.net.URI;
  */
 public class MutualAuthServerTest extends HttpsServerTest {
 
-    private static final TestHandler testHandler = new TestHandler();
+    private static final TestMicroservice TEST_MICROSERVICE = new TestMicroservice();
     private static MicroservicesRunner microservicesRunner;
 
     private static String hostname = Constants.HOSTNAME;
@@ -55,7 +55,7 @@ public class MutualAuthServerTest extends HttpsServerTest {
                 Resources.getResource("netty-transports-2.yml").getPath());
         microservicesRunner = new MicroservicesRunner();
         microservicesRunner
-                .deploy(testHandler)
+                .deploy(TEST_MICROSERVICE)
                 .start();
     }
 
