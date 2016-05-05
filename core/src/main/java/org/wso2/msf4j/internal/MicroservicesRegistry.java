@@ -30,7 +30,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ws.rs.Path;
@@ -74,11 +73,10 @@ public class MicroservicesRegistry {
         Arrays.stream(service).forEach(svc -> log.info("Added microservice: " + svc));
     }
 
-    public Object getServiceWithBasePath(String path) {
-        List<Object> services = this.services.stream().
-                filter(service -> service.getClass().getAnnotation(Path.class).value().equals(path)).
-                collect(Collectors.toList());
-        return services.isEmpty() ? null : services.get(0);
+    public Optional<Object> getServiceWithBasePath(String path) {
+        return services.stream().
+                filter(svc -> svc.getClass().getAnnotation(Path.class).value().equals(path)).
+                findAny();
     }
 
     public void removeService(Object service) {

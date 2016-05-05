@@ -23,6 +23,7 @@ import org.wso2.msf4j.internal.MicroservicesRegistry;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
@@ -58,10 +59,10 @@ public class SwaggerDefinitionService {
         } else {
             msf4JBeanConfig = swaggerBeans.get(path);
             if (msf4JBeanConfig == null) {
-                Object service = serviceRegistry.getServiceWithBasePath(path);
-                if (service != null) {
+                Optional<Object> service = serviceRegistry.getServiceWithBasePath(path);
+                if (service.isPresent()) {
                     MSF4JBeanConfig beanConfig = new MSF4JBeanConfig();
-                    beanConfig.addServiceClass(service.getClass());
+                    beanConfig.addServiceClass(service.get().getClass());
                     beanConfig.setScan(true);
                     msf4JBeanConfig = beanConfig;
                     swaggerBeans.put(path, msf4JBeanConfig);
