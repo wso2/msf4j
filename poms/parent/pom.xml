@@ -462,12 +462,6 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.testng</groupId>
-                <artifactId>testng</artifactId>
-                <version>${testng.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-core</artifactId>
                 <version>${logback.version}</version>
@@ -477,6 +471,77 @@
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
                 <version>${logback.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>osgi-test-util</artifactId>
+                <version>${carbon.kernel.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- PAX Exam -->
+            <dependency>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+                <version>${testng.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.exam</groupId>
+                <artifactId>pax-exam</artifactId>
+                <version>${pax.exam.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.exam</groupId>
+                <artifactId>pax-exam-inject</artifactId>
+                <version>${pax.exam.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.exam</groupId>
+                <artifactId>pax-exam-extender-service</artifactId>
+                <version>${pax.exam.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.base</groupId>
+                <artifactId>ops4j-base</artifactId>
+                <version>${ops4j.base.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-atinject_1.0_spec</artifactId>
+                <version>${geronimo.atinject.spec.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.exam</groupId>
+                <artifactId>pax-exam-container-native</artifactId>
+                <version>${pax.exam.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.exam</groupId>
+                <artifactId>pax-exam-testng</artifactId>
+                <version>${pax.exam.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.exam</groupId>
+                <artifactId>pax-exam-link-mvn</artifactId>
+                <version>${pax.exam.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.url</groupId>
+                <artifactId>pax-url-aether</artifactId>
+                <version>${pax.url.aether.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.spec.ee</groupId>
+                <artifactId>ow2-jta-1.1-spec</artifactId>
+                <version>${ow2.jta.spec.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jacoco</groupId>
+                <artifactId>org.jacoco.ant</artifactId>
+                <version>${org.jacoco.ant.version}</version>
                 <scope>test</scope>
             </dependency>
 
@@ -499,7 +564,7 @@
         <maven.archetype.version>2.4</maven.archetype.version>
 
         <!-- Dependencies -->
-        <carbon.kernel.version>5.0.0</carbon.kernel.version>
+        <carbon.kernel.version>5.1.0-alpha</carbon.kernel.version>
         <carbon.kernel.version.range>[5.0,6)</carbon.kernel.version.range>
         <carbon.messaging.version>1.0.2</carbon.messaging.version>
         <carbon.messaging.version.range>[1.0.2,2)</carbon.messaging.version.range>
@@ -532,7 +597,6 @@
         <beanutils.version>1.8.3_2</beanutils.version>
         <beanutils.version.range>[1.8,2)</beanutils.version.range>
         <beanutils.osgi.version>1.8.3.2</beanutils.osgi.version>
-        <testng.version>6.9.4</testng.version>
         <logback.version>1.0.9</logback.version>
         <nimbus.jose.jwt.version>2.25</nimbus.jose.jwt.version>
         <io.swagger.version>1.5.8</io.swagger.version>
@@ -550,12 +614,10 @@
         <!--Pax Exam Versions-->
         <pax.exam.version>4.6.0</pax.exam.version>
         <pax.url.aether.version>1.6.0</pax.url.aether.version>
-        <ow2.jta.spec.version>1.0.12</ow2.jta.spec.version>
         <slf4j.api.version>1.7.12</slf4j.api.version>
         <javax.inject.version>1</javax.inject.version>
 
         <!--Other dependency versions -->
-        <testng.version>6.9.4</testng.version>
         <jacoco.version>0.7.5.201505241946</jacoco.version>
         <javax.inject.version>1</javax.inject.version>
         <apache.felix.gogo.command.version>0.10.0.v201209301215</apache.felix.gogo.command.version>
@@ -581,7 +643,15 @@
         <org.jacoco.ant.version>0.7.5.201505241946</org.jacoco.ant.version>
         <org.springframework.version>4.1.7.RELEASE</org.springframework.version>
 
+        <!--Pax Exam Versions-->
+        <pax.exam.version>4.8.0</pax.exam.version>
+        <pax.url.aether.version>1.6.0</pax.url.aether.version>
+        <slf4j.api.version>1.7.12</slf4j.api.version>
+        <javax.inject.version>1</javax.inject.version>
+        <ops4j.base.version>1.5.0</ops4j.base.version>
+        <osgi.compendium.version>4.3.1</osgi.compendium.version>
+        <geronimo.atinject.spec.version>1.0</geronimo.atinject.spec.version>
+        <ow2.jta.spec.version>1.0.12</ow2.jta.spec.version>
+        <org.jacoco.ant.version>0.7.5.201505241946</org.jacoco.ant.version>
     </properties>
-
-
 </project>
