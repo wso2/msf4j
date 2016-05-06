@@ -14,26 +14,18 @@
  * limitations under the License.
  */
 
-package org.wso2.webinar.samples.msf4j;
+package org.wso2.msf4j.example;
 
-import org.wso2.msf4j.MicroservicesRunner;
-import org.wso2.webinar.samples.msf4j.dao.UserRepository;
-import org.wso2.webinar.samples.msf4j.resource.UserResource;
-
-import javax.persistence.Persistence;
+import org.springframework.stereotype.Component;
 
 /**
- * Main Application class.
+ * HelloService class to be injected to Hello resource through Spring
  */
-public class Application {
-    public static void main(String[] args) {
-        new MicroservicesRunner()
-                .deploy(new UserResource(getUserRepository()))
-                .start();
-    }
+@Component
+public class HelloService {
 
-    public static UserRepository getUserRepository() {
-        return new UserRepository(Persistence.createEntityManagerFactory("org.hibernate.tutorial.jpa"));
+    public String hello(String name) {
+        return "Hello " + name;
     }
 
 }

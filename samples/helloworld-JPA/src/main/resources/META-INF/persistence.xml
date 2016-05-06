@@ -28,7 +28,7 @@
 
     <persistence-unit name="org.hibernate.tutorial.jpa">
 
-        <class>org.wso2.webinar.samples.msf4j.model.User</class>
+        <class>org.wso2.msf4j.example.model.User</class>
 
         <!-- For in-memory H2 database -->
         <properties>

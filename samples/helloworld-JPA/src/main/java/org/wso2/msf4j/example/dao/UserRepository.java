@@ -16,10 +16,10 @@
  *  under the License.
  */
 
-package org.wso2.webinar.samples.msf4j.dao;
+package org.wso2.msf4j.example.dao;
 
 
-import org.wso2.webinar.samples.msf4j.model.User;
+import org.wso2.msf4j.example.model.User;
 
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
