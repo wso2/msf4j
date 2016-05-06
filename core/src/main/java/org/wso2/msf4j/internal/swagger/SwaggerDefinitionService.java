@@ -70,7 +70,8 @@ public class SwaggerDefinitionService {
             }
         }
         return (msf4JBeanConfig == null) ?
-                Response.status(Response.Status.NOT_FOUND).build() :
+                Response.status(Response.Status.NOT_FOUND).
+                        entity("No Swagger definition found for path " + path).build() :
                 Response.status(Response.Status.OK).
                         entity(Json.mapper().
                                 writerWithDefaultPrettyPrinter().writeValueAsString(msf4JBeanConfig.getSwagger())).
