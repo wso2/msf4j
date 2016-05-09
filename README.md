@@ -273,6 +273,10 @@ in "HTTP Monitoring Dashboard".
 Monitor each HTTP request. This annotation can be used at the Class level and the Method level.
 
 ###Swagger Annotations
+[Swagger](http://swagger.io/getting-started/) is a standard, language-agnostic interface to REST APIs which allows both 
+humans and computers to discover and understand the capabilities of the service without access to source code, documentation, 
+or through network traffic inspection. 
+
 MSF4J supports all [Swagger annotations](https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X) out of the box.
 
 In order to retrieve Swagger definitions of your microservice, go to http://<host>:<port>/swagger?path=<service_base_path>.
