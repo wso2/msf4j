@@ -279,7 +279,7 @@ or through network traffic inspection.
 
 MSF4J supports all [Swagger annotations](https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X) out of the box.
 
-In order to retrieve Swagger definitions of your microservice, go to http://&lt;host&gt;:&lt;port&gt;/swagger?path=&lt;service_base_path&gt;.
+In order to retrieve Swagger definitions of your microservice, go to <br/>http://&lt;host&gt;:&lt;port&gt;/swagger?path="&lt;service_base_path&gt;".
 
 e.g. [http://localhost:8080/swagger?path="/hello"](http://localhost:8080/swagger?path="/hello")
 
