@@ -272,6 +272,19 @@ in "HTTP Monitoring Dashboard".
 #####@HTTPMonitored
 Monitor each HTTP request. This annotation can be used at the Class level and the Method level.
 
+###Swagger Annotations
+MSF4J supports all [Swagger annotations](https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X) out of the box.
+
+In order to retrieve Swagger definitions of your microservice, go to http://<host>:<port>/swagger?path=<service_base_path>.
+e.g. [http://localhost:8080/swagger?path="/hello"](http://localhost:8080/swagger?path="/hello")
+
+To retrieve Swagger definitions of all microservices in your runtime, go to http://<host>:<port>/swagger.
+e.g. [http://localhost:8080/swagger](http://localhost:8080/swagger)
+
+NOTE: Even without any Swagger annotation, default Swagger definitions will be generated using the JAXRS annotation
+in your MSF4J microservice.
+
+The [StockQuote sample](samples/stockquote/fatjar) demonstrates Swagger annotations in action.
 
 ###Complete Feature List
 * Annotation based definition of microservices
