@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.msf4j.spring.example.helloworld;
+package org.wso2.msf4j.example;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

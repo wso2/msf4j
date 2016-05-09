@@ -16,7 +16,7 @@
  *  under the License.
  */
 
-package org.wso2.webinar.samples.msf4j.model;
+package org.wso2.msf4j.example.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

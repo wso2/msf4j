@@ -1,4 +1,4 @@
-package org.wso2.msf4j.spring.example.helloworld;
+package org.wso2.msf4j.example;
 
 import org.wso2.msf4j.spring.MSF4JSpringApplication;
 

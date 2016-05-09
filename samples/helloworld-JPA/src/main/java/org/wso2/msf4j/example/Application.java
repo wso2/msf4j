@@ -14,18 +14,26 @@
  * limitations under the License.
  */
 
-package org.wso2.msf4j.spring.example.helloworld;
+package org.wso2.msf4j.example;
 
-import org.springframework.stereotype.Component;
+import org.wso2.msf4j.MicroservicesRunner;
+import org.wso2.msf4j.example.dao.UserRepository;
+import org.wso2.msf4j.example.resource.UserResource;
+
+import javax.persistence.Persistence;
 
 /**
- * HelloService class to be injected to Hello resource through Spring
+ * Main Application class.
  */
-@Component
-public class HelloService {
+public class Application {
+    public static void main(String[] args) {
+        new MicroservicesRunner()
+                .deploy(new UserResource(getUserRepository()))
+                .start();
+    }
 
-    public String hello(String name) {
-        return "Hello " + name;
+    public static UserRepository getUserRepository() {
+        return new UserRepository(Persistence.createEntityManagerFactory("org.hibernate.tutorial.jpa"));
     }
 
 }
