@@ -104,4 +104,4 @@ or through network traffic inspection.
 
 This sample also demonstrates the usage of [Swagger annotations](https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X).
 In order to retrieve the [Swagger](http://swagger.io/getting-started/) definition for the StockQuote microservice, go to 
-[http://localhost:8080/swagger?path="/hello"](http://localhost:8080/swagger?path="/stockquote").
+[http://localhost:8080/swagger?path="/stockquote"](http://localhost:8080/swagger?path="/stockquote").
