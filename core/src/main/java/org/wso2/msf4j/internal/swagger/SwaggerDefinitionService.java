@@ -19,25 +19,62 @@
 package org.wso2.msf4j.internal.swagger;
 
 import io.swagger.util.Json;
+import org.wso2.msf4j.internal.MicroservicesRegistry;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Response;
 
 /**
  * This service returns the Swagger definition of all the APIs of the microservices deployed in this runtime.
  */
 @Path("/swagger")
 public class SwaggerDefinitionService {
+    private static final String GLOBAL = "global";
 
-    private MSF4JBeanConfig swaggerBeanConfig;
+    private Map<String, MSF4JBeanConfig> swaggerBeans = new HashMap<>();
+    private MicroservicesRegistry serviceRegistry;
 
-    public SwaggerDefinitionService(MSF4JBeanConfig swaggerBeanConfig) {
-        this.swaggerBeanConfig = swaggerBeanConfig;
+    public SwaggerDefinitionService(MicroservicesRegistry serviceRegistry) {
+        this.serviceRegistry = serviceRegistry;
     }
 
     @GET
-    public String getSwaggerDefinition() throws Exception {
-        return Json.mapper().
-                writerWithDefaultPrettyPrinter().writeValueAsString(swaggerBeanConfig.getSwagger());
+    public Response getSwaggerDefinition(@QueryParam("path") String path) throws Exception {
+        MSF4JBeanConfig msf4JBeanConfig;
+        if (path == null) {
+            msf4JBeanConfig = swaggerBeans.get(GLOBAL);
+            if (msf4JBeanConfig == null) {
+                MSF4JBeanConfig beanConfig = new MSF4JBeanConfig();
+                serviceRegistry.getHttpServices().stream().
+                        forEach(service -> beanConfig.addServiceClass(service.getClass()));
+                beanConfig.setScan(true);
+                msf4JBeanConfig = beanConfig;
+                swaggerBeans.put(GLOBAL, msf4JBeanConfig);
+            }
+        } else {
+            msf4JBeanConfig = swaggerBeans.get(path);
+            if (msf4JBeanConfig == null) {
+                Optional<Object> service = serviceRegistry.getServiceWithBasePath(path);
+                if (service.isPresent()) {
+                    MSF4JBeanConfig beanConfig = new MSF4JBeanConfig();
+                    beanConfig.addServiceClass(service.get().getClass());
+                    beanConfig.setScan(true);
+                    msf4JBeanConfig = beanConfig;
+                    swaggerBeans.put(path, msf4JBeanConfig);
+                }
+            }
+        }
+        return (msf4JBeanConfig == null) ?
+                Response.status(Response.Status.NOT_FOUND).
+                        entity("No Swagger definition found for path " + path).build() :
+                Response.status(Response.Status.OK).
+                        entity(Json.mapper().
+                                writerWithDefaultPrettyPrinter().writeValueAsString(msf4JBeanConfig.getSwagger())).
+                        build();
     }
 }

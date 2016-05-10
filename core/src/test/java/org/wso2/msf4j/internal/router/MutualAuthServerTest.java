@@ -16,6 +16,7 @@
 package org.wso2.msf4j.internal.router;
 
 import com.google.common.io.ByteStreams;
+import com.google.common.io.FileWriteMode;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
 import org.testng.annotations.AfterClass;
@@ -31,7 +32,7 @@ import java.net.URI;
  */
 public class MutualAuthServerTest extends HttpsServerTest {
 
-    private static final TestHandler testHandler = new TestHandler();
+    private static final TestMicroservice TEST_MICROSERVICE = new TestMicroservice();
     private static MicroservicesRunner microservicesRunner;
 
     private static String hostname = Constants.HOSTNAME;
@@ -44,8 +45,9 @@ public class MutualAuthServerTest extends HttpsServerTest {
         baseURI = URI.create(String.format("https://%s:%d", hostname, port));
         trustKeyStore = new File(tmpFolder, "MutualAuthServerTest.jks");
         trustKeyStore.createNewFile();
-        ByteStreams.copy(Resources.newInputStreamSupplier(Resources.getResource("client.jks")),
-                Files.newOutputStreamSupplier(trustKeyStore));
+        ByteStreams.copy(
+                Resources.asByteSource(Resources.getResource("client.jks")).openStream(),
+                Files.asByteSink(trustKeyStore, FileWriteMode.APPEND).openStream());
         String trustKeyStorePassword = "password";
         setSslClientContext(new SSLClientContext(trustKeyStore, trustKeyStorePassword));
 
@@ -53,7 +55,7 @@ public class MutualAuthServerTest extends HttpsServerTest {
                 Resources.getResource("netty-transports-2.yml").getPath());
         microservicesRunner = new MicroservicesRunner();
         microservicesRunner
-                .deploy(testHandler)
+                .deploy(TEST_MICROSERVICE)
                 .start();
     }
 

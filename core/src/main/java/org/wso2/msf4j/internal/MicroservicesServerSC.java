@@ -53,14 +53,14 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             service = Microservice.class,
             cardinality = ReferenceCardinality.MULTIPLE,
             policy = ReferencePolicy.DYNAMIC,
-            unbind = "removeHttpService"
+            unbind = "removeService"
     )
-    protected void addHttpService(Microservice httpService) {
-        microservicesRegistry.addHttpService(httpService);
+    protected void addService(Microservice service) {
+        microservicesRegistry.addService(service);
     }
 
-    protected void removeHttpService(Microservice httpService) {
-        microservicesRegistry.removeHttpService(httpService);
+    protected void removeService(Microservice service) {
+        microservicesRegistry.removeService(service);
     }
 
     @Reference(

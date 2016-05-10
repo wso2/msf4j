@@ -16,10 +16,10 @@
  *  under the License.
  */
 
-package org.wso2.webinar.samples.msf4j.resource;
+package org.wso2.msf4j.example.resource;
 
-import org.wso2.webinar.samples.msf4j.dao.UserRepository;
-import org.wso2.webinar.samples.msf4j.model.User;
+import org.wso2.msf4j.example.dao.UserRepository;
+import org.wso2.msf4j.example.model.User;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;

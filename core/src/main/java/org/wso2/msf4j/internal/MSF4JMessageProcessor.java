@@ -95,7 +95,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
     private void dispatchMethod(Request request, Response response) throws Exception {
         HttpUtil.setConnectionHeader(request, response);
         PatternPathRouter.RoutableDestination<HttpResourceModel> destination = microservicesRegistry
-                .getHttpResourceHandler()
+                .getMetadata()
                 .getDestinationMethod(request.getUri(),
                         request.getHttpMethod(),
                         request.getContentType(),

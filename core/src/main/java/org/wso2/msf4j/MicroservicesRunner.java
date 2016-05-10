@@ -28,9 +28,9 @@ import org.wso2.carbon.transport.http.netty.internal.NettyTransportContextHolder
 import org.wso2.carbon.transport.http.netty.listener.NettyListener;
 import org.wso2.msf4j.internal.MSF4JMessageProcessor;
 import org.wso2.msf4j.internal.MicroservicesRegistry;
-import org.wso2.msf4j.internal.swagger.MSF4JBeanConfig;
 import org.wso2.msf4j.internal.swagger.SwaggerDefinitionService;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -46,7 +46,6 @@ public class MicroservicesRunner {
     private long startTime = System.currentTimeMillis();
     private boolean isStarted;
     private MicroservicesRegistry msRegistry = MicroservicesRegistry.newInstance();
-    private MSF4JBeanConfig swaggerBeanConfig = new MSF4JBeanConfig();
 
     /**
      * Creates a MicroservicesRunner instance which will be used for deploying microservices. Allows specifying
@@ -107,11 +106,9 @@ public class MicroservicesRunner {
      * @param microservice The microservice which is to be deployed
      * @return this MicroservicesRunner object
      */
-
-    public MicroservicesRunner deploy(Object microservice) {
+    public MicroservicesRunner deploy(Object... microservice) {
         checkState();
-        swaggerBeanConfig.addServiceClass(microservice.getClass());
-        msRegistry.addHttpService(microservice);
+        msRegistry.addService(microservice);
         return this;
     }
 
@@ -122,9 +119,9 @@ public class MicroservicesRunner {
      * @param interceptor The interceptor to be added.
      * @return this MicroservicesRunner object
      */
-    public MicroservicesRunner addInterceptor(Interceptor interceptor) {
+    public MicroservicesRunner addInterceptor(Interceptor... interceptor) {
         checkState();
-        msRegistry.addInterceptor(interceptor);
+        Arrays.stream(interceptor).parallel().forEach(msRegistry::addInterceptor);
         return this;
     }
 
@@ -138,10 +135,8 @@ public class MicroservicesRunner {
      * Start this Microservices runner. This will startup all the Netty transports.
      */
     public void start() {
-        swaggerBeanConfig.setScan(true);
-
         // Deploy the Swagger definition service which will return the Swagger definition.
-        deploy(new SwaggerDefinitionService(swaggerBeanConfig));
+        msRegistry.addService(new SwaggerDefinitionService(msRegistry));
 
         handleServiceLifecycleMethods();
         transportManager.startTransports();

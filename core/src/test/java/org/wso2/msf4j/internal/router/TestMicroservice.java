@@ -57,7 +57,7 @@ import javax.ws.rs.core.Response;
  */
 @SuppressWarnings("UnusedParameters")
 @Path("/test/v1")
-public class TestHandler implements Microservice {
+public class TestMicroservice implements Microservice {
 
     private static final Gson GSON = new Gson();
 

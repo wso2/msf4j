@@ -32,18 +32,19 @@ import java.util.Optional;
 import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.ws.rs.Path;
 
 /**
  * MicroservicesRegistry for the MSF4J component.
  */
 public class MicroservicesRegistry {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MicroservicesRegistry.class);
+    private static final Logger log = LoggerFactory.getLogger(MicroservicesRegistry.class);
     private static final MicroservicesRegistry instance = new MicroservicesRegistry();
-    private final Set<Object> httpServices = new HashSet<>();
+    private final Set<Object> services = new HashSet<>();
 
     private final List<Interceptor> interceptors = new ArrayList<>();
-    private volatile MicroserviceMetadata httpResourceHandler = new MicroserviceMetadata(Collections.emptyList());
+    private volatile MicroserviceMetadata metadata = new MicroserviceMetadata(Collections.emptyList());
 
     private MicroservicesRegistry() {
     }
@@ -66,24 +67,34 @@ public class MicroservicesRegistry {
         return new MicroservicesRegistry();
     }
 
-    public void addHttpService(Object httpHandler) {
-        httpServices.add(httpHandler);
-        updateHttpResourceHandler();
-        LOG.info("Added microservice: " + httpHandler);
+    public void addService(Object... service) {
+        Collections.addAll(services, service);
+        updateMetadata();
+        Arrays.stream(service).forEach(svc -> log.info("Added microservice: " + svc));
     }
 
-    public void removeHttpService(Object httpService) {
-        httpServices.remove(httpService);
-        updateHttpResourceHandler();
+    public Optional<Object> getServiceWithBasePath(String path) {
+        return services.stream().
+                filter(svc -> svc.getClass().getAnnotation(Path.class).value().equals(path)).
+                findAny();
     }
 
-    public MicroserviceMetadata getHttpResourceHandler() {
-        return httpResourceHandler;
+    public void removeService(Object service) {
+        services.remove(service);
+        updateMetadata();
     }
 
-    public void addInterceptor(Interceptor interceptor) {
-        interceptors.add(interceptor);
-        updateHttpResourceHandler();
+    public MicroserviceMetadata getMetadata() {
+        return metadata;
+    }
+
+    public Set<Object> getHttpServices() {
+        return Collections.unmodifiableSet(services);
+    }
+
+    public void addInterceptor(Interceptor... interceptor) {
+        Collections.addAll(interceptors, interceptor);
+        updateMetadata();
     }
 
     public List<Interceptor> getInterceptors() {
@@ -92,16 +103,15 @@ public class MicroservicesRegistry {
 
     public void removeInterceptor(Interceptor interceptor) {
         interceptors.remove(interceptor);
-        updateHttpResourceHandler();
+        updateMetadata();
     }
 
     public int getServiceCount() {
-        return httpServices.size();
+        return services.size();
     }
 
-    private void updateHttpResourceHandler() {
-        httpResourceHandler =
-                new MicroserviceMetadata(Collections.unmodifiableSet(httpServices));
+    private void updateMetadata() {
+        metadata = new MicroserviceMetadata(Collections.unmodifiableSet(services));
     }
 
     public void initServices() {
@@ -121,7 +131,7 @@ public class MicroservicesRegistry {
     }
 
     private void invokeLifecycleMethods(Class lcAnnotation) {
-        httpServices.stream().forEach(httpService -> invokeLifecycleMethod(httpService, lcAnnotation));
+        services.stream().forEach(httpService -> invokeLifecycleMethod(httpService, lcAnnotation));
     }
 
     private void invokeLifecycleMethod(Object httpService, Class lcAnnotation) {

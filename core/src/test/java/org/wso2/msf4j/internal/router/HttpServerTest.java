@@ -71,7 +71,7 @@ public class HttpServerTest {
 
     public static File tmpFolder = Files.createTempDir();
 
-    private static final TestHandler testHandler = new TestHandler();
+    private static final TestMicroservice TEST_MICROSERVICE = new TestMicroservice();
 
     private static String hostname = Constants.HOSTNAME;
     private static final int port = Constants.PORT + 1;
@@ -83,7 +83,7 @@ public class HttpServerTest {
     public static void setup() throws Exception {
         baseURI = URI.create(String.format("http://%s:%d", hostname, port));
         microservicesRunner
-                .deploy(testHandler)
+                .deploy(TEST_MICROSERVICE)
                 .start();
     }
 
@@ -538,7 +538,7 @@ public class HttpServerTest {
     @Test
     public void testExceptionHandler() throws IOException {
         HttpURLConnection urlConn = request("/test/v1/customException", HttpMethod.POST);
-        Assert.assertEquals(TestHandler.CustomException.HTTP_RESPONSE_STATUS, urlConn.getResponseCode());
+        Assert.assertEquals(TestMicroservice.CustomException.HTTP_RESPONSE_STATUS, urlConn.getResponseCode());
         urlConn.disconnect();
     }
 

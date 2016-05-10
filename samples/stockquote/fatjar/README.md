@@ -4,7 +4,9 @@ A fat jar is a jar file which includes all the dependencies in one fat (uber) ja
 and running it in a Java process is also referred to as server-less execution.
 
 This sample shows the use of @Produces and @Consumes annotations for bean conversions. In addition to that this 
-demonstrates how to develop a microservice with WSO2 MSF4J, create a fat jar & run it.
+demonstrates how to develop a microservice with WSO2 MSF4J, create a fat jar & run it. The sample also demonstrates 
+generating Swagger definitions for your services using
+[Swagger annotations](https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X).
 
 See also; [msf4j bundle](../bundle)
 
@@ -94,3 +96,12 @@ curl --insecure https://localhost:8443/stockquote/IBM
 ```
 
 You should get a successful response if everything worked fine.
+
+## Swagger Annotations
+[Swagger](http://swagger.io/getting-started/) is a standard, language-agnostic interface to REST APIs which allows both 
+humans and computers to discover and understand the capabilities of the service without access to source code, documentation, 
+or through network traffic inspection.
+
+This sample also demonstrates the usage of [Swagger annotations](https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X).
+In order to retrieve the [Swagger](http://swagger.io/getting-started/) definition for the StockQuote microservice, go to 
+[http://localhost:8080/swagger?path="/stockquote"](http://localhost:8080/swagger?path=/stockquote).

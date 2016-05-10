@@ -38,7 +38,7 @@ public class HttpsServerTest extends HttpServerTest {
 
     private static SSLClientContext sslClientContext;
 
-    private static final TestHandler testHandler = new TestHandler();
+    private static final TestMicroservice TEST_MICROSERVICE = new TestMicroservice();
     private static MicroservicesRunner microservicesRunner;
 
     private static String hostname = Constants.HOSTNAME;
@@ -53,7 +53,7 @@ public class HttpsServerTest extends HttpServerTest {
         microservicesRunner = new MicroservicesRunner();
         sslClientContext = new SSLClientContext();
         microservicesRunner
-                .deploy(testHandler)
+                .deploy(TEST_MICROSERVICE)
                 .start();
     }
 

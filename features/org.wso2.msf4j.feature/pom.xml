@@ -61,18 +61,7 @@
             <groupId>org.wso2.msf4j</groupId>
             <artifactId>jaxrs-delegates</artifactId>
         </dependency>
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-jaxrs</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-annotations</artifactId>
-        </dependency>
+
         <!-- Metrics Dependencies - Start -->
         <dependency>
             <groupId>org.wso2.carbon.metrics</groupId>
@@ -177,7 +166,7 @@
                                 </bundle>
                                 <bundle>
                                     <symbolicName>com.google.guava</symbolicName>
-                                    <version>13.0.1</version>
+                                    <version>${guava.version}.0</version>
                                 </bundle>
                                 <bundle>
                                     <symbolicName>com.google.gson</symbolicName>
@@ -186,18 +175,6 @@
                                 <bundle>
                                     <symbolicName>org.apache.servicemix.bundles.commons-beanutils</symbolicName>
                                     <version>${beanutils.osgi.version}</version>
-                                </bundle>
-                                <bundle>
-                                    <symbolicName>io.swagger.core</symbolicName>
-                                    <version>${io.swagger.version}</version>
-                                </bundle>
-                                <bundle>
-                                    <symbolicName>io.swagger.jaxrs</symbolicName>
-                                    <version>${io.swagger.version}</version>
-                                </bundle>
-                                <bundle>
-                                    <symbolicName>io.swagger.annotations</symbolicName>
-                                    <version>${io.swagger.version}</version>
                                 </bundle>
                                 <!-- Metrics Bundles - Start -->
                                 <bundle>
