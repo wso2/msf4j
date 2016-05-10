@@ -127,7 +127,7 @@
         <module>samples/template</module>
         <module>samples/log-interceptor-bundle</module>
         <module>samples/lifecycle</module>
-        <!--<module>samples/jwt-claims</module>-->
+        <module>samples/jwt-claims</module>
         <module>samples/spring-helloworld</module>
         <module>samples/helloworld-JPA</module>
     </modules>
