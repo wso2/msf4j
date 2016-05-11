@@ -23,15 +23,8 @@ import org.wso2.msf4j.MicroservicesRunner;
 public class Application {
 
     public static void main(String[] args) {
-        new MicroservicesRunner()
-                .deploy(new StockQuoteService())
-                .start();
-        while(true) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        new MicroservicesRunner().
+                deploy(new StockQuoteService()).
+                start();
     }
 }
