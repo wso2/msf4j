@@ -677,6 +677,33 @@ public class HttpServerTest {
         urlConn.disconnect();
     }
 
+    @Test
+    public void testGlobalSwagger() throws Exception {
+        HttpURLConnection urlConn = request("/swagger", HttpMethod.GET);
+        Assert.assertEquals(urlConn.getResponseCode(), Response.Status.OK.getStatusCode());
+        String contentType = urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE);
+        Assert.assertTrue(contentType.equalsIgnoreCase(MediaType.TEXT_PLAIN));
+        urlConn.disconnect();
+    }
+
+    @Test
+    public void testServiceSwagger() throws Exception {
+        HttpURLConnection urlConn = request("/swagger?path=/test/v1", HttpMethod.GET);
+        Assert.assertEquals(urlConn.getResponseCode(), Response.Status.OK.getStatusCode());
+        String contentType = urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE);
+        Assert.assertTrue(contentType.equalsIgnoreCase(MediaType.TEXT_PLAIN));
+        urlConn.disconnect();
+    }
+
+    @Test
+    public void testNonExistantServiceSwagger() throws Exception {
+        HttpURLConnection urlConn = request("/swagger?path=/zzaabdf", HttpMethod.GET);
+        Assert.assertEquals(urlConn.getResponseCode(), Response.Status.NOT_FOUND.getStatusCode());
+        String contentType = urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE);
+        Assert.assertTrue(contentType.equalsIgnoreCase(MediaType.TEXT_PLAIN));
+        urlConn.disconnect();
+    }
+
     protected Socket createRawSocket(URL url) throws IOException {
         return new Socket(url.getHost(), url.getPort());
     }
