@@ -248,9 +248,8 @@
             org.wso2.msf4j.util.*,
             javax.ws.rs.*,
         </import.package>
-        <provide.capability>
-            osgi.service;effective:=active;objectClass="org.wso2.carbon.kernel.startupresolver.CapabilityProvider";
-            capability-name="org.wso2.msf4j.Interceptor"
-        </provide.capability>
+        <carbon.component>
+            osgi.service;objectClass="org.wso2.carbon.kernel.startupresolver.CapabilityProvider";capabilityName="org.wso2.msf4j.Interceptor"
+        </carbon.component>
     </properties>
 </project>

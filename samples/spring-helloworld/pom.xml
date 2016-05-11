@@ -50,10 +50,6 @@
                 </exclusion>
                 <exclusion>
                     <groupId>org.wso2.carbon</groupId>
-                    <artifactId>wso2carbon-kernel</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.wso2.carbon</groupId>
                     <artifactId>org.wso2.carbon.launcher</artifactId>
                 </exclusion>
                 <exclusion>
