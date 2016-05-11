@@ -16,19 +16,20 @@
  *  under the License.
  *
  */
-package org.wso2.msf4j.example;
+package org.wso2.msf4j.internal.router;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 
 /**
- * ExceptioMapper which handled SymbolNotFoundException.
+ * Test exception mapper used for testing ExceptionMapper feature.
  */
-public class SymbolNotFoundMapper implements ExceptionMapper<SymbolNotFoundException> {
+public class TestExceptionMapper implements ExceptionMapper<MappedException> {
 
-    public Response toResponse(SymbolNotFoundException ex) {
+    @Override
+    public Response toResponse(MappedException e) {
         return Response.status(404).
-                entity(ex.getMessage()).
+                entity(e.getMessage()).
                 type("text/plain").
                 build();
     }

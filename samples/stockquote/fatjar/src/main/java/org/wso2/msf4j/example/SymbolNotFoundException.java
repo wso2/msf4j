@@ -19,7 +19,7 @@
 package org.wso2.msf4j.example;
 
 /**
- * Thrown when a Symbol is not found
+ * Thrown when a Symbol is not found.
  */
 public class SymbolNotFoundException extends Exception {
     public SymbolNotFoundException() {

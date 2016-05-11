@@ -83,6 +83,7 @@ public class HttpServerTest {
     public static void setup() throws Exception {
         baseURI = URI.create(String.format("http://%s:%d", hostname, port));
         microservicesRunner
+                .addExceptionMapper(new TestExceptionMapper(), new TestExceptionMapper2())
                 .deploy(TEST_MICROSERVICE)
                 .start();
     }
@@ -115,7 +116,7 @@ public class HttpServerTest {
 
     @Test
     public void testSmallFileUpload() throws IOException {
-        testStreamUpload(10 , "testSmallFileUpload.txt");
+        testStreamUpload(10, "testSmallFileUpload.txt");
     }
 
     @Test
@@ -696,13 +697,30 @@ public class HttpServerTest {
     }
 
     @Test
-    public void testNonExistantServiceSwagger() throws Exception {
+    public void testNonExistentServiceSwagger() throws Exception {
         HttpURLConnection urlConn = request("/swagger?path=/zzaabdf", HttpMethod.GET);
         Assert.assertEquals(urlConn.getResponseCode(), Response.Status.NOT_FOUND.getStatusCode());
         String contentType = urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE);
         Assert.assertTrue(contentType.equalsIgnoreCase(MediaType.TEXT_PLAIN));
         urlConn.disconnect();
     }
+
+    @Test
+    public void testExceptionMapper() throws Exception {
+        HttpURLConnection urlConn = request("/test/v1/mappedException", HttpMethod.GET);
+        Assert.assertEquals(urlConn.getResponseCode(), Response.Status.NOT_FOUND.getStatusCode());
+        String contentType = urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE);
+        Assert.assertTrue(contentType.equalsIgnoreCase(MediaType.TEXT_PLAIN));
+        urlConn.disconnect();
+    }
+
+    @Test
+    public void testExceptionMapper2() throws Exception {
+        HttpURLConnection urlConn = request("/test/v1/mappedException2", HttpMethod.GET);
+        Assert.assertEquals(urlConn.getResponseCode(), Response.Status.EXPECTATION_FAILED.getStatusCode());
+        urlConn.disconnect();
+    }
+
 
     protected Socket createRawSocket(URL url) throws IOException {
         return new Socket(url.getHost(), url.getPort());

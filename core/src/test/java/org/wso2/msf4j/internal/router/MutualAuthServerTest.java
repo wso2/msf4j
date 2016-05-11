@@ -55,6 +55,7 @@ public class MutualAuthServerTest extends HttpsServerTest {
                 Resources.getResource("netty-transports-2.yml").getPath());
         microservicesRunner = new MicroservicesRunner();
         microservicesRunner
+                .addExceptionMapper(new TestExceptionMapper(), new TestExceptionMapper2())
                 .deploy(TEST_MICROSERVICE)
                 .start();
     }
