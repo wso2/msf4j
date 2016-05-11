@@ -137,15 +137,13 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
         Optional<ExceptionMapper> exceptionMapper = microservicesRegistry.getExceptionMapper(throwable);
         if (exceptionMapper.isPresent()) {
             org.wso2.msf4j.Response msf4jResponse = new org.wso2.msf4j.Response(carbonCallback);
-            javax.ws.rs.core.Response jaxrsResponse = exceptionMapper.get().toResponse(throwable);
-            msf4jResponse.setEntity(jaxrsResponse);
+            msf4jResponse.setEntity(exceptionMapper.get().toResponse(throwable));
             msf4jResponse.send();
         } else {
             log.warn("Unmapped exception", throwable);
-            carbonCallback.done(HttpUtil
-                    .createTextResponse(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
+            carbonCallback.done(HttpUtil.
+                    createTextResponse(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
                             "Exception occurred :" + throwable.getMessage()));
-//                            throwable.getMessage()));
         }
     }
 

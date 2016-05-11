@@ -105,3 +105,11 @@ or through network traffic inspection.
 This sample also demonstrates the usage of [Swagger annotations](https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X).
 In order to retrieve the [Swagger](http://swagger.io/getting-started/) definition for the StockQuote microservice, go to 
 [http://localhost:8080/swagger?path="/stockquote"](http://localhost:8080/swagger?path=/stockquote).
+
+## ExtensionMapper
+This sample also demonstrates the use of [JAXRS ExceptionMapper](https://docs.oracle.com/javaee/7/api/javax/ws/rs/ext/ExceptionMapper.html).
+When a request is sent to a non-existent symbol is sent, [http://localhost:8080/stockquote/ZZZ](http://localhost:8080/stockquote/ZZZ)
+for example, a [SymbolNotFoundException](src/main/java/org/wso2/msf4j/example/SymbolNotFoundException.java)
+is thrown. We have registered [SymbolNotFoundMapper](src/main/java/org/wso2/msf4j/example/SymbolNotFoundMapper.java) as 
+the ExtensionMapper for SymbolNotFoundException and this mapper will take care of sending back an HTTP 404 with the 
+exception message.
