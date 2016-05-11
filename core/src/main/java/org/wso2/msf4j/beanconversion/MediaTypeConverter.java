@@ -29,9 +29,8 @@ public abstract class MediaTypeConverter {
      *
      * @param object object that needs to be converted to a media content
      * @return converted media content
-     * @throws BeanConversionException throws if conversion is failed
      */
-    public ByteBuffer convertToMedia(Object object) throws BeanConversionException {
+    public ByteBuffer convertToMedia(Object object) {
         if (object == null) {
             throw new BeanConversionException("Object cannot be null");
         }

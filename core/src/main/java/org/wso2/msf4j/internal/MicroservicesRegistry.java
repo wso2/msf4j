@@ -26,13 +26,16 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ws.rs.Path;
+import javax.ws.rs.ext.ExceptionMapper;
 
 /**
  * MicroservicesRegistry for the MSF4J component.
@@ -45,6 +48,7 @@ public class MicroservicesRegistry {
 
     private final List<Interceptor> interceptors = new ArrayList<>();
     private volatile MicroserviceMetadata metadata = new MicroserviceMetadata(Collections.emptyList());
+    private Map<String, ExceptionMapper> exceptionMappers = new HashMap<>();
 
     private MicroservicesRegistry() {
     }
@@ -95,6 +99,17 @@ public class MicroservicesRegistry {
     public void addInterceptor(Interceptor... interceptor) {
         Collections.addAll(interceptors, interceptor);
         updateMetadata();
+    }
+
+    public void addExceptionMapper(ExceptionMapper mapper) {
+        Arrays.stream(mapper.getClass().getMethods()).
+                filter(method -> method.getName().equals("toResponse") && method.getParameterCount() == 1).
+                findAny().
+                ifPresent(method -> exceptionMappers.put(method.getGenericParameterTypes()[0].getTypeName(), mapper));
+    }
+
+    public Optional<ExceptionMapper> getExceptionMapper(Throwable throwable) {
+        return Optional.ofNullable(exceptionMappers.get(throwable.getClass().getTypeName()));
     }
 
     public List<Interceptor> getInterceptors() {

@@ -35,7 +35,9 @@ import org.wso2.msf4j.util.HttpUtil;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
 import java.util.List;
+import java.util.Optional;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.ExceptionMapper;
 
 /**
  * Process carbon messages for MSF4J.
@@ -131,12 +133,20 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
         }
     }
 
-    private void handleThrowable(Throwable t, CarbonCallback carbonCallback) {
-        log.warn("Unmapped exception", t);
-        // TODO: improve the response and add exception mapping
-        carbonCallback.done(HttpUtil
-                .createTextResponse(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
-                        t.getMessage()));
+    private void handleThrowable(Throwable throwable, CarbonCallback carbonCallback) {
+        Optional<ExceptionMapper> exceptionMapper = microservicesRegistry.getExceptionMapper(throwable);
+        if (exceptionMapper.isPresent()) {
+            org.wso2.msf4j.Response msf4jResponse = new org.wso2.msf4j.Response(carbonCallback);
+            javax.ws.rs.core.Response jaxrsResponse = exceptionMapper.get().toResponse(throwable);
+            msf4jResponse.setEntity(jaxrsResponse);
+            msf4jResponse.send();
+        } else {
+            log.warn("Unmapped exception", throwable);
+            carbonCallback.done(HttpUtil
+                    .createTextResponse(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
+                            "Exception occurred :" + throwable.getMessage()));
+//                            throwable.getMessage()));
+        }
     }
 
     private void handleHandlerException(HandlerException e, CarbonCallback carbonCallback) {

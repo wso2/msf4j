@@ -42,8 +42,7 @@ public class ObjectEntityWriter implements EntityWriter<Object> {
      * Write the entity to the carbon message.
      */
     @Override
-    public void writeData(CarbonMessage carbonMessage, Object entity, String mediaType, int chunkSize)
-            throws Exception {
+    public void writeData(CarbonMessage carbonMessage, Object entity, String mediaType, int chunkSize) {
         mediaType = (mediaType != null) ? mediaType : MediaType.WILDCARD;
         ByteBuffer byteBuffer = BeanConverter.getInstance().getConverter(mediaType).convertToMedia(entity);
         carbonMessage.addMessageBody(byteBuffer);

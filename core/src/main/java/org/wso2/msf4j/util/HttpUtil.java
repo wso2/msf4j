@@ -42,8 +42,12 @@ public class HttpUtil {
     public static CarbonMessage createTextResponse(int status, String msg) {
         DefaultCarbonMessage response = new DefaultCarbonMessage();
         response.setProperty(Constants.HTTP_STATUS_CODE, status);
-        response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(msg.length()));
-        response.setStringMessageBody(msg);
+        if (msg != null) {
+            response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(msg.length()));
+            response.setStringMessageBody(msg);
+        } else {
+            response.setHeader(HttpHeaders.CONTENT_LENGTH, "0");
+        }
         return response;
     }
 
