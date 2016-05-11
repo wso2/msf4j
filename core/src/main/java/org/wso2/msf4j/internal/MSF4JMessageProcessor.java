@@ -136,7 +136,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
         // TODO: improve the response and add exception mapping
         carbonCallback.done(HttpUtil
                 .createTextResponse(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
-                        HttpUtil.EMPTY_BODY));
+                        t.getMessage()));
     }
 
     private void handleHandlerException(HandlerException e, CarbonCallback carbonCallback) {
