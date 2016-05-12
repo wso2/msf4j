@@ -298,6 +298,12 @@ which allows creation of custom responses when exceptions are thrown from MSF4J 
 
 The [StockQuote sample](samples/stockquote/fatjar) demonstrates ExceptionMapper in action.
 
+The following code segment shows how ExceptionMappers are registered with the MSF4J runtime.
+
+```java
+new MicroservicesRunner().addExceptionMapper(new SymbolNotFoundMapper(), new DuplicateSymbolMapper());
+```
+
 ###Complete Feature List
 * Annotation based definition of microservices
 * High performance Netty based transport

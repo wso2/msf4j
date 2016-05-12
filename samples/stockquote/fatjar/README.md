@@ -113,3 +113,9 @@ for example, a [SymbolNotFoundException](src/main/java/org/wso2/msf4j/example/Sy
 is thrown. We have registered [SymbolNotFoundMapper](src/main/java/org/wso2/msf4j/example/SymbolNotFoundMapper.java) as 
 the ExtensionMapper for SymbolNotFoundException and this mapper will take care of sending back an HTTP 404 with the 
 exception message.
+
+The following code segment shows how ExceptionMappers are registered with the MSF4J runtime.
+
+```java
+new MicroservicesRunner().addExceptionMapper(new SymbolNotFoundMapper(), new DuplicateSymbolMapper());
+```
