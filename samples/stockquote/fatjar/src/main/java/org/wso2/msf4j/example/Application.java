@@ -24,7 +24,7 @@ public class Application {
 
     public static void main(String[] args) {
         new MicroservicesRunner().
-                addExceptionMapper(new SymbolNotFoundMapper()).
+                addExceptionMapper(new SymbolNotFoundMapper(), new DuplicateSymbolMapper()).
                 deploy(new StockQuoteService()).
                 start();
     }

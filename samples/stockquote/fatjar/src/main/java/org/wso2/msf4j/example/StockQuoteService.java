@@ -104,8 +104,12 @@ public class StockQuoteService {
     @ApiOperation(
             value = "Add a stock item",
             notes = "Add a valid stock item")
-    public void addStock(Stock stock) {
-        stockQuotes.put(stock.getSymbol(), stock);
+    public void addStock(Stock stock) throws DuplicateSymbolException {
+        String symbol = stock.getSymbol();
+        if (stockQuotes.containsKey(symbol)) {
+            throw new DuplicateSymbolException("Symbol " + symbol + " already exists");
+        }
+        stockQuotes.put(symbol, stock);
     }
 
     /**
