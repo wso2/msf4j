@@ -16,6 +16,9 @@
 package org.wso2.msf4j.example;
 
 import org.wso2.msf4j.MicroservicesRunner;
+import org.wso2.msf4j.example.exception.DuplicateSymbolMapper;
+import org.wso2.msf4j.example.exception.EntityNotFoundMapper;
+import org.wso2.msf4j.example.exception.SymbolNotFoundMapper;
 
 /**
  * Application entry point.
@@ -24,7 +27,7 @@ public class Application {
 
     public static void main(String[] args) {
         new MicroservicesRunner().
-                addExceptionMapper(new SymbolNotFoundMapper(), new DuplicateSymbolMapper()).
+                addExceptionMapper(new EntityNotFoundMapper(), new SymbolNotFoundMapper(), new DuplicateSymbolMapper()).
                 deploy(new StockQuoteService()).
                 start();
     }

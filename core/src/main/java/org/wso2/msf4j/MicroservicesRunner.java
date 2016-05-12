@@ -30,7 +30,6 @@ import org.wso2.msf4j.internal.MSF4JMessageProcessor;
 import org.wso2.msf4j.internal.MicroservicesRegistry;
 import org.wso2.msf4j.internal.swagger.SwaggerDefinitionService;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -122,7 +121,7 @@ public class MicroservicesRunner {
      */
     public MicroservicesRunner addInterceptor(Interceptor... interceptor) {
         checkState();
-        Arrays.stream(interceptor).parallel().forEach(msRegistry::addInterceptor);
+        msRegistry.addInterceptor(interceptor);
         return this;
     }
 
@@ -134,7 +133,7 @@ public class MicroservicesRunner {
      */
     public MicroservicesRunner addExceptionMapper(ExceptionMapper... exceptionMapper) {
         checkState();
-        Arrays.stream(exceptionMapper).parallel().forEach(msRegistry::addExceptionMapper);
+        msRegistry.addExceptionMapper(exceptionMapper);
         return this;
     }
 

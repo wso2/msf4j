@@ -16,13 +16,20 @@
  *  under the License.
  *
  */
-package org.wso2.msf4j.example;
+package org.wso2.msf4j.example.exception;
+
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
 
 /**
- * DuplicateSymbolException.
+ * ExceptionMapper which handled SymbolNotFoundException.
  */
-public class DuplicateSymbolException extends Throwable {
-    public DuplicateSymbolException(String msg) {
-        super(msg);
+public class SymbolNotFoundMapper implements ExceptionMapper<SymbolNotFoundException> {
+
+    public Response toResponse(SymbolNotFoundException ex) {
+        return Response.status(404).
+                entity(ex.getMessage() + " [from SymbolNotFoundMapper]").
+                type("text/plain").
+                build();
     }
 }

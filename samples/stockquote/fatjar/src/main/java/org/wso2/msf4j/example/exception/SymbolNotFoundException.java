@@ -16,12 +16,12 @@
  *  under the License.
  *
  */
-package org.wso2.msf4j.example;
+package org.wso2.msf4j.example.exception;
 
 /**
  * Thrown when a Symbol is not found.
  */
-public class SymbolNotFoundException extends Exception {
+public class SymbolNotFoundException extends EntityNotFoundException {
     public SymbolNotFoundException() {
         super();
     }
