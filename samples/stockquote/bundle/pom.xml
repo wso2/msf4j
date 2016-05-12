@@ -62,5 +62,8 @@
             javax.xml.bind*,
             org.slf4j.*,
         </import.package>
+        <carbon.component>
+            osgi.service; objectClass="org.wso2.msf4j.Microservice"
+        </carbon.component>
     </properties>
 </project>

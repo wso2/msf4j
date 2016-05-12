@@ -66,5 +66,8 @@
             org.slf4j.*,
             org.wso2.carbon.metrics.annotation.*,
         </import.package>
+        <carbon.component>
+            osgi.service; objectClass="org.wso2.msf4j.Microservice"
+        </carbon.component>
     </properties>
 </project>
