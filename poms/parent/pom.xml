@@ -39,20 +39,6 @@
         <maven>3.0.0</maven>
     </prerequisites>
 
-    <repositories>
-        <!-- WSO2 released artifact repository -->
-        <repository>
-            <id>wso2.releases.staging</id>
-            <name>WSO2 Releases Repository Staging</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/orgwso2carbon-1016/</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-                <checksumPolicy>ignore</checksumPolicy>
-            </releases>
-        </repository>
-    </repositories>
-
     <pluginRepositories>
         <pluginRepository>
             <id>wso2-nexus</id>

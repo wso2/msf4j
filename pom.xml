@@ -38,20 +38,6 @@
         <tag>HEAD</tag>
     </scm>
 
-    <repositories>
-        <!-- WSO2 released artifact repository -->
-        <repository>
-            <id>wso2.releases.staging</id>
-            <name>WSO2 Releases Repository Staging</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/orgwso2carbon-1016/</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-                <checksumPolicy>ignore</checksumPolicy>
-            </releases>
-        </repository>
-    </repositories>
-
     <developers>
         <developer>
             <name>WSO2</name>
