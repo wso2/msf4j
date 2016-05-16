@@ -474,6 +474,18 @@ public class TestMicroservice implements Microservice {
         throw new CustomException();
     }
 
+    @Path("/mappedException")
+    @GET
+    public void testExceptionMapping() throws MappedException {
+         throw new MappedException("Mapped exception thrown");
+    }
+
+    @Path("/mappedException2")
+    @GET
+    public void testExceptionMapping2() throws MappedException2 {
+        throw new MappedException2("Mapped exception 2 thrown");
+    }
+
     /**
      * Custom exception class for testing exception handler.
      */

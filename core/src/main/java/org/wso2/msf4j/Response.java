@@ -234,14 +234,14 @@ public class Response {
     /**
      * Send the HTTP response using the content in this object.
      */
-    public void send() throws Exception {
+    public void send() {
         carbonMessage.setProperty(Constants.HTTP_STATUS_CODE, getStatusCode());
         processEntity();
         carbonCallback.done(carbonMessage);
     }
 
     @SuppressWarnings("unchecked")
-    private void processEntity() throws Exception {
+    private void processEntity() {
         if (entity != null) {
             EntityWriterRegistry.getInstance()
                     .getEntityWriter(entity.getClass())

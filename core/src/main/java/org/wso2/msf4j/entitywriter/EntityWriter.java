@@ -44,8 +44,7 @@ public interface EntityWriter<T> {
      * @param chunkSize user defined chunk size
      *                  0 to signify none chunked response
      *                  -1 to signify default chunk size of the EntityWriter
-     * @throws Exception
      */
-    void writeData(CarbonMessage carbonMessage, T entity, String mediaType, int chunkSize) throws Exception;
+    void writeData(CarbonMessage carbonMessage, T entity, String mediaType, int chunkSize);
 
 }

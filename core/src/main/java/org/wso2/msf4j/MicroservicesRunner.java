@@ -30,10 +30,10 @@ import org.wso2.msf4j.internal.MSF4JMessageProcessor;
 import org.wso2.msf4j.internal.MicroservicesRegistry;
 import org.wso2.msf4j.internal.swagger.SwaggerDefinitionService;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import javax.ws.rs.ext.ExceptionMapper;
 
 /**
  * This runner initializes the microservices runtime, deploys the microservices and service interceptors,
@@ -121,7 +121,19 @@ public class MicroservicesRunner {
      */
     public MicroservicesRunner addInterceptor(Interceptor... interceptor) {
         checkState();
-        Arrays.stream(interceptor).parallel().forEach(msRegistry::addInterceptor);
+        msRegistry.addInterceptor(interceptor);
+        return this;
+    }
+
+    /**
+     * Add javax.ws.rs.ext.ExtensionMapper objects
+     *
+     * @param exceptionMapper The ExtensionMapper to be added
+     * @return this MicroservicesRunner object
+     */
+    public MicroservicesRunner addExceptionMapper(ExceptionMapper... exceptionMapper) {
+        checkState();
+        msRegistry.addExceptionMapper(exceptionMapper);
         return this;
     }
 

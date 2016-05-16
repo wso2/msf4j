@@ -292,12 +292,25 @@ in your MSF4J microservice.
 
 The [StockQuote sample](samples/stockquote/fatjar) demonstrates Swagger annotations in action.
 
+### ExceptionMapper 
+MSF4J supports [JAXRS ExceptionMapper](https://docs.oracle.com/javaee/7/api/javax/ws/rs/ext/ExceptionMapper.html) 
+which allows creation of custom responses when exceptions are thrown from MSF4J services. 
+
+The [StockQuote sample](samples/stockquote/fatjar) demonstrates ExceptionMapper in action.
+
+The following code segment shows how ExceptionMappers are registered with the MSF4J runtime.
+
+```java
+new MicroservicesRunner().addExceptionMapper(new SymbolNotFoundMapper(), new DuplicateSymbolMapper());
+```
+
 ###Complete Feature List
 * Annotation based definition of microservices
 * High performance Netty based transport
 * WSO2 Developer Studio based tooling for microservices development starting from a Swagger API definition
 * Generate Swagger definition using [Swagger annotations](https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X)
 * HTTP request & response streaming
+* [ExceptionMapper]((https://docs.oracle.com/javaee/7/api/javax/ws/rs/ext/ExceptionMapper.html))
 * Support for metrics & visualization of metrics using WSO2 Data Analytics Server (DAS) dashboards
 * Support for securing microservices
 * Integration with rendering engines such as Mustache

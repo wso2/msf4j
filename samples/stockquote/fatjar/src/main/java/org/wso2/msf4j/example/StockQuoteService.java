@@ -23,6 +23,8 @@ import io.swagger.annotations.Contact;
 import io.swagger.annotations.Info;
 import io.swagger.annotations.License;
 import io.swagger.annotations.SwaggerDefinition;
+import org.wso2.msf4j.example.exception.DuplicateSymbolException;
+import org.wso2.msf4j.example.exception.SymbolNotFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -70,7 +72,7 @@ public class StockQuoteService {
      * http://localhost:8080/stockquote/IBM
      *
      * @param symbol Stock symbol will be taken from the path parameter.
-     * @return
+     * @return Response
      */
     @GET
     @Path("/{symbol}")
@@ -81,11 +83,12 @@ public class StockQuoteService {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Valid stock item found"),
             @ApiResponse(code = 404, message = "Stock item not found")})
-    public Response getQuote(@PathParam("symbol") String symbol) {
+    public Response getQuote(@PathParam("symbol") String symbol) throws SymbolNotFoundException {
         Stock stock = stockQuotes.get(symbol);
-        return (stock == null) ?
-                Response.status(Response.Status.NOT_FOUND).build() :
-                Response.status(Response.Status.OK).entity(stock).build();
+        if (stock == null) {
+            throw new SymbolNotFoundException("Symbol " + symbol + " not found");
+        }
+        return Response.status(Response.Status.OK).entity(stock).build();
     }
 
     /**
@@ -103,8 +106,12 @@ public class StockQuoteService {
     @ApiOperation(
             value = "Add a stock item",
             notes = "Add a valid stock item")
-    public void addStock(Stock stock) {
-        stockQuotes.put(stock.getSymbol(), stock);
+    public void addStock(Stock stock) throws DuplicateSymbolException {
+        String symbol = stock.getSymbol();
+        if (stockQuotes.containsKey(symbol)) {
+            throw new DuplicateSymbolException("Symbol " + symbol + " already exists");
+        }
+        stockQuotes.put(symbol, stock);
     }
 
     /**

@@ -28,11 +28,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeMap;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ws.rs.Path;
+import javax.ws.rs.ext.ExceptionMapper;
 
 /**
  * MicroservicesRegistry for the MSF4J component.
@@ -45,6 +48,7 @@ public class MicroservicesRegistry {
 
     private final List<Interceptor> interceptors = new ArrayList<>();
     private volatile MicroserviceMetadata metadata = new MicroserviceMetadata(Collections.emptyList());
+    private Map<String, ExceptionMapper> exceptionMappers = new TreeMap<>(new ClassComparator());
 
     private MicroservicesRegistry() {
     }
@@ -95,6 +99,29 @@ public class MicroservicesRegistry {
     public void addInterceptor(Interceptor... interceptor) {
         Collections.addAll(interceptors, interceptor);
         updateMetadata();
+    }
+
+    public void addExceptionMapper(ExceptionMapper... mapper) {
+        Arrays.stream(mapper).forEach(em -> {
+            Arrays.stream(em.getClass().getMethods()).
+                    filter(method -> method.getName().equals("toResponse") && method.getParameterCount() == 1).
+                    findAny().
+                    ifPresent(method -> exceptionMappers.put(method.getGenericParameterTypes()[0].getTypeName(), em));
+        });
+    }
+
+    Optional<ExceptionMapper> getExceptionMapper(Throwable throwable) {
+        return exceptionMappers.entrySet().
+                stream().
+                filter(entry -> {
+                    try {
+                        return Class.forName(entry.getKey()).isAssignableFrom(throwable.getClass());
+                    } catch (ClassNotFoundException e) {
+                        throw new RuntimeException(e.getMessage(), e);
+                    }
+                }).findFirst().
+                flatMap(entry -> Optional.ofNullable(entry.getValue()));
+//        return Optional.ofNullable(exceptionMappers.get(throwable.getClass().getTypeName()));
     }
 
     public List<Interceptor> getInterceptors() {

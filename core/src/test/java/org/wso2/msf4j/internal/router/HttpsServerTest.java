@@ -53,6 +53,7 @@ public class HttpsServerTest extends HttpServerTest {
         microservicesRunner = new MicroservicesRunner();
         sslClientContext = new SSLClientContext();
         microservicesRunner
+                .addExceptionMapper(new TestExceptionMapper(), new TestExceptionMapper2())
                 .deploy(TEST_MICROSERVICE)
                 .start();
     }

@@ -26,7 +26,9 @@ import java.util.Map;
 import java.util.Optional;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
@@ -44,6 +46,7 @@ public class SwaggerDefinitionService {
     }
 
     @GET
+    @Produces({MediaType.TEXT_PLAIN})
     public Response getSwaggerDefinition(@QueryParam("path") String path) throws Exception {
         MSF4JBeanConfig msf4JBeanConfig;
         if (path == null) {

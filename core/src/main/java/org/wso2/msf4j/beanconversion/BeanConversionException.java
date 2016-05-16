@@ -19,7 +19,7 @@ package org.wso2.msf4j.beanconversion;
 /**
  * Exception that is thrown when a bean conversion is failed.
  */
-public class BeanConversionException extends Exception {
+public class BeanConversionException extends RuntimeException {
 
     public BeanConversionException(String msg) {
         super(msg);

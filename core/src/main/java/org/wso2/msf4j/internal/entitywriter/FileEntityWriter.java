@@ -26,6 +26,7 @@ import org.wso2.msf4j.internal.mime.MimeMappingException;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import javax.ws.rs.core.MediaType;
@@ -49,7 +50,7 @@ public class FileEntityWriter implements EntityWriter<File> {
      * Write the entity to the carbon message.
      */
     @Override
-    public void writeData(CarbonMessage carbonMessage, File file, String mediaType, int chunkSize) throws Exception {
+    public void writeData(CarbonMessage carbonMessage, File file, String mediaType, int chunkSize) {
         if (mediaType == null || mediaType.equals(MediaType.WILDCARD)) {
             try {
                 mediaType = MimeMapper.getMimeType(Files.getFileExtension(file.getName()));
@@ -57,20 +58,24 @@ public class FileEntityWriter implements EntityWriter<File> {
                 mediaType = MediaType.WILDCARD;
             }
         }
-        FileChannel fileChannel = new FileInputStream(file).getChannel();
-        if (chunkSize == Response.NO_CHUNK || chunkSize == Response.DEFAULT_CHUNK_SIZE) {
-            chunkSize = DEFAULT_CHUNK_SIZE;
+        try {
+            FileChannel fileChannel = new FileInputStream(file).getChannel();
+            if (chunkSize == Response.NO_CHUNK || chunkSize == Response.DEFAULT_CHUNK_SIZE) {
+                chunkSize = DEFAULT_CHUNK_SIZE;
+            }
+            //TODO: prevent full loading of the file to memory
+            ByteBuffer buffer = ByteBuffer.allocate(chunkSize);
+            while (fileChannel.read(buffer) != -1) {
+                buffer.flip();
+                carbonMessage.addMessageBody(buffer);
+                buffer = ByteBuffer.allocate(chunkSize);
+            }
+            fileChannel.close();
+            carbonMessage.setEndOfMsgAdded(true);
+            carbonMessage.setHeader(Constants.HTTP_TRANSFER_ENCODING, CHUNKED);
+            carbonMessage.setHeader(Constants.HTTP_CONTENT_TYPE, mediaType);
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot write file", e);
         }
-        //TODO: prevent full loading of the file to memory
-        ByteBuffer buffer = ByteBuffer.allocate(chunkSize);
-        while (fileChannel.read(buffer) != -1) {
-            buffer.flip();
-            carbonMessage.addMessageBody(buffer);
-            buffer = ByteBuffer.allocate(chunkSize);
-        }
-        fileChannel.close();
-        carbonMessage.setEndOfMsgAdded(true);
-        carbonMessage.setHeader(Constants.HTTP_TRANSFER_ENCODING, CHUNKED);
-        carbonMessage.setHeader(Constants.HTTP_CONTENT_TYPE, mediaType);
     }
 }
