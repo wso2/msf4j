@@ -566,9 +566,9 @@
         <!-- Dependencies -->
         <carbon.kernel.version>5.1.0-alpha2</carbon.kernel.version>
         <carbon.kernel.version.range>[5.0.0,6.0.0)</carbon.kernel.version.range>
-        <carbon.messaging.version>1.0.2</carbon.messaging.version>
+        <carbon.messaging.version>1.0.3</carbon.messaging.version>
         <carbon.messaging.version.range>[1.0.2,2)</carbon.messaging.version.range>
-        <org.wso2.carbon.transport.http.netty.version>2.0.1</org.wso2.carbon.transport.http.netty.version>
+        <org.wso2.carbon.transport.http.netty.version>2.0.3</org.wso2.carbon.transport.http.netty.version>
         <org.wso2.carbon.transport.http.netty.version.range>[2.0,3)</org.wso2.carbon.transport.http.netty.version.range>
         <msf4j.version>1.1.0-SNAPSHOT</msf4j.version>
         <carbon.metrics.version>1.2.0</carbon.metrics.version>
