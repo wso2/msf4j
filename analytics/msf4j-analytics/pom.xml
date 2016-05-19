@@ -228,7 +228,7 @@
 
     <properties>
         <export.package>
-            org.wso2.msf4j.analytics.*;version="1.0.0"
+            org.wso2.msf4j.analytics.*;version="${msf4j.version}"
         </export.package>
         <import.package>
             javax.annotation.*,
