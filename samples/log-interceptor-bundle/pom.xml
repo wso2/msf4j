@@ -49,8 +49,11 @@
         <private.package>org.wso2.msf4j.loginterceptor.*</private.package>
         <import.package>
             org.osgi.framework.*;version="${osgi.framework.import.version.range}",
-            org.wso2.msf4j.*
+            org.wso2.msf4j.*,
             org.slf4j.*,
         </import.package>
+        <carbon.component>
+            osgi.service;objectClass="org.wso2.msf4j.Interceptor"
+        </carbon.component>
     </properties>
 </project>
