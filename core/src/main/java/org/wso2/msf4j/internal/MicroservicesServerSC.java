@@ -34,9 +34,8 @@ import org.wso2.msf4j.Microservice;
 @Component(
         name = "org.wso2.msf4j.internal.MicroServicesServerSC",
         immediate = true,
-        service = RequiredCapabilityListener.class,
         property = {
-                "component-key=wso2-microservices-server"
+                "componentName=wso2-microservices-server"
         }
 )
 @SuppressWarnings("unused")

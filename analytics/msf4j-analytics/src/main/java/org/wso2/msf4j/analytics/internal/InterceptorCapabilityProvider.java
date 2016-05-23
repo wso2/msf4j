@@ -27,7 +27,7 @@ import org.wso2.carbon.kernel.startupresolver.CapabilityProvider;
 @Component(
         name = "org.wso2.msf4j.analytics.internal.InterceptorCapabilityProvider",
         immediate = true,
-        property = "capability-name=org.wso2.msf4j.Interceptor"
+        property = "capabilityName=org.wso2.msf4j.Interceptor"
 )
 public class InterceptorCapabilityProvider implements CapabilityProvider {
 
@@ -44,6 +44,6 @@ public class InterceptorCapabilityProvider implements CapabilityProvider {
      */
     @Override
     public int getCount() {
-        return 1;
+        return 2;
     }
 }

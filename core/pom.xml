@@ -310,7 +310,7 @@
         <export.package>
             !org.wso2.msf4j.internal.*,
             !org.wso2.msf4j.delegates.*,
-            org.wso2.msf4j.*;version="1.1.0",
+            org.wso2.msf4j.*;version="${msf4j.version}",
         </export.package>
         <import.package>
             com.google.gson.*;version="${gson.version.range}",
@@ -329,12 +329,10 @@
             org.wso2.carbon.kernel.utils.*;version="${carbon.kernel.version.range}",
             org.wso2.carbon.messaging.*
         </import.package>
-        <provide.capability>
-            osgi.service;effective:=active;objectClass="org.wso2.msf4j.internal.MicroservicesServerSC";
-            dependent-component-key="carbon-transport-mgt"
-        </provide.capability>
-        <startup.component>
-            wso2-microservices-server;required-service="org.wso2.msf4j.Microservice,org.wso2.msf4j.Interceptor"
-        </startup.component>
+        <carbon.component>
+            startup.listener;componentName="wso2-microservices-server";requiredService="org.wso2.msf4j.Microservice,org.wso2.msf4j.Interceptor",
+            osgi.service; objectClass="org.wso2.msf4j.internal.MicroservicesServerSC";dependentComponentName="carbon-transport-mgt",
+            osgi.service; objectClass="org.wso2.carbon.messaging.CarbonMessageProcessor"
+        </carbon.component>
     </properties>
 </project>
