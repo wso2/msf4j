@@ -112,12 +112,12 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                         microservicesRegistry.getInterceptors());
         if (interceptorExecutor.execPreCalls()) { // preCalls can throw exceptions
 
-            HttpMethodInfoBuilder httpMethodInfoBuilder = HttpMethodInfoBuilder
-                    .getInstance()
-                    .httpResourceModel(resourceModel)
-                    .httpRequest(request)
-                    .httpResponder(response)
-                    .requestInfo(destination.getGroupNameValues());
+            HttpMethodInfoBuilder httpMethodInfoBuilder =
+                    new HttpMethodInfoBuilder().
+                            httpResourceModel(resourceModel).
+                            httpRequest(request).
+                            httpResponder(response).
+                            requestInfo(destination.getGroupNameValues());
 
             HttpMethodInfo httpMethodInfo = httpMethodInfoBuilder.build();
             if (httpMethodInfo.isStreamingSupported()) {

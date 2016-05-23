@@ -35,13 +35,6 @@ public class HttpMethodInfoBuilder {
     private HttpMethodInfo httpMethodInfo;
 
     /**
-     * Create a new instance of the builder and return.
-     */
-    public static HttpMethodInfoBuilder getInstance() {
-        return new HttpMethodInfoBuilder();
-    }
-
-    /**
      * Set the associated HttpResourceModel object.
      */
     public HttpMethodInfoBuilder httpResourceModel(HttpResourceModel httpResourceModel) {
