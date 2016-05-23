@@ -53,10 +53,6 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
     private MicroservicesRegistry microservicesRegistry;
     private static final String MSF4J_MSG_PROC_ID = "MSF4J-CM-PROCESSOR";
 
-    public MSF4JMessageProcessor() {
-        this.microservicesRegistry = MicroservicesRegistry.getInstance();
-    }
-
     public MSF4JMessageProcessor(MicroservicesRegistry microservicesRegistry) {
         this.microservicesRegistry = microservicesRegistry;
     }
@@ -66,6 +62,9 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
      */
     @Override
     public boolean receive(CarbonMessage carbonMessage, CarbonCallback carbonCallback) {
+        if (microservicesRegistry == null) {
+            microservicesRegistry = DataHolder.getInstance().getMicroservicesRegistry();
+        }
         Request request = new Request(carbonMessage);
         Response response = new Response(carbonCallback);
         try {
@@ -96,17 +95,18 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
      */
     private void dispatchMethod(Request request, Response response) throws Exception {
         HttpUtil.setConnectionHeader(request, response);
-        PatternPathRouter.RoutableDestination<HttpResourceModel> destination = microservicesRegistry
-                .getMetadata()
-                .getDestinationMethod(request.getUri(),
-                        request.getHttpMethod(),
-                        request.getContentType(),
-                        request.getAcceptTypes());
+        PatternPathRouter.RoutableDestination<HttpResourceModel> destination =
+                microservicesRegistry
+                        .getMetadata()
+                        .getDestinationMethod(request.getUri(),
+                                request.getHttpMethod(),
+                                request.getContentType(),
+                                request.getAcceptTypes());
         HttpResourceModel resourceModel = destination.getDestination();
         response.setMediaType(getResponseType(request.getAcceptTypes(),
                 resourceModel.getProducesMediaTypes()));
-        InterceptorExecutor interceptorExecutor = InterceptorExecutor
-                .instance(resourceModel,
+        InterceptorExecutor interceptorExecutor =
+                InterceptorExecutor.instance(resourceModel,
                         request,
                         response,
                         microservicesRegistry.getInterceptors());

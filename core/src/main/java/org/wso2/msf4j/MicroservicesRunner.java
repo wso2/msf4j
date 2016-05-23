@@ -45,7 +45,7 @@ public class MicroservicesRunner {
     private TransportManager transportManager = new TransportManager();
     private long startTime = System.currentTimeMillis();
     private boolean isStarted;
-    private MicroservicesRegistry msRegistry = MicroservicesRegistry.newInstance();
+    private MicroservicesRegistry msRegistry = new MicroservicesRegistry();
 
     /**
      * Creates a MicroservicesRunner instance which will be used for deploying microservices. Allows specifying

@@ -43,33 +43,11 @@ import javax.ws.rs.ext.ExceptionMapper;
 public class MicroservicesRegistry {
 
     private static final Logger log = LoggerFactory.getLogger(MicroservicesRegistry.class);
-    private static final MicroservicesRegistry instance = new MicroservicesRegistry();
     private final Set<Object> services = new HashSet<>();
 
     private final List<Interceptor> interceptors = new ArrayList<>();
     private volatile MicroserviceMetadata metadata = new MicroserviceMetadata(Collections.emptyList());
     private Map<String, ExceptionMapper> exceptionMappers = new TreeMap<>(new ClassComparator());
-
-    private MicroservicesRegistry() {
-    }
-
-    /**
-     * Always returns the same MicroservicesRegistry instance.
-     *
-     * @return the singleton MicroservicesRegistry instance
-     */
-    public static MicroservicesRegistry getInstance() {
-        return instance;
-    }
-
-    /**
-     * Every call to this method will result in the creation of a new MicroservicesRegistry instance.
-     *
-     * @return a new MicroservicesRegistry instance
-     */
-    public static MicroservicesRegistry newInstance() {
-        return new MicroservicesRegistry();
-    }
 
     public void addService(Object... service) {
         Collections.addAll(services, service);
@@ -121,7 +99,6 @@ public class MicroservicesRegistry {
                     }
                 }).findFirst().
                 flatMap(entry -> Optional.ofNullable(entry.getValue()));
-//        return Optional.ofNullable(exceptionMappers.get(throwable.getClass().getTypeName()));
     }
 
     public List<Interceptor> getInterceptors() {

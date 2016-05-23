@@ -41,10 +41,11 @@ import org.wso2.msf4j.Microservice;
 @SuppressWarnings("unused")
 public class MicroservicesServerSC implements RequiredCapabilityListener {
     private static final Logger log = LoggerFactory.getLogger(MicroservicesServerSC.class);
-    private final MicroservicesRegistry microservicesRegistry = MicroservicesRegistry.getInstance();
+    private final MicroservicesRegistry microservicesRegistry = new MicroservicesRegistry();
 
     @Activate
     protected void start(final BundleContext bundleContext) {
+        DataHolder.getInstance().setMicroservicesRegistry(microservicesRegistry);
     }
 
     @Reference(

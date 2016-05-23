@@ -24,6 +24,7 @@ public class DataHolder {
 
     private static final DataHolder instance = new DataHolder();
     private BundleContext bundleContext;
+    private MicroservicesRegistry microservicesRegistry;
 
     private DataHolder() {
     }
@@ -38,5 +39,13 @@ public class DataHolder {
 
     public void setBundleContext(BundleContext bundleContext) {
         this.bundleContext = bundleContext;
+    }
+
+    public MicroservicesRegistry getMicroservicesRegistry() {
+        return microservicesRegistry;
+    }
+
+    public void setMicroservicesRegistry(MicroservicesRegistry microservicesRegistry) {
+        this.microservicesRegistry = microservicesRegistry;
     }
 }
