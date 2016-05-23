@@ -143,11 +143,11 @@
             <artifactId>pax-exam-extender-service</artifactId>
             <scope>test</scope>
         </dependency>
-        <!--<dependency>
+        <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.compendium</artifactId>
             <scope>test</scope>
-        </dependency>-->
+        </dependency>
         <dependency>
             <groupId>org.ops4j.base</groupId>
             <artifactId>ops4j-base</artifactId>
@@ -309,7 +309,14 @@
                                 <org.ops4j.pax.url.mvn.localRepository>${settings.localRepository}
                                 </org.ops4j.pax.url.mvn.localRepository>
                                 <jacoco-agent.destfile>${project.build.directory}/jacoco.exec</jacoco-agent.destfile>
+                                <pax.exam.system>default</pax.exam.system>
                             </systemPropertyVariables>
+                            <systemProperties>
+                                <property>
+                                    <name>carbon.home</name>
+                                    <value>${basedir}/target/carbon-home</value>
+                                </property>
+                            </systemProperties>
                             <suiteXmlFiles>
                                 <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
                             </suiteXmlFiles>

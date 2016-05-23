@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.wso2</groupId>
         <artifactId>wso2</artifactId>
-        <version>4</version>
+        <version>5</version>
         <relativePath/>
     </parent>
 
