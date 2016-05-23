@@ -61,6 +61,64 @@
             <groupId>org.wso2.msf4j</groupId>
             <artifactId>jaxrs-delegates</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-jaxrs</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.ws.rs</groupId>
+                    <artifactId>jsr311-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-models</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-yaml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.orbit.org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+        </dependency>
 
         <!-- Metrics Dependencies - Start -->
         <dependency>
@@ -176,6 +234,59 @@
                                     <symbolicName>org.apache.servicemix.bundles.commons-beanutils</symbolicName>
                                     <version>${beanutils.osgi.version}</version>
                                 </bundle>
+                                <bundle>
+                                    <symbolicName>io.swagger.core</symbolicName>
+                                    <version>${io.swagger.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>io.swagger.annotations</symbolicName>
+                                    <version>${io.swagger.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>io.swagger.jaxrs</symbolicName>
+                                    <version>${io.swagger.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>io.swagger.models</symbolicName>
+                                    <version>${io.swagger.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>com.fasterxml.jackson.core.jackson-databind</symbolicName>
+                                    <version>${com.fasterxml.jackson.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>com.fasterxml.jackson.core.jackson-annotations</symbolicName>
+                                    <version>${com.fasterxml.jackson.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>com.fasterxml.jackson.core.jackson-core</symbolicName>
+                                    <version>${com.fasterxml.jackson.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>com.fasterxml.jackson.dataformat.jackson-dataformat-yaml</symbolicName>
+                                    <version>${com.fasterxml.jackson.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>javax.validation.api</symbolicName>
+                                    <version>${javax.validation.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>org.apache.commons.lang3</symbolicName>
+                                    <version>${apache.commons.lang3.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>javax.servlet-api</symbolicName>
+                                    <version>${javax.servlet-api.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>reflections</symbolicName>
+                                    <version>${reflections.orbit.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>javassist</symbolicName>
+                                    <version>${javassist.version}</version>
+                                </bundle>
+
                                 <!-- Metrics Bundles - Start -->
                                 <bundle>
                                     <symbolicName>org.wso2.carbon.metrics.annotation</symbolicName>
