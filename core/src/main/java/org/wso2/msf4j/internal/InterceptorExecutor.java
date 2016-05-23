@@ -38,22 +38,15 @@ public class InterceptorExecutor {
     private List<Interceptor> interceptors;
     private ServiceMethodInfo serviceMethodInfo;
 
-    private InterceptorExecutor(HttpResourceModel httpResourceModel,
-                                Request request,
-                                Response response,
-                                List<Interceptor> interceptors) {
+    public InterceptorExecutor(HttpResourceModel httpResourceModel,
+                               Request request,
+                               Response response,
+                               List<Interceptor> interceptors) {
         this.request = request;
         this.response = response;
         this.interceptors = interceptors;
         serviceMethodInfo = new ServiceMethodInfo(httpResourceModel.getMethod().getDeclaringClass().getName(),
                 httpResourceModel.getMethod());
-    }
-
-    public static InterceptorExecutor instance(HttpResourceModel httpResourceModel,
-                                               Request request,
-                                               Response response,
-                                               List<Interceptor> interceptors) {
-        return new InterceptorExecutor(httpResourceModel, request, response, interceptors);
     }
 
     /**

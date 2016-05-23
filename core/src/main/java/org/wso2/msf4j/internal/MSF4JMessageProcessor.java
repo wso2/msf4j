@@ -96,20 +96,15 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
     private void dispatchMethod(Request request, Response response) throws Exception {
         HttpUtil.setConnectionHeader(request, response);
         PatternPathRouter.RoutableDestination<HttpResourceModel> destination =
-                microservicesRegistry
-                        .getMetadata()
-                        .getDestinationMethod(request.getUri(),
-                                request.getHttpMethod(),
-                                request.getContentType(),
+                microservicesRegistry.
+                        getMetadata().
+                        getDestinationMethod(request.getUri(), request.getHttpMethod(), request.getContentType(),
                                 request.getAcceptTypes());
         HttpResourceModel resourceModel = destination.getDestination();
         response.setMediaType(getResponseType(request.getAcceptTypes(),
                 resourceModel.getProducesMediaTypes()));
         InterceptorExecutor interceptorExecutor =
-                InterceptorExecutor.instance(resourceModel,
-                        request,
-                        response,
-                        microservicesRegistry.getInterceptors());
+                new InterceptorExecutor(resourceModel, request, response, microservicesRegistry.getInterceptors());
         if (interceptorExecutor.execPreCalls()) { // preCalls can throw exceptions
 
             HttpMethodInfoBuilder httpMethodInfoBuilder =
