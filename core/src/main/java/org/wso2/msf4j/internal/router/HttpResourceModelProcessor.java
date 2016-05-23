@@ -89,11 +89,9 @@ public class HttpResourceModelProcessor {
                     // request body data parameter
                     ByteBuffer fullContent = BufferUtil.merge(request.getFullMessageBody());
                     Type paramType = paramInfo.getParameterType();
-                    args[idx] = BeanConverter
-                            .getInstance()
-                            .getConverter((request.getContentType() != null)
-                                    ? request.getContentType()
-                                    : MediaType.WILDCARD)
+                    args[idx] = BeanConverter.getConverter((request.getContentType() != null)
+                            ? request.getContentType()
+                            : MediaType.WILDCARD)
                             .convertToObject(fullContent, paramType);
                 }
                 idx++;

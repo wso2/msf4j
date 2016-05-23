@@ -29,11 +29,12 @@ import java.util.Map;
 public class BeanConverter {
 
     private static final MediaTypeConverter DEFAULT_CONVERTER = new TextPlainConverter();
-    private static final BeanConverter INSTANCE = new BeanConverter();
+    private static final Map<String, MediaTypeConverter> converterMap = new HashMap<>();
 
-    private final Map<String, MediaTypeConverter> converterMap = new HashMap<>();
+    private BeanConverter() {
+    }
 
-    public BeanConverter() {
+    static {
         addMediaTypeConverter(new JsonConverter());
         addMediaTypeConverter(new XmlConverter());
     }
@@ -44,7 +45,7 @@ public class BeanConverter {
      * @param mediaType media type String
      * @return MediaTypeConverter
      */
-    public MediaTypeConverter getConverter(String mediaType) {
+    public static MediaTypeConverter getConverter(String mediaType) {
         MediaTypeConverter mediaTypeConverter = converterMap.get(mediaType.toLowerCase(Locale.US));
         if (mediaTypeConverter == null) {
             mediaTypeConverter = DEFAULT_CONVERTER;
@@ -55,16 +56,9 @@ public class BeanConverter {
     /**
      * Register a media type converter.
      */
-    public void addMediaTypeConverter(MediaTypeConverter mediaTypeConverter) {
+    private static void addMediaTypeConverter(MediaTypeConverter mediaTypeConverter) {
         for (String mediaType : mediaTypeConverter.getSupportedMediaTypes()) {
             converterMap.put(mediaType.toLowerCase(Locale.US), mediaTypeConverter);
         }
-    }
-
-    /**
-     * Get BeanConverter singleton.
-     */
-    public static BeanConverter getInstance() {
-        return INSTANCE;
     }
 }

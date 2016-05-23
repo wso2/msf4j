@@ -589,10 +589,10 @@ public class HttpServerTest {
         xmlBean.setId(10);
         xmlBean.setValue(15);
         writeContent(urlConn, Charset.defaultCharset()
-                .decode(BeanConverter.getInstance().getConverter("text/xml").convertToMedia(xmlBean)).toString());
+                .decode(BeanConverter.getConverter("text/xml").convertToMedia(xmlBean)).toString());
         Assert.assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
         String respBody = getContent(urlConn);
-        XmlBean xmlBean2 = (XmlBean) BeanConverter.getInstance().getConverter("text/xml").convertToObject(
+        XmlBean xmlBean2 = (XmlBean) BeanConverter.getConverter("text/xml").convertToObject(
                 ByteBuffer.wrap(respBody.getBytes(Charset.defaultCharset())), XmlBean.class);
         Assert.assertEquals(xmlBean.getName(), xmlBean2.getName());
         Assert.assertEquals(xmlBean.getId(), xmlBean2.getId());

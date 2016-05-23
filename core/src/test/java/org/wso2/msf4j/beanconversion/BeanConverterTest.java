@@ -33,8 +33,8 @@ public class BeanConverterTest {
     @Test
     public void testJsonBeanConversionTextJson() throws BeanConversionException {
         Pet pet = makePet();
-        ByteBuffer json = BeanConverter.getInstance().getConverter("text/json").toMedia(pet);
-        Pet pet1 = (Pet) BeanConverter.getInstance().getConverter("text/json").toObject(json, Pet.class);
+        ByteBuffer json = BeanConverter.getConverter("text/json").toMedia(pet);
+        Pet pet1 = (Pet) BeanConverter.getConverter("text/json").toObject(json, Pet.class);
         Assert.assertEquals(pet.getId(), pet1.getId());
         Assert.assertEquals(pet.getDetails(), pet1.getDetails());
         Assert.assertEquals(pet.getImage(), pet1.getImage());
@@ -47,8 +47,8 @@ public class BeanConverterTest {
     @Test
     public void testJsonBeanConversionApplicationJson() throws BeanConversionException {
         Pet pet = makePet();
-        ByteBuffer json = BeanConverter.getInstance().getConverter("application/json").toMedia(pet);
-        Pet pet1 = (Pet) BeanConverter.getInstance().getConverter("application/json").toObject(json, Pet.class);
+        ByteBuffer json = BeanConverter.getConverter("application/json").toMedia(pet);
+        Pet pet1 = (Pet) BeanConverter.getConverter("application/json").toObject(json, Pet.class);
         Assert.assertEquals(pet.getId(), pet1.getId());
         Assert.assertEquals(pet.getDetails(), pet1.getDetails());
         Assert.assertEquals(pet.getImage(), pet1.getImage());
@@ -61,24 +61,24 @@ public class BeanConverterTest {
     @Test
     public void testTextPlainBeanConversion() throws BeanConversionException {
         String val = "Test_String";
-        ByteBuffer media = BeanConverter.getInstance().getConverter("text/plain").toMedia(val);
-        Object obj1 = BeanConverter.getInstance().getConverter("text/plain").toObject(media, null);
+        ByteBuffer media = BeanConverter.getConverter("text/plain").toMedia(val);
+        Object obj1 = BeanConverter.getConverter("text/plain").toObject(media, null);
         Assert.assertEquals(obj1, val);
     }
 
     @Test
     public void testAnyBeanConversion() throws BeanConversionException {
         String val = "Test_String";
-        ByteBuffer media = BeanConverter.getInstance().getConverter("*/*").toMedia(val);
-        Object obj1 = BeanConverter.getInstance().getConverter("*/*").toObject(media, null);
+        ByteBuffer media = BeanConverter.getConverter("*/*").toMedia(val);
+        Object obj1 = BeanConverter.getConverter("*/*").toObject(media, null);
         Assert.assertEquals(obj1, val);
     }
 
     @Test
     public void testXmlBeanConversion() throws BeanConversionException {
         XmlBean xmlBean = makeXmlBan();
-        ByteBuffer xml = BeanConverter.getInstance().getConverter("text/xml").toMedia(xmlBean);
-        XmlBean xmlBean1 = (XmlBean) BeanConverter.getInstance().getConverter("text/xml").toObject(xml, XmlBean.class);
+        ByteBuffer xml = BeanConverter.getConverter("text/xml").toMedia(xmlBean);
+        XmlBean xmlBean1 = (XmlBean) BeanConverter.getConverter("text/xml").toObject(xml, XmlBean.class);
         Assert.assertEquals(xmlBean.getName(), xmlBean1.getName());
         Assert.assertEquals(xmlBean.getId(), xmlBean1.getId());
         Assert.assertEquals(xmlBean.getValue(), xmlBean1.getValue());
