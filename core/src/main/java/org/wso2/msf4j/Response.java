@@ -243,9 +243,8 @@ public class Response {
     @SuppressWarnings("unchecked")
     private void processEntity() {
         if (entity != null) {
-            EntityWriterRegistry.getInstance()
-                    .getEntityWriter(entity.getClass())
-                    .writeData(carbonMessage, entity, mediaType, chunkSize);
+            EntityWriterRegistry.getEntityWriter(entity.getClass()).
+                    writeData(carbonMessage, entity, mediaType, chunkSize);
         } else {
             carbonMessage.addMessageBody(ByteBuffer.allocate(0));
             carbonMessage.setEndOfMsgAdded(true);

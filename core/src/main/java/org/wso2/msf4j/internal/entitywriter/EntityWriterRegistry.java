@@ -27,11 +27,9 @@ import java.util.Map;
 public class EntityWriterRegistry {
 
     private static final EntityWriter DEFAULT_ENTITY_WRITER = new ObjectEntityWriter();
-    private static final EntityWriterRegistry INSTANCE = new EntityWriterRegistry();
+    private static final Map<Class, EntityWriter> writerMap = new HashMap<>();
 
-    private final Map<Class, EntityWriter> writerMap = new HashMap<>();
-
-    public EntityWriterRegistry() {
+    static  {
         registerEntityWriter(new FileEntityWriter());
     }
 
@@ -40,7 +38,7 @@ public class EntityWriterRegistry {
      *
      * @param entityWriter entity writer for a specific entity type
      */
-    public void registerEntityWriter(EntityWriter entityWriter) {
+    private static void registerEntityWriter(EntityWriter entityWriter) {
         writerMap.put(entityWriter.getType(), entityWriter);
     }
 
@@ -50,16 +48,8 @@ public class EntityWriterRegistry {
      * @param type type of the entity to be written to a carbon message
      * @return entity writer
      */
-    public EntityWriter getEntityWriter(Class type) {
+    public static EntityWriter getEntityWriter(Class type) {
         EntityWriter entityWriter = writerMap.get(type);
         return (entityWriter != null) ? entityWriter : DEFAULT_ENTITY_WRITER;
     }
-
-    /**
-     * Return a singleton instance.
-     */
-    public static EntityWriterRegistry getInstance() {
-        return INSTANCE;
-    }
-
 }
