@@ -564,7 +564,7 @@
         <maven.archetype.version>2.4</maven.archetype.version>
 
         <!-- Dependencies -->
-        <carbon.kernel.version>5.1.0-alpha2</carbon.kernel.version>
+        <carbon.kernel.version>5.1.0-beta</carbon.kernel.version>
         <carbon.kernel.version.range>[5.0.0,6.0.0)</carbon.kernel.version.range>
         <carbon.messaging.version>1.0.3</carbon.messaging.version>
         <carbon.messaging.version.range>[1.0.2,2)</carbon.messaging.version.range>
