@@ -16,8 +16,6 @@
 
 package org.wso2.msf4j.security.basic;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
@@ -33,8 +31,6 @@ import java.util.Base64;
  * @since 1.1.0
  */
 public abstract class AbstractBasicAuthSecurityInterceptor implements Interceptor {
-
-    private final Log log = LogFactory.getLog(AbstractBasicAuthSecurityInterceptor.class);
 
     private static final String AUTH_TYPE_BASIC = "Basic";
     public static final String CHARSET_UTF_8 = "UTF-8";

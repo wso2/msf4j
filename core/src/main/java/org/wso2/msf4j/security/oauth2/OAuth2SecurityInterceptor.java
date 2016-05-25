@@ -19,8 +19,8 @@ import com.google.common.base.Charsets;
 import com.google.common.io.ByteStreams;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
@@ -44,7 +44,7 @@ import javax.ws.rs.HttpMethod;
  * @since 1.0.0
  */
 public class OAuth2SecurityInterceptor implements Interceptor {
-    private final Log log = LogFactory.getLog(OAuth2SecurityInterceptor.class);
+    private static final Logger log = LoggerFactory.getLogger(OAuth2SecurityInterceptor.class);
 
     private static final String AUTHORIZATION_HTTP_HEADER = "Authorization";
     private static final String AUTH_TYPE_OAUTH2 = "OAuth2";

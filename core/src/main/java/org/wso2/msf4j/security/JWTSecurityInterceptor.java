@@ -20,8 +20,8 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jwt.SignedJWT;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
@@ -48,7 +48,7 @@ import java.util.Map;
  */
 public class JWTSecurityInterceptor implements Interceptor {
 
-    private final Log log = LogFactory.getLog(JWTSecurityInterceptor.class);
+    private static final Logger log = LoggerFactory.getLogger(JWTSecurityInterceptor.class);
 
     private static final String JWT_HEADER = "X-JWT-Assertion";
     private static final String AUTH_TYPE_JWT = "JWT";
