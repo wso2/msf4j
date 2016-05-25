@@ -17,6 +17,7 @@ package org.wso2.msf4j.example;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Contact;
@@ -83,7 +84,8 @@ public class StockQuoteService {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Valid stock item found"),
             @ApiResponse(code = 404, message = "Stock item not found")})
-    public Response getQuote(@PathParam("symbol") String symbol) throws SymbolNotFoundException {
+    public Response getQuote(@ApiParam(value = "Symbol", required = true)
+                                 @PathParam("symbol") String symbol) throws SymbolNotFoundException {
         Stock stock = stockQuotes.get(symbol);
         if (stock == null) {
             throw new SymbolNotFoundException("Symbol " + symbol + " not found");
@@ -106,7 +108,8 @@ public class StockQuoteService {
     @ApiOperation(
             value = "Add a stock item",
             notes = "Add a valid stock item")
-    public void addStock(Stock stock) throws DuplicateSymbolException {
+    public void addStock(@ApiParam(value = "Stock object", required = true)  Stock stock)
+            throws DuplicateSymbolException {
         String symbol = stock.getSymbol();
         if (stockQuotes.containsKey(symbol)) {
             throw new DuplicateSymbolException("Symbol " + symbol + " already exists");

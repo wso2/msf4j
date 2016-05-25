@@ -83,16 +83,13 @@ public class HttpResourceModelProcessor {
                     } else if (Context.class.isAssignableFrom(annotationType)) {
                         args[idx] = getContextParamValue((HttpResourceModel.ParameterInfo<Object>) paramInfo,
                                 request, responder);
+                    } else {
+                        createObject(request, args, idx, paramInfo);
                     }
                 } else {
                     // If an annotation is not present the parameter is considered a
                     // request body data parameter
-                    ByteBuffer fullContent = BufferUtil.merge(request.getFullMessageBody());
-                    Type paramType = paramInfo.getParameterType();
-                    args[idx] = BeanConverter.getConverter((request.getContentType() != null)
-                            ? request.getContentType()
-                            : MediaType.WILDCARD)
-                            .convertToObject(fullContent, paramType);
+                    createObject(request, args, idx, paramInfo);
                 }
                 idx++;
             }
@@ -114,6 +111,14 @@ public class HttpResourceModelProcessor {
                     String.format("Error in executing request: %s %s", request.getHttpMethod(),
                             request.getUri()), e);
         }
+    }
+
+    private void createObject(Request request, Object[] args, int idx, HttpResourceModel.ParameterInfo<?> paramInfo) {
+        ByteBuffer fullContent = BufferUtil.merge(request.getFullMessageBody());
+        Type paramType = paramInfo.getParameterType();
+        args[idx] =
+                BeanConverter.getConverter((request.getContentType() != null) ? request.getContentType() :
+                        MediaType.WILDCARD).convertToObject(fullContent, paramType);
     }
 
 
