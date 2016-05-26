@@ -24,6 +24,7 @@ import io.swagger.annotations.Contact;
 import io.swagger.annotations.Info;
 import io.swagger.annotations.License;
 import io.swagger.annotations.SwaggerDefinition;
+import org.wso2.msf4j.Request;
 import org.wso2.msf4j.example.exception.DuplicateSymbolException;
 import org.wso2.msf4j.example.exception.SymbolNotFoundException;
 
@@ -35,6 +36,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
 /**
@@ -132,7 +134,9 @@ public class StockQuoteService {
             notes = "Returns all stock items",
             response = Stocks.class,
             responseContainer = "List")
-    public Stocks getAllStocks() {
+    public Stocks getAllStocks(@Context Request request) {
+        request.getHeaders().entrySet().stream().
+                forEach(entry -> System.out.println(entry.getKey() + "=" + entry.getValue()));
         return new Stocks(stockQuotes.values());
     }
 }
