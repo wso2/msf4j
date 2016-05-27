@@ -53,6 +53,9 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
     private MicroservicesRegistry microservicesRegistry;
     private static final String MSF4J_MSG_PROC_ID = "MSF4J-CM-PROCESSOR";
 
+    public MSF4JMessageProcessor() {
+    }
+
     public MSF4JMessageProcessor(MicroservicesRegistry microservicesRegistry) {
         this.microservicesRegistry = microservicesRegistry;
     }
