@@ -28,6 +28,8 @@ import org.wso2.carbon.kernel.transports.CarbonTransport;
 import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Microservice;
 
+import javax.ws.rs.ext.ExceptionMapper;
+
 /**
  * OSGi service component for MicroServicesServer.
  */
@@ -89,6 +91,21 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
 
     protected void removeInterceptor(Interceptor interceptor) {
         microservicesRegistry.removeInterceptor(interceptor);
+    }
+
+    @Reference(
+            name = "exception-mapper",
+            service = ExceptionMapper.class,
+            cardinality = ReferenceCardinality.MULTIPLE,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "removeExceptionMapper"
+    )
+    protected void addInterceptor(ExceptionMapper exceptionMapper) {
+        microservicesRegistry.addExceptionMapper(exceptionMapper);
+    }
+
+    protected void removeExceptionMapper(ExceptionMapper exceptionMapper) {
+        microservicesRegistry.removeExceptionMapper(exceptionMapper);
     }
 
     @Override

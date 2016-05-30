@@ -101,6 +101,14 @@ public class MicroservicesRegistry {
                 flatMap(entry -> Optional.ofNullable(entry.getValue()));
     }
 
+
+    public void removeExceptionMapper(ExceptionMapper em) {
+        Arrays.stream(em.getClass().getMethods()).
+                filter(method -> method.getName().equals("toResponse") && method.getParameterCount() == 1).
+                findAny().
+                ifPresent(method -> exceptionMappers.remove(method.getGenericParameterTypes()[0].getTypeName()));
+    }
+
     public List<Interceptor> getInterceptors() {
         return interceptors;
     }
