@@ -349,7 +349,10 @@
             org.wso2.carbon.kernel.transports.*;version="${carbon.kernel.version.range}",
             org.wso2.carbon.kernel.startupresolver.*;version="${carbon.kernel.version.range}",
             org.wso2.carbon.kernel.utils.*;version="${carbon.kernel.version.range}",
-            org.wso2.carbon.messaging.*
+            io.swagger.jaxrs.config.*;version="${io.swagger.version.range}",
+            io.swagger.util.*;version="${io.swagger.version.range}",
+            com.fasterxml.jackson.*;version="${com.fasterxml.jackson.version.range}",
+            org.wso2.carbon.messaging.*,
         </import.package>
         <carbon.component>
             startup.listener;componentName="wso2-microservices-server";requiredService="org.wso2.msf4j.Microservice,org.wso2.msf4j.Interceptor",

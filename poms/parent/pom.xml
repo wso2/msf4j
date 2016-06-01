@@ -318,6 +318,51 @@
                 <artifactId>swagger-annotations</artifactId>
                 <version>${io.swagger.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${com.fasterxml.jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${com.fasterxml.jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${com.fasterxml.jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-yaml</artifactId>
+                <version>${com.fasterxml.jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.validation</groupId>
+                <artifactId>validation-api</artifactId>
+                <version>${javax.validation.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${apache.commons.lang3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>${javax.servlet-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.orbit.org.reflections</groupId>
+                <artifactId>reflections</artifactId>
+                <version>${reflections.orbit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.javassist</groupId>
+                <artifactId>javassist</artifactId>
+                <version>${javassist.version}</version>
+            </dependency>
 
             <!-- Metrics Dependencies - Start -->
             <dependency>
@@ -600,6 +645,14 @@
         <logback.version>1.0.9</logback.version>
         <nimbus.jose.jwt.version>2.25</nimbus.jose.jwt.version>
         <io.swagger.version>1.5.8</io.swagger.version>
+        <io.swagger.version.range>[1.5.0,1.6.0)</io.swagger.version.range>
+        <com.fasterxml.jackson.version>2.7.4</com.fasterxml.jackson.version>
+        <com.fasterxml.jackson.version.range>[2.7.0,2.8.0)</com.fasterxml.jackson.version.range>
+        <javax.validation.version>1.1.0.Final</javax.validation.version>
+        <apache.commons.lang3.version>3.4</apache.commons.lang3.version>
+        <javax.servlet-api.version>3.1.0</javax.servlet-api.version>
+        <reflections.orbit.version>0.9.10.wso2v1</reflections.orbit.version>
+        <javassist.version>3.19.0-GA</javassist.version>
 
         <osgi.framework.import.version.range>[1.8.0, 2.0.0)</osgi.framework.import.version.range>
         <osgi.service.tracker.import.version.range>[1.5.1, 2.0.0)</osgi.service.tracker.import.version.range>
