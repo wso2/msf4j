@@ -16,11 +16,24 @@
 
 package org.wso2.msf4j.stockquote;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Contact;
+import io.swagger.annotations.Info;
+import io.swagger.annotations.License;
+import io.swagger.annotations.SwaggerDefinition;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.Microservice;
+import org.wso2.msf4j.Request;
+import org.wso2.msf4j.stockquote.exception.DuplicateSymbolException;
+import org.wso2.msf4j.stockquote.exception.SymbolNotFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +43,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
 /**
@@ -40,8 +54,20 @@ import javax.ws.rs.core.Response;
         service = Microservice.class,
         immediate = true
 )
+@SwaggerDefinition(
+        info = @Info(
+                title = "Stockquote Swagger Definition", version = "1.0",
+                description = "Stock quote service",
+                license = @License(name = "Apache 2.0", url = "http://www.apache.org/licenses/LICENSE-2.0"),
+                contact = @Contact(
+                        name = "Afkham Azeez",
+                        email = "azeez@wso2.com",
+                        url = "http://wso2.com"
+                ))
+)
 @Path("/stockquote")
 public class StockQuoteService implements Microservice {
+    private static final Logger log = LoggerFactory.getLogger(StockQuoteService.class);
 
     private Map<String, Stock> stockQuotes = new HashMap<>();
 
@@ -75,11 +101,18 @@ public class StockQuoteService implements Microservice {
     @GET
     @Path("/{symbol}")
     @Produces({"application/json", "text/xml"})
-    public Response getQuote(@PathParam("symbol") String symbol) {
+    @ApiOperation(
+            value = "Return stock quote corresponding to the symbol",
+            notes = "Returns HTTP 404 if the symbol is not found")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Valid stock item found"),
+            @ApiResponse(code = 404, message = "Stock item not found")})
+    public Response getQuote(@PathParam("symbol") String symbol) throws SymbolNotFoundException {
         Stock stock = stockQuotes.get(symbol);
-        return (stock == null) ?
-                Response.status(Response.Status.NOT_FOUND).build() :
-                Response.status(Response.Status.OK).entity(stock).build();
+        if (stock == null) {
+            throw new SymbolNotFoundException("Symbol " + symbol + " not found");
+        }
+        return Response.status(Response.Status.OK).entity(stock).build();
     }
 
     /**
@@ -94,8 +127,16 @@ public class StockQuoteService implements Microservice {
      */
     @POST
     @Consumes("application/json")
-    public void addStock(Stock stock) {
-        stockQuotes.put(stock.getSymbol(), stock);
+    @ApiOperation(
+            value = "Add a stock item",
+            notes = "Add a valid stock item")
+    public void addStock(@ApiParam(value = "Stock object", required = true) Stock stock)
+            throws DuplicateSymbolException {
+        String symbol = stock.getSymbol();
+        if (stockQuotes.containsKey(symbol)) {
+            throw new DuplicateSymbolException("Symbol " + symbol + " already exists");
+        }
+        stockQuotes.put(symbol, stock);
     }
 
     /**
@@ -108,7 +149,14 @@ public class StockQuoteService implements Microservice {
     @GET
     @Path("/all")
     @Produces({"application/json", "text/xml"})
-    public Stocks getAllStocks() {
+    @ApiOperation(
+            value = "Get all stocks",
+            notes = "Returns all stock items",
+            response = Stocks.class,
+            responseContainer = "List")
+    public Stocks getAllStocks(@Context Request request) {
+        request.getHeaders().entrySet().stream().
+                forEach(entry -> log.info(entry.getKey() + "=" + entry.getValue()));
         return new Stocks(stockQuotes.values());
     }
 

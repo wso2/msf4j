@@ -61,6 +61,7 @@
             javax.ws.rs.*,
             javax.xml.bind*,
             org.slf4j.*,
+            io.swagger.annotations.*
         </import.package>
         <carbon.component>
             osgi.service; objectClass="org.wso2.msf4j.Microservice"

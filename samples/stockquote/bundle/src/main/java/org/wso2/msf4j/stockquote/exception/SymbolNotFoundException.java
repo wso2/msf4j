@@ -16,29 +16,29 @@
  *  under the License.
  *
  */
-package org.wso2.msf4j.example.exception;
+package org.wso2.msf4j.stockquote.exception;
 
 /**
- * EntityNotFoundException.
+ * Thrown when a Symbol is not found.
  */
-public class EntityNotFoundException extends Exception {
-    public EntityNotFoundException() {
+public class SymbolNotFoundException extends EntityNotFoundException {
+    public SymbolNotFoundException() {
         super();
     }
 
-    public EntityNotFoundException(String message) {
+    public SymbolNotFoundException(String message) {
         super(message);
     }
 
-    public EntityNotFoundException(String message, Throwable cause) {
+    public SymbolNotFoundException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public EntityNotFoundException(Throwable cause) {
+    public SymbolNotFoundException(Throwable cause) {
         super(cause);
     }
 
-    protected EntityNotFoundException(String message, Throwable cause,
+    protected SymbolNotFoundException(String message, Throwable cause,
                                       boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }

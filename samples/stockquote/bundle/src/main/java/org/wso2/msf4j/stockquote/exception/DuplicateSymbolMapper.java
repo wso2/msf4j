@@ -16,30 +16,28 @@
  *  under the License.
  *
  */
-package org.wso2.msf4j.example.exception;
+package org.wso2.msf4j.stockquote.exception;
+
+import org.osgi.service.component.annotations.Component;
+
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
 
 /**
- * EntityNotFoundException.
+ * DuplicateSymbolMapper.
  */
-public class EntityNotFoundException extends Exception {
-    public EntityNotFoundException() {
-        super();
-    }
+@Component(
+        name = "org.wso2.msf4j.stockquote.exception.DuplicateSymbolMapper",
+        service = ExceptionMapper.class,
+        immediate = true
+)
+public class DuplicateSymbolMapper implements ExceptionMapper<DuplicateSymbolException> {
 
-    public EntityNotFoundException(String message) {
-        super(message);
-    }
-
-    public EntityNotFoundException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public EntityNotFoundException(Throwable cause) {
-        super(cause);
-    }
-
-    protected EntityNotFoundException(String message, Throwable cause,
-                                      boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    @Override
+    public Response toResponse(DuplicateSymbolException e) {
+        return Response.status(Response.Status.CONFLICT).
+                entity(e.getMessage()).
+                type("text/plain").
+                build();
     }
 }

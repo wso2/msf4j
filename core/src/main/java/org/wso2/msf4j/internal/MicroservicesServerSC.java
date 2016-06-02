@@ -103,7 +103,7 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             policy = ReferencePolicy.DYNAMIC,
             unbind = "removeExceptionMapper"
     )
-    protected void addInterceptor(ExceptionMapper exceptionMapper) {
+    protected void addExceptionMapper(ExceptionMapper exceptionMapper) {
         microservicesRegistry.addExceptionMapper(exceptionMapper);
     }
 

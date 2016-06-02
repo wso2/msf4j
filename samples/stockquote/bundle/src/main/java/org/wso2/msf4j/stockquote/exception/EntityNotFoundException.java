@@ -16,7 +16,7 @@
  *  under the License.
  *
  */
-package org.wso2.msf4j.example.exception;
+package org.wso2.msf4j.stockquote.exception;
 
 /**
  * EntityNotFoundException.
