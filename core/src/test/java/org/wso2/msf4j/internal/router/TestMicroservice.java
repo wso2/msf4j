@@ -22,7 +22,6 @@ import com.google.common.io.Resources;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import org.testng.Assert;
 import org.wso2.msf4j.HttpStreamHandler;
 import org.wso2.msf4j.HttpStreamer;
 import org.wso2.msf4j.Microservice;
@@ -51,6 +50,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import static org.testng.AssertJUnit.fail;
 
 /**
  * Test handler.
@@ -183,7 +184,7 @@ public class TestMicroservice implements Microservice {
             message = message.concat(String.format("Content: %s", data));
         } catch (IOException e) {
             //This condition should never occur
-            Assert.fail();
+            fail();
         }
         JsonObject object = new JsonObject();
         object.addProperty("result", message);
@@ -199,7 +200,7 @@ public class TestMicroservice implements Microservice {
             message = message.concat(String.format("Content: %s", data));
         } catch (IOException e) {
             //This condition should never occur
-            Assert.fail();
+            fail();
         }
         JsonObject object = new JsonObject();
         object.addProperty("result", message);
@@ -477,7 +478,7 @@ public class TestMicroservice implements Microservice {
     @Path("/mappedException")
     @GET
     public void testExceptionMapping() throws MappedException {
-         throw new MappedException("Mapped exception thrown");
+        throw new MappedException("Mapped exception thrown");
     }
 
     @Path("/mappedException2")

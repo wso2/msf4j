@@ -41,13 +41,12 @@ public class HttpsServerTest extends HttpServerTest {
     private static final TestMicroservice TEST_MICROSERVICE = new TestMicroservice();
     private static MicroservicesRunner microservicesRunner;
 
-    private static String hostname = Constants.HOSTNAME;
     private static final int port = Constants.PORT + 4;
 
 
     @BeforeClass
     public static void setup() throws Exception {
-        baseURI = URI.create(String.format("https://%s:%d", hostname, port));
+        baseURI = URI.create(String.format("https://%s:%d", Constants.HOSTNAME, port));
         System.setProperty(YAMLTransportConfigurationBuilder.NETTY_TRANSPORT_CONF,
                 Resources.getResource("netty-transports-1.yml").getPath());
         microservicesRunner = new MicroservicesRunner();
@@ -72,7 +71,7 @@ public class HttpsServerTest extends HttpServerTest {
         // Install the all-trusting host verifier
         HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
         HttpURLConnection urlConn = (HttpsURLConnection) url.openConnection();
-        if (method == HttpMethod.POST || method == HttpMethod.PUT) {
+        if (method.equals(HttpMethod.POST) || method.equals(HttpMethod.PUT)) {
             urlConn.setDoOutput(true);
         }
         urlConn.setRequestMethod(method);
@@ -87,7 +86,7 @@ public class HttpsServerTest extends HttpServerTest {
         return sslClientContext.getClientContext().getSocketFactory().createSocket(url.getHost(), url.getPort());
     }
 
-    public static void setSslClientContext(SSLClientContext sslClientContext) {
+    static void setSslClientContext(SSLClientContext sslClientContext) {
         HttpsServerTest.sslClientContext = sslClientContext;
     }
 }

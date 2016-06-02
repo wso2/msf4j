@@ -17,11 +17,12 @@
 package org.wso2.msf4j.internal.router;
 
 
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
 import javax.ws.rs.core.Response;
+
+import static org.testng.AssertJUnit.assertEquals;
 
 /**
  * Test MSF4JResponse and MSF4J ResponseBuilder.
@@ -33,7 +34,7 @@ public class MSF4JResponseTest {
         Response response = Response
                 .status(Response.Status.OK.getStatusCode())
                 .build();
-        Assert.assertTrue(response.getStatus() == Response.Status.OK.getStatusCode());
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
 
     @Test
@@ -41,7 +42,7 @@ public class MSF4JResponseTest {
         Response response = Response
                 .status(Response.Status.NOT_FOUND.getStatusCode())
                 .build();
-        Assert.assertTrue(response.getStatus() == Response.Status.NOT_FOUND.getStatusCode());
+        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
     }
 
     @Test
@@ -50,8 +51,8 @@ public class MSF4JResponseTest {
                 .status(Response.Status.OK.getStatusCode())
                 .entity("Entity")
                 .build();
-        Assert.assertTrue(response.getStatus() == Response.Status.OK.getStatusCode());
-        Assert.assertEquals(response.getEntity(), "Entity");
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertEquals(response.getEntity(), "Entity");
     }
 
     @Test
@@ -60,7 +61,7 @@ public class MSF4JResponseTest {
                 .status(Response.Status.OK.getStatusCode())
                 .header("key1", "val1")
                 .build();
-        Assert.assertEquals("val1", response.getStringHeaders().getFirst("key1"));
+        assertEquals("val1", response.getStringHeaders().getFirst("key1"));
     }
 
     @Test
@@ -70,8 +71,8 @@ public class MSF4JResponseTest {
                 .header("key1", "val1")
                 .header("key2", "val2")
                 .build();
-        Assert.assertEquals("val1", response.getStringHeaders().getFirst("key1"));
-        Assert.assertEquals("val2", response.getStringHeaders().getFirst("key2"));
+        assertEquals("val1", response.getStringHeaders().getFirst("key1"));
+        assertEquals("val2", response.getStringHeaders().getFirst("key2"));
     }
 
     @Test
@@ -81,18 +82,18 @@ public class MSF4JResponseTest {
                 .header("key1", "val1")
                 .header("key1", "val2")
                 .build();
-        Assert.assertEquals("val1", response.getStringHeaders().get("key1").get(0));
-        Assert.assertEquals("val2", response.getStringHeaders().get("key1").get(1));
+        assertEquals("val1", response.getStringHeaders().get("key1").get(0));
+        assertEquals("val2", response.getStringHeaders().get("key1").get(1));
     }
 
     @Test
     public void testSingleHeaderListVal() {
-        Response response = Response
-                .status(Response.Status.OK.getStatusCode())
-                .header("key1", Arrays.asList(new String[]{"val1", "val2"}))
-                .build();
-        Assert.assertEquals("val1", response.getStringHeaders().get("key1").get(0));
-        Assert.assertEquals("val2", response.getStringHeaders().get("key1").get(1));
+        Response response =
+                Response.
+                        status(Response.Status.OK.getStatusCode()).
+                        header("key1", Arrays.asList("val1", "val2")).build();
+        assertEquals("val1", response.getStringHeaders().get("key1").get(0));
+        assertEquals("val2", response.getStringHeaders().get("key1").get(1));
     }
 
 }

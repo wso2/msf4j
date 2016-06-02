@@ -16,9 +16,10 @@
 
 package org.wso2.msf4j.internal.router;
 
-import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.wso2.msf4j.HttpStreamer;
+
+import static org.testng.AssertJUnit.assertTrue;
 
 /**
  * Tests functionality fo HttpResourceModel.
@@ -31,8 +32,8 @@ public class HttpResourceModelTest {
         HttpResourceModel httpResourceModel = new HttpResourceModel("", testObj.getClass()
                 .getMethod("methodWithHttpStreaming", HttpStreamer.class),
                 testObj);
-        Assert.assertTrue(httpResourceModel.isStreamingReqSupported());
-        Assert.assertTrue(httpResourceModel.isStreamingReqSupported());
+        assertTrue(httpResourceModel.isStreamingReqSupported());
+        assertTrue(httpResourceModel.isStreamingReqSupported());
     }
 
     @Test
@@ -41,8 +42,8 @@ public class HttpResourceModelTest {
         HttpResourceModel httpResourceModel = new HttpResourceModel("", testObj.getClass()
                 .getMethod("methodWithNoHttpStreaming", Object.class),
                 testObj);
-        Assert.assertTrue(!httpResourceModel.isStreamingReqSupported());
-        Assert.assertTrue(!httpResourceModel.isStreamingReqSupported());
+        assertTrue(!httpResourceModel.isStreamingReqSupported());
+        assertTrue(!httpResourceModel.isStreamingReqSupported());
     }
 
     /**

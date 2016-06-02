@@ -27,7 +27,6 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.apache.commons.io.IOUtils;
-import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -58,6 +57,10 @@ import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertTrue;
+import static org.testng.AssertJUnit.fail;
 
 /**
  * Test the HttpServer.
@@ -96,20 +99,20 @@ public class HttpServerTest {
     @Test
     public void testValidEndPoints() throws IOException {
         HttpURLConnection urlConn = request("/test/v1/resource?num=10", HttpMethod.GET);
-        Assert.assertEquals(200, urlConn.getResponseCode());
+        assertEquals(200, urlConn.getResponseCode());
         String content = getContent(urlConn);
 
         Map<String, String> map = GSON.fromJson(content, STRING_MAP_TYPE);
-        Assert.assertEquals(1, map.size());
-        Assert.assertEquals("Handled get in resource end-point", map.get("status"));
+        assertEquals(1, map.size());
+        assertEquals("Handled get in resource end-point", map.get("status"));
         urlConn.disconnect();
 
         urlConn = request("/test/v1/tweets/1", HttpMethod.GET);
-        Assert.assertEquals(200, urlConn.getResponseCode());
+        assertEquals(200, urlConn.getResponseCode());
         content = getContent(urlConn);
         map = GSON.fromJson(content, STRING_MAP_TYPE);
-        Assert.assertEquals(1, map.size());
-        Assert.assertEquals("Handled get in tweets end-point, id: 1", map.get("status"));
+        assertEquals(1, map.size());
+        assertEquals("Handled get in tweets end-point, id: 1", map.get("status"));
         urlConn.disconnect();
     }
 
@@ -138,9 +141,9 @@ public class HttpServerTest {
         //test stream upload
         HttpURLConnection urlConn = request("/test/v1/stream/upload", HttpMethod.PUT);
         Files.copy(fname, urlConn.getOutputStream());
-        Assert.assertEquals(200, urlConn.getResponseCode());
+        assertEquals(200, urlConn.getResponseCode());
         String contentFromServer = getContent(urlConn);
-        Assert.assertEquals(contentStr, contentFromServer);
+        assertEquals(contentStr, contentFromServer);
         urlConn.disconnect();
         fname.delete();
     }
@@ -157,7 +160,7 @@ public class HttpServerTest {
 
         HttpURLConnection urlConn = request("/test/v1/stream/upload/fail", HttpMethod.PUT);
         Files.copy(fname, urlConn.getOutputStream());
-        Assert.assertEquals(500, urlConn.getResponseCode());
+        assertEquals(500, urlConn.getResponseCode());
         urlConn.disconnect();
         fname.delete();
     }
@@ -176,9 +179,9 @@ public class HttpServerTest {
         HttpURLConnection urlConn = request("/test/v1/aggregate/upload", HttpMethod.PUT);
         urlConn.setChunkedStreamingMode(1024);
         Files.copy(fname, urlConn.getOutputStream());
-        Assert.assertEquals(200, urlConn.getResponseCode());
+        assertEquals(200, urlConn.getResponseCode());
 
-        Assert.assertEquals(size, Integer.parseInt(getContent(urlConn).split(":")[1].trim()));
+        assertEquals(size, Integer.parseInt(getContent(urlConn).split(":")[1].trim()));
         urlConn.disconnect();
         fname.delete();
     }
@@ -197,7 +200,7 @@ public class HttpServerTest {
         HttpURLConnection urlConn = request("/test/v1/aggregate/upload", HttpMethod.PUT);
         urlConn.setChunkedStreamingMode(1024);
         Files.copy(fname, urlConn.getOutputStream());
-        Assert.assertEquals(500, urlConn.getResponseCode());
+        assertEquals(500, urlConn.getResponseCode());
         urlConn.disconnect();
         fname.delete();
     }
@@ -205,12 +208,12 @@ public class HttpServerTest {
     @Test
     public void testPathWithMultipleMethods() throws IOException {
         HttpURLConnection urlConn = request("/test/v1/tweets/1", HttpMethod.GET);
-        Assert.assertEquals(200, urlConn.getResponseCode());
+        assertEquals(200, urlConn.getResponseCode());
         urlConn.disconnect();
 
         urlConn = request("/test/v1/tweets/1", HttpMethod.PUT);
         writeContent(urlConn, "data");
-        Assert.assertEquals(200, urlConn.getResponseCode());
+        assertEquals(200, urlConn.getResponseCode());
         urlConn.disconnect();
     }
 
@@ -219,7 +222,7 @@ public class HttpServerTest {
     public void testNonExistingEndPoints() throws IOException {
         HttpURLConnection urlConn = request("/test/v1/users", HttpMethod.POST);
         writeContent(urlConn, "data");
-        Assert.assertEquals(404, urlConn.getResponseCode());
+        assertEquals(404, urlConn.getResponseCode());
         urlConn.disconnect();
     }
 
@@ -227,13 +230,13 @@ public class HttpServerTest {
     public void testPutWithData() throws IOException {
         HttpURLConnection urlConn = request("/test/v1/facebook/1/message", HttpMethod.PUT);
         writeContent(urlConn, "Hello, World");
-        Assert.assertEquals(200, urlConn.getResponseCode());
+        assertEquals(200, urlConn.getResponseCode());
 
         String content = getContent(urlConn);
 
         Map<String, String> map = GSON.fromJson(content, STRING_MAP_TYPE);
-        Assert.assertEquals(1, map.size());
-        Assert.assertEquals("Handled put in tweets end-point, id: 1. Content: Hello, World", map.get("result"));
+        assertEquals(1, map.size());
+        assertEquals("Handled put in tweets end-point, id: 1. Content: Hello, World", map.get("result"));
         urlConn.disconnect();
     }
 
@@ -241,20 +244,20 @@ public class HttpServerTest {
     public void testPostWithData() throws IOException {
         HttpURLConnection urlConn = request("/test/v1/facebook/1/message", HttpMethod.POST);
         writeContent(urlConn, "Hello, World");
-        Assert.assertEquals(200, urlConn.getResponseCode());
+        assertEquals(200, urlConn.getResponseCode());
 
         String content = getContent(urlConn);
 
         Map<String, String> map = GSON.fromJson(content, STRING_MAP_TYPE);
-        Assert.assertEquals(1, map.size());
-        Assert.assertEquals("Handled post in tweets end-point, id: 1. Content: Hello, World", map.get("result"));
+        assertEquals(1, map.size());
+        assertEquals("Handled post in tweets end-point, id: 1. Content: Hello, World", map.get("result"));
         urlConn.disconnect();
     }
 
     @Test
     public void testNonExistingMethods() throws IOException {
         HttpURLConnection urlConn = request("/test/v1/facebook/1/message", HttpMethod.GET);
-        Assert.assertEquals(405, urlConn.getResponseCode());
+        assertEquals(405, urlConn.getResponseCode());
         urlConn.disconnect();
     }
 
@@ -262,22 +265,22 @@ public class HttpServerTest {
     public void testKeepAlive() throws IOException {
         HttpURLConnection urlConn = request("/test/v1/tweets/1", HttpMethod.PUT, true);
         writeContent(urlConn, "data");
-        Assert.assertEquals(200, urlConn.getResponseCode());
+        assertEquals(200, urlConn.getResponseCode());
 
-        Assert.assertEquals("keep-alive", urlConn.getHeaderField(HEADER_KEY_CONNECTION));
+        assertEquals("keep-alive", urlConn.getHeaderField(HEADER_KEY_CONNECTION));
         urlConn.disconnect();
     }
 
     @Test
     public void testMultiplePathParameters() throws IOException {
         HttpURLConnection urlConn = request("/test/v1/user/sree/message/12", HttpMethod.GET);
-        Assert.assertEquals(200, urlConn.getResponseCode());
+        assertEquals(200, urlConn.getResponseCode());
 
         String content = getContent(urlConn);
 
         Map<String, String> map = GSON.fromJson(content, STRING_MAP_TYPE);
-        Assert.assertEquals(1, map.size());
-        Assert.assertEquals("Handled multiple path parameters sree 12", map.get("result"));
+        assertEquals(1, map.size());
+        assertEquals("Handled multiple path parameters sree 12", map.get("result"));
         urlConn.disconnect();
     }
 
@@ -285,35 +288,35 @@ public class HttpServerTest {
     @Test
     public void testMultiplePathParametersWithParamterInDifferentOrder() throws IOException {
         HttpURLConnection urlConn = request("/test/v1/message/21/user/sree", HttpMethod.GET);
-        Assert.assertEquals(200, urlConn.getResponseCode());
+        assertEquals(200, urlConn.getResponseCode());
 
         String content = getContent(urlConn);
 
         Map<String, String> map = GSON.fromJson(content, STRING_MAP_TYPE);
-        Assert.assertEquals(1, map.size());
-        Assert.assertEquals("Handled multiple path parameters sree 21", map.get("result"));
+        assertEquals(1, map.size());
+        assertEquals("Handled multiple path parameters sree 21", map.get("result"));
         urlConn.disconnect();
     }
 
     @Test
     public void testNotRoutablePathParamMismatch() throws IOException {
         HttpURLConnection urlConn = request("/test/v1/NotRoutable/sree", HttpMethod.GET);
-        Assert.assertEquals(500, urlConn.getResponseCode());
+        assertEquals(500, urlConn.getResponseCode());
         urlConn.disconnect();
     }
 
     @Test
     public void testMultiMatchParamPut() throws Exception {
         HttpURLConnection urlConn = request("/test/v1/multi-match/bar", HttpMethod.PUT);
-        Assert.assertEquals(405, urlConn.getResponseCode());
+        assertEquals(405, urlConn.getResponseCode());
         urlConn.disconnect();
     }
 
     @Test
     public void testHandlerException() throws Exception {
         HttpURLConnection urlConn = request("/test/v1/uexception", HttpMethod.GET);
-        Assert.assertEquals(500, urlConn.getResponseCode());
-        // Assert.assertEquals("Exception encountered while processing request : User Exception",
+        assertEquals(500, urlConn.getResponseCode());
+        // assertEquals("Exception encountered while processing request : User Exception",
         //         new String(ByteStreams.toByteArray(urlConn.getErrorStream()), Charsets.UTF_8));
         urlConn.disconnect();
     }
@@ -326,8 +329,8 @@ public class HttpServerTest {
     /*@Test
     public void testChannelPipelineModification() throws Exception {
         HttpURLConnection urlConn = request("/test/v1/tweets/1", HttpMethod.GET);
-        Assert.assertEquals(200, urlConn.getResponseCode());
-        Assert.assertEquals(urlConn.getHeaderField(TestChannelHandler.HEADER_FIELD), TestChannelHandler.HEADER_VALUE);
+        assertEquals(200, urlConn.getResponseCode());
+        assertEquals(urlConn.getHeaderField(TestChannelHandler.HEADER_FIELD), TestChannelHandler.HEADER_VALUE);
     }*/
     @Test
     public void testMultiMatchFoo() throws Exception {
@@ -375,7 +378,7 @@ public class HttpServerTest {
         try {
             writeContent(urlConn, "Testing message");
             String response = getContent(urlConn);
-            Assert.assertEquals("Testing message", response);
+            assertEquals("Testing message", response);
         } finally {
             urlConn.disconnect();
         }
@@ -419,8 +422,8 @@ public class HttpServerTest {
             urlConn.addRequestProperty("name", name);
         }
 
-        Assert.assertEquals(200, urlConn.getResponseCode());
-        Assert.assertEquals(Joiner.on(',').join(names), getContent(urlConn));
+        assertEquals(200, urlConn.getResponseCode());
+        assertEquals(Joiner.on(',').join(names), getContent(urlConn));
         urlConn.disconnect();
     }
 
@@ -429,8 +432,8 @@ public class HttpServerTest {
         HttpURLConnection urlConn = request("/test/v1/headerResponse", HttpMethod.GET);
         urlConn.addRequestProperty("name", "name1");
 
-        Assert.assertEquals(200, urlConn.getResponseCode());
-        Assert.assertEquals("name1", urlConn.getHeaderField("name"));
+        assertEquals(200, urlConn.getResponseCode());
+        assertEquals("name1", urlConn.getHeaderField("name"));
         urlConn.disconnect();
     }
 
@@ -438,15 +441,15 @@ public class HttpServerTest {
     public void testDefaultQueryParam() throws IOException {
         // Submit with no parameters. Each should get the default values.
         HttpURLConnection urlConn = request("/test/v1/defaultValue", HttpMethod.GET);
-        Assert.assertEquals(200, urlConn.getResponseCode());
+        assertEquals(200, urlConn.getResponseCode());
         JsonObject json = GSON.fromJson(getContent(urlConn), JsonObject.class);
 
         Type hobbyType = new TypeToken<List<String>>() {
         }.getType();
 
-        Assert.assertEquals(30, json.get("age").getAsLong());
-        Assert.assertEquals("hello", json.get("name").getAsString());
-        Assert.assertEquals(ImmutableList.of("casking"),
+        assertEquals(30, json.get("age").getAsLong());
+        assertEquals("hello", json.get("name").getAsString());
+        assertEquals(ImmutableList.of("casking"),
                 GSON.fromJson(json.get("hobby").getAsJsonArray(), hobbyType));
 
         urlConn.disconnect();
@@ -469,7 +472,7 @@ public class HttpServerTest {
             // Just read everything from the response. Since the server will close the connection, the read loop should
             // end with an EOF. Otherwise there will be timeout of this test case
             String response = CharStreams.toString(new InputStreamReader(socket.getInputStream(), Charsets.UTF_8));
-            Assert.assertTrue(response.startsWith("HTTP/1.1 200 OK"));
+            assertTrue(response.startsWith("HTTP/1.1 200 OK"));
         } finally {
             socket.close();
         }
@@ -483,11 +486,11 @@ public class HttpServerTest {
             urlConn.getOutputStream().write("Rejected Content".getBytes(Charsets.UTF_8));
             try {
                 urlConn.getInputStream();
-                Assert.fail();
+                fail();
             } catch (IOException e) {
                 // Expect to get exception since server response with 400. Just drain the error stream.
                 ByteStreams.toByteArray(urlConn.getErrorStream());
-                Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), urlConn.getResponseCode());
+                assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), urlConn.getResponseCode());
             }
         } finally {
             urlConn.disconnect();
@@ -497,49 +500,49 @@ public class HttpServerTest {
     @Test
     public void testNoPathGetMethod() throws Exception {
         HttpURLConnection urlConn = request("/test/v1", HttpMethod.GET);
-        Assert.assertEquals("no-@Path-GET", getContent(urlConn));
+        assertEquals("no-@Path-GET", getContent(urlConn));
         urlConn.disconnect();
     }
 
     @Test
     public void testNoPathPostMethod() throws Exception {
         HttpURLConnection urlConn = request("/test/v1", HttpMethod.POST);
-        Assert.assertEquals("no-@Path-POST", getContent(urlConn));
+        assertEquals("no-@Path-POST", getContent(urlConn));
         urlConn.disconnect();
     }
 
     @Test
     public void testNoPathPutMethod() throws Exception {
         HttpURLConnection urlConn = request("/test/v1", HttpMethod.PUT);
-        Assert.assertEquals("no-@Path-PUT", getContent(urlConn));
+        assertEquals("no-@Path-PUT", getContent(urlConn));
         urlConn.disconnect();
     }
 
     @Test
     public void testNoPathDeleteMethod() throws Exception {
         HttpURLConnection urlConn = request("/test/v1", HttpMethod.DELETE);
-        Assert.assertEquals("no-@Path-DELETE", getContent(urlConn));
+        assertEquals("no-@Path-DELETE", getContent(urlConn));
         urlConn.disconnect();
     }
 
     @Test
     public void testSleep() throws Exception {
         HttpURLConnection urlConn = request("/test/v1/sleep/10", HttpMethod.GET);
-        Assert.assertEquals(200, urlConn.getResponseCode());
+        assertEquals(200, urlConn.getResponseCode());
         urlConn.disconnect();
     }
 
     @Test
     public void testWrongMethod() throws IOException {
         HttpURLConnection urlConn = request("/test/v1/customException", HttpMethod.GET);
-        Assert.assertEquals(Response.Status.METHOD_NOT_ALLOWED.getStatusCode(), urlConn.getResponseCode());
+        assertEquals(Response.Status.METHOD_NOT_ALLOWED.getStatusCode(), urlConn.getResponseCode());
         urlConn.disconnect();
     }
 
     @Test
     public void testExceptionHandler() throws IOException {
         HttpURLConnection urlConn = request("/test/v1/customException", HttpMethod.POST);
-        Assert.assertEquals(TestMicroservice.CustomException.HTTP_RESPONSE_STATUS, urlConn.getResponseCode());
+        assertEquals(TestMicroservice.CustomException.HTTP_RESPONSE_STATUS, urlConn.getResponseCode());
         urlConn.disconnect();
     }
 
@@ -550,8 +553,8 @@ public class HttpServerTest {
         Gson gson = new Gson();
         Pet pet = petInstance();
         writeContent(urlConn, gson.toJson(pet));
-        Assert.assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
-        Assert.assertEquals(pet.getDetails(), getContent(urlConn));
+        assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
+        assertEquals(pet.getDetails(), getContent(urlConn));
         urlConn.disconnect();
     }
 
@@ -561,11 +564,11 @@ public class HttpServerTest {
         urlConn.setRequestProperty(HttpHeaders.CONTENT_TYPE, "text/plain");
         String str = "send-something";
         writeContent(urlConn, str);
-        Assert.assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
+        assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
         Gson gson = new Gson();
         String content = getContent(urlConn);
         TextBean textBean = gson.fromJson(content, TextBean.class);
-        Assert.assertEquals(str, textBean.getText());
+        assertEquals(str, textBean.getText());
         urlConn.disconnect();
     }
 
@@ -575,8 +578,8 @@ public class HttpServerTest {
         urlConn.setRequestProperty(HttpHeaders.CONTENT_TYPE, "text/plain");
         String str = "send-something";
         writeContent(urlConn, str);
-        Assert.assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
-        Assert.assertEquals(str + "-processed", getContent(urlConn));
+        assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
+        assertEquals(str + "-processed", getContent(urlConn));
         urlConn.disconnect();
     }
 
@@ -590,57 +593,57 @@ public class HttpServerTest {
         xmlBean.setValue(15);
         writeContent(urlConn, Charset.defaultCharset()
                 .decode(BeanConverter.getConverter("text/xml").convertToMedia(xmlBean)).toString());
-        Assert.assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
+        assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
         String respBody = getContent(urlConn);
         XmlBean xmlBean2 = (XmlBean) BeanConverter.getConverter("text/xml").convertToObject(
                 ByteBuffer.wrap(respBody.getBytes(Charset.defaultCharset())), XmlBean.class);
-        Assert.assertEquals(xmlBean.getName(), xmlBean2.getName());
-        Assert.assertEquals(xmlBean.getId(), xmlBean2.getId());
-        Assert.assertEquals(xmlBean.getValue(), xmlBean2.getValue());
+        assertEquals(xmlBean.getName(), xmlBean2.getName());
+        assertEquals(xmlBean.getId(), xmlBean2.getId());
+        assertEquals(xmlBean.getValue(), xmlBean2.getValue());
         urlConn.disconnect();
     }
 
     @Test
     public void testDownloadPngFile() throws Exception {
         HttpURLConnection urlConn = request("/test/v1/fileserver/png", HttpMethod.GET);
-        Assert.assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
+        assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
         String contentType = urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE);
-        Assert.assertTrue(contentType.equalsIgnoreCase("image/png"));
+        assertTrue(contentType.equalsIgnoreCase("image/png"));
         InputStream downStream = urlConn.getInputStream();
         File file = new File(Resources.getResource("testPngFile.png").toURI());
-        Assert.assertTrue(isStreamEqual(downStream, new FileInputStream(file)));
+        assertTrue(isStreamEqual(downStream, new FileInputStream(file)));
     }
 
     @Test
     public void testDownloadJpgFile() throws Exception {
         HttpURLConnection urlConn = request("/test/v1/fileserver/jpg", HttpMethod.GET);
-        Assert.assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
+        assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
         String contentType = urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE);
-        Assert.assertTrue(contentType.equalsIgnoreCase("image/jpeg"));
+        assertTrue(contentType.equalsIgnoreCase("image/jpeg"));
         InputStream downStream = urlConn.getInputStream();
         File file = new File(Resources.getResource("testJpgFile.jpg").toURI());
-        Assert.assertTrue(isStreamEqual(downStream, new FileInputStream(file)));
+        assertTrue(isStreamEqual(downStream, new FileInputStream(file)));
     }
 
     @Test
     public void testDownloadTxtFile() throws Exception {
         HttpURLConnection urlConn = request("/test/v1/fileserver/txt", HttpMethod.GET);
-        Assert.assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
+        assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
         String contentType = urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE);
-        Assert.assertTrue(contentType.equalsIgnoreCase("text/plain"));
+        assertTrue(contentType.equalsIgnoreCase("text/plain"));
         InputStream downStream = urlConn.getInputStream();
         File file = new File(Resources.getResource("testTxtFile.txt").toURI());
-        Assert.assertTrue(isStreamEqual(downStream, new FileInputStream(file)));
+        assertTrue(isStreamEqual(downStream, new FileInputStream(file)));
     }
 
     @Test
     public void testGzipCompressionWithNoGzipAccept() throws Exception {
         HttpURLConnection urlConn = request("/test/v1/gzipfile", HttpMethod.GET);
-        Assert.assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
+        assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
         String contentEncoding = urlConn.getHeaderField(HttpHeaders.CONTENT_ENCODING);
-        Assert.assertTrue(contentEncoding == null || !contentEncoding.contains("gzip"));
+        assertTrue(contentEncoding == null || !contentEncoding.contains("gzip"));
         InputStream downStream = urlConn.getInputStream();
-        Assert.assertTrue(IOUtils.toByteArray(downStream).length ==
+        assertTrue(IOUtils.toByteArray(downStream).length ==
                 IOUtils.toByteArray(Resources.getResource("testJpgFile.jpg").openStream()).length);
     }
 
@@ -648,76 +651,76 @@ public class HttpServerTest {
     public void testGzipCompressionWithGzipAccept() throws Exception {
         HttpURLConnection urlConn = request("/test/v1/gzipfile", HttpMethod.GET);
         urlConn.addRequestProperty(HttpHeaders.ACCEPT_ENCODING, "gzip");
-        Assert.assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
+        assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
         String contentEncoding = urlConn.getHeaderField(HttpHeaders.CONTENT_ENCODING);
-        Assert.assertTrue("gzip".equalsIgnoreCase(contentEncoding));
+        assertTrue("gzip".equalsIgnoreCase(contentEncoding));
         InputStream downStream = urlConn.getInputStream();
-        Assert.assertTrue(IOUtils.toByteArray(downStream).length <
+        assertTrue(IOUtils.toByteArray(downStream).length <
                 IOUtils.toByteArray(Resources.getResource("testJpgFile.jpg").openStream()).length);
     }
 
     @Test
     public void testContentTypeSetting0() throws Exception {
         HttpURLConnection urlConn = request("/test/v1/response/typehtml", HttpMethod.GET);
-        Assert.assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
+        assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
         String contentType = urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE);
-        Assert.assertTrue(contentType.equalsIgnoreCase(MediaType.TEXT_HTML));
+        assertTrue(contentType.equalsIgnoreCase(MediaType.TEXT_HTML));
         String content = getContent(urlConn);
-        Assert.assertEquals("Hello", content);
+        assertEquals("Hello", content);
         urlConn.disconnect();
     }
 
     @Test
     public void testContentTypeSetting1() throws Exception {
         HttpURLConnection urlConn = request("/test/v1/response/typehtml/str", HttpMethod.GET);
-        Assert.assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
+        assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
         String contentType = urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE);
-        Assert.assertTrue(contentType.equalsIgnoreCase(MediaType.TEXT_HTML));
+        assertTrue(contentType.equalsIgnoreCase(MediaType.TEXT_HTML));
         String content = getContent(urlConn);
-        Assert.assertEquals("Hello", content);
+        assertEquals("Hello", content);
         urlConn.disconnect();
     }
 
     @Test
     public void testGlobalSwagger() throws Exception {
         HttpURLConnection urlConn = request("/swagger", HttpMethod.GET);
-        Assert.assertEquals(urlConn.getResponseCode(), Response.Status.OK.getStatusCode());
+        assertEquals(urlConn.getResponseCode(), Response.Status.OK.getStatusCode());
         String contentType = urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE);
-        Assert.assertTrue(contentType.equalsIgnoreCase(MediaType.TEXT_PLAIN));
+        assertTrue(contentType.equalsIgnoreCase(MediaType.TEXT_PLAIN));
         urlConn.disconnect();
     }
 
     @Test
     public void testServiceSwagger() throws Exception {
         HttpURLConnection urlConn = request("/swagger?path=/test/v1", HttpMethod.GET);
-        Assert.assertEquals(urlConn.getResponseCode(), Response.Status.OK.getStatusCode());
+        assertEquals(urlConn.getResponseCode(), Response.Status.OK.getStatusCode());
         String contentType = urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE);
-        Assert.assertTrue(contentType.equalsIgnoreCase(MediaType.TEXT_PLAIN));
+        assertTrue(contentType.equalsIgnoreCase(MediaType.TEXT_PLAIN));
         urlConn.disconnect();
     }
 
     @Test
     public void testNonExistentServiceSwagger() throws Exception {
         HttpURLConnection urlConn = request("/swagger?path=/zzaabdf", HttpMethod.GET);
-        Assert.assertEquals(urlConn.getResponseCode(), Response.Status.NOT_FOUND.getStatusCode());
+        assertEquals(urlConn.getResponseCode(), Response.Status.NOT_FOUND.getStatusCode());
         String contentType = urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE);
-        Assert.assertTrue(contentType.equalsIgnoreCase(MediaType.TEXT_PLAIN));
+        assertTrue(contentType.equalsIgnoreCase(MediaType.TEXT_PLAIN));
         urlConn.disconnect();
     }
 
     @Test
     public void testExceptionMapper() throws Exception {
         HttpURLConnection urlConn = request("/test/v1/mappedException", HttpMethod.GET);
-        Assert.assertEquals(urlConn.getResponseCode(), Response.Status.NOT_FOUND.getStatusCode());
+        assertEquals(urlConn.getResponseCode(), Response.Status.NOT_FOUND.getStatusCode());
         String contentType = urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE);
-        Assert.assertTrue(contentType.equalsIgnoreCase(MediaType.TEXT_PLAIN));
+        assertTrue(contentType.equalsIgnoreCase(MediaType.TEXT_PLAIN));
         urlConn.disconnect();
     }
 
     @Test
     public void testExceptionMapper2() throws Exception {
         HttpURLConnection urlConn = request("/test/v1/mappedException2", HttpMethod.GET);
-        Assert.assertEquals(urlConn.getResponseCode(), Response.Status.EXPECTATION_FAILED.getStatusCode());
+        assertEquals(urlConn.getResponseCode(), Response.Status.EXPECTATION_FAILED.getStatusCode());
         urlConn.disconnect();
     }
 
@@ -732,8 +735,8 @@ public class HttpServerTest {
 
     protected void testContent(String path, String content, String method) throws IOException {
         HttpURLConnection urlConn = request(path, method);
-        Assert.assertEquals(200, urlConn.getResponseCode());
-        Assert.assertEquals(content, getContent(urlConn));
+        assertEquals(200, urlConn.getResponseCode());
+        assertEquals(content, getContent(urlConn));
         urlConn.disconnect();
     }
 
