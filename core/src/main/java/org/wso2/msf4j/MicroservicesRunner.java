@@ -126,9 +126,9 @@ public class MicroservicesRunner {
     }
 
     /**
-     * Add javax.ws.rs.ext.ExtensionMapper objects
+     * Add javax.ws.rs.ext.ExceptionMapper objects
      *
-     * @param exceptionMapper The ExtensionMapper to be added
+     * @param exceptionMapper The ExceptionMapper to be added
      * @return this MicroservicesRunner object
      */
     public MicroservicesRunner addExceptionMapper(ExceptionMapper... exceptionMapper) {
