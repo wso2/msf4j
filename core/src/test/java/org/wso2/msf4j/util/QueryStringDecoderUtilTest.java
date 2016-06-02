@@ -17,7 +17,6 @@
 package org.wso2.msf4j.util;
 
 
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.net.URI;
@@ -28,6 +27,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertNotNull;
+import static org.testng.AssertJUnit.assertTrue;
+
 /**
  * Tests for QueryStringDecoderUtil.
  */
@@ -36,7 +40,7 @@ public class QueryStringDecoderUtilTest {
     @Test
     public void testBasicUris() throws URISyntaxException {
         QueryStringDecoderUtil d = new QueryStringDecoderUtil(new URI("http://localhost/path"));
-        Assert.assertEquals(0, d.parameters().size());
+        assertEquals(0, d.parameters().size());
     }
 
     @Test
@@ -44,46 +48,46 @@ public class QueryStringDecoderUtilTest {
         QueryStringDecoderUtil d;
 
         d = new QueryStringDecoderUtil("/foo?a=b=c");
-        Assert.assertEquals("/foo", d.path());
-        Assert.assertEquals(1, d.parameters().size());
-        Assert.assertEquals(1, d.parameters().get("a").size());
-        Assert.assertEquals("b=c", d.parameters().get("a").get(0));
+        assertEquals("/foo", d.path());
+        assertEquals(1, d.parameters().size());
+        assertEquals(1, d.parameters().get("a").size());
+        assertEquals("b=c", d.parameters().get("a").get(0));
 
         d = new QueryStringDecoderUtil("/foo?a=1&a=2");
-        Assert.assertEquals("/foo", d.path());
-        Assert.assertEquals(1, d.parameters().size());
-        Assert.assertEquals(2, d.parameters().get("a").size());
-        Assert.assertEquals("1", d.parameters().get("a").get(0));
-        Assert.assertEquals("2", d.parameters().get("a").get(1));
+        assertEquals("/foo", d.path());
+        assertEquals(1, d.parameters().size());
+        assertEquals(2, d.parameters().get("a").size());
+        assertEquals("1", d.parameters().get("a").get(0));
+        assertEquals("2", d.parameters().get("a").get(1));
 
         d = new QueryStringDecoderUtil("/foo?a=&a=2");
-        Assert.assertEquals("/foo", d.path());
-        Assert.assertEquals(1, d.parameters().size());
-        Assert.assertEquals(2, d.parameters().get("a").size());
-        Assert.assertEquals("", d.parameters().get("a").get(0));
-        Assert.assertEquals("2", d.parameters().get("a").get(1));
+        assertEquals("/foo", d.path());
+        assertEquals(1, d.parameters().size());
+        assertEquals(2, d.parameters().get("a").size());
+        assertEquals("", d.parameters().get("a").get(0));
+        assertEquals("2", d.parameters().get("a").get(1));
 
         d = new QueryStringDecoderUtil("/foo?a=1&a=");
-        Assert.assertEquals("/foo", d.path());
-        Assert.assertEquals(1, d.parameters().size());
-        Assert.assertEquals(2, d.parameters().get("a").size());
-        Assert.assertEquals("1", d.parameters().get("a").get(0));
-        Assert.assertEquals("", d.parameters().get("a").get(1));
+        assertEquals("/foo", d.path());
+        assertEquals(1, d.parameters().size());
+        assertEquals(2, d.parameters().get("a").size());
+        assertEquals("1", d.parameters().get("a").get(0));
+        assertEquals("", d.parameters().get("a").get(1));
 
         d = new QueryStringDecoderUtil("/foo?a=1&a=&a=");
-        Assert.assertEquals("/foo", d.path());
-        Assert.assertEquals(1, d.parameters().size());
-        Assert.assertEquals(3, d.parameters().get("a").size());
-        Assert.assertEquals("1", d.parameters().get("a").get(0));
-        Assert.assertEquals("", d.parameters().get("a").get(1));
-        Assert.assertEquals("", d.parameters().get("a").get(2));
+        assertEquals(d.path(), "/foo");
+        assertEquals(d.parameters().size(), 1);
+        assertEquals(3, d.parameters().get("a").size());
+        assertEquals("1", d.parameters().get("a").get(0));
+        assertEquals("", d.parameters().get("a").get(1));
+        assertEquals("", d.parameters().get("a").get(2));
 
         d = new QueryStringDecoderUtil("/foo?a=1=&a==2");
-        Assert.assertEquals("/foo", d.path());
-        Assert.assertEquals(1, d.parameters().size());
-        Assert.assertEquals(2, d.parameters().get("a").size());
-        Assert.assertEquals("1=", d.parameters().get("a").get(0));
-        Assert.assertEquals("=2", d.parameters().get("a").get(1));
+        assertEquals("/foo", d.path());
+        assertEquals(1, d.parameters().size());
+        assertEquals(2, d.parameters().get("a").size());
+        assertEquals("1=", d.parameters().get("a").get(0));
+        assertEquals("=2", d.parameters().get("a").get(1));
     }
 
     @Test
@@ -121,20 +125,20 @@ public class QueryStringDecoderUtilTest {
             buf.append(i);
             buf.append('&');
         }
-        Assert.assertEquals(1024, new QueryStringDecoderUtil(buf.toString()).parameters().size());
+        assertEquals(1024, new QueryStringDecoderUtil(buf.toString()).parameters().size());
     }
 
     @Test
     public void testHasPath() throws Exception {
         QueryStringDecoderUtil decoder = new QueryStringDecoderUtil("1=2", false);
-        Assert.assertEquals("", decoder.path());
+        assertEquals("", decoder.path());
         Map<String, List<String>> params = decoder.parameters();
-        Assert.assertEquals(1, params.size());
-        Assert.assertTrue(params.containsKey("1"));
+        assertEquals(1, params.size());
+        assertTrue(params.containsKey("1"));
         List<String> param = params.get("1");
-        Assert.assertNotNull(param);
-        Assert.assertEquals(1, param.size());
-        Assert.assertEquals("2", param.get(0));
+        assertNotNull(param);
+        assertEquals(1, param.size());
+        assertEquals("2", param.get(0));
     }
 
     @Test
@@ -165,10 +169,10 @@ public class QueryStringDecoderUtilTest {
             final String expected = tests[i + 1];
             try {
                 final String decoded = QueryStringDecoderUtil.decodeComponent(encoded);
-                Assert.assertEquals(expected, decoded);
+                assertEquals(expected, decoded);
             } catch (IllegalArgumentException e) {
-                Assert.assertTrue(e.getMessage().contains(expected), "String " + e.getMessage() + "\" does"
-                                                                     + " not contain \"" + expected + '"');
+                assertTrue("String " + e.getMessage() + "\" does not contain \"" + expected + '"',
+                        e.getMessage().contains(expected));
             }
         }
     }
@@ -176,8 +180,8 @@ public class QueryStringDecoderUtilTest {
     private static void assertQueryString(String expected, String actual) {
         QueryStringDecoderUtil ed = new QueryStringDecoderUtil(expected, Charset.defaultCharset());
         QueryStringDecoderUtil ad = new QueryStringDecoderUtil(actual, Charset.defaultCharset());
-        Assert.assertEquals(ed.path(), ad.path());
-        Assert.assertEquals(ed.parameters(), ad.parameters());
+        assertEquals(ed.path(), ad.path());
+        assertEquals(ed.parameters(), ad.parameters());
     }
 
     // See #189
@@ -185,27 +189,27 @@ public class QueryStringDecoderUtilTest {
     public void testURI() {
         URI uri = URI.create("http://localhost:8080/foo?param1=value1&param2=value2&param3=value3");
         QueryStringDecoderUtil decoder = new QueryStringDecoderUtil(uri);
-        Assert.assertEquals("/foo", decoder.path());
+        assertEquals("/foo", decoder.path());
         Map<String, List<String>> params = decoder.parameters();
-        Assert.assertEquals(3, params.size());
+        assertEquals(3, params.size());
         Iterator<Entry<String, List<String>>> entries = params.entrySet().iterator();
 
         Entry<String, List<String>> entry = entries.next();
-        Assert.assertEquals("param1", entry.getKey());
-        Assert.assertEquals(1, entry.getValue().size());
-        Assert.assertEquals("value1", entry.getValue().get(0));
+        assertEquals("param1", entry.getKey());
+        assertEquals(1, entry.getValue().size());
+        assertEquals("value1", entry.getValue().get(0));
 
         entry = entries.next();
-        Assert.assertEquals("param2", entry.getKey());
-        Assert.assertEquals(1, entry.getValue().size());
-        Assert.assertEquals("value2", entry.getValue().get(0));
+        assertEquals("param2", entry.getKey());
+        assertEquals(1, entry.getValue().size());
+        assertEquals("value2", entry.getValue().get(0));
 
         entry = entries.next();
-        Assert.assertEquals("param3", entry.getKey());
-        Assert.assertEquals(1, entry.getValue().size());
-        Assert.assertEquals("value3", entry.getValue().get(0));
+        assertEquals("param3", entry.getKey());
+        assertEquals(1, entry.getValue().size());
+        assertEquals("value3", entry.getValue().get(0));
 
-        Assert.assertFalse(entries.hasNext());
+        assertFalse(entries.hasNext());
     }
 
     // See #189
@@ -213,27 +217,27 @@ public class QueryStringDecoderUtilTest {
     public void testURISlashPath() {
         URI uri = URI.create("http://localhost:8080/?param1=value1&param2=value2&param3=value3");
         QueryStringDecoderUtil decoder = new QueryStringDecoderUtil(uri);
-        Assert.assertEquals("/", decoder.path());
+        assertEquals("/", decoder.path());
         Map<String, List<String>> params = decoder.parameters();
-        Assert.assertEquals(3, params.size());
+        assertEquals(3, params.size());
         Iterator<Entry<String, List<String>>> entries = params.entrySet().iterator();
 
         Entry<String, List<String>> entry = entries.next();
-        Assert.assertEquals("param1", entry.getKey());
-        Assert.assertEquals(1, entry.getValue().size());
-        Assert.assertEquals("value1", entry.getValue().get(0));
+        assertEquals("param1", entry.getKey());
+        assertEquals(1, entry.getValue().size());
+        assertEquals("value1", entry.getValue().get(0));
 
         entry = entries.next();
-        Assert.assertEquals("param2", entry.getKey());
-        Assert.assertEquals(1, entry.getValue().size());
-        Assert.assertEquals("value2", entry.getValue().get(0));
+        assertEquals("param2", entry.getKey());
+        assertEquals(1, entry.getValue().size());
+        assertEquals("value2", entry.getValue().get(0));
 
         entry = entries.next();
-        Assert.assertEquals("param3", entry.getKey());
-        Assert.assertEquals(1, entry.getValue().size());
-        Assert.assertEquals("value3", entry.getValue().get(0));
+        assertEquals("param3", entry.getKey());
+        assertEquals(1, entry.getValue().size());
+        assertEquals("value3", entry.getValue().get(0));
 
-        Assert.assertFalse(entries.hasNext());
+        assertFalse(entries.hasNext());
     }
 
     // See #189
@@ -241,27 +245,27 @@ public class QueryStringDecoderUtilTest {
     public void testURINoPath() {
         URI uri = URI.create("http://localhost:8080?param1=value1&param2=value2&param3=value3");
         QueryStringDecoderUtil decoder = new QueryStringDecoderUtil(uri);
-        Assert.assertEquals("", decoder.path());
+        assertEquals("", decoder.path());
         Map<String, List<String>> params = decoder.parameters();
-        Assert.assertEquals(3, params.size());
+        assertEquals(3, params.size());
         Iterator<Entry<String, List<String>>> entries = params.entrySet().iterator();
 
         Entry<String, List<String>> entry = entries.next();
-        Assert.assertEquals("param1", entry.getKey());
-        Assert.assertEquals(1, entry.getValue().size());
-        Assert.assertEquals("value1", entry.getValue().get(0));
+        assertEquals("param1", entry.getKey());
+        assertEquals(1, entry.getValue().size());
+        assertEquals("value1", entry.getValue().get(0));
 
         entry = entries.next();
-        Assert.assertEquals("param2", entry.getKey());
-        Assert.assertEquals(1, entry.getValue().size());
-        Assert.assertEquals("value2", entry.getValue().get(0));
+        assertEquals("param2", entry.getKey());
+        assertEquals(1, entry.getValue().size());
+        assertEquals("value2", entry.getValue().get(0));
 
         entry = entries.next();
-        Assert.assertEquals("param3", entry.getKey());
-        Assert.assertEquals(1, entry.getValue().size());
-        Assert.assertEquals("value3", entry.getValue().get(0));
+        assertEquals("param3", entry.getKey());
+        assertEquals(1, entry.getValue().size());
+        assertEquals("value3", entry.getValue().get(0));
 
-        Assert.assertFalse(entries.hasNext());
+        assertFalse(entries.hasNext());
     }
 
     // See https://github.com/netty/netty/issues/1833
@@ -269,21 +273,21 @@ public class QueryStringDecoderUtilTest {
     public void testURI2() {
         URI uri = URI.create("http://foo.com/images;num=10?query=name;value=123");
         QueryStringDecoderUtil decoder = new QueryStringDecoderUtil(uri);
-        Assert.assertEquals("/images;num=10", decoder.path());
+        assertEquals("/images;num=10", decoder.path());
         Map<String, List<String>> params = decoder.parameters();
-        Assert.assertEquals(2, params.size());
+        assertEquals(2, params.size());
         Iterator<Entry<String, List<String>>> entries = params.entrySet().iterator();
 
         Entry<String, List<String>> entry = entries.next();
-        Assert.assertEquals("query", entry.getKey());
-        Assert.assertEquals(1, entry.getValue().size());
-        Assert.assertEquals("name", entry.getValue().get(0));
+        assertEquals("query", entry.getKey());
+        assertEquals(1, entry.getValue().size());
+        assertEquals("name", entry.getValue().get(0));
 
         entry = entries.next();
-        Assert.assertEquals("value", entry.getKey());
-        Assert.assertEquals(1, entry.getValue().size());
-        Assert.assertEquals("123", entry.getValue().get(0));
+        assertEquals("value", entry.getKey());
+        assertEquals(1, entry.getValue().size());
+        assertEquals("123", entry.getValue().get(0));
 
-        Assert.assertFalse(entries.hasNext());
+        assertFalse(entries.hasNext());
     }
 }

@@ -17,8 +17,9 @@
 package org.wso2.msf4j.internal.mime;
 
 
-import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import static org.testng.AssertJUnit.assertEquals;
 
 /**
  * Test the functionality of MimeMapper.
@@ -28,7 +29,7 @@ public class MimeMapperTest {
     @Test
     public void testMimeMappingForKnownExtension() throws MimeMappingException {
         String mimeType = MimeMapper.getMimeType("png");
-        Assert.assertEquals("image/png", mimeType);
+        assertEquals("image/png", mimeType);
     }
 
     @Test(expectedExceptions = MimeMappingException.class)

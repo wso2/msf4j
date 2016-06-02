@@ -16,7 +16,6 @@
 
 package org.wso2.msf4j.beanconversion;
 
-import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.wso2.msf4j.internal.beanconversion.BeanConverter;
 import org.wso2.msf4j.internal.router.Category;
@@ -24,6 +23,8 @@ import org.wso2.msf4j.internal.router.Pet;
 import org.wso2.msf4j.internal.router.XmlBean;
 
 import java.nio.ByteBuffer;
+
+import static org.testng.AssertJUnit.assertEquals;
 
 /**
  * Tests the functionality of BeanConverter.
@@ -35,27 +36,27 @@ public class BeanConverterTest {
         Pet pet = makePet();
         ByteBuffer json = BeanConverter.getConverter("text/json").toMedia(pet);
         Pet pet1 = (Pet) BeanConverter.getConverter("text/json").toObject(json, Pet.class);
-        Assert.assertEquals(pet.getId(), pet1.getId());
-        Assert.assertEquals(pet.getDetails(), pet1.getDetails());
-        Assert.assertEquals(pet.getImage(), pet1.getImage());
-        Assert.assertEquals(pet.getCategory().getName(), pet1.getCategory().getName());
-        Assert.assertEquals(pet.getAgeMonths(), pet1.getAgeMonths());
-        Assert.assertEquals(pet.getPrice(), pet1.getPrice(), 0);
-        Assert.assertEquals(pet.getDateAdded(), pet1.getDateAdded());
+        assertEquals(pet.getId(), pet1.getId());
+        assertEquals(pet.getDetails(), pet1.getDetails());
+        assertEquals(pet.getImage(), pet1.getImage());
+        assertEquals(pet.getCategory().getName(), pet1.getCategory().getName());
+        assertEquals(pet.getAgeMonths(), pet1.getAgeMonths());
+        assertEquals(pet.getPrice(), pet1.getPrice(), 0);
+        assertEquals(pet.getDateAdded(), pet1.getDateAdded());
     }
 
     @Test
     public void testJsonBeanConversionApplicationJson() throws BeanConversionException {
-        Pet pet = makePet();
-        ByteBuffer json = BeanConverter.getConverter("application/json").toMedia(pet);
-        Pet pet1 = (Pet) BeanConverter.getConverter("application/json").toObject(json, Pet.class);
-        Assert.assertEquals(pet.getId(), pet1.getId());
-        Assert.assertEquals(pet.getDetails(), pet1.getDetails());
-        Assert.assertEquals(pet.getImage(), pet1.getImage());
-        Assert.assertEquals(pet.getCategory().getName(), pet1.getCategory().getName());
-        Assert.assertEquals(pet.getAgeMonths(), pet1.getAgeMonths());
-        Assert.assertEquals(pet.getPrice(), pet1.getPrice(), 0);
-        Assert.assertEquals(pet.getDateAdded(), pet1.getDateAdded());
+        Pet original = makePet();
+        ByteBuffer json = BeanConverter.getConverter("application/json").toMedia(original);
+        Pet result = (Pet) BeanConverter.getConverter("application/json").toObject(json, Pet.class);
+        assertEquals(original.getId(), result.getId());
+        assertEquals(original.getDetails(), result.getDetails());
+        assertEquals(original.getImage(), result.getImage());
+        assertEquals(original.getCategory().getName(), result.getCategory().getName());
+        assertEquals(original.getAgeMonths(), result.getAgeMonths());
+        assertEquals(original.getPrice(), result.getPrice(), 0);
+        assertEquals(original.getDateAdded(), result.getDateAdded());
     }
 
     @Test
@@ -63,25 +64,25 @@ public class BeanConverterTest {
         String val = "Test_String";
         ByteBuffer media = BeanConverter.getConverter("text/plain").toMedia(val);
         Object obj1 = BeanConverter.getConverter("text/plain").toObject(media, null);
-        Assert.assertEquals(obj1, val);
+        assertEquals(obj1, val);
     }
 
     @Test
     public void testAnyBeanConversion() throws BeanConversionException {
-        String val = "Test_String";
-        ByteBuffer media = BeanConverter.getConverter("*/*").toMedia(val);
-        Object obj1 = BeanConverter.getConverter("*/*").toObject(media, null);
-        Assert.assertEquals(obj1, val);
+        String original = "Test_String";
+        ByteBuffer media = BeanConverter.getConverter("*/*").toMedia(original);
+        Object result = BeanConverter.getConverter("*/*").toObject(media, null);
+        assertEquals(original, result);
     }
 
     @Test
     public void testXmlBeanConversion() throws BeanConversionException {
-        XmlBean xmlBean = makeXmlBan();
-        ByteBuffer xml = BeanConverter.getConverter("text/xml").toMedia(xmlBean);
-        XmlBean xmlBean1 = (XmlBean) BeanConverter.getConverter("text/xml").toObject(xml, XmlBean.class);
-        Assert.assertEquals(xmlBean.getName(), xmlBean1.getName());
-        Assert.assertEquals(xmlBean.getId(), xmlBean1.getId());
-        Assert.assertEquals(xmlBean.getValue(), xmlBean1.getValue());
+        XmlBean original = makeXmlBan();
+        ByteBuffer xml = BeanConverter.getConverter("text/xml").toMedia(original);
+        XmlBean result = (XmlBean) BeanConverter.getConverter("text/xml").toObject(xml, XmlBean.class);
+        assertEquals(original.getName(), result.getName());
+        assertEquals(original.getId(), result.getId());
+        assertEquals(original.getValue(), result.getValue());
     }
 
     private XmlBean makeXmlBan() {
@@ -101,5 +102,4 @@ public class BeanConverterTest {
         pet.setImage("cat.png");
         return pet;
     }
-
 }
