@@ -16,7 +16,6 @@
 
 package org.wso2.msf4j.internal.router;
 
-import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
@@ -27,17 +26,18 @@ import java.net.URI;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.Response;
 
+import static org.testng.AssertJUnit.assertEquals;
+
 /**
  * Tests handler interceptor.
  */
-public class HandlerInterceptorTest2 extends BaseHandlerInterceptorTest {
+public class HandlerInterceptorTest2 extends InterceptorTestBase {
     private static final TestInterceptor interceptor1 = new TestInterceptor();
     private static final TestInterceptor interceptor2 = new TestInterceptor();
 
     private static final TestMicroservice TEST_MICROSERVICE = new TestMicroservice();
 
-    private static String hostname = Constants.HOSTNAME;
-    private static final int port = Constants.PORT + 0;
+    private static final int port = Constants.PORT;
 
     private static final MicroservicesRunner microservicesRunner = new MicroservicesRunner(port);
 
@@ -48,7 +48,7 @@ public class HandlerInterceptorTest2 extends BaseHandlerInterceptorTest {
                 .addInterceptor(interceptor1)
                 .addInterceptor(interceptor2)
                 .start();
-        baseURI = URI.create(String.format("http://%s:%d", hostname, port));
+        baseURI = URI.create(String.format("http://%s:%d", Constants.HOSTNAME, port));
     }
 
     @AfterClass
@@ -65,42 +65,42 @@ public class HandlerInterceptorTest2 extends BaseHandlerInterceptorTest {
     @Test
     public void testPreException() throws Exception {
         int status = doGet("/test/v1/resource", "X-Request-Type", "PreException");
-        Assert.assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), status);
+        assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), status);
 
         // Wait for any post handlers to be called
         TimeUnit.MILLISECONDS.sleep(100);
-        Assert.assertEquals(1, interceptor1.getNumPreCalls());
+        assertEquals(1, interceptor1.getNumPreCalls());
 
         // The second pre-call should not have happened due to exception in the first pre-call
         // None of the post calls should have happened.
-        Assert.assertEquals(0, interceptor1.getNumPostCalls());
-        Assert.assertEquals(0, interceptor2.getNumPreCalls());
-        Assert.assertEquals(0, interceptor2.getNumPostCalls());
+        assertEquals(0, interceptor1.getNumPostCalls());
+        assertEquals(0, interceptor2.getNumPreCalls());
+        assertEquals(0, interceptor2.getNumPostCalls());
     }
 
     @Test
     public void testPostException() throws Exception {
         int status = doGet("/test/v1/resource", "X-Request-Type", "PostException");
-        Assert.assertEquals(Response.Status.OK.getStatusCode(), status);
+        assertEquals(Response.Status.OK.getStatusCode(), status);
 
-        Assert.assertEquals(1, interceptor1.getNumPreCalls());
-        Assert.assertEquals(1, interceptor1.getNumPostCalls());
+        assertEquals(1, interceptor1.getNumPreCalls());
+        assertEquals(1, interceptor1.getNumPostCalls());
 
-        Assert.assertEquals(1, interceptor2.getNumPreCalls());
-        Assert.assertEquals(1, interceptor2.getNumPostCalls());
+        assertEquals(1, interceptor2.getNumPreCalls());
+        assertEquals(1, interceptor2.getNumPostCalls());
     }
 
     @Test
     public void testUnknownPath() throws Exception {
         int status = doGet("/unknown/path/test/v1/resource");
-        Assert.assertEquals(Response.Status.NOT_FOUND.getStatusCode(), status);
+        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), status);
 
         // Wait for any post handlers to be called
         TimeUnit.MILLISECONDS.sleep(100);
-        Assert.assertEquals(0, interceptor1.getNumPreCalls());
-        Assert.assertEquals(0, interceptor1.getNumPostCalls());
+        assertEquals(0, interceptor1.getNumPreCalls());
+        assertEquals(0, interceptor1.getNumPostCalls());
 
-        Assert.assertEquals(0, interceptor2.getNumPreCalls());
-        Assert.assertEquals(0, interceptor2.getNumPostCalls());
+        assertEquals(0, interceptor2.getNumPreCalls());
+        assertEquals(0, interceptor2.getNumPostCalls());
     }
 }

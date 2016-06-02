@@ -24,17 +24,17 @@ import java.net.URL;
 import java.util.Map;
 
 /**
- * TODO: add a class level comment.
+ * Base class of MSF4J Interceptor tests.
  */
-public class BaseHandlerInterceptorTest {
+class InterceptorTestBase {
 
-    protected static URI baseURI;
+    static URI baseURI;
 
-    public int doGet(String resource) throws Exception {
-        return doGet(resource, ImmutableMap.<String, String>of());
+    int doGet(String resource) throws Exception {
+        return doGet(resource, ImmutableMap.of());
     }
 
-    public int doGet(String resource, String key, String value, String... keyValues) throws Exception {
+    int doGet(String resource, String key, String value, String... keyValues) throws Exception {
         Map<String, String> headerMap = Maps.newHashMap();
         headerMap.put(key, value);
 
@@ -44,7 +44,7 @@ public class BaseHandlerInterceptorTest {
         return doGet(resource, headerMap);
     }
 
-    public int doGet(String resource, Map<String, String> headers) throws Exception {
+    private int doGet(String resource, Map<String, String> headers) throws Exception {
         URL url = baseURI.resolve(resource).toURL();
         HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
         try {
