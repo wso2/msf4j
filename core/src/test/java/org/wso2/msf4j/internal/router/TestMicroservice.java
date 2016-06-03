@@ -312,7 +312,7 @@ public class TestMicroservice implements Microservice {
             return Response.ok(file).build();
         } else if (fileType.equals("jpg")) {
             file = new File(Resources.getResource("testJpgFile.jpg").toURI());
-            return Response.ok(file).build();
+            return Response.ok(file).header("X-Custom-Header", "wso2").build();
         } else if (fileType.equals("txt")) {
             file = new File(Resources.getResource("testTxtFile.txt").toURI());
             return Response.ok(file).build();

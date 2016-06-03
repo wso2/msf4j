@@ -17,6 +17,7 @@
 package org.wso2.msf4j.internal.entitywriter;
 
 import com.google.common.io.Files;
+import org.wso2.carbon.messaging.CarbonCallback;
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.Constants;
 import org.wso2.msf4j.Response;
@@ -50,7 +51,7 @@ public class FileEntityWriter implements EntityWriter<File> {
      * Write the entity to the carbon message.
      */
     @Override
-    public void writeData(CarbonMessage carbonMessage, File file, String mediaType, int chunkSize) {
+    public void writeData(CarbonMessage carbonMessage, File file, String mediaType, int chunkSize, CarbonCallback cb) {
         if (mediaType == null || mediaType.equals(MediaType.WILDCARD)) {
             try {
                 mediaType = MimeMapper.getMimeType(Files.getFileExtension(file.getName()));
@@ -63,7 +64,11 @@ public class FileEntityWriter implements EntityWriter<File> {
             if (chunkSize == Response.NO_CHUNK || chunkSize == Response.DEFAULT_CHUNK_SIZE) {
                 chunkSize = DEFAULT_CHUNK_SIZE;
             }
-            //TODO: prevent full loading of the file to memory
+            carbonMessage.setHeader(Constants.HTTP_TRANSFER_ENCODING, CHUNKED);
+            carbonMessage.setHeader(Constants.HTTP_CONTENT_TYPE, mediaType);
+            carbonMessage.setBufferContent(false);
+            cb.done(carbonMessage);
+
             ByteBuffer buffer = ByteBuffer.allocate(chunkSize);
             while (fileChannel.read(buffer) != -1) {
                 buffer.flip();
@@ -72,8 +77,6 @@ public class FileEntityWriter implements EntityWriter<File> {
             }
             fileChannel.close();
             carbonMessage.setEndOfMsgAdded(true);
-            carbonMessage.setHeader(Constants.HTTP_TRANSFER_ENCODING, CHUNKED);
-            carbonMessage.setHeader(Constants.HTTP_CONTENT_TYPE, mediaType);
         } catch (IOException e) {
             throw new RuntimeException("Cannot write file", e);
         }

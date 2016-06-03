@@ -618,6 +618,7 @@ public class HttpServerTest {
     public void testDownloadJpgFile() throws Exception {
         HttpURLConnection urlConn = request("/test/v1/fileserver/jpg", HttpMethod.GET);
         assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
+        assertEquals("wso2", urlConn.getHeaderField("X-Custom-Header"));
         String contentType = urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE);
         assertTrue(contentType.equalsIgnoreCase("image/jpeg"));
         InputStream downStream = urlConn.getInputStream();

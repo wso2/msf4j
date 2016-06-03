@@ -237,14 +237,13 @@ public class Response {
     public void send() {
         carbonMessage.setProperty(Constants.HTTP_STATUS_CODE, getStatusCode());
         processEntity();
-        carbonCallback.done(carbonMessage);
     }
 
     @SuppressWarnings("unchecked")
     private void processEntity() {
         if (entity != null) {
             EntityWriterRegistry.getEntityWriter(entity.getClass()).
-                    writeData(carbonMessage, entity, mediaType, chunkSize);
+                    writeData(carbonMessage, entity, mediaType, chunkSize, carbonCallback);
         } else {
             carbonMessage.addMessageBody(ByteBuffer.allocate(0));
             carbonMessage.setEndOfMsgAdded(true);
