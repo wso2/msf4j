@@ -33,7 +33,6 @@ import org.wso2.msf4j.internal.router.PatternPathRouter;
 import org.wso2.msf4j.util.HttpUtil;
 
 import java.lang.reflect.InvocationTargetException;
-import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
@@ -119,9 +118,8 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
 
             HttpMethodInfo httpMethodInfo = httpMethodInfoBuilder.build();
             if (httpMethodInfo.isStreamingSupported()) {
-                // TODO: introduce a true async model
-                for (ByteBuffer byteBuffer : request.getFullMessageBody()) {
-                    httpMethodInfo.chunk(byteBuffer);
+                while (!(request.isEmpty() && request.isEomAdded())) {
+                    httpMethodInfo.chunk(request.getMessageBody());
                 }
                 httpMethodInfo.end();
             } else {
