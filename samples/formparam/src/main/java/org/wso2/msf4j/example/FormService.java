@@ -89,10 +89,10 @@ public class FormService {
     public Response complexForm(@FormDataParam("file") File file,
                             @FormDataParam("id") int id,
                             @FormDataParam("people") List<Person> personList,
-                            @FormDataParam("company") Company animal) {
+                            @FormDataParam("company") Company company) {
         System.out.println("First Person in List " + personList.get(0).getName());
         System.out.println("Id " + id);
-        System.out.println("Company " + animal.getType());
+        System.out.println("Company " + company.getType());
         try {
             Files.copy(file.toPath(), Paths.get("/tmp", "tst", file.getName()));
         } catch (IOException e) {
