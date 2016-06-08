@@ -17,19 +17,36 @@
 package org.wso2.msf4j.internal.router;
 
 import com.google.common.base.Preconditions;
+import org.apache.commons.io.FileCleaningTracker;
 import org.wso2.msf4j.HttpStreamer;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
+import org.wso2.msf4j.formparam.FormDataParam;
+import org.wso2.msf4j.formparam.FormItem;
+import org.wso2.msf4j.formparam.FormParamIterator;
+import org.wso2.msf4j.formparam.exception.FileUploadException;
+import org.wso2.msf4j.formparam.util.StreamUtil;
 import org.wso2.msf4j.internal.beanconversion.BeanConverter;
 import org.wso2.msf4j.util.BufferUtil;
 import org.wso2.msf4j.util.QueryStringDecoderUtil;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
@@ -44,6 +61,11 @@ public class HttpResourceModelProcessor {
 
     private final HttpResourceModel httpResourceModel;
     private HttpStreamer httpStreamer;
+    private Map<String, List<Object>> formParameters = null;
+    private Map<String, String> formParamContentType = new HashMap<>();
+    private static Path tempRepoPath = Paths.get(System.getProperty("java.io.tmpdir"), "msf4jtemp");
+    // Temp File cleaning thread
+    private static FileCleaningTracker fileCleaningTracker = new FileCleaningTracker();
 
     public HttpResourceModelProcessor(HttpResourceModel httpResourceModel) {
         this.httpResourceModel = httpResourceModel;
@@ -83,6 +105,12 @@ public class HttpResourceModelProcessor {
                     } else if (Context.class.isAssignableFrom(annotationType)) {
                         args[idx] = getContextParamValue((HttpResourceModel.ParameterInfo<Object>) paramInfo,
                                 request, responder);
+                    } else if (FormParam.class.isAssignableFrom(annotationType)) {
+                        args[idx] = getFormParamValue((HttpResourceModel.ParameterInfo<List<Object>>) paramInfo,
+                                                      request);
+                    } else if (FormDataParam.class.isAssignableFrom(annotationType)) {
+                        args[idx] = getFormDataParamValue((HttpResourceModel.ParameterInfo<List<Object>>) paramInfo,
+                                                          request);
                     } else {
                         createObject(request, args, idx, paramInfo);
                     }
@@ -121,10 +149,105 @@ public class HttpResourceModelProcessor {
                         MediaType.WILDCARD).convertToObject(fullContent, paramType);
     }
 
+    private Object getFormDataParamValue(HttpResourceModel.ParameterInfo<List<Object>> paramInfo, Request request)
+            throws FileUploadException, IOException {
+        if (Files.notExists(tempRepoPath)) {
+            Files.createDirectory(tempRepoPath);
+        }
+
+        Type paramType = paramInfo.getParameterType();
+        FormDataParam formDataParam = paramInfo.getAnnotation();
+        if (getFormParameters() == null) {
+            FormParamIterator formParamIterator = new FormParamIterator(request);
+            Map<String, List<Object>> parameters = new HashMap<>();
+            while (formParamIterator.hasNext()) {
+                FormItem item = formParamIterator.next();
+
+                String cType = item.getContentType();
+                if (cType != null && cType.contains(";")) {
+                    cType = cType.split(";")[0];
+                }
+                boolean isFile = item.getHeaders().getHeader("content-disposition").contains("filename") ||
+                                 "application/octet-stream".equals(item.getHeaders().getHeader("content-type"));
+                formParamContentType.putIfAbsent(item.getFieldName(), cType);
+
+                List<Object> existingValues = parameters.get(item.getFieldName());
+                if (existingValues == null) {
+                    parameters.put(item.getFieldName(),
+                                   isFile ? new ArrayList<>(Collections.singletonList(createAndTrackTempFile(item))) :
+                                   new ArrayList<>(Collections.singletonList(StreamUtil.asString(item.openStream()))));
+                } else {
+                    existingValues.add(isFile ? createAndTrackTempFile(item) : StreamUtil.asString(item.openStream()));
+                }
+            }
+            setFormParameters(parameters);
+        }
+
+        List<Object> parameter = getParameter(formDataParam.value());
+        if (paramInfo.getConverter() != null) {
+            // We need to skip the conversion for java.io.File types
+            if (paramType instanceof ParameterizedType) {
+                return parameter;
+            } else if (parameter.get(0).getClass().isAssignableFrom(File.class)) {
+                return parameter.get(0);
+            }
+            return paramInfo.convert(parameter);
+        }
+        // These are beans. Convert using existing BeanConverter
+        return BeanConverter.getConverter(formParamContentType.get(formDataParam.value())).convertToObject(
+                ByteBuffer.wrap(parameter.get(0).toString().getBytes(Charset.defaultCharset())), paramType);
+    }
+
+    private File createAndTrackTempFile(FormItem item) throws IOException {
+        Path path = Paths.get(tempRepoPath.toString(), item.getName());
+        File file = path.toFile();
+        StreamUtil.copy(item.openStream(), new FileOutputStream(file), true);
+        fileCleaningTracker.track(file, file);
+        return file;
+    }
+
+    private Object getFormParamValue(HttpResourceModel.ParameterInfo<List<Object>> paramInfo, Request request)
+            throws FileUploadException, IOException {
+        FormParam formParam = paramInfo.getAnnotation();
+        if (getFormParameters() == null) {
+            Map<String, List<Object>> parameters = new HashMap<>();
+            if (MediaType.MULTIPART_FORM_DATA.equals(request.getContentType())) {
+                FormParamIterator formParamIterator = new FormParamIterator(request);
+                while (formParamIterator.hasNext()) {
+                    FormItem item = formParamIterator.next();
+                    List<Object> existingValues = parameters.get(item.getFieldName());
+                    if (existingValues == null) {
+                        parameters.put(item.getFieldName(), new ArrayList<>(
+                                Collections.singletonList(StreamUtil.asString(item.openStream()))));
+                    } else {
+                        existingValues.add(StreamUtil.asString(item.openStream()));
+                    }
+                }
+            } else if (MediaType.APPLICATION_FORM_URLENCODED.equals(request.getContentType())) {
+                ByteBuffer fullContent = BufferUtil.merge(request.getFullMessageBody());
+                String bodyStr = BeanConverter.getConverter(
+                        (request.getContentType() != null) ? request.getContentType() : MediaType.WILDCARD)
+                                              .convertToObject(fullContent, paramInfo.getParameterType()).toString();
+                QueryStringDecoderUtil queryStringDecoderUtil = new QueryStringDecoderUtil(bodyStr, false);
+                queryStringDecoderUtil.parameters().entrySet().
+                        forEach(entry -> parameters.put(entry.getKey(), new ArrayList<>(entry.getValue())));
+            }
+            setFormParameters(parameters);
+        }
+
+        List<Object> paramValue = getParameter(formParam.value());
+        if (paramValue == null) {
+            String defaultVal = paramInfo.getDefaultVal();
+            if (defaultVal != null) {
+                paramValue = Collections.singletonList(defaultVal);
+            }
+        }
+        return paramInfo.convert(paramValue);
+    }
 
     @SuppressWarnings("unchecked")
     private Object getContextParamValue(HttpResourceModel.ParameterInfo<Object> paramInfo, Request request,
-                                        Response responder) {
+                                        Response responder) throws FileUploadException, IOException {
         Type paramType = paramInfo.getParameterType();
         Object value = null;
         if (((Class) paramType).isAssignableFrom(Request.class)) {
@@ -136,6 +259,8 @@ public class HttpResourceModelProcessor {
                 httpStreamer = new HttpStreamer();
             }
             value = httpStreamer;
+        } else if (((Class) paramType).isAssignableFrom(FormParamIterator.class)) {
+            value = new FormParamIterator(request);
         }
         Preconditions.checkArgument(value != null, "Could not resolve parameter %s", paramType.getTypeName());
         return value;
@@ -182,4 +307,28 @@ public class HttpResourceModelProcessor {
         return info.convert(Collections.singletonList(header));
     }
 
+    /**
+     * @return parameter value of the given key.
+     * @param key parameter name
+     */
+    public List<Object> getParameter(String key) {
+        return formParameters.get(key);
+    }
+
+    /**
+     *
+     * @return Map of request formParameters
+     */
+    public Map<String, List<Object>> getFormParameters() {
+        return formParameters;
+    }
+
+    /**
+     * Set the request formParameters
+     *
+     * @param parameters request formParameters
+     */
+    public void setFormParameters(Map<String, List<Object>> parameters) {
+        this.formParameters = parameters;
+    }
 }

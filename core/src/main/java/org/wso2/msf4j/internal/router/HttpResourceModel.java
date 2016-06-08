@@ -21,6 +21,7 @@ import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import org.wso2.msf4j.HttpStreamer;
+import org.wso2.msf4j.formparam.FormDataParam;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -34,6 +35,7 @@ import javax.annotation.Nullable;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.HttpMethod;
@@ -50,8 +52,9 @@ import javax.ws.rs.core.Context;
  */
 public final class HttpResourceModel {
 
-    private static final Set<Class<? extends Annotation>> SUPPORTED_PARAM_ANNOTATIONS =
-            ImmutableSet.of(PathParam.class, QueryParam.class, HeaderParam.class, Context.class);
+    private static final Set<Class<? extends Annotation>> SUPPORTED_PARAM_ANNOTATIONS = ImmutableSet
+            .of(PathParam.class, QueryParam.class, HeaderParam.class, Context.class, FormParam.class,
+                FormDataParam.class);
     private static final String[] ANY_MEDIA_TYPE = new String[]{"*/*"};
     private static final int STREAMING_REQ_UNKNOWN = 0, STREAMING_REQ_SUPPORTED = 1, STREAMING_REQ_UNSUPPORTED = 2;
 
@@ -209,6 +212,10 @@ public final class HttpResourceModel {
                     converter = ParamConvertUtils.createPathParamConverter(parameterType);
                 } else if (QueryParam.class.isAssignableFrom(annotationType)) {
                     converter = ParamConvertUtils.createQueryParamConverter(parameterType);
+                } else if (FormParam.class.isAssignableFrom(annotationType)) {
+                    converter = ParamConvertUtils.createFormParamConverter(parameterType);
+                } else if (FormDataParam.class.isAssignableFrom(annotationType)) {
+                    converter = ParamConvertUtils.createFormDataParamConverter(parameterType, annotation);
                 } else if (HeaderParam.class.isAssignableFrom(annotationType)) {
                     converter = ParamConvertUtils.createHeaderParamConverter(parameterType);
                 } else if (DefaultValue.class.isAssignableFrom(annotationType)) {
@@ -288,6 +295,10 @@ public final class HttpResourceModel {
 
         Object convert(T input) {
             return (converter == null) ? null : converter.apply(input);
+        }
+
+        public Function<T, Object> getConverter() {
+            return converter;
         }
     }
 }

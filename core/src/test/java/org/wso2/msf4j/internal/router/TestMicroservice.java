@@ -26,6 +26,9 @@ import org.wso2.msf4j.HttpStreamHandler;
 import org.wso2.msf4j.HttpStreamer;
 import org.wso2.msf4j.Microservice;
 import org.wso2.msf4j.Request;
+import org.wso2.msf4j.formparam.FormItem;
+import org.wso2.msf4j.formparam.FormParamIterator;
+import org.wso2.msf4j.formparam.exception.FileUploadException;
 import org.wso2.msf4j.util.BufferUtil;
 
 import java.io.File;
@@ -39,6 +42,7 @@ import java.util.concurrent.TimeUnit;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -485,6 +489,36 @@ public class TestMicroservice implements Microservice {
     @GET
     public void testExceptionMapping2() throws MappedException2 {
         throw new MappedException2("Mapped exception 2 thrown");
+    }
+
+    @Path("/formParam")
+    @POST
+    @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.MULTIPART_FORM_DATA})
+    public Response tesFormParamWithURLEncoded(@FormParam("name") String name, @FormParam("age") int age) {
+        return Response.ok().entity(name + ":" + age).build();
+    }
+
+    @Path("/formParamWithList")
+    @POST
+    public Response tesFormParamWithURLEncodedList(@FormParam("names") List<String> names) {
+        return Response.ok().entity(names.size()).build();
+    }
+
+    @POST
+    @Path("/testFormParamWithFile")
+    public Response testFormParamWithFile(@Context FormParamIterator formParamIterator) {
+        String response = "";
+        try {
+            while (formParamIterator.hasNext()) {
+                FormItem item = formParamIterator.next();
+                response = item.getName();
+            }
+        } catch (FileUploadException e) {
+            response = e.getMessage();
+        } catch (IOException e) {
+            response = e.getMessage();
+        }
+        return Response.ok().entity(response).build();
     }
 
     /**
