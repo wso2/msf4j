@@ -76,7 +76,6 @@ public class HttpServerTest {
 
     private static final TestMicroservice TEST_MICROSERVICE = new TestMicroservice();
 
-    private static String hostname = Constants.HOSTNAME;
     private static final int port = Constants.PORT + 1;
     protected static URI baseURI;
 
@@ -84,7 +83,7 @@ public class HttpServerTest {
 
     @BeforeClass
     public static void setup() throws Exception {
-        baseURI = URI.create(String.format("http://%s:%d", hostname, port));
+        baseURI = URI.create(String.format("http://%s:%d", Constants.HOSTNAME, port));
         microservicesRunner
                 .addExceptionMapper(new TestExceptionMapper(), new TestExceptionMapper2())
                 .deploy(TEST_MICROSERVICE)
@@ -608,11 +607,23 @@ public class HttpServerTest {
         HttpURLConnection urlConn = request("/test/v1/fileserver/png", HttpMethod.GET);
         assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
         String contentType = urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE);
-        assertTrue(contentType.equalsIgnoreCase("image/png"));
+        assertTrue("image/png".equalsIgnoreCase(contentType));
         InputStream downStream = urlConn.getInputStream();
         File file = new File(Resources.getResource("testPngFile.png").toURI());
         assertTrue(isStreamEqual(downStream, new FileInputStream(file)));
     }
+
+    @Test
+    public void testDownloadPngFileFromInputStream() throws Exception {
+        HttpURLConnection urlConn = request("/test/v1/fileserver/ip/png", HttpMethod.GET);
+        assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
+        String contentType = urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE);
+        assertTrue("image/png".equalsIgnoreCase(contentType));
+        InputStream downStream = urlConn.getInputStream();
+        File file = new File(Resources.getResource("testPngFile.png").toURI());
+        assertTrue(isStreamEqual(downStream, new FileInputStream(file)));
+    }
+
 
     @Test
     public void testDownloadJpgFile() throws Exception {
@@ -620,7 +631,19 @@ public class HttpServerTest {
         assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
         assertEquals("wso2", urlConn.getHeaderField("X-Custom-Header"));
         String contentType = urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE);
-        assertTrue(contentType.equalsIgnoreCase("image/jpeg"));
+        assertTrue("image/jpeg".equalsIgnoreCase(contentType));
+        InputStream downStream = urlConn.getInputStream();
+        File file = new File(Resources.getResource("testJpgFile.jpg").toURI());
+        assertTrue(isStreamEqual(downStream, new FileInputStream(file)));
+    }
+
+    @Test
+    public void testDownloadJpgFileFromInputStream() throws Exception {
+        HttpURLConnection urlConn = request("/test/v1/fileserver/ip/jpg", HttpMethod.GET);
+        assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
+        assertEquals("wso2", urlConn.getHeaderField("X-Custom-Header"));
+        String contentType = urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE);
+        assertTrue("image/jpeg".equalsIgnoreCase(contentType));
         InputStream downStream = urlConn.getInputStream();
         File file = new File(Resources.getResource("testJpgFile.jpg").toURI());
         assertTrue(isStreamEqual(downStream, new FileInputStream(file)));
@@ -631,7 +654,18 @@ public class HttpServerTest {
         HttpURLConnection urlConn = request("/test/v1/fileserver/txt", HttpMethod.GET);
         assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
         String contentType = urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE);
-        assertTrue(contentType.equalsIgnoreCase("text/plain"));
+        assertTrue("text/plain".equalsIgnoreCase(contentType));
+        InputStream downStream = urlConn.getInputStream();
+        File file = new File(Resources.getResource("testTxtFile.txt").toURI());
+        assertTrue(isStreamEqual(downStream, new FileInputStream(file)));
+    }
+
+    @Test
+    public void testDownloadTxtFileFromInputStream() throws Exception {
+        HttpURLConnection urlConn = request("/test/v1/fileserver/ip/txt", HttpMethod.GET);
+        assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
+        String contentType = urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE);
+        assertTrue("text/plain".equalsIgnoreCase(contentType));
         InputStream downStream = urlConn.getInputStream();
         File file = new File(Resources.getResource("testTxtFile.txt").toURI());
         assertTrue(isStreamEqual(downStream, new FileInputStream(file)));
@@ -685,43 +719,39 @@ public class HttpServerTest {
     @Test
     public void testGlobalSwagger() throws Exception {
         HttpURLConnection urlConn = request("/swagger", HttpMethod.GET);
-        assertEquals(urlConn.getResponseCode(), Response.Status.OK.getStatusCode());
-        String contentType = urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE);
-        assertTrue(contentType.equalsIgnoreCase(MediaType.TEXT_PLAIN));
+        assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
+        assertEquals(MediaType.TEXT_PLAIN, urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE));
         urlConn.disconnect();
     }
 
     @Test
     public void testServiceSwagger() throws Exception {
         HttpURLConnection urlConn = request("/swagger?path=/test/v1", HttpMethod.GET);
-        assertEquals(urlConn.getResponseCode(), Response.Status.OK.getStatusCode());
-        String contentType = urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE);
-        assertTrue(contentType.equalsIgnoreCase(MediaType.TEXT_PLAIN));
+        assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
+        assertEquals(MediaType.TEXT_PLAIN, urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE));
         urlConn.disconnect();
     }
 
     @Test
     public void testNonExistentServiceSwagger() throws Exception {
         HttpURLConnection urlConn = request("/swagger?path=/zzaabdf", HttpMethod.GET);
-        assertEquals(urlConn.getResponseCode(), Response.Status.NOT_FOUND.getStatusCode());
-        String contentType = urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE);
-        assertTrue(contentType.equalsIgnoreCase(MediaType.TEXT_PLAIN));
+        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), urlConn.getResponseCode());
+        assertEquals(MediaType.TEXT_PLAIN, urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE));
         urlConn.disconnect();
     }
 
     @Test
     public void testExceptionMapper() throws Exception {
         HttpURLConnection urlConn = request("/test/v1/mappedException", HttpMethod.GET);
-        assertEquals(urlConn.getResponseCode(), Response.Status.NOT_FOUND.getStatusCode());
-        String contentType = urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE);
-        assertTrue(contentType.equalsIgnoreCase(MediaType.TEXT_PLAIN));
+        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), urlConn.getResponseCode());
+        assertEquals(MediaType.TEXT_PLAIN, urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE));
         urlConn.disconnect();
     }
 
     @Test
     public void testExceptionMapper2() throws Exception {
         HttpURLConnection urlConn = request("/test/v1/mappedException2", HttpMethod.GET);
-        assertEquals(urlConn.getResponseCode(), Response.Status.EXPECTATION_FAILED.getStatusCode());
+        assertEquals(Response.Status.EXPECTATION_FAILED.getStatusCode(), urlConn.getResponseCode());
         urlConn.disconnect();
     }
 
@@ -748,7 +778,7 @@ public class HttpServerTest {
     protected HttpURLConnection request(String path, String method, boolean keepAlive) throws IOException {
         URL url = baseURI.resolve(path).toURL();
         HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
-        if (method == HttpMethod.POST || method == HttpMethod.PUT) {
+        if (method.equals(HttpMethod.POST) || method.equals(HttpMethod.PUT)) {
             urlConn.setDoOutput(true);
         }
         urlConn.setRequestMethod(method);

@@ -17,9 +17,11 @@
 package org.wso2.msf4j.internal.entitywriter;
 
 import org.wso2.msf4j.entitywriter.EntityWriter;
+import org.wso2.msf4j.internal.ClassComparator;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
 
 /**
  * Registry that stores entity writers for different entity types.
@@ -27,10 +29,14 @@ import java.util.Map;
 public class EntityWriterRegistry {
 
     private static final EntityWriter DEFAULT_ENTITY_WRITER = new ObjectEntityWriter();
-    private static final Map<Class, EntityWriter> writerMap = new HashMap<>();
+    private static final Map<Class, EntityWriter> writers = new TreeMap<>(new ClassComparator());
 
-    static  {
+    static {
         registerEntityWriter(new FileEntityWriter());
+        registerEntityWriter(new InputStreamEntityWriter());
+    }
+
+    private EntityWriterRegistry() {
     }
 
     /**
@@ -39,7 +45,7 @@ public class EntityWriterRegistry {
      * @param entityWriter entity writer for a specific entity type
      */
     private static void registerEntityWriter(EntityWriter entityWriter) {
-        writerMap.put(entityWriter.getType(), entityWriter);
+        writers.put(entityWriter.getType(), entityWriter);
     }
 
     /**
@@ -49,7 +55,10 @@ public class EntityWriterRegistry {
      * @return entity writer
      */
     public static EntityWriter getEntityWriter(Class type) {
-        EntityWriter entityWriter = writerMap.get(type);
-        return (entityWriter != null) ? entityWriter : DEFAULT_ENTITY_WRITER;
+        return writers.entrySet().
+                stream().
+                filter(entry -> entry.getKey().isAssignableFrom(type)).
+                findFirst().
+                flatMap(entry -> Optional.ofNullable(entry.getValue())).orElse(DEFAULT_ENTITY_WRITER);
     }
 }

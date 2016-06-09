@@ -47,7 +47,7 @@ public class MicroservicesRegistry {
 
     private final List<Interceptor> interceptors = new ArrayList<>();
     private volatile MicroserviceMetadata metadata = new MicroserviceMetadata(Collections.emptyList());
-    private Map<String, ExceptionMapper> exceptionMappers = new TreeMap<>(new ClassComparator());
+    private Map<Class, ExceptionMapper> exceptionMappers = new TreeMap<>(new ClassComparator());
 
     public void addService(Object... service) {
         Collections.addAll(services, service);
@@ -82,22 +82,23 @@ public class MicroservicesRegistry {
     public void addExceptionMapper(ExceptionMapper... mapper) {
         Arrays.stream(mapper).forEach(em -> {
             Arrays.stream(em.getClass().getMethods()).
-                    filter(method -> method.getName().equals("toResponse") && method.getParameterCount() == 1).
+                    filter(method -> "toResponse".equals(method.getName()) && method.getParameterCount() == 1).
                     findAny().
-                    ifPresent(method -> exceptionMappers.put(method.getGenericParameterTypes()[0].getTypeName(), em));
+                    ifPresent(method -> {
+                        try {
+                            exceptionMappers.put(Class.forName(method.getGenericParameterTypes()[0].getTypeName()), em);
+                        } catch (ClassNotFoundException e) {
+                            log.error("Could not load class", e);
+                        }
+                    });
         });
     }
 
     Optional<ExceptionMapper> getExceptionMapper(Throwable throwable) {
         return exceptionMappers.entrySet().
                 stream().
-                filter(entry -> {
-                    try {
-                        return Class.forName(entry.getKey()).isAssignableFrom(throwable.getClass());
-                    } catch (ClassNotFoundException e) {
-                        throw new RuntimeException(e.getMessage(), e);
-                    }
-                }).findFirst().
+                filter(entry -> entry.getKey().isAssignableFrom(throwable.getClass())).
+                findFirst().
                 flatMap(entry -> Optional.ofNullable(entry.getValue()));
     }
 
@@ -106,7 +107,13 @@ public class MicroservicesRegistry {
         Arrays.stream(em.getClass().getMethods()).
                 filter(method -> method.getName().equals("toResponse") && method.getParameterCount() == 1).
                 findAny().
-                ifPresent(method -> exceptionMappers.remove(method.getGenericParameterTypes()[0].getTypeName()));
+                ifPresent(method -> {
+                    try {
+                        exceptionMappers.remove(Class.forName(method.getGenericParameterTypes()[0].getTypeName()));
+                    } catch (ClassNotFoundException e) {
+                        log.error("Could not load class", e);
+                    }
+                });
     }
 
     public List<Interceptor> getInterceptors() {

@@ -29,7 +29,9 @@ import org.wso2.msf4j.Request;
 import org.wso2.msf4j.util.BufferUtil;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -307,15 +309,31 @@ public class TestMicroservice implements Microservice {
     @GET
     public Response serveFile(@PathParam("fileType") String fileType) throws Exception {
         File file;
-        if (fileType.equals("png")) {
+        if ("png".equals(fileType)) {
             file = new File(Resources.getResource("testPngFile.png").toURI());
             return Response.ok(file).build();
-        } else if (fileType.equals("jpg")) {
+        } else if ("jpg".equals(fileType)) {
             file = new File(Resources.getResource("testJpgFile.jpg").toURI());
             return Response.ok(file).header("X-Custom-Header", "wso2").build();
-        } else if (fileType.equals("txt")) {
+        } else if ("txt".equals(fileType)) {
             file = new File(Resources.getResource("testTxtFile.txt").toURI());
             return Response.ok(file).build();
+        }
+        return Response.noContent().build();
+    }
+
+    @Path("/fileserver/ip/{fileType}")
+    @GET
+    public Response serveInputStream(@PathParam("fileType") String fileType) throws Exception {
+        if ("png".equals(fileType)) {
+            InputStream ipStream = new FileInputStream(new File(Resources.getResource("testPngFile.png").toURI()));
+            return Response.ok(ipStream).type("image/png").build();
+        } else if ("jpg".equals(fileType)) {
+            InputStream ipStream = new FileInputStream(new File(Resources.getResource("testJpgFile.jpg").toURI()));
+            return Response.ok(ipStream).type("image/jpeg").header("X-Custom-Header", "wso2").build();
+        } else if ("txt".equals(fileType)) {
+            InputStream ipStream = new FileInputStream(new File(Resources.getResource("testTxtFile.txt").toURI()));
+            return Response.ok(ipStream).type("text/plain").build();
         }
         return Response.noContent().build();
     }
