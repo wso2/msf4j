@@ -73,7 +73,6 @@ public class FileEntityWriter implements EntityWriter<File> {
             while (fileChannel.read(buffer) != -1) {
                 buffer.flip();
                 carbonMessage.addMessageBody(buffer);
-                buffer = ByteBuffer.allocate(chunkSize);
             }
             fileChannel.close();
             carbonMessage.setEndOfMsgAdded(true);
