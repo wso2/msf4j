@@ -247,6 +247,7 @@ public class Response {
         } else {
             carbonMessage.addMessageBody(ByteBuffer.allocate(0));
             carbonMessage.setEndOfMsgAdded(true);
+            carbonCallback.done(carbonMessage);
         }
     }
 }

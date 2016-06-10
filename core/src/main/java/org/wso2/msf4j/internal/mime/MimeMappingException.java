@@ -20,7 +20,7 @@ package org.wso2.msf4j.internal.mime;
  * This exception will be thrown in case a
  * file extension cannot be mapped to a mime type.
  */
-public class MimeMappingException extends Exception {
+public class MimeMappingException extends RuntimeException {
 
     public MimeMappingException(String msg) {
         super(msg);
