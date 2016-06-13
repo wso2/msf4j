@@ -5,7 +5,11 @@
 
 You can serve files from the resource methods by returning a java.io.File, 
  java.io.InputStream or by returning a javax.ws.rs.core.Response object with a java.io.File or 
-java.io.InputStream entity.
+java.io.InputStream entity. Streaming is supported by default for java.io.File and java.io.InputStream
+entities. 
+
+javax.ws.rs.core.StreamingOutput is also supported by MSF4J. This provides the service author more control
+over the chunk size.
 
 See the following sample.
 
@@ -21,7 +25,7 @@ See the following sample.
     }
 ```
 
-## Chunked HTTP Request Handling
+## Streaming (Chunked) HTTP Request Handling
 
 
 With WSO2 MSF4J, you can handle chunked requests in two ways.
@@ -113,4 +117,10 @@ Alternatively, to see how streaming works with java.io.InputStream, run the foll
 
 ```
 curl -v -X GET http://localhost:8080/ip/filename.png > result-ipstream.png
+```
+
+To see how streaming works with javax.ws.rs.core.StreamingOutput , run the following command:
+
+```
+curl -v -X GET http://localhost:8080/op/filename.png > result-opstream.png
 ```

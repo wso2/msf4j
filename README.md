@@ -309,7 +309,7 @@ new MicroservicesRunner().addExceptionMapper(new SymbolNotFoundMapper(), new Dup
 * High performance Netty based transport
 * WSO2 Developer Studio based tooling for microservices development starting from a Swagger API definition
 * Generate Swagger definition using [Swagger annotations](https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X)
-* HTTP request & response streaming
+* HTTP request & response streaming including support for javax.ws.rs.core.StreamingOutput.
 * [ExceptionMapper]((https://docs.oracle.com/javaee/7/api/javax/ws/rs/ext/ExceptionMapper.html))
 * Support for metrics & visualization of metrics using WSO2 Data Analytics Server (DAS) dashboards
 * Support for securing microservices
