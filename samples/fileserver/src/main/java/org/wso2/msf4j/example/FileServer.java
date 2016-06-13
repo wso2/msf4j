@@ -109,7 +109,8 @@ public class FileServer {
     public Response getFileUsingStreamingOutput(@PathParam("fileName") String fileName) {
         StreamingOutput stream = os -> {
             File file = Paths.get(MOUNT_PATH.toString(), fileName).toFile();
-            byte[] buf = new byte[8192];
+            int chunkSize = 4096;
+            byte[] buf = new byte[chunkSize];
             InputStream is = new FileInputStream(file);
             int c = 0;
             while ((c = is.read(buf, 0, buf.length)) > 0) {
