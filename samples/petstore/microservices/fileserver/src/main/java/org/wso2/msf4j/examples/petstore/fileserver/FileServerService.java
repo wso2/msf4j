@@ -96,7 +96,6 @@ public class FileServerService {
             if (fileChannel == null) {
                 throw new IOException("Unable to write file");
             }
-            content.flip();
             fileChannel.write(content);
         }
 

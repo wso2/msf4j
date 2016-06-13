@@ -21,7 +21,6 @@ import org.wso2.carbon.messaging.CarbonCallback;
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.Constants;
 import org.wso2.msf4j.Response;
-import org.wso2.msf4j.entitywriter.EntityWriter;
 import org.wso2.msf4j.internal.mime.MimeMapper;
 import org.wso2.msf4j.internal.mime.MimeMappingException;
 
@@ -77,7 +76,7 @@ public class FileEntityWriter implements EntityWriter<File> {
             fileChannel.close();
             carbonMessage.setEndOfMsgAdded(true);
         } catch (IOException e) {
-            throw new RuntimeException("Cannot write file", e);
+            throw new RuntimeException("Error occurred while reading from file", e);
         }
     }
 }

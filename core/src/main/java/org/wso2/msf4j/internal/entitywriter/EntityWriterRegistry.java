@@ -16,7 +16,6 @@
 
 package org.wso2.msf4j.internal.entitywriter;
 
-import org.wso2.msf4j.entitywriter.EntityWriter;
 import org.wso2.msf4j.internal.ClassComparator;
 
 import java.util.Map;
@@ -34,6 +33,7 @@ public class EntityWriterRegistry {
     static {
         registerEntityWriter(new FileEntityWriter());
         registerEntityWriter(new InputStreamEntityWriter());
+        registerEntityWriter(new StreamingOutputEntityWriter());
     }
 
     private EntityWriterRegistry() {

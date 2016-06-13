@@ -20,6 +20,7 @@ import org.wso2.carbon.messaging.CarbonCallback;
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.Constants;
 import org.wso2.carbon.messaging.DefaultCarbonMessage;
+import org.wso2.msf4j.internal.entitywriter.EntityWriter;
 import org.wso2.msf4j.internal.entitywriter.EntityWriterRegistry;
 
 import java.nio.ByteBuffer;
@@ -242,8 +243,8 @@ public class Response {
     @SuppressWarnings("unchecked")
     private void processEntity() {
         if (entity != null) {
-            EntityWriterRegistry.getEntityWriter(entity.getClass()).
-                    writeData(carbonMessage, entity, mediaType, chunkSize, carbonCallback);
+            EntityWriter entityWriter = EntityWriterRegistry.getEntityWriter(entity.getClass());
+            entityWriter.writeData(carbonMessage, entity, mediaType, chunkSize, carbonCallback);
         } else {
             carbonMessage.addMessageBody(ByteBuffer.allocate(0));
             carbonMessage.setEndOfMsgAdded(true);

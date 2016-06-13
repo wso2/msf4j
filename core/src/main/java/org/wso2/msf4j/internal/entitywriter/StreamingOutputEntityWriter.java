@@ -19,41 +19,38 @@ package org.wso2.msf4j.internal.entitywriter;
 import org.wso2.carbon.messaging.CarbonCallback;
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.Constants;
-import org.wso2.msf4j.Response;
-import org.wso2.msf4j.internal.beanconversion.BeanConverter;
 
-import java.nio.ByteBuffer;
-import javax.ws.rs.core.MediaType;
+import java.io.IOException;
+import javax.ws.rs.core.StreamingOutput;
 
 /**
- * EntityWriter for  entity of type Object.
+ * EntityWriter for entity of type {@link javax.ws.rs.core.StreamingOutput}.
  */
-public class ObjectEntityWriter implements EntityWriter<Object> {
+public class StreamingOutputEntityWriter implements EntityWriter<StreamingOutput> {
 
     /**
      * Supported entity type.
      */
     @Override
-    public Class<Object> getType() {
-        return Object.class;
+    public Class<StreamingOutput> getType() {
+        return StreamingOutput.class;
     }
 
     /**
      * Write the entity to the carbon message.
      */
     @Override
-    public void writeData(CarbonMessage carbonMessage, Object entity, String mediaType, int chunkSize,
-                          CarbonCallback cb) {
-        mediaType = (mediaType != null) ? mediaType : MediaType.WILDCARD;
-        ByteBuffer byteBuffer = BeanConverter.getConverter(mediaType).convertToMedia(entity);
-        carbonMessage.addMessageBody(byteBuffer);
-        carbonMessage.setEndOfMsgAdded(true);
-        if (chunkSize == Response.NO_CHUNK) {
-            carbonMessage.setHeader(Constants.HTTP_CONTENT_LENGTH, String.valueOf(byteBuffer.remaining()));
-        } else {
+    public void writeData(CarbonMessage carbonMessage, StreamingOutput output,
+                          String mediaType, int chunkSize, CarbonCallback cb) {
+        try {
+            carbonMessage.setHeader(Constants.HTTP_CONTENT_TYPE, mediaType);
             carbonMessage.setHeader(Constants.HTTP_TRANSFER_ENCODING, CHUNKED);
+            carbonMessage.setBufferContent(false);
+            cb.done(carbonMessage);
+            output.write(carbonMessage.getOutputStream());
+            carbonMessage.setEndOfMsgAdded(true);
+        } catch (IOException e) {
+            throw new RuntimeException("Error occurred while streaming output", e);
         }
-        carbonMessage.setHeader(Constants.HTTP_CONTENT_TYPE, mediaType);
-        cb.done(carbonMessage);
     }
 }

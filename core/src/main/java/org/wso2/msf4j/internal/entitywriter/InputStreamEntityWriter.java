@@ -20,7 +20,6 @@ import org.wso2.carbon.messaging.CarbonCallback;
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.Constants;
 import org.wso2.msf4j.Response;
-import org.wso2.msf4j.entitywriter.EntityWriter;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -65,7 +64,7 @@ public class InputStreamEntityWriter implements EntityWriter<InputStream> {
             ipStream.close();
             carbonMessage.setEndOfMsgAdded(true);
         } catch (IOException e) {
-            throw new RuntimeException("Cannot write file", e);
+            throw new RuntimeException("Error occurred while reading from InputStream", e);
         }
     }
 }

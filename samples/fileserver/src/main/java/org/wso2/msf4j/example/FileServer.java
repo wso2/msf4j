@@ -28,6 +28,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Paths;
@@ -37,6 +38,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 
 /**
  * FileServer service class. This uses request streaming
@@ -53,7 +55,7 @@ public class FileServer {
      * Upload a file with streaming.
      *
      * @param httpStreamer Handle for setting the {@link HttpStreamHandler}callback for streaming.
-     * @param fileName Name of the file that was uploaded.
+     * @param fileName     Name of the file that was uploaded.
      * @throws IOException
      */
     @POST
@@ -93,6 +95,32 @@ public class FileServer {
         String mimeType = MimeMapper.getMimeType(Files.getFileExtension(fileName));
         File file = Paths.get(MOUNT_PATH.toString(), fileName).toFile();
         return Response.ok(new FileInputStream(file)).type(mimeType).build();
+    }
+
+    /**
+     * Download file with Streaming using using {@link javax.ws.rs.core.StreamingOutput}.
+     * You have more control over streaming chunk sizes when this method is used.
+     *
+     * @param fileName Name of the file to be downloaded.
+     * @return Response
+     */
+    @GET
+    @Path("/op/{fileName}")
+    public Response getFileUsingStreamingOutput(@PathParam("fileName") String fileName) {
+        StreamingOutput stream = os -> {
+            File file = Paths.get(MOUNT_PATH.toString(), fileName).toFile();
+            byte[] buf = new byte[8192];
+            InputStream is = new FileInputStream(file);
+            int c = 0;
+            while ((c = is.read(buf, 0, buf.length)) > 0) {
+                os.write(buf, 0, c);
+                os.flush();
+            }
+            os.close();
+            is.close();
+        };
+        String mimeType = MimeMapper.getMimeType(Files.getFileExtension(fileName));
+        return Response.ok(stream).type(mimeType).build();
     }
 
     private static class HttpStreamHandlerImpl implements HttpStreamHandler {
