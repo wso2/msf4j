@@ -41,8 +41,10 @@ import org.wso2.msf4j.formparam.util.StreamUtil;
 import org.wso2.msf4j.internal.beanconversion.BeanConverter;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -858,6 +860,31 @@ public class HttpServerTest {
         IOUtils.closeQuietly(inputStream);
         connection.disconnect();
         assertEquals(response, "2");
+    }
+
+    @Test
+    public void testFormDataParamWithFileStream() throws IOException, URISyntaxException {
+        HttpURLConnection connection = request("/test/v1/streamFile", HttpMethod.POST);
+        File file = new File(Resources.getResource("testTxtFile.txt").toURI());
+        HttpEntity reqEntity = MultipartEntityBuilder.create().
+                addBinaryBody("file", file, ContentType.DEFAULT_BINARY, file.getName()).build();
+
+        connection.setRequestProperty("Content-Type", reqEntity.getContentType().getValue());
+        try (OutputStream out = connection.getOutputStream()) {
+            reqEntity.writeTo(out);
+        }
+
+        InputStream inputStream = connection.getInputStream();
+        String response = StreamUtil.asString(inputStream);
+        IOUtils.closeQuietly(inputStream);
+        connection.disconnect();
+        StringBuilder stringBuilder = new StringBuilder();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+            while (bufferedReader.ready()) {
+                stringBuilder.append(bufferedReader.readLine());
+            }
+        }
+        assertEquals(response, stringBuilder.toString() + "-" + file.getName());
     }
 
     protected Socket createRawSocket(URL url) throws IOException {
