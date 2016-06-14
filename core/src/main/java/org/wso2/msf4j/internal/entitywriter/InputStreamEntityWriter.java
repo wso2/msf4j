@@ -16,25 +16,19 @@
 
 package org.wso2.msf4j.internal.entitywriter;
 
-import com.google.common.io.Files;
 import org.wso2.carbon.messaging.CarbonCallback;
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.Constants;
 import org.wso2.msf4j.Response;
-import org.wso2.msf4j.internal.mime.MimeMapper;
-import org.wso2.msf4j.internal.mime.MimeMappingException;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import javax.ws.rs.core.MediaType;
 
 /**
- * EntityWriter for entity of type File.
+ * EntityWriter for entity of type InputStream.
  */
-public class FileEntityWriter implements EntityWriter<File> {
+public class InputStreamEntityWriter implements EntityWriter<InputStream> {
 
     public static final int DEFAULT_CHUNK_SIZE = 1024;
 
@@ -42,24 +36,17 @@ public class FileEntityWriter implements EntityWriter<File> {
      * Supported entity type.
      */
     @Override
-    public Class<File> getType() {
-        return File.class;
+    public Class<InputStream> getType() {
+        return InputStream.class;
     }
 
     /**
      * Write the entity to the carbon message.
      */
     @Override
-    public void writeData(CarbonMessage carbonMessage, File file, String mediaType, int chunkSize, CarbonCallback cb) {
-        if (mediaType == null || mediaType.equals(MediaType.WILDCARD)) {
-            try {
-                mediaType = MimeMapper.getMimeType(Files.getFileExtension(file.getName()));
-            } catch (MimeMappingException e) {
-                mediaType = MediaType.WILDCARD;
-            }
-        }
+    public void writeData(CarbonMessage carbonMessage, InputStream ipStream,
+                          String mediaType, int chunkSize, CarbonCallback cb) {
         try {
-            FileChannel fileChannel = new FileInputStream(file).getChannel();
             if (chunkSize == Response.NO_CHUNK || chunkSize == Response.DEFAULT_CHUNK_SIZE) {
                 chunkSize = DEFAULT_CHUNK_SIZE;
             }
@@ -68,15 +55,16 @@ public class FileEntityWriter implements EntityWriter<File> {
             carbonMessage.setBufferContent(false);
             cb.done(carbonMessage);
 
-            ByteBuffer buffer = ByteBuffer.allocate(chunkSize);
-            while (fileChannel.read(buffer) != -1) {
-                buffer.flip();
-                carbonMessage.addMessageBody(buffer);
+            byte[] data = new byte[chunkSize];
+            int len;
+            while ((len = ipStream.read(data)) != -1) {
+                carbonMessage.addMessageBody(ByteBuffer.wrap(data, 0, len));
             }
-            fileChannel.close();
+
+            ipStream.close();
             carbonMessage.setEndOfMsgAdded(true);
         } catch (IOException e) {
-            throw new RuntimeException("Error occurred while reading from file", e);
+            throw new RuntimeException("Error occurred while reading from InputStream", e);
         }
     }
 }

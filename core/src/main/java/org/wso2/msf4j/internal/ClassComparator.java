@@ -24,23 +24,18 @@ import java.util.Comparator;
 /**
  * Compares classes to see if they are subclasses.
  */
-class ClassComparator implements Comparator<String>, Serializable {
+public class ClassComparator implements Comparator<Class>, Serializable {
 
     private static final long serialVersionUID = 2101798650978464444L;
 
     @Override
-    public int compare(String class1, String class2) {
-        try {
-            if (class1.equals(class2)) {
-                return 0;
-            } else if (Class.forName(class1).isAssignableFrom(Class.forName(class2))) {
-                return 1;
-            } else {
-                return -1;
-            }
-        } catch (ClassNotFoundException ignored) {
-            ignored.printStackTrace();
+    public int compare(Class class1, Class class2) {
+        if (class1.equals(class2)) {
+            return 0;
+        } else if (class1.isAssignableFrom(class2)) {
+            return 1;
+        } else {
+            return -1;
         }
-        return 0;
     }
 }

@@ -368,7 +368,7 @@
         <carbon.component>
             startup.listener;componentName="wso2-microservices-server";requiredService="org.wso2.msf4j.Microservice,org.wso2.msf4j.Interceptor",
             osgi.service;
-            objectClass="org.wso2.msf4j.internal.MicroservicesServerSC";dependentComponentName="carbon-transport-mgt",
+            objectClass="org.wso2.msf4j.internal.MicroservicesServerSC";requiredByComponentName="carbon-transport-mgt",
             osgi.service; objectClass="org.wso2.carbon.messaging.CarbonMessageProcessor"
         </carbon.component>
     </properties>
