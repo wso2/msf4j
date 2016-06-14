@@ -22,7 +22,7 @@ import java.io.PrintWriter;
  * Exception for errors encountered while processing the request.
  *
  */
-public class FileUploadException extends Exception {
+public class FormUploadException extends RuntimeException {
 
     /**
      * Serial version UID, being used, if the exception
@@ -39,7 +39,7 @@ public class FileUploadException extends Exception {
     /**
      * Constructs a new <code>FileUploadException</code> without message.
      */
-    public FileUploadException() {
+    public FormUploadException() {
         this(null, null);
     }
 
@@ -49,7 +49,7 @@ public class FileUploadException extends Exception {
      *
      * @param msg the error message.
      */
-    public FileUploadException(final String msg) {
+    public FormUploadException(final String msg) {
         this(msg, null);
     }
 
@@ -60,7 +60,7 @@ public class FileUploadException extends Exception {
      * @param msg The exceptions detail message.
      * @param cause The exceptions cause.
      */
-    public FileUploadException(String msg, Throwable cause) {
+    public FormUploadException(String msg, Throwable cause) {
         super(msg);
         this.cause = cause;
     }

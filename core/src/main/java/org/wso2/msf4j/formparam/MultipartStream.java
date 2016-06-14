@@ -15,7 +15,7 @@ package org.wso2.msf4j.formparam;
 * limitations under the License.
 */
 
-import org.wso2.msf4j.formparam.exception.FileUploadException;
+import org.wso2.msf4j.formparam.exception.FormUploadException;
 import org.wso2.msf4j.formparam.util.Closeable;
 import org.wso2.msf4j.formparam.util.StreamUtil;
 
@@ -202,8 +202,6 @@ public class MultipartStream {
      * @param boundary The token used for dividing the stream into
      *                 <code>encapsulations</code>.
      * @param bufSize  The size of the buffer to be used, in bytes.
-     * @throws IllegalArgumentException If the buffer size is too small
-     * @since 1.3.1
      */
     public MultipartStream(InputStream input, byte[] boundary, int bufSize) {
 
@@ -294,9 +292,8 @@ public class MultipartStream {
      *
      * @return <code>true</code> if there are more encapsulations in
      * this stream; <code>false</code> otherwise.
-     * @throws MalformedStreamException if the stream ends unexpectedly or fails to follow required syntax.
      */
-    public boolean readBoundary() throws FileUploadException, MalformedStreamException {
+    public boolean readBoundary() {
         byte[] marker = new byte[2];
         boolean nextChunk;
 
@@ -341,11 +338,8 @@ public class MultipartStream {
      *
      * @param boundary The boundary to be used for parsing of the nested
      *                 stream.
-     * @throws IllegalBoundaryException if the <code>boundary</code>
-     *                                  has a different length than the one
-     *                                  being currently parsed.
      */
-    public void setBoundary(byte[] boundary) throws IllegalBoundaryException {
+    public void setBoundary(byte[] boundary) {
         if (boundary.length != boundaryLength - BOUNDARY_PREFIX.length) {
             throw new IllegalBoundaryException("The length of a boundary token can not be changed");
         }
@@ -362,9 +356,8 @@ public class MultipartStream {
      * <p>
      *
      * @return The <code>header-part</code> of the current encapsulation.
-     * @throws MalformedStreamException if the stream ends unexpectedly.
      */
-    public String readHeaders() throws MalformedStreamException, UnsupportedEncodingException {
+    public String readHeaders() {
         int i = 0;
         byte b;
         // to support multi-byte characters
@@ -396,10 +389,20 @@ public class MultipartStream {
             } catch (UnsupportedEncodingException e) {
                 // Fall back to platform default if specified encoding is not
                 // supported.
-                headers = baos.toString(Charset.defaultCharset().name());
+                if (!headerEncoding.equals(Charset.defaultCharset().displayName())) {
+                    try {
+                        headers = baos.toString(Charset.defaultCharset().displayName());
+                    } catch (UnsupportedEncodingException e1) {
+                        throw new FormUploadException("Provided encoding doesn't support", e);
+                    }
+                }
             }
         } else {
-            headers = baos.toString(Charset.defaultCharset().name());
+            try {
+                headers = baos.toString(Charset.defaultCharset().displayName());
+            } catch (UnsupportedEncodingException e) {
+                throw new FormUploadException("Provided encoding doesn't support", e);
+            }
         }
 
         return headers;
@@ -418,9 +421,8 @@ public class MultipartStream {
      *               be null, in which case this method is equivalent
      *               to {@link #discardBodyData()}.
      * @return the amount of data written.
-     * @throws IOException if an i/o error occurs.
      */
-    public int readBodyData(OutputStream output) throws IOException {
+    public int readBodyData(OutputStream output) {
         return (int) StreamUtil.copy(newInputStream(), output, false); // N.B. Streams.copy closes the input stream
     }
 
@@ -441,9 +443,8 @@ public class MultipartStream {
      * understand.
      *
      * @return The amount of data discarded.
-     * @throws IOException if an i/o error occurs.
      */
-    public int discardBodyData() throws IOException {
+    public int discardBodyData() {
         return readBodyData(null);
     }
 
@@ -452,9 +453,8 @@ public class MultipartStream {
      *
      * @return <code>true</code> if an <code>encapsulation</code> was found in
      * the stream.
-     * @throws IOException if an i/o error occurs.
      */
-    public boolean skipPreamble() throws FileUploadException, IOException {
+    public boolean skipPreamble() {
         // First delimiter may be not preceeded with a CRLF.
         System.arraycopy(boundary, 2, boundary, 0, boundary.length - 2);
         boundaryLength = boundary.length - 2;
@@ -547,7 +547,7 @@ public class MultipartStream {
      * Thrown to indicate that the input stream fails to follow the
      * required syntax.
      */
-    public static class MalformedStreamException extends IOException {
+    public static class MalformedStreamException extends RuntimeException {
 
         /**
          * The UID to use when serializing this instance.
@@ -577,7 +577,7 @@ public class MultipartStream {
     /**
      * Thrown upon attempt of setting an invalid boundary token.
      */
-    public static class IllegalBoundaryException extends IOException {
+    public static class IllegalBoundaryException extends RuntimeException {
 
         /**
          * The UID to use when serializing this instance.
@@ -658,10 +658,9 @@ public class MultipartStream {
          * available, without blocking.
          *
          * @return Number of bytes in the buffer.
-         * @throws IOException An I/O error occurs.
          */
         @Override
-        public int available() throws IOException {
+        public int available() {
             if (pos == -1) {
                 return tail - head - pad;
             }
@@ -773,10 +772,9 @@ public class MultipartStream {
          * @param bytes Number of bytes to skip.
          * @return The number of bytes, which have actually been
          * skipped.
-         * @throws IOException An I/O error occurred.
          */
         @Override
-        public long skip(long bytes) throws IOException {
+        public long skip(long bytes) {
             if (closed) {
                 throw new FormItem.ItemSkippedException();
             }
@@ -796,9 +794,8 @@ public class MultipartStream {
          * Attempts to read more data.
          *
          * @return Number of available bytes
-         * @throws IOException An I/O error occurred.
          */
-        private int makeAvailable() throws IOException {
+        private int makeAvailable() {
             if (pos != -1) {
                 return 0;
             }
@@ -812,7 +809,12 @@ public class MultipartStream {
             tail = pad;
 
             for (;;) {
-                int bytesRead = input.read(buffer, tail, bufSize - tail);
+                int bytesRead = 0;
+                try {
+                    bytesRead = input.read(buffer, tail, bufSize - tail);
+                } catch (IOException e) {
+                    throw new RuntimeException("Error while reading multipart stream");
+                }
                 if (bytesRead == -1) {
                     // The last pad amount is left in the buffer.
                     // Boundary can't be in there so signal an error

@@ -26,9 +26,10 @@ import org.wso2.msf4j.HttpStreamHandler;
 import org.wso2.msf4j.HttpStreamer;
 import org.wso2.msf4j.Microservice;
 import org.wso2.msf4j.Request;
+import org.wso2.msf4j.formparam.FormDataParam;
 import org.wso2.msf4j.formparam.FormItem;
 import org.wso2.msf4j.formparam.FormParamIterator;
-import org.wso2.msf4j.formparam.exception.FileUploadException;
+import org.wso2.msf4j.formparam.exception.FormUploadException;
 import org.wso2.msf4j.util.BufferUtil;
 
 import java.io.File;
@@ -513,14 +514,30 @@ public class TestMicroservice implements Microservice {
                 FormItem item = formParamIterator.next();
                 response = item.getName();
             }
-        } catch (FileUploadException e) {
-            response = e.getMessage();
-        } catch (IOException e) {
+        } catch (FormUploadException e) {
             response = e.getMessage();
         }
         return Response.ok().entity(response).build();
     }
 
+    @POST
+    @Path("/complexForm")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response complexForm(@FormDataParam("file") File file,
+                                @FormDataParam("id") int id,
+                                @FormDataParam("people") List<Person> personList,
+                                @FormDataParam("company") Company company) {
+        return Response.ok().entity(file.getName() + ":" + id + ":" + personList.size() + ":" + company.getType())
+                       .build();
+    }
+
+
+    @POST
+    @Path("/multipleFiles")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response multipleFiles(@FormDataParam("files") List<File> files) {
+        return Response.ok().entity(files.size()).build();
+    }
     /**
      * Custom exception class for testing exception handler.
      */

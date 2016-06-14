@@ -17,7 +17,7 @@ package org.wso2.msf4j.formparam;
 
 import org.apache.commons.io.IOUtils;
 import org.wso2.msf4j.Request;
-import org.wso2.msf4j.formparam.exception.FileUploadException;
+import org.wso2.msf4j.formparam.exception.FormUploadException;
 import org.wso2.msf4j.formparam.exception.InvalidContentTypeException;
 import org.wso2.msf4j.formparam.util.FormItemHeader;
 
@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -34,7 +35,7 @@ import static java.lang.String.format;
 /**
  *
  */
-public class FormParamIterator {
+public class FormParamIterator implements Iterator {
 
     /**
      * HTTP content type header name.
@@ -118,13 +119,13 @@ public class FormParamIterator {
      * compliant <code>multipart/form-data</code> stream.
      *
      * @param request The context for the request to be parsed.
-     * @throws FileUploadException if there are problems reading/parsing
+     * @throws FormUploadException if there are problems reading/parsing
      *                             the request or storing files.
      * @throws IOException         An I/O error occurred. This may be a network
      *                             error while communicating with the client or a problem while
      *                             storing the uploaded content.
      */
-    public FormParamIterator(Request request) throws FileUploadException, IOException {
+    public FormParamIterator(Request request) throws FormUploadException, IOException {
         this(new RequestContext(request));
     }
 
@@ -328,11 +329,11 @@ public class FormParamIterator {
      * Creates a new instance.
      *
      * @param ctx The request context.
-     * @throws FileUploadException An error occurred while
+     * @throws FormUploadException An error occurred while
      *                             parsing the request.
      * @throws IOException         An I/O error occurred.
      */
-    private FormParamIterator(RequestContext ctx) throws FileUploadException, IOException {
+    private FormParamIterator(RequestContext ctx) throws FormUploadException, IOException {
         if (ctx == null) {
             throw new NullPointerException("ctx parameter");
         }
@@ -351,7 +352,7 @@ public class FormParamIterator {
         boundary = getBoundary(contentType);
         if (boundary.length == 0) {
             IOUtils.closeQuietly(input); // avoid possible resource leak
-            throw new FileUploadException("the request was rejected because no multipart boundary was found");
+            throw new FormUploadException("the request was rejected because no multipart boundary was found");
         }
 
         try {
@@ -373,7 +374,7 @@ public class FormParamIterator {
      * @return True, if an next item was found, otherwise false.
      * @throws IOException An I/O error occurred.
      */
-    private boolean findNextItem() throws FileUploadException, IOException {
+    private boolean findNextItem() {
         if (eof) {
             return false;
         }
@@ -449,11 +450,8 @@ public class FormParamIterator {
      *
      * @return True, if one or more additional file items
      * are available, otherwise false.
-     * @throws FileUploadException Parsing or processing the
-     *                             file item failed.
-     * @throws IOException         Reading the file item failed.
      */
-    public boolean hasNext() throws FileUploadException, IOException {
+    public boolean hasNext() {
         if (eof) {
             return false;
         }
@@ -465,11 +463,8 @@ public class FormParamIterator {
      *
      * @return FileItemStream instance, which provides
      * access to the next file item.
-     * @throws FileUploadException Parsing or processing the
-     *                             file item failed.
-     * @throws IOException         Reading the file item failed.
      */
-    public FormItem next() throws FileUploadException, IOException {
+    public FormItem next() {
         if (eof || (!itemValid && !hasNext())) {
             throw new NoSuchElementException();
         }

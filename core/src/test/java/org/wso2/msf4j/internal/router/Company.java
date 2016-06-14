@@ -1,4 +1,4 @@
-package org.wso2.msf4j.example.bean;
+package org.wso2.msf4j.internal.router;
 /*
 * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
@@ -35,4 +35,8 @@ public class Company {
                "type='" + type + '\'' +
                '}';
     }
+
+    /*public Company(String type) {
+        this.type = type;
+    }*/
 }

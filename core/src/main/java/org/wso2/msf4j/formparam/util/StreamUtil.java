@@ -16,6 +16,7 @@ package org.wso2.msf4j.formparam.util;
 */
 
 import org.apache.commons.io.IOUtils;
+import org.wso2.msf4j.formparam.exception.FormUploadException;
 import org.wso2.msf4j.formparam.exception.InvalidFileNameException;
 
 import java.io.ByteArrayOutputStream;
@@ -62,8 +63,7 @@ public final class StreamUtil {
      * @return Number of bytes, which have been copied.
      * @throws IOException An I/O error occurred.
      */
-    public static long copy(InputStream inputStream, OutputStream outputStream, boolean closeOutputStream)
-            throws IOException {
+    public static long copy(InputStream inputStream, OutputStream outputStream, boolean closeOutputStream) {
         return copy(inputStream, outputStream, closeOutputStream, new byte[DEFAULT_BUFFER_SIZE]);
     }
 
@@ -86,7 +86,7 @@ public final class StreamUtil {
      * @throws IOException An I/O error occurred.
      */
     public static long copy(InputStream inputStream, OutputStream outputStream, boolean closeOutputStream,
-                            byte[] buffer) throws IOException {
+                            byte[] buffer) {
         OutputStream out = outputStream;
         InputStream in = inputStream;
         try {
@@ -104,16 +104,13 @@ public final class StreamUtil {
                 }
             }
             if (out != null) {
-                if (closeOutputStream) {
-                    out.close();
-                } else {
+                if (!closeOutputStream) {
                     out.flush();
                 }
-                out = null;
             }
-            in.close();
-            in = null;
             return total;
+        } catch (IOException e) {
+            throw new FormUploadException("Error while copying streams", e);
         } finally {
             IOUtils.closeQuietly(in);
             if (closeOutputStream) {

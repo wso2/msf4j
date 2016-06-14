@@ -18,19 +18,12 @@ package org.wso2.msf4j.formparam.exception;
 /**
  * Thrown to indicate that the request is not a multipart request.
  */
-public class InvalidContentTypeException extends FileUploadException {
+public class InvalidContentTypeException extends FormUploadException {
 
     /**
      * The exceptions UID, for serializing an instance.
      */
     private static final long serialVersionUID = -9073026332015646668L;
-
-    /**
-     * Constructs a <code>InvalidContentTypeException</code> with no
-     * detail message.
-     */
-    public InvalidContentTypeException() {
-    }
 
     /**
      * Constructs an <code>InvalidContentTypeException</code> with

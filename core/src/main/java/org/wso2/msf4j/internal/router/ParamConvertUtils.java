@@ -28,6 +28,7 @@ import com.google.common.primitives.Primitives;
 import com.google.common.reflect.TypeToken;
 import org.apache.commons.beanutils.ConvertUtils;
 
+import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -135,6 +136,14 @@ public final class ParamConvertUtils {
      * @return Function the function
      */
     public static Function<List<String>, Object> createFormDataParamConverter(Type resultType, Annotation annotation) {
+        // For java.io.File we only support List ParameterizedType
+        if (resultType instanceof ParameterizedType) {
+            ParameterizedType type = (ParameterizedType) resultType;
+            Type elementType = type.getActualTypeArguments()[0];
+            if (elementType == File.class && type.getRawType() != List.class) {
+                throw new IllegalArgumentException("Unsupported type " + resultType);
+            }
+        }
         Function<List<String>, Object> listConverter = null;
         try {
             listConverter = createListConverter(resultType);
@@ -312,6 +321,11 @@ public final class ParamConvertUtils {
         Type elementType = type.getActualTypeArguments()[0];
         if (rawType == SortedSet.class && !Comparable.class.isAssignableFrom(TypeToken.of(elementType).getRawType())) {
             return null;
+        }
+
+        //We only support List type for java.io.File
+        if (elementType == File.class && rawType != List.class) {
+            throw new IllegalArgumentException("File doesn't support " + rawType);
         }
 
         // Get the converter for the collection element.

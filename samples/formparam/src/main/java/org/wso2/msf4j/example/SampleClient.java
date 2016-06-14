@@ -15,6 +15,7 @@ package org.wso2.msf4j.example;/*
 */
 
 import com.google.common.io.Resources;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -23,10 +24,17 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.wso2.msf4j.formparam.util.StreamUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import javax.ws.rs.HttpMethod;
 
 /**
  * Sample Client to invoke the {{@link FormService}}
@@ -34,12 +42,29 @@ import java.net.URISyntaxException;
 public class SampleClient {
 
     public static void main(String[] args) throws IOException {
-       // HttpPost httppost = new HttpPost("http://localhost:8080/formService/multipleFiles");
-       // HttpPost httppost = new HttpPost("http://localhost:8080/formService/complexForm");
-        HttpPost httppost = new HttpPost("http://localhost:8080/formService/simpleFormStreaming");
-        httppost.setEntity(createMessageForSimpleFormStreaming());
+       /*// HttpPost httppost = new HttpPost("http://localhost:8080/formService/multipleFiles");
+        HttpPost httppost = new HttpPost("http://localhost:8080/formService/complexForm");
+        //HttpPost httppost = new HttpPost("http://localhost:8080/formService/simpleFormStreaming");
+        httppost.setEntity(createMessageForComplexForm());
         CloseableHttpClient httpclient = HttpClients.createDefault();
-        CloseableHttpResponse execute = httpclient.execute(httppost);
+        CloseableHttpResponse execute = httpclient.execute(httppost);*/
+
+        HttpEntity messageForComplexForm = createMessageForComplexForm();
+        URL url = URI.create("http://localhost:8080/formService/complexForm").toURL();
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setDoOutput(true);
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type", messageForComplexForm.getContentType().getValue());
+        try (OutputStream out = connection.getOutputStream()) {
+            messageForComplexForm.writeTo(out);
+        }
+
+        InputStream inputStream = connection.getInputStream();
+        String response = StreamUtil.asString(inputStream);
+        IOUtils.closeQuietly(inputStream);
+        connection.disconnect();
+        System.out.println(response);
+
     }
 
     private static HttpEntity createMessageForSimpleFormStreaming(){
@@ -67,7 +92,7 @@ public class SampleClient {
                     ContentType.APPLICATION_JSON);
             reqEntity = MultipartEntityBuilder.create()
                                               .addTextBody("id", "1")
-                                              .addPart("company", companyText)
+                                              //.addPart("company", companyText)
                                               .addPart("people", personList)
                                               .addBinaryBody("file", new File(
                                                                      Resources.getResource("sample.txt").toURI()),

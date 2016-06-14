@@ -189,6 +189,8 @@ Inject additional objects to a resource method. Currently supports injection of 
     (samples/stockquote/fatjar) sample.
 * org.wso2.msf4j.HttpStreamer - 
     This object can be used to stream a chunked request body and process it while the request is streaming. See the [FileServer](samples/fileserver) sample.
+* org.wso2.msf4j.formparam.FormParamIterator - 
+    This object can be used to stream a HTML form submission request body and process it while the request is streaming. See the [FormParam](samples/formparam) sample.
 
 #####@PathParam
 /StockQuote/{symbol} to get value of symbol. The value will be automatically converted to the corresponding parameter
@@ -201,6 +203,14 @@ and assigned to that parameter.
 #####@HeaderParam
 To read HTTP request header values. The value will be automatically converted to the corresponding parameter type and
  assigned to that parameter.
+
+#####@FormParam
+To support HTML form submission with application/x-www-form-urlencoded and multipart/form-data The value will be 
+automatically converted to the corresponding parameter type and assigned to that parameter
+
+#####@FormDataParam
+To support complex form submission with multipart/form-data content type. E.g file uploads and beans. The values will be 
+automatically converted to the corresponding parameter type and assigned to that parameter
 
 ###Lifecycle Callback Methods
 Support following Java lifecycle callback method annotations. 

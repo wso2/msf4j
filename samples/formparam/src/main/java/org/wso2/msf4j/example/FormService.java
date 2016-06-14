@@ -16,23 +16,24 @@
 
 package org.wso2.msf4j.example;
 
-import org.wso2.msf4j.example.bean.Company;
-import org.wso2.msf4j.example.bean.Person;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.msf4j.example.bean.Company;
+import org.wso2.msf4j.example.bean.Person;
+import org.wso2.msf4j.formparam.FileInfo;
+import org.wso2.msf4j.formparam.FormDataParam;
 import org.wso2.msf4j.formparam.FormItem;
 import org.wso2.msf4j.formparam.FormParamIterator;
-import org.wso2.msf4j.formparam.exception.FileUploadException;
-import org.wso2.msf4j.formparam.FormDataParam;
+import org.wso2.msf4j.formparam.exception.FormUploadException;
 import org.wso2.msf4j.formparam.util.StreamUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
@@ -51,7 +52,7 @@ public class FormService {
     @POST
     @Path("/simpleForm")
     @Consumes({ MediaType.APPLICATION_FORM_URLENCODED, MediaType.MULTIPART_FORM_DATA })
-    public Response simpleForm(@FormParam("age") int age, @FormParam("name") String name) {
+    public Response simpleForm(@FormDataParam("age") int age, @FormDataParam("name") String name) {
         return Response.ok().entity("Name and age " + name + ", " + age).build();
     }
 
@@ -72,10 +73,10 @@ public class FormService {
                 if (item.isFormField()) {
                     System.out.println(item.getFieldName() + " - " + StreamUtil.asString(item.openStream()));
                 } else {
-                    Files.copy(item.openStream(), Paths.get("/tmp", "tst", item.getName()));
+                    Files.copy(item.openStream(), Paths.get(System.getProperty("java.io.tmpdir"), item.getName()));
                 }
             }
-        } catch (FileUploadException e) {
+        } catch (FormUploadException e) {
             log.error("Error while uploading the file " + e.getMessage(), e);
         } catch (IOException e) {
             log.error("Unable to upload the file " + e.getMessage(), e);
@@ -87,20 +88,20 @@ public class FormService {
     @Path("/complexForm")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response complexForm(@FormDataParam("file") File file,
-                            @FormDataParam("id") int id,
-                            @FormDataParam("people") List<Person> personList,
-                            @FormDataParam("company") Company company) {
+                                @FormDataParam("id") int id,
+                                @FormDataParam("people") List<Person> personList,
+                                @FormDataParam("company") Company company) {
         System.out.println("First Person in List " + personList.get(0).getName());
         System.out.println("Id " + id);
         System.out.println("Company " + company.getType());
         try {
-            Files.copy(file.toPath(), Paths.get("/tmp", "tst", file.getName()));
+            Files.copy(file.toPath(), Paths.get(System.getProperty("java.io.tmpdir"), file.getName()));
         } catch (IOException e) {
             log.error("Error while Copying the file " + e.getMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
         return Response.ok().entity("Request completed").build();
     }
-
 
     @POST
     @Path("/multipleFiles")
@@ -108,12 +109,24 @@ public class FormService {
     public Response multipleFiles(@FormDataParam("files") List<File> files) {
         files.forEach(file -> {
             try {
-                Files.copy(file.toPath(), Paths.get("/tmp", "tst", file.getName()));
+                Files.copy(file.toPath(),Paths.get(System.getProperty("java.io.tmpdir"), file.getName()));
             } catch (IOException e) {
                 log.error("Error while Copying the file " + e.getMessage(), e);
             }
         });
         return Response.ok().entity("Request completed").build();
     }
-}
 
+    @POST
+    @Path("/streamFile")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response multipleFiles(@FormDataParam("file") FileInfo fileInfo,
+                                  @FormDataParam("file") InputStream inputStream) {
+        try {
+            Files.copy(inputStream, Paths.get(System.getProperty("java.io.tmpdir"), fileInfo.getFileName()));
+        } catch (IOException e) {
+            log.error("Error while Copying the file " + e.getMessage(), e);
+        }
+        return Response.ok().entity("Request completed").build();
+    }
+}

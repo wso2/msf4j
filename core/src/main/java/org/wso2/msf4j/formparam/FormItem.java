@@ -15,6 +15,7 @@ package org.wso2.msf4j.formparam;
 * limitations under the License.
 */
 
+import org.wso2.msf4j.formparam.exception.FormUploadException;
 import org.wso2.msf4j.formparam.util.Closeable;
 import org.wso2.msf4j.formparam.util.FormItemHeader;
 import org.wso2.msf4j.formparam.util.StreamUtil;
@@ -78,7 +79,7 @@ public class FormItem {
      * @throws IOException Creating the file item failed.
      */
     FormItem(String pName, String pFieldName, String pContentType, boolean pFormField, long pContentLength,
-             MultipartStream multi) throws IOException {
+             MultipartStream multi) {
         name = pName;
         fieldName = pFieldName;
         contentType = pContentType;
@@ -142,8 +143,12 @@ public class FormItem {
      *
      * @throws IOException An I/O error occurred.
      */
-    void close() throws IOException {
-        stream.close();
+    public void close() {
+        try {
+            stream.close();
+        } catch (IOException e) {
+            throw new FormUploadException("Error while closing the stream", e);
+        }
     }
 
     /**
@@ -164,7 +169,7 @@ public class FormItem {
         headers = pHeaders;
     }
 
-    static class ItemSkippedException extends IOException {
+    static class ItemSkippedException extends RuntimeException {
 
         /**
          * The exceptions serial version UID, which is being used

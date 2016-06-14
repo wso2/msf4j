@@ -810,6 +810,56 @@ public class HttpServerTest {
         assertEquals(response, file.getName());
     }
 
+    @Test
+    public void testFormDataParamWithComplexForm() throws IOException, URISyntaxException {
+        HttpURLConnection connection = request("/test/v1/complexForm", HttpMethod.POST);
+        StringBody companyText = new StringBody("{\"type\": \"Open Source\"}", ContentType.APPLICATION_JSON);
+        StringBody personList = new StringBody(
+                "[{\"name\":\"Richard Stallman\",\"age\":63}, {\"name\":\"Linus Torvalds\",\"age\":46}]",
+                ContentType.APPLICATION_JSON);
+        HttpEntity reqEntity = MultipartEntityBuilder.create()
+                                          .addTextBody("id", "1")
+                                          .addPart("company", companyText)
+                                          .addPart("people", personList)
+                                          .addBinaryBody("file", new File(
+                                                                 Resources.getResource("testTxtFile.txt").toURI()),
+                                                         ContentType.DEFAULT_BINARY, "testTxtFile.txt")
+                                          .build();
+
+        connection.setRequestProperty("Content-Type", reqEntity.getContentType().getValue());
+        try (OutputStream out = connection.getOutputStream()) {
+            reqEntity.writeTo(out);
+        }
+
+        InputStream inputStream = connection.getInputStream();
+        String response = StreamUtil.asString(inputStream);
+        IOUtils.closeQuietly(inputStream);
+        connection.disconnect();
+        assertEquals(response, "testTxtFile.txt:1:2:Open Source");
+    }
+
+    @Test
+    public void testFormDataParamWithMultipleFiles() throws IOException, URISyntaxException {
+        HttpURLConnection connection = request("/test/v1/multipleFiles", HttpMethod.POST);
+        File file1 = new File(Resources.getResource("testTxtFile.txt").toURI());
+        File file2 = new File(Resources.getResource("testPngFile.png").toURI());
+        HttpEntity reqEntity = MultipartEntityBuilder.create().
+                addBinaryBody("files", file1, ContentType.DEFAULT_BINARY, file1.getName())
+                                                     .addBinaryBody("files", file2, ContentType.DEFAULT_BINARY,
+                                                                    file2.getName()).build();
+
+        connection.setRequestProperty("Content-Type", reqEntity.getContentType().getValue());
+        try (OutputStream out = connection.getOutputStream()) {
+            reqEntity.writeTo(out);
+        }
+
+        InputStream inputStream = connection.getInputStream();
+        String response = StreamUtil.asString(inputStream);
+        IOUtils.closeQuietly(inputStream);
+        connection.disconnect();
+        assertEquals(response, "2");
+    }
+
     protected Socket createRawSocket(URL url) throws IOException {
         return new Socket(url.getHost(), url.getPort());
     }

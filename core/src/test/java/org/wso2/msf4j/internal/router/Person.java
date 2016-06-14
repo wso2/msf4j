@@ -1,4 +1,4 @@
-package org.wso2.msf4j.example.bean;
+package org.wso2.msf4j.internal.router;
 /*
 * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
@@ -16,23 +16,37 @@ package org.wso2.msf4j.example.bean;
 */
 
 /**
- * Simple bean class for a company
+ * Simple Bean class for a Person
  */
-public class Company {
-    private String type;
+public class Person {
+    private String name;
+    private int age;
 
-    public String getType() {
-        return type;
+    public int getAge() {
+        return age;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
     public String toString() {
-        return "Company {" +
-               "type='" + type + '\'' +
+        return "Person{" +
+               "name='" + name + '\'' +
+               ", age=" + age +
                '}';
     }
+
+    /*public Person(String name) {
+        this.name = name;
+    }*/
 }
