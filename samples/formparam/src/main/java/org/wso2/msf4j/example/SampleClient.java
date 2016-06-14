@@ -88,7 +88,7 @@ public class SampleClient {
                     "[{\"name\":\"Richard Stallman\",\"age\":63}, {\"name\":\"Linus Torvalds\",\"age\":46}]",
                     ContentType.APPLICATION_JSON);
             reqEntity = MultipartEntityBuilder.create().addTextBody("id", "1")
-                                              //.addPart("company", companyText)
+                                              .addPart("company", companyText)
                                               .addPart("people", personList).addBinaryBody("file", new File(
                             Resources.getResource("sample.txt").toURI()), ContentType.DEFAULT_BINARY, "sample.txt")
                                               .build();
