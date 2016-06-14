@@ -28,6 +28,8 @@ import com.google.common.primitives.Primitives;
 import com.google.common.reflect.TypeToken;
 import org.apache.commons.beanutils.ConvertUtils;
 
+import java.io.File;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -107,6 +109,48 @@ public final class ParamConvertUtils {
      */
     public static Function<List<String>, Object> createQueryParamConverter(Type resultType) {
         return createListConverter(resultType);
+    }
+
+    /**
+     * Creates a converter function that converts form parameter into an object of the given result type.
+     * It follows the supported types of {@link javax.ws.rs.FormParam} with the following exceptions:
+     * <ol>
+     * <li>Does not support types registered with {@link javax.ws.rs.ext.ParamConverterProvider}</li>
+     * </ol>
+     *
+     * @param resultType Result type
+     * @return Function the function
+     */
+    public static Function<List<String>, Object> createFormParamConverter(Type resultType) {
+        return createListConverter(resultType);
+    }
+
+    /**
+     * Creates a converter function that converts form parameter into an object of the given result type.
+     * It follows the supported types of {@link org.wso2.msf4j.formparam.FormDataParam} with the following exceptions:
+     * <ol>
+     * <li>Does not support types registered with {@link javax.ws.rs.ext.ParamConverterProvider}</li>
+     * </ol>
+     *
+     * @param resultType Result type
+     * @return Function the function
+     */
+    public static Function<List<String>, Object> createFormDataParamConverter(Type resultType, Annotation annotation) {
+        // For java.io.File we only support List ParameterizedType
+        if (resultType instanceof ParameterizedType) {
+            ParameterizedType type = (ParameterizedType) resultType;
+            Type elementType = type.getActualTypeArguments()[0];
+            if (elementType == File.class && type.getRawType() != List.class) {
+                throw new IllegalArgumentException("Unsupported type " + resultType);
+            }
+        }
+        Function<List<String>, Object> listConverter = null;
+        try {
+            listConverter = createListConverter(resultType);
+        } catch (Throwable e) {
+            // Ignore the exceptions since from the logic we will handle the beans and Files
+        }
+        return listConverter;
     }
 
     /**
@@ -277,6 +321,11 @@ public final class ParamConvertUtils {
         Type elementType = type.getActualTypeArguments()[0];
         if (rawType == SortedSet.class && !Comparable.class.isAssignableFrom(TypeToken.of(elementType).getRawType())) {
             return null;
+        }
+
+        //We only support List type for java.io.File
+        if (elementType == File.class && rawType != List.class) {
+            throw new IllegalArgumentException("File doesn't support " + rawType);
         }
 
         // Get the converter for the collection element.

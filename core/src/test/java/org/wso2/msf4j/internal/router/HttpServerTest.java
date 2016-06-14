@@ -27,28 +27,39 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.msf4j.MicroservicesRunner;
 import org.wso2.msf4j.beanconversion.BeanConversionException;
+import org.wso2.msf4j.formparam.util.StreamUtil;
 import org.wso2.msf4j.internal.beanconversion.BeanConverter;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.RandomAccessFile;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -114,7 +125,6 @@ public class HttpServerTest {
         assertEquals("Handled get in tweets end-point, id: 1", map.get("status"));
         urlConn.disconnect();
     }
-
 
     @Test
     public void testSmallFileUpload() throws IOException {
@@ -755,6 +765,157 @@ public class HttpServerTest {
         urlConn.disconnect();
     }
 
+    @Test
+    public void tesFormParamWithURLEncoded() throws IOException {
+        HttpURLConnection connection = request("/test/v1/formParam", HttpMethod.POST);
+        String rawData = "name=wso2&age=10";
+        ByteBuffer encodedData = Charset.defaultCharset().encode(rawData);
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type", MediaType.APPLICATION_FORM_URLENCODED);
+        connection.setRequestProperty("Content-Length", String.valueOf(encodedData.array().length));
+        try (OutputStream os = connection.getOutputStream()) {
+            os.write(Arrays.copyOf(encodedData.array(), encodedData.limit()));
+        }
+
+        InputStream inputStream = connection.getInputStream();
+        String response = StreamUtil.asString(inputStream);
+        IOUtils.closeQuietly(inputStream);
+        connection.disconnect();
+        assertEquals(response, "wso2:10");
+    }
+
+    @Test
+    public void testFormParamWithMultipart() throws IOException, URISyntaxException {
+        HttpURLConnection connection = request("/test/v1/formParam", HttpMethod.POST);
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        builder.addPart("name", new StringBody("wso2", ContentType.TEXT_PLAIN));
+        builder.addPart("age", new StringBody("10", ContentType.TEXT_PLAIN));
+        HttpEntity build = builder.build();
+        connection.setRequestProperty("Content-Type", build.getContentType().getValue());
+        try (OutputStream out = connection.getOutputStream()) {
+            build.writeTo(out);
+        }
+
+        InputStream inputStream = connection.getInputStream();
+        String response = StreamUtil.asString(inputStream);
+        IOUtils.closeQuietly(inputStream);
+        connection.disconnect();
+        assertEquals(response, "wso2:10");
+    }
+
+    @Test
+    public void tesFormParamWithURLEncodedList() throws IOException {
+        HttpURLConnection connection = request("/test/v1/formParamWithList", HttpMethod.POST);
+        String rawData = "names=WSO2&names=IBM";
+        ByteBuffer encodedData = Charset.defaultCharset().encode(rawData);
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type", MediaType.APPLICATION_FORM_URLENCODED);
+        connection.setRequestProperty("Content-Length", String.valueOf(encodedData.array().length));
+        try (OutputStream os = connection.getOutputStream()) {
+            os.write(Arrays.copyOf(encodedData.array(), encodedData.limit()));
+        }
+
+        InputStream inputStream = connection.getInputStream();
+        String response = StreamUtil.asString(inputStream);
+        IOUtils.closeQuietly(inputStream);
+        connection.disconnect();
+        assertEquals(response, "2");
+    }
+
+    @Test
+    public void testFormParamWithFile() throws IOException, URISyntaxException {
+        HttpURLConnection connection = request("/test/v1/testFormParamWithFile", HttpMethod.POST);
+        File file = new File(Resources.getResource("testJpgFile.jpg").toURI());
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        FileBody fileBody = new FileBody(file, ContentType.DEFAULT_BINARY);
+        builder.addPart("form", fileBody);
+        HttpEntity build = builder.build();
+        connection.setRequestProperty("Content-Type", build.getContentType().getValue());
+        try (OutputStream out = connection.getOutputStream()) {
+            build.writeTo(out);
+        }
+
+        InputStream inputStream = connection.getInputStream();
+        String response = StreamUtil.asString(inputStream);
+        IOUtils.closeQuietly(inputStream);
+        connection.disconnect();
+        assertEquals(response, file.getName());
+    }
+
+    @Test
+    public void testFormDataParamWithComplexForm() throws IOException, URISyntaxException {
+        HttpURLConnection connection = request("/test/v1/complexForm", HttpMethod.POST);
+        StringBody companyText = new StringBody("{\"type\": \"Open Source\"}", ContentType.APPLICATION_JSON);
+        StringBody personList = new StringBody(
+                "[{\"name\":\"Richard Stallman\",\"age\":63}, {\"name\":\"Linus Torvalds\",\"age\":46}]",
+                ContentType.APPLICATION_JSON);
+        HttpEntity reqEntity = MultipartEntityBuilder.create()
+                                          .addTextBody("id", "1")
+                                          .addPart("company", companyText)
+                                          .addPart("people", personList)
+                                          .addBinaryBody("file", new File(
+                                                                 Resources.getResource("testTxtFile.txt").toURI()),
+                                                         ContentType.DEFAULT_BINARY, "testTxtFile.txt")
+                                          .build();
+
+        connection.setRequestProperty("Content-Type", reqEntity.getContentType().getValue());
+        try (OutputStream out = connection.getOutputStream()) {
+            reqEntity.writeTo(out);
+        }
+
+        InputStream inputStream = connection.getInputStream();
+        String response = StreamUtil.asString(inputStream);
+        IOUtils.closeQuietly(inputStream);
+        connection.disconnect();
+        assertEquals(response, "testTxtFile.txt:1:2:Open Source");
+    }
+
+    @Test
+    public void testFormDataParamWithMultipleFiles() throws IOException, URISyntaxException {
+        HttpURLConnection connection = request("/test/v1/multipleFiles", HttpMethod.POST);
+        File file1 = new File(Resources.getResource("testTxtFile.txt").toURI());
+        File file2 = new File(Resources.getResource("testPngFile.png").toURI());
+        HttpEntity reqEntity = MultipartEntityBuilder.create().
+                addBinaryBody("files", file1, ContentType.DEFAULT_BINARY, file1.getName())
+                                                     .addBinaryBody("files", file2, ContentType.DEFAULT_BINARY,
+                                                                    file2.getName()).build();
+
+        connection.setRequestProperty("Content-Type", reqEntity.getContentType().getValue());
+        try (OutputStream out = connection.getOutputStream()) {
+            reqEntity.writeTo(out);
+        }
+
+        InputStream inputStream = connection.getInputStream();
+        String response = StreamUtil.asString(inputStream);
+        IOUtils.closeQuietly(inputStream);
+        connection.disconnect();
+        assertEquals(response, "2");
+    }
+
+    @Test
+    public void testFormDataParamWithFileStream() throws IOException, URISyntaxException {
+        HttpURLConnection connection = request("/test/v1/streamFile", HttpMethod.POST);
+        File file = new File(Resources.getResource("testTxtFile.txt").toURI());
+        HttpEntity reqEntity = MultipartEntityBuilder.create().
+                addBinaryBody("file", file, ContentType.DEFAULT_BINARY, file.getName()).build();
+
+        connection.setRequestProperty("Content-Type", reqEntity.getContentType().getValue());
+        try (OutputStream out = connection.getOutputStream()) {
+            reqEntity.writeTo(out);
+        }
+
+        InputStream inputStream = connection.getInputStream();
+        String response = StreamUtil.asString(inputStream);
+        IOUtils.closeQuietly(inputStream);
+        connection.disconnect();
+        StringBuilder stringBuilder = new StringBuilder();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+            while (bufferedReader.ready()) {
+                stringBuilder.append(bufferedReader.readLine());
+            }
+        }
+        assertEquals(response, stringBuilder.toString() + "-" + file.getName());
+    }
 
     protected Socket createRawSocket(URL url) throws IOException {
         return new Socket(url.getHost(), url.getPort());

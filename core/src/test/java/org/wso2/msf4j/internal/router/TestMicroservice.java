@@ -22,16 +22,24 @@ import com.google.common.io.Resources;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import org.apache.commons.io.IOUtils;
 import org.wso2.msf4j.HttpStreamHandler;
 import org.wso2.msf4j.HttpStreamer;
 import org.wso2.msf4j.Microservice;
 import org.wso2.msf4j.Request;
+import org.wso2.msf4j.formparam.FileInfo;
+import org.wso2.msf4j.formparam.FormDataParam;
+import org.wso2.msf4j.formparam.FormItem;
+import org.wso2.msf4j.formparam.FormParamIterator;
+import org.wso2.msf4j.formparam.exception.FormUploadException;
 import org.wso2.msf4j.util.BufferUtil;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -41,6 +49,7 @@ import java.util.concurrent.TimeUnit;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -505,6 +514,70 @@ public class TestMicroservice implements Microservice {
         throw new MappedException2("Mapped exception 2 thrown");
     }
 
+    @Path("/formParam")
+    @POST
+    @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.MULTIPART_FORM_DATA})
+    public Response tesFormParamWithURLEncoded(@FormParam("name") String name, @FormParam("age") int age) {
+        return Response.ok().entity(name + ":" + age).build();
+    }
+
+    @Path("/formParamWithList")
+    @POST
+    public Response tesFormParamWithURLEncodedList(@FormParam("names") List<String> names) {
+        return Response.ok().entity(names.size()).build();
+    }
+
+    @POST
+    @Path("/testFormParamWithFile")
+    public Response testFormParamWithFile(@Context FormParamIterator formParamIterator) {
+        String response = "";
+        try {
+            while (formParamIterator.hasNext()) {
+                FormItem item = formParamIterator.next();
+                response = item.getName();
+            }
+        } catch (FormUploadException e) {
+            response = e.getMessage();
+        }
+        return Response.ok().entity(response).build();
+    }
+
+    @POST
+    @Path("/complexForm")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response complexForm(@FormDataParam("file") File file,
+                                @FormDataParam("id") int id,
+                                @FormDataParam("people") List<Person> personList,
+                                @FormDataParam("company") Company company) {
+        return Response.ok().entity(file.getName() + ":" + id + ":" + personList.size() + ":" + company.getType())
+                       .build();
+    }
+
+
+    @POST
+    @Path("/multipleFiles")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response multipleFiles(@FormDataParam("files") List<File> files) {
+        return Response.ok().entity(files.size()).build();
+    }
+
+    @POST
+    @Path("/streamFile")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response multipleFiles(@FormDataParam("file") FileInfo fileInfo,
+                                  @FormDataParam("file") InputStream inputStream) {
+        StringBuilder stringBuilder = new StringBuilder();
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
+            while (bufferedReader.ready()) {
+                stringBuilder.append(bufferedReader.readLine());
+            }
+        } catch (IOException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } finally {
+            IOUtils.closeQuietly(inputStream);
+        }
+        return Response.ok().entity(stringBuilder.toString() + "-" + fileInfo.getFileName()).build();
+    }
     /**
      * Custom exception class for testing exception handler.
      */

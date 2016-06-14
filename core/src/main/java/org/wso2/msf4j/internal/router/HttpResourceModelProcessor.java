@@ -17,19 +17,41 @@
 package org.wso2.msf4j.internal.router;
 
 import com.google.common.base.Preconditions;
+import org.apache.commons.io.FileCleaningTracker;
 import org.wso2.msf4j.HttpStreamer;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
+import org.wso2.msf4j.beanconversion.BeanConversionException;
+import org.wso2.msf4j.beanconversion.MediaTypeConverter;
+import org.wso2.msf4j.formparam.FileInfo;
+import org.wso2.msf4j.formparam.FormDataParam;
+import org.wso2.msf4j.formparam.FormItem;
+import org.wso2.msf4j.formparam.FormParamIterator;
+import org.wso2.msf4j.formparam.exception.FormUploadException;
+import org.wso2.msf4j.formparam.util.StreamUtil;
 import org.wso2.msf4j.internal.beanconversion.BeanConverter;
 import org.wso2.msf4j.util.BufferUtil;
 import org.wso2.msf4j.util.QueryStringDecoderUtil;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
@@ -44,6 +66,13 @@ public class HttpResourceModelProcessor {
 
     private final HttpResourceModel httpResourceModel;
     private HttpStreamer httpStreamer;
+    private Map<String, List<Object>> formParameters = null;
+    private Map<String, String> formParamContentType = new HashMap<>();
+    private static Path tempRepoPath = Paths.get(System.getProperty("java.io.tmpdir"), "msf4jtemp");
+    private Path tmpPathForRequest;
+    // Temp File cleaning thread
+    private static FileCleaningTracker fileCleaningTracker = new FileCleaningTracker();
+    private static final String FILEINFO_POSTFIX = "file.info";
 
     public HttpResourceModelProcessor(HttpResourceModel httpResourceModel) {
         this.httpResourceModel = httpResourceModel;
@@ -83,6 +112,12 @@ public class HttpResourceModelProcessor {
                     } else if (Context.class.isAssignableFrom(annotationType)) {
                         args[idx] = getContextParamValue((HttpResourceModel.ParameterInfo<Object>) paramInfo,
                                 request, responder);
+                    } else if (FormParam.class.isAssignableFrom(annotationType)) {
+                        args[idx] = getFormParamValue((HttpResourceModel.ParameterInfo<List<Object>>) paramInfo,
+                                                      request);
+                    } else if (FormDataParam.class.isAssignableFrom(annotationType)) {
+                        args[idx] = getFormDataParamValue((HttpResourceModel.ParameterInfo<List<Object>>) paramInfo,
+                                                          request);
                     } else {
                         createObject(request, args, idx, paramInfo);
                     }
@@ -121,10 +156,139 @@ public class HttpResourceModelProcessor {
                         MediaType.WILDCARD).convertToObject(fullContent, paramType);
     }
 
+    private Object getFormDataParamValue(HttpResourceModel.ParameterInfo<List<Object>> paramInfo, Request request)
+            throws FormUploadException, IOException {
+        if (Files.notExists(tempRepoPath)) {
+            Files.createDirectory(tempRepoPath);
+        }
+
+        Type paramType = paramInfo.getParameterType();
+        FormDataParam formDataParam = paramInfo.getAnnotation();
+        if (getFormParameters() == null) {
+            FormParamIterator formParamIterator = new FormParamIterator(request);
+            Map<String, List<Object>> parameters = new HashMap<>();
+            while (formParamIterator.hasNext()) {
+                FormItem item = formParamIterator.next();
+
+                String cType = item.getContentType();
+                if (cType != null && cType.contains(";")) {
+                    cType = cType.split(";")[0];
+                }
+                if (cType == null) {
+                    cType = MediaType.TEXT_PLAIN;
+                }
+                boolean isFile = item.getHeaders().getHeader("content-disposition").contains("filename") ||
+                                 MediaType.APPLICATION_OCTET_STREAM.equals(item.getHeaders().getHeader("content-type"));
+                formParamContentType.putIfAbsent(item.getFieldName(), cType);
+
+                List<Object> existingValues = parameters.get(item.getFieldName());
+                if (existingValues == null) {
+                    parameters.put(item.getFieldName(),
+                                   isFile ? new ArrayList<>(Collections.singletonList(createAndTrackTempFile(item))) :
+                                   new ArrayList<>(Collections.singletonList(StreamUtil.asString(item.openStream()))));
+                } else {
+                    existingValues.add(isFile ? createAndTrackTempFile(item) : StreamUtil.asString(item.openStream()));
+                }
+
+                if (isFile) {
+                    //Create FileInfo bean to handle InputStream
+                    FileInfo fileInfo = new FileInfo();
+                    fileInfo.setFileName(item.getName());
+                    fileInfo.setContentType(item.getContentType());
+                    parameters.putIfAbsent(item.getFieldName() + FILEINFO_POSTFIX, Collections.singletonList(fileInfo));
+                }
+            }
+            setFormParameters(parameters);
+        }
+
+        List<Object> parameter = getParameter(formDataParam.value());
+        boolean isNotNull = (parameter != null);
+        if (paramInfo.getConverter() != null) {
+            // We need to skip the conversion for java.io.File types and handle special cases
+            if (paramType instanceof ParameterizedType && isNotNull &&
+                parameter.get(0).getClass().isAssignableFrom(File.class)) {
+                return parameter;
+            } else if (isNotNull && parameter.get(0).getClass().isAssignableFrom(File.class)) {
+                return parameter.get(0);
+            } else if (MediaType.TEXT_PLAIN.equalsIgnoreCase(formParamContentType.get(formDataParam.value()))) {
+                return paramInfo.convert(parameter);
+            }
+            // Beans with string constructor
+            return createBean(parameter, formDataParam, paramType, isNotNull);
+        }
+        // We only support InputStream for a single file. Therefore only get first element from the list
+        if (paramType == InputStream.class && isNotNull && parameter.get(0).getClass().isAssignableFrom(File.class)) {
+            return new FileInputStream((File) parameter.get(0));
+        } else if (paramType == FileInfo.class) {
+            List<Object> fileInfo = getParameter(formDataParam.value() + FILEINFO_POSTFIX);
+            return fileInfo == null ? null : fileInfo.get(0);
+        }
+        // These are beans without having string constructor. Convert using existing BeanConverter
+        return createBean(parameter, formDataParam, paramType, isNotNull);
+    }
+
+    private Object createBean(List<Object> parameter, FormDataParam formDataParam, Type paramType, boolean isNotNull) {
+        if (isNotNull) {
+            MediaTypeConverter converter = BeanConverter.getConverter(formParamContentType.get(formDataParam.value()));
+            ByteBuffer value = ByteBuffer.wrap(parameter.get(0).toString().getBytes(Charset.defaultCharset()));
+            return converter.convertToObject(value, paramType);
+        }
+        throw new BeanConversionException("Content cannot be null");
+    }
+
+    private File createAndTrackTempFile(FormItem item) throws IOException {
+        if (tmpPathForRequest == null) {
+            tmpPathForRequest = Files.createTempDirectory(tempRepoPath, "tmp");
+        }
+        Path path = Paths.get(tmpPathForRequest.toString(), item.getName());
+        File file = path.toFile();
+        StreamUtil.copy(item.openStream(), new FileOutputStream(file), true);
+        fileCleaningTracker.track(file, file);
+        return file;
+    }
+
+    private Object getFormParamValue(HttpResourceModel.ParameterInfo<List<Object>> paramInfo, Request request)
+            throws FormUploadException, IOException {
+        FormParam formParam = paramInfo.getAnnotation();
+        if (getFormParameters() == null) {
+            Map<String, List<Object>> parameters = new HashMap<>();
+            if (MediaType.MULTIPART_FORM_DATA.equals(request.getContentType())) {
+                FormParamIterator formParamIterator = new FormParamIterator(request);
+                while (formParamIterator.hasNext()) {
+                    FormItem item = formParamIterator.next();
+                    List<Object> existingValues = parameters.get(item.getFieldName());
+                    if (existingValues == null) {
+                        parameters.put(item.getFieldName(), new ArrayList<>(
+                                Collections.singletonList(StreamUtil.asString(item.openStream()))));
+                    } else {
+                        existingValues.add(StreamUtil.asString(item.openStream()));
+                    }
+                }
+            } else if (MediaType.APPLICATION_FORM_URLENCODED.equals(request.getContentType())) {
+                ByteBuffer fullContent = BufferUtil.merge(request.getFullMessageBody());
+                String bodyStr = BeanConverter.getConverter(
+                        (request.getContentType() != null) ? request.getContentType() : MediaType.WILDCARD)
+                                              .convertToObject(fullContent, paramInfo.getParameterType()).toString();
+                QueryStringDecoderUtil queryStringDecoderUtil = new QueryStringDecoderUtil(bodyStr, false);
+                queryStringDecoderUtil.parameters().entrySet().
+                        forEach(entry -> parameters.put(entry.getKey(), new ArrayList<>(entry.getValue())));
+            }
+            setFormParameters(parameters);
+        }
+
+        List<Object> paramValue = getParameter(formParam.value());
+        if (paramValue == null) {
+            String defaultVal = paramInfo.getDefaultVal();
+            if (defaultVal != null) {
+                paramValue = Collections.singletonList(defaultVal);
+            }
+        }
+        return paramInfo.convert(paramValue);
+    }
 
     @SuppressWarnings("unchecked")
     private Object getContextParamValue(HttpResourceModel.ParameterInfo<Object> paramInfo, Request request,
-                                        Response responder) {
+                                        Response responder) throws FormUploadException, IOException {
         Type paramType = paramInfo.getParameterType();
         Object value = null;
         if (((Class) paramType).isAssignableFrom(Request.class)) {
@@ -136,6 +300,8 @@ public class HttpResourceModelProcessor {
                 httpStreamer = new HttpStreamer();
             }
             value = httpStreamer;
+        } else if (((Class) paramType).isAssignableFrom(FormParamIterator.class)) {
+            value = new FormParamIterator(request);
         }
         Preconditions.checkArgument(value != null, "Could not resolve parameter %s", paramType.getTypeName());
         return value;
@@ -182,4 +348,28 @@ public class HttpResourceModelProcessor {
         return info.convert(Collections.singletonList(header));
     }
 
+    /**
+     * @return parameter value of the given key.
+     * @param key parameter name
+     */
+    public List<Object> getParameter(String key) {
+        return formParameters.get(key);
+    }
+
+    /**
+     *
+     * @return Map of request formParameters
+     */
+    public Map<String, List<Object>> getFormParameters() {
+        return formParameters;
+    }
+
+    /**
+     * Set the request formParameters
+     *
+     * @param parameters request formParameters
+     */
+    public void setFormParameters(Map<String, List<Object>> parameters) {
+        this.formParameters = parameters;
+    }
 }
