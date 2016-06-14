@@ -17,13 +17,11 @@ package org.wso2.msf4j.example;/*
 import com.google.common.io.Resources;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.formparam.util.StreamUtil;
 
 import java.io.File;
@@ -34,29 +32,31 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import javax.ws.rs.HttpMethod;
 
 /**
  * Sample Client to invoke the {{@link FormService}}
  */
 public class SampleClient {
+    private static final Logger log = LoggerFactory.getLogger(SampleClient.class);
 
     public static void main(String[] args) throws IOException {
-       /*// HttpPost httppost = new HttpPost("http://localhost:8080/formService/multipleFiles");
-        HttpPost httppost = new HttpPost("http://localhost:8080/formService/complexForm");
-        //HttpPost httppost = new HttpPost("http://localhost:8080/formService/simpleFormStreaming");
-        httppost.setEntity(createMessageForComplexForm());
-        CloseableHttpClient httpclient = HttpClients.createDefault();
-        CloseableHttpResponse execute = httpclient.execute(httppost);*/
+        HttpEntity messageEntity = createMessageForComplexForm();
+        // Uncomment the required message body based on the method that want to be used
+        //HttpEntity messageEntity = createMessageForMultipleFiles();
+        //HttpEntity messageEntity = createMessageForSimpleFormStreaming();
 
-        HttpEntity messageForComplexForm = createMessageForComplexForm();
-        URL url = URI.create("http://localhost:8080/formService/complexForm").toURL();
+        String serverUrl = "http://localhost:8080/formService/complexForm";
+        // Uncomment the required service url based on the method that want to be used
+        //String serverUrl = "http://localhost:8080/formService/multipleFiles";
+        //String serverUrl = "http://localhost:8080/formService/simpleFormStreaming";
+
+        URL url = URI.create(serverUrl).toURL();
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setDoOutput(true);
         connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type", messageForComplexForm.getContentType().getValue());
+        connection.setRequestProperty("Content-Type", messageEntity.getContentType().getValue());
         try (OutputStream out = connection.getOutputStream()) {
-            messageForComplexForm.writeTo(out);
+            messageEntity.writeTo(out);
         }
 
         InputStream inputStream = connection.getInputStream();
@@ -67,56 +67,47 @@ public class SampleClient {
 
     }
 
-    private static HttpEntity createMessageForSimpleFormStreaming(){
+    private static HttpEntity createMessageForSimpleFormStreaming() {
         HttpEntity reqEntity = null;
         try {
-            reqEntity = MultipartEntityBuilder.create()
-                                              .addTextBody("name", "WSO2")
-                                              .addTextBody("age", "10")
-                                              .addBinaryBody("file", new File(
-                                                                     Resources.getResource("sample.txt").toURI()),
-                                                             ContentType.DEFAULT_BINARY, "sample.txt")
-                                              .build();
+            reqEntity = MultipartEntityBuilder.create().addTextBody("name", "WSO2").addTextBody("age", "10")
+                                              .addBinaryBody("file",
+                                                             new File(Resources.getResource("sample.txt").toURI()),
+                                                             ContentType.DEFAULT_BINARY, "sample.txt").build();
         } catch (URISyntaxException e) {
-            e.printStackTrace();
+            log.error("Error while getting the file from resource." + e.getMessage(), e);
         }
         return reqEntity;
     }
 
-    private static HttpEntity createMessageForComplexForm(){
+    private static HttpEntity createMessageForComplexForm() {
         HttpEntity reqEntity = null;
         try {
             StringBody companyText = new StringBody("{\"type\": \"Open Source\"}", ContentType.APPLICATION_JSON);
             StringBody personList = new StringBody(
                     "[{\"name\":\"Richard Stallman\",\"age\":63}, {\"name\":\"Linus Torvalds\",\"age\":46}]",
                     ContentType.APPLICATION_JSON);
-            reqEntity = MultipartEntityBuilder.create()
-                                              .addTextBody("id", "1")
+            reqEntity = MultipartEntityBuilder.create().addTextBody("id", "1")
                                               //.addPart("company", companyText)
-                                              .addPart("people", personList)
-                                              .addBinaryBody("file", new File(
-                                                                     Resources.getResource("sample.txt").toURI()),
-                                                             ContentType.DEFAULT_BINARY, "sample.txt")
+                                              .addPart("people", personList).addBinaryBody("file", new File(
+                            Resources.getResource("sample.txt").toURI()), ContentType.DEFAULT_BINARY, "sample.txt")
                                               .build();
         } catch (URISyntaxException e) {
-            e.printStackTrace();
+            log.error("Error while getting the file from resource." + e.getMessage(), e);
         }
         return reqEntity;
     }
 
-    private static HttpEntity createMessageForMultipleFiles(){
+    private static HttpEntity createMessageForMultipleFiles() {
         HttpEntity reqEntity = null;
         try {
-            reqEntity = MultipartEntityBuilder.create()
-                                              .addBinaryBody("files", new File(
-                                                                     Resources.getResource("sample.txt").toURI()),
-                                                             ContentType.DEFAULT_BINARY, "sample.txt")
-                                              .addBinaryBody("files", new File(
-                                                                     Resources.getResource("sample.jpg").toURI()),
-                                                             ContentType.DEFAULT_BINARY, "sample.jpg")
-                                              .build();
+            reqEntity = MultipartEntityBuilder.create().addBinaryBody("files", new File(
+                    Resources.getResource("sample.txt").toURI()), ContentType.DEFAULT_BINARY, "sample.txt")
+                                              .addBinaryBody("files",
+                                                             new File(Resources.getResource("sample.jpg").toURI()),
+                                                             ContentType.DEFAULT_BINARY, "sample.jpg").build();
         } catch (URISyntaxException e) {
-            e.printStackTrace();
+            log.error("Error while getting the file from resource." + e.getMessage(), e);
         }
         return reqEntity;
     }

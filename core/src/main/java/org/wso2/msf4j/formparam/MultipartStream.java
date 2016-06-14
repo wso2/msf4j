@@ -81,7 +81,6 @@ import static java.lang.String.format;
  *   }
  * </pre>
  *
- * @version $Id$
  */
 public class MultipartStream {
 
