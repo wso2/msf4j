@@ -16,6 +16,7 @@
 
 package org.wso2.msf4j.example;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.example.bean.Company;
@@ -67,19 +68,29 @@ public class FormService {
     @Path("/simpleFormStreaming")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response simpleFormStreaming(@Context FormParamIterator formParamIterator) {
-        try {
-            while (formParamIterator.hasNext()) {
-                FormItem item = formParamIterator.next();
+        StringBuilder response = new StringBuilder();
+        while (formParamIterator.hasNext()) {
+            FormItem item = formParamIterator.next();
+            InputStream inputStream = null;
+            try {
+                inputStream = item.openStream();
                 if (item.isFormField()) {
-                    System.out.println(item.getFieldName() + " - " + StreamUtil.asString(item.openStream()));
+                    System.out.println(item.getFieldName() + " - " + StreamUtil.asString(inputStream));
                 } else {
-                    Files.copy(item.openStream(), Paths.get(System.getProperty("java.io.tmpdir"), item.getName()));
+                    Files.copy(inputStream, Paths.get(System.getProperty("java.io.tmpdir"), item.getName()));
                 }
+            } catch (FormUploadException e) {
+                log.error("Error while uploading the file " + e.getMessage(), e);
+                response.append("Error while uploading the file ").append(e.getMessage());
+            } catch (IOException e) {
+                log.error("Unable to upload the file " + e.getMessage(), e);
+                response.append("Unable to upload the file ").append(e.getMessage());
+            } finally {
+                IOUtils.closeQuietly(inputStream);
             }
-        } catch (FormUploadException e) {
-            log.error("Error while uploading the file " + e.getMessage(), e);
-        } catch (IOException e) {
-            log.error("Unable to upload the file " + e.getMessage(), e);
+        }
+        if (!response.toString().isEmpty()) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(response.toString()).build();
         }
         return Response.ok().entity("Request completed").build();
     }
@@ -107,13 +118,18 @@ public class FormService {
     @Path("/multipleFiles")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response multipleFiles(@FormDataParam("files") List<File> files) {
+        StringBuilder response = new StringBuilder();
         files.forEach(file -> {
             try {
-                Files.copy(file.toPath(),Paths.get(System.getProperty("java.io.tmpdir"), file.getName()));
+                Files.copy(file.toPath(), Paths.get(System.getProperty("java.io.tmpdir"), file.getName()));
             } catch (IOException e) {
+                response.append("Unable to upload the file ").append(e.getMessage());
                 log.error("Error while Copying the file " + e.getMessage(), e);
             }
         });
+        if (!response.toString().isEmpty()) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(response.toString()).build();
+        }
         return Response.ok().entity("Request completed").build();
     }
 
@@ -126,6 +142,9 @@ public class FormService {
             Files.copy(inputStream, Paths.get(System.getProperty("java.io.tmpdir"), fileInfo.getFileName()));
         } catch (IOException e) {
             log.error("Error while Copying the file " + e.getMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } finally {
+            IOUtils.closeQuietly(inputStream);
         }
         return Response.ok().entity("Request completed").build();
     }
