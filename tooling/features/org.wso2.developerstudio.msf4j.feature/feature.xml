@@ -18,7 +18,7 @@
 <feature
         id="org.wso2.developerstudio.msf4j.feature"
         label="MSF4J Tooling Feature"
-        version="1.0.0.qualifier"
+        version="1.1.0.qualifier"
         provider-name="WSO2 Inc.">
 
     <description url="http://wso2.com">

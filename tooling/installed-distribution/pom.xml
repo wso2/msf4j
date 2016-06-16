@@ -69,11 +69,30 @@
         </dependencies>
     </dependencyManagement>    
     <modules>
-        <module>developer-studio-eclipse-jee-luna-linux-gtk</module>
-        <module>developer-studio-eclipse-jee-luna-linux-gtk-x86_64</module>
-        <module>developer-studio-eclipse-jee-luna-macosx-cocoa</module>
-        <module>developer-studio-eclipse-jee-luna-macosx-cocoa-x86_64</module>
-        <module>developer-studio-eclipse-jee-luna-win32</module>
-        <module>developer-studio-eclipse-jee-luna-win64-x86_64</module>
-    </modules>        
+        <module>developer-studio-eclipse-jee-mars-linux-gtk</module>
+        <module>developer-studio-eclipse-jee-mars-linux-gtk-x86_64</module>
+        <module>developer-studio-eclipse-jee-mars-macosx-cocoa-x86_64</module>
+        <module>developer-studio-eclipse-jee-mars-win32</module>
+        <module>developer-studio-eclipse-jee-mars-win64-x86_64</module>
+    </modules>   
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>exec-maven-plugin</artifactId>
+				<groupId>org.codehaus.mojo</groupId>
+				<executions>
+					<execution>
+						<id>Download-Eclipse_distributions</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>${basedir}/scripts/intaller-script-mars.sh</executable>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>     
 </project>

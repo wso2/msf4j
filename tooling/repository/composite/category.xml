@@ -16,7 +16,7 @@
   -->
 
 <site>
-   <category-def name="org.wso2.developerstudio.msf4j" label="MSF4J Tool">
+   <category-def name="org.wso2.developerstudio.msf4j.feature.category" label="MSF4J Tool">
 	   <description>
 		This is the MSF4J Tools Feature for the Developer Studio. This provides
           tooling support for WSO2 MSF4J Artifact creation with Developer Studio.
@@ -24,33 +24,60 @@
    </category-def>
 
    <!-- MSS prodcut feature (itself)-->
-   <feature url="features/org.wso2.developerstudio.msf4j.feature_1.0.0.qualifier.jar" id="org.wso2.developerstudio.msf4j.feature" version="1.0.0.qualifier">
-      <category name="org.wso2.developerstudio.mss"/>
+   <feature url="features/org.wso2.developerstudio.msf4j.feature_1.1.0.qualifier.jar" id="org.wso2.developerstudio.msf4j.feature" version="1.1.0.qualifier">
+      <category name="org.wso2.developerstudio.msf4j.feature.category"/>
    </feature>
    
    <!-- Kernel Features and category-->	
-   <feature id="org.wso2.developerstudio.kernel.core.feature" version="0.0.0">
-      <category name="org.wso2.developerstudio.msf4j"/>
+   <feature id="org.wso2.developerstudio.kernel.feature" version="0.0.0">
+      <category name="org.wso2.developerstudio.msf4j.feature.category"/>
    </feature>
-   <feature id="org.wso2.developerstudio.kernel.core.ui.feature" version="0.0.0">
-      <category name="org.wso2.developerstudio.msf4j"/>
+   <feature id="org.wso2.developerstudio.capp.feature" version="0.0.0">
+      <category name="org.wso2.developerstudio.msf4j.feature.category"/>
    </feature>
-   <feature id="org.wso2.developerstudio.kernel.tools.feature" version="0.0.0">
-      <category name="org.wso2.developerstudio.msf4j"/>
+   <feature id="org.wso2.developerstudio.carbon.server.feature" version="0.0.0">
+      <category name="org.wso2.developerstudio.msf4j.feature.category"/>
    </feature>
-   <feature id="org.wso2.developerstudio.kernel.utils.feature" version="0.0.0">
-      <category name="org.wso2.developerstudio.msf4j"/>
+   <feature id="org.wso2.developerstudio.carbon.server-40.feature" version="0.0.0">
+      <category name="org.wso2.developerstudio.msf4j.feature.category"/>
    </feature>
-  
-   <!-- Kernel core Features and category-->	
-   <!--feature id="org.wso2.developerstudio.capp.feature" version="0.0.0">
-      <category name="org.wso2.developerstudio.mss"/>
+   <feature id="org.wso2.developerstudio.carbon.server-42.feature" version="0.0.0">
+      <category name="org.wso2.developerstudio.msf4j.feature.category"/>
    </feature>
-   <feature id="org.wso2.developerstudio.kernel.registry.feature" version="0.0.0">
-      <category name="org.wso2.developerstudio.mss"/>
+ <feature id="org.wso2.developerstudio.carbon.server-remote.feature" version="0.0.0">
+      <category name="org.wso2.developerstudio.msf4j.feature.category"/>
    </feature>
-   <feature id="org.wso2.developerstudio.kernel.security.feature" version="0.0.0">
-      <category name="org.wso2.developerstudio.kernel.common"/>
-   </feature-->
-
+ <feature id="org.wso2.developerstudio.carbon.server-44.feature" version="0.0.0">
+      <category name="org.wso2.developerstudio.msf4j.feature.category"/>
+   </feature>
+ <feature id="org.wso2.developerstudio.dashboard.feature" version="0.0.0">
+      <category name="org.wso2.developerstudio.msf4j.feature.category"/>
+   </feature>
+ <feature id="org.wso2.developerstudio.kernel.registry.core.feature" version="0.0.0">
+      <category name="org.wso2.developerstudio.msf4j.feature.category"/>
+   </feature>
+ <feature id="org.wso2.developerstudio.kernel.security.feature" version="0.0.0">
+      <category name="org.wso2.developerstudio.msf4j.feature.category"/>
+   </feature>
+ <feature id="org.wso2.developerstudio.kernel.wso2plugins.default.samples.feature" version="0.0.0">
+      <category name="org.wso2.developerstudio.msf4j.feature.category"/>
+   </feature>
+ <feature id="org.wso2.developerstudio.cloud.utils.feature" version="0.0.0">
+      <category name="org.wso2.developerstudio.msf4j.feature.category"/>
+   </feature>
+ <feature id="org.wso2.developerstudio.kernel.utils.feature" version="0.0.0">
+      <category name="org.wso2.developerstudio.msf4j.feature.category"/>
+   </feature>
+ <feature id="org.wso2.developerstudio.library.artifact.feature" version="0.0.0">
+      <category name="org.wso2.developerstudio.msf4j.feature.category"/>
+   </feature>
+ <feature id="org.wso2.developerstudio.platform.libraries.feature" version="0.0.0">
+      <category name="org.wso2.developerstudio.msf4j.feature.category"/>
+   </feature>
+ <feature id="org.wso2.developerstudio.usr.management.feature" version="0.0.0">
+      <category name="org.wso2.developerstudio.msf4j.feature.category"/>
+   </feature>
+ <feature id="org.wso2.developerstudio.mvn.multimodule.feature" version="0.0.0">
+      <category name="org.wso2.developerstudio.msf4j.feature.category"/>
+   </feature>
 </site>
