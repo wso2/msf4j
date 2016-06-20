@@ -39,6 +39,7 @@ public class HelloService {
     @Path("/{name}")
     public String hello(@PathParam("name") String name) {
         System.out.println("Hello");
+        System.out.println("=====" + Thread.currentThread().getName());
         return "Hello " + name;
     }
 

@@ -130,7 +130,8 @@
         <module>samples/lifecycle</module>
         <module>samples/jwt-claims</module>
         <module>samples/spring-helloworld</module>
-        <module>samples/helloworld-JPA</module>
+        <module>samples/helloworld-jpa</module>
+        <module>samples/circuitbreaker</module>
 
         <module>features/feature-test</module>
     </modules>

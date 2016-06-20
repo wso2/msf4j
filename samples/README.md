@@ -9,11 +9,14 @@ This directory contain a comprehensive suite of samples demonstrating the capabi
 #Samples 
 In increasing order of complexity;
 
-* [Hello World](helloworld) - Running a Basic Microservice
+* [Hello World](helloworld) - Running a basic Microservice
+* [Spring Hello World](spring-helloworld) - Running a basic Microservice using the Spring framework  
 * [StockQuote (Fat jar)](stockquote/stockquote-fatjar) - Developing a Microservice as a single jar which packs all the dependencies
 * [StockQuote (OSGi bundle)](stockquote/stockquote-bundle) - Creating a Microservice as an OSGi Bundle
 * [Metrics and HTTP Monitoring Fat jar](metrics-httpmon/metrics-httpmon-fatjar) / [OSGi bundle](metrics-httpmon/metrics-httpmon-bundle) - Using Metrics and HTTP Monitoring Interceptors
-* [File Server](fileserver) - Handling Files
+* [File Server](fileserver) - Handling Files including streaming input & output
+* [Circuit Breaker](circuitbreaker) - Using the circuit breaker pattern
+* [FormParam](formparam) - Shows usage of the FormParam annotation
 * [Lifecycle](lifecycle) - Using Service Lifecycle Methods
 * [Log-interceptor](log-interceptor-bundle) - Creating an Interceptor as an OSGi Bundle
 * [BasicAuth Security](basicauth-security) - Securing Microservice using BasicAuth
