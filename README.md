@@ -1,9 +1,9 @@
+[![Build Status](https://wso2.org/jenkins/job/msf4j/badge/icon)](https://wso2.org/jenkins/job/msf4j)
+
 #WSO2 Microservices Framework for Java (MSF4J)
 
 WSO2 Microservices Framework for Java (MSF4J) is a lightweight high performance framework for developing
 & running microservices.
-
-[![Build Status](https://wso2.org/jenkins/job/msf4j/badge/icon)](https://wso2.org/jenkins/job/msf4j)
 
 WSO2 MSF4J is one of the highest performing lightweight Java microservices frameworks. The following graphs show the 
 throughput & memory consumption characteristics of MSF4J against other microservices frameworks.
