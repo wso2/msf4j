@@ -26,9 +26,9 @@
 	<relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>developer-studio-eclipse-jee-luna-macosx-cocoa-x86_64</artifactId>
+    <artifactId>developer-studio-eclipse-jee-mars-win32</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Developer Studio Eclipse MSF4J Tools distribution-macosx-cocoa-x86_64</name>
+    <name>WSO2 Developer Studio Eclipse MSF4J Tools distribution-win32</name>
     <url>http://wso2.org</url>
     <repositories>
     	<repository>
@@ -43,7 +43,7 @@
                 <checksumPolicy>ignore</checksumPolicy>
             </releases>
             <id>DevS-Deps-p2-Repository</id>
-             <url>http://product-dist.wso2.com/p2/developer-studio-kernel/4.0.0/kernel/releases/main/</url>
+             <url>http://builder1.us1.wso2.org/~developerstudio/developer-studio-kernel/4.1.0/kernel/releases/</url>
             <layout>p2</layout>
         </repository>
     </repositories>
@@ -60,6 +60,19 @@
     
     <build>
         <plugins>
+ <plugin>
+				<artifactId>exec-maven-plugin</artifactId>
+				<groupId>org.codehaus.mojo</groupId>
+				<executions>
+					<execution>
+						<id>Download-Eclipse_distributions</id>
+						<phase>generate-sources</phase>
+						<configuration>
+							<skip>true</skip>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -74,16 +87,16 @@
                         </goals>
                         <configuration>
                             <artifactItems>
-                                <artifactItem>
+                               <artifactItem>
                                     <groupId>org.eclipse</groupId>
-                                    <artifactId>eclipse-jee-luna-macosx-cocoa-x86_64</artifactId>
-                                    <version>4.4.2</version>
-                                    <type>tar.gz</type>
+                                    <artifactId>eclipse-jee-mars-2-win32</artifactId>
+                                    <version>4.5.2</version>
+                                    <type>zip</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>target</outputDirectory>
                                 </artifactItem>
                                 <artifactItem>
-                                    <groupId>org.wso2.developerstudio.msf4j</groupId>
+                                   <groupId>org.wso2.developerstudio.msf4j</groupId>
                                     <artifactId>wso2-developer-studio-msf4j-tool-p2-composite</artifactId>
                                     <version>1.1.0-SNAPSHOT</version>
                                     <type>zip</type>
@@ -158,10 +171,10 @@
              <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.4</version>
+                <version>2.2-beta-2</version>
                 <executions>
                     <execution>
-                        <id>assembly</id>
+                        <id>1-pre_dist</id>
                         <phase>package</phase>
                         <goals>
                             <goal>attached</goal>
@@ -170,7 +183,6 @@
                             <descriptors>
                                 <descriptor>${basedir}/src/assembly/dist.xml</descriptor>
                             </descriptors>
-			    <appendAssemblyId>false</appendAssemblyId>
                         </configuration>
                     </execution>
                 </executions>

@@ -16,7 +16,7 @@
   -->
 
 <site>
-   <feature url="features/org.wso2.developerstudio.msf4j.feature_1.0.0.qualifier.jar" id="org.wso2.developerstudio.msf4j.feature" version="1.0.0.qualifier">
+   <feature url="features/org.wso2.developerstudio.msf4j.feature_1.1.0.qualifier.jar" id="org.wso2.developerstudio.msf4j.feature" version="1.1.0.qualifier">
       <category name="org.wso2.developerstudio.msf4j"/>
    </feature>
    <category-def name="org.wso2.developerstudio.msf4j" label="MSF4J Tool"/>
