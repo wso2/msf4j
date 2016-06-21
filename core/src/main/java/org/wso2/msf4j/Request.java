@@ -127,7 +127,7 @@ public class Request {
      * @return HTTP method of the request.
      */
     public String getHttpMethod() {
-        return (String) carbonMessage.getProperty(Constants.HTTP_METHOD);
+        return (String) carbonMessage.getProperty(org.wso2.carbon.transport.http.netty.common.Constants.HTTP_METHOD);
     }
 
     /**

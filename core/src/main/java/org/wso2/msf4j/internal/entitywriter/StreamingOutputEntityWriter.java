@@ -18,7 +18,7 @@ package org.wso2.msf4j.internal.entitywriter;
 
 import org.wso2.carbon.messaging.CarbonCallback;
 import org.wso2.carbon.messaging.CarbonMessage;
-import org.wso2.carbon.messaging.Constants;
+import org.wso2.carbon.transport.http.netty.common.Constants;
 
 import java.io.IOException;
 import javax.ws.rs.core.StreamingOutput;
