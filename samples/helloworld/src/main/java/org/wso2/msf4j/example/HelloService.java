@@ -39,20 +39,6 @@ public class HelloService {
     @Path("/{name}")
     public String hello(@PathParam("name") String name) {
         System.out.println("Hello");
-        System.out.println("=====" + Thread.currentThread().getName());
         return "Hello " + name;
     }
-
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response streamExample() {
-        StreamingOutput stream = os -> {
-            Writer writer = new BufferedWriter(new OutputStreamWriter(os));
-            writer.write("###### test ######");
-            System.out.println("++++++ wrote it ++++++++");
-            writer.flush();
-        };
-        return Response.ok(stream).build();
-    }
-
 }
