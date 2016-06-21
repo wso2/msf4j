@@ -81,12 +81,13 @@ public class MicroservicesRegistry {
 
     public void addExceptionMapper(ExceptionMapper... mapper) {
         Arrays.stream(mapper).forEach(em -> {
-            Arrays.stream(em.getClass().getMethods()).
-                    filter(method -> "toResponse".equals(method.getName()) && method.getParameterCount() == 1).
+            Arrays.stream(em.getClass().getDeclaredMethods()).
+                    filter(method -> "toResponse".equals(method.getName()) && method.getParameterCount() == 1 &&
+                            !"java.lang.Throwable".equals(method.getParameterTypes()[0].getTypeName())).
                     findAny().
                     ifPresent(method -> {
                         try {
-                            exceptionMappers.put(Class.forName(method.getGenericParameterTypes()[0].getTypeName()), em);
+                            exceptionMappers.put(Class.forName(method.getParameterTypes()[0].getTypeName()), em);
                         } catch (ClassNotFoundException e) {
                             log.error("Could not load class", e);
                         }
