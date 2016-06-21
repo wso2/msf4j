@@ -9,7 +9,8 @@ This is pretty much similar to the QueryParam. MSF4J reads the Request body and 
 
 E.g.
 Sample service for application/x-www-form-urlencoded content type
-```@POST
+```java
+@POST
 @Path("/formParam")
 public Response testFormParam(@FormParam("age") int age, @FormParam("name") String name) {
    System.out.println("Name " + name);
@@ -20,7 +21,8 @@ public Response testFormParam(@FormParam("age") int age, @FormParam("name") Stri
 Parameters should be based on http://docs.oracle.com/javaee/7/api/javax/ws/rs/FormParam.html
 
 ### For the multipart/form-data
-```@POST
+```java
+@POST
 @Path("/formParam")
 @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.MULTIPART_FORM_DATA})
 public Response testFormParam(@FormParam("age") int age, @FormParam("name") String name) {
@@ -34,7 +36,8 @@ FormParam name must be ‘form’ and the type must be FormParamIterator
 
 E.g.
 Sample service for multipart/form-data content-type with file upload
-```@POST
+```java
+@POST
 @Path("/simpleFormStreaming")
 @Consumes(MediaType.MULTIPART_FORM_DATA)
 public Response simpleFormStreaming(@Context FormParamIterator formParamIterator) {
@@ -57,8 +60,9 @@ public Response simpleFormStreaming(@Context FormParamIterator formParamIterator
 ```
 If you like use non streaming mode then you can directly get File objects in a file upload. Here rather than @FormParam you need to use *@FormDataParam* annotation. This annotation can be used with all FormParam supported data types plus File and bean types as well as InpuStreams.
 
-If you wanna upload set of files. Then a sample service would be like as follows
-```@POST
+If you want to upload set of files. Then a sample service would be like as follows:
+```java
+@POST
 @Path("/multipleFiles")
 @Consumes(MediaType.MULTIPART_FORM_DATA)
 public Response multipleFiles(@FormDataParam("files") List<File> files) {
@@ -73,7 +77,8 @@ public Response multipleFiles(@FormDataParam("files") List<File> files) {
 }
 ```
 You can use more complex times with combination of primitives, beans and files as follows
-```@POST
+```java
+@POST
 @Path("/complexForm")
 @Consumes(MediaType.MULTIPART_FORM_DATA)
 public Response complexForm(@FormDataParam("file") File file,
@@ -93,7 +98,8 @@ public Response complexForm(@FormDataParam("file") File file,
 ```
 
 If you like to get the InputStream of a file then you can go ahead like below example. There FileInfo bean will hold the filename and the content type attributes of the particular inputstream. Note that attribute names must be equal when you use InpuStream. Here I’ve used ‘file’ for the both params.
-```@POST
+```java
+@POST
 @Path("/streamFile")
 @Consumes(MediaType.MULTIPART_FORM_DATA)
 public Response multipleFiles(@FormDataParam("file") FileInfo fileInfo,
@@ -124,9 +130,9 @@ mvn clean install
 
 ## How to run the sample
 
-From the target directory, run
+From this directory, run
 ```
-java -jar formparam-*.jar
+java -jar target/formparam-*.jar
 ```
 
 ## How to test the sample

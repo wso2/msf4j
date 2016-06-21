@@ -28,7 +28,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.wso2.msf4j.sample</groupId>
-    <artifactId>helloworld-jpa</artifactId>
+    <artifactId>jpa</artifactId>
 
     <properties>
         <hibernate.version>5.0.1.Final</hibernate.version>

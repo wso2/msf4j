@@ -14,31 +14,19 @@
  * limitations under the License.
  */
 
-package org.wso2.msf4j.example;
+package org.example.service;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
+import org.wso2.msf4j.MicroservicesRunner;
 
 /**
- * Hello service resource class.
+ * Application entry point.
+ *
+ * @since 0.1-SNAPSHOT
  */
-@Path("/hello")
-public class HelloService {
-
-    @GET
-    @Path("/{name}")
-    public String hello(@PathParam("name") String name) {
-        System.out.println("Hello");
-        return "Hello " + name;
+public class Application {
+    public static void main(String[] args) {
+        new MicroservicesRunner()
+                .deploy(new StockQuoteService())
+                .start();
     }
 }
