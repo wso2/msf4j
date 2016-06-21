@@ -83,7 +83,7 @@ public class MicroservicesRegistry {
         Arrays.stream(mapper).forEach(em -> {
             Arrays.stream(em.getClass().getDeclaredMethods()).
                     filter(method -> "toResponse".equals(method.getName()) && method.getParameterCount() == 1 &&
-                            !"java.lang.Throwable".equals(method.getParameterTypes()[0].getTypeName())).
+                            !Throwable.class.getName().equals(method.getParameterTypes()[0].getTypeName())).
                     findAny().
                     ifPresent(method -> {
                         try {
