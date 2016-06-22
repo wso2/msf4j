@@ -1,4 +1,4 @@
-# Automated deployment of the Petstore sample
+# Automated developer version of the Petstore sample
 
 ## Support Operating Systems
  * Linux
