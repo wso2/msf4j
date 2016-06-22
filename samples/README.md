@@ -24,4 +24,5 @@ In increasing order of complexity;
 * [Template](template) - Rendering a Model from a Template
 * [Pet-store](petstore) - Running as an MSA Application
 * [Hello World JPA](helloworld-JPA) - Simple JPA Hibernate based sample
+* [Regex PathParam](regex-pathparam) - How to use regex with PathParam annotation
 

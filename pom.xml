@@ -132,6 +132,7 @@
         <module>samples/spring-helloworld</module>
         <module>samples/jpa</module>
         <module>samples/circuitbreaker</module>
+        <module>samples/regex-pathparam</module>
 
         <module>features/feature-test</module>
     </modules>
