@@ -917,6 +917,27 @@ public class HttpServerTest {
         assertEquals(response, stringBuilder.toString() + "-" + file.getName());
     }
 
+    @Test
+    public void testPathParamWithRegexOne() throws Exception {
+        HttpURLConnection urlConn = request("/test/v1/WSDL/12/states", HttpMethod.GET);
+
+        InputStream inputStream = urlConn.getInputStream();
+        String response = StreamUtil.asString(inputStream);
+        IOUtils.closeQuietly(inputStream);
+        urlConn.disconnect();
+        assertEquals(response, "Asset Type = WSDL, Asset Id = 12");
+    }
+
+    @Test
+    public void testPathParamWithRegexTwo() throws Exception {
+        HttpURLConnection urlConn = request("/test/v1/endpoints/WADL/10", HttpMethod.GET);
+        InputStream inputStream = urlConn.getInputStream();
+        String response = StreamUtil.asString(inputStream);
+        IOUtils.closeQuietly(inputStream);
+        urlConn.disconnect();
+        assertEquals(response, "Asset Type = WADL, Asset Id = 10");
+    }
+
     protected Socket createRawSocket(URL url) throws IOException {
         return new Socket(url.getHost(), url.getPort());
     }

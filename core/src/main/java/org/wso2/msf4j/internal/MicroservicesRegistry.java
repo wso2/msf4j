@@ -87,7 +87,8 @@ public class MicroservicesRegistry {
                     findAny().
                     ifPresent(method -> {
                         try {
-                            exceptionMappers.put(Class.forName(method.getParameterTypes()[0].getTypeName()), em);
+                            exceptionMappers.put(Class.forName(method.getParameterTypes()[0].getTypeName(), false,
+                                    em.getClass().getClassLoader()), em);
                         } catch (ClassNotFoundException e) {
                             log.error("Could not load class", e);
                         }
@@ -110,7 +111,8 @@ public class MicroservicesRegistry {
                 findAny().
                 ifPresent(method -> {
                     try {
-                        exceptionMappers.remove(Class.forName(method.getGenericParameterTypes()[0].getTypeName()));
+                        exceptionMappers.remove(Class.forName(method.getGenericParameterTypes()[0].getTypeName(),
+                                false, em.getClass().getClassLoader()));
                     } catch (ClassNotFoundException e) {
                         log.error("Could not load class", e);
                     }

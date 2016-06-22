@@ -20,10 +20,10 @@
     <format>zip</format>
   </formats>
   <includeBaseDirectory>false</includeBaseDirectory>
-  <fileSets>
-    <fileSet>
-      <directory>${project.build.directory}/eclipse</directory>
-      <outputDirectory>eclipse</outputDirectory>
+   <fileSets>
+     <fileSet>
+      <directory>${project.build.directory}/Eclipse.app</directory>
+      <outputDirectory>Eclipse.app</outputDirectory>
       <fileMode>0777</fileMode>
       <directoryMode>0777</directoryMode>
     </fileSet>
