@@ -578,6 +578,23 @@ public class TestMicroservice implements Microservice {
         }
         return Response.ok().entity(stringBuilder.toString() + "-" + fileInfo.getFileName()).build();
     }
+
+    @GET
+    @Path("{assetType : [a-zA-Z][a-zA-Z_0-9]*}/{id}/states")
+    public Response testPathParamWithRegexOne(@PathParam("assetType") String assetType, @PathParam("id") String id) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Asset Type = ").append(assetType).append(", Asset Id = ").append(id);
+        return Response.ok().entity(sb.toString()).build();
+    }
+
+    @GET
+    @Path("/endpoints/{assetType : [a-zA-Z][a-zA-Z_0-9]*}/{id}")
+    public Response testPathParamWithRegexTwo(@PathParam("assetType") String assetType, @PathParam("id") String id) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Asset Type = ").append(assetType).append(", Asset Id = ").append(id);
+        return Response.ok().entity(sb.toString()).build();
+    }
+
     /**
      * Custom exception class for testing exception handler.
      */
