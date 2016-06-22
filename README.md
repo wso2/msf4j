@@ -1,3 +1,5 @@
+[![Build Status](https://wso2.org/jenkins/job/msf4j/badge/icon)](https://wso2.org/jenkins/job/msf4j)
+
 #WSO2 Microservices Framework for Java (MSF4J)
 
 WSO2 Microservices Framework for Java (MSF4J) is a lightweight high performance framework for developing
@@ -314,6 +316,10 @@ The following code segment shows how ExceptionMappers are registered with the MS
 new MicroservicesRunner().addExceptionMapper(new SymbolNotFoundMapper(), new DuplicateSymbolMapper());
 ```
 
+### Circuit Breaker
+Nygard's circuit breaker pattern is supported in MSF4J using the Netflix Hystrix library. For more details see the
+[circuit breaker sample](samples/circuitbreaker)
+
 ###Complete Feature List
 * Annotation based definition of microservices
 * High performance Netty based transport
@@ -322,13 +328,7 @@ new MicroservicesRunner().addExceptionMapper(new SymbolNotFoundMapper(), new Dup
 * HTTP request & response streaming including support for javax.ws.rs.core.StreamingOutput.
 * [ExceptionMapper]((https://docs.oracle.com/javaee/7/api/javax/ws/rs/ext/ExceptionMapper.html))
 * Support for metrics & visualization of metrics using WSO2 Data Analytics Server (DAS) dashboards
+* Supports circuit breaker using Netflix Hystrix. 
 * Support for securing microservices
 * Integration with rendering engines such as Mustache
 * Comprehensive samples demonstrating how to develop microservices based solutions
-
-
-
-
-
-
-

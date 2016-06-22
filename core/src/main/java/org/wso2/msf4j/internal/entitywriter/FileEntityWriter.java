@@ -19,7 +19,7 @@ package org.wso2.msf4j.internal.entitywriter;
 import com.google.common.io.Files;
 import org.wso2.carbon.messaging.CarbonCallback;
 import org.wso2.carbon.messaging.CarbonMessage;
-import org.wso2.carbon.messaging.Constants;
+import org.wso2.carbon.transport.http.netty.common.Constants;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.internal.mime.MimeMapper;
 import org.wso2.msf4j.internal.mime.MimeMappingException;

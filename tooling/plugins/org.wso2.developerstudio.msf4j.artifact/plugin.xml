@@ -32,7 +32,7 @@
         </wizard>
     </extension>
 
-    <extension point="org.wso2.developerstudio.eclipse.platform.core.intro.ui.dashboard">
+    <extension point="org.wso2.developerstudio.eclipse.dashboad.link">
         <wizardCategory category="org.wso2.developerstudio.eclipse.service.hosting.msf4j"/>
         <category id="dashboard.category.msf4j" showTitle="true"
                   title="MSF4J"

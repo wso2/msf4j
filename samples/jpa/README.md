@@ -15,10 +15,8 @@ mvn clean package
 2. Run the application using following java commend 
 
 ```shell
-java -jar target/HelloWorld-JPA-1.0.0-SNAPSHOT.jar
+java -jar target/jpa.jar
 ```
-
-
 
 # How to test this sample 
 Use following cURL commands

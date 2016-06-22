@@ -54,16 +54,16 @@ public class MicroservicesRunner {
      * @param ports The port on which the microservices are exposed
      */
     public MicroservicesRunner(int... ports) {
+        NettyTransportContextHolder nettyTransportContextHolder = NettyTransportContextHolder.getInstance();
+        nettyTransportContextHolder.setHandlerExecutor(new HandlerExecutor());
+        nettyTransportContextHolder.addMessageProcessor(new MSF4JMessageProcessor(msRegistry));
         for (int port : ports) {
-            NettyTransportContextHolder nettyTransportContextHolder = NettyTransportContextHolder.getInstance();
             ListenerConfiguration listenerConfiguration =
                     new ListenerConfiguration("netty-" + port, "0.0.0.0", port);
             //TODO: remove this default param workaround when transport supports default configurations
             listenerConfiguration.setEnableDisruptor(String.valueOf(false));
             listenerConfiguration.setParameters(getDefaultTransportParams());
             NettyListener listener = new NettyListener(listenerConfiguration);
-            nettyTransportContextHolder.setHandlerExecutor(new HandlerExecutor());
-            nettyTransportContextHolder.addMessageProcessor(new MSF4JMessageProcessor(msRegistry));
             transportManager.registerTransport(listener);
         }
     }
@@ -80,6 +80,8 @@ public class MicroservicesRunner {
         TransportsConfiguration trpConfig = YAMLTransportConfigurationBuilder.build();
         Set<ListenerConfiguration> listenerConfigurations = trpConfig.getListenerConfigurations();
         NettyTransportContextHolder nettyTransportContextHolder = NettyTransportContextHolder.getInstance();
+        nettyTransportContextHolder.setHandlerExecutor(new HandlerExecutor());
+        nettyTransportContextHolder.addMessageProcessor(new MSF4JMessageProcessor(msRegistry));
         for (ListenerConfiguration listenerConfiguration : listenerConfigurations) {
             //TODO: remove this default param workaround when transport supports default configurations
             if (listenerConfiguration.getEnableDisruptor() == null) {
@@ -94,8 +96,6 @@ public class MicroservicesRunner {
                 listenerConfiguration.setParameters(getDefaultTransportParams());
             }
             NettyListener listener = new NettyListener(listenerConfiguration);
-            nettyTransportContextHolder.setHandlerExecutor(new HandlerExecutor());
-            nettyTransportContextHolder.addMessageProcessor(new MSF4JMessageProcessor(msRegistry));
             transportManager.registerTransport(listener);
         }
     }

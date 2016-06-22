@@ -40,6 +40,8 @@ public final class PatternPathRouter<T> {
     // non-greedy wild card match.
     private static final Pattern WILD_CARD_PATTERN = Pattern.compile("\\*\\*");
 
+    private static final Pattern VARIABLE_PATTERN = Pattern.compile("(\\w[-\\w\\.]*[ ]*)(\\:(.+))?");
+
     private static final String PATH_SLASH = "/";
 
     private final List<ImmutablePair<Pattern, RouteDestinationWithGroups>> patternRouteList;
@@ -77,8 +79,15 @@ public final class PatternPathRouter<T> {
         for (String part : parts) {
             Matcher groupMatcher = GROUP_PATTERN.matcher(part);
             if (groupMatcher.matches()) {
-                groupNames.add(groupMatcher.group(1));
-                sb.append("([^/]+?)");
+                PathPart pathPart = createPathPart(groupMatcher.group(1));
+                groupNames.add(pathPart.getName());
+                if (pathPart.getPattern() != null) {
+                    sb.append('(');
+                    sb.append(pathPart.getPattern());
+                    sb.append(')');
+                } else {
+                    sb.append("([^/]+?)");
+                }
             } else if (WILD_CARD_PATTERN.matcher(part).matches()) {
                 sb.append(".*?");
             } else {
@@ -94,6 +103,50 @@ public final class PatternPathRouter<T> {
 
         Pattern pattern = Pattern.compile(sb.toString());
         patternRouteList.add(ImmutablePair.of(pattern, new RouteDestinationWithGroups(destination, groupNames)));
+    }
+
+    private static PathPart createPathPart(String uriChunk) {
+        PathPart pathPart = new PathPart();
+        uriChunk = stripBraces(uriChunk).trim();
+        Matcher matcher = VARIABLE_PATTERN.matcher(uriChunk);
+        if (matcher.matches()) {
+            pathPart.setName(matcher.group(1).trim());
+            if (matcher.group(2) != null && matcher.group(3) != null) {
+                pathPart.setPattern(matcher.group(3).trim());
+            }
+        } else {
+            pathPart.setName(uriChunk);
+        }
+        return pathPart;
+    }
+
+    private static String stripBraces(String token) {
+        return token.charAt(0) == '{' && token.charAt(token.length() - 1) == '}' ?
+               token.substring(1, token.length() - 1) : token;
+    }
+
+    /**
+     * Represents Paths parts
+     */
+    private static class PathPart {
+        private String name;
+        private String pattern;
+
+        public String getPattern() {
+            return pattern;
+        }
+
+        public void setPattern(String pattern) {
+            this.pattern = pattern;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
     }
 
     /**
