@@ -98,11 +98,6 @@ cp -f $TRANSACTION/target/petstore-txn-*.jar $SHARE_FOLDER/transaction/docker/pa
 cp -f $TRANSACTION/data-agent-conf.xml $SHARE_FOLDER/transaction/docker/packages/data-agent-conf.xml
 cp -f $TRANSACTION/client-truststore.jks $SHARE_FOLDER/transaction/docker/packages/client-truststore.jks
 
-#echo "--------------------------------------------------------------"
-#echo "Cleaning up old docker files"
-#echo "--------------------------------------------------------------"
-#[ -f $SHARE_FOLDER/fileserver.tgz ] && rm $SHARE_FOLDER/fileserver.tgz 
-#[ -f $SHARE_FOLDER/pet.tgz ] && rm $SHARE_FOLDER/pet.tgz 
 
 
 echo "--------------------------------------------------------------"
