@@ -16,10 +16,14 @@
  *  under the License.
  *
  */
-package org.wso2.msf4j.spring;
+package org.wso2.msf4j.spring.exception;
+
+import org.springframework.stereotype.Component;
+import org.wso2.msf4j.exception.TestExceptionMapper;
 
 /**
- * TODO: class level comment
+ * Test exception mapper used for testing ExceptionMapper feature.
  */
-public class Test {
+@Component
+public class SpringTestExceptionMapper extends TestExceptionMapper {
 }

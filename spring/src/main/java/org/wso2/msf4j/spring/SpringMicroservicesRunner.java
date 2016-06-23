@@ -55,6 +55,9 @@ public class SpringMicroservicesRunner extends MicroservicesRunner implements Ap
     @Autowired
     private ApplicationContext applicationContext;
 
+    public SpringMicroservicesRunner() {
+    }
+
     public SpringMicroservicesRunner(int... ports) {
         super(ports);
     }
