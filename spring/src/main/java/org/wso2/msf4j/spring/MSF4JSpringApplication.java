@@ -20,6 +20,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.core.env.SimpleCommandLinePropertySource;
 import org.springframework.core.io.ResourceLoader;
 
 import java.util.List;
@@ -59,6 +60,8 @@ public class MSF4JSpringApplication {
         } else {
             scanIfAnnotationConfigApplicationContext(context);
         }
+
+        context.getEnvironment().getPropertySources().addFirst(new SimpleCommandLinePropertySource(args));
 
         context.refresh();
         return context;
