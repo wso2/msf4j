@@ -17,34 +17,31 @@
 package org.wso2.msf4j.spring;
 
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.beans.factory.support.RootBeanDefinition;
-import org.springframework.core.env.Environment;
 import org.wso2.msf4j.spring.transport.HTTPSTransportConfig;
 import org.wso2.msf4j.spring.transport.HTTPTransportConfig;
 
 /**
  * MSF4JBeanDefinitionRegistryPostProcessor is used by Spring to add default HTTP and/or HTTPS transports.
  *
+ * @since 2.0.0
+ *
  */
 public class MSF4JBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor {
-
-    @Autowired
-    private Environment environment;
 
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
 
-        if(!registry.containsBeanDefinition("http")){
-            registerBeanDefinition(registry, "http", HTTPTransportConfig.class);
+        if (!registry.containsBeanDefinition(SpringConstants.HTTP_TRANSPORT)) {
+            registerBeanDefinition(registry, SpringConstants.HTTP_TRANSPORT, HTTPTransportConfig.class);
         }
 
-        if(!registry.containsBeanDefinition("https")){
-            registerBeanDefinition(registry, "https", HTTPSTransportConfig.class);
+        if (!registry.containsBeanDefinition(SpringConstants.HTTPS_TRANSPORT)) {
+            registerBeanDefinition(registry, SpringConstants.HTTP_TRANSPORT, HTTPSTransportConfig.class);
         }
     }
 
@@ -53,7 +50,7 @@ public class MSF4JBeanDefinitionRegistryPostProcessor implements BeanDefinitionR
 
     }
 
-    private void registerBeanDefinition(BeanDefinitionRegistry registry, String beanName, Class beanClass){
+    private void registerBeanDefinition(BeanDefinitionRegistry registry, String beanName, Class beanClass) {
         RootBeanDefinition beanDefinition =
                 new RootBeanDefinition(beanClass);
         beanDefinition.setTargetType(beanClass);

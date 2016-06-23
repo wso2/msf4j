@@ -19,6 +19,9 @@ package org.wso2.msf4j.spring;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 /**
  * Default Spring configuration class for Microservices, it's possible to provide alternative Spring configuration
@@ -26,10 +29,29 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan
+@PropertySources({
+        @PropertySource(value = "file:application.properties", ignoreResourceNotFound = true,
+                name = "applicationProperties"),
+        @PropertySource(value = "classpath:application.properties", ignoreResourceNotFound = true,
+                name = "applicationProperties"),
+
+})
 public class MSF4JSpringConfiguration {
+
+    @Bean
+    public MSF4JBeanDefinitionRegistryPostProcessor msf4JBeanDefinitionRegistryPostProcessor() {
+        return new MSF4JBeanDefinitionRegistryPostProcessor();
+    }
 
     @Bean
     public SpringMicroservicesRunner springMicroservicesRunner() {
         return new SpringMicroservicesRunner();
+    }
+
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertyConfigurer() {
+        PropertySourcesPlaceholderConfigurer pspc = new PropertySourcesPlaceholderConfigurer();
+        pspc.setIgnoreUnresolvablePlaceholders(true);
+        return pspc;
     }
 }
