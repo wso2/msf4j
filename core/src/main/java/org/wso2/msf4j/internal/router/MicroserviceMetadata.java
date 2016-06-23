@@ -61,7 +61,7 @@ public final class MicroserviceMetadata {
                 basePath = service.getClass().getAnnotation(Path.class).value();
             }
 
-            for (Method method : service.getClass().getDeclaredMethods()) {
+            for (Method method : service.getClass().getMethods()) {
                 if (method.isAnnotationPresent(PostConstruct.class) || method.isAnnotationPresent(PreDestroy.class)) {
                     continue;
                 }
