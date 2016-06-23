@@ -15,6 +15,8 @@ package org.wso2.msf4j.formparam;
 * limitations under the License.
 */
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.formparam.exception.FormUploadException;
 import org.wso2.msf4j.formparam.util.Closeable;
 import org.wso2.msf4j.formparam.util.StreamUtil;
@@ -186,6 +188,8 @@ public class MultipartStream {
      * The content encoding to use when reading headers.
      */
     private String headerEncoding;
+
+    private static final Logger log = LoggerFactory.getLogger(MultipartStream.class);
 
     // ----------------------------------------------------------- Constructors
 
@@ -760,6 +764,11 @@ public class MultipartStream {
                         }
                     }
                     long skip = skip(av);
+                    if (skip != av) {
+                        if (log.isDebugEnabled()) {
+                            log.debug(skip + " bytes been skipped.");
+                        }
+                    }
                 }
             }
             closed = true;
