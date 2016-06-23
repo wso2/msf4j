@@ -18,14 +18,25 @@ package org.wso2.msf4j.example;
 
 import org.springframework.stereotype.Component;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * HelloService class to be injected to Hello resource through Spring
  */
 @Component
 public class HelloService {
 
-    public String hello(String name) {
+    public String hello(String name) throws InvalidNameException {
+        if (isNumericValue(name)) {
+            throw new InvalidNameException(name + " is an invalid name");
+        }
         return "Hello " + name;
     }
 
+    private boolean isNumericValue(String value) {
+        Pattern pattern = Pattern.compile("^(0|[1-9][0-9]*)$");
+        Matcher matcher = pattern.matcher(value);
+        return matcher.matches();
+    }
 }
