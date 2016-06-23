@@ -40,6 +40,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import javax.ws.rs.Path;
+import javax.ws.rs.ext.ExceptionMapper;
 
 /**
  * This runner initializes the microservices runtime based on provided Spring configuration, deploys microservices,
@@ -68,6 +69,12 @@ public class SpringMicroservicesRunner extends MicroservicesRunner implements Ap
         for (Map.Entry<String, Interceptor> entry : applicationContext.getBeansOfType(Interceptor.class).entrySet()) {
             log.info("Adding " + entry.getKey() + "  Interceptor");
             addInterceptor(entry.getValue());
+        }
+
+        for (Map.Entry<String, ExceptionMapper> exceptionMapper :
+                applicationContext.getBeansOfType(ExceptionMapper.class).entrySet()) {
+            log.info("Adding " + exceptionMapper.getKey() + "  ExceptionMapper");
+            addExceptionMapper(exceptionMapper.getValue());
         }
 
         configureTransport(applicationContext.getBeansOfType(ListenerConfiguration.class).values(),
