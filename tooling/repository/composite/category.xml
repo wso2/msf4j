@@ -24,7 +24,7 @@
    </category-def>
 
    <!-- MSS prodcut feature (itself)-->
-   <feature url="features/org.wso2.developerstudio.msf4j.feature_1.1.0.qualifier.jar" id="org.wso2.developerstudio.msf4j.feature" version="1.1.0.qualifier">
+   <feature url="features/org.wso2.developerstudio.msf4j.feature_2.0.0.qualifier.jar" id="org.wso2.developerstudio.msf4j.feature" version="2.0.0.qualifier">
       <category name="org.wso2.developerstudio.msf4j.feature.category"/>
    </feature>
    
