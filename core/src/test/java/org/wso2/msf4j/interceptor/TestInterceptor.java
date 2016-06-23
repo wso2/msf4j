@@ -21,7 +21,7 @@ import org.wso2.msf4j.Response;
 import org.wso2.msf4j.ServiceMethodInfo;
 
 /**
- * TODO : add class level comment.
+ * Interceptor used in test.
  */
 public class TestInterceptor implements Interceptor {
     private volatile int numPreCalls = 0;

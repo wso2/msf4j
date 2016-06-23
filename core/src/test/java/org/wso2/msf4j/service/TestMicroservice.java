@@ -72,7 +72,7 @@ import javax.ws.rs.core.Response;
 import static org.testng.AssertJUnit.fail;
 
 /**
- * Test handler.
+ * Test service.
  */
 @SuppressWarnings("UnusedParameters")
 @Path("/test/v1")
