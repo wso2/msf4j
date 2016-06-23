@@ -40,19 +40,19 @@ limitations under the License.
 
     <test name="mime-mapper-unit-tests" preserve-order="true" parallel="false">
         <classes>
-            <class name="org.wso2.msf4j.internal.mime.MimeMapperTest" />
+            <class name="org.wso2.msf4j.MimeMapperTest" />
         </classes>
     </test>
 
     <test name="http-server-unit-tests" preserve-order="true" parallel="false">
         <classes>
-            <class name="org.wso2.msf4j.internal.router.HttpResourceModelTest" />
-            <class name="org.wso2.msf4j.internal.router.HttpServerTest" />
-            <class name="org.wso2.msf4j.internal.router.HttpsServerTest" />
-            <class name="org.wso2.msf4j.internal.router.MSF4JResponseTest" />
-            <class name="org.wso2.msf4j.internal.router.MutualAuthServerTest" />
-            <class name="org.wso2.msf4j.internal.router.PathRouterTest" />
-            <class name="org.wso2.msf4j.internal.router.SSLKeyStoreTest" />
+            <class name="org.wso2.msf4j.HttpResourceModelTest" />
+            <class name="org.wso2.msf4j.HttpServerTest" />
+            <class name="org.wso2.msf4j.HttpsServerTest" />
+            <class name="org.wso2.msf4j.MSF4JResponseTest" />
+            <class name="org.wso2.msf4j.MutualAuthServerTest" />
+            <class name="org.wso2.msf4j.PathRouterTest" />
+            <class name="org.wso2.msf4j.SSLKeyStoreTest" />
         </classes>
     </test>
 </suite>
