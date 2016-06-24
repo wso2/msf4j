@@ -18,9 +18,9 @@ package org.wso2.msf4j.beanconversion;
 
 import org.testng.annotations.Test;
 import org.wso2.msf4j.internal.beanconversion.BeanConverter;
-import org.wso2.msf4j.internal.router.Category;
-import org.wso2.msf4j.internal.router.Pet;
-import org.wso2.msf4j.internal.router.XmlBean;
+import org.wso2.msf4j.pojo.Category;
+import org.wso2.msf4j.pojo.Pet;
+import org.wso2.msf4j.pojo.XmlBean;
 
 import java.nio.ByteBuffer;
 

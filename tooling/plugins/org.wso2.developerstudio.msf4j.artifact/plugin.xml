@@ -32,17 +32,6 @@
         </wizard>
     </extension>
 
-    <extension point="org.wso2.developerstudio.eclipse.dashboad.link">
-        <wizardCategory category="org.wso2.developerstudio.eclipse.service.hosting.msf4j"/>
-        <category id="dashboard.category.msf4j" showTitle="true"
-                  title="MSF4J"
-                  priority="8">
-        </category>
-        <wizardLink category="dashboard.category.msf4j" id="1dashboard.wizardLink.msf4j"
-                    wizard="org.wso2.developerstudio.msf4j.artifact.newmsf4jartifact"
-                    priority="1">
-        </wizardLink>
-    </extension>
 
     <extension point="org.eclipse.core.resources.natures"
                id="org.wso2.developerstudio.eclipse.msf4j.project.nature" name="MSF4J Project Nature">

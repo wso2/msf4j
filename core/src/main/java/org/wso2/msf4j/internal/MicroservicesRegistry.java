@@ -81,7 +81,7 @@ public class MicroservicesRegistry {
 
     public void addExceptionMapper(ExceptionMapper... mapper) {
         Arrays.stream(mapper).forEach(em -> {
-            Arrays.stream(em.getClass().getDeclaredMethods()).
+            Arrays.stream(em.getClass().getMethods()).
                     filter(method -> "toResponse".equals(method.getName()) && method.getParameterCount() == 1 &&
                             !Throwable.class.getName().equals(method.getParameterTypes()[0].getTypeName())).
                     findAny().

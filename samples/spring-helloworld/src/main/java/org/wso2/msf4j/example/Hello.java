@@ -36,7 +36,7 @@ public class Hello {
 
     @GET
     @Path("/{name}")
-    public String hello(@PathParam("name") String name) {
+    public String hello(@PathParam("name") String name) throws InvalidNameException {
         return helloService.hello(name);
     }
 
