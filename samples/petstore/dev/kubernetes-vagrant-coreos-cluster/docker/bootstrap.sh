@@ -100,15 +100,15 @@ echo "building / load pet docker"
 echo "------------------------------------------------------------------"
 
 cd $PET
-docker build -t wso2mss/petstore-pet .
+docker build -t wso2msf4j/petstore-pet:1.0.0 .
 sleep 3
-if docker images |grep wso2mss/petstore-pet >/dev/null 2>&1
+if docker images |grep wso2msf4j/petstore-pet:1.0.0 >/dev/null 2>&1
     then
-        echo "wso2mss/petstore-pet image build success!!"
+        echo "wso2msf4j/petstore-pet image build success!!"
     else
-        echo "wso2mss/petstore-pet building again........."
+        echo "wso2msf4j/petstore-pet building again........."
         cd $PET
-        docker build -t wso2mss/petstore-pet .
+        docker build -t wso2msf4j/petstore-pet:1.0.0 .
 fi
 
 
@@ -116,14 +116,14 @@ echo "------------------------------------------------------------------"
 echo "building fileserver docker"
 echo "------------------------------------------------------------------"
 cd $FILESERVER
-docker build -t wso2mss/petstore-fileserver .
+docker build -t wso2msf4j/petstore-fileserver:1.0.0 .
 
-if docker images |grep wso2mss/petstore-fileserver >/dev/null 2>&1
+if docker images |grep wso2msf4j/petstore-fileserver:1.0.0 >/dev/null 2>&1
     then
-        echo "wso2mss/petstore-fileserver image build success!!"
+        echo "wso2msf4j/petstore-fileserver image build success!!"
     else
         cd $FILESERVER
-        docker build -t wso2mss/petstore-fileserver .
+        docker build -t wso2msf4j/petstore-fileserver:1.0.0 .
 fi
 
 
@@ -131,14 +131,14 @@ echo "------------------------------------------------------------------"
 echo "building FrontEnd Admin"
 echo "------------------------------------------------------------------"
 cd $FRONTEND_ADMIN
-docker build -t wso2mss/petstore-admin-fe .
+docker build -t wso2msf4j/petstore-admin-fe:1.0.0 .
 
-if docker images |grep wso2mss/petstore-admin-fe >/dev/null 2>&1
+if docker images |grep wso2msf4j/petstore-admin-fe:1.0.0 >/dev/null 2>&1
     then
-        echo "wso2mss/petstore-admin-fe image build success!!"
+        echo "wso2msf4j/petstore-admin-fe image build success!!"
     else
         cd $FRONTEND_ADMIN
-        docker build -t wso2mss/petstore-admin-fe .
+        docker build -t wso2msf4j/petstore-admin-fe:1.0.0 .
 fi
 
 
@@ -146,14 +146,14 @@ echo "------------------------------------------------------------------"
 echo "building FrontEnd User"
 echo "------------------------------------------------------------------"
 cd $FRONTEND_USER
-docker build -t wso2mss/petstore-store-fe .
+docker build -t wso2msf4j/petstore-store-fe:1.0.0 .
 
-if docker images |grep wso2mss/petstore-store-fe >/dev/null 2>&1
+if docker images |grep wso2msf4j/petstore-store-fe:1.0.0 >/dev/null 2>&1
     then
-        echo "wso2mss/petstore-store-fe image build success!!"
+        echo "wso2msf4j/petstore-store-fe image build success!!"
     else
         cd $FRONTEND_USER
-        docker build -t wso2mss/petstore-store-fe .
+        docker build -t wso2msf4j/petstore-store-fe:1.0.0 .
 fi
 
 
@@ -161,14 +161,14 @@ echo "------------------------------------------------------------------"
 echo "building Security"
 echo "------------------------------------------------------------------"
 cd $SECURITY
-docker build -t wso2mss/petstore-security .
+docker build -t wso2msf4j/petstore-security:1.0.0 .
 
-if docker images |grep wso2mss/petstore-security >/dev/null 2>&1
+if docker images |grep wso2msf4j/petstore-security:1.0.0 >/dev/null 2>&1
     then
-        echo "wso2mss/petstore-security image build success!!"
+        echo "wso2msf4j/petstore-security image build success!!"
     else
         cd $SECURITY
-        docker build -t wso2mss/petstore-security .
+        docker build -t wso2msf4j/petstore-security:1.0.0 .
 fi
 
 
@@ -176,14 +176,14 @@ echo "------------------------------------------------------------------"
 echo "building Transaction"
 echo "------------------------------------------------------------------"
 cd $TRANSACTION
-docker build -t wso2mss/petstore-txn .
+docker build -t wso2msf4j/petstore-txn:1.0.0 .
 
-if docker images |grep wso2mss/petstore-txn >/dev/null 2>&1
+if docker images |grep wso2msf4j/petstore-txn:1.0.0 >/dev/null 2>&1
     then
-        echo "wso2mss/petstore-txn image build success!!"
+        echo "wso2msf4j/petstore-txn image build success!!"
     else
         cd $TRANSACTION
-        docker build -t wso2mss/petstore-txn .
+        docker build -t wso2msf4j/petstore-txn:1.0.0 .
 fi
 
 
