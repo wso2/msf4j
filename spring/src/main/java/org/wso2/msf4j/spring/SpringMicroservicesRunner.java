@@ -24,7 +24,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 import org.wso2.carbon.messaging.handler.HandlerExecutor;
-import org.wso2.carbon.transport.http.netty.common.Constants;
 import org.wso2.carbon.transport.http.netty.config.ListenerConfiguration;
 import org.wso2.carbon.transport.http.netty.config.Parameter;
 import org.wso2.carbon.transport.http.netty.internal.NettyTransportContextHolder;
@@ -134,20 +133,10 @@ public class SpringMicroservicesRunner extends MicroservicesRunner implements Ap
         ListenerConfiguration listenerConfig = new ListenerConfiguration(transportConfig.getId(),
                                                                          transportConfig.getHost(),
                                                                          transportConfig.getPort());
-        listenerConfig.setEnableDisruptor(String.valueOf(false));
-        listenerConfig.setParameters(getDefaultTransportParams());
         listenerConfig.setScheme(transportConfig.getScheme());
         List<Parameter> parameters = new ArrayList<>();
         for (Map.Entry<String, String> entry : transportConfig.getParameters().entrySet()) {
             parameters.add(createParameter(entry.getKey(), entry.getValue()));
-        }
-
-        //TODO: remove this default param workaround when transport supports default configurations
-        if (!transportConfig.getParameters().containsKey(Constants.EXECUTOR_WORKER_POOL_SIZE)) {
-            Parameter param1 = new Parameter();
-            param1.setName(Constants.EXECUTOR_WORKER_POOL_SIZE);
-            param1.setValue(SpringConstants.DEFAULT_EXECUTOR_WORKER_POOL_SIZE);
-            parameters.add(param1);
         }
 
         listenerConfig.setParameters(parameters);

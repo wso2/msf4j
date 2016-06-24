@@ -19,9 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.kernel.transports.TransportManager;
 import org.wso2.carbon.messaging.handler.HandlerExecutor;
-import org.wso2.carbon.transport.http.netty.common.Constants;
 import org.wso2.carbon.transport.http.netty.config.ListenerConfiguration;
-import org.wso2.carbon.transport.http.netty.config.Parameter;
 import org.wso2.carbon.transport.http.netty.config.TransportsConfiguration;
 import org.wso2.carbon.transport.http.netty.config.YAMLTransportConfigurationBuilder;
 import org.wso2.carbon.transport.http.netty.internal.NettyTransportContextHolder;
@@ -30,8 +28,6 @@ import org.wso2.msf4j.internal.MSF4JMessageProcessor;
 import org.wso2.msf4j.internal.MicroservicesRegistry;
 import org.wso2.msf4j.internal.swagger.SwaggerDefinitionService;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 import javax.ws.rs.ext.ExceptionMapper;
 
@@ -116,9 +112,6 @@ public class MicroservicesRunner {
         for (int port : ports) {
             ListenerConfiguration listenerConfiguration =
                     new ListenerConfiguration("netty-" + port, "0.0.0.0", port);
-            //TODO: remove this default param workaround when transport supports default configurations
-            listenerConfiguration.setEnableDisruptor(String.valueOf(false));
-            listenerConfiguration.setParameters(getDefaultTransportParams());
             NettyListener listener = new NettyListener(listenerConfiguration);
             transportManager.registerTransport(listener);
         }
@@ -134,18 +127,6 @@ public class MicroservicesRunner {
         nettyTransportContextHolder.setHandlerExecutor(new HandlerExecutor());
         nettyTransportContextHolder.addMessageProcessor(new MSF4JMessageProcessor(msRegistry));
         for (ListenerConfiguration listenerConfiguration : listenerConfigurations) {
-            //TODO: remove this default param workaround when transport supports default configurations
-            if (listenerConfiguration.getEnableDisruptor() == null) {
-                listenerConfiguration.setEnableDisruptor(String.valueOf(false));
-                listenerConfiguration.setParameters(getDefaultTransportParams());
-            } else if (!Boolean.valueOf(listenerConfiguration.getEnableDisruptor()) &&
-                    (listenerConfiguration.getParameters() == null || listenerConfiguration.getParameters()
-                            .stream()
-                            .filter(parameter -> Constants.EXECUTOR_WORKER_POOL_SIZE.equals(parameter.getName()))
-                            .findFirst()
-                            .isPresent())) {
-                listenerConfiguration.setParameters(getDefaultTransportParams());
-            }
             NettyListener listener = new NettyListener(listenerConfiguration);
             transportManager.registerTransport(listener);
         }
@@ -204,18 +185,5 @@ public class MicroservicesRunner {
                 msRegistry.preDestroyServices();
             }
         });
-    }
-
-    /**
-     * Temporary method to add default transport parameters.
-     *
-     * @return transports parameter list
-     */
-    //TODO: remove this default param workaround when transport supports default configurations
-    protected List<Parameter> getDefaultTransportParams() {
-        Parameter param1 = new Parameter();
-        param1.setName(Constants.EXECUTOR_WORKER_POOL_SIZE);
-        param1.setValue("1024");
-        return Collections.singletonList(param1);
     }
 }

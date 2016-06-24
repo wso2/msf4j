@@ -23,7 +23,7 @@ listenerConfigurations:
   execHandlerThreadPoolSize: 60
   parameters:
     -
-     name: "execThreadPoolSize"
+     name: "executor.workerpool.size"
      value: 60
 
  -
