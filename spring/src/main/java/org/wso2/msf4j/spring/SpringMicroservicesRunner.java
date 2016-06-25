@@ -49,7 +49,7 @@ import javax.ws.rs.ext.ExceptionMapper;
 
 @Component
 public class SpringMicroservicesRunner extends MicroservicesRunner implements ApplicationContextAware,
-                                                                              InitializingBean {
+        InitializingBean {
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
@@ -81,7 +81,7 @@ public class SpringMicroservicesRunner extends MicroservicesRunner implements Ap
         }
 
         configureTransport(applicationContext.getBeansOfType(ListenerConfiguration.class).values(),
-                           applicationContext.getBeansOfType(TransportConfig.class).values());
+                applicationContext.getBeansOfType(TransportConfig.class).values());
 
         start();
     }
@@ -135,9 +135,9 @@ public class SpringMicroservicesRunner extends MicroservicesRunner implements Ap
     private NettyListener createListenerConfiguration(TransportConfig transportConfig) {
 
         ListenerConfiguration listenerConfig = new ListenerConfiguration(transportConfig.getId(),
-                                                                         transportConfig.getHost(),
-                                                                         transportConfig.getPort());
-        listenerConfig.setEnableDisruptor(String.valueOf(false));
+                transportConfig.getHost(),
+                transportConfig.getPort());
+        listenerConfig.setEnableDisruptor(false);
         listenerConfig.setParameters(getDefaultTransportParams());
         listenerConfig.setScheme(transportConfig.getScheme());
         List<Parameter> parameters = new ArrayList<>();
