@@ -117,7 +117,7 @@ public class MicroservicesRunner {
             ListenerConfiguration listenerConfiguration =
                     new ListenerConfiguration("netty-" + port, "0.0.0.0", port);
             //TODO: remove this default param workaround when transport supports default configurations
-            listenerConfiguration.setEnableDisruptor(String.valueOf(false));
+            listenerConfiguration.setEnableDisruptor(false);
             listenerConfiguration.setParameters(getDefaultTransportParams());
             NettyListener listener = new NettyListener(listenerConfiguration);
             transportManager.registerTransport(listener);
@@ -136,9 +136,9 @@ public class MicroservicesRunner {
         for (ListenerConfiguration listenerConfiguration : listenerConfigurations) {
             //TODO: remove this default param workaround when transport supports default configurations
             if (listenerConfiguration.getEnableDisruptor() == null) {
-                listenerConfiguration.setEnableDisruptor(String.valueOf(false));
+                listenerConfiguration.setEnableDisruptor(false);
                 listenerConfiguration.setParameters(getDefaultTransportParams());
-            } else if (!Boolean.valueOf(listenerConfiguration.getEnableDisruptor()) &&
+            } else if (!listenerConfiguration.getEnableDisruptor() &&
                     (listenerConfiguration.getParameters() == null || listenerConfiguration.getParameters()
                             .stream()
                             .filter(parameter -> Constants.EXECUTOR_WORKER_POOL_SIZE.equals(parameter.getName()))
