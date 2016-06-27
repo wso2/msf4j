@@ -14,30 +14,18 @@
  * limitations under the License.
  */
 
-package org.wso2.msf4j.example;
+package org.wso2.msf4j.spring.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.wso2.msf4j.service.TestMicroservice;
 
-import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 
 /**
- * Hello Resource class.
+ * Test service.
  */
-
+@SuppressWarnings("UnusedParameters")
 @Component
-@Path("/hello")
-public class Hello {
-
-    @Autowired
-    private HelloService helloService;
-
-    @GET
-    @Path("/{name}")
-    public String hello(@PathParam("name") String name) throws InvalidNameException {
-        return helloService.hello(name);
-    }
-
+@Path("/test/v1")
+public class SpringTestMicroservice extends TestMicroservice {
 }

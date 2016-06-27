@@ -13,31 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.wso2.msf4j.spring.interceptor;
 
-package org.wso2.msf4j.example;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import org.wso2.msf4j.interceptor.TestInterceptor;
 
 /**
- * Hello Resource class.
+ * Interceptor used in Spring test.
  */
-
 @Component
-@Path("/hello")
-public class Hello {
-
-    @Autowired
-    private HelloService helloService;
-
-    @GET
-    @Path("/{name}")
-    public String hello(@PathParam("name") String name) throws InvalidNameException {
-        return helloService.hello(name);
-    }
-
+public class SpringTestInterceptor extends TestInterceptor {
 }

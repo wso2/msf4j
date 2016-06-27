@@ -48,11 +48,14 @@ import javax.ws.rs.ext.ExceptionMapper;
 
 @Component
 public class SpringMicroservicesRunner extends MicroservicesRunner implements ApplicationContextAware,
-                                                                              InitializingBean {
+        InitializingBean {
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
     private ApplicationContext applicationContext;
+
+    public SpringMicroservicesRunner() {
+    }
 
     public SpringMicroservicesRunner(int... ports) {
         super(ports);
@@ -77,7 +80,7 @@ public class SpringMicroservicesRunner extends MicroservicesRunner implements Ap
         }
 
         configureTransport(applicationContext.getBeansOfType(ListenerConfiguration.class).values(),
-                           applicationContext.getBeansOfType(TransportConfig.class).values());
+                applicationContext.getBeansOfType(TransportConfig.class).values());
 
         start();
     }

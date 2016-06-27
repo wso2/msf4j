@@ -41,7 +41,7 @@ public class MSF4JBeanDefinitionRegistryPostProcessor implements BeanDefinitionR
         }
 
         if (!registry.containsBeanDefinition(SpringConstants.HTTPS_TRANSPORT)) {
-            registerBeanDefinition(registry, SpringConstants.HTTP_TRANSPORT, HTTPSTransportConfig.class);
+            registerBeanDefinition(registry, SpringConstants.HTTPS_TRANSPORT, HTTPSTransportConfig.class);
         }
     }
 
