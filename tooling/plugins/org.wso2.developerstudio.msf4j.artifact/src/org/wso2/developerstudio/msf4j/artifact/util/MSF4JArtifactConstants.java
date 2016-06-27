@@ -26,8 +26,9 @@ public class MSF4JArtifactConstants {
 
     public static final String MSF4J_SERVICE_PARENT_GROUP_ID = "org.wso2.msf4j";
     public static final String MSF4J_SERVICE_PARENT_ARTIFACT_ID = "msf4j-service";
-    public static final String MSF4J_SERVICE_PARENT_VERSION = "1.0.0-SNAPSHOT";
-    public static final String SWAGGER_ANNOTATIONS_DEPENDENCY_GROUP_ID = "io.swagger";
+    public static String MSF4JServiceParentVersion = "2.0.0-SNAPSHOT";
+   
+	public static final String SWAGGER_ANNOTATIONS_DEPENDENCY_GROUP_ID = "io.swagger";
     public static final String SWAGGER_ANNOTATIONS_DEPENDENCY_ARTIFACT_ID = "swagger-annotations";
     public static final String SWAGGER_ANNOTATIONS_DEPENDENCY_VERSION = "1.5.0";
 
@@ -62,4 +63,11 @@ public class MSF4JArtifactConstants {
     public static final String NOT_FOUND_EXCEPTION_JAVA = "NotFoundException.java";
     public static final String API = "api";
 
+    
+    public static String getMSF4JServiceParentVersion() {
+		return MSF4JServiceParentVersion;
+	}
+	public static void setMSF4JServiceParentVersion(String mSF4J_SERVICE_PARENT_VERSION) {
+		MSF4JServiceParentVersion = mSF4J_SERVICE_PARENT_VERSION;
+	}
 }
