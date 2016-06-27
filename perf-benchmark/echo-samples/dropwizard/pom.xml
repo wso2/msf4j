@@ -81,7 +81,7 @@
     </build>
 
     <properties>
-        <dropwizard.version>0.8.4</dropwizard.version>
+        <dropwizard.version>1.0.0-rc3</dropwizard.version>
     </properties>
 
 </project>
