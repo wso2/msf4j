@@ -28,6 +28,7 @@ public class MSF4JProjectModel extends ProjectDataModel {
 	private String sourceFolder;
 	private String generatedCodeLocation;
 	private String packageName;
+	private String msf4jVersion;
 
 	public Object getModelPropertyValue(String key) {
 		Object modelPropertyValue = super.getModelPropertyValue(key);
@@ -49,6 +50,8 @@ public class MSF4JProjectModel extends ProjectDataModel {
 			}
 		} else if (key.equals("service.class.package.name")) {
 			setPackageName(data.toString());
+		} else if (key.equals("service.class.msf4j.version")) {
+			setMsf4jVersion(data.toString());
 		}
 		return returnValue;
 	}
@@ -91,6 +94,14 @@ public class MSF4JProjectModel extends ProjectDataModel {
 
 	public void setPackageName(String packageName) {
 		this.packageName = packageName;
+	}
+	
+	public String getMsf4jVersion() {
+		return msf4jVersion;
+	}
+
+	public void setMsf4jVersion(String msf4jVersion) {
+		this.msf4jVersion = msf4jVersion;
 	}
 
 }

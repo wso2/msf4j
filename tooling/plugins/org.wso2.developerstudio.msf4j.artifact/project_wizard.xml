@@ -32,6 +32,9 @@
             <data modelProperty="service.class.package.name" type="string"
                   fieldController="org.wso2.developerstudio.msf4j.artifact.validators.MSF4JArtifactFieldController"
                   group="paramGroup">Package Name</data>
+            <data modelProperty="service.class.msf4j.version" type="string"
+                  fieldController="org.wso2.developerstudio.msf4j.artifact.validators.MSF4JArtifactFieldController"
+                  group="paramGroup">MSF4J Version</data>
             <group id="paramGroup"/>
             <projectNatures>
                 <nature>org.eclipse.jdt.core.javanature</nature>
