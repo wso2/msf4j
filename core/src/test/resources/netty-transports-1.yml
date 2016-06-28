@@ -28,8 +28,5 @@ listenerConfigurations:
   enableDisruptor: false
   parameters:
     -
-     name: "execThreadPoolSize"
-     value: 60
-    -
      name: "executor.workerpool.size"
      value: 60
