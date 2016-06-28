@@ -63,6 +63,7 @@ import org.wso2.developerstudio.eclipse.utils.project.ProjectUtils;
 import org.wso2.developerstudio.msf4j.artifact.Activator;
 import org.wso2.developerstudio.msf4j.artifact.generator.SwaggerToJavaGenerator;
 import org.wso2.developerstudio.msf4j.artifact.model.MSF4JProjectModel;
+import org.wso2.developerstudio.msf4j.artifact.util.MSF4JArtifactConstants;
 import org.wso2.developerstudio.msf4j.artifact.util.MSF4JImageUtils;
 
 /**
@@ -94,7 +95,9 @@ public class MSF4JProjectCreationWizard extends AbstractWSO2ProjectCreationWizar
                 IProject project = createNewProject();
                 msf4jArtifactModel.setGeneratedCodeLocation(project.getLocation().toOSString());
                 msf4jArtifactModel.setProject(project);
-
+                if (msf4jArtifactModel.getMsf4jVersion() != null) {
+                	MSF4JArtifactConstants.setMSF4JServiceParentVersion(msf4jArtifactModel.getMsf4jVersion());
+                }
                 ProgressMonitorDialog progressMonitorDialog = new ProgressMonitorDialog(getShell());
                 progressMonitorDialog.create();
                 progressMonitorDialog.open();
