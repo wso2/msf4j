@@ -13,7 +13,7 @@ if [ $PRE_REQ -eq 0 ];then
     exit;
 fi
 
-#git pull
+git pull
 
 echo "--------------------------------------------------------------"
 echo "Building petstore sample"
@@ -117,6 +117,9 @@ fi
 cp -f $HOME/bootstrap.sh $VAGRANT_HOME/docker/  
 cd $VAGRANT_HOME
 NODE_MEM=2048 NODE_CPUS=2 NODES=2 USE_KUBE_UI=true vagrant up
+
+ssh -i ~/.vagrant.d/insecure_private_key core@172.17.8.102 '/vagrant/bootstrap.sh'
+ssh -i ~/.vagrant.d/insecure_private_key core@172.17.8.103 '/vagrant/bootstrap.sh'
 
 source ~/.bash_profile
 
