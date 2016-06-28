@@ -4,6 +4,10 @@ In this performance test, a sample echo service that can accept a payload and re
 client was created with each subjected microservices framework. See [echo-samples](echo-samples) directory for the 
 sample services that were created for each framework.
 
+## Prerequisite
+* **apache2-utils** - This performance tests are executed using ApacheBench. Therefore in order to run the tests, apache2-utils
+should be installed in the machine.
+
 ## Throughput test
 
 To measure the throughput, each of the above mentioned sample services were started and 1KB of payload was sent to 

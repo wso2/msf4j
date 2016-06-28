@@ -15,3 +15,4 @@ kubectl delete services --all --namespace=kube-system
 kubectl delete rc --all --namespace=kube-system
 kubectl delete pods --all --namespace=kube-system
 
+kubectl delete ns kube-system
