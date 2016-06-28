@@ -26,7 +26,6 @@ public class SpringConstants {
     public static final String HTTPS_TRANSPORT = "https";
 
     public static final String TRANSPORTS_NETTY_CONF_FILE = "transports.netty.conf";
-    public static final String DEFAULT_EXECUTOR_WORKER_POOL_SIZE = "1024";
 
     public static final String APPLICATION_PROPERTIES = "applicationProperties";
     public static final String PARAMETER_STR = ".parameter.";
