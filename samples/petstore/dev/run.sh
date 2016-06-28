@@ -120,8 +120,8 @@ NODE_MEM=2048 NODE_CPUS=2 NODES=2 USE_KUBE_UI=true vagrant up
 
 
 mv ~/.ssh/known_hosts ~/.ssh/known_hosts.old
-scp -i ~/.vagrant.d/insecure_private_key -r docker/* core@172.17.8.102:/vagrant/*
-scp -i ~/.vagrant.d/insecure_private_key -r docker/* core@172.17.8.103:/vagrant/*
+scp -i ~/.vagrant.d/insecure_private_key -r docker/* core@172.17.8.102:/vagrant/
+scp -i ~/.vagrant.d/insecure_private_key -r docker/* core@172.17.8.103:/vagrant/
 ssh -i ~/.vagrant.d/insecure_private_key core@172.17.8.102 '/vagrant/bootstrap.sh'
 ssh -i ~/.vagrant.d/insecure_private_key core@172.17.8.103 '/vagrant/bootstrap.sh'
 
