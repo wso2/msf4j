@@ -54,8 +54,11 @@ import org.wso2.developerstudio.msf4j.artifact.Activator;
 /**
  * This class extended from {@link Job} class and handles the maven dependency resolving operation of given maven
  * project
+ * 
+ * Deprecated : we need to integrate the method to run these commands from m2e plugin if needed, currently this is not required.
  *
  */
+@Deprecated
 public class MSF4JMavenDependencyResolverJob extends Job {
 
     private static IDeveloperStudioLog log = Logger.getLog(Activator.PLUGIN_ID);

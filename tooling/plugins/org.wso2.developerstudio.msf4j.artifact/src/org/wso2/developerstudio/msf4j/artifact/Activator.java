@@ -18,6 +18,8 @@ package org.wso2.developerstudio.msf4j.artifact;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.wso2.developerstudio.eclipse.logging.core.IDeveloperStudioLog;
+import org.wso2.developerstudio.eclipse.logging.core.Logger;
 
 /**
  * The activator class controls the plug-in life cycle
