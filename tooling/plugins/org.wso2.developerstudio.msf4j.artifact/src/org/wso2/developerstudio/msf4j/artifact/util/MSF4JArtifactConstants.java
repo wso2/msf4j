@@ -52,6 +52,7 @@ public class MSF4JArtifactConstants {
     public static final String JAVA_DIRECTORY = "java";
     public static final String MAIN_DIRECTORY = "main";
     public static final String SRC_DIRECTORY = "src";
+    public static final String TRGET_DIRECTORY = "target";
     public static final String WEBAPP_DIRECTORY = "webapp";
     public static final String MSF4J_PROJECT_CREATION_TASK = "Creating MSF4J Project...";
     public static final String PROCESSING_CONFIGURATION_TASK = "Processing configuration...";

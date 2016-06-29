@@ -51,7 +51,6 @@
             <run class="org.wso2.developerstudio.msf4j.artifact.project.nature.MSF4JArtifactProjectNature"/>
         </runtime>
     </extension>
-
     <extension point="org.eclipse.ui.ide.projectNatureImages">
         <image id="org.wso2.developerstudio.eclipse.msf4j.project.natureImage"
                natureId="org.wso2.developerstudio.eclipse.msf4j.project.nature" icon="icons/msf4j-nature.png">

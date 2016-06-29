@@ -29,6 +29,42 @@ public class MSF4JProjectModel extends ProjectDataModel {
 	private String generatedCodeLocation;
 	private String packageName;
 	private String msf4jVersion;
+	private File folderLocation;
+	private File projectFolder;
+	private String createdProjectN;
+	private String createdProjectFile;
+
+	public String getCreatedProjectN() {
+		return createdProjectN;
+	}
+
+	public void setCreatedProjectN(String createdProjectN) {
+		this.createdProjectN = createdProjectN;
+	}
+
+	public File getProjectFolder() {
+		return projectFolder;
+	}
+
+	public void setProjectFolder(File projectFolder) {
+		this.projectFolder = projectFolder;
+	}
+
+	public String getCreatedProjectFile() {
+		return createdProjectFile;
+	}
+
+	public void setCreatedProjectFile(String createdProjectFile) {
+		this.createdProjectFile = createdProjectFile;
+	}
+
+	public File getFolderLocation() {
+		return folderLocation;
+	}
+
+	public void setFolderLocation(File folderLocation) {
+		this.folderLocation = folderLocation;
+	}
 
 	public Object getModelPropertyValue(String key) {
 		Object modelPropertyValue = super.getModelPropertyValue(key);
@@ -95,7 +131,7 @@ public class MSF4JProjectModel extends ProjectDataModel {
 	public void setPackageName(String packageName) {
 		this.packageName = packageName;
 	}
-	
+
 	public String getMsf4jVersion() {
 		return msf4jVersion;
 	}
