@@ -16,41 +16,22 @@
 
 package org.wso2.developerstudio.msf4j.artifact.project.nature;
 
-import static org.wso2.developerstudio.msf4j.artifact.util.MSF4JArtifactConstants.DEFAULT_MAIN_CLASS_PROPERTY_VALUE;
-import static org.wso2.developerstudio.msf4j.artifact.util.MSF4JArtifactConstants.ERROR_TAG;
-import static org.wso2.developerstudio.msf4j.artifact.util.MSF4JArtifactConstants.MAVEN_DEPENDENCY_RESOLVER_TAG;
-import static org.wso2.developerstudio.msf4j.artifact.util.MSF4JArtifactConstants.MSF4J_MAIN_CLASS_PROPERTY;
 import static org.wso2.developerstudio.msf4j.artifact.util.MSF4JArtifactConstants.MSF4J_SERVICE_PARENT_ARTIFACT_ID;
 import static org.wso2.developerstudio.msf4j.artifact.util.MSF4JArtifactConstants.MSF4J_SERVICE_PARENT_GROUP_ID;
-import static org.wso2.developerstudio.msf4j.artifact.util.MSF4JArtifactConstants.OK_BUTTON;
 import static org.wso2.developerstudio.msf4j.artifact.util.MSF4JArtifactConstants.POM_FILE;
-import static org.wso2.developerstudio.msf4j.artifact.util.MSF4JArtifactConstants.POM_FILE_PREFIX;
-import static org.wso2.developerstudio.msf4j.artifact.util.MSF4JArtifactConstants.XML_EXTENTION;
 
 import java.io.File;
 import java.io.IOException;
 //import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
-import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Parent;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IPerspectiveDescriptor;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.WorkbenchException;
-import org.eclipse.ui.actions.OpenPerspectiveAction;
 import org.wso2.developerstudio.eclipse.logging.core.IDeveloperStudioLog;
 import org.wso2.developerstudio.eclipse.logging.core.Logger;
 import org.wso2.developerstudio.eclipse.maven.util.MavenUtils;
@@ -62,6 +43,7 @@ import org.wso2.developerstudio.msf4j.artifact.util.MSF4JArtifactConstants;
  * Class for represent the nature of a Microservices project inside Eclipse
  * workspace
  */
+@Deprecated
 public class MSF4JArtifactProjectNature extends AbstractWSO2ProjectNature {
 
 	private static IDeveloperStudioLog log = Logger.getLog(Activator.PLUGIN_ID);
@@ -102,44 +84,6 @@ public class MSF4JArtifactProjectNature extends AbstractWSO2ProjectNature {
 
 		Properties generatedProperties = mavenProject.getModel().getProperties();
 		generatedProperties.clear();
-
-		mavenProject.getModel().addProperty(MSF4J_MAIN_CLASS_PROPERTY, DEFAULT_MAIN_CLASS_PROPERTY_VALUE);
-		MavenUtils.saveMavenProject(mavenProject, mavenProjectPomLocation);
-		try {
-			project.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
-			final IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-				IPerspectiveDescriptor activePerspective = workbenchWindow.getActivePage().getPerspective();
-				if (activePerspective == null || !activePerspective.getId().equals(PERSPECTIVE_ID)) {
-					Display.getCurrent().asyncExec(new Runnable() {
-						public void run() {
-							// switch perspective
-							try {
-								workbenchWindow.getWorkbench().showPerspective(PERSPECTIVE_ID, workbenchWindow);
-							} catch (WorkbenchException e) {
-								log.error("Can not switch to perspective: " + PERSPECTIVE_ID, e);
-							}
-						}
-					});
-				}
-		} catch (CoreException e) {
-			log.error("Error while refreshing the project", e);
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-
-				@Override
-				public void run() {
-					Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-					MessageDialog errorDialog = new MessageDialog(shell, ERROR_TAG, null,
-							"Unable to refresh the project, please manually refresh the project in Eclipse project explorer.",
-							MessageDialog.ERROR, new String[] { OK_BUTTON }, 0);
-					errorDialog.open();
-				}
-			});
-		}
-		/*TODO : this section should be redone with m2e plugin 
-		 * MSF4JMavenDependencyResolverJob dependencyResolver = new
-		 * MSF4JMavenDependencyResolverJob( MAVEN_DEPENDENCY_RESOLVER_TAG,
-		 * project); dependencyResolver.schedule();
-		 */
 
 	}
 
