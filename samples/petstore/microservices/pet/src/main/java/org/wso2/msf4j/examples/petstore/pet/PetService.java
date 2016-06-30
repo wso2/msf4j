@@ -53,6 +53,7 @@ public class PetService {
     @Consumes("application/json")
     @Timed
     public Response addPet(Pet pet) {
+        log.info("Adding pet");
         String categoryName = pet.getCategory().getName();
         if (!JedisUtil.smembers(PetConstants.CATEGORIES_KEY).contains(categoryName)) {
             JedisUtil.sadd(PetConstants.CATEGORIES_KEY, categoryName);

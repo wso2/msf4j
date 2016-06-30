@@ -58,6 +58,7 @@ public class JWTSecurityInterceptor implements Interceptor {
 
     public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo)
             throws Exception {
+        log.info("Authentication precall");
         Map<String, String> headers = request.getHeaders();
         boolean isValidSignature;
         if (headers != null) {
@@ -91,7 +92,7 @@ public class JWTSecurityInterceptor implements Interceptor {
             }
         } catch (ParseException | IOException | KeyStoreException | CertificateException |
                 NoSuchAlgorithmException | UnrecoverableKeyException | JOSEException e) {
-            log.error("Error occurred while JWT signature verification", e);
+            log.error("Error occurred while JWT signature verification. JWT=" + jwt, e);
         }
         return false;
     }
