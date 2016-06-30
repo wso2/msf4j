@@ -29,7 +29,7 @@ public class Runner {
 
     public static void main(String[] args) {
         new MicroservicesRunner().
-                addInterceptor(new JWTSecurityInterceptor()).
+//                addInterceptor(new JWTSecurityInterceptor()).
                 addInterceptor(new HTTPMonitoringInterceptor().init()).
                 addInterceptor(new MetricsInterceptor().init(
                         MetricReporter.CONSOLE, MetricReporter.JMX, MetricReporter.DAS)).
