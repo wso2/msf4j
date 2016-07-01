@@ -41,7 +41,6 @@ import java.security.cert.CertificateException;
 import java.security.interfaces.RSAPublicKey;
 import java.text.ParseException;
 import java.util.Date;
-import java.util.Map;
 
 /**
  * Verify the JWT header in request.
@@ -59,15 +58,12 @@ public class JWTSecurityInterceptor implements Interceptor {
     public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo)
             throws Exception {
         log.info("Authentication precall");
-        Map<String, String> headers = request.getHeaders();
         boolean isValidSignature;
-        if (headers != null) {
-            String jwtHeader = headers.get(JWT_HEADER);
-            if (jwtHeader != null) {
-                isValidSignature = verifySignature(jwtHeader);
-                if (isValidSignature) {
-                    return true;
-                }
+        String jwtHeader = request.getHeader(JWT_HEADER);
+        if (jwtHeader != null) {
+            isValidSignature = verifySignature(jwtHeader);
+            if (isValidSignature) {
+                return true;
             }
         }
         responder.setHeader(javax.ws.rs.core.HttpHeaders.WWW_AUTHENTICATE, AUTH_TYPE_JWT);
