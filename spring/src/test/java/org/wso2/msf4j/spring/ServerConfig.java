@@ -29,7 +29,7 @@ public class ServerConfig {
 
     /*
      This will override "SpringMicroservicesRunner" bean configured in default MSF4JSpringConfiguration class, this
-     enables to start Netty transport on 9090 port.
+     enables to start Netty transport on 9291 port.
      NOTE - Due to Spring framework limitations this feature only work with Spring versions starting from 4.2.0
      */
     @Bean
