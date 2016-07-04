@@ -20,6 +20,7 @@ import org.wso2.msf4j.MicroservicesRunner;
 import org.wso2.msf4j.analytics.httpmonitoring.HTTPMonitoringInterceptor;
 import org.wso2.msf4j.analytics.metrics.MetricReporter;
 import org.wso2.msf4j.analytics.metrics.MetricsInterceptor;
+import org.wso2.msf4j.security.JWTSecurityInterceptor;
 
 /**
  * Microservice runner for file server
@@ -28,7 +29,7 @@ public class Runner {
 
     public static void main(String[] args) {
         new MicroservicesRunner().
-                //addInterceptor(new JWTSecurityInterceptor()).
+//                addInterceptor(new JWTSecurityInterceptor()).
                 addInterceptor(new HTTPMonitoringInterceptor().init()).
                 addInterceptor(new MetricsInterceptor().init(
                         MetricReporter.CONSOLE, MetricReporter.JMX, MetricReporter.DAS)).

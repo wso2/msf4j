@@ -54,6 +54,7 @@ public class FileServerService {
     public void postFile(@Context HttpStreamer httpStreamer,
                          @PathParam("fileName") String fileName)
             throws IOException {
+        log.info("Adding file: " + fileName);
         httpStreamer.callback(new HttpStreamHandlerImpl(fileName));
     }
 
@@ -61,6 +62,7 @@ public class FileServerService {
     @Path("/{fileName}")
     @Timed
     public Response getFile(@PathParam("fileName") String fileName) {
+        log.info("Retrieving file: " + fileName);
         File file = Paths.get(MOUNT_PATH.toString(), fileName).toFile();
         if (file.exists()) {
             return Response.ok(file).build();

@@ -41,7 +41,6 @@ import java.security.cert.CertificateException;
 import java.security.interfaces.RSAPublicKey;
 import java.text.ParseException;
 import java.util.Date;
-import java.util.Map;
 
 /**
  * Verify the JWT header in request.
@@ -58,15 +57,13 @@ public class JWTSecurityInterceptor implements Interceptor {
 
     public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo)
             throws Exception {
-        Map<String, String> headers = request.getHeaders();
+        log.info("Authentication precall");
         boolean isValidSignature;
-        if (headers != null) {
-            String jwtHeader = headers.get(JWT_HEADER);
-            if (jwtHeader != null) {
-                isValidSignature = verifySignature(jwtHeader);
-                if (isValidSignature) {
-                    return true;
-                }
+        String jwtHeader = request.getHeader(JWT_HEADER);
+        if (jwtHeader != null) {
+            isValidSignature = verifySignature(jwtHeader);
+            if (isValidSignature) {
+                return true;
             }
         }
         responder.setHeader(javax.ws.rs.core.HttpHeaders.WWW_AUTHENTICATE, AUTH_TYPE_JWT);
@@ -91,7 +88,7 @@ public class JWTSecurityInterceptor implements Interceptor {
             }
         } catch (ParseException | IOException | KeyStoreException | CertificateException |
                 NoSuchAlgorithmException | UnrecoverableKeyException | JOSEException e) {
-            log.error("Error occurred while JWT signature verification", e);
+            log.error("Error occurred while JWT signature verification. JWT=" + jwt, e);
         }
         return false;
     }

@@ -30,9 +30,16 @@
             <description>MSF4J Project</description>
         </wizard>
     </extension>
+    <extension point="org.eclipse.ui.perspectives">
+   <perspective
+         name="MSF4J Perspective"
+         class="org.wso2.developerstudio.msf4j.artifact.ui.wizard.MSF4JPerspective"
+         id="org.eclipse.ui.articles.perspective.msf4jperspective">
+   </perspective>
+</extension>
      <extension
      point="org.eclipse.ui.perspectiveExtensions">
-  <perspectiveExtension targetID="*">
+  <perspectiveExtension targetID="org.eclipse.ui.articles.perspective.msf4jperspective">
      <newWizardShortcut
            id="org.wso2.developerstudio.msf4j.artifact.newmsf4jartifact">
      </newWizardShortcut>
@@ -44,7 +51,6 @@
             <run class="org.wso2.developerstudio.msf4j.artifact.project.nature.MSF4JArtifactProjectNature"/>
         </runtime>
     </extension>
-
     <extension point="org.eclipse.ui.ide.projectNatureImages">
         <image id="org.wso2.developerstudio.eclipse.msf4j.project.natureImage"
                natureId="org.wso2.developerstudio.eclipse.msf4j.project.nature" icon="icons/msf4j-nature.png">

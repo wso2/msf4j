@@ -101,8 +101,9 @@ public class Response {
      * @param key   header name
      * @param value value of the header
      */
-    public void setHeader(String key, String value) {
+    public Response setHeader(String key, String value) {
         carbonMessage.setHeader(key, value);
+        return this;
     }
 
     /**
@@ -169,8 +170,9 @@ public class Response {
      *
      * @param statusCode HTTP status code
      */
-    public void setStatus(int statusCode) {
+    public Response setStatus(int statusCode) {
         this.statusCode = statusCode;
+        return this;
     }
 
     /**
@@ -193,8 +195,9 @@ public class Response {
      *
      * @param mediaType HTTP media type string
      */
-    public void setMediaType(String mediaType) {
+    public Response setMediaType(String mediaType) {
         this.mediaType = mediaType;
+        return this;
     }
 
     /**
@@ -202,7 +205,7 @@ public class Response {
      *
      * @param entity object that should be set as the response body
      */
-    public void setEntity(Object entity) {
+    public Response setEntity(Object entity) {
         if (!carbonMessage.isEmpty()) {
             throw new IllegalStateException("CarbonMessage should not contain a message body");
         }
@@ -220,6 +223,7 @@ public class Response {
         } else {
             this.entity = entity;
         }
+        return this;
     }
 
     /**
