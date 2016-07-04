@@ -925,6 +925,56 @@ public class HttpServerTest {
     }
 
     @Test
+    public void testGetAllFormItemsWithURLEncoded() throws IOException, URISyntaxException {
+        HttpURLConnection connection = request("/test/v1/getAllFormItemsURLEncoded", HttpMethod.POST);
+        String rawData = "names=WSO2&names=IBM&age=10&type=Software";
+        ByteBuffer encodedData = Charset.defaultCharset().encode(rawData);
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type", MediaType.APPLICATION_FORM_URLENCODED);
+        connection.setRequestProperty("Content-Length", String.valueOf(encodedData.array().length));
+        try (OutputStream os = connection.getOutputStream()) {
+            os.write(Arrays.copyOf(encodedData.array(), encodedData.limit()));
+        }
+
+        InputStream inputStream = connection.getInputStream();
+        String response = StreamUtil.asString(inputStream);
+        IOUtils.closeQuietly(inputStream);
+        connection.disconnect();
+        assertEquals("No of Companies-2 type-Software", response);
+    }
+
+    @Test
+    public void getAllFormItemsMultipart() throws IOException, URISyntaxException {
+        HttpURLConnection connection = request("/test/v1/getAllFormItemsMultipart", HttpMethod.POST);
+        StringBody companyText = new StringBody("{\"type\": \"Open Source\"}", ContentType.APPLICATION_JSON);
+        StringBody personList = new StringBody(
+                "[{\"name\":\"Richard Stallman\",\"age\":63}, {\"name\":\"Linus Torvalds\",\"age\":46}]",
+                ContentType.APPLICATION_JSON);
+        HttpEntity reqEntity = MultipartEntityBuilder.create()
+                                        .addTextBody("id", "1")
+                                        .addPart("company", companyText)
+                                        .addPart("people", personList)
+                                        .addBinaryBody("file",
+                                                       new File(Resources.getResource("testTxtFile.txt").toURI()),
+                                                                    ContentType.DEFAULT_BINARY, "testTxtFile.txt")
+                                        .addBinaryBody("file",
+                                                       new File(Resources.getResource("testPngFile.png").toURI()),
+                                                                    ContentType.DEFAULT_BINARY, "testPngFile.png")
+                                        .build();
+
+        connection.setRequestProperty("Content-Type", reqEntity.getContentType().getValue());
+        try (OutputStream out = connection.getOutputStream()) {
+            reqEntity.writeTo(out);
+        }
+
+        InputStream inputStream = connection.getInputStream();
+        String response = StreamUtil.asString(inputStream);
+        IOUtils.closeQuietly(inputStream);
+        connection.disconnect();
+        assertEquals("FileCount-2 SecondFileName-testPngFile.png FirstPerson-Richard Stallman", response);
+    }
+
+    @Test
     public void testPathParamWithRegexOne() throws Exception {
         HttpURLConnection urlConn = request("/test/v1/WSDL/12/states", HttpMethod.GET);
 

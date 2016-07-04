@@ -22,6 +22,7 @@ import com.google.common.io.Resources;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.apache.commons.io.IOUtils;
 import org.wso2.msf4j.HttpStreamHandler;
 import org.wso2.msf4j.HttpStreamer;
@@ -50,6 +51,7 @@ import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.concurrent.TimeUnit;
@@ -67,6 +69,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
 import static org.testng.AssertJUnit.fail;
@@ -584,6 +587,30 @@ public class TestMicroservice implements Microservice {
             IOUtils.closeQuietly(inputStream);
         }
         return Response.ok().entity(stringBuilder.toString() + "-" + fileInfo.getFileName()).build();
+    }
+
+    @POST
+    @Path("/getAllFormItemsURLEncoded")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response getAllFormItemsURLEncoded(@Context MultivaluedMap formItemMultivaluedMap) {
+        int noOfCompanies = ((ArrayList) formItemMultivaluedMap.get("names")).size();
+        String type = formItemMultivaluedMap.getFirst("type").toString();
+        String response = "No of Companies-" + noOfCompanies + " type-" + type;
+        return Response.ok().entity(response).build();
+    }
+
+    @POST
+    @Path("/getAllFormItemsMultipart")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response getAllFormItemsMultipart(@Context MultivaluedMap formItemMultivaluedMap) {
+        ArrayList files = (ArrayList) formItemMultivaluedMap.get("file");
+        String person = formItemMultivaluedMap.getFirst("people").toString();
+        JsonParser parser = new JsonParser();
+        String name = parser.parse(person).getAsJsonArray().get(0).getAsJsonObject().get("name").getAsString();
+        String response =
+                "FileCount-" + files.size() + " SecondFileName-" + ((File) files.get(1)).getName() + " FirstPerson-" +
+                name;
+        return Response.ok().entity(response).build();
     }
 
     @GET
