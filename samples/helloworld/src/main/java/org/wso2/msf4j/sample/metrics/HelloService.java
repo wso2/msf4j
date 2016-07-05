@@ -14,23 +14,22 @@
  * limitations under the License.
  */
 
-package org.wso2.msf4j.examples.petstore.fileserver;
+package org.wso2.msf4j.sample.metrics;
 
-import org.wso2.msf4j.MicroservicesRunner;
-import org.wso2.msf4j.analytics.httpmonitoring.HTTPMonitoringInterceptor;
-import org.wso2.msf4j.analytics.metrics.MetricsInterceptor;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 
 /**
- * Microservice runner for file server
+ * Hello service resource class.
  */
-public class Runner {
+@Path("/hello")
+public class HelloService {
 
-    public static void main(String[] args) {
-        new MicroservicesRunner()
-                //.addInterceptor(new JWTSecurityInterceptor())
-                .addInterceptor(new HTTPMonitoringInterceptor())
-                .addInterceptor(new MetricsInterceptor())
-                .deploy(new FileServerService())
-                .start();
+    @GET
+    @Path("/{name}")
+    public String hello(@PathParam("name") String name) {
+        System.out.println("Hello");
+        return "Hello " + name;
     }
 }

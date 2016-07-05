@@ -13,24 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.msf4j.examples.petstore.pet;
+
+package org.wso2.msf4j.sample.metrics;
 
 import org.wso2.msf4j.MicroservicesRunner;
-import org.wso2.msf4j.analytics.httpmonitoring.HTTPMonitoringInterceptor;
-import org.wso2.msf4j.analytics.metrics.MetricsInterceptor;
-import org.wso2.msf4j.security.JWTSecurityInterceptor;
 
 /**
- * Microservice runner for the pet microservices.
+ * Application entry point.
  */
-public class Runner {
+public class Application {
     public static void main(String[] args) {
         new MicroservicesRunner()
-                .addInterceptor(new JWTSecurityInterceptor())
-                .addInterceptor(new HTTPMonitoringInterceptor())
-                .addInterceptor(new MetricsInterceptor())
-                .deploy(new PetService())
-                .deploy(new PetCategoryService())
+                .deploy(new HelloService())
                 .start();
     }
 }

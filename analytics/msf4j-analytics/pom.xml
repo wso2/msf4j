@@ -40,29 +40,19 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.metrics</groupId>
-            <artifactId>org.wso2.carbon.metrics.manager</artifactId>
+            <artifactId>org.wso2.carbon.metrics.core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.metrics</groupId>
-            <artifactId>org.wso2.carbon.metrics.impl</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.httpcomponents</groupId>
-                    <artifactId>httpclient</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>commons-pool</groupId>
-                    <artifactId>commons-pool</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.thrift</groupId>
-                    <artifactId>libthrift</artifactId>
-                </exclusion>
-            </exclusions>
+            <artifactId>org.wso2.carbon.metrics.jdbc.core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.metrics</groupId>
-            <artifactId>org.wso2.carbon.metrics.annotation</artifactId>
+            <artifactId>org.wso2.carbon.metrics.das.core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.metrics</groupId>
+            <artifactId>org.wso2.carbon.metrics.config</artifactId>
         </dependency>
     </dependencies>
 
@@ -237,12 +227,7 @@
             org.osgi.framework.*;version="${osgi.framework.import.version.range}",
             org.osgi.util.tracker; version="${osgi.service.tracker.import.version.range}",
             org.wso2.carbon.kernel.utils.*;version="${carbon.kernel.version.range}",
-            org.wso2.carbon.metrics.annotation.*;version="${carbon.metrics.version.range}",
-            org.wso2.carbon.metrics.common.*;version="${carbon.metrics.version.range}",
-            org.wso2.carbon.metrics.manager.*;version="${carbon.metrics.version.range}",
-            org.wso2.carbon.metrics.impl.*;version="${carbon.metrics.version.range}",
-            org.wso2.carbon.databridge.agent.*;version="${carbon.analytics.common.version.range}",
-            org.wso2.carbon.databridge.commons.*;version="${carbon.analytics.common.version.range}",
+            org.wso2.carbon.metrics.core.*;version="${carbon.metrics.version.range}",
             org.wso2.carbon.kernel.startupresolver.*;version="${carbon.kernel.version.range}",
             org.wso2.msf4j.*,
             org.wso2.msf4j.util.*,

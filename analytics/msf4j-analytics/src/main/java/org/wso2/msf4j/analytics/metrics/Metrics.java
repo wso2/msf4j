@@ -17,80 +17,106 @@ package org.wso2.msf4j.analytics.metrics;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.metrics.impl.MetricServiceImpl;
-import org.wso2.carbon.metrics.impl.MetricsLevelConfigException;
-import org.wso2.carbon.metrics.impl.MetricsLevelConfiguration;
-import org.wso2.carbon.metrics.impl.util.ConsoleReporterBuilder;
-import org.wso2.carbon.metrics.impl.util.DASReporterBuilder;
-import org.wso2.carbon.metrics.impl.util.JmxReporterBuilder;
-import org.wso2.carbon.metrics.manager.MetricManager;
-import org.wso2.carbon.metrics.manager.MetricService;
-import org.wso2.carbon.metrics.manager.ServiceReferenceHolder;
+import org.wso2.carbon.metrics.core.MetricManagementService;
+import org.wso2.carbon.metrics.core.MetricService;
 
 /**
- * A utility class to initialize/destroy Metric Service.
+ * A utility class to keep Metric Services.
  */
 public final class Metrics {
 
     private static final Logger logger = LoggerFactory.getLogger(Metrics.class);
 
-    private static MetricService metricService;
+    private volatile MetricService metricService;
+
+    private volatile MetricManagementService metricManagementService;
 
     private Metrics() {
     }
 
-    static synchronized void init(MetricReporter... metricReporters) {
-        if (metricService != null) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Metric Service is already initialized");
-            }
-            return;
-        }
-        if (logger.isInfoEnabled()) {
-            logger.info("Initializing Metrics Service");
-        }
-        MetricsEnvConfiguration metricsEnvConfiguration = new MetricsEnvConfiguration();
-        MetricsLevelConfiguration metricsLevelConfiguration = new MetricsLevelConfiguration();
-        try {
-            metricsLevelConfiguration.loadFromSystemPropertyFile();
-        } catch (MetricsLevelConfigException e) {
-            if (logger.isWarnEnabled()) {
-                logger.warn("Error loading metrics level configuration", e);
-            }
-        }
-        MetricServiceImpl.Builder builder = new MetricServiceImpl.Builder().setEnabled(true)
-                .setRootLevel(org.wso2.carbon.metrics.manager.Level.INFO);
-        for (MetricReporter metricReporter : metricReporters) {
-            switch (metricReporter) {
-            case CONSOLE:
-                builder.addReporterBuilder(
-                        new ConsoleReporterBuilder().setEnabled(true).configure(metricsEnvConfiguration));
-                break;
-            case DAS:
-                builder.addReporterBuilder(
-                        new DASReporterBuilder().setEnabled(true).configure(metricsEnvConfiguration));
-                break;
-            case JMX:
-                builder.addReporterBuilder(
-                        new JmxReporterBuilder().setEnabled(true).configure(metricsEnvConfiguration));
-                break;
-            default:
-                break;
-
-            }
-        }
-        metricService = builder.build(metricsLevelConfiguration);
-        ServiceReferenceHolder.getInstance().setMetricService(metricService);
-        MetricManager.registerMXBean();
+    /**
+     * Initializes the Metrics instance
+     */
+    private static class MetricsHolder {
+        private static final Metrics INSTANCE = new Metrics();
     }
 
-    static synchronized void destroy() {
-        if (metricService != null) {
-            MetricManager.unregisterMXBean();
-            metricService.disable();
-            metricService = null;
+    /**
+     * This returns the Metrics singleton instance.
+     *
+     * @return The Metrics instance
+     */
+    public static Metrics getInstance() {
+        return MetricsHolder.INSTANCE;
+    }
+
+    /**
+     * Initialize metric services
+     */
+    private void initializeServices() {
+        if (logger.isInfoEnabled()) {
+            logger.info("Initializing Metrics Services");
         }
-        ServiceReferenceHolder.getInstance().setMetricService(null);
+        org.wso2.carbon.metrics.core.Metrics metrics = new org.wso2.carbon.metrics.core.Metrics();
+        // Activate metrics
+        metrics.activate();
+
+        metricService = metrics.getMetricService();
+        metricManagementService = metrics.getMetricManagementService();
+
+        // Deactivate Metrics at shutdown
+        Thread thread = new Thread(() -> metrics.deactivate());
+        Runtime.getRuntime().addShutdownHook(thread);
+    }
+
+    /**
+     * Returns the {@link MetricService}
+     *
+     * @return The {@link MetricService} instance
+     */
+    public MetricService getMetricService() {
+        if (metricService == null) {
+            synchronized (this) {
+                if (metricService == null) {
+                    initializeServices();
+                }
+            }
+        }
+        return metricService;
+    }
+
+    /**
+     * Set the {@link MetricService} service
+     *
+     * @param metricService The {@link MetricService} reference
+     */
+    void setMetricService(MetricService metricService) {
+        this.metricService = metricService;
+    }
+
+    /**
+     * Returns the {@link MetricManagementService}
+     *
+     * @return The {@link MetricManagementService} instance
+     */
+    public MetricManagementService getMetricManagementService() {
+        if (metricManagementService == null) {
+            synchronized (this) {
+                if (metricManagementService == null) {
+                    initializeServices();
+                }
+            }
+        }
+        return metricManagementService;
+    }
+
+    /**
+     * Set the {@link MetricManagementService} service
+     *
+     * @param metricManagementService The {@link MetricManagementService} reference
+     */
+    void setMetricManagementService(MetricManagementService metricManagementService) {
+        this.metricManagementService = metricManagementService;
     }
 
 }

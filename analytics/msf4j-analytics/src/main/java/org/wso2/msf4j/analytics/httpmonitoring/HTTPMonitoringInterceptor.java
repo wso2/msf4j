@@ -51,13 +51,6 @@ public class HTTPMonitoringInterceptor implements Interceptor {
         }
     }
 
-    public HTTPMonitoringInterceptor init() {
-        HTTPMonitoringDataPublisher.init();
-        // Destroy the publisher at shutdown
-        Runtime.getRuntime().addShutdownHook(new ShutdownHook());
-        return this;
-    }
-
     /**
      * Returns the final annotation that is application to the given method. For example,
      * the {@link HTTPMonitored} annotation can be mentioned in class level, and also in
@@ -100,13 +93,6 @@ public class HTTPMonitoringInterceptor implements Interceptor {
         }
     }
 
-    private static class ShutdownHook extends Thread {
-        @Override
-        public void run() {
-            HTTPMonitoringDataPublisher.destroy();
-        }
-    }
-
     private static class HTTPInterceptor implements Interceptor {
 
         private static final String DEFAULT_TRACE_ID = "DEFAULT";
@@ -126,7 +112,10 @@ public class HTTPMonitoringInterceptor implements Interceptor {
 
         private boolean tracing;
 
+        private final HTTPMonitoringDataPublisher httpMonitoringDataPublisher;
+
         private HTTPInterceptor(boolean tracing) {
+            httpMonitoringDataPublisher = HTTPMonitoringDataPublisher.getInstance();
             this.tracing = tracing;
         }
 
@@ -200,7 +189,7 @@ public class HTTPMonitoringInterceptor implements Interceptor {
             httpMonitoringEvent.setResponseTime(
                     TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - httpMonitoringEvent.getStartNanoTime()));
             httpMonitoringEvent.setResponseHttpStatusCode(status);
-            HTTPMonitoringDataPublisher.publishEvent(httpMonitoringEvent);
+            httpMonitoringDataPublisher.publishEvent(httpMonitoringEvent);
         }
     }
 }
