@@ -28,8 +28,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
-import static javax.swing.text.html.FormSubmitEvent.MethodType.POST;
-
 /**
  * Resource class
  */
