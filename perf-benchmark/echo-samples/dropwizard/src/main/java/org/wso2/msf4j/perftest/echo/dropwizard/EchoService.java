@@ -18,10 +18,17 @@
 
 package org.wso2.msf4j.perftest.echo.dropwizard;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
+import java.util.UUID;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+
+import static javax.swing.text.html.FormSubmitEvent.MethodType.POST;
 
 /**
  * Resource class
@@ -37,4 +44,18 @@ public class EchoService {
         return body;
     }
 
+    @POST
+    @Path("dbecho")
+    @Consumes("text/plain")
+    @Produces("text/plain")
+    public String fileWrite(String body) throws InterruptedException, IOException {
+        String returnStr = "";
+        java.nio.file.Path tempfile = Files.createTempFile(UUID.randomUUID().toString(), ".tmp");
+        Files.write(tempfile, body.getBytes(Charset.defaultCharset()),
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.TRUNCATE_EXISTING);
+        returnStr = new String(Files.readAllBytes(tempfile), Charset.defaultCharset());
+        Files.delete(tempfile);
+        return returnStr;
+    }
 }
