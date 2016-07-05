@@ -428,16 +428,12 @@ public class HttpServerTest {
         testContent("/test/v1/sortedSetQueryParam?id=20&id=30&id=20&id=10", "10,20,30", HttpMethod.GET);
     }
 
-    //@Test
-    // TODO: CarbonMessage does not support multiple header values
+    @Test
     public void testListHeaderParam() throws IOException {
         List<String> names = ImmutableList.of("name1", "name3", "name2", "name1");
 
         HttpURLConnection urlConn = request("/test/v1/listHeaderParam", HttpMethod.GET);
-        for (String name : names) {
-            urlConn.addRequestProperty("name", name);
-        }
-
+        urlConn.addRequestProperty("name", "name1,name3,name2,name1");
         assertEquals(200, urlConn.getResponseCode());
         assertEquals(Joiner.on(',').join(names), getContent(urlConn));
         urlConn.disconnect();
@@ -857,13 +853,13 @@ public class HttpServerTest {
                 "[{\"name\":\"Richard Stallman\",\"age\":63}, {\"name\":\"Linus Torvalds\",\"age\":46}]",
                 ContentType.APPLICATION_JSON);
         HttpEntity reqEntity = MultipartEntityBuilder.create()
-                                          .addTextBody("id", "1")
-                                          .addPart("company", companyText)
-                                          .addPart("people", personList)
-                                          .addBinaryBody("file", new File(
-                                                                 Resources.getResource("testTxtFile.txt").toURI()),
-                                                         ContentType.DEFAULT_BINARY, "testTxtFile.txt")
-                                          .build();
+                .addTextBody("id", "1")
+                .addPart("company", companyText)
+                .addPart("people", personList)
+                .addBinaryBody("file", new File(
+                                Resources.getResource("testTxtFile.txt").toURI()),
+                        ContentType.DEFAULT_BINARY, "testTxtFile.txt")
+                .build();
 
         connection.setRequestProperty("Content-Type", reqEntity.getContentType().getValue());
         try (OutputStream out = connection.getOutputStream()) {
@@ -884,8 +880,8 @@ public class HttpServerTest {
         File file2 = new File(Resources.getResource("testPngFile.png").toURI());
         HttpEntity reqEntity = MultipartEntityBuilder.create().
                 addBinaryBody("files", file1, ContentType.DEFAULT_BINARY, file1.getName())
-                                                     .addBinaryBody("files", file2, ContentType.DEFAULT_BINARY,
-                                                                    file2.getName()).build();
+                .addBinaryBody("files", file2, ContentType.DEFAULT_BINARY,
+                        file2.getName()).build();
 
         connection.setRequestProperty("Content-Type", reqEntity.getContentType().getValue());
         try (OutputStream out = connection.getOutputStream()) {
@@ -951,16 +947,16 @@ public class HttpServerTest {
                 "[{\"name\":\"Richard Stallman\",\"age\":63}, {\"name\":\"Linus Torvalds\",\"age\":46}]",
                 ContentType.APPLICATION_JSON);
         HttpEntity reqEntity = MultipartEntityBuilder.create()
-                                        .addTextBody("id", "1")
-                                        .addPart("company", companyText)
-                                        .addPart("people", personList)
-                                        .addBinaryBody("file",
-                                                       new File(Resources.getResource("testTxtFile.txt").toURI()),
-                                                                    ContentType.DEFAULT_BINARY, "testTxtFile.txt")
-                                        .addBinaryBody("file",
-                                                       new File(Resources.getResource("testPngFile.png").toURI()),
-                                                                    ContentType.DEFAULT_BINARY, "testPngFile.png")
-                                        .build();
+                .addTextBody("id", "1")
+                .addPart("company", companyText)
+                .addPart("people", personList)
+                .addBinaryBody("file",
+                        new File(Resources.getResource("testTxtFile.txt").toURI()),
+                        ContentType.DEFAULT_BINARY, "testTxtFile.txt")
+                .addBinaryBody("file",
+                        new File(Resources.getResource("testPngFile.png").toURI()),
+                        ContentType.DEFAULT_BINARY, "testPngFile.png")
+                .build();
 
         connection.setRequestProperty("Content-Type", reqEntity.getContentType().getValue());
         try (OutputStream out = connection.getOutputStream()) {
