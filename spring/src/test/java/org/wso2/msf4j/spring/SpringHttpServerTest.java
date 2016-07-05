@@ -33,13 +33,13 @@ public class SpringHttpServerTest extends HttpServerTest {
     private static final int port = Constants.PORT;
 
     @BeforeClass
-    public static void setup() throws Exception {
+    public void setup() throws Exception {
         baseURI = URI.create(String.format("http://%s:%d", Constants.HOSTNAME, port));
         MSF4JSpringApplication.run(SpringHttpServerTest.class);
     }
 
     @AfterClass
-    public static void teardown() throws Exception {
+    public void teardown() throws Exception {
         //TODO: how to stop?
     }
 }
