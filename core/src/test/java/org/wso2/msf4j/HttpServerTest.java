@@ -92,24 +92,25 @@ public class HttpServerTest {
 
     public static File tmpFolder = Files.createTempDir();
 
-    private static final TestMicroservice TEST_MICROSERVICE = new TestMicroservice();
+    private final TestMicroservice testMicroservice = new TestMicroservice();
 
     private static final int port = Constants.PORT + 1;
     protected static URI baseURI;
 
-    private static final MicroservicesRunner microservicesRunner = new MicroservicesRunner(port);
+    private MicroservicesRunner microservicesRunner;
 
     @BeforeClass
-    public static void setup() throws Exception {
+    public void setup() throws Exception {
         baseURI = URI.create(String.format("http://%s:%d", Constants.HOSTNAME, port));
+        microservicesRunner = new MicroservicesRunner(port);
         microservicesRunner
                 .addExceptionMapper(new TestExceptionMapper(), new TestExceptionMapper2())
-                .deploy(TEST_MICROSERVICE)
+                .deploy(testMicroservice)
                 .start();
     }
 
     @AfterClass
-    public static void teardown() throws Exception {
+    public void teardown() throws Exception {
         microservicesRunner.stop();
     }
 

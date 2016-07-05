@@ -18,7 +18,7 @@ package org.wso2.msf4j;
 
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.wso2.msf4j.conf.Constants;
 import org.wso2.msf4j.interceptor.TestInterceptor;
@@ -34,19 +34,20 @@ import static org.testng.AssertJUnit.assertEquals;
  * Tests handler interceptors.
  */
 public class InterceptorTest extends InterceptorTestBase {
-    private static final TestInterceptor interceptor1 = new TestInterceptor();
-    private static final TestInterceptor interceptor2 = new TestInterceptor();
+    private final TestInterceptor interceptor1 = new TestInterceptor();
+    private final TestInterceptor interceptor2 = new TestInterceptor();
 
-    private static final TestMicroservice TEST_MICROSERVICE = new TestMicroservice();
+    private final TestMicroservice testMicroservice = new TestMicroservice();
 
     private static final int port = Constants.PORT + 2;
 
-    private static final MicroservicesRunner microservicesRunner = new MicroservicesRunner(port);
+    private MicroservicesRunner microservicesRunner;
 
     @BeforeClass
-    public static void setup() throws Exception {
+    public void setup() throws Exception {
+        microservicesRunner = new MicroservicesRunner(port);
         microservicesRunner.
-                deploy(TEST_MICROSERVICE).
+                deploy(testMicroservice).
                 addInterceptor(interceptor1).
                 addInterceptor(interceptor2)
                 .start();
@@ -54,11 +55,11 @@ public class InterceptorTest extends InterceptorTestBase {
     }
 
     @AfterClass
-    public static void teardown() throws Exception {
+    public void teardown() throws Exception {
         microservicesRunner.stop();
     }
 
-    @BeforeTest
+    @BeforeMethod
     public void reset() {
         interceptor1.reset();
         interceptor2.reset();
@@ -67,7 +68,7 @@ public class InterceptorTest extends InterceptorTestBase {
     @Test
     public void testPreInterceptorReject() throws Exception {
         int status = doGet("/test/v1/resource", "X-Request-Type", "Reject");
-        assertEquals(status, Response.Status.NOT_ACCEPTABLE.getStatusCode());
+        assertEquals(Response.Status.NOT_ACCEPTABLE.getStatusCode(), status);
 
         // Wait for any post handlers to be called
         TimeUnit.MILLISECONDS.sleep(100);

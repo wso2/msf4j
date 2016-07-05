@@ -42,14 +42,14 @@ public class HttpsServerTest extends HttpServerTest {
 
     private static SSLClientContext sslClientContext;
 
-    private static final TestMicroservice TEST_MICROSERVICE = new TestMicroservice();
-    private static MicroservicesRunner microservicesRunner;
+    private final TestMicroservice testMicroservice = new TestMicroservice();
+    private MicroservicesRunner microservicesRunner;
 
     private static final int port = Constants.PORT + 4;
 
 
     @BeforeClass
-    public static void setup() throws Exception {
+    public void setup() throws Exception {
         baseURI = URI.create(String.format("https://%s:%d", Constants.HOSTNAME, port));
         System.setProperty(YAMLTransportConfigurationBuilder.NETTY_TRANSPORT_CONF,
                 Resources.getResource("netty-transports-1.yml").getPath());
@@ -57,12 +57,12 @@ public class HttpsServerTest extends HttpServerTest {
         sslClientContext = new SSLClientContext();
         microservicesRunner
                 .addExceptionMapper(new TestExceptionMapper(), new TestExceptionMapper2())
-                .deploy(TEST_MICROSERVICE)
+                .deploy(testMicroservice)
                 .start();
     }
 
     @AfterClass
-    public static void teardown() throws Exception {
+    public void teardown() throws Exception {
         microservicesRunner.stop();
     }
 

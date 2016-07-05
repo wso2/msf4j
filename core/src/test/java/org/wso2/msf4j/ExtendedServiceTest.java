@@ -48,23 +48,24 @@ public class ExtendedServiceTest {
     }.getType();
     protected static final Gson GSON = new Gson();
 
-    private static final TestMicroservice TEST_MICROSERVICE = new ExtendedTestMicroservice();
+    private final TestMicroservice testMicroservice = new ExtendedTestMicroservice();
 
     private static final int port = Constants.PORT + 39;
     protected static URI baseURI;
 
-    private static final MicroservicesRunner microservicesRunner = new MicroservicesRunner(port);
+    private MicroservicesRunner microservicesRunner;
 
     @BeforeClass
-    public static void setup() throws Exception {
+    public void setup() throws Exception {
         baseURI = URI.create(String.format("http://%s:%d", Constants.HOSTNAME, port));
+        microservicesRunner = new MicroservicesRunner(port);
         microservicesRunner
-                .deploy(TEST_MICROSERVICE)
+                .deploy(testMicroservice)
                 .start();
     }
 
     @AfterClass
-    public static void teardown() throws Exception {
+    public void teardown() throws Exception {
         microservicesRunner.stop();
     }
 

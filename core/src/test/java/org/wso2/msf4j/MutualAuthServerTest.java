@@ -36,8 +36,8 @@ import java.net.URI;
  */
 public class MutualAuthServerTest extends HttpsServerTest {
 
-    private static final TestMicroservice TEST_MICROSERVICE = new TestMicroservice();
-    private static MicroservicesRunner microservicesRunner;
+    private final TestMicroservice testMicroservice = new TestMicroservice();
+    private MicroservicesRunner microservicesRunner;
 
     private static String hostname = Constants.HOSTNAME;
     private static final int port = Constants.PORT + 5;
@@ -45,7 +45,7 @@ public class MutualAuthServerTest extends HttpsServerTest {
 
 
     @BeforeClass
-    public static void setup() throws Exception {
+    public void setup() throws Exception {
         baseURI = URI.create(String.format("https://%s:%d", hostname, port));
         trustKeyStore = new File(tmpFolder, "MutualAuthServerTest.jks");
         trustKeyStore.createNewFile();
@@ -60,12 +60,12 @@ public class MutualAuthServerTest extends HttpsServerTest {
         microservicesRunner = new MicroservicesRunner();
         microservicesRunner
                 .addExceptionMapper(new TestExceptionMapper(), new TestExceptionMapper2())
-                .deploy(TEST_MICROSERVICE)
+                .deploy(testMicroservice)
                 .start();
     }
 
     @AfterClass
-    public static void teardown() throws Exception {
+    public void teardown() throws Exception {
         microservicesRunner.stop();
         trustKeyStore.delete();
     }
