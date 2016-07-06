@@ -20,6 +20,7 @@ package org.wso2.msf4j.perftest.echo.spark;
 
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.UUID;
 
@@ -34,7 +35,7 @@ public class Application {
         port(8080);
         post("/EchoService/echo", (req, res) -> req.body());
         post("/EchoService/dbecho", (req, res) -> {
-            java.nio.file.Path tempfile = Files.createTempFile(UUID.randomUUID().toString(), ".tmp");
+            Path tempfile = Files.createTempFile(UUID.randomUUID().toString(), ".tmp");
             Files.write(tempfile, req.bodyAsBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
             String returnStr = new String(Files.readAllBytes(tempfile), Charset.defaultCharset());
             Files.delete(tempfile);
