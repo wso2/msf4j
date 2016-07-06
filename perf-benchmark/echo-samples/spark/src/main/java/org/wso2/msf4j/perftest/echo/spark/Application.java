@@ -18,6 +18,12 @@
 
 package org.wso2.msf4j.perftest.echo.spark;
 
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.UUID;
+
 import static spark.Spark.port;
 import static spark.Spark.post;
 
@@ -25,8 +31,15 @@ import static spark.Spark.post;
  * Application
  */
 public class Application {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         port(8080);
         post("/EchoService/echo", (req, res) -> req.body());
+        post("/EchoService/dbecho", (req, res) -> {
+            Path tempfile = Files.createTempFile(UUID.randomUUID().toString(), ".tmp");
+            Files.write(tempfile, req.bodyAsBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+            String returnStr = new String(Files.readAllBytes(tempfile), Charset.defaultCharset());
+            Files.delete(tempfile);
+            return returnStr;
+        });
     }
 }
