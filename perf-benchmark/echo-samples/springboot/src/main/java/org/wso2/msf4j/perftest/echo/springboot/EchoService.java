@@ -22,6 +22,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
+import java.util.UUID;
+
 /**
  * Resource class
  */
@@ -33,5 +39,18 @@ public class EchoService {
     @ResponseBody
     String echo(@RequestBody String body) {
         return body;
+    }
+
+    @RequestMapping("/EchoService/dbecho")
+    @ResponseBody
+    public String fileWrite(@RequestBody String body) throws InterruptedException, IOException {
+        String returnStr = "";
+        java.nio.file.Path tempfile = Files.createTempFile(UUID.randomUUID().toString(), ".tmp");
+        Files.write(tempfile, body.getBytes(Charset.defaultCharset()),
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.TRUNCATE_EXISTING);
+        returnStr = new String(Files.readAllBytes(tempfile), Charset.defaultCharset());
+        Files.delete(tempfile);
+        return returnStr;
     }
 }

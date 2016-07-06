@@ -18,7 +18,11 @@
 
 package org.wso2.msf4j.perftest.echo.wso2msf4j;
 
-import java.util.concurrent.TimeUnit;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
+import java.util.UUID;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -36,5 +40,19 @@ public class EchoService {
     @Produces("text/plain")
     public String echo(String body) {
         return body;
+    }
+
+    @POST
+    @Path("dbecho")
+    @Consumes("text/plain")
+    @Produces("text/plain")
+    public String fileWrite(String body) throws InterruptedException, IOException {
+        String returnStr = "";
+        java.nio.file.Path tempfile = Files.createTempFile(UUID.randomUUID().toString(), ".tmp");
+        Files.write(tempfile, body.getBytes(Charset.defaultCharset()), StandardOpenOption.CREATE,
+                    StandardOpenOption.TRUNCATE_EXISTING);
+        returnStr = new String(Files.readAllBytes(tempfile), Charset.defaultCharset());
+        Files.delete(tempfile);
+        return returnStr;
     }
 }
