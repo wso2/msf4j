@@ -45,7 +45,6 @@ public class DemoService {
     @GET
     @Path("/echo/{string}")
     @Timed
-    @Counted
     public String echo(@PathParam("string") String string) {
         try {
             Thread.sleep(random.nextInt(5000));

@@ -26,6 +26,7 @@ import org.wso2.carbon.databridge.agent.exception.DataEndpointException;
 import org.wso2.carbon.databridge.commons.Event;
 import org.wso2.carbon.databridge.commons.exception.TransportException;
 import org.wso2.carbon.databridge.commons.utils.DataBridgeCommonsUtils;
+import org.wso2.msf4j.analytics.httpmonitoring.config.model.DasConfig;
 import org.wso2.msf4j.util.SystemVariableUtil;
 
 import java.net.Inet4Address;
@@ -66,28 +67,11 @@ public final class HTTPMonitoringDataPublisher {
         }
     }
 
-    private HTTPMonitoringDataPublisher() {
-        HTTPMonitoringConfig httpMonitoringConfig = HTTPMonitoringConfigBuilder.build();
-        init(httpMonitoringConfig);
+    public HTTPMonitoringDataPublisher(DasConfig dasConfig) {
+        init(dasConfig);
         // Destroy data publisher at shutdown
-        Thread thread = new Thread(() -> destroy());
+        Thread thread = new Thread(this::destroy);
         Runtime.getRuntime().addShutdownHook(thread);
-    }
-
-    /**
-     * Initializes the HTTPMonitoringDataPublisher instance
-     */
-    private static class HTTPMonitoringDataPublisherHolder {
-        private static final HTTPMonitoringDataPublisher INSTANCE = new HTTPMonitoringDataPublisher();
-    }
-
-    /**
-     * This returns the HTTPMonitoringDataPublisher singleton instance.
-     *
-     * @return The HTTPMonitoringDataPublisher instance
-     */
-    public static HTTPMonitoringDataPublisher getInstance() {
-        return HTTPMonitoringDataPublisherHolder.INSTANCE;
     }
 
     private static InetAddress getLocalAddress() throws SocketException, UnknownHostException {
@@ -108,17 +92,17 @@ public final class HTTPMonitoringDataPublisher {
         return InetAddress.getLocalHost();
     }
 
-    private void init(HTTPMonitoringConfig httpMonitoringConfig) {
+    private void init(DasConfig dasConfig) {
         if (logger.isInfoEnabled()) {
             logger.info("Initializing HTTP Monitoring Data Publisher");
         }
 
-        String type = httpMonitoringConfig.getType();
-        String receiverURL = httpMonitoringConfig.getReceiverURL();
-        String authURL = httpMonitoringConfig.getAuthURL();
-        String username = httpMonitoringConfig.getUsername();
-        String password = httpMonitoringConfig.getPassword();
-        String dataAgentConfigPath = httpMonitoringConfig.getDataAgentConfigPath();
+        String type = dasConfig.getType();
+        String receiverURL = dasConfig.getReceiverURL();
+        String authURL = dasConfig.getAuthURL();
+        String username = dasConfig.getUsername();
+        String password = dasConfig.getPassword();
+        String dataAgentConfigPath = dasConfig.getDataAgentConfigPath();
 
         if (type == null) {
             throw new IllegalArgumentException("Type cannot be null");

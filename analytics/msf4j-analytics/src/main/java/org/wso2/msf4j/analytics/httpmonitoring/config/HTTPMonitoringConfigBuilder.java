@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.msf4j.analytics.httpmonitoring;
+package org.wso2.msf4j.analytics.httpmonitoring.config;
 
 import org.wso2.carbon.metrics.core.utils.Utils;
+import org.wso2.msf4j.analytics.httpmonitoring.config.model.HTTPMonitoringConfig;
 import org.yaml.snakeyaml.Yaml;
 
 import java.util.Optional;
@@ -26,7 +27,7 @@ import java.util.Optional;
 public final class HTTPMonitoringConfigBuilder {
 
     public static HTTPMonitoringConfig build() {
-        Optional<String> metricsConfigFileContent = Utils.readFile("httpmonitoring.conf", "httpmonitoring.yml");
+        Optional<String> metricsConfigFileContent = Utils.readFile("http-monitoring.conf", "http-monitoring.yml");
         if (metricsConfigFileContent.isPresent()) {
             try {
                 Yaml yaml = new Yaml();

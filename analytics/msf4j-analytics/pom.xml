@@ -54,6 +54,11 @@
             <groupId>org.wso2.carbon.metrics</groupId>
             <artifactId>org.wso2.carbon.metrics.config</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

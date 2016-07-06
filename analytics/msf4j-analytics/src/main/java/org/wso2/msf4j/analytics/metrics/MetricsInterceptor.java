@@ -55,31 +55,52 @@ public class MetricsInterceptor implements Interceptor {
         }
     }
 
+    private Timed getTimedAnnotation(Method method) {
+        Timed annotation = method.getAnnotation(Timed.class);
+        if (annotation == null) {
+            annotation = method.getDeclaringClass().getAnnotation(Timed.class);
+        }
+        return annotation;
+    }
+
+    private Metered getMeteredAnnotation(Method method) {
+        Metered annotation = method.getAnnotation(Metered.class);
+        if (annotation == null) {
+            annotation = method.getDeclaringClass().getAnnotation(Metered.class);
+        }
+        return annotation;
+    }
+
+    private Counted getCountedAnnotation(Method method) {
+        Counted annotation = method.getAnnotation(Counted.class);
+        if (annotation == null) {
+            annotation = method.getDeclaringClass().getAnnotation(Counted.class);
+        }
+        return annotation;
+    }
+
     @Override
     public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) throws Exception {
         Method method = serviceMethodInfo.getMethod();
         MethodInterceptors methodInterceptors = map.get(method);
-        if (methodInterceptors == null || !methodInterceptors.isAnnotationScanned()) {
+        if (methodInterceptors == null || !methodInterceptors.annotationScanned) {
             List<Interceptor> interceptors = new CopyOnWriteArrayList<>();
-            if (method.isAnnotationPresent(Timed.class)) {
-                Timed annotation = method.getAnnotation(Timed.class);
-                Timer timer = MetricAnnotation.timer(Metrics.getInstance().getMetricService(), annotation, method);
+            Timed timed = getTimedAnnotation(method);
+            if (timed != null) {
+                Timer timer = MetricAnnotation.timer(Metrics.getInstance().getMetricService(), timed, method);
                 Interceptor interceptor = new TimerInterceptor(timer);
                 interceptors.add(interceptor);
             }
-
-            if (method.isAnnotationPresent(Metered.class)) {
-                Metered annotation = method.getAnnotation(Metered.class);
-                Meter meter = MetricAnnotation.meter(Metrics.getInstance().getMetricService(), annotation, method);
+            Metered metered = getMeteredAnnotation(method);
+            if (metered != null) {
+                Meter meter = MetricAnnotation.meter(Metrics.getInstance().getMetricService(), metered, method);
                 Interceptor interceptor = new MeterInterceptor(meter);
                 interceptors.add(interceptor);
             }
-
-            if (method.isAnnotationPresent(Counted.class)) {
-                Counted annotation = method.getAnnotation(Counted.class);
-                Counter counter = MetricAnnotation.counter(Metrics.getInstance().getMetricService(), annotation,
-                        method);
-                Interceptor interceptor = new CounterInterceptor(counter, annotation.monotonic());
+            Counted counted = getCountedAnnotation(method);
+            if (counted != null) {
+                Counter counter = MetricAnnotation.counter(Metrics.getInstance().getMetricService(), counted, method);
+                Interceptor interceptor = new CounterInterceptor(counter, counted.monotonic());
                 interceptors.add(interceptor);
             }
 
@@ -110,10 +131,6 @@ public class MetricsInterceptor implements Interceptor {
             if (!interceptors.isEmpty()) {
                 this.interceptors = interceptors.toArray(new Interceptor[interceptors.size()]);
             }
-        }
-
-        private boolean isAnnotationScanned() {
-            return annotationScanned;
         }
 
         @Override

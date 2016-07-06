@@ -22,6 +22,8 @@ import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.ServiceMethodInfo;
+import org.wso2.msf4j.analytics.httpmonitoring.config.HTTPMonitoringConfigBuilder;
+import org.wso2.msf4j.analytics.httpmonitoring.config.model.HTTPMonitoringConfig;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -40,15 +42,24 @@ import javax.ws.rs.core.HttpHeaders;
         immediate = true)
 public class HTTPMonitoringInterceptor implements Interceptor {
 
-    public static final String REFERER = "Referer";
     private static final Logger logger = LoggerFactory.getLogger(HTTPMonitoringInterceptor.class);
 
-    private Map<Method, Interceptor> map = new ConcurrentHashMap<>();
+    public static final String REFERER = "Referer";
+
+    private Map<Method, MethodInterceptor> map = new ConcurrentHashMap<>();
+
+    private final boolean enabled;
+
+    private final HTTPMonitoringDataPublisher httpMonitoringDataPublisher;
 
     public HTTPMonitoringInterceptor() {
         if (logger.isDebugEnabled()) {
             logger.debug("Creating HTTP Monitoring Interceptor");
         }
+        HTTPMonitoringConfig httpMonitoringConfig = HTTPMonitoringConfigBuilder.build();
+        enabled = httpMonitoringConfig.isEnabled();
+        httpMonitoringDataPublisher = enabled ? new HTTPMonitoringDataPublisher(httpMonitoringConfig.getDas()) :
+                null;
     }
 
     /**
@@ -67,33 +78,66 @@ public class HTTPMonitoringInterceptor implements Interceptor {
 
     @Override
     public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) throws Exception {
+        if (!enabled) {
+            return true;
+        }
         Method method = serviceMethodInfo.getMethod();
-        Interceptor interceptor = map.get(method);
-        if (interceptor == null) {
-            HTTPMonitored httpMon = this.extractFinalAnnotation(method);
+        MethodInterceptor methodInterceptor = map.get(method);
+        if (methodInterceptor == null || !methodInterceptor.annotationScanned) {
+            HTTPMonitored httpMon = extractFinalAnnotation(method);
+            Interceptor interceptor = null;
             if (httpMon != null) {
                 interceptor = new HTTPInterceptor(httpMon.tracing());
-                map.put(method, interceptor);
             }
+
+            methodInterceptor = new MethodInterceptor(true, interceptor);
+            map.put(method, methodInterceptor);
         }
 
-        if (interceptor != null) {
-            interceptor.preCall(request, responder, serviceMethodInfo);
-        }
-
-        return true;
+        return methodInterceptor.preCall(request, responder, serviceMethodInfo);
     }
 
     @Override
     public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) throws Exception {
+        if (!enabled) {
+            return;
+        }
         Method method = serviceMethodInfo.getMethod();
-        Interceptor interceptor = map.get(method);
-        if (interceptor != null) {
-            interceptor.postCall(request, status, serviceMethodInfo);
+        MethodInterceptor methodInterceptor = map.get(method);
+        if (methodInterceptor != null) {
+            methodInterceptor.postCall(request, status, serviceMethodInfo);
         }
     }
 
-    private static class HTTPInterceptor implements Interceptor {
+    private static class MethodInterceptor implements Interceptor {
+
+        private final boolean annotationScanned;
+
+        private final Interceptor interceptor;
+
+        MethodInterceptor(boolean annotationScanned, Interceptor interceptor) {
+            this.annotationScanned = annotationScanned;
+            this.interceptor = interceptor;
+        }
+
+        @Override
+        public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo)
+                throws Exception {
+            if (interceptor != null) {
+                return interceptor.preCall(request, responder, serviceMethodInfo);
+            }
+            return true;
+        }
+
+        @Override
+        public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) throws Exception {
+            if (interceptor != null) {
+                interceptor.postCall(request, status, serviceMethodInfo);
+            }
+        }
+    }
+
+    private class HTTPInterceptor implements Interceptor {
 
         private static final String DEFAULT_TRACE_ID = "DEFAULT";
 
@@ -112,10 +156,7 @@ public class HTTPMonitoringInterceptor implements Interceptor {
 
         private boolean tracing;
 
-        private final HTTPMonitoringDataPublisher httpMonitoringDataPublisher;
-
         private HTTPInterceptor(boolean tracing) {
-            httpMonitoringDataPublisher = HTTPMonitoringDataPublisher.getInstance();
             this.tracing = tracing;
         }
 

@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.msf4j.analytics.httpmonitoring;
+package org.wso2.msf4j.analytics.httpmonitoring.config.model;
 
 /**
- * Configuration for HTTP Monitoring
+ * Configuration for connecting with Data Analytics Server (DAS)
  */
-public class HTTPMonitoringConfig {
+public class DasConfig {
 
     private String type = "thrift";
 
@@ -79,4 +79,5 @@ public class HTTPMonitoringConfig {
     public void setDataAgentConfigPath(String dataAgentConfigPath) {
         this.dataAgentConfigPath = dataAgentConfigPath;
     }
+
 }

@@ -16,6 +16,7 @@
 package org.wso2.msf4j.sample.httpmonitoring.service;
 
 
+import org.wso2.carbon.metrics.core.annotation.Timed;
 import org.wso2.msf4j.analytics.httpmonitoring.HTTPMonitored;
 
 import java.util.Collection;
@@ -32,6 +33,7 @@ import javax.ws.rs.Produces;
  * StudentService class.
  */
 @Path("/student")
+@Timed
 public class StudentService {
 
     private Map<String, Student> students = new ConcurrentHashMap<>();
