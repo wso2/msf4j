@@ -18,7 +18,7 @@ Use @Timed to keep a histogram of durations of each method invocation.
 
 The @Metered annotation also keeps a count. The @Timed annotation keeps the count and rate of events as well.
 
-See [Metrics Annotations](../../../../../#metrics-annotations) for more details.
+See [Metrics Annotations](../../#metrics-annotations) for more details.
 
 See the following example:
 
