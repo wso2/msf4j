@@ -20,15 +20,19 @@ All services were run out of the box without any tuning separately on a 32 core 
 
 ### Performing the throughput test
 
-For each service in [echo-samples](echo-samples) directory,
-* Build service
-* Start the service and get the service url (Refer the readme of each service)
-* Perform the test using the automated [run-test.sh](run-test.sh) script
+Build the samples using the following command from [perf-benchmark](perf-benchmark)
 
 ```
-./run-test.sh <service-url>
+./run build
 ```
-This script will perform the loads and provide you the average throughput of the given service.
+
+Run all tests using the following command from [perf-benchmark](perf-benchmark)
+
+```
+./run
+```
+
+This script will perform the loads and provide you the average throughput, latency and 90th percentile for all the sample services.
 
 
 ## Memory Test
