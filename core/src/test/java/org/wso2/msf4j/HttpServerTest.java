@@ -992,6 +992,23 @@ public class HttpServerTest {
         assertEquals(response, "Asset Type = WADL, Asset Id = 10");
     }
 
+    @Test
+    public void testDualInvocation() throws Exception {
+        HttpURLConnection urlConn = request("/test/v1/testDualInvocation1", HttpMethod.GET);
+        InputStream inputStream = urlConn.getInputStream();
+        String response = StreamUtil.asString(inputStream);
+        IOUtils.closeQuietly(inputStream);
+        urlConn.disconnect();
+        assertEquals("1", response);
+
+        urlConn = request("/test/v1/testDualInvocation2", HttpMethod.GET);
+        inputStream = urlConn.getInputStream();
+        response = StreamUtil.asString(inputStream);
+        IOUtils.closeQuietly(inputStream);
+        urlConn.disconnect();
+        assertEquals("2", response);
+    }
+
     protected Socket createRawSocket(URL url) throws IOException {
         return new Socket(url.getHost(), url.getPort());
     }

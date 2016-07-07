@@ -273,7 +273,7 @@
 
     <properties>
         <export.package>
-            org.wso2.msf4j.spring.*;version="1.0.0",
+            org.wso2.msf4j.spring.*;version="${msf4j.version}"
         </export.package>
         <import.package>
             javax.annotation.*,

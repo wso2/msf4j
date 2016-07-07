@@ -17,6 +17,7 @@
 package org.wso2.msf4j.spring.transport;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.wso2.msf4j.spring.SpringConstants;
 
 /**
  * TransportConfig bean for HTTP transport
@@ -25,28 +26,52 @@ import org.springframework.beans.factory.annotation.Value;
  */
 public class HTTPTransportConfig extends TransportConfig {
 
-    @Value("${http.id:msf4j-http}")
+    public HTTPTransportConfig() {
+        super.setScheme(SpringConstants.HTTP_TRANSPORT);
+    }
+
+    public HTTPTransportConfig(int port) {
+        this();
+        setPort(port);
+    }
+
+    @Value("${http.id:}")
     public void setId(String id) {
         super.setId(id);
     }
 
-    @Value("${http.enabled:true}")
-    public void setEnabled(boolean enabled) {
-        super.setEnabled(enabled);
+    @Value("${http.enabled:}")
+    public void setEnabledProperty(String enabled) {
+        super.setEnabledProperty(enabled);
     }
 
-    @Value("${http.port:8080}")
-    public void setPort(int port) {
-        super.setPort(port);
+    @Value("${http.port:}")
+    public void setPortProperty(String port) {
+        super.setPortProperty(port);
     }
 
-    @Value("${http.host:0.0.0.0}")
-    public void setHost(String host) {
-        super.setHost(host);
+    @Value("${http.host:}")
+    public void setHostProperty(String host) {
+        super.setHostProperty(host);
     }
 
-    @Value("${http.scheme:http}")
-    public void setScheme(String scheme) {
-        super.setScheme(scheme);
+    public HTTPTransportConfig port(int port) {
+        setPort(port);
+        return this;
+    }
+
+    public HTTPTransportConfig host(String host) {
+        setHost(host);
+        return this;
+    }
+
+    public HTTPTransportConfig enabled(boolean enabled) {
+        setEnabled(enabled);
+        return this;
+    }
+
+    public HTTPTransportConfig enabled() {
+        setEnabled(true);
+        return this;
     }
 }

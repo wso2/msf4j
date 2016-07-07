@@ -29,4 +29,6 @@ public class SpringConstants {
 
     public static final String APPLICATION_PROPERTIES = "applicationProperties";
     public static final String PARAMETER_STR = ".parameter.";
+    public static final String DEFAULT_HOST = "0.0.0.0";
+
 }

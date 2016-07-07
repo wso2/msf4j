@@ -629,6 +629,22 @@ public class TestMicroservice implements Microservice {
         return Response.ok().entity(sb.toString()).build();
     }
 
+    private static int initialValue = 0;
+    @GET
+    @Path("/testDualInvocation1")
+    public Response testDualInvocation1() {
+        initialValue++;
+        return Response.ok().entity(initialValue).build();
+    }
+
+    @GET
+    @Path("/testDualInvocation2")
+    public Response testDualInvocation2() {
+        int returnVal = initialValue + 1;
+        initialValue = 0;
+        return Response.ok().entity(returnVal).build();
+    }
+    
     /**
      * Custom exception class for testing exception handler.
      */
