@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
 baseDir=$(dirname "$0")
-concLevels="1 25 50"
-loopReps=3
-testLoops=1000
+concLevels="1 25 50 100 200 400 800 1600 3200"
+loopReps=2
+testLoops=10000
 warmUpConc=50
-warmUpLoop=1000
+warmUpLoop=10000
 
 tmpDir="$baseDir/tmpData"
 vendorsLoc="$baseDir/Samples"
