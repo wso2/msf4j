@@ -34,7 +34,7 @@ public class Application {
     public static void main(String[] args) throws Exception {
         port(8080);
         post("/EchoService/echo", (req, res) -> req.body());
-        post("/EchoService/dbecho", (req, res) -> {
+        post("/EchoService/fileecho", (req, res) -> {
             Path tempfile = Files.createTempFile(UUID.randomUUID().toString(), ".tmp");
             Files.write(tempfile, req.bodyAsBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
             String returnStr = new String(Files.readAllBytes(tempfile), Charset.defaultCharset());

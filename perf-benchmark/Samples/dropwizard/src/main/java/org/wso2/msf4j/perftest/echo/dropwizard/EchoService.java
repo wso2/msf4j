@@ -43,7 +43,7 @@ public class EchoService {
     }
 
     @POST
-    @Path("dbecho")
+    @Path("fileecho")
     @Consumes("text/plain")
     @Produces("text/plain")
     public String fileWrite(String body) throws InterruptedException, IOException {

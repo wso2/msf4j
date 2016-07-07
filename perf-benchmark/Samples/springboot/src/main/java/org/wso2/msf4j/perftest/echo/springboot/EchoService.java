@@ -41,7 +41,7 @@ public class EchoService {
         return body;
     }
 
-    @RequestMapping("/EchoService/dbecho")
+    @RequestMapping("/EchoService/fileecho")
     @ResponseBody
     public String fileWrite(@RequestBody String body) throws InterruptedException, IOException {
         String returnStr = "";
