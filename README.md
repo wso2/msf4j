@@ -256,11 +256,11 @@ annotation is added to the "hello" method of "HelloService" shown above.
 | @Counted(name = "helloCounter")                  | org.example.service.HelloService.hello.helloCounter |
 | @Counted(name = "helloCounter", absolute = true) | helloCounter                                        |
 
-The Metrics annotations can be used only at the Method level.
+The Metrics annotations can be used at the Method level and Class level.
 
 You can also configure a level in Metrics Annotations. For more information about Metric Levels, 
 see [WSO2 Carbon Metrics](https://github.com/wso2/carbon-metrics). In MSF4J, you can load the metrics level configuration 
-via the System Propery named `metrics.level.configuration`.
+via the System Property named `metrics.level.conf`.
 
 #####@Counted
 Count the method invocations. There is a parameter named "monotonic" and it is set to false by default. This means that the

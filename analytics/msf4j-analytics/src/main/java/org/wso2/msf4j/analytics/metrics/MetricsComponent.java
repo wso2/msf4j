@@ -18,37 +18,96 @@ package org.wso2.msf4j.analytics.metrics;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
-import org.wso2.carbon.kernel.utils.Utils;
-import org.wso2.msf4j.util.SystemVariableUtil;
-
-import java.io.File;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.wso2.carbon.metrics.core.MetricManagementService;
+import org.wso2.carbon.metrics.core.MetricService;
 
 /**
  * Metrics OSGi Component to Initialize/Destroy Metrics.
  */
-@Component(
-    name = "org.wso2.msf4j.analytics.metrics.MetricsComponent",
-    immediate = true)
+@Component(name = "org.wso2.msf4j.analytics.metrics.MetricsComponent")
 public class MetricsComponent {
 
-    private static final String METRICS_ENABLED = "METRICS_ENABLED";
-    private static final String METRICS_REPORTING_DAS_DATAAGENTCONFIGPATH = "METRICS_REPORTING_DAS_DATAAGENTCONFIGPATH";
+    private static final Logger logger = LoggerFactory.getLogger(MetricsComponent.class);
 
+    /**
+     * This is the activation method of MetricsComponent. This will be called when its references are
+     * satisfied.
+     */
     @Activate
-    protected void init() {
-        if (Boolean.parseBoolean(SystemVariableUtil.getValue(METRICS_ENABLED, Boolean.FALSE.toString()))) {
-            String dataAgentConfigPath =
-                    SystemVariableUtil.getValue(METRICS_REPORTING_DAS_DATAAGENTCONFIGPATH, Utils.getCarbonConfigHome()
-                            + File.separator + "data-bridge" + File.separator + "data-agent-conf.xml");
-            System.setProperty(METRICS_REPORTING_DAS_DATAAGENTCONFIGPATH, dataAgentConfigPath);
-            Metrics.init(MetricReporter.JMX, MetricReporter.DAS);
+    protected void activate() {
+        if (logger.isInfoEnabled()) {
+            logger.info("Metrics Component is activated");
         }
     }
 
+    /**
+     * This is the deactivation method of MetricsComponent.
+     */
     @Deactivate
-    protected void destroy() {
-        if (Boolean.parseBoolean(SystemVariableUtil.getValue(METRICS_ENABLED, Boolean.FALSE.toString()))) {
-            Metrics.destroy();
+    protected void deactivate() {
+        if (logger.isInfoEnabled()) {
+            logger.info("Metrics Component is deactivated");
         }
+    }
+
+    /**
+     * This bind method will be called when {@link MetricService} is registered.
+     *
+     * @param metricService The {@link MetricService} instance registered as an OSGi service
+     */
+    @Reference(
+            name = "carbon.metrics.service",
+            service = MetricService.class,
+            cardinality = ReferenceCardinality.MANDATORY,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "unsetMetricService"
+    )
+    protected void setMetricService(MetricService metricService) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Setting MetricService reference");
+        }
+        Metrics.getInstance().setMetricService(metricService);
+    }
+
+    /**
+     * This is the unbind method which gets called at the un-registration of {@link MetricService}
+     *
+     * @param metricService The {@link MetricService} instance registered as an OSGi service
+     */
+    protected void unsetMetricService(MetricService metricService) {
+        Metrics.getInstance().setMetricService(null);
+    }
+
+    /**
+     * This bind method will be called when {@link MetricManagementService} is registered.
+     *
+     * @param metricManagementService The {@link MetricManagementService} instance registered as an OSGi service
+     */
+    @Reference(
+            name = "carbon.metrics.management.service",
+            service = MetricManagementService.class,
+            cardinality = ReferenceCardinality.MANDATORY,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "unsetMetricManagementService"
+    )
+    protected void setMetricManagementService(MetricManagementService metricManagementService) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Setting MetricManagementService reference");
+        }
+        Metrics.getInstance().setMetricManagementService(metricManagementService);
+    }
+
+    /**
+     * This is the unbind method which gets called at the un-registration of {@link MetricManagementService}
+     *
+     * @param metricManagementService The {@link MetricManagementService} instance registered as an OSGi service
+     */
+    protected void unsetMetricManagementService(MetricManagementService metricManagementService) {
+        Metrics.getInstance().setMetricManagementService(null);
     }
 }
