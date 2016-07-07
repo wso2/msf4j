@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.msf4j.sample.metrics;
+package org.wso2.msf4j.example;
 
 import org.wso2.msf4j.MicroservicesRunner;
 

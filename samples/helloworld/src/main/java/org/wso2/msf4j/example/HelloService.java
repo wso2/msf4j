@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.msf4j.sample.metrics;
+package org.wso2.msf4j.example;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
