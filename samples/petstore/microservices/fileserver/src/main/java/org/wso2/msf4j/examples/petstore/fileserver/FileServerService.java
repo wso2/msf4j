@@ -18,7 +18,7 @@ package org.wso2.msf4j.examples.petstore.fileserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.metrics.annotation.Timed;
+import org.wso2.carbon.metrics.core.annotation.Timed;
 import org.wso2.msf4j.HttpStreamHandler;
 import org.wso2.msf4j.HttpStreamer;
 import org.wso2.msf4j.analytics.httpmonitoring.HTTPMonitored;
