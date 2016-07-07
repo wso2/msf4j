@@ -143,6 +143,9 @@ function testConcLevel(){
         local p90thV=$(cat "$resOut" |grep -Eo "90%.*" | grep -Eo "[0-9]+(\.[0-9]+)?" | tail -1)
         p90th=$(echo "$p90th+$p90thV" | bc)
         echo "90% at concurrency $concLevel in repetition $loopRep is $p90thV"
+
+        echo "Waiting 1s.."
+        sleep 1
     done
     echo "For $service"
 
