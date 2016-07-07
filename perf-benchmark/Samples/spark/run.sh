@@ -65,6 +65,13 @@ function getEndpoints(){
     echo "$endpoints"
 }
 
+function buildSample(){
+    local curDir=$(pwd)
+    cd $baseDir
+    mvn clean package
+    cd $curDir
+}
+
 if [ "$1" = "start" ]
 then
     start
@@ -76,4 +83,7 @@ then
 elif [ "$1" = "endpoints" ]
 then
     getEndpoints
+elif [ "$1" = "build" ]
+then
+    buildSample
 fi

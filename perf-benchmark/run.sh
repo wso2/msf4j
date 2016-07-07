@@ -1,32 +1,47 @@
 #!/usr/bin/env bash
 
 baseDir=$(dirname "$0")
-testTypeLoc="$baseDir/Test-Types"
+vendorsLoc="$baseDir/Samples"
 
 function cleanup(){
-    local types=$(ls "$testTypeLoc")
+    local vendors=$(ls "$vendorsLoc")
     local type=""
-    for type in $types
+    local vendor=""
+    for vendor in $vendors
     do
-        local typeDir="$testTypeLoc/$type"
-        if [ -d "$typeDir" ]
+        local vendorDir="$vendorsLoc/$vendor"
+        if [ -f "$vendorDir/run.sh" ]
         then
-            local vendors=$(ls "$typeDir")
-            local vendor=""
-            for vendor in $vendors
-            do
-                local vendorDir="$typeDir/$vendor"
-                pidFile=$vendorDir/pid
-                if [ -f $pidFile ]
-                then
-                    $vendorDir/run.sh "stop"
-                fi
-            done
+            local pidFile=$vendorDir/pid
+            if [ -f $pidFile ]
+            then
+                $vendorDir/run.sh "stop"
+            fi
         fi
     done
 }
 
-$baseDir/excecute-tests.sh
+function buildSamples(){
+    local vendors=$(ls "$vendorsLoc")
+    local type=""
+    local vendor=""
+    for vendor in $vendors
+    do
+        local vendorDir="$vendorsLoc/$vendor"
+        if [ -f "$vendorDir/run.sh" ]
+        then
+            $vendorDir/run.sh "build"
+        fi
+    done
+}
+
+if [ "$1" = "build" ]
+then
+    cleanup
+    buildSamples
+else
+    $baseDir/excecute-tests.sh
+fi
 
 if [ ! "$?" = 0 ]
 then

@@ -2,7 +2,7 @@
 
 baseDir=$(dirname "$0")
 
-artifact="$baseDir/target/wildfly-echo-message-*"
+artifact="$baseDir/target/wildfly-echo-*.war"
 startCmd="$baseDir/wildfly-10.0.0.Final/bin/standalone.sh"
 stopCmd="$baseDir/wildfly-10.0.0.Final/bin/jboss-cli.sh --connect command=:shutdown"
 
@@ -67,6 +67,32 @@ function getEndpoints(){
     echo "$endpoints"
 }
 
+function buildSample(){
+    local curDir=$(pwd)
+    cd $baseDir
+    mvn clean package
+    if [ ! -d "wildfly-10.0.0.Final" ]
+    then
+        if [ -f "wildfly-10.0.0.Final.zip" ]
+        then
+            unzip "wildfly-10.0.0.Final.zip"
+        else
+            if which wget >/dev/null
+            then
+                wget "http://download.jboss.org/wildfly/10.0.0.Final/wildfly-10.0.0.Final.zip"
+                unzip "wildfly-10.0.0.Final.zip"
+            else
+                echo "couldnot find 'wget' to download wildfly server"
+                echo "failed to prepare wildfly sample"
+                return
+            fi
+        fi
+    fi
+    rm -f "wildfly-10.0.0.Final/standalone/deployments/wildfly*"
+    cd $curDir
+    cp -v $artifact "$baseDir/wildfly-10.0.0.Final/standalone/deployments/"
+}
+
 if [ "$1" = "start" ]
 then
     start
@@ -78,4 +104,7 @@ then
 elif [ "$1" = "endpoints" ]
 then
     getEndpoints
+elif [ "$1" = "build" ]
+then
+    buildSample
 fi
