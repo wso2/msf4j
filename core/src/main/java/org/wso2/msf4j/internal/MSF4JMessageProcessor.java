@@ -88,6 +88,9 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                             HttpUtil.EMPTY_BODY));
         } catch (Throwable t) {
             handleThrowable(t, carbonCallback);
+        } finally {
+            // Calling the release method to make sure that there won't be any memory leaks from netty
+            carbonMessage.release();
         }
         return true;
     }
