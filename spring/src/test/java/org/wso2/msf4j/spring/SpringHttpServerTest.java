@@ -18,6 +18,7 @@
  */
 package org.wso2.msf4j.spring;
 
+import org.springframework.context.ConfigurableApplicationContext;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.wso2.msf4j.HttpServerTest;
@@ -31,15 +32,16 @@ import java.net.URI;
 public class SpringHttpServerTest extends HttpServerTest {
 
     private static final int port = Constants.PORT;
+    private ConfigurableApplicationContext configurableApplicationContext;
 
     @BeforeClass
     public void setup() throws Exception {
         baseURI = URI.create(String.format("http://%s:%d", Constants.HOSTNAME, port));
-        MSF4JSpringApplication.run(SpringHttpServerTest.class);
+        configurableApplicationContext = MSF4JSpringApplication.run(SpringHttpServerTest.class);
     }
 
     @AfterClass
     public void teardown() throws Exception {
-        //TODO: how to stop?
+        configurableApplicationContext.close();
     }
 }
