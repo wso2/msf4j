@@ -15,7 +15,7 @@
 # This is the main configuration file for HTTP Monitoring
 
 # Enable HTTP Monitoring
-enabled: false
+enabled: true
 
 # Data Analytics Server (DAS) configuration
 das:
