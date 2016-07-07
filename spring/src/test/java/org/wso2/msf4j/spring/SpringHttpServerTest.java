@@ -21,7 +21,6 @@ package org.wso2.msf4j.spring;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 import org.wso2.msf4j.HttpServerTest;
 import org.wso2.msf4j.conf.Constants;
 
