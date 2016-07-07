@@ -518,7 +518,7 @@
         <org.wso2.carbon.transport.http.netty.version>2.1.1-SNAPSHOT</org.wso2.carbon.transport.http.netty.version>
         <org.wso2.carbon.transport.http.netty.version.range>[2.0,3)</org.wso2.carbon.transport.http.netty.version.range>
         <msf4j.version>2.0.0-SNAPSHOT</msf4j.version>
-        <carbon.metrics.version>2.0.0-SNAPSHOT</carbon.metrics.version>
+        <carbon.metrics.version>2.0.0</carbon.metrics.version>
         <carbon.metrics.version.range>[2.0,3)</carbon.metrics.version.range>
         <carbon.analytics.common.version>5.0.6</carbon.analytics.common.version>
         <carbon.analytics.common.version.range>[5.0,6)</carbon.analytics.common.version.range>
