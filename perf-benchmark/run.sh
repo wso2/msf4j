@@ -40,6 +40,7 @@ then
     cleanup
     buildSamples
 else
+    cleanup
     $baseDir/excecute-tests.sh
 fi
 

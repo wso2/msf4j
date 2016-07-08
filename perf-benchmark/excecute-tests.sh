@@ -2,10 +2,10 @@
 
 baseDir=$(dirname "$0")
 concLevels="1 25 50 100 200 400 800 1600 3200"
-loopReps=2
-testLoops=10000
-warmUpConc=50
-warmUpLoop=10000
+perTestTime=30
+testLoops=1000000
+warmUpConc=200
+warmUpLoop=50000
 
 tmpDir="$baseDir/tmpData"
 vendorsLoc="$baseDir/Samples"
@@ -83,18 +83,18 @@ function processResults(){
             local header=""
             if "$isPrintH"
             then
-                header="Concurrency, "
+                header="Concurrency"
             fi
-            local line="$conc, "
+            local line="$conc"
             for vendorI in $(seq 0 $((MAP["$type-vendor-n"]-1)))
             do
                 local vendor=${MAP["$type-vendor-$vendorI"]}
                 if "$isPrintH"
                 then
-                    header+="$vendor, "
+                    header+=", $vendor"
                 fi
                 local tps=${MAP["$type-$vendor-$conc-$metric"]}
-                line+="$tps, "
+                line+=", $tps"
             done
             if "$isPrintH"
             then
@@ -111,6 +111,46 @@ function processResults(){
     cat "$resultsFile"
 }
 
+function processPercentiles(){
+    local resultsFile=$1
+    local type=""
+    local vendorI=0
+    local conc=""
+
+    rm -f "$resultsFile"
+
+    local header="Vendor, Concurrency"
+    for hVal in $(seq 0 100)
+    do
+        header+=", $hVal"
+    done
+
+    for type in "${types[@]}"
+    do
+        echo "Test: $type," >> "$resultsFile"
+        for conc in $concLevels
+        do
+            local isPrintH=true
+            for vendorI in $(seq 0 $((MAP["$type-vendor-n"]-1)))
+            do
+                local vendor=${MAP["$type-vendor-$vendorI"]}
+                local percents=${MAP["$type-$vendor-$conc-percents"]}
+                if "$isPrintH"
+                then
+                    echo "$header" >> "$resultsFile"
+                    isPrintH=false
+                fi
+                echo "$percents" >> "$resultsFile"
+            done
+            echo "" >> "$resultsFile"
+        done
+    done
+    echo "==========================================="
+    echo "            Results (Percentiles)              "
+    echo "==========================================="
+    cat "$resultsFile"
+}
+
 function warmUp(){
     local service=$1
     echo "Warm up service $service"
@@ -122,44 +162,30 @@ function testConcLevel(){
     local concLevel=$2
     local type=$3
     local vendor=$4
-    local tps=0
-    local meanLat=0
-    local p90th=0
-    for loopRep in $(seq 1 $loopReps)
-    do
-        local resOut="$tmpDir/$type-$vendor-conc$concLevel-rep$loopRep-loops$testLoops-time$timeStmp-$(uuidgen)"
-        echo "Testing service: $service"
-        echo "Testing concurrency $concLevel for repetition $loopRep at $resOut"
-        ab -k -p "$payload" -c $concLevel -n $testLoops -H "Accept:text/plain" "$service" > "$resOut"
 
-        local tpsV=$(cat "$resOut" | grep -Eo "Requests per second.*" | grep -Eo "[0-9]+" | head -1)
-        tps=$(echo "$tps+$tpsV" | bc)
-        echo "Tps at concurrency $concLevel in repetition $loopRep is $tpsV"
+    local resOut="$tmpDir/result-$type-$vendor-conc$concLevel-rep$loopRep-loops$testLoops-time$timeStmp-$(uuidgen)"
+    local percentOut="$tmpDir/percentile-$type-$vendor-conc$concLevel-rep$loopRep-loops$testLoops-time$timeStmp-$(uuidgen)"
+    echo "Testing service: $service"
+    echo "Testing concurrency $concLevel at $resOut"
+    ab -t "$perTestTime" -n "$testLoops" -c "$concLevel" -H "Accept:text/plain" -p "$payload" -k -e "$percentOut" "$service" > "$resOut"
 
-        local meanLatV=$(cat "$resOut" | grep -Eo "Time per request.*\(mean\)" | grep -Eo "[0-9]+(\.[0-9]+)?")
-        meanLat=$(echo "$meanLat+$meanLatV" | bc)
-        echo "Latency at concurrency $concLevel in repetition $loopRep is $meanLatV"
+    local tps=$(cat "$resOut" | grep -Eo "Requests per second.*" | grep -Eo "[0-9]+" | head -1)
 
-        local p90thV=$(cat "$resOut" |grep -Eo "90%.*" | grep -Eo "[0-9]+(\.[0-9]+)?" | tail -1)
-        p90th=$(echo "$p90th+$p90thV" | bc)
-        echo "90% at concurrency $concLevel in repetition $loopRep is $p90thV"
+    local meanLat=$(cat "$resOut" | grep -Eo "Time per request.*\(mean\)" | grep -Eo "[0-9]+(\.[0-9]+)?")
 
-        echo "Waiting 1s.."
-        sleep 1
-    done
-    echo "For $service"
+    local percents=$(cat "$percentOut" | grep -Eo ",.*" | grep -Eo "[0-9]+(\.[0-9]+)?" | tr '\n' ',')
+    percents="$vendor, $concLevel, $percents"
 
-    tps=$(echo "$tps/$loopReps" | bc)
+    echo "For $service at concurrency $concLevel"
+
     MAP["$type-$vendor-$concLevel-tps"]=$tps
-    echo -e "\tFinal tps for $tps"
+    echo -e "\tThroughput $tps"
 
-    meanLat=$(echo "$meanLat/$loopReps" | bc)
     MAP["$type-$vendor-$concLevel-meanLat"]=$meanLat
-    echo -e "\tFinal mean latency is $meanLat"
+    echo -e "\tMean latency is $meanLat"
 
-    p90th=$(echo "$p90th/$loopReps" | bc)
-    MAP["$type-$vendor-$concLevel-p90th"]=$p90th
-    echo -e "\tFinal 90th percentile is $p90th"
+    MAP["$type-$vendor-$concLevel-percents"]=$percents
+    echo -e "\tPercentiles are $percents"
 }
 
 function iterateConcLevels(){
@@ -211,7 +237,7 @@ function iterateVendors(){
     echo ""
     processResults "meanLat" "$baseDir/results-latency.csv"
     echo ""
-    processResults "p90th" "$baseDir/results-90th-percentile.csv"
+    processPercentiles "$baseDir/results-percentiles.csv"
     echo ""
     #printResultStructures
 }
