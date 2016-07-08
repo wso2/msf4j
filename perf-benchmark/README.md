@@ -23,16 +23,23 @@ All services were run out of the box without any tuning separately on a 32 core 
 Build the samples using the following command from [perf-benchmark](perf-benchmark)
 
 ```
-./run build
+./run.sh build
 ```
 
 Run all tests using the following command from [perf-benchmark](perf-benchmark)
 
 ```
-./run
+./run.sh
 ```
 
-This script will perform the loads and provide you the average throughput, latency and 90th percentile for all the sample services.
+This script will perform the loads and provide you the average throughput, latency and all the percentiles for all the sample services.
+
+You can customize the following parameters of the performance test by modifying the following values in [excecute-tests.sh](excecute-tests.sh)
+ * concLevels - Space separated list of concurrency levels to test
+ * perTestTime - Maximum time to spend on a single concurrency level
+ * testLoops - Number of requests to perform for a sigle concurrency level
+ * warmUpConc - Concurrency of the warm-up requests
+ * warmUpLoop - Number of requests to send for warm-up
 
 
 ## Memory Test
@@ -48,6 +55,6 @@ average heape usage values were plotted for each framework.
 For each service in [echo-samples](echo-samples) directory,
 * Build service
 * Start the service with GC logging enabled with time stamp (-Xloggc:gc-log-file.log -verbose:gc -XX:+PrintGCDateStamps)
-* Perform the test using the automated [run-test.sh](run-test.sh) script as mentioned earlier
+* Perform the test using the automated [run.sh](run.sh) script as mentioned earlier
 * Get time range of each concurrency level from the output of the run-test.sh
 * Analyse the GC log for each concurrency level by matching the time range and calculate the average heap usage for each concurrency level
