@@ -20,7 +20,6 @@ listenerConfigurations:
   port: 8085
   bossThreadPoolSize: 2
   workerThreadPoolSize: 250
-  execHandlerThreadPoolSize: 60
   scheme: https
   keyStoreFile: "src/test/resources/cert.jks"
   keyStorePass: secret

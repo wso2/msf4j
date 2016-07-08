@@ -363,129 +363,31 @@
                 <artifactId>javassist</artifactId>
                 <version>${javassist.version}</version>
             </dependency>
-
-            <!-- Metrics Dependencies - Start -->
-            <dependency>
-                <groupId>org.wso2.carbon.metrics</groupId>
-                <artifactId>org.wso2.carbon.metrics.manager</artifactId>
-                <version>${carbon.metrics.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.eclipse.osgi</groupId>
-                        <artifactId>org.eclipse.osgi.services</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.metrics</groupId>
-                <artifactId>org.wso2.carbon.metrics.impl</artifactId>
-                <version>${carbon.metrics.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.apache.ws.commons.axiom.wso2</groupId>
-                        <artifactId>axiom</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>xerces</groupId>
-                        <artifactId>xercesImpl</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.wso2.carbon</groupId>
-                        <artifactId>org.wso2.carbon.utils</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.wso2.carbon</groupId>
-                        <artifactId>org.wso2.carbon.registry.core</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.wso2.securevault</groupId>
-                        <artifactId>org.wso2.securevault</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.eclipse.osgi</groupId>
-                        <artifactId>org.eclipse.osgi</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.eclipse.osgi</groupId>
-                        <artifactId>org.eclipse.osgi.services</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.metrics</groupId>
-                <artifactId>org.wso2.carbon.metrics.annotation</artifactId>
-                <version>${carbon.metrics.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.metrics</groupId>
-                <artifactId>org.wso2.carbon.metrics.common</artifactId>
-                <version>${carbon.metrics.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.apache.geronimo.specs</groupId>
-                        <artifactId>geronimo-stax-api_1.0_spec</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.apache.ws.commons.axiom</groupId>
-                        <artifactId>axiom-api</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.metrics</groupId>
-                <artifactId>org.wso2.carbon.metrics.das.reporter</artifactId>
-                <version>${carbon.metrics.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.analytics-common</groupId>
-                <artifactId>org.wso2.carbon.databridge.agent</artifactId>
-                <version>${carbon.analytics.common.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.analytics-common</groupId>
-                <artifactId>org.wso2.carbon.databridge.commons</artifactId>
-                <version>${carbon.analytics.common.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.wso2.carbon</groupId>
-                        <artifactId>org.wso2.carbon.logging</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.analytics-common</groupId>
-                <artifactId>org.wso2.carbon.databridge.commons.thrift</artifactId>
-                <version>${carbon.analytics.common.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.orbit.com.lmax</groupId>
-                <artifactId>disruptor</artifactId>
-                <version>${disruptor.orbit.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.dropwizard.metrics</groupId>
-                <artifactId>metrics-core</artifactId>
-                <version>${metrics.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.dropwizard.metrics</groupId>
-                <artifactId>metrics-jvm</artifactId>
-                <version>${metrics.version}</version>
-            </dependency>
             <dependency>
                 <groupId>commons-io.wso2</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>${commons-io.wso2.version}</version>
             </dependency>
+            <!-- Metrics Dependencies - Start -->
             <dependency>
-                <groupId>libthrift.wso2</groupId>
-                <artifactId>libthrift</artifactId>
-                <version>${libthrift.wso2.version}</version>
+                <groupId>org.wso2.carbon.metrics</groupId>
+                <artifactId>org.wso2.carbon.metrics.core</artifactId>
+                <version>${carbon.metrics.version}</version>
             </dependency>
             <dependency>
-                <groupId>commons-pool.wso2</groupId>
-                <artifactId>commons-pool</artifactId>
-                <version>${commons.pool.version}</version>
+                <groupId>org.wso2.carbon.metrics</groupId>
+                <artifactId>org.wso2.carbon.metrics.jdbc.core</artifactId>
+                <version>${carbon.metrics.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.metrics</groupId>
+                <artifactId>org.wso2.carbon.metrics.das.core</artifactId>
+                <version>${carbon.metrics.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.metrics</groupId>
+                <artifactId>org.wso2.carbon.metrics.config</artifactId>
+                <version>${carbon.metrics.version}</version>
             </dependency>
             <!-- Metrics Dependencies - End -->
             <dependency>
@@ -611,13 +513,13 @@
         <!-- Dependencies -->
         <carbon.kernel.version>5.1.0</carbon.kernel.version>
         <carbon.kernel.version.range>[5.0.0,6.0.0)</carbon.kernel.version.range>
-        <carbon.messaging.version>1.0.4-SNAPSHOT</carbon.messaging.version>
+        <carbon.messaging.version>1.0.4</carbon.messaging.version>
         <carbon.messaging.version.range>[1.0.4,2)</carbon.messaging.version.range>
-        <org.wso2.carbon.transport.http.netty.version>2.1.1-SNAPSHOT</org.wso2.carbon.transport.http.netty.version>
+        <org.wso2.carbon.transport.http.netty.version>2.1.1</org.wso2.carbon.transport.http.netty.version>
         <org.wso2.carbon.transport.http.netty.version.range>[2.0,3)</org.wso2.carbon.transport.http.netty.version.range>
         <msf4j.version>2.0.0-SNAPSHOT</msf4j.version>
-        <carbon.metrics.version>1.2.0</carbon.metrics.version>
-        <carbon.metrics.version.range>[1.2,2)</carbon.metrics.version.range>
+        <carbon.metrics.version>2.0.0</carbon.metrics.version>
+        <carbon.metrics.version.range>[2.0,3)</carbon.metrics.version.range>
         <carbon.analytics.common.version>5.0.6</carbon.analytics.common.version>
         <carbon.analytics.common.version.range>[5.0,6)</carbon.analytics.common.version.range>
         <disruptor.orbit.version>3.3.2.wso2v2</disruptor.orbit.version>

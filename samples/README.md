@@ -14,7 +14,8 @@ In increasing order of complexity;
 * [StockQuote (Fat jar)](stockquote/stockquote-fatjar) - Developing a Microservice as a single jar which packs all the dependencies
 * [StockQuote (OSGi bundle)](stockquote/stockquote-bundle) - Creating a Microservice as an OSGi Bundle
 * [Lifecycle](lifecycle) - Using Service Lifecycle Methods
-* [Metrics and HTTP Monitoring Fat jar](metrics-httpmon/metrics-httpmon-fatjar) / [OSGi bundle](metrics-httpmon/metrics-httpmon-bundle) - Using Metrics and HTTP Monitoring Interceptors
+* [Metrics](metrics) - Using Metrics Interceptor
+* [HTTP Monitoring](http-monitoring) - Using HTTP Monitoring Interceptor
 * [Regex PathParam](regex-pathparam) - How to use regex with PathParam annotation
 * [File Server](fileserver) - Handling Files including streaming input & output
 * [FormParam](formparam) - Shows usage of the FormParam annotation
