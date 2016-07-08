@@ -14,14 +14,13 @@
   ~ limitations under the License.
   -->
 
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wso2.msf4j</groupId>
     <artifactId>msf4j-service</artifactId>
     <packaging>pom</packaging>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.0.0</version>
 
     <name>MSF4J-Parent</name>
 
@@ -152,7 +151,7 @@
         <connection>scm:git:https://github.com/wso2/carbon-parent.git</connection>
         <url>https://github.com/wso2/carbon-parent.git</url>
         <developerConnection>scm:git:https://github.com/wso2/carbon-parent.git</developerConnection>
-        <tag>carbon-parent-4</tag>
+        <tag>v2.0.0-rc1</tag>
     </scm>
 
     <build>
@@ -450,11 +449,10 @@
                                 </filter>
                             </filters>
                             <transformers>
-                                <transformer
-                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>${microservice.mainClass}</mainClass>
                                 </transformer>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
                             </transformers>
                         </configuration>
                     </execution>
@@ -558,7 +556,7 @@
         <!-- Other dependency versions -->
         <maven.wagon.ssh.version>2.10</maven.wagon.ssh.version>
 
-        <msf4j.version>2.0.0-SNAPSHOT</msf4j.version>
+        <msf4j.version>2.0.0</msf4j.version>
 
         <wso2.maven.compiler.source>1.8</wso2.maven.compiler.source>
         <wso2.maven.compiler.target>1.8</wso2.maven.compiler.target>
