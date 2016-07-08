@@ -14,7 +14,8 @@ To measure the throughput, each of the above mentioned sample services were star
 each service repeatedly in varying concurrency levels using apache bench tool. After that the average throughput for
 each concurrency level is calculated and plotted for each framework.
 
-![Throughput](graphs/tps.png)
+![EchoThroughput](graphs/echotps.png) 
+![FileEchoThroughput](graphs/fileechotps.png) 
 
 All services were run out of the box without any tuning separately on a 32 core 64GB server in JVM v1.8.0_60 with default configuration.
 
@@ -41,7 +42,8 @@ To measure the memory usage, above mentioned 1KB echo test was performed for eac
 concurrency level the heap usage was measured and an average value for each concurrency level was calculated. These
 average heape usage values were plotted for each framework.
 
-![Memory](graphs/memory.png)
+![EchoMemory](graphs/echomem.png)
+![FileEchoMemory](graphs/fileechomem.png)
 
 ### Performing the memory test
 
