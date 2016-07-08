@@ -29,10 +29,10 @@ import java.io.InputStream;
  * The items contents are retrieved by calling {@link #openStream()}.</p>
  * <p>Instances of this class are created by accessing the
  * iterator, returned by
- * {@link FormParamIterator(org.wso2.msf4j.Request)}.</p>
+ * {@link FormParamIterator}.</p>
  * <p><em>Note</em>: There is an interaction between the iterator and
  * its associated instances of {@link FormItem}: By invoking
- * {@link java.util.Iterator#hasNext()} on the iterator, you discard all data,
+ * @see java.util.Iterator#hasNext() on the iterator, you discard all data,
  * which hasn't been read so far from the previous data.</p>
  *
  */
@@ -141,7 +141,6 @@ public class FormItem {
     /**
      * Closes the file item.
      *
-     * @throws IOException An I/O error occurred.
      */
     public void close() {
         try {

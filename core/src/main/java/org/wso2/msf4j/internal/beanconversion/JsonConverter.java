@@ -60,7 +60,7 @@ public class JsonConverter extends MediaTypeConverter {
      * @param content    content that needs to be converted to an object
      * @param targetType media type of the content
      * @return Object that maps the Json data
-     * @throws BeanConversionException
+     * @throws BeanConversionException if error occure while converting the content
      */
     @Override
     public Object toObject(ByteBuffer content, Type targetType) throws BeanConversionException {
