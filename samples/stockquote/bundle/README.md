@@ -53,7 +53,7 @@ Install the target/stockquote-msf4j-bundle-1.0.0.jar as an OSGi bundle to WSO2 M
 OSGi console with the following command.
 
 ```
-install file://<path to target directory>/stockquote-bundle-1.0.0.jar
+install file://<path to target directory>/stockquote-bundle-2.0.0.jar
 ```
 
 When the installation of the bundle is successful, use the bundle ID of the installed bundle to start  
@@ -67,7 +67,7 @@ When the bundle is started, the microservice that is exposed as an OSGi service 
 will be exposed as a REST service.
 
 ### Using dropins directory
-Unzip wso2 MSF4J product and copy target/stockquote-msf4j-bundle-1.0.0.jar bundle to the 
+Unzip wso2 MSF4J product and copy target/stockquote-msf4j-bundle-2.0.0.jar bundle to the 
 "[SERVER-HOME]/osgi/dropins" directory.
 
 Then navigate to the bin directory and run the following command to start WSO2 MSF4J server.

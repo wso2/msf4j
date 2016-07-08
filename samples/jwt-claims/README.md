@@ -15,7 +15,7 @@ mvn clean install
 Use following command to run the application
 
 ```
-java -jar jwt-sample/target/jwt-sample-1.0.0-SNAPSHOT.jar
+java -jar jwt-sample/target/jwt-sample-2.0.0.jar
 ```
 
 ## Setting up the Authorization Server with web app.
@@ -25,7 +25,7 @@ Here we use WSO2 Identity server as the authorization server.
 
 1) Download and unzip the latest version of the WSO2 Identity Server from http://wso2.com/products/identity-server.
 
-2) Add JWTAccessTokenBuilder/target/JWTAccessTokenBuilder-1.0.0-SNAPSHOT.jar into \<IS_HOME\>/repository/components/lib folder.
+2) Add JWTAccessTokenBuilder/target/JWTAccessTokenBuilder-2.0.0.jar into \<IS_HOME\>/repository/components/lib folder.
 
 3) Add the following property in <IS_HOME>/repository/conf/identity/identity.xml under oauth tag:
 "\<IdentityOAuthTokenGenerator\>com.wso2.jwt.token.builder.JWTAccessTokenBuilder\</IdentityOAuthTokenGenerator\>"
