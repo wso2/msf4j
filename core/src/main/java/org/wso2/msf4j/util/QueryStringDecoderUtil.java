@@ -41,9 +41,9 @@ import java.util.Map;
  * {@link QueryStringDecoderUtil} decoder = new {@link QueryStringDecoderUtil}("recipient=world&x=1;y=2", false);
  * ...
  * </pre>
- * <p>
+ *
  * <h3>HashDOS vulnerability fix</h3>
- * <p>
+ *
  * As a workaround to the <a href="http://netty.io/s/hashdos">HashDOS</a> vulnerability, the decoder
  * limits the maximum number of decoded key-value parameter pairs, up to {@literal 1024} by
  * default, and you can configure it when you construct the decoder by passing an additional
@@ -64,6 +64,8 @@ public class QueryStringDecoderUtil {
     /**
      * Creates a new decoder that decodes the specified URI. The decoder will
      * assume that the query string is encoded in UTF-8.
+     *
+     * @param uri object to be decoded
      */
     public QueryStringDecoderUtil(String uri) {
         this(uri, Charset.defaultCharset());
@@ -72,6 +74,9 @@ public class QueryStringDecoderUtil {
     /**
      * Creates a new decoder that decodes the specified URI encoded in the
      * specified charset.
+     *
+     * @param uri object to be decoded
+     * @param hasPath whether uri contains path
      */
     public QueryStringDecoderUtil(String uri, boolean hasPath) {
         this(uri, Charset.defaultCharset(), hasPath);
@@ -80,6 +85,9 @@ public class QueryStringDecoderUtil {
     /**
      * Creates a new decoder that decodes the specified URI encoded in the
      * specified charset.
+     *
+     * @param uri object to be decoded
+     * @param charset encoded charset
      */
     public QueryStringDecoderUtil(String uri, Charset charset) {
         this(uri, charset, true);
@@ -88,6 +96,10 @@ public class QueryStringDecoderUtil {
     /**
      * Creates a new decoder that decodes the specified URI encoded in the
      * specified charset.
+     *
+     * @param uri object to be decoded
+     * @param charset encoded charset
+     * @param hasPath whether uri contains path
      */
     public QueryStringDecoderUtil(String uri, Charset charset, boolean hasPath) {
         this(uri, charset, hasPath, DEFAULT_MAX_PARAMS);
@@ -96,6 +108,11 @@ public class QueryStringDecoderUtil {
     /**
      * Creates a new decoder that decodes the specified URI encoded in the
      * specified charset.
+     *
+     * @param uri object to be decoded
+     * @param charset encoded charset
+     * @param hasPath whether uri contains path
+     * @param maxParams maximum no of parameters to decode
      */
     public QueryStringDecoderUtil(String uri, Charset charset, boolean hasPath, int maxParams) {
         if (uri == null) {
@@ -118,6 +135,8 @@ public class QueryStringDecoderUtil {
     /**
      * Creates a new decoder that decodes the specified URI. The decoder will
      * assume that the query string is encoded in UTF-8.
+     *
+     * @param uri object to be decoded
      */
     public QueryStringDecoderUtil(URI uri) {
         this(uri, Charset.defaultCharset());
@@ -126,6 +145,9 @@ public class QueryStringDecoderUtil {
     /**
      * Creates a new decoder that decodes the specified URI encoded in the
      * specified charset.
+     *
+     * @param uri object to be decoded
+     * @param charset encoded charset
      */
     public QueryStringDecoderUtil(URI uri, Charset charset) {
         this(uri, charset, DEFAULT_MAX_PARAMS);
@@ -134,6 +156,10 @@ public class QueryStringDecoderUtil {
     /**
      * Creates a new decoder that decodes the specified URI encoded in the
      * specified charset.
+     *
+     * @param uri object to be decoded
+     * @param charset encoded charset
+     * @param maxParams maximum no of parameters to decode
      */
     public QueryStringDecoderUtil(URI uri, Charset charset, int maxParams) {
         if (uri == null) {
@@ -163,6 +189,8 @@ public class QueryStringDecoderUtil {
 
     /**
      * Returns the uri used to initialize this {@link QueryStringDecoderUtil}.
+     *
+     * @return uri object that initialize decoder
      */
     public String uri() {
         return uri;
@@ -170,6 +198,8 @@ public class QueryStringDecoderUtil {
 
     /**
      * Returns the decoded path string of the URI.
+     *
+     * @return decoded path string
      */
     public String path() {
         if (path == null) {
@@ -189,6 +219,8 @@ public class QueryStringDecoderUtil {
 
     /**
      * Returns the decoded key-value parameter pairs of the URI.
+     *
+     * @return the decoded key-value parameter pairs of the URI
      */
     public Map<String, List<String>> parameters() {
         if (params == null) {

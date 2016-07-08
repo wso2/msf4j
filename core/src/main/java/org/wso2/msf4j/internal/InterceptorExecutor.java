@@ -50,10 +50,12 @@ public class InterceptorExecutor {
     }
 
     /**
+     *
      * Execute preCalls in all interceptors and return true
      * if and only if all preCalls return true.
      *
      * @return true if all preCalls return true
+     * @throws InterceptorException if error while executing a preCall
      */
     public boolean execPreCalls() throws InterceptorException {
         try {
@@ -73,6 +75,7 @@ public class InterceptorExecutor {
      * Execute postCalls of all interceptors.
      *
      * @param status status that was returned to the client
+     * @throws InterceptorException if error while executing a postCall
      */
     public void execPostCalls(int status) throws InterceptorException {
         for (Interceptor interceptor : interceptors) {

@@ -36,6 +36,9 @@ public class HttpMethodInfoBuilder {
 
     /**
      * Set the associated HttpResourceModel object.
+     *
+     * @param httpResourceModel resource model for the request
+     * @return HttpMethodInfoBuilder object
      */
     public HttpMethodInfoBuilder httpResourceModel(HttpResourceModel httpResourceModel) {
         this.httpResourceModel = httpResourceModel;
@@ -44,15 +47,20 @@ public class HttpMethodInfoBuilder {
 
     /**
      * Set the associated Request object.
+     *
+     * @param request Request object
+     * @return HttpMethodInfoBuilder object
      */
     public HttpMethodInfoBuilder httpRequest(Request request) {
         this.request = request;
         return this;
     }
 
-
     /**
      * Set the associated Response object.
+     *
+     * @param responder Response object
+     * @return HttpMethodInfoBuilder object
      */
     public HttpMethodInfoBuilder httpResponder(Response responder) {
         this.responder = responder;
@@ -62,6 +70,9 @@ public class HttpMethodInfoBuilder {
     /**
      * Set information of the request that were processed
      * when searching for the route.
+     *
+     * @param groupValues request info to be set
+     * @return HttpMethodInfoBuilder object
      */
     public HttpMethodInfoBuilder requestInfo(Map<String, String> groupValues) {
         this.groupValues = groupValues;
@@ -70,6 +81,9 @@ public class HttpMethodInfoBuilder {
 
     /**
      * Build HttpMethodInfo instance.
+     *
+     * @return HttpMethodInfo object
+     * @throws HandlerException if error occurs while executing the request
      */
     public HttpMethodInfo build() throws HandlerException {
         if (httpMethodInfo == null) {

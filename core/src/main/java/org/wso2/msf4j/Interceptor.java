@@ -31,6 +31,7 @@ public interface Interceptor {
      * @param serviceMethodInfo Info on handler method that will be called.
      * @return true if the request processing can continue, otherwise the hook should send response and return false to
      * stop further processing.
+     * @throws Exception if error occurs while executing the preCall
      */
     boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) throws Exception;
 
@@ -42,6 +43,7 @@ public interface Interceptor {
      * @param request           HttpRequest being processed.
      * @param status            Http status returned to the client.
      * @param serviceMethodInfo Info on handler method that was called.
+     * @throws Exception if error occurs while executing the postCall
      */
     void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) throws Exception;
 }

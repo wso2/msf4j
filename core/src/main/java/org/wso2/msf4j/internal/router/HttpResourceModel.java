@@ -215,7 +215,7 @@ public final class HttpResourceModel {
                 } else if (FormParam.class.isAssignableFrom(annotationType)) {
                     converter = ParamConvertUtils.createFormParamConverter(parameterType);
                 } else if (FormDataParam.class.isAssignableFrom(annotationType)) {
-                    converter = ParamConvertUtils.createFormDataParamConverter(parameterType, annotation);
+                    converter = ParamConvertUtils.createFormDataParamConverter(parameterType);
                 } else if (HeaderParam.class.isAssignableFrom(annotationType)) {
                     converter = ParamConvertUtils.createHeaderParamConverter(parameterType);
                 } else if (DefaultValue.class.isAssignableFrom(annotationType)) {
@@ -259,6 +259,7 @@ public final class HttpResourceModel {
 
     /**
      * A container class to hold information about a handler method parameters.
+     * @param <T> type of parameter
      */
     public static final class ParameterInfo<T> {
         private final Annotation annotation;
