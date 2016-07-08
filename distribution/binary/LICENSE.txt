@@ -1,73 +1,98 @@
 
 This product is licensed by WSO2 Inc. under Apache License 2.0. The license
 can be downloaded from the following locations:
-	http://www.apache.org/licenses/LICENSE-2.0.html
-	http://www.apache.org/licenses/LICENSE-2.0.txt
+    http://www.apache.org/licenses/LICENSE-2.0.html
+    http://www.apache.org/licenses/LICENSE-2.0.txt
 
 This product also contains software under different licenses. This table below
-all the contained libraries (jar files) and the license under which they are 
+all the contained libraries (jar files) and the license under which they are
 provided to you.
 
 At the bottom of this file is a table that shows what each license indicated
 below is and where the actual text of the license can be found.
 
-Name                                                                            Type           License   
+Name                                                                            Type           License
 ---------------------------------------------------------------------------------------------------------
-com.google.gson_2.2.4.jar                                                       bundle         apache2   914       
-com.google.guava_13.0.1.jar								       apache2
-commons-io_2.4.0.wso2v1.jar                                                     bundle         apache2   4217      
-commons-pool_1.5.6.wso2v1.jar                                                   bundle         apache2   1009      
-disruptor_3.3.2.wso2v2.jar                                                      bundle         apache2   4377      
-io.dropwizard.metrics.core_3.1.2.jar                                            bundle         apache2   1305      
-io.dropwizard.metrics.jvm_3.1.2.jar                                             bundle         apache2   1302      
-io.netty.buffer_4.0.30.Final.jar                                                bundle         apache2   1544      
-io.netty.codec-http_4.0.30.Final.jar                                            bundle         apache2   1543      
-io.netty.codec_4.0.30.Final.jar                                                 bundle         apache2   1542      
-io.netty.common_4.0.30.Final.jar                                                bundle         apache2   1541      
-io.netty.handler_4.0.30.Final.jar                                               bundle         apache2   1540      
-io.netty.transport_4.0.30.Final.jar                                             bundle         apache2   1539      
-javax.ws.rs-api.fragment_1.0.0.jar                                              bundle         cddl+gpl  1604
-javax.ws.rs-api_2.0.0.jar                                                       bundle         cddl+gpl  1538      
-libthrift_0.8.0.wso2v1.jar                                                      bundle         apache2   1117
-org.apache.felix.gogo.command_0.10.0.v201209301215.jar                          bundle         apache2   1134      
-org.apache.felix.gogo.runtime_0.10.0.v201209301036.jar                          bundle         apache2   1133      
-org.apache.felix.gogo.shell_0.10.0.v201212101605.jar                            bundle         apache2   1132      
-org.apache.servicemix.bundles.commons-beanutils_1.8.3.2.jar                     bundle         apache2   1537      
-org.eclipse.equinox.app_1.3.200.v20130910-1609.jar                              bundle         epl1      1424      
-org.eclipse.equinox.cm_1.1.0.v20131021-1936.jar                                 bundle         epl1      1423      
-org.eclipse.equinox.common_3.6.200.v20130402-1505.jar                           bundle         epl1      1122      
-org.eclipse.equinox.concurrent_1.1.0.v20130327-1442.jar                         bundle         epl1      1121      
-org.eclipse.equinox.console_1.1.0.v20140131-1639.jar                            bundle         epl1      1422      
-org.eclipse.equinox.ds_1.4.200.v20131126-2331.jar                               bundle         epl1      1421      
-org.eclipse.equinox.frameworkadmin.equinox_1.0.500.v20131211-1531.jar           bundle         epl1      1420      
-org.eclipse.equinox.frameworkadmin_2.0.100.v20131209-2144.jar                   bundle         epl1      1419      
-org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar                           bundle         epl1      1418      
-org.eclipse.equinox.preferences_3.5.200.v20140224-1527.jar                      bundle         epl1      1417      
-org.eclipse.equinox.registry_3.5.400.v20140428-1507.jar                         bundle         epl1      1416      
-org.eclipse.equinox.simpleconfigurator.manipulator_2.0.0.v20131217-1203.jar     bundle         epl1      1415      
-org.eclipse.equinox.simpleconfigurator_1.1.0.v20131217-1203.jar                 bundle         epl1      1414      
-org.eclipse.equinox.util_1.0.500.v20130404-1337.jar                             bundle         epl1      1094      
-org.eclipse.osgi.compatibility.state_1.0.1.v20140709-1414.jar                   bundle         epl1      1413      
-org.eclipse.osgi.services_3.4.0.v20140312-2051.jar                              bundle         epl1      1412      
-org.eclipse.osgi_3.10.2.v20150203-1939.jar                                      bundle         epl1      1411
-org.ops4j.pax.logging.pax-logging-api_1.8.4.jar                                 bundle         apache2   1410      
-org.ops4j.pax.logging.pax-logging-log4j2_1.8.4.jar                              bundle         apache2   1409      
-org.osgi.core-6.0.0.jar                                                         bundle         apache2   1407      
-org.wso2.carbon.core_5.0.0.jar                                                  bundle         apache2   6885      
-org.wso2.carbon.databridge.agent_5.0.6.jar                                      bundle         apache2   6893      
-org.wso2.carbon.databridge.commons.thrift_5.0.6.jar                             bundle         apache2   6892      
-org.wso2.carbon.databridge.commons_5.0.6.jar                                    bundle         apache2   6891      
-org.wso2.carbon.launcher-5.0.0.jar                                              bundle         apache2   6882      
-org.wso2.carbon.metrics.annotation_1.2.0.jar                                    bundle         apache2   6890      
-org.wso2.carbon.metrics.common_1.2.0.jar                                        bundle         apache2   6889      
-org.wso2.carbon.metrics.das.reporter_1.2.0.jar                                  bundle         apache2   6888      
-org.wso2.carbon.metrics.impl_1.2.0.jar                                          bundle         apache2   6887      
-org.wso2.carbon.metrics.manager_1.2.0.jar                                       bundle         apache2   6886      
-org.wso2.msf4j_1.0.0.jar                                                   bundle         apache2   6884
-org.wso2.carbon.tools-5.0.0.jar                                                 bundle         apache2   6881      
-org.wso2.carbon.transport.http.netty_1.0.0.jar                                  bundle         apache2   6883      
-snakeyaml_1.16.0.wso2v1.jar                                                     bundle         apache2   6274      
-
+guava_18.0.jar                                                                  bundle        apache2
+commons-io_2.4.0.wso2v1.jar                                                     bundle        apache2
+commons-lang3.3.4.jar                                                           jar           apache2
+commons-logging.1.1.1.jar                                                       jar           apache2
+commons-pool.1.5.6.wso2v1.jar                                                   bundle        apache2
+disruptor.3.3.2.wso2v2.jar                                                      bundle
+gson.2.2.4.jar                                                                  jar           apache2
+hikaricp.2.4.6.jar                                                              bundle        apache2
+httpclient.4.3.1.wso2v2.jar                                                     bundle        apache2
+jackson-annotations.2.7.4.jar                                                   bundle        apache2
+jackson-core.2.7.4.jar                                                          bundle        apache2
+jackson-databind.2.7.4.jar                                                      bundle        apache2
+jackson-dataformat-yaml.2.7.4.jar                                               bundle        apache2
+jackson-jaxrs-base.2.4.5.jar                                                    bundle        apache2
+jackson-jaxrs-json-provider.2.4.5.jar                                           bundle        apache2
+jackson-module-jaxb-annotations.2.4.5.jar                                       bundle        apache2
+javassist.3.19.0-ga.jar                                                         bundle        mpl+lgpl+apache2
+javax.ws.rs-api.2.0.jar                                                         jar           cddl+gpl2
+jaxrs-delegates.2.0.0-snapshot.jar                                              bundle        apache2
+json.2.0.0.wso2v1.jar                                                           bundle        apache2
+libthrift.0.8.0.wso2v1.jar                                                      bundle        apache2
+log4j.1.2.14.jar                                                                jar           apache2
+metrics-core.3.1.2.jar                                                          bundle        apache2
+metrics-jvm.3.1.2.jar                                                           bundle        apache2
+msf4j-analytics.2.0.0-snapshot.jar                                              bundle        apache2
+msf4j-core.2.0.0-snapshot.jar                                                   bundle        apache2
+netty-buffer.4.0.30.final.jar                                                   jar           apache2
+netty-codec-http.4.0.30.final.jar                                               jar           apache2
+netty-codec.4.0.30.final.jar                                                    jar           apache2
+netty-common.4.0.30.final.jar                                                   jar           apache2
+netty-handler.4.0.30.final.jar                                                  jar           apache2
+netty-transport.4.0.30.final.jar                                                jar           apache2
+org.apache.felix.gogo.command.0.10.0.v201209301215.jar                          jar           apache2
+org.apache.felix.gogo.runtime.0.10.0.v201209301036.jar                          jar           apache2
+org.apache.felix.gogo.shell.0.10.0.v201212101605.jar                            jar           apache2
+org.apache.servicemix.bundles.commons-beanutils.1.8.3_2.jar                     bundle        apache2
+org.eclipse.equinox.cm.1.1.0.v20131021-1936.jar                                 jar           apache2
+org.eclipse.equinox.common.3.6.200.v20130402-1505.jar                           jar           apache2
+org.eclipse.equinox.concurrent.1.1.0.v20130327-1442.jar                         jar           apache2
+org.eclipse.equinox.console.1.1.0.v20140131-1639.jar                            jar           apache2
+org.eclipse.equinox.ds.1.4.200.v20131126-2331.jar                               jar           apache2
+org.eclipse.equinox.frameworkadmin.2.0.100.v20131209-2144.jar                   jar           apache2
+org.eclipse.equinox.frameworkadmin.equinox.1.0.500.v20131211-1531.jar           jar           apache2
+org.eclipse.equinox.launcher.1.3.0.v20140415-2008.jar                           jar           apache2
+org.eclipse.equinox.launcher.gtk.linux.x86.1.1.200.v20150204-1316.jar           jar           apache2
+org.eclipse.equinox.preferences.3.5.200.v20140224-1527.jar                      jar           apache2
+org.eclipse.equinox.simpleconfigurator.1.1.0.v20131217-1203.jar                 jar           apache2
+org.eclipse.equinox.simpleconfigurator.manipulator.2.0.0.v20131217-1203.jar     jar           apache2
+org.eclipse.equinox.util.1.0.500.v20130404-1337.jar                             jar           apache2
+org.eclipse.osgi.compatibility.state.1.0.1.v20140709-1414.jar                   jar           apache2
+org.osgi.core.6.0.0.jar                                                         jar           apache2
+org.wso2.carbon.base.5.1.0.jar                                                  bundle        apache2
+org.wso2.carbon.core.5.1.0.jar                                                  bundle        apache2
+org.wso2.carbon.databridge.agent.5.0.11.jar                                     bundle        apache2
+org.wso2.carbon.databridge.commons.5.0.11.jar                                   bundle        apache2
+org.wso2.carbon.databridge.commons.binary.5.0.11.jar                            bundle        apache2
+org.wso2.carbon.databridge.commons.thrift.5.0.11.jar                            bundle        apache2
+org.wso2.carbon.kernel.feature.5.1.0.jar                                        carbon-feature   apache2
+org.wso2.carbon.launcher.5.1.0.jar                                              jar           apache2
+org.wso2.carbon.messaging.1.0.4.jar                                             bundle        apache2
+org.wso2.carbon.metrics.config.2.0.0.jar                                        jar           apache2
+org.wso2.carbon.metrics.core.2.0.0.jar                                          bundle        apache2
+org.wso2.carbon.metrics.das.core.2.0.0.jar                                      bundle        apache2
+org.wso2.carbon.metrics.das.reporter.2.0.0.jar                                  bundle        apache2
+org.wso2.carbon.metrics.jdbc.core.2.0.0.jar                                     bundle        apache2
+org.wso2.carbon.metrics.jdbc.reporter.2.0.0.jar                                 bundle        apache2
+org.wso2.carbon.runtime.feature.5.1.0.jar                                       carbon-feature   apache2
+org.wso2.carbon.tools.core.5.1.0.jar                                            jar           apache2
+org.wso2.carbon.transport.http.netty.2.1.1.jar                                  bundle        apache2
+pax-logging-api.1.8.5.jar                                                       bundle        alv2
+pax-logging-log4j2.1.8.5.jar                                                    bundle        alv2
+reflections.0.9.10.jar                                                          jar           wtfpl+bsd
+slf4j-api.1.7.5.jar                                                             jar           mit
+slf4j-log4j12.1.6.0.jar                                                         jar           mit
+snakeyaml.1.16.0.wso2v1.jar                                                     bundle        apache2
+swagger-annotations.1.5.8.jar                                                   bundle        apache2
+swagger-core.1.5.8.jar                                                          bundle        apache2
+swagger-jaxrs.1.5.8.jar                                                         bundle        apache2
+swagger-models.1.5.8.jar                                                        bundle        apache2
+validation-api.1.1.0.final.jar                                                  jar           apache2
 
 
 The license types used by the above libraries and their information is given below:
