@@ -8,7 +8,7 @@ First you have to add the following dependency to the pom.
      <dependency>
         <groupId>org.wso2.msf4j</groupId>
         <artifactId>msf4j-mustache-template</artifactId>
-        <version>1.0.0</version>
+        <version>2.0.0</version>
      </dependency>
 ```
 
