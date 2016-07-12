@@ -27,7 +27,7 @@ import org.wso2.msf4j.ServiceMethodInfo;
 import java.util.Map;
 
 /**
- * Spring based MSF4J Interceptor
+ * Spring based MSF4J Interceptor class which print HTTP headers from incoming messages.
  */
 @Component
 public class LogHeadersInterceptor implements Interceptor {
