@@ -26,6 +26,25 @@ public class Hello {
 
 ``` 
 
+Here an instance of HelloService class will be injected to the Hello service class by Spring framework,  to enable 
+Spring to discover  HelloService bean it is possible to use @Component annotation within HelloService class as shown 
+below.  
+
+```java
+@Component
+public class HelloService {
+
+   public String hello(String name) throws InvalidNameException {
+       if (isNumericValue(name)) {
+           throw new InvalidNameException(name + " is an invalid name");
+       }
+       return "Hello " + name;
+   }
+
+ }
+ 
+``` 
+
 In addition to above service classes a special class called MSF4JSpringApplication is used to run Spring based MSF4J 
 services.  When specific Spring Configuration is not present, MSF4J use Spring’s auto-scan feature to discover service 
 beans, any class  with @Path and Spring’s @Component  annotations will be deploy as services. 
