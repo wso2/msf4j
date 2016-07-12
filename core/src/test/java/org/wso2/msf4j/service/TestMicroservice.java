@@ -629,6 +629,16 @@ public class TestMicroservice implements Microservice {
         return Response.ok().entity(response).build();
     }
 
+    @POST
+    @Path("/getAllFormItemsXFormUrlEncoded")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response getAllFormItemsXFormUrlEncoded(@Context MultivaluedMap formItemMultivaluedMap) {
+        ArrayList names = (ArrayList) formItemMultivaluedMap.get("names");
+        String type = formItemMultivaluedMap.getFirst("type").toString();
+        String response = "Type = " + type + " No of names = " + names.size() + " First name = " + names.get(1);
+        return Response.ok().entity(response).build();
+    }
+
     @GET
     @Path("{assetType : [a-zA-Z][a-zA-Z_0-9]*}/{id}/states")
     public Response testPathParamWithRegexOne(@PathParam("assetType") String assetType, @PathParam("id") String id) {

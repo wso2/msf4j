@@ -1061,6 +1061,22 @@ public class HttpServerTest {
         IOUtils.closeQuietly(inputStream);
         connection.disconnect();
         assertEquals("FileCount-2 SecondFileName-testPngFile.png FirstPerson-Richard Stallman", response);
+
+        connection = request("/test/v1/getAllFormItemsXFormUrlEncoded", HttpMethod.POST);
+        String rawData = "names=WSO2&names=IBM&type=Software";
+        ByteBuffer encodedData = Charset.defaultCharset().encode(rawData);
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type", MediaType.APPLICATION_FORM_URLENCODED);
+        connection.setRequestProperty("Content-Length", String.valueOf(encodedData.array().length));
+        try (OutputStream os = connection.getOutputStream()) {
+            os.write(Arrays.copyOf(encodedData.array(), encodedData.limit()));
+        }
+
+        inputStream = connection.getInputStream();
+        response = StreamUtil.asString(inputStream);
+        IOUtils.closeQuietly(inputStream);
+        connection.disconnect();
+        assertEquals("Type = Software No of names = 2 First name = IBM", response);
     }
 
     @Test
