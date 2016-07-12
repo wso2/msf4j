@@ -18,7 +18,7 @@ package org.wso2.msf4j.example;
 import org.wso2.msf4j.spring.MSF4JSpringApplication;
 
 /**
- * Main Application class.
+ * Main Application class to run this sample.
  */
 public class Application {
 
