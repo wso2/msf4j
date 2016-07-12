@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * <p> This interface provides access to a file or form item that was
+ * <p> This provides access to a file or form item that was
  * received within a <code>multipart/form-data</code> POST request.
  * The items contents are retrieved by calling {@link #openStream()}.</p>
  * <p>Instances of this class are created by accessing the
@@ -164,7 +164,7 @@ public class FormItem {
      *
      * @param pHeaders The items header object
      */
-    public void setHeaders(FormItemHeader pHeaders) {
+    void setHeaders(FormItemHeader pHeaders) {
         headers = pHeaders;
     }
 
