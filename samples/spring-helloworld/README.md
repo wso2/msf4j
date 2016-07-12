@@ -166,7 +166,7 @@ keyStorePass | Key store password
 certPass | Certificate password 
 
 
-
+# How to build and run the sample
 
 ## How to build the sample
 
