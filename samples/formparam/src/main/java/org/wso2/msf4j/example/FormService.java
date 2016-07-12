@@ -34,7 +34,10 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
@@ -51,9 +54,37 @@ public class FormService {
     private static final Logger log = LoggerFactory.getLogger(FormService.class);
 
     @POST
+    @Path("/simpleFormWithFormParam")
+    @Consumes({ MediaType.APPLICATION_FORM_URLENCODED, MediaType.MULTIPART_FORM_DATA })
+    public Response simpleFormWithFormParam(@FormParam("age") int age, @FormParam("name") String name) {
+        return Response.ok().entity("Name and age " + name + ", " + age).build();
+    }
+
+    @POST
+    @Path("/simpleFormWithFormParamAndList")
+    @Consumes({ MediaType.APPLICATION_FORM_URLENCODED, MediaType.MULTIPART_FORM_DATA })
+    public Response simpleFormWithFormParamAndList(@FormParam("name") List<String> name) {
+        return Response.ok().entity(name).build();
+    }
+
+    @POST
+    @Path("/simpleFormWithFormParamAndSet")
+    @Consumes({ MediaType.APPLICATION_FORM_URLENCODED, MediaType.MULTIPART_FORM_DATA })
+    public Response simpleFormWithFormParamAndSet(@FormParam("name") Set<String> name) {
+        return Response.ok().entity(name).build();
+    }
+
+    @POST
+    @Path("/simpleFormWithFormParamAndSortedSet")
+    @Consumes({ MediaType.APPLICATION_FORM_URLENCODED, MediaType.MULTIPART_FORM_DATA })
+    public Response simpleFormWithFormParamAndSortedSet(@FormParam("name") SortedSet<String> name) {
+        return Response.ok().entity(name).build();
+    }
+
+    @POST
     @Path("/simpleForm")
     @Consumes({ MediaType.APPLICATION_FORM_URLENCODED, MediaType.MULTIPART_FORM_DATA })
-    public Response simpleForm(@FormDataParam("age") int age, @FormDataParam("name") String name) {
+    public Response simpleForm(@FormDataParam("age") Long age, @FormDataParam("name") String name) {
         return Response.ok().entity("Name and age " + name + ", " + age).build();
     }
 
