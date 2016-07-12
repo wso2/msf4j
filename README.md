@@ -225,7 +225,7 @@ Invoke by the container during server shutdown before the  container removes the
 
 For a detailed example, check out the lifecycle sample [here](https://github.com/wso2/msf4j/tree/master/samples/lifecycle). 
 
-##Devalop and Configure MSF4J services using Spring framework
+##Devalop and configure MSF4J services using Spring framework
 
 Spring is a popular Java application development framework which supports concepts like Dependency Injection(DI) 
 and Convention over Configuration.  Spring support for MSF4J provides following features. 
