@@ -16,7 +16,7 @@
 package org.wso2.msf4j.example;
 
 /**
- * InvalidNameException class.
+ * InvalidNameException class to demonstrate ExceptionMapper feature .
  */
 public class InvalidNameException extends Exception {
 
