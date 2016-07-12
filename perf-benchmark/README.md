@@ -60,3 +60,13 @@ For each service in [echo-samples](echo-samples) directory,
 * Perform the test using the automated [run.sh](run.sh) script as mentioned earlier
 * Get time range of each concurrency level from the output of the run-test.sh
 * Analyse the GC log for each concurrency level by matching the time range and calculate the average heap usage for each concurrency level
+
+
+## Latency Test
+
+To measure the latency, above mentioned 1KB echo test was performed for each sample service using 3 concurrency levels (1, 200 and 400). Then for each 
+concurrency level the latency was measured using apache bench. These values were plotted for each framework.
+
+![LatencyC1](graphs/latency-c1-n100000.png)
+![LatencyC2](graphs/latency-c200-n100000.png)
+![LatencyC3](graphs/latency-c400-n100000.png)
