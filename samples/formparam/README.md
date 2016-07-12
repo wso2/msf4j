@@ -142,3 +142,26 @@ Simple client is also available in the sample
 
 ## Sample CURL Command 
 curl -X POST -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW" -F "name=WSO2" -F "age=10" -F "image=@abc.png" "http://localhost:8080/formService/simpleFormStreaming"
+
+You can also use a simple html form like below or a rest client e.g. Postman, Advanced RestClient
+```html
+<form method="post" action="http://localhost:8080/formService/simpleFormStreaming">
+    <table>
+        <tr>
+    	    <td>Name:</td>
+    	    <td><input type="text" name="name" /></td>
+        </tr>
+        <tr>
+    	    <td>Age:</td>
+    	    <td><input type="text" name="age" /></td>
+        </tr>
+        <tr>
+    	    <td>Photo:</td>
+    	    <td><input type="file" name="photo" /></td>
+        </tr>
+        <tr>
+    	    <td colspan="1"><input name="submit" type="submit" value="Add User" /></td>
+        </tr>
+    </table>
+</form>
+```
