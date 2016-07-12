@@ -37,7 +37,7 @@ public class SpringHttpServerTest extends HttpServerTest {
     @BeforeClass
     public void setup() throws Exception {
         baseURI = URI.create(String.format("http://%s:%d", Constants.HOSTNAME, port));
-        configurableApplicationContext = MSF4JSpringApplication.run(SpringHttpServerTest.class);
+        configurableApplicationContext = MSF4JSpringApplication.run(SpringHttpServerTest.class, "--http.port=8090");
     }
 
     @AfterClass
