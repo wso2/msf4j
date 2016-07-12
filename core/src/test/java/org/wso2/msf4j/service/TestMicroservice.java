@@ -53,6 +53,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.Consumes;
@@ -531,9 +532,24 @@ public class TestMicroservice implements Microservice {
         return Response.ok().entity(name + ":" + age).build();
     }
 
+    @Path("/formDataParam")
+    @POST
+    @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.MULTIPART_FORM_DATA})
+    public Response tesFormDataParam(@FormDataParam("name") String name, @FormDataParam("age") int age) {
+        return Response.ok().entity(name + ":" + age).build();
+    }
+
     @Path("/formParamWithList")
     @POST
-    public Response tesFormParamWithURLEncodedList(@FormParam("names") List<String> names) {
+    @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.MULTIPART_FORM_DATA})
+    public Response tesFormParamList(@FormParam("names") List<String> names) {
+        return Response.ok().entity(names.size()).build();
+    }
+
+    @Path("/formParamWithSet")
+    @POST
+    @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.MULTIPART_FORM_DATA})
+    public Response tesFormParamSet(@FormParam("names") Set<String> names) {
         return Response.ok().entity(names.size()).build();
     }
 
