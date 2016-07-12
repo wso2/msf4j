@@ -56,7 +56,7 @@ public class FormService {
     @POST
     @Path("/simpleFormWithFormParam")
     @Consumes({ MediaType.APPLICATION_FORM_URLENCODED, MediaType.MULTIPART_FORM_DATA })
-    public Response simpleFormWithFormParam(@FormParam("age") int age, @FormParam("name") String name) {
+    public Response simpleFormWithFormParam(@FormParam("age") Long age, @FormParam("name") String name) {
         return Response.ok().entity("Name and age " + name + ", " + age).build();
     }
 
@@ -84,7 +84,7 @@ public class FormService {
     @POST
     @Path("/simpleForm")
     @Consumes({ MediaType.APPLICATION_FORM_URLENCODED, MediaType.MULTIPART_FORM_DATA })
-    public Response simpleForm(@FormDataParam("age") Long age, @FormDataParam("name") String name) {
+    public Response simpleForm(@FormDataParam("age") int age, @FormDataParam("name") String name) {
         return Response.ok().entity("Name and age " + name + ", " + age).build();
     }
 
