@@ -225,6 +225,42 @@ Invoke by the container during server shutdown before the  container removes the
 
 For a detailed example, check out the lifecycle sample [here](https://github.com/wso2/msf4j/tree/master/samples/lifecycle). 
 
+##Devalop and Configure MSF4J services using Spring framework
+
+Spring is a popular Java application development framework which supports concepts like Dependency Injection(DI) 
+and Convention over Configuration.  Spring support for MSF4J provides following features. 
+
+1. Develop MSF4J services as Spring beans 
+2. Develop and configure MSF4J components such as Interceptors and ExceptionMappers using Spring. 
+3. Use Annotation or XML based Spring configuration to configure internals of MSF4J framework such as ports, SSL etc. 
+
+Following example illustrates how to use Spring annotations together with MSF4J annotations to build a RESTful service. The main advantage here is service developers can consume Spring features such as dependency injection , Spring AOP etc. in the Spring way.  
+
+```java
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+
+@Component
+@Path("/greeting")
+public class Hello {
+
+    @Autowired
+    private HelloService helloService;
+
+    @GET
+    public String message() {
+        return helloService.hello(" World");
+    }
+}
+```
+
+For further details refer Spring [Helloworld sample](samples/spring-helloworld).
+
+
+
 ##Annotations for Analytics
 
 In this section, we will look at the annotations available for analytics purposes MSF4J microservices. There are annotations 
