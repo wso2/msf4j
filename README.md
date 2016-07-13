@@ -6,14 +6,14 @@ WSO2 Microservices Framework for Java (MSF4J) is a lightweight high performance 
 & running microservices.
 
 WSO2 MSF4J is one of the highest performing lightweight Java microservices frameworks. The following graphs show the 
-throughput & memory consumption characteristics of MSF4J against other microservices frameworks.
+throughput, memory consumption & latency characteristics of MSF4J against other microservices frameworks.
  
 ![EchoThroughput](perf-benchmark/graphs/echotps.png) 
 ![FileEchoThroughput](perf-benchmark/graphs/fileechotps.png) 
 
-An echo service which accepts a 1KB request & echoes it back was developed for the respective frameworks, and requests
-were sent for different concurrency values. The test was repeated for each concurrency value for each framework and 
-the average throughput was calculated. 
+An echo service which accepts a 1KB request & echoes it back directly and using a temp file was developed for the respective 
+frameworks, and requests were sent for different concurrency values. The test was repeated for each concurrency value for each 
+framework and the average throughput was calculated. 
 Tests were run out of the box without any tuning on 32 core 64GB server in JVM v1.8.0_60 with default configuration.
 
 ![EchoMemory](perf-benchmark/graphs/echomem.png)
@@ -21,7 +21,15 @@ Tests were run out of the box without any tuning on 32 core 64GB server in JVM v
 
 Memory usage for each framework was observed after running the 1KB payload echo microservice on each framework & 
 sending a number of requests at different concurrency levels to each service. 
-The graph above shows the averaged out values after several runs for each framework. 
+The graph above shows the averaged out values after several runs for each framework.
+ 
+Latency results was observed using the Apache bench provided percentile values. Results were plotted for 
+concurrency levels of 1, 200 and 400 for the simple echo test.
+  
+![LatencyC1](perf-benchmark/graphs/latency-c1-n100000.png)
+![LatencyC2](perf-benchmark/graphs/latency-c200-n100000.png)
+![LatencyC3](perf-benchmark/graphs/latency-c400-n100000.png)
+
 Tests were run out of the box without any tuning on 32 core 64GB server in JVM v1.8.0_60 with default configuration.
 
 More details about the performance test can found [here](perf-benchmark).
