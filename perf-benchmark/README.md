@@ -1,7 +1,9 @@
 ##Echo message performance test
 
-In this performance test, a sample echo service that can accept a payload and respond the same payload back to the 
-client was created with each subjected microservices framework. See [echo-samples](echo-samples) directory for the 
+In this performance test, a sample echo service with 2 operations were created.
+1. Accept a payload and respond the same payload back
+2. Accept a payload, write to a temp file, read that file and respond the same payload back
+Client was created with each subjected microservices framework. See [echo-samples](echo-samples) directory for the 
 sample services that were created for each framework.
 
 ## Prerequisite
