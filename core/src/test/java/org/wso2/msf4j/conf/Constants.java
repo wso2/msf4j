@@ -22,5 +22,5 @@ package org.wso2.msf4j.conf;
 public class Constants {
 
     public static final String HOSTNAME = "localhost";
-    public static final int PORT = 8080;
+    public static final int PORT = 8090;
 }

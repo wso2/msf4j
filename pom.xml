@@ -134,6 +134,7 @@
         <module>samples/circuitbreaker</module>
         <module>samples/regex-pathparam</module>
 
+        <module>perf-benchmark/Samples/wso2msf4j</module>
         <module>features/feature-test</module>
     </modules>
 
