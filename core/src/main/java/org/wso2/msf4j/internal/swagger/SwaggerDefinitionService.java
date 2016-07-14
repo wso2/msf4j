@@ -46,7 +46,7 @@ public class SwaggerDefinitionService {
     }
 
     @GET
-    @Produces({MediaType.TEXT_PLAIN})
+    @Produces({MediaType.APPLICATION_JSON})
     public Response getSwaggerDefinition(@QueryParam("path") String path) throws Exception {
         MSF4JBeanConfig msf4JBeanConfig;
         if (path == null) {
@@ -74,7 +74,7 @@ public class SwaggerDefinitionService {
         }
         return (msf4JBeanConfig == null) ?
                 Response.status(Response.Status.NOT_FOUND).
-                        entity("No Swagger definition found for path " + path).build() :
+                        entity("{\"error\": \"Swagger definition not found for path " + path + "\"}").build() :
                 Response.status(Response.Status.OK).
                         entity(Json.mapper().
                                 writerWithDefaultPrettyPrinter().writeValueAsString(msf4JBeanConfig.getSwagger())).

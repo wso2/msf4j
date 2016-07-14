@@ -734,7 +734,7 @@ public class HttpServerTest {
     public void testGlobalSwagger() throws Exception {
         HttpURLConnection urlConn = request("/swagger", HttpMethod.GET);
         assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
-        assertEquals(MediaType.TEXT_PLAIN, urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE));
+        assertEquals(MediaType.APPLICATION_JSON, urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE));
         urlConn.disconnect();
     }
 
@@ -742,7 +742,7 @@ public class HttpServerTest {
     public void testServiceSwagger() throws Exception {
         HttpURLConnection urlConn = request("/swagger?path=/test/v1", HttpMethod.GET);
         assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
-        assertEquals(MediaType.TEXT_PLAIN, urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE));
+        assertEquals(MediaType.APPLICATION_JSON, urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE));
         urlConn.disconnect();
     }
 
@@ -750,7 +750,7 @@ public class HttpServerTest {
     public void testNonExistentServiceSwagger() throws Exception {
         HttpURLConnection urlConn = request("/swagger?path=/zzaabdf", HttpMethod.GET);
         assertEquals(Response.Status.NOT_FOUND.getStatusCode(), urlConn.getResponseCode());
-        assertEquals(MediaType.TEXT_PLAIN, urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE));
+        assertEquals(MediaType.APPLICATION_JSON, urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE));
         urlConn.disconnect();
     }
 
