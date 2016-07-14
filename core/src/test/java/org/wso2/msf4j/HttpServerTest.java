@@ -1118,14 +1118,28 @@ public class HttpServerTest {
     }
 
     @Test
-    public void testJsonProduceWithString() throws Exception {
+    public void testJsonProduceWithStringJsonArrayAndJsonObject() throws Exception {
         HttpURLConnection urlConn = request("/test/v1/testJsonProduceWithString", HttpMethod.GET);
         InputStream inputStream = urlConn.getInputStream();
         String response = StreamUtil.asString(inputStream);
         IOUtils.closeQuietly(inputStream);
         urlConn.disconnect();
-        assertEquals("{\"abc\":[{\"name\":\"Richard Stallman\",\"age\":63},{\"name\":\"Linus Torvalds\",\"age\":46}]}",
+        assertEquals("{\"abc\":[{\"name\":\"Richard Stallman\",\"age\":63}, {\"name\":\"Linus Torvalds\",\"age\":46}]}",
                      response);
+
+        urlConn = request("/test/v1/testJsonProduceWithJsonArray", HttpMethod.GET);
+        inputStream = urlConn.getInputStream();
+        response = StreamUtil.asString(inputStream);
+        IOUtils.closeQuietly(inputStream);
+        urlConn.disconnect();
+        assertEquals("[\"12\",\"15\",\"15\"]", response);
+
+        urlConn = request("/test/v1/testJsonProduceWithJsonObject", HttpMethod.GET);
+        inputStream = urlConn.getInputStream();
+        response = StreamUtil.asString(inputStream);
+        IOUtils.closeQuietly(inputStream);
+        urlConn.disconnect();
+        assertEquals("{\"name\":\"WSO2\",\"products\":[\"APIM\",\"IS\",\"MSF4J\"]}", response);
     }
 
     protected Socket createRawSocket(URL url) throws IOException {

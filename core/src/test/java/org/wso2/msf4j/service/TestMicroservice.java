@@ -21,8 +21,10 @@ import com.google.common.base.Throwables;
 import com.google.common.io.Resources;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 import org.apache.commons.io.IOUtils;
 import org.wso2.msf4j.HttpStreamHandler;
 import org.wso2.msf4j.HttpStreamer;
@@ -677,6 +679,31 @@ public class TestMicroservice implements Microservice {
     public Response testJsonProduceWithString() {
         String res = "{\"abc\":[{\"name\":\"Richard Stallman\",\"age\":63}, {\"name\":\"Linus Torvalds\",\"age\":46}]}";
         return Response.ok().entity(res).build();
+    }
+
+    @GET
+    @Path("/testJsonProduceWithJsonArray")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response testJsonProduceWithJsonArray() {
+        JsonArray jsonArray = new JsonArray();
+        jsonArray.add(new JsonPrimitive("12"));
+        jsonArray.add(new JsonPrimitive("15"));
+        jsonArray.add(new JsonPrimitive("15"));
+        return Response.ok().entity(jsonArray).build();
+    }
+
+    @GET
+    @Path("/testJsonProduceWithJsonObject")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response testJsonProduceWithJJsonObject() {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.add("name", new JsonPrimitive("WSO2"));
+        JsonArray jsonArray = new JsonArray();
+        jsonArray.add(new JsonPrimitive("APIM"));
+        jsonArray.add(new JsonPrimitive("IS"));
+        jsonArray.add(new JsonPrimitive("MSF4J"));
+        jsonObject.add("products", jsonArray);
+        return Response.ok().entity(jsonObject).build();
     }
     
     /**
