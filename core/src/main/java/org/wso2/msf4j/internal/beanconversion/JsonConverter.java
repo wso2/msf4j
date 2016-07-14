@@ -17,6 +17,7 @@
 package org.wso2.msf4j.internal.beanconversion;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
 import org.wso2.msf4j.beanconversion.BeanConversionException;
 import org.wso2.msf4j.beanconversion.MediaTypeConverter;
@@ -51,7 +52,9 @@ public class JsonConverter extends MediaTypeConverter {
      */
     @Override
     public ByteBuffer toMedia(Object object) {
-        return ByteBuffer.wrap(gson.toJson(object).getBytes(Charset.defaultCharset()));
+        String value = (object instanceof String) ? gson.fromJson(object.toString(), JsonElement.class).toString() :
+                       gson.toJson(object);
+        return ByteBuffer.wrap(value.getBytes(Charset.defaultCharset()));
     }
 
     /**

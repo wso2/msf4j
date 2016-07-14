@@ -670,6 +670,14 @@ public class TestMicroservice implements Microservice {
         initialValue = 0;
         return Response.ok().entity(returnVal).build();
     }
+
+    @GET
+    @Path("/testJsonProduceWithString")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response testJsonProduceWithString() {
+        String res = "{\"abc\":[{\"name\":\"Richard Stallman\",\"age\":63}, {\"name\":\"Linus Torvalds\",\"age\":46}]}";
+        return Response.ok().entity(res).build();
+    }
     
     /**
      * Custom exception class for testing exception handler.
