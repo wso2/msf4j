@@ -41,6 +41,14 @@
                     <groupId>org.wso2.carbon</groupId>
                     <artifactId>wso2carbon-kernel</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.wso2.carbon</groupId>
+                    <artifactId>org.wso2.carbon.kernel.feature</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.wso2.carbon</groupId>
+                    <artifactId>org.wso2.carbon.runtime.feature</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
