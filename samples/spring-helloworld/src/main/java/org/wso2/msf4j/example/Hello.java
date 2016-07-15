@@ -24,7 +24,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
 /**
- * Hello Resource class.
+ * MSF4J service class annotated with MSF4J and Spring annotations.
  */
 
 @Component

@@ -19,6 +19,8 @@ package org.wso2.msf4j.spring;
 /**
  * Class to hold constants used in Spring module.
  *
+ * @since 2.0.0
+ *
  */
 public class SpringConstants {
 
@@ -29,4 +31,6 @@ public class SpringConstants {
 
     public static final String APPLICATION_PROPERTIES = "applicationProperties";
     public static final String PARAMETER_STR = ".parameter.";
+    public static final String DEFAULT_HOST = "0.0.0.0";
+
 }

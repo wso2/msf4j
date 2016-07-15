@@ -26,6 +26,7 @@ import org.wso2.carbon.databridge.agent.exception.DataEndpointException;
 import org.wso2.carbon.databridge.commons.Event;
 import org.wso2.carbon.databridge.commons.exception.TransportException;
 import org.wso2.carbon.databridge.commons.utils.DataBridgeCommonsUtils;
+import org.wso2.msf4j.analytics.httpmonitoring.config.model.DasConfig;
 import org.wso2.msf4j.util.SystemVariableUtil;
 
 import java.net.Inet4Address;
@@ -43,13 +44,6 @@ public final class HTTPMonitoringDataPublisher {
 
     private static final Logger logger = LoggerFactory.getLogger(HTTPMonitoringDataPublisher.class);
 
-    private static final String HTTP_MONITORING_DAS_TYPE = "HTTP_MONITORING_DAS_TYPE";
-    private static final String HTTP_MONITORING_DAS_RECEIVER_URL = "HTTP_MONITORING_DAS_RECEIVERURL";
-    private static final String HTTP_MONITORING_DAS_AUTH_URL = "HTTP_MONITORING_DAS_AUTHURL";
-    private static final String HTTP_MONITORING_DAS_USERNAME = "HTTP_MONITORING_DAS_USERNAME";
-    private static final String HTTP_MONITORING_DAS_PASSWORD = "HTTP_MONITORING_DAS_PASSWORD";
-    private static final String HTTP_MONITORING_DAS_DATAAGENTCONFIGPATH = "HTTP_MONITORING_DAS_DATAAGENTCONFIGPATH";
-
     private static final String HTTP_MONITORING_STREAM = "org.wso2.msf4j.analytics.httpmonitoring";
     private static final String VERSION = "1.0.0";
     private static final String HTTP_MONITORING_STREAM_ID;
@@ -59,8 +53,8 @@ public final class HTTPMonitoringDataPublisher {
 
     private static final String MICROSERVICE = "Microservice";
 
-    private static DataPublisher dataPublisher;
-    private static Map<String, String> arbitraryAttributes;
+    private DataPublisher dataPublisher;
+    private Map<String, String> arbitraryAttributes;
 
     static {
         HTTP_MONITORING_STREAM_ID = DataBridgeCommonsUtils.generateStreamId(HTTP_MONITORING_STREAM, VERSION);
@@ -73,7 +67,11 @@ public final class HTTPMonitoringDataPublisher {
         }
     }
 
-    private HTTPMonitoringDataPublisher() {
+    public HTTPMonitoringDataPublisher(DasConfig dasConfig) {
+        init(dasConfig);
+        // Destroy data publisher at shutdown
+        Thread thread = new Thread(this::destroy);
+        Runtime.getRuntime().addShutdownHook(thread);
     }
 
     private static InetAddress getLocalAddress() throws SocketException, UnknownHostException {
@@ -94,31 +92,17 @@ public final class HTTPMonitoringDataPublisher {
         return InetAddress.getLocalHost();
     }
 
-    static synchronized void init() {
-        // This method is synchronized to make sure that Data Publisher is created only once.
-        if (dataPublisher != null) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("HTTP Monitoring Data Publisher is already initialized");
-            }
-            return;
-        }
+    private void init(DasConfig dasConfig) {
         if (logger.isInfoEnabled()) {
             logger.info("Initializing HTTP Monitoring Data Publisher");
         }
 
-        String type = "thrift";
-        String receiverURL = "tcp://localhost:7611";
-        String authURL;
-        String username = "admin";
-        String password = "admin";
-        String dataAgentConfigPath;
-
-        type = SystemVariableUtil.getValue(HTTP_MONITORING_DAS_TYPE, type);
-        receiverURL = SystemVariableUtil.getValue(HTTP_MONITORING_DAS_RECEIVER_URL, receiverURL);
-        authURL = SystemVariableUtil.getValue(HTTP_MONITORING_DAS_AUTH_URL, null);
-        username = SystemVariableUtil.getValue(HTTP_MONITORING_DAS_USERNAME, username);
-        password = SystemVariableUtil.getValue(HTTP_MONITORING_DAS_PASSWORD, password);
-        dataAgentConfigPath = SystemVariableUtil.getValue(HTTP_MONITORING_DAS_DATAAGENTCONFIGPATH, null);
+        String type = dasConfig.getType();
+        String receiverURL = dasConfig.getReceiverURL();
+        String authURL = dasConfig.getAuthURL();
+        String username = dasConfig.getUsername();
+        String password = dasConfig.getPassword();
+        String dataAgentConfigPath = dasConfig.getDataAgentConfigPath();
 
         if (type == null) {
             throw new IllegalArgumentException("Type cannot be null");
@@ -145,7 +129,7 @@ public final class HTTPMonitoringDataPublisher {
         }
     }
 
-    static synchronized void destroy() {
+    private void destroy() {
         if (dataPublisher != null) {
             try {
                 dataPublisher.shutdownWithAgent();
@@ -157,7 +141,7 @@ public final class HTTPMonitoringDataPublisher {
         }
     }
 
-    static void publishEvent(HTTPMonitoringEvent httpMonitoringEvent) {
+    public void publishEvent(HTTPMonitoringEvent httpMonitoringEvent) {
         Object[] meta = new Object[4];
         meta[0] = httpMonitoringEvent.getTimestamp();
         meta[1] = SERVER_HOST_ADDRESS;

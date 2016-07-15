@@ -15,7 +15,7 @@ spec:
     spec: 
       containers: 
         - resources:
-          image: wso2msf4j/petstore-fileserver:1.0.0
+          image: wso2msf4j/petstore-fileserver:2.0.0
           name: fileserver
           env:
           - name: GET_HOSTS_FROM

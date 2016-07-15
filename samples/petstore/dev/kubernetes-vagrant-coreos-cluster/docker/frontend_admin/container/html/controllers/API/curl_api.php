@@ -24,10 +24,14 @@ function callAuthApiLogin($url, $data){
     $header = substr($curl_response, 0, $header_size);
 
     if($info['http_code'] === 200){
-        $get_token = explode("\r\n",$header);
+        $response = explode("\n",$header);
+        $searchword = 'X-JWT-Assertion';
+        $matches = array_filter($response, function($var) use ($searchword) {
+            return preg_match("/\b$searchword\b/i", $var); });
+
         session_start();
         $_SESSION['username'] = 'user';
-        $_SESSION['authtoken'] = trim(explode(':',$get_token[3])[1]);
+        $_SESSION['authtoken'] = trim(explode("X-JWT-Assertion:", array_values($matches)[0])[1]);
         echo json_encode(array('status' => 1));
     }else if($info['http_code'] === 401){
         echo json_encode(array('status' => 'error', 'message' => 'User unauthorized'));

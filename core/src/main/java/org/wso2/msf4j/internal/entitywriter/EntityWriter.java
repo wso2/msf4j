@@ -40,6 +40,7 @@ public interface EntityWriter<T> {
      * Write the entity object to the carbon message by considering the
      * provided chunk size and media type.
      *
+     * @param carbonMessage response message
      * @param entity    object
      * @param mediaType user defined media type
      * @param chunkSize user defined chunk size

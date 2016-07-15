@@ -61,7 +61,6 @@ public final class StreamUtil {
      *                          is called on the stream. False indicates, that only
      *                          {@link OutputStream#flush()} should be called finally.
      * @return Number of bytes, which have been copied.
-     * @throws IOException An I/O error occurred.
      */
     public static long copy(InputStream inputStream, OutputStream outputStream, boolean closeOutputStream) {
         return copy(inputStream, outputStream, closeOutputStream, new byte[DEFAULT_BUFFER_SIZE]);
@@ -83,7 +82,6 @@ public final class StreamUtil {
      * @param buffer            Temporary buffer, which is to be used for
      *                          copying data.
      * @return Number of bytes, which have been copied.
-     * @throws IOException An I/O error occurred.
      */
     public static long copy(InputStream inputStream, OutputStream outputStream, boolean closeOutputStream,
                             byte[] buffer) {

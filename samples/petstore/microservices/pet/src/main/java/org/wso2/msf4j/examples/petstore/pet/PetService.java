@@ -18,7 +18,7 @@ package org.wso2.msf4j.examples.petstore.pet;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.metrics.annotation.Timed;
+import org.wso2.carbon.metrics.core.annotation.Timed;
 import org.wso2.msf4j.analytics.httpmonitoring.HTTPMonitored;
 import org.wso2.msf4j.examples.petstore.util.JedisUtil;
 import org.wso2.msf4j.examples.petstore.util.model.Pet;
@@ -53,6 +53,7 @@ public class PetService {
     @Consumes("application/json")
     @Timed
     public Response addPet(Pet pet) {
+        log.info("Adding pet");
         String categoryName = pet.getCategory().getName();
         if (!JedisUtil.smembers(PetConstants.CATEGORIES_KEY).contains(categoryName)) {
             JedisUtil.sadd(PetConstants.CATEGORIES_KEY, categoryName);

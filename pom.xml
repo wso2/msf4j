@@ -121,8 +121,8 @@
         <module>samples/stockquote/bundle</module>
         <module>samples/basicauth-security</module>
         <module>samples/oauth2-security</module>
-        <module>samples/metrics-httpmon/metrics-httpmon-fatjar</module>
-        <module>samples/metrics-httpmon/metrics-httpmon-bundle</module>
+        <module>samples/metrics</module>
+        <module>samples/http-monitoring</module>
         <module>samples/petstore</module>
         <module>samples/fileserver</module>
         <module>samples/template</module>
@@ -134,6 +134,7 @@
         <module>samples/circuitbreaker</module>
         <module>samples/regex-pathparam</module>
 
+        <module>perf-benchmark/Samples/wso2msf4j</module>
         <module>features/feature-test</module>
     </modules>
 

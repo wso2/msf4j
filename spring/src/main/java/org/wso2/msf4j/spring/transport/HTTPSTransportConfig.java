@@ -17,6 +17,7 @@
 package org.wso2.msf4j.spring.transport;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.wso2.msf4j.spring.SpringConstants;
 
 /**
  * TransportConfig bean for HTTPS transport
@@ -25,43 +26,77 @@ import org.springframework.beans.factory.annotation.Value;
  */
 public class HTTPSTransportConfig extends TransportConfig {
 
-    @Value("${https.id:msf4j-https}")
+    public HTTPSTransportConfig() {
+        super.setScheme(SpringConstants.HTTPS_TRANSPORT);
+    }
+
+    @Value("${https.id:}")
     public void setId(String id) {
         super.setId(id);
     }
 
-    @Value("${https.enabled:false}")
-    public void setEnabled(boolean enabled) {
-        super.setEnabled(enabled);
+    @Value("${https.enabled:}")
+    public void setEnabledProperty(String enabled) {
+        super.setEnabledProperty(enabled);
     }
 
-    @Value("${https.port:8443}")
-    public void setPort(int port) {
-        super.setPort(port);
+    @Value("${https.port:}")
+    public void setPortProperty(String port) {
+        super.setPortProperty(port);
     }
 
-    @Value("${https.host:0.0.0.0}")
-    public void setHost(String host) {
-        super.setHost(host);
+    @Value("${https.host:}")
+    public void setHostProperty(String host) {
+        super.setHostProperty(host);
     }
 
-    @Value("${https.scheme:https}")
-    public void setScheme(String scheme) {
-        super.setScheme(scheme);
+    @Value("${https.keyStoreFile:}")
+    public void setKeyStoreFileProperty(String keyStoreFile) {
+        super.setKeyStoreFileProperty(keyStoreFile);
     }
 
-    @Value("${https.keyStoreFile:wso2carbon.jks}")
-    public void setKeyStoreFile(String keyStoreFile) {
-        super.setKeyStoreFile(keyStoreFile);
+    @Value("${https.keyStorePass:}")
+    public void setKeyStorePassProperty(String keyStorePass) {
+        super.setKeyStorePassProperty(keyStorePass);
     }
 
-    @Value("${https.keyStorePass:wso2carbon}")
-    public void setKeyStorePass(String keyStorePass) {
-        super.setKeyStorePass(keyStorePass);
+    @Value("${https.certPass:}")
+    public void setCertPassProperty(String certPass) {
+        super.setCertPassProperty(certPass);
     }
 
-    @Value("${https.certPass:wso2carbon}")
-    public void setCertPass(String certPass) {
-        super.setCertPass(certPass);
+    public HTTPSTransportConfig port(int port) {
+        setPort(port);
+        return this;
+    }
+
+    public HTTPSTransportConfig host(String host) {
+        setHost(host);
+        return this;
+    }
+
+    public HTTPSTransportConfig keyStore(String keyStore) {
+        setKeyStoreFile(keyStore);
+        return this;
+    }
+
+    public HTTPSTransportConfig keyStorePass(String keyStorePass) {
+        setKeyStorePass(keyStorePass);
+        return this;
+    }
+
+    public HTTPSTransportConfig certPass(String certPass) {
+        setCertPass(certPass);
+        return this;
+    }
+
+    public HTTPSTransportConfig enabled(boolean enabled) {
+        setEnabled(enabled);
+        return this;
+    }
+
+    public HTTPSTransportConfig enabled() {
+        setEnabled(true);
+        return this;
     }
 }

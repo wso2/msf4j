@@ -15,4 +15,8 @@
 
     <name>Sample: PathParam with Regex</name>
 
+    <properties>
+        <microservice.mainClass>org.wso2.msf4j.example.Application</microservice.mainClass>
+    </properties>
+
 </project>

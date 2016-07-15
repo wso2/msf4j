@@ -44,6 +44,8 @@ import javax.ws.rs.ext.ExceptionMapper;
 /**
  * This runner initializes the microservices runtime based on provided Spring configuration, deploys microservices,
  * service interceptors and starts the relevant transports.
+ *
+ * @since 2.0.0
  */
 
 @Component

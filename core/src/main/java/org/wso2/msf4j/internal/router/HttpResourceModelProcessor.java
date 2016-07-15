@@ -57,6 +57,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
 
 /**
  * This class is responsible for processing the HttpResourceModel
@@ -66,7 +68,7 @@ public class HttpResourceModelProcessor {
 
     private final HttpResourceModel httpResourceModel;
     private HttpStreamer httpStreamer;
-    private Map<String, List<Object>> formParameters = null;
+    private MultivaluedMap<String, Object> formParameters = null;
     private Map<String, String> formParamContentType = new HashMap<>();
     private static Path tempRepoPath = Paths.get(System.getProperty("java.io.tmpdir"), "msf4jtemp");
     private Path tmpPathForRequest;
@@ -165,8 +167,52 @@ public class HttpResourceModelProcessor {
         Type paramType = paramInfo.getParameterType();
         FormDataParam formDataParam = paramInfo.getAnnotation();
         if (getFormParameters() == null) {
+            setFormParameters(extractRequestFormParams(request, paramInfo, true));
+        }
+
+        List<Object> parameter = getParameter(formDataParam.value());
+        boolean isNotNull = (parameter != null);
+        if (paramInfo.getConverter() != null) {
+            // We need to skip the conversion for java.io.File types and handle special cases
+            if (paramType instanceof ParameterizedType && isNotNull &&
+                parameter.get(0).getClass().isAssignableFrom(File.class)) {
+                return parameter;
+            } else if (isNotNull && parameter.get(0).getClass().isAssignableFrom(File.class)) {
+                return parameter.get(0);
+            } else if (MediaType.TEXT_PLAIN.equalsIgnoreCase(formParamContentType.get(formDataParam.value()))) {
+                return paramInfo.convert(parameter);
+            } else if (MediaType.APPLICATION_FORM_URLENCODED.equals(request.getContentType())) {
+                return paramInfo.convert(parameter);
+            }
+            // Beans with string constructor
+            return createBean(parameter, formDataParam, paramType, isNotNull);
+        }
+        // We only support InputStream for a single file. Therefore only get first element from the list
+        if (paramType == InputStream.class && isNotNull && parameter.get(0).getClass().isAssignableFrom(File.class)) {
+            return new FileInputStream((File) parameter.get(0));
+        } else if (paramType == FileInfo.class) {
+            List<Object> fileInfo = getParameter(formDataParam.value() + FILEINFO_POSTFIX);
+            return fileInfo == null ? null : fileInfo.get(0);
+        }
+        // These are beans without having string constructor. Convert using existing BeanConverter
+        return createBean(parameter, formDataParam, paramType, isNotNull);
+    }
+
+    /**
+     * Extract the form items in the request.
+     *
+     * @param request Request which need to be processed
+     * @param paramInfo of the method
+     * @param addFileInfo if FileInfo object needed to be added to params. In a case of InputStream this should be true
+     * @return MultivaluedMap of form items
+     * @throws IOException if error occurs while processing the multipart/form-data request
+     */
+    private MultivaluedMap<String, Object> extractRequestFormParams(Request request,
+                                                       HttpResourceModel.ParameterInfo paramInfo,
+                                                       boolean addFileInfo) throws IOException {
+        MultivaluedMap<String, Object> parameters = new MultivaluedHashMap<>();
+        if (MediaType.MULTIPART_FORM_DATA.equals(request.getContentType())) {
             FormParamIterator formParamIterator = new FormParamIterator(request);
-            Map<String, List<Object>> parameters = new HashMap<>();
             while (formParamIterator.hasNext()) {
                 FormItem item = formParamIterator.next();
 
@@ -190,41 +236,24 @@ public class HttpResourceModelProcessor {
                     existingValues.add(isFile ? createAndTrackTempFile(item) : StreamUtil.asString(item.openStream()));
                 }
 
-                if (isFile) {
+                if (addFileInfo && isFile) {
                     //Create FileInfo bean to handle InputStream
                     FileInfo fileInfo = new FileInfo();
                     fileInfo.setFileName(item.getName());
                     fileInfo.setContentType(item.getContentType());
-                    parameters.putIfAbsent(item.getFieldName() + FILEINFO_POSTFIX, Collections.singletonList(fileInfo));
+                    parameters.putSingle(item.getFieldName() + FILEINFO_POSTFIX, fileInfo);
                 }
             }
-            setFormParameters(parameters);
+        } else if (MediaType.APPLICATION_FORM_URLENCODED.equals(request.getContentType())) {
+            ByteBuffer fullContent = BufferUtil.merge(request.getFullMessageBody());
+            String bodyStr = BeanConverter
+                    .getConverter((request.getContentType() != null) ? request.getContentType() : MediaType.WILDCARD)
+                    .convertToObject(fullContent, paramInfo.getParameterType()).toString();
+            QueryStringDecoderUtil queryStringDecoderUtil = new QueryStringDecoderUtil(bodyStr, false);
+            queryStringDecoderUtil.parameters().entrySet().
+                    forEach(entry -> parameters.put(entry.getKey(), new ArrayList<>(entry.getValue())));
         }
-
-        List<Object> parameter = getParameter(formDataParam.value());
-        boolean isNotNull = (parameter != null);
-        if (paramInfo.getConverter() != null) {
-            // We need to skip the conversion for java.io.File types and handle special cases
-            if (paramType instanceof ParameterizedType && isNotNull &&
-                parameter.get(0).getClass().isAssignableFrom(File.class)) {
-                return parameter;
-            } else if (isNotNull && parameter.get(0).getClass().isAssignableFrom(File.class)) {
-                return parameter.get(0);
-            } else if (MediaType.TEXT_PLAIN.equalsIgnoreCase(formParamContentType.get(formDataParam.value()))) {
-                return paramInfo.convert(parameter);
-            }
-            // Beans with string constructor
-            return createBean(parameter, formDataParam, paramType, isNotNull);
-        }
-        // We only support InputStream for a single file. Therefore only get first element from the list
-        if (paramType == InputStream.class && isNotNull && parameter.get(0).getClass().isAssignableFrom(File.class)) {
-            return new FileInputStream((File) parameter.get(0));
-        } else if (paramType == FileInfo.class) {
-            List<Object> fileInfo = getParameter(formDataParam.value() + FILEINFO_POSTFIX);
-            return fileInfo == null ? null : fileInfo.get(0);
-        }
-        // These are beans without having string constructor. Convert using existing BeanConverter
-        return createBean(parameter, formDataParam, paramType, isNotNull);
+        return parameters;
     }
 
     private Object createBean(List<Object> parameter, FormDataParam formDataParam, Type paramType, boolean isNotNull) {
@@ -251,7 +280,7 @@ public class HttpResourceModelProcessor {
             throws FormUploadException, IOException {
         FormParam formParam = paramInfo.getAnnotation();
         if (getFormParameters() == null) {
-            Map<String, List<Object>> parameters = new HashMap<>();
+            MultivaluedMap<String, Object> parameters = new MultivaluedHashMap<>();
             if (MediaType.MULTIPART_FORM_DATA.equals(request.getContentType())) {
                 FormParamIterator formParamIterator = new FormParamIterator(request);
                 while (formParamIterator.hasNext()) {
@@ -302,6 +331,21 @@ public class HttpResourceModelProcessor {
             value = httpStreamer;
         } else if (((Class) paramType).isAssignableFrom(FormParamIterator.class)) {
             value = new FormParamIterator(request);
+        } else if (((Class) paramType).isAssignableFrom(MultivaluedMap.class)) {
+            MultivaluedMap<String, Object> listMultivaluedMap = new MultivaluedHashMap<>();
+            if (MediaType.MULTIPART_FORM_DATA.equals(request.getContentType())) {
+                listMultivaluedMap = extractRequestFormParams(request, paramInfo, false);
+            } else if (MediaType.APPLICATION_FORM_URLENCODED.equals(request.getContentType())) {
+                ByteBuffer fullContent = BufferUtil.merge(request.getFullMessageBody());
+                String bodyStr = BeanConverter.getConverter(
+                        (request.getContentType() != null) ? request.getContentType() : MediaType.WILDCARD)
+                                              .convertToObject(fullContent, paramInfo.getParameterType()).toString();
+                QueryStringDecoderUtil queryStringDecoderUtil = new QueryStringDecoderUtil(bodyStr, false);
+                MultivaluedMap<String, Object> finalListMultivaluedMap = listMultivaluedMap;
+                queryStringDecoderUtil.parameters().entrySet().
+                        forEach(entry -> finalListMultivaluedMap.put(entry.getKey(), new ArrayList(entry.getValue())));
+            }
+            value = listMultivaluedMap;
         }
         Preconditions.checkArgument(value != null, "Could not resolve parameter %s", paramType.getTypeName());
         return value;
@@ -369,7 +413,7 @@ public class HttpResourceModelProcessor {
      *
      * @param parameters request formParameters
      */
-    public void setFormParameters(Map<String, List<Object>> parameters) {
+    public void setFormParameters(MultivaluedMap<String, Object> parameters) {
         this.formParameters = parameters;
     }
 }

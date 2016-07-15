@@ -27,6 +27,8 @@ import java.util.List;
 
 /**
  * This class is responsible to construct Microservice application.
+ *
+ * @since 2.0.0
  */
 public class MSF4JSpringApplication {
 

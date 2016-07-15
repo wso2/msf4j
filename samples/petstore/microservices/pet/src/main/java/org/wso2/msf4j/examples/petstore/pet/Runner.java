@@ -17,7 +17,6 @@ package org.wso2.msf4j.examples.petstore.pet;
 
 import org.wso2.msf4j.MicroservicesRunner;
 import org.wso2.msf4j.analytics.httpmonitoring.HTTPMonitoringInterceptor;
-import org.wso2.msf4j.analytics.metrics.MetricReporter;
 import org.wso2.msf4j.analytics.metrics.MetricsInterceptor;
 import org.wso2.msf4j.security.JWTSecurityInterceptor;
 
@@ -26,12 +25,12 @@ import org.wso2.msf4j.security.JWTSecurityInterceptor;
  */
 public class Runner {
     public static void main(String[] args) {
-        new MicroservicesRunner().
-                addInterceptor(new JWTSecurityInterceptor()).
-                addInterceptor(new HTTPMonitoringInterceptor().init()).
-                addInterceptor(new MetricsInterceptor().init(
-                        MetricReporter.CONSOLE, MetricReporter.JMX, MetricReporter.DAS)).
-                deploy(new PetService()).
-                deploy(new PetCategoryService()).start();
+        new MicroservicesRunner()
+                .addInterceptor(new JWTSecurityInterceptor())
+                .addInterceptor(new HTTPMonitoringInterceptor())
+                .addInterceptor(new MetricsInterceptor())
+                .deploy(new PetService())
+                .deploy(new PetCategoryService())
+                .start();
     }
 }

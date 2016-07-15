@@ -17,10 +17,9 @@ listenerConfigurations:
  -
   id: "jaxrs-http"
   host: "0.0.0.0"
-  port: 8085
+  port: 8095
   bossThreadPoolSize: 2
   workerThreadPoolSize: 250
-  execHandlerThreadPoolSize: 60
   scheme: https
   keyStoreFile: "src/test/resources/cert.jks"
   keyStorePass: secret

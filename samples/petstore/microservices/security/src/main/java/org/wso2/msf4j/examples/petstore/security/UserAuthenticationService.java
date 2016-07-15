@@ -18,7 +18,7 @@ package org.wso2.msf4j.examples.petstore.security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.metrics.annotation.Timed;
+import org.wso2.carbon.metrics.core.annotation.Timed;
 import org.wso2.msf4j.analytics.httpmonitoring.HTTPMonitored;
 import org.wso2.msf4j.examples.petstore.security.ldap.LDAPUserStoreManager;
 import org.wso2.msf4j.examples.petstore.util.model.User;
@@ -67,7 +67,7 @@ public class UserAuthenticationService {
                 JWTGenerator jwtGenerator = new JWTGenerator();
                 jwt = jwtGenerator.generateJWT(userFromUserStore);
                 String msg = "User " + name + " authenticated successfully";
-                log.info(msg);
+                log.info(msg + ". JWT=" + jwt);
                 return Response.ok(msg).header(JWT_HEADER, jwt).build();
             }
         } catch (Exception e) {

@@ -37,6 +37,7 @@ public @interface FormDataParam {
      * content will be used to initialize the value of the annotated method
      * argument.
      *
+     * @return name of a "multipart/form-data" body part
      */
     String value();
 
