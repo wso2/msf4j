@@ -67,7 +67,7 @@ public Response simpleFormStreaming(@Context FormParamIterator formParamIterator
    return Response.ok().entity("Request completed").build();
 }
 ```
-If you like use non streaming mode then you can directly get File objects in a file upload. Here rather than @FormParam you need to use *@FormDataParam* annotation. This annotation can be used with all FormParam supported data types plus File and bean types as well as InpuStreams.
+If you like use non streaming mode then you can directly get File objects in a file upload. Here rather than @FormParam you need to use *@FormDataParam* annotation. This annotation can be used with all FormParam supported data types plus File and bean types as well as InputStreams.
 
 If you want to upload set of files. Then a sample service would be like as follows:
 ```java
