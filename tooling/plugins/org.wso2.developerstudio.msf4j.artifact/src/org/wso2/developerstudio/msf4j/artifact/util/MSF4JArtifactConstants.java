@@ -26,7 +26,7 @@ public class MSF4JArtifactConstants {
 
     public static final String MSF4J_SERVICE_PARENT_GROUP_ID = "org.wso2.msf4j";
     public static final String MSF4J_SERVICE_PARENT_ARTIFACT_ID = "msf4j-service";
-    public static String MSF4JServiceParentVersion = "2.0.0-SNAPSHOT";
+    public static String MSF4JServiceParentVersion = "2.0.0";
    
 	public static final String SWAGGER_ANNOTATIONS_DEPENDENCY_GROUP_ID = "io.swagger";
     public static final String SWAGGER_ANNOTATIONS_DEPENDENCY_ARTIFACT_ID = "swagger-annotations";
