@@ -22,7 +22,7 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 
 /**
- * Wrapper {@link InputStream} for {@link Request}
+ * Wrapper {@link InputStream} for {@link Request}.
  */
 public class MSF4JRequestInputStream extends InputStream {
     private Request request;

@@ -33,7 +33,7 @@ public class RequestContext {
     }
 
     /**
-     * Get request's character encoding
+     * Get request's character encoding.
      *
      * @return character encoding of the request
      */
@@ -42,7 +42,7 @@ public class RequestContext {
     }
 
     /**
-     * Get the request's content type
+     * Get the request's content type.
      *
      * @return String request's content type
      */
@@ -51,7 +51,7 @@ public class RequestContext {
     }
 
     /**
-     * Get the request's inputstream
+     * Get the request's inputstream.
      *
      * @return InputStream request's inputstream
      */
