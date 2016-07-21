@@ -874,8 +874,7 @@ public class HttpServerTest {
         assertEquals(response, "testTxtFile.txt:1:2:Open Source");
     }
 
-    //TODO Fix WMS-80
-    //@Test
+    @Test
     public void testFormDataParamWithMultipleFiles() throws IOException, URISyntaxException {
         HttpURLConnection connection = request("/test/v1/multipleFiles", HttpMethod.POST);
         File file1 = new File(Resources.getResource("testTxtFile.txt").toURI());
