@@ -18,6 +18,7 @@ package org.wso2.msf4j.internal.router;
 
 import com.google.common.base.Preconditions;
 import org.apache.commons.io.FileCleaningTracker;
+import org.apache.commons.io.FileDeleteStrategy;
 import org.wso2.msf4j.HttpStreamer;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
@@ -160,10 +161,6 @@ public class HttpResourceModelProcessor {
 
     private Object getFormDataParamValue(HttpResourceModel.ParameterInfo<List<Object>> paramInfo, Request request)
             throws FormUploadException, IOException {
-        if (Files.notExists(tempRepoPath)) {
-            Files.createDirectory(tempRepoPath);
-        }
-
         Type paramType = paramInfo.getParameterType();
         FormDataParam formDataParam = paramInfo.getAnnotation();
         if (getFormParameters() == null) {
@@ -253,12 +250,16 @@ public class HttpResourceModelProcessor {
 
     private File createAndTrackTempFile(FormItem item) throws IOException {
         if (tmpPathForRequest == null) {
+            if (Files.notExists(tempRepoPath)) {
+                Files.createDirectory(tempRepoPath);
+            }
             tmpPathForRequest = Files.createTempDirectory(tempRepoPath, "tmp");
         }
         Path path = Paths.get(tmpPathForRequest.toString(), item.getName());
         File file = path.toFile();
         StreamUtil.copy(item.openStream(), new FileOutputStream(file), true);
         fileCleaningTracker.track(file, file);
+        fileCleaningTracker.track(tempRepoPath.toFile(), file, FileDeleteStrategy.FORCE);
         return file;
     }
 
