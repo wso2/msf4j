@@ -20,30 +20,32 @@ import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.ServiceMethodInfo;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * Interceptor used in test.
  */
 public class TestInterceptor implements Interceptor {
-    private volatile int numPreCalls = 0;
-    private volatile int numPostCalls = 0;
+    private volatile AtomicInteger numPreCalls = new AtomicInteger(0);
+    private volatile AtomicInteger numPostCalls = new AtomicInteger(0);
 
     public int getNumPreCalls() {
-        return numPreCalls;
+        return numPreCalls.get();
     }
 
     public int getNumPostCalls() {
-        return numPostCalls;
+        return numPostCalls.get();
     }
 
     public void reset() {
-        numPreCalls = 0;
-        numPostCalls = 0;
+        numPreCalls.set(0);
+        numPostCalls.set(0);
     }
 
     @Override
     public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo)
             throws Exception {
-        ++numPreCalls;
+        numPreCalls.incrementAndGet();
 
         String header = request.getHeader("X-Request-Type");
         if (header != null && header.equals("Reject")) {
@@ -61,7 +63,7 @@ public class TestInterceptor implements Interceptor {
 
     @Override
     public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) {
-        ++numPostCalls;
+        numPostCalls.incrementAndGet();
         String header = request.getHeader("X-Request-Type");
         if (header != null && header.equals("PostException")) {
             throw new IllegalArgumentException("PostException");
