@@ -126,7 +126,7 @@ public final class PatternPathRouter<T> {
     }
 
     /**
-     * Represents Paths parts
+     * Represents Paths parts.
      */
     private static class PathPart {
         private String name;

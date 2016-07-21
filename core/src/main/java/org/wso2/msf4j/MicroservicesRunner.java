@@ -91,7 +91,7 @@ public class MicroservicesRunner {
     }
 
     /**
-     * Add javax.ws.rs.ext.ExceptionMapper objects
+     * Add javax.ws.rs.ext.ExceptionMapper objects.
      *
      * @param exceptionMapper The ExceptionMapper to be added
      * @return this MicroservicesRunner object
@@ -103,7 +103,7 @@ public class MicroservicesRunner {
     }
 
     /**
-     * Method to configure transports
+     * Method to configure transports.
      *
      * @param ports The port on which the microservices are exposed
      */
@@ -120,7 +120,7 @@ public class MicroservicesRunner {
     }
 
     /**
-     * Method to configure transports
+     * Method to configure transports.
      */
     protected void configureTransport() {
         TransportsConfiguration trpConfig = YAMLTransportConfigurationBuilder.build();
@@ -136,7 +136,7 @@ public class MicroservicesRunner {
 
 
     /**
-     * Method to register NettyListeners
+     * Method to register NettyListeners.
      *
      * @param listener The NettyListener to be added
      */

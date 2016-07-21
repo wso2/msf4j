@@ -24,7 +24,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This {@link java.lang.annotation.Annotation} provide supports for multipart/form-data with MSF4J
+ * This {@link java.lang.annotation.Annotation} provide supports for multipart/form-data with MSF4J.
  *
  */
 @Target({ElementType.PARAMETER, ElementType.METHOD, ElementType.FIELD})
