@@ -394,9 +394,9 @@ public class HttpResourceModelProcessor {
 
     /**
      * @return parameter value of the given key.
-     * @param key parameter name
+     * @param key parameter name.
      */
-    public List<Object> getParameter(String key) {
+    private List<Object> getParameter(String key) {
         return formParameters.get(key);
     }
 
@@ -404,16 +404,16 @@ public class HttpResourceModelProcessor {
      *
      * @return Map of request formParameters
      */
-    public Map<String, List<Object>> getFormParameters() {
+    private Map<String, List<Object>> getFormParameters() {
         return formParameters;
     }
 
     /**
-     * Set the request formParameters
+     * Set the request formParameters.
      *
      * @param parameters request formParameters
      */
-    public void setFormParameters(MultivaluedMap<String, Object> parameters) {
+    private void setFormParameters(MultivaluedMap<String, Object> parameters) {
         this.formParameters = parameters;
     }
 }
