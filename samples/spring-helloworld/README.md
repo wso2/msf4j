@@ -76,25 +76,19 @@ import javax.ws.rs.Path;
 @Component
 public class LogHeadersInterceptor implements Interceptor {
 
-
     @Override
-    public boolean preCall(HttpRequest httpRequest, HttpResponder httpResponder,  
-                                                                                     ServiceMethodInfo serviceMethodInfo) {
-        
+    public boolean preCall(HttpRequest httpRequest, HttpResponder httpResponder, 
+                           ServiceMethodInfo serviceMethodInfo) {
+        // preCall implementation code goes here 
     }
-
 
     @Override
     public void postCall(HttpRequest httpRequest, HttpResponseStatus httpResponseStatus,
-                                                                              ServiceMethodInfo serviceMethodInfo) {
-
+                         ServiceMethodInfo serviceMethodInfo) {
+        // postCall implementation code goes here 
     }
-
-
 }
-
 ```
-
 
 ### Configuring ExceptionMappers using Spring. 
 

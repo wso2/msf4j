@@ -26,6 +26,8 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 /**
  * Default Spring configuration class for Microservices, it's possible to provide alternative Spring configuration
  * classes by application developers.
+ *
+ * @since 2.0.0
  */
 @Configuration
 @ComponentScan

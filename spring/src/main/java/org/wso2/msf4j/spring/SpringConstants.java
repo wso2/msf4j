@@ -19,6 +19,8 @@ package org.wso2.msf4j.spring;
 /**
  * Class to hold constants used in Spring module.
  *
+ * @since 2.0.0
+ *
  */
 public class SpringConstants {
 
