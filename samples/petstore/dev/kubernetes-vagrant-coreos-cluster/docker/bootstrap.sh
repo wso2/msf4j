@@ -1,5 +1,6 @@
 #!/bin/bash
 
+VERSION=2.0.0
 HOME="/vagrant"
 PET=$HOME/pet/docker
 FILESERVER=$HOME/fileserver/docker
@@ -100,15 +101,15 @@ echo "building / load pet docker"
 echo "------------------------------------------------------------------"
 
 cd $PET
-docker build -t wso2msf4j/petstore-pet:1.0.0 .
+docker build -t wso2msf4j/petstore-pet:${VERSION} .
 sleep 3
-if docker images |grep wso2msf4j/petstore-pet:1.0.0 >/dev/null 2>&1
+if docker images |grep wso2msf4j/petstore-pet:${VERSION} >/dev/null 2>&1
     then
         echo "wso2msf4j/petstore-pet image build success!!"
     else
         echo "wso2msf4j/petstore-pet building again........."
         cd $PET
-        docker build -t wso2msf4j/petstore-pet:1.0.0 .
+        docker build -t wso2msf4j/petstore-pet:${VERSION} .
 fi
 
 
@@ -116,14 +117,14 @@ echo "------------------------------------------------------------------"
 echo "building fileserver docker"
 echo "------------------------------------------------------------------"
 cd $FILESERVER
-docker build -t wso2msf4j/petstore-fileserver:1.0.0 .
+docker build -t wso2msf4j/petstore-fileserver:${VERSION} .
 
-if docker images |grep wso2msf4j/petstore-fileserver:1.0.0 >/dev/null 2>&1
+if docker images |grep wso2msf4j/petstore-fileserver:${VERSION} >/dev/null 2>&1
     then
         echo "wso2msf4j/petstore-fileserver image build success!!"
     else
         cd $FILESERVER
-        docker build -t wso2msf4j/petstore-fileserver:1.0.0 .
+        docker build -t wso2msf4j/petstore-fileserver:${VERSION} .
 fi
 
 
@@ -131,14 +132,14 @@ echo "------------------------------------------------------------------"
 echo "building FrontEnd Admin"
 echo "------------------------------------------------------------------"
 cd $FRONTEND_ADMIN
-docker build -t wso2msf4j/petstore-admin-fe:1.0.0 .
+docker build -t wso2msf4j/petstore-admin-fe:${VERSION} .
 
-if docker images |grep wso2msf4j/petstore-admin-fe:1.0.0 >/dev/null 2>&1
+if docker images |grep wso2msf4j/petstore-admin-fe:${VERSION} >/dev/null 2>&1
     then
         echo "wso2msf4j/petstore-admin-fe image build success!!"
     else
         cd $FRONTEND_ADMIN
-        docker build -t wso2msf4j/petstore-admin-fe:1.0.0 .
+        docker build -t wso2msf4j/petstore-admin-fe:${VERSION} .
 fi
 
 
@@ -146,14 +147,14 @@ echo "------------------------------------------------------------------"
 echo "building FrontEnd User"
 echo "------------------------------------------------------------------"
 cd $FRONTEND_USER
-docker build -t wso2msf4j/petstore-store-fe:1.0.0 .
+docker build -t wso2msf4j/petstore-store-fe:${VERSION} .
 
-if docker images |grep wso2msf4j/petstore-store-fe:1.0.0 >/dev/null 2>&1
+if docker images |grep wso2msf4j/petstore-store-fe:${VERSION} >/dev/null 2>&1
     then
         echo "wso2msf4j/petstore-store-fe image build success!!"
     else
         cd $FRONTEND_USER
-        docker build -t wso2msf4j/petstore-store-fe:1.0.0 .
+        docker build -t wso2msf4j/petstore-store-fe:${VERSION} .
 fi
 
 
@@ -161,14 +162,14 @@ echo "------------------------------------------------------------------"
 echo "building Security"
 echo "------------------------------------------------------------------"
 cd $SECURITY
-docker build -t wso2msf4j/petstore-security:1.0.0 .
+docker build -t wso2msf4j/petstore-security:${VERSION} .
 
-if docker images |grep wso2msf4j/petstore-security:1.0.0 >/dev/null 2>&1
+if docker images |grep wso2msf4j/petstore-security:${VERSION} >/dev/null 2>&1
     then
         echo "wso2msf4j/petstore-security image build success!!"
     else
         cd $SECURITY
-        docker build -t wso2msf4j/petstore-security:1.0.0 .
+        docker build -t wso2msf4j/petstore-security:${VERSION} .
 fi
 
 
@@ -176,14 +177,14 @@ echo "------------------------------------------------------------------"
 echo "building Transaction"
 echo "------------------------------------------------------------------"
 cd $TRANSACTION
-docker build -t wso2msf4j/petstore-txn:1.0.0 .
+docker build -t wso2msf4j/petstore-txn:${VERSION} .
 
-if docker images |grep wso2msf4j/petstore-txn:1.0.0 >/dev/null 2>&1
+if docker images |grep wso2msf4j/petstore-txn:${VERSION} >/dev/null 2>&1
     then
         echo "wso2msf4j/petstore-txn image build success!!"
     else
         cd $TRANSACTION
-        docker build -t wso2msf4j/petstore-txn:1.0.0 .
+        docker build -t wso2msf4j/petstore-txn:${VERSION} .
 fi
 
 

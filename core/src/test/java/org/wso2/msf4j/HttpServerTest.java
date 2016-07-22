@@ -734,7 +734,7 @@ public class HttpServerTest {
     public void testGlobalSwagger() throws Exception {
         HttpURLConnection urlConn = request("/swagger", HttpMethod.GET);
         assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
-        assertEquals(MediaType.TEXT_PLAIN, urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE));
+        assertEquals(MediaType.APPLICATION_JSON, urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE));
         urlConn.disconnect();
     }
 
@@ -742,7 +742,7 @@ public class HttpServerTest {
     public void testServiceSwagger() throws Exception {
         HttpURLConnection urlConn = request("/swagger?path=/test/v1", HttpMethod.GET);
         assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
-        assertEquals(MediaType.TEXT_PLAIN, urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE));
+        assertEquals(MediaType.APPLICATION_JSON, urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE));
         urlConn.disconnect();
     }
 
@@ -750,7 +750,7 @@ public class HttpServerTest {
     public void testNonExistentServiceSwagger() throws Exception {
         HttpURLConnection urlConn = request("/swagger?path=/zzaabdf", HttpMethod.GET);
         assertEquals(Response.Status.NOT_FOUND.getStatusCode(), urlConn.getResponseCode());
-        assertEquals(MediaType.TEXT_PLAIN, urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE));
+        assertEquals(MediaType.APPLICATION_JSON, urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE));
         urlConn.disconnect();
     }
 
@@ -808,7 +808,45 @@ public class HttpServerTest {
     }
 
     @Test
-    public void tesFormParamWithURLEncodedList() throws IOException {
+    public void testFormDataParamWithSimpleRequest() throws IOException, URISyntaxException {
+        // Send x-form-url-encoded request
+        HttpURLConnection connection = request("/test/v1/formDataParam", HttpMethod.POST);
+        String rawData = "name=wso2&age=10";
+        ByteBuffer encodedData = Charset.defaultCharset().encode(rawData);
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type", MediaType.APPLICATION_FORM_URLENCODED);
+        connection.setRequestProperty("Content-Length", String.valueOf(encodedData.array().length));
+        try (OutputStream os = connection.getOutputStream()) {
+            os.write(Arrays.copyOf(encodedData.array(), encodedData.limit()));
+        }
+
+        InputStream inputStream = connection.getInputStream();
+        String response = StreamUtil.asString(inputStream);
+        IOUtils.closeQuietly(inputStream);
+        connection.disconnect();
+        assertEquals(response, "wso2:10");
+
+        // Send multipart/form-data request
+        connection = request("/test/v1/formDataParam", HttpMethod.POST);
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        builder.addPart("name", new StringBody("wso2", ContentType.TEXT_PLAIN));
+        builder.addPart("age", new StringBody("10", ContentType.TEXT_PLAIN));
+        HttpEntity build = builder.build();
+        connection.setRequestProperty("Content-Type", build.getContentType().getValue());
+        try (OutputStream out = connection.getOutputStream()) {
+            build.writeTo(out);
+        }
+
+        inputStream = connection.getInputStream();
+        response = StreamUtil.asString(inputStream);
+        IOUtils.closeQuietly(inputStream);
+        connection.disconnect();
+        assertEquals(response, "wso2:10");
+    }
+
+    @Test
+    public void tesFormParamWithCollection() throws IOException {
+        // Send x-form-url-encoded request
         HttpURLConnection connection = request("/test/v1/formParamWithList", HttpMethod.POST);
         String rawData = "names=WSO2&names=IBM";
         ByteBuffer encodedData = Charset.defaultCharset().encode(rawData);
@@ -824,6 +862,60 @@ public class HttpServerTest {
         IOUtils.closeQuietly(inputStream);
         connection.disconnect();
         assertEquals(response, "2");
+
+        // Send multipart/form-data request
+        connection = request("/test/v1/formParamWithList", HttpMethod.POST);
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        builder.addPart("names", new StringBody("WSO2", ContentType.TEXT_PLAIN));
+        builder.addPart("names", new StringBody("IBM", ContentType.TEXT_PLAIN));
+        builder.addPart("names", new StringBody("Oracle", ContentType.TEXT_PLAIN));
+        HttpEntity build = builder.build();
+        connection.setRequestProperty("Content-Type", build.getContentType().getValue());
+        try (OutputStream out = connection.getOutputStream()) {
+            build.writeTo(out);
+        }
+
+        inputStream = connection.getInputStream();
+        response = StreamUtil.asString(inputStream);
+        IOUtils.closeQuietly(inputStream);
+        connection.disconnect();
+        assertEquals(response, "3");
+
+        // Send x-form-url-encoded request
+        connection = request("/test/v1/formParamWithSet", HttpMethod.POST);
+        rawData = "names=WSO2&names=IBM&names=IBM";
+        encodedData = Charset.defaultCharset().encode(rawData);
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type", MediaType.APPLICATION_FORM_URLENCODED);
+        connection.setRequestProperty("Content-Length", String.valueOf(encodedData.array().length));
+        try (OutputStream os = connection.getOutputStream()) {
+            os.write(Arrays.copyOf(encodedData.array(), encodedData.limit()));
+        }
+
+        inputStream = connection.getInputStream();
+        response = StreamUtil.asString(inputStream);
+        IOUtils.closeQuietly(inputStream);
+        connection.disconnect();
+        assertEquals(response, "2");
+
+        // Send multipart/form-data request
+        connection = request("/test/v1/formParamWithSet", HttpMethod.POST);
+        builder = MultipartEntityBuilder.create();
+        builder.addPart("names", new StringBody("WSO2", ContentType.TEXT_PLAIN));
+        builder.addPart("names", new StringBody("IBM", ContentType.TEXT_PLAIN));
+        builder.addPart("names", new StringBody("IBM", ContentType.TEXT_PLAIN));
+        builder.addPart("names", new StringBody("Oracle", ContentType.TEXT_PLAIN));
+        build = builder.build();
+        connection.setRequestProperty("Content-Type", build.getContentType().getValue());
+        try (OutputStream out = connection.getOutputStream()) {
+            build.writeTo(out);
+        }
+
+        inputStream = connection.getInputStream();
+        response = StreamUtil.asString(inputStream);
+        IOUtils.closeQuietly(inputStream);
+        connection.disconnect();
+        assertEquals(response, "3");
     }
 
     @Test
@@ -969,6 +1061,22 @@ public class HttpServerTest {
         IOUtils.closeQuietly(inputStream);
         connection.disconnect();
         assertEquals("FileCount-2 SecondFileName-testPngFile.png FirstPerson-Richard Stallman", response);
+
+        connection = request("/test/v1/getAllFormItemsXFormUrlEncoded", HttpMethod.POST);
+        String rawData = "names=WSO2&names=IBM&type=Software";
+        ByteBuffer encodedData = Charset.defaultCharset().encode(rawData);
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type", MediaType.APPLICATION_FORM_URLENCODED);
+        connection.setRequestProperty("Content-Length", String.valueOf(encodedData.array().length));
+        try (OutputStream os = connection.getOutputStream()) {
+            os.write(Arrays.copyOf(encodedData.array(), encodedData.limit()));
+        }
+
+        inputStream = connection.getInputStream();
+        response = StreamUtil.asString(inputStream);
+        IOUtils.closeQuietly(inputStream);
+        connection.disconnect();
+        assertEquals("Type = Software No of names = 2 First name = IBM", response);
     }
 
     @Test
@@ -1007,6 +1115,31 @@ public class HttpServerTest {
         IOUtils.closeQuietly(inputStream);
         urlConn.disconnect();
         assertEquals("2", response);
+    }
+
+    @Test
+    public void testJsonProduceWithStringJsonArrayAndJsonObject() throws Exception {
+        HttpURLConnection urlConn = request("/test/v1/testJsonProduceWithString", HttpMethod.GET);
+        InputStream inputStream = urlConn.getInputStream();
+        String response = StreamUtil.asString(inputStream);
+        IOUtils.closeQuietly(inputStream);
+        urlConn.disconnect();
+        assertEquals("{\"abc\":[{\"name\":\"Richard Stallman\",\"age\":63}, {\"name\":\"Linus Torvalds\",\"age\":46}]}",
+                     response);
+
+        urlConn = request("/test/v1/testJsonProduceWithJsonArray", HttpMethod.GET);
+        inputStream = urlConn.getInputStream();
+        response = StreamUtil.asString(inputStream);
+        IOUtils.closeQuietly(inputStream);
+        urlConn.disconnect();
+        assertEquals("[\"12\",\"15\",\"15\"]", response);
+
+        urlConn = request("/test/v1/testJsonProduceWithJsonObject", HttpMethod.GET);
+        inputStream = urlConn.getInputStream();
+        response = StreamUtil.asString(inputStream);
+        IOUtils.closeQuietly(inputStream);
+        urlConn.disconnect();
+        assertEquals("{\"name\":\"WSO2\",\"products\":[\"APIM\",\"IS\",\"MSF4J\"]}", response);
     }
 
     protected Socket createRawSocket(URL url) throws IOException {

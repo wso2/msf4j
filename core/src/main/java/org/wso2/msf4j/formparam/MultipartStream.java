@@ -31,16 +31,16 @@ import java.nio.charset.Charset;
 import static java.lang.String.format;
 
 /**
- * <p> Low level API for processing file uploads.
- * <p>
+ * <p> Low level API for processing file uploads. </p>
+ *
  * <p> This class can be used to process data streams conforming to MIME
  * 'multipart' format as defined in
  * <a href="http://www.ietf.org/rfc/rfc1867.txt">RFC 1867</a>. Arbitrarily
  * large amounts of data in the stream can be processed under constant
  * memory usage.
- * <p>
+ *
  * <p> The format of the stream is defined in the following way:<br>
- * <p>
+ * </p>
  * <code>
  * multipart-body := preamble 1*encapsulation close-delimiter epilogue<br>
  * encapsulation := delimiter body CRLF<br>
@@ -55,15 +55,16 @@ import static java.lang.String.format;
  * header-value := &lt;any ascii characters except CR &amp; LF&gt;<br>
  * body-data := &lt;arbitrary data&gt;<br>
  * </code>
- * <p>
+ *
  * <p>Note that body-data can contain another mulipart entity.  There
  * is limited support for single pass processing of such nested
  * streams.  The nested stream is <strong>required</strong> to have a
  * boundary token of the same length as the parent stream (see {@link
  * #setBoundary(byte[])}).
- * <p>
+ * </p>
+ *
  * <p>Here is an example of usage of this class.<br>
- * <p>
+ * </p>
  * <pre>
  *   try {
  *     MultipartStream multipartStream = new MultipartStream(input, boundary);
@@ -195,12 +196,12 @@ public class MultipartStream {
 
     /**
      * <p> Constructs a <code>MultipartStream</code> with a custom size buffer.
-     * <p>
+     * </p>
      * <p> Note that the buffer must be at least big enough to contain the
      * boundary string, plus 4 characters for CR/LF and double dash, plus at
      * least one byte of data.  Too small a buffer size setting will degrade
      * performance.
-     *
+     * </p>
      * @param input    The <code>InputStream</code> to serve as a data source.
      * @param boundary The token used for dividing the stream into
      *                 <code>encapsulations</code>.
@@ -233,7 +234,7 @@ public class MultipartStream {
     }
 
     /**
-     * <p> Constructs a <code>MultipartStream</code> with a default size buffer.
+     * <p> Constructs a <code>MultipartStream</code> with a default size buffer.</p>
      *
      * @param input    The <code>InputStream</code> to serve as a data source.
      * @param boundary The token used for dividing the stream into
@@ -329,16 +330,16 @@ public class MultipartStream {
 
     /**
      * <p>Changes the boundary token used for partitioning the stream.
-     * <p>
+     * </p>
      * <p>This method allows single pass processing of nested multipart
      * streams.
-     * <p>
+     * </p>
      * <p>The boundary token of the nested stream is <code>required</code>
      * to be of the same length as the boundary token in parent stream.
-     * <p>
+     * </p>
      * <p>Restoring the parent stream boundary token after processing of a
      * nested stream is left to the application.
-     *
+     * </p>
      * @param boundary The boundary to be used for parsing of the nested
      *                 stream.
      */
@@ -352,11 +353,11 @@ public class MultipartStream {
     /**
      * <p>Reads the <code>header-part</code> of the current
      * <code>encapsulation</code>.
-     * <p>
+     * </p>
      * <p>Headers are returned verbatim to the input stream, including the
      * trailing <code>CRLF</code> marker. Parsing is left to the
      * application.
-     * <p>
+     * </p>
      *
      * @return The <code>header-part</code> of the current encapsulation.
      */
@@ -415,11 +416,11 @@ public class MultipartStream {
      * <p>Reads <code>body-data</code> from the current
      * <code>encapsulation</code> and writes its contents into the
      * output <code>Stream</code>.
-     * <p>
+     * </p>
      * <p>Arbitrary large amounts of data can be processed by this
      * method using a constant size buffer. (see {@link
      * #MultipartStream(InputStream, byte[], int) constructor}).
-     *
+     * </p>
      * @param output The <code>Stream</code> to write data into. May
      *               be null, in which case this method is equivalent
      *               to {@link #discardBodyData()}.
@@ -441,9 +442,9 @@ public class MultipartStream {
     /**
      * <p> Reads <code>body-data</code> from the current
      * <code>encapsulation</code> and discards it.
-     * <p>
+     * </p>
      * <p>Use this method to skip encapsulations you don't need or don't
-     * understand.
+     * understand.</p>
      *
      * @return The amount of data discarded.
      */

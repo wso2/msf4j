@@ -21,8 +21,10 @@ import com.google.common.base.Throwables;
 import com.google.common.io.Resources;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 import org.apache.commons.io.IOUtils;
 import org.wso2.msf4j.HttpStreamHandler;
 import org.wso2.msf4j.HttpStreamer;
@@ -53,6 +55,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.Consumes;
@@ -531,9 +534,24 @@ public class TestMicroservice implements Microservice {
         return Response.ok().entity(name + ":" + age).build();
     }
 
+    @Path("/formDataParam")
+    @POST
+    @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.MULTIPART_FORM_DATA})
+    public Response tesFormDataParam(@FormDataParam("name") String name, @FormDataParam("age") int age) {
+        return Response.ok().entity(name + ":" + age).build();
+    }
+
     @Path("/formParamWithList")
     @POST
-    public Response tesFormParamWithURLEncodedList(@FormParam("names") List<String> names) {
+    @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.MULTIPART_FORM_DATA})
+    public Response tesFormParamList(@FormParam("names") List<String> names) {
+        return Response.ok().entity(names.size()).build();
+    }
+
+    @Path("/formParamWithSet")
+    @POST
+    @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.MULTIPART_FORM_DATA})
+    public Response tesFormParamSet(@FormParam("names") Set<String> names) {
         return Response.ok().entity(names.size()).build();
     }
 
@@ -613,6 +631,16 @@ public class TestMicroservice implements Microservice {
         return Response.ok().entity(response).build();
     }
 
+    @POST
+    @Path("/getAllFormItemsXFormUrlEncoded")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response getAllFormItemsXFormUrlEncoded(@Context MultivaluedMap formItemMultivaluedMap) {
+        ArrayList names = (ArrayList) formItemMultivaluedMap.get("names");
+        String type = formItemMultivaluedMap.getFirst("type").toString();
+        String response = "Type = " + type + " No of names = " + names.size() + " First name = " + names.get(1);
+        return Response.ok().entity(response).build();
+    }
+
     @GET
     @Path("{assetType : [a-zA-Z][a-zA-Z_0-9]*}/{id}/states")
     public Response testPathParamWithRegexOne(@PathParam("assetType") String assetType, @PathParam("id") String id) {
@@ -643,6 +671,39 @@ public class TestMicroservice implements Microservice {
         int returnVal = initialValue + 1;
         initialValue = 0;
         return Response.ok().entity(returnVal).build();
+    }
+
+    @GET
+    @Path("/testJsonProduceWithString")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response testJsonProduceWithString() {
+        String res = "{\"abc\":[{\"name\":\"Richard Stallman\",\"age\":63}, {\"name\":\"Linus Torvalds\",\"age\":46}]}";
+        return Response.ok().entity(res).build();
+    }
+
+    @GET
+    @Path("/testJsonProduceWithJsonArray")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response testJsonProduceWithJsonArray() {
+        JsonArray jsonArray = new JsonArray();
+        jsonArray.add(new JsonPrimitive("12"));
+        jsonArray.add(new JsonPrimitive("15"));
+        jsonArray.add(new JsonPrimitive("15"));
+        return Response.ok().entity(jsonArray).build();
+    }
+
+    @GET
+    @Path("/testJsonProduceWithJsonObject")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response testJsonProduceWithJJsonObject() {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.add("name", new JsonPrimitive("WSO2"));
+        JsonArray jsonArray = new JsonArray();
+        jsonArray.add(new JsonPrimitive("APIM"));
+        jsonArray.add(new JsonPrimitive("IS"));
+        jsonArray.add(new JsonPrimitive("MSF4J"));
+        jsonObject.add("products", jsonArray);
+        return Response.ok().entity(jsonObject).build();
     }
     
     /**

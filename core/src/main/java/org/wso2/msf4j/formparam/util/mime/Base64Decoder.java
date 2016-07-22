@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * Simple Bas64 decoder
+ * Simple Bas64 decoder.
  */
 final class Base64Decoder {
 

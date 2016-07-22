@@ -36,6 +36,7 @@ public interface HttpStreamHandler {
      * Http request content will be streamed directly to this method.
      *
      * @param content content of chunks
+     * @throws  Exception if error occurs while invoking streaming handlers
      */
     void chunk(ByteBuffer content) throws Exception;
 
@@ -43,7 +44,7 @@ public interface HttpStreamHandler {
      * This method will be called when all chunks
      * have been completely streamed.
      *
-     * @throws Exception
+     * @throws Exception if error occurs while stopping streaming handlers
      */
     void end() throws Exception;
 

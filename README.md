@@ -6,20 +6,30 @@ WSO2 Microservices Framework for Java (MSF4J) is a lightweight high performance 
 & running microservices.
 
 WSO2 MSF4J is one of the highest performing lightweight Java microservices frameworks. The following graphs show the 
-throughput & memory consumption characteristics of MSF4J against other microservices frameworks.
+throughput, memory consumption & latency characteristics of MSF4J against other microservices frameworks.
  
-![Throughput](perf-benchmark/graphs/tps.png) 
+![EchoThroughput](perf-benchmark/graphs/echotps.png) 
+![FileEchoThroughput](perf-benchmark/graphs/fileechotps.png) 
 
-An echo service which accepts a 1KB request & echoes it back was developed for the respective frameworks, and requests
-were sent for different concurrency values. The test was repeated for each concurrency value for each framework and 
-the average throughput was calculated. 
+An echo service which accepts a 1KB request & echoes it back directly and using a temp file was developed for the respective 
+frameworks, and requests were sent for different concurrency values. The test was repeated for each concurrency value for each 
+framework and the average throughput was calculated. 
 Tests were run out of the box without any tuning on 32 core 64GB server in JVM v1.8.0_60 with default configuration.
 
-![Memory](perf-benchmark/graphs/memory.png) 
+![EchoMemory](perf-benchmark/graphs/echomem.png)
+![FileEchoMemory](perf-benchmark/graphs/fileechomem.png)
 
 Memory usage for each framework was observed after running the 1KB payload echo microservice on each framework & 
 sending a number of requests at different concurrency levels to each service. 
-The graph above shows the averaged out values after several runs for each framework. 
+The graph above shows the averaged out values after several runs for each framework.
+ 
+Latency results was observed using the Apache bench provided percentile values. Results were plotted for 
+concurrency levels of 1, 200 and 400 for the simple echo test.
+  
+![LatencyC1](perf-benchmark/graphs/latency-c1-n100000.png)
+![LatencyC2](perf-benchmark/graphs/latency-c200-n100000.png)
+![LatencyC3](perf-benchmark/graphs/latency-c400-n100000.png)
+
 Tests were run out of the box without any tuning on 32 core 64GB server in JVM v1.8.0_60 with default configuration.
 
 More details about the performance test can found [here](perf-benchmark).
@@ -38,7 +48,7 @@ You can use the [msf4j-microservice](archetypes) Maven [archetype](http://maven.
 ```
 mvn archetype:generate -DarchetypeGroupId=org.wso2.msf4j \
 -DarchetypeArtifactId=msf4j-microservice -DarchetypeVersion=2.0.0 \
--DgroupId=org.example -DartifactId=Hello-Service -Dversion=1.0.0-SNAPSHOT \
+-DgroupId=org.example -DartifactId=Hello-Service -Dversion=0.1-SNAPSHOT \
 -Dpackage=org.example.service -DserviceClass=HelloService
 ```
 
@@ -64,7 +74,7 @@ configuration. Click [here](poms/msf4j-service) for more information.
 
     <groupId>org.example</groupId>
     <artifactId>Hello-Service</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>0.1-SNAPSHOT</version>
     <name>WSO2 MSF4J Microservice</name>
 
     <properties>
@@ -113,7 +123,7 @@ public class Application {
 
 
 ###Build the Service
-Run the following Maven command. This will create the fat jar **Hello-Service-1.0.0-SNAPSHOT.jar** in the **target** directory.
+Run the following Maven command. This will create the fat jar **Hello-Service-0.1-SNAPSHOT.jar** in the **target** directory.
 ```
 mvn package
 ```
@@ -361,7 +371,7 @@ Nygard's circuit breaker pattern is supported in MSF4J using the Netflix Hystrix
 * High performance Netty based transport
 * WSO2 Developer Studio based tooling for microservices development starting from a Swagger API definition
 * Generate Swagger definition using [Swagger annotations](https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X)
-* Ability to devalop and Configure MSF4J services using Spring framework
+* Ability to develop and Configure MSF4J services using Spring framework
 * HTTP request & response streaming including support for javax.ws.rs.core.StreamingOutput.
 * [ExceptionMapper]((https://docs.oracle.com/javaee/7/api/javax/ws/rs/ext/ExceptionMapper.html))
 * Support for metrics & visualization of metrics using WSO2 Data Analytics Server (DAS) dashboards

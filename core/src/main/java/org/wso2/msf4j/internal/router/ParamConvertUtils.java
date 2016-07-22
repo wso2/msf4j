@@ -29,7 +29,6 @@ import com.google.common.reflect.TypeToken;
 import org.apache.commons.beanutils.ConvertUtils;
 
 import java.io.File;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -135,7 +134,7 @@ public final class ParamConvertUtils {
      * @param resultType Result type
      * @return Function the function
      */
-    public static Function<List<String>, Object> createFormDataParamConverter(Type resultType, Annotation annotation) {
+    public static Function<List<String>, Object> createFormDataParamConverter(Type resultType) {
         // For java.io.File we only support List ParameterizedType
         if (resultType instanceof ParameterizedType) {
             ParameterizedType type = (ParameterizedType) resultType;

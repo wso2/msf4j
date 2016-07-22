@@ -56,9 +56,9 @@ public class MicroservicesRunner {
     /**
      * Default constructor which will take care of initializing Netty transports in the file pointed to by the
      * System property <code>transports.netty.conf</code>.
-     * <p/>
+     *
      * If that System property is not specified, it will start a single Netty transport on port 8080.
-     * <p/>
+     *
      * {@link #MicroservicesRunner(int...)}
      */
     public MicroservicesRunner() {
@@ -91,7 +91,7 @@ public class MicroservicesRunner {
     }
 
     /**
-     * Add javax.ws.rs.ext.ExceptionMapper objects
+     * Add javax.ws.rs.ext.ExceptionMapper objects.
      *
      * @param exceptionMapper The ExceptionMapper to be added
      * @return this MicroservicesRunner object
@@ -103,7 +103,9 @@ public class MicroservicesRunner {
     }
 
     /**
-     * Method to configure transports
+     * Method to configure transports.
+     *
+     * @param ports The port on which the microservices are exposed
      */
     protected void configureTransport(int... ports) {
         NettyTransportContextHolder nettyTransportContextHolder = NettyTransportContextHolder.getInstance();
@@ -118,7 +120,7 @@ public class MicroservicesRunner {
     }
 
     /**
-     * Method to configure transports
+     * Method to configure transports.
      */
     protected void configureTransport() {
         TransportsConfiguration trpConfig = YAMLTransportConfigurationBuilder.build();
@@ -134,7 +136,7 @@ public class MicroservicesRunner {
 
 
     /**
-     * Method to register NettyListeners
+     * Method to register NettyListeners.
      *
      * @param listener The NettyListener to be added
      */
