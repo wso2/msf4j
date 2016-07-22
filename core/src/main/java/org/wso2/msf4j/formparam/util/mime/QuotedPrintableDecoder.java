@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * Simple decoder for quoted values
+ * Simple decoder for quoted values.
  */
 final class QuotedPrintableDecoder {
 

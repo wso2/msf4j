@@ -99,7 +99,7 @@ public final class MicroserviceMetadata {
      * @param contentTypeHeader content type of the request
      * @param acceptHeader      accept type of the request
      * @return matching resource method
-     * @throws HandlerException
+     * @throws HandlerException if the method not found or content type mismatch
      */
     public PatternPathRouter
             .RoutableDestination<HttpResourceModel> getDestinationMethod(String uri,

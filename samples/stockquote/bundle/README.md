@@ -53,7 +53,7 @@ Install the target/stockquote-msf4j-bundle-2.0.0.jar as an OSGi bundle to WSO2 M
 OSGi console with the following command.
 
 ```
-install file://<path to target directory>/stockquote-bundle-1.0.0.jar
+install file://<path to target directory>/stockquote-bundle-2.0.0.jar
 ```
 
 When the installation of the bundle is successful, use the bundle ID of the installed bundle to start  

@@ -16,8 +16,10 @@ package org.wso2.msf4j.formparam;
 */
 
 /**
+ * <p>
  * This class contains basic file information which can be used with
- * FormDataParam("file") InputStream
+ * FormDataParam("file") InputStream.
+ * </p>
  */
 public class FileInfo {
     private String fileName;

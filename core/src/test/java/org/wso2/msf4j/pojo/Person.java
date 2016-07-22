@@ -16,7 +16,7 @@ package org.wso2.msf4j.pojo;
 */
 
 /**
- * Simple Bean class for a Person
+ * Simple Bean class for a Person.
  */
 public class Person {
     private String name;

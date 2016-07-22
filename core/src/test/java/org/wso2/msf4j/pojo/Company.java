@@ -16,7 +16,7 @@ package org.wso2.msf4j.pojo;
 */
 
 /**
- * Simple bean class for a company
+ * Simple bean class for a company.
  */
 public class Company {
     private String type;

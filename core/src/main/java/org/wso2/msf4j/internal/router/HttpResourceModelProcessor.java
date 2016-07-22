@@ -164,7 +164,7 @@ public class HttpResourceModelProcessor {
         Type paramType = paramInfo.getParameterType();
         FormDataParam formDataParam = paramInfo.getAnnotation();
         if (getFormParameters() == null) {
-            setFormParameters(extractRequestFormParams(request, true));
+            setFormParameters(extractRequestFormParams(request, paramInfo, true));
         }
 
         List<Object> parameter = getParameter(formDataParam.value());
@@ -177,6 +177,8 @@ public class HttpResourceModelProcessor {
             } else if (isNotNull && parameter.get(0).getClass().isAssignableFrom(File.class)) {
                 return parameter.get(0);
             } else if (MediaType.TEXT_PLAIN.equalsIgnoreCase(formParamContentType.get(formDataParam.value()))) {
+                return paramInfo.convert(parameter);
+            } else if (MediaType.APPLICATION_FORM_URLENCODED.equals(request.getContentType())) {
                 return paramInfo.convert(parameter);
             }
             // Beans with string constructor
@@ -197,44 +199,56 @@ public class HttpResourceModelProcessor {
      * Extract the form items in the request.
      *
      * @param request Request which need to be processed
+     * @param paramInfo of the method
      * @param addFileInfo if FileInfo object needed to be added to params. In a case of InputStream this should be true
      * @return MultivaluedMap of form items
-     * @throws IOException
+     * @throws IOException if error occurs while processing the multipart/form-data request
      */
-    private MultivaluedMap<String, Object> extractRequestFormParams(Request request, boolean addFileInfo)
-            throws IOException {
-        FormParamIterator formParamIterator = new FormParamIterator(request);
+    private MultivaluedMap<String, Object> extractRequestFormParams(Request request,
+                                                       HttpResourceModel.ParameterInfo paramInfo,
+                                                       boolean addFileInfo) throws IOException {
         MultivaluedMap<String, Object> parameters = new MultivaluedHashMap<>();
-        while (formParamIterator.hasNext()) {
-            FormItem item = formParamIterator.next();
+        if (MediaType.MULTIPART_FORM_DATA.equals(request.getContentType())) {
+            FormParamIterator formParamIterator = new FormParamIterator(request);
+            while (formParamIterator.hasNext()) {
+                FormItem item = formParamIterator.next();
 
-            String cType = item.getContentType();
-            if (cType != null && cType.contains(";")) {
-                cType = cType.split(";")[0];
-            }
-            if (cType == null) {
-                cType = MediaType.TEXT_PLAIN;
-            }
-            boolean isFile = item.getHeaders().getHeader("content-disposition").contains("filename") ||
-                             MediaType.APPLICATION_OCTET_STREAM.equals(item.getHeaders().getHeader("content-type"));
-            formParamContentType.putIfAbsent(item.getFieldName(), cType);
+                String cType = item.getContentType();
+                if (cType != null && cType.contains(";")) {
+                    cType = cType.split(";")[0];
+                }
+                if (cType == null) {
+                    cType = MediaType.TEXT_PLAIN;
+                }
+                boolean isFile = item.getHeaders().getHeader("content-disposition").contains("filename") ||
+                                 MediaType.APPLICATION_OCTET_STREAM.equals(item.getHeaders().getHeader("content-type"));
+                formParamContentType.putIfAbsent(item.getFieldName(), cType);
 
-            List<Object> existingValues = parameters.get(item.getFieldName());
-            if (existingValues == null) {
-                parameters.put(item.getFieldName(),
-                               isFile ? new ArrayList<>(Collections.singletonList(createAndTrackTempFile(item))) :
-                               new ArrayList<>(Collections.singletonList(StreamUtil.asString(item.openStream()))));
-            } else {
-                existingValues.add(isFile ? createAndTrackTempFile(item) : StreamUtil.asString(item.openStream()));
-            }
+                List<Object> existingValues = parameters.get(item.getFieldName());
+                if (existingValues == null) {
+                    parameters.put(item.getFieldName(),
+                                   isFile ? new ArrayList<>(Collections.singletonList(createAndTrackTempFile(item))) :
+                                   new ArrayList<>(Collections.singletonList(StreamUtil.asString(item.openStream()))));
+                } else {
+                    existingValues.add(isFile ? createAndTrackTempFile(item) : StreamUtil.asString(item.openStream()));
+                }
 
-            if (addFileInfo && isFile) {
-                //Create FileInfo bean to handle InputStream
-                FileInfo fileInfo = new FileInfo();
-                fileInfo.setFileName(item.getName());
-                fileInfo.setContentType(item.getContentType());
-                parameters.putSingle(item.getFieldName() + FILEINFO_POSTFIX, fileInfo);
+                if (addFileInfo && isFile) {
+                    //Create FileInfo bean to handle InputStream
+                    FileInfo fileInfo = new FileInfo();
+                    fileInfo.setFileName(item.getName());
+                    fileInfo.setContentType(item.getContentType());
+                    parameters.putSingle(item.getFieldName() + FILEINFO_POSTFIX, fileInfo);
+                }
             }
+        } else if (MediaType.APPLICATION_FORM_URLENCODED.equals(request.getContentType())) {
+            ByteBuffer fullContent = BufferUtil.merge(request.getFullMessageBody());
+            String bodyStr = BeanConverter
+                    .getConverter((request.getContentType() != null) ? request.getContentType() : MediaType.WILDCARD)
+                    .convertToObject(fullContent, paramInfo.getParameterType()).toString();
+            QueryStringDecoderUtil queryStringDecoderUtil = new QueryStringDecoderUtil(bodyStr, false);
+            queryStringDecoderUtil.parameters().entrySet().
+                    forEach(entry -> parameters.put(entry.getKey(), new ArrayList<>(entry.getValue())));
         }
         return parameters;
     }
@@ -259,7 +273,7 @@ public class HttpResourceModelProcessor {
         File file = path.toFile();
         StreamUtil.copy(item.openStream(), new FileOutputStream(file), true);
         fileCleaningTracker.track(file, file);
-        fileCleaningTracker.track(tempRepoPath.toFile(), file, FileDeleteStrategy.FORCE);
+        fileCleaningTracker.track(tmpPathForRequest.toFile(), file, FileDeleteStrategy.FORCE);
         return file;
     }
 
@@ -321,7 +335,7 @@ public class HttpResourceModelProcessor {
         } else if (((Class) paramType).isAssignableFrom(MultivaluedMap.class)) {
             MultivaluedMap<String, Object> listMultivaluedMap = new MultivaluedHashMap<>();
             if (MediaType.MULTIPART_FORM_DATA.equals(request.getContentType())) {
-                listMultivaluedMap = extractRequestFormParams(request, false);
+                listMultivaluedMap = extractRequestFormParams(request, paramInfo, false);
             } else if (MediaType.APPLICATION_FORM_URLENCODED.equals(request.getContentType())) {
                 ByteBuffer fullContent = BufferUtil.merge(request.getFullMessageBody());
                 String bodyStr = BeanConverter.getConverter(
@@ -381,9 +395,9 @@ public class HttpResourceModelProcessor {
 
     /**
      * @return parameter value of the given key.
-     * @param key parameter name
+     * @param key parameter name.
      */
-    public List<Object> getParameter(String key) {
+    private List<Object> getParameter(String key) {
         return formParameters.get(key);
     }
 
@@ -391,16 +405,16 @@ public class HttpResourceModelProcessor {
      *
      * @return Map of request formParameters
      */
-    public Map<String, List<Object>> getFormParameters() {
+    private Map<String, List<Object>> getFormParameters() {
         return formParameters;
     }
 
     /**
-     * Set the request formParameters
+     * Set the request formParameters.
      *
      * @param parameters request formParameters
      */
-    public void setFormParameters(MultivaluedMap<String, Object> parameters) {
+    private void setFormParameters(MultivaluedMap<String, Object> parameters) {
         this.formParameters = parameters;
     }
 }

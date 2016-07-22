@@ -56,4 +56,10 @@ limitations under the License.
             <class name="org.wso2.msf4j.SSLKeyStoreTest" />
         </classes>
     </test>
+
+    <test name="extended-microservice-tests" preserve-order="true" parallel="false">
+        <classes>
+            <class name="org.wso2.msf4j.ExtendedServiceTest"/>
+        </classes>
+    </test>
 </suite>

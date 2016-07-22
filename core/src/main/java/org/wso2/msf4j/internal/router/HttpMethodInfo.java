@@ -101,6 +101,8 @@ public class HttpMethodInfo {
 
     /**
      * Calls the http resource method.
+     *
+     * @throws Exception if error occurs while invoking the resource method
      */
     public void invoke() throws Exception {
         Object returnVal = method.invoke(handler, args);
@@ -112,6 +114,7 @@ public class HttpMethodInfo {
      * If chunk handling is supported provide chunks directly.
      *
      * @param chunk chunk content
+     * @throws Exception if error occurs while invoking streaming handlers
      */
     public void chunk(ByteBuffer chunk) throws Exception {
         try {
@@ -125,6 +128,8 @@ public class HttpMethodInfo {
 
     /**
      * If chunk handling is supported end streaming chunks.
+     *
+     * @throws Exception if error occurs while stopping streaming handlers
      */
     public void end() throws Exception {
         try {
@@ -138,6 +143,8 @@ public class HttpMethodInfo {
 
     /**
      * Return true if the handler method supports streaming.
+     *
+     * @return boolean true if streaming is supported
      */
     public boolean isStreamingSupported() {
         return httpStreamHandler != null;

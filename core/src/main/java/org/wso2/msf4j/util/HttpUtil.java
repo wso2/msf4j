@@ -37,6 +37,7 @@ public class HttpUtil {
      * Create a CarbonMessage for a specific status code.
      *
      * @param status HTTP status code
+     * @param msg message text
      * @return CarbonMessage representing the status
      */
     public static CarbonMessage createTextResponse(int status, String msg) {

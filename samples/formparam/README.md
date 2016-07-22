@@ -32,7 +32,16 @@ public Response testFormParam(@FormParam("age") int age, @FormParam("name") Stri
 }
 ```
 If a user wants, MSF4J will not process the stream but rather directly pass an FormParamIterator which can be used to retrieve the parameter values. 
-FormParam name must be ‘form’ and the type must be FormParamIterator
+You can inject that with @Context  annotation. Type must be FormParamIterator.
+e.g.
+```java
+public Response simpleFormStreaming(@Context FormParamIterator formParamIterator) {
+```
+FormParamIterator.next() and FormParamIterator.hasNext() method can be used to retrieve and check if more items are available.
+FormParamIterator.next() returns a **FormItem** object which is corresponding to a item in the form. 
+FormItem.openStream() returns an InputStream for the particular item of the form.
+FormItem.getContentType() returns the content type of the item
+FormItem.getFieldName() returns the name of the item
 
 E.g.
 Sample service for multipart/form-data content-type with file upload
@@ -58,7 +67,7 @@ public Response simpleFormStreaming(@Context FormParamIterator formParamIterator
    return Response.ok().entity("Request completed").build();
 }
 ```
-If you like use non streaming mode then you can directly get File objects in a file upload. Here rather than @FormParam you need to use *@FormDataParam* annotation. This annotation can be used with all FormParam supported data types plus File and bean types as well as InpuStreams.
+If you like use non streaming mode then you can directly get File objects in a file upload. Here rather than @FormParam you need to use *@FormDataParam* annotation. This annotation can be used with all FormParam supported data types plus File and bean types as well as InputStreams.
 
 If you want to upload set of files. Then a sample service would be like as follows:
 ```java
@@ -140,5 +149,50 @@ java -jar target/formparam-*.jar
 We will use the cURL command line tool for testing. You can use your preferred HTTP or REST client too.
 Simple client is also available in the sample
 
-## Sample CURL Command 
+## Sample CURL Commands 
+1. For simpleForm and simpleFormWithFormParam operations in the FormService. Change the url based on the operations you invoke
+```
+curl -X POST -H "Content-Type: application/x-www-form-urlencoded" -d 'name=WSO2&age=10' "http://localhost:8080/formService/simpleFormWithFormParam"
+curl -X POST -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW" -F "name=WSO2" -F "age=10" "http://localhost:8080/formService/simpleFormWithFormParam"
+```
+2. For simpleFormWithFormParamAndList, simpleFormWithFormParamAndSet and simpleFormWithFormParamAndSortedSet operations in the FormService. Change the url based on the operations you invoke
+```
+curl -X POST -H "Content-Type: application/x-www-form-urlencoded" -d 'name=WSO2&name=IBM' "http://localhost:8080/formService/simpleFormWithFormParamAndList"
+curl -X POST -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW" -F "name=WSO2" -F "name=IBM" -F "name=Oracle" "http://localhost:8080/formService/simpleFormWithFormParamAndList"
+```
+3. For simpleFormStreaming operation in the FormService
+```
 curl -X POST -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW" -F "name=WSO2" -F "age=10" -F "image=@abc.png" "http://localhost:8080/formService/simpleFormStreaming"
+```
+You can also use a simple html form like below or a rest client e.g. Postman, Advanced RestClient
+```html
+<form method="post" action="http://localhost:8080/formService/simpleFormStreaming">
+    <table>
+        <tr>
+    	    <td>Name:</td>
+    	    <td><input type="text" name="name" /></td>
+        </tr>
+        <tr>
+    	    <td>Age:</td>
+    	    <td><input type="text" name="age" /></td>
+        </tr>
+        <tr>
+    	    <td>Photo:</td>
+    	    <td><input type="file" name="photo" /></td>
+        </tr>
+        <tr>
+    	    <td colspan="1"><input name="submit" type="submit" value="Add User" /></td>
+        </tr>
+    </table>
+</form>
+```
+
+4. For multipleFiles operation in the FormService
+```
+curl -X POST -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW" -F "files=@file1.txt" -F "files=file2.jpg" "http://localhost:8080/formService/multipleFiles"
+```
+5. For streamFile operation in the FormService
+```
+curl -X POST -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW" -F "file=file1.txt" "http://localhost:8080/formService/streamFile"
+```
+Please refer to the SampleClient code to invoke the complexForm operation
