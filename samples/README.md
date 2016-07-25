@@ -21,9 +21,9 @@ In increasing order of complexity;
 * [FormParam](formparam) - Shows usage of the FormParam annotation
 * [Circuit Breaker](circuitbreaker) - Using the circuit breaker pattern
 * [Log-interceptor](log-interceptor-bundle) - Creating an Interceptor as an OSGi Bundle
+* [Hello World JPA](jpa) - Simple JPA Hibernate based sample
 * [BasicAuth Security](basicauth-security) - Securing Microservice using BasicAuth
 * [OAuth2 Security](oauth2-security) - Securing Microservice using OAuth2
 * [Template](template) - Rendering a Model from a Template
 * [Pet-store](petstore) - Running as an MSA Application
-* [Hello World JPA](helloworld-JPA) - Simple JPA Hibernate based sample
 
