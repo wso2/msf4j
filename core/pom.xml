@@ -361,9 +361,9 @@
         <bundle.activator>org.wso2.msf4j.internal.MicroservicesServerActivator</bundle.activator>
         <private.package>org.wso2.msf4j.internal.*</private.package>
         <export.package>
-            org.wso2.msf4j.*;version="${msf4j.version}",
             !org.wso2.msf4j.internal.*,
-            !org.wso2.msf4j.delegates.*
+            !org.wso2.msf4j.delegates.*,
+            org.wso2.msf4j.*;version="${msf4j.version}"
         </export.package>
         <import.package>
             org.apache.commons.io.*;version="${commons-io.version.range}",
