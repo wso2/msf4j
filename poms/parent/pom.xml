@@ -236,6 +236,11 @@
                 <artifactId>org.wso2.carbon.transport.http.netty</artifactId>
                 <version>${org.wso2.carbon.transport.http.netty.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${org.apache.httpcomponents.httpclient.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.osgi</groupId>
@@ -518,6 +523,7 @@
         <carbon.messaging.version.range>[1.0.4,2)</carbon.messaging.version.range>
         <org.wso2.carbon.transport.http.netty.version>2.1.2</org.wso2.carbon.transport.http.netty.version>
         <org.wso2.carbon.transport.http.netty.version.range>[2.0,3)</org.wso2.carbon.transport.http.netty.version.range>
+        <org.apache.httpcomponents.httpclient.version>4.5.2</org.apache.httpcomponents.httpclient.version>
         <msf4j.version>2.0.1-SNAPSHOT</msf4j.version>
         <carbon.metrics.version>2.0.0</carbon.metrics.version>
         <carbon.metrics.version.range>[2.0,3)</carbon.metrics.version.range>
