@@ -207,6 +207,11 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.msf4j</groupId>
+                <artifactId>zipkin-tracing</artifactId>
+                <version>${msf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.msf4j</groupId>
                 <artifactId>jaxrs-delegates</artifactId>
                 <version>${msf4j.version}</version>
             </dependency>

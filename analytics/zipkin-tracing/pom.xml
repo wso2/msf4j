@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2016, WSO2 Inc. (http://wso2.com) All Rights Reserved.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.wso2.msf4j</groupId>
+        <artifactId>msf4j-parent</artifactId>
+        <version>2.0.1-SNAPSHOT</version>
+        <relativePath>../../poms/parent/pom.xml</relativePath>
+    </parent>
+
+    <artifactId>zipkin-tracing</artifactId>
+    <!-- TODO: Make this an OSGi bundle to support MSF4J OSGi mode -->
+    <packaging>jar</packaging>
+
+    <name>Zipkin Tracing Module</name>
+    <description>This module provides Zipkin tracing support for MSF4J server-less mode.</description>
+    <url>https://github.com/wso2/msf4j</url>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.wso2.msf4j</groupId>
+            <artifactId>msf4j-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.zipkin.brave</groupId>
+            <artifactId>brave-spancollector-http</artifactId>
+            <version>3.9.1</version>
+        </dependency>
+        <dependency>
+            <groupId>io.zipkin.brave</groupId>
+            <artifactId>brave-http</artifactId>
+            <version>3.9.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.rat</groupId>
+                <artifactId>apache-rat-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <!-- Profile for generating coverage report -->
+        <profile>
+            <id>coverage</id>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-surefire-plugin</artifactId>
+                            <configuration>
+                                <argLine>${argLine} -Xmx512m</argLine>
+                            </configuration>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.jacoco</groupId>
+                            <artifactId>jacoco-maven-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <id>prepare-agent</id>
+                                    <goals>
+                                        <goal>prepare-agent</goal>
+                                    </goals>
+                                </execution>
+                                <execution>
+                                    <id>report</id>
+                                    <phase>prepare-package</phase>
+                                    <goals>
+                                        <goal>report</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Profile for creating all deployment artifacts -->
+        <profile>
+            <id>release</id>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <!-- Source jar -->
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-source-plugin</artifactId>
+                            <configuration>
+                                <excludeResources>true</excludeResources>
+                            </configuration>
+                            <executions>
+                                <execution>
+                                    <id>attach-sources</id>
+                                    <phase>package</phase>
+                                    <goals>
+                                        <goal>jar-no-fork</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+
+                        <!-- Javadoc jar -->
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-javadoc-plugin</artifactId>
+                            <configuration>
+                                <detectJavaApiLink>true</detectJavaApiLink>
+                                <links>
+                                    <link>http://docs.oracle.com/javaee/6/api/</link>
+                                </links>
+                                <excludePackageNames>*.internal.*</excludePackageNames>
+                                <bottom>
+                                    <![CDATA[Copyright {currentYear} WSO2, Inc. <a href="http://www.apache.org/licenses/LICENSE-2.0">Licensed under the Apache License, Version 2.0</a>]]>
+                                </bottom>
+                            </configuration>
+                            <executions>
+                                <execution>
+                                    <id>attach-javadoc</id>
+                                    <phase>package</phase>
+                                    <goals>
+                                        <goal>jar</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+
+                        <!-- GPG signature -->
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-gpg-plugin</artifactId>
+                            <configuration>
+                                <passphrase>${gpg.passphrase}</passphrase>
+                                <useAgent>${gpg.useagent}</useAgent>
+                            </configuration>
+                            <executions>
+                                <execution>
+                                    <goals>
+                                        <goal>sign</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>
