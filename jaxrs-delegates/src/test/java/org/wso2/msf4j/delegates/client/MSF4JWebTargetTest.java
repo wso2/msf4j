@@ -16,9 +16,32 @@
 
 package org.wso2.msf4j.delegates.client;
 
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import java.net.URI;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.WebTarget;
+
 /**
  * Class that tests org.wso2.msf4j.delegates.client.MSF4JWebTargetTest
  */
-public class MSF4JWebTargetTest {
+public class MSF4JWebTargetTest extends Assert {
+
+    @Test
+    public void testWebTargetPath() {
+        Client client = MSF4JClientBuilder.newClient();
+        WebTarget webTarget = client.target("http://wso2.com");
+        URI uri = webTarget.path("/products").getUri();
+        assertEquals(uri.toASCIIString(), "http://wso2.com/products");
+    }
+
+    @Test
+    public void testWebTargetPathWithoutSlashPrefix() {
+        Client client = MSF4JClientBuilder.newClient();
+        WebTarget webTarget = client.target("http://wso2.com");
+        URI uri = webTarget.path("products").getUri();
+        assertEquals(uri.toASCIIString(), "http://wso2.com/products");
+    }
 
 }

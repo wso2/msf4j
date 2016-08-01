@@ -14,24 +14,21 @@
  * limitations under the License.
  */
 
-package org.wso2.msf4j.delegates.client;
+package org.wso2.msf4j.service;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
 
 /**
- * Class that tests org.wso2.msf4j.delegates.client.MSF4JClient
+ * This microservice is used to test the MSF4J client
  */
-public class MSF4JClientTest extends Assert {
+@Path("/test")
+public class ClientTestMicroService {
 
-    @Test
-    public void testCreatingWebTarget() {
-        Client client = MSF4JClientBuilder.newClient();
-        WebTarget webTarget = client.target("http://wso2.com");
-        assertTrue(MSF4JWebTarget.class.isInstance(webTarget));
+    @GET
+    @Path("hello")
+    public String getHello() {
+        return "Hello";
     }
 
 }

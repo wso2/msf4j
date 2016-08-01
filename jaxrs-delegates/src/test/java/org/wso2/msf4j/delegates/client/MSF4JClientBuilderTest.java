@@ -16,9 +16,22 @@
 
 package org.wso2.msf4j.delegates.client;
 
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+
 /**
  * Class that tests org.wso2.msf4j.delegates.client.MSF4JClientBuilder
  */
-public class MSF4JClientBuilderTest {
+public class MSF4JClientBuilderTest extends Assert {
+
+    @Test
+    public void testTypeOfClientOfClientBuilder() {
+        Client client = ClientBuilder.newClient();
+        assertTrue(MSF4JClient.class.isInstance(client),
+                "Client should be an instance of MSF4JClientBuilder");
+    }
 
 }
