@@ -108,6 +108,12 @@ public class MSF4JInvocation implements Invocation {
         private MSF4JClientRequestContext clientRequestContext;
         private List<Object> providerComponents = new ArrayList<>();
 
+        /**
+         * Constructor of MSF4JInvocation.Builder
+         *
+         * @param clientRequestContext ClientRequestContext to create the InvocationBuilder
+         * @param providerComponents   List of provider components
+         */
         public Builder(MSF4JClientRequestContext clientRequestContext, List<Object> providerComponents) {
             this.clientRequestContext = clientRequestContext;
             this.providerComponents.addAll(providerComponents);
@@ -148,12 +154,24 @@ public class MSF4JInvocation implements Invocation {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Set accept media types.
+         *
+         * @param mediaTypes Array of accpet media types as strings
+         * @return This Invocation.Builder
+         */
         @Override
         public Invocation.Builder accept(String... mediaTypes) {
             clientRequestContext.setAcceptResponseTypesStr(Arrays.asList(mediaTypes));
             return this;
         }
 
+        /**
+         * Set accept media types.
+         *
+         * @param mediaTypes Array of accpet media types as MediaTypes.
+         * @return This Invocation.Builder
+         */
         @Override
         public Invocation.Builder accept(MediaType... mediaTypes) {
             clientRequestContext.setAcceptResponseTypes(Arrays.asList(mediaTypes));
@@ -190,6 +208,13 @@ public class MSF4JInvocation implements Invocation {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Set headers of the request.
+         *
+         * @param name  Header name
+         * @param value Header value
+         * @return This Invocation.Builder
+         */
         @Override
         public Invocation.Builder header(String name, Object value) {
             clientRequestContext.getHeaders().add(name, value.toString());
@@ -206,6 +231,11 @@ public class MSF4JInvocation implements Invocation {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Make a HTTP GET request.
+         *
+         * @return Response object
+         */
         @Override
         public Response get() {
             clientRequestContext.setMethod(HttpMethod.GET);
@@ -222,10 +252,16 @@ public class MSF4JInvocation implements Invocation {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Make a HTTP PUT request.
+         *
+         * @param entity Entity of the request
+         * @return Response object
+         */
         @Override
         public Response put(Entity<?> entity) {
             clientRequestContext.setMethod(HttpMethod.PUT);
-            clientRequestContext.setEntity(entity.getEntity());
+            // TODO: implement entity support
             return sendRequest(clientRequestContext);
         }
 
@@ -239,10 +275,17 @@ public class MSF4JInvocation implements Invocation {
             throw new UnsupportedOperationException();
         }
 
+
+        /**
+         * Make a HTTP POST request.
+         *
+         * @param entity Entity of the request
+         * @return Response object
+         */
         @Override
         public Response post(Entity<?> entity) {
             clientRequestContext.setMethod(HttpMethod.POST);
-            clientRequestContext.setEntity(entity.getEntity());
+            // TODO: implement entity support
             return sendRequest(clientRequestContext);
         }
 
@@ -256,9 +299,11 @@ public class MSF4JInvocation implements Invocation {
             throw new UnsupportedOperationException();
         }
 
+
         /**
+         * Make a HTTP DELETE request.
          *
-         * @return
+         * @return Response object
          */
         @Override
         public Response delete() {
