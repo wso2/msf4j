@@ -84,6 +84,17 @@ public class MSF4JClientRequestContext implements ClientRequestContext {
         return this;
     }
 
+    /**
+     * Set media type of the request.
+     *
+     * @param mediaType MediaType of the request
+     * @return This MSF4JClientRequestContext instance
+     */
+    public MSF4JClientRequestContext setMediaType(MediaType mediaType) {
+        this.mediaType = mediaType;
+        return this;
+    }
+
     @Override
     public Object getProperty(String name) {
         throw new UnsupportedOperationException();
