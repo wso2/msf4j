@@ -24,6 +24,7 @@ import org.wso2.msf4j.MicroservicesRunner;
 import org.wso2.msf4j.service.ClientTestMicroService;
 
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 
 /**
@@ -52,6 +53,30 @@ public class MSF4JInvocationTest extends Assert {
         Response response = ClientBuilder.newClient().target("http://0.0.0.0:8101").path("test/hello").request().get();
         assertEquals(response.getStatus(), 200);
         assertEquals(response.getEntity(), "Hello");
+    }
+
+    @Test
+    public void testSimplePostRequest() {
+        Response response = ClientBuilder.newClient().target("http://0.0.0.0:8101").path("test/hello").request()
+                .post(Entity.text(""));
+        assertEquals(response.getStatus(), 200);
+        assertEquals(response.getEntity(), "PostHello");
+    }
+
+    @Test
+    public void testSimplePutRequest() {
+        Response response = ClientBuilder.newClient().target("http://0.0.0.0:8101").path("test/hello").request()
+                .put(Entity.text(""));
+        assertEquals(response.getStatus(), 200);
+        assertEquals(response.getEntity(), "PutHello");
+    }
+
+    @Test
+    public void testSimpleDeleteRequest() {
+        Response response = ClientBuilder.newClient().target("http://0.0.0.0:8101").path("test/hello").request()
+                .delete();
+        assertEquals(response.getStatus(), 200);
+        assertEquals(response.getEntity(), "DeleteHello");
     }
 
 }

@@ -16,7 +16,10 @@
 
 package org.wso2.msf4j.service;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 
 /**
@@ -29,6 +32,24 @@ public class ClientTestMicroService {
     @Path("hello")
     public String getHello() {
         return "Hello";
+    }
+
+    @POST
+    @Path("hello")
+    public String postHello() {
+        return "PostHello";
+    }
+
+    @PUT
+    @Path("hello")
+    public String putHello() {
+        return "PutHello";
+    }
+
+    @DELETE
+    @Path("hello")
+    public String deleteHello() {
+        return "DeleteHello";
     }
 
 }
