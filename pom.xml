@@ -132,6 +132,7 @@
         <module>samples/jpa</module>
         <module>samples/circuitbreaker</module>
         <module>samples/regex-pathparam</module>
+        <module>samples/zipkin-tracing</module>
 
         <module>perf-benchmark/Samples/wso2msf4j</module>
         <module>features/feature-test</module>
