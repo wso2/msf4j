@@ -23,6 +23,6 @@ package org.wso2.msf4j.analytics.zipkintracing;
  */
 class ZipkinConstants {
 
-    final static String DEFAULT_ZIPKIN_URL = "http://0.0.0.0:9411";
+    static final String DEFAULT_ZIPKIN_URL = "http://0.0.0.0:9411";
 
 }
