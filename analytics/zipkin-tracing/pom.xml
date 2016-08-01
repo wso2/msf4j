@@ -42,12 +42,10 @@
         <dependency>
             <groupId>io.zipkin.brave</groupId>
             <artifactId>brave-spancollector-http</artifactId>
-            <version>3.9.1</version>
         </dependency>
         <dependency>
             <groupId>io.zipkin.brave</groupId>
             <artifactId>brave-http</artifactId>
-            <version>3.9.1</version>
         </dependency>
         <dependency>
             <groupId>org.testng</groupId>
