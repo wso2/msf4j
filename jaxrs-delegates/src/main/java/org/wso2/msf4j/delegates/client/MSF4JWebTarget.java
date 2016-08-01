@@ -16,136 +16,194 @@
 
 package org.wso2.msf4j.delegates.client;
 
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
-import java.net.URI;
-import java.util.Map;
 
 /**
  * Implementation class of JAX-RS WebTarget.
  */
+// TODO: Complete the spec implementation
 public class MSF4JWebTarget implements WebTarget {
 
+    private Client client;
+    private URI uri;
+    private List<Object> providerComponents = new ArrayList<>();
+    private static final String PATH_SEPARATOR = "/";
+
+    /**
+     * Constructor of the MSF4JWebTarget
+     *
+     * @param client             Client of the WebTarget
+     * @param uri                URI of the WebTarget
+     * @param providerComponents List of provider components to inherit
+     */
+    public MSF4JWebTarget(Client client, URI uri, List<Object> providerComponents) {
+        this.client = client;
+        this.uri = uri;
+        this.providerComponents.addAll(providerComponents);
+    }
+
+    /**
+     * Get the URI of the WebTarget.
+     *
+     * @return URI of the WebTarget
+     */
     @Override
     public URI getUri() {
-        return null;
+        return uri;
     }
 
     @Override
     public UriBuilder getUriBuilder() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
+    /**
+     * Create a new WebTarget by appending the given path.
+     *
+     * @param path Path to append
+     * @return New WebTarget with the appended path
+     */
     @Override
     public WebTarget path(String path) {
-        return null;
+        if (!path.isEmpty()) {
+            return new MSF4JWebTarget(client, uri.resolve((path.startsWith(PATH_SEPARATOR)) ? path : PATH_SEPARATOR +
+                    path), providerComponents);
+        } else {
+            return new MSF4JWebTarget(client, uri, providerComponents);
+        }
     }
 
     @Override
     public WebTarget resolveTemplate(String name, Object value) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public WebTarget resolveTemplate(String name, Object value, boolean encodeSlashInPath) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public WebTarget resolveTemplateFromEncoded(String name, Object value) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public WebTarget resolveTemplates(Map<String, Object> templateValues) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public WebTarget resolveTemplates(Map<String, Object> templateValues, boolean encodeSlashInPath) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public WebTarget resolveTemplatesFromEncoded(Map<String, Object> templateValues) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public WebTarget matrixParam(String name, Object... values) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public WebTarget queryParam(String name, Object... values) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
+    /**
+     * Create an Invocation.Builder from the WebTarget.
+     *
+     * @return Invocation.Builder instance
+     */
     @Override
     public Invocation.Builder request() {
-        return null;
+        return this.request(MediaType.WILDCARD_TYPE);
     }
 
+    /**
+     * Create an Invocation.Builder from the WebTarget with the given array of accepted response types.
+     *
+     * @param acceptedResponseTypes Array of accepted response types as Strings
+     * @return Invocation.Builder instance
+     */
     @Override
     public Invocation.Builder request(String... acceptedResponseTypes) {
-        return null;
+        return new MSF4JInvocation.Builder(new MSF4JClientRequestContext(client, uri)
+                .setAcceptResponseTypesStr(Arrays.asList(acceptedResponseTypes)), providerComponents);
     }
 
+    /**
+     * Create an Invocation.Builder from the WebTarget with the given array of accepted response types.
+     *
+     * @param acceptedResponseTypes Array of accepted response types as MediaTypes
+     * @return Invocation.Builder instance
+     */
     @Override
     public Invocation.Builder request(MediaType... acceptedResponseTypes) {
-        return null;
+        return new MSF4JInvocation.Builder(new MSF4JClientRequestContext(client, uri)
+                .setAcceptResponseTypes(Arrays.asList(acceptedResponseTypes)), providerComponents);
     }
 
     @Override
     public Configuration getConfiguration() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public WebTarget property(String name, Object value) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public WebTarget register(Class<?> componentClass) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public WebTarget register(Class<?> componentClass, int priority) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public WebTarget register(Class<?> componentClass, Class<?>... contracts) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public WebTarget register(Class<?> componentClass, Map<Class<?>, Integer> contracts) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public WebTarget register(Object component) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public WebTarget register(Object component, int priority) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public WebTarget register(Object component, Class<?>... contracts) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public WebTarget register(Object component, Map<Class<?>, Integer> contracts) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 }

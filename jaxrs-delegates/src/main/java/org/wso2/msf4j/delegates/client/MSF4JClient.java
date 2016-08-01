@@ -16,6 +16,10 @@
 
 package org.wso2.msf4j.delegates.client;
 
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.client.Client;
@@ -24,101 +28,134 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.UriBuilder;
-import java.net.URI;
-import java.util.Map;
 
 /**
  * Implementation class of JAX-RS client.
  */
+// TODO: Complete the spec implementation
 public class MSF4JClient implements Client {
+
+    private List<Object> providerComponents = new ArrayList<>();
 
     @Override
     public void close() {
-
+        throw new UnsupportedOperationException();
     }
 
+    /**
+     * Create a WebTarget from URL string.
+     *
+     * @param s URI string of the WeTarget
+     * @return WebTarget instance
+     */
     @Override
     public WebTarget target(String s) {
-        return null;
+        return this.target(URI.create(s));
     }
 
+    /**
+     * Create a WebTarget from URL.
+     *
+     * @param uri URI of the WeTarget
+     * @return WebTarget instance
+     */
     @Override
     public WebTarget target(URI uri) {
-        return null;
+        return new MSF4JWebTarget(this, uri, providerComponents);
     }
 
     @Override
     public WebTarget target(UriBuilder uriBuilder) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public WebTarget target(Link link) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Invocation.Builder invocation(Link link) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public SSLContext getSslContext() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public HostnameVerifier getHostnameVerifier() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Configuration getConfiguration() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Client property(String s, Object o) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
+    /**
+     * Register a provider class that is supported by the Runtime.
+     *
+     * @param aClass Provider class that is supported by the Runtime
+     * @return This Client instance
+     */
     @Override
     public Client register(Class<?> aClass) {
-        return null;
+        try {
+            providerComponents.add(aClass.newInstance());
+            return this;
+        } catch (InstantiationException e) {
+            throw new RuntimeException("Failed to initialize provider", e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException("Failed to access provider implementation", e);
+        }
     }
 
     @Override
     public Client register(Class<?> aClass, int i) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Client register(Class<?> aClass, Class<?>... classes) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Client register(Class<?> aClass, Map<Class<?>, Integer> map) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
+    /**
+     * Register an instance of a provider class that is supported by the Runtime.
+     *
+     * @param o Instance of the provider class that is supported by the Runtime
+     * @return This Client instance
+     */
     @Override
     public Client register(Object o) {
-        return null;
+        providerComponents.add(o);
+        return this;
     }
 
     @Override
     public Client register(Object o, int i) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Client register(Object o, Class<?>... classes) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Client register(Object o, Map<Class<?>, Integer> map) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 }

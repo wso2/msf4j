@@ -16,96 +16,102 @@
 
 package org.wso2.msf4j.delegates.client;
 
+import java.security.KeyStore;
+import java.util.Map;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Configuration;
-import java.security.KeyStore;
-import java.util.Map;
 
 /**
  * Implementation class of JAX-RS client builder.
  */
+// TODO: Complete the spec implementation
 public class MSF4JClientBuilder extends ClientBuilder {
 
     @Override
     public ClientBuilder withConfig(Configuration configuration) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public ClientBuilder sslContext(SSLContext sslContext) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public ClientBuilder keyStore(KeyStore keyStore, char[] chars) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public ClientBuilder trustStore(KeyStore keyStore) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public ClientBuilder hostnameVerifier(HostnameVerifier hostnameVerifier) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
+    /**
+     * Create a new Client instance.
+     *
+     * @return Client instance
+     */
     @Override
     public Client build() {
-        return null;
+        return new MSF4JClient();
     }
 
     @Override
     public Configuration getConfiguration() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public ClientBuilder property(String s, Object o) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public ClientBuilder register(Class<?> aClass) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public ClientBuilder register(Class<?> aClass, int i) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public ClientBuilder register(Class<?> aClass, Class<?>... classes) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public ClientBuilder register(Class<?> aClass, Map<Class<?>, Integer> map) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public ClientBuilder register(Object o) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public ClientBuilder register(Object o, int i) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public ClientBuilder register(Object o, Class<?>... classes) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public ClientBuilder register(Object o, Map<Class<?>, Integer> map) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 }
