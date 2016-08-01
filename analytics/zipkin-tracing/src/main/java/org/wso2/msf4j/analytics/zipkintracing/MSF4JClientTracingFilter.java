@@ -46,11 +46,21 @@ public class MSF4JClientTracingFilter implements ClientRequestFilter, ClientResp
     /**
      * Constructor of the MSF4JClientTracingFilter.
      *
-     * @param clientName Name of the client.
+     * @param clientName Name of the client
      */
     public MSF4JClientTracingFilter(String clientName) {
+        this(clientName, ZipkinConstants.DEFAULT_ZIPKIN_URL);
+    }
+
+    /**
+     * Constructor of the MSF4JClientTracingFilter.
+     *
+     * @param clientName Name of the client
+     * @param zipkinUrl  Base URL of the Zipkin server
+     */
+    public MSF4JClientTracingFilter(String clientName, String zipkinUrl) {
         Brave.Builder builder = new Brave.Builder(clientName);
-        builder.spanCollector(HttpSpanCollector.create("http://0.0.0.0:9411/", new EmptySpanCollectorMetricsHandler()));
+        builder.spanCollector(HttpSpanCollector.create(zipkinUrl, new EmptySpanCollectorMetricsHandler()));
         Brave brave = builder.build();
         requestInterceptor = brave.clientRequestInterceptor();
         responseInterceptor = brave.clientResponseInterceptor();

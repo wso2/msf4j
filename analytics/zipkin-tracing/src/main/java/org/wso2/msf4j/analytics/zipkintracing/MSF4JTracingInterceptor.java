@@ -46,8 +46,18 @@ public class MSF4JTracingInterceptor implements Interceptor {
      * @param microServiceName Name of the Microservice
      */
     public MSF4JTracingInterceptor(String microServiceName) {
+        this(microServiceName, ZipkinConstants.DEFAULT_ZIPKIN_URL);
+    }
+
+    /**
+     * Constructor of the MSF4JTracingInterceptor.
+     *
+     * @param microServiceName Name of the Microservice
+     * @param zipkinUrl        Base URL of the Zipkin server
+     */
+    public MSF4JTracingInterceptor(String microServiceName, String zipkinUrl) {
         Brave.Builder builder = new Brave.Builder(microServiceName);
-        builder.spanCollector(HttpSpanCollector.create("http://0.0.0.0:9411/", new EmptySpanCollectorMetricsHandler()));
+        builder.spanCollector(HttpSpanCollector.create(zipkinUrl, new EmptySpanCollectorMetricsHandler()));
         Brave brave = builder.build();
         reqInterceptor = brave.serverRequestInterceptor();
         respInterceptor = brave.serverResponseInterceptor();
