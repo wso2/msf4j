@@ -411,7 +411,7 @@
             <dependency>
                 <groupId>io.zipkin.brave</groupId>
                 <artifactId>brave-http</artifactId>
-                <version>${zipkin.brave.version}}</version>
+                <version>${zipkin.brave.version}</version>
             </dependency>
             <!-- Zipkin tracing dependencies - End -->
             <dependency>
