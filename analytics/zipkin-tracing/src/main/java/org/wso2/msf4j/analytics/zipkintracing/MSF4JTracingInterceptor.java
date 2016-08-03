@@ -38,7 +38,7 @@ public class MSF4JTracingInterceptor implements Interceptor {
 
     private final ServerRequestInterceptor reqInterceptor;
     private final ServerResponseInterceptor respInterceptor;
-    private Response responder;
+    private static final String RESPONDER_ATTRIBUTE = "responder-attribute";
 
     /**
      * Constructor of the MSF4JTracingInterceptor.
@@ -69,7 +69,7 @@ public class MSF4JTracingInterceptor implements Interceptor {
      */
     @Override
     public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) throws Exception {
-        this.responder = responder;
+        serviceMethodInfo.setAttribute(RESPONDER_ATTRIBUTE, responder);
         HttpServerRequest req = new TraceableHttpServerRequest(request);
         HttpServerRequestAdapter reqAdapter = new HttpServerRequestAdapter(req, new DefaultSpanNameProvider());
         reqInterceptor.handle(reqAdapter);
@@ -82,7 +82,8 @@ public class MSF4JTracingInterceptor implements Interceptor {
      */
     @Override
     public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) throws Exception {
-        HttpResponse httpResponse = new TraceableHttpServerResponse(responder);
+        HttpResponse httpResponse = new TraceableHttpServerResponse((Response) serviceMethodInfo
+                .getAttribute(RESPONDER_ATTRIBUTE));
         HttpServerResponseAdapter adapter = new HttpServerResponseAdapter(httpResponse);
         respInterceptor.handle(adapter);
     }
