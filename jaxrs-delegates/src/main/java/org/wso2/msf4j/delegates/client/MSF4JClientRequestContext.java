@@ -22,6 +22,7 @@ import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -49,6 +50,7 @@ public class MSF4JClientRequestContext implements ClientRequestContext {
     private List<MediaType> acceptResponseTypes;
     private MediaType mediaType;
     private Object entity;
+    private Map<String, Object> properties = new HashMap<>();
 
     /**
      * Constructor of MSF4JClientRequestContext.
@@ -95,24 +97,46 @@ public class MSF4JClientRequestContext implements ClientRequestContext {
         return this;
     }
 
+    /**
+     * Get the property value store with the given property name.
+     *
+     * @param name Key name of the property
+     * @return Property value
+     */
     @Override
     public Object getProperty(String name) {
-        throw new UnsupportedOperationException();
+        return properties.get(name);
     }
 
+    /**
+     * Get the collection of property names.
+     *
+     * @return Property names set
+     */
     @Override
     public Collection<String> getPropertyNames() {
-        throw new UnsupportedOperationException();
+        return properties.keySet();
     }
 
+    /**
+     * Set a property value to a property name.
+     *
+     * @param name   Property name
+     * @param object Property value
+     */
     @Override
     public void setProperty(String name, Object object) {
-        throw new UnsupportedOperationException();
+        properties.put(name, object);
     }
 
+    /**
+     * Remove th property with the given peroperty name.
+     *
+     * @param name Property name
+     */
     @Override
     public void removeProperty(String name) {
-        throw new UnsupportedOperationException();
+        properties.remove(name);
     }
 
     /**
