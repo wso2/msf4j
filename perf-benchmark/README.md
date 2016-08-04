@@ -79,3 +79,14 @@ Due to higher latency values, some of the framework are been removed from the ch
 ![MedianLatency](graphs/99thpercentile.png)
 
 ### Performing the Latency Test
+
+Run the perf test samples one at a time and execute the run-latency.sh script.
+```
+./run-latency.sh   service-url
+```
+e.g.
+./run-latency.sh http://localhost:8080/EchoService/echo
+This will output the latency results to a latency-results.csv file. If you want to create seperate file you can pass the file suffix as 2nd parameter
+e.g.
+./run-latency.sh http://localhost:8080/EchoService/echo msf4j
+This will output the latency results to a latency-results-msf4j.csv
