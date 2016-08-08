@@ -66,9 +66,27 @@ For each service in [echo-samples](echo-samples) directory,
 
 ## Latency Test
 
-To measure the latency, above mentioned 1KB echo test was performed for each sample service using 3 concurrency levels (1, 200 and 400). Then for each 
-concurrency level the latency was measured using apache bench. These values were plotted for each framework.
+To measure the latency, above mentioned 1KB echo test was performed using same concurrency levels with 500000 requests per each concurrency level. 
+Latency was measured using apache bench output. These values were plotted for each framework.
 
-![LatencyC1](graphs/latency-c1-n100000.png)
-![LatencyC2](graphs/latency-c200-n100000.png)
-![LatencyC3](graphs/latency-c400-n100000.png)
+**Note**
+Due to higher latency values, some of the framework are been removed from the charts.
+
+![MeanLatency](graphs/meanlatencysmall.png)
+![MedianLatency](graphs/medianlatency.png)
+![90thPercentilLatency](graphs/90thpercentile.png)
+![95thPercentilLatency](graphs/95thpercentile.png)
+![99thPercentilLatency](graphs/99thpercentile.png)
+
+### Performing the Latency Test
+
+Run the perf test samples one at a time and execute the run-latency.sh script.
+```
+./run-latency.sh   service-url
+```
+e.g.
+./run-latency.sh http://localhost:8080/EchoService/echo
+This will output the latency results to a latency-results.csv file. If you want to create seperate file you can pass the file suffix as 2nd parameter
+e.g.
+./run-latency.sh http://localhost:8080/EchoService/echo msf4j
+This will output the latency results to a latency-results-msf4j.csv
