@@ -74,9 +74,9 @@ Due to higher latency values, some of the framework are been removed from the ch
 
 ![MeanLatency](graphs/meanlatencysmall.png)
 ![MedianLatency](graphs/medianlatency.png)
-![MedianLatency](graphs/90thpercentile.png)
-![MedianLatency](graphs/95thpercentile.png)
-![MedianLatency](graphs/99thpercentile.png)
+![90thPercentilLatency](graphs/90thpercentile.png)
+![95thPercentilLatency](graphs/95thpercentile.png)
+![99thPercentilLatency](graphs/99thpercentile.png)
 
 ### Performing the Latency Test
 
