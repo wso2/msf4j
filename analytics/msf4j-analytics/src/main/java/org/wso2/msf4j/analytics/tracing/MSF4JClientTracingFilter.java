@@ -28,6 +28,7 @@ import javax.ws.rs.client.ClientResponseFilter;
 /**
  * Filter for tracing client side request/response flow.
  */
+// TODO: Write tests and add the OSGi mode support
 public class MSF4JClientTracingFilter implements ClientRequestFilter, ClientResponseFilter {
 
     private static final String TRACE_EVENT_ATTRIBUTE = "trace-event-attribute";

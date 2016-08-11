@@ -29,17 +29,23 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 
 /**
- * Class to hold constants used in tracing.
+ * Utility methods of for MSF4J tracing.
  */
 class TracingUtil {
 
     private static final Logger log = LoggerFactory.getLogger(TracingUtil.class);
     private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
+    /**
+     * Generate a random string unique identifier.
+     */
     static String generateUniqueId() {
         return UUID.randomUUID().toString();
     }
 
+    /**
+     * Publish trace event to DAS in the background.
+     */
     static void pushToDAS(TraceEvent traceEvent, String dasUrl) {
         executorService.submit(() -> {
             log.debug("Publishing trace event " + traceEvent);

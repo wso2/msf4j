@@ -19,7 +19,10 @@
 package org.wso2.msf4j.analytics.tracing;
 
 /**
- * Class to hold constants used in tracing.
+ * Class for holding the thread local of tracing events.
+ * This class help the Client interceptors to access the
+ * request trace event of the containing service to keep
+ * the correlation.
  */
 public class TracingEventTracker {
 

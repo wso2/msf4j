@@ -26,6 +26,7 @@ import java.util.Date;
 /**
  * Interceptor for tracing server side request/response flows.
  */
+// TODO: Write tests and add the OSGi mode support
 public class MSF4JTracingInterceptor implements Interceptor {
 
     private static final String RESPONDER_ATTRIBUTE = "responder-attribute";
