@@ -16,8 +16,6 @@
 
 package org.wso2.msf4j.analytics.tracing;
 
-import org.wso2.msf4j.Request;
-
 import java.io.IOException;
 import java.util.Date;
 import javax.ws.rs.client.ClientRequestContext;
