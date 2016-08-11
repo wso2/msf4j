@@ -42,10 +42,10 @@ class TracingUtil {
 
     static void pushToDAS(TraceEvent traceEvent, String dasUrl) {
         executorService.submit(() -> {
-            log.info("Publishing trace event " + traceEvent);
+            log.debug("Publishing trace event " + traceEvent);
             if (ClientBuilder.newClient().target(dasUrl)
                     .request().post(Entity.json(traceEvent)).getStatus() != Response.Status.OK.getStatusCode()) {
-                log.warn("Error while publishing trace event " + traceEvent);
+                log.error("Error while publishing trace event " + traceEvent);
             }
         });
     }
