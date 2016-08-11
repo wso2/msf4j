@@ -21,6 +21,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.msf4j.MicroservicesRunner;
+import org.wso2.msf4j.models.SampleEntity;
 import org.wso2.msf4j.service.ClientTestMicroService;
 
 import javax.ws.rs.client.ClientBuilder;
@@ -77,6 +78,14 @@ public class MSF4JInvocationTest extends Assert {
                 .delete();
         assertEquals(response.getStatus(), 200);
         assertEquals(response.getEntity(), "DeleteHello");
+    }
+
+    @Test
+    public void testPostJsonRequest() {
+        Response response = ClientBuilder.newClient().target("http://0.0.0.0:8101/test/sample-entity-json")
+                .request().post(Entity.json(new SampleEntity(1, 2, "val1", "val2", "val3")));
+        assertEquals(response.getStatus(), 200);
+        assertEquals(response.getEntity(), "success");
     }
 
 }

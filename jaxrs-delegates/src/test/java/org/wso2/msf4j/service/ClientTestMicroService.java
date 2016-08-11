@@ -16,11 +16,17 @@
 
 package org.wso2.msf4j.service;
 
+import org.wso2.msf4j.models.SampleEntity;
+
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 /**
  * This microservice is used to test the MSF4J client
@@ -50,6 +56,33 @@ public class ClientTestMicroService {
     @Path("hello")
     public String deleteHello() {
         return "DeleteHello";
+    }
+
+    @POST
+    @Path("sample-entity-json")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public String postSampleEntityJson(SampleEntity sampleEntity, @HeaderParam("Content-Length") int len) {
+        boolean isAllSuccess = true;
+        if (len <= 0) {
+            isAllSuccess = false;
+        }
+        if (sampleEntity.getField1() != 1) {
+            isAllSuccess = false;
+        }
+        if (sampleEntity.getField2() != 2) {
+            isAllSuccess = false;
+        }
+        if (!sampleEntity.getField3().equals("val1")) {
+            isAllSuccess = false;
+        }
+        if (!sampleEntity.getField4().equals("val2")) {
+            isAllSuccess = false;
+        }
+        if (!sampleEntity.getField5().equals("val3")) {
+            isAllSuccess = false;
+        }
+        return (isAllSuccess) ? "success" : "failed";
     }
 
 }
