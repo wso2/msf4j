@@ -16,12 +16,16 @@
 
 package org.wso2.msf4j.delegates.client;
 
+import com.google.gson.Gson;
+import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
@@ -285,7 +289,8 @@ public class MSF4JInvocation implements Invocation {
         @Override
         public Response post(Entity<?> entity) {
             clientRequestContext.setMethod(HttpMethod.POST);
-            // TODO: implement entity support
+            clientRequestContext.setMediaType(entity.getMediaType());
+            clientRequestContext.setEntity(entity.getEntity());
             return sendRequest(clientRequestContext);
         }
 
@@ -421,9 +426,16 @@ public class MSF4JInvocation implements Invocation {
                 httpRequestBase = new HttpGet(clientRequestContext.getUri());
             } else if (HttpMethod.POST.equals(httpMethod)) {
                 HttpPost httpPost = new HttpPost(clientRequestContext.getUri());
+                Object entity = clientRequestContext.getEntity();
+                // TODO: implement message body writer support
+                Gson gson = new Gson();
+                HttpEntity httpEntity = new StringEntity(gson.toJson(entity),
+                        ContentType.create(clientRequestContext.getMediaType().toString()));
+                httpPost.setEntity(httpEntity);
                 httpRequestBase = httpPost;
             } else if (HttpMethod.PUT.equals(httpMethod)) {
                 HttpPut httpPut = new HttpPut(clientRequestContext.getUri());
+                // TODO: implement message body writer support
                 httpRequestBase = httpPut;
             } else if (HttpMethod.DELETE.equals(httpMethod)) {
                 httpRequestBase = new HttpDelete(clientRequestContext.getUri());
@@ -457,6 +469,7 @@ public class MSF4JInvocation implements Invocation {
                 }
             }
             if (clientResponseContext.hasEntity()) {
+                // TODO: implement message body reader support
                 InputStream content = clientResponseContext.getEntityStream();
                 ByteArrayOutputStream result = new ByteArrayOutputStream();
                 byte[] buffer = new byte[1024];
