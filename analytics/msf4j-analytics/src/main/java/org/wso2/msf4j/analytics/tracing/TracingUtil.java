@@ -22,6 +22,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
@@ -32,17 +34,20 @@ import javax.ws.rs.core.Response;
 class TracingUtil {
 
     private static final Logger log = LoggerFactory.getLogger(TracingUtil.class);
+    private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     static String generateUniqueId() {
         return UUID.randomUUID().toString();
     }
 
     static void pushToDAS(TraceEvent traceEvent, String dasUrl) {
-        log.info("Publishing trace event " + traceEvent);
-        if (ClientBuilder.newClient().target(dasUrl)
-                .request().post(Entity.json(traceEvent)).getStatus() != Response.Status.OK.getStatusCode()) {
-            log.warn("Error while publishing trace event " + traceEvent);
-        }
+        executorService.submit(() -> {
+            log.info("Publishing trace event " + traceEvent);
+            if (ClientBuilder.newClient().target(dasUrl)
+                    .request().post(Entity.json(traceEvent)).getStatus() != Response.Status.OK.getStatusCode()) {
+                log.warn("Error while publishing trace event " + traceEvent);
+            }
+        });
     }
 
 }
