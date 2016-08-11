@@ -62,6 +62,7 @@ public class MSF4JTracingInterceptor implements Interceptor {
      */
     @Override
     public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) throws Exception {
+        long time = new Date().getTime();
         serviceMethodInfo.setAttribute(RESPONDER_ATTRIBUTE, responder);
         String traceOriginId = request.getHeader(TracingConstants.TRACE_ORIGIN_ID_HEADER);
         String serverTraceId;
@@ -76,7 +77,7 @@ public class MSF4JTracingInterceptor implements Interceptor {
                 TracingConstants.SERVER_TRACE_START,
                 serverTraceId,
                 traceOriginId,
-                new Date().getTime()
+                time
         );
         serverTraceEvent.setInstanceId(instanceId);
         serverTraceEvent.setInstanceName(instanceName);
@@ -95,13 +96,14 @@ public class MSF4JTracingInterceptor implements Interceptor {
      */
     @Override
     public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) throws Exception {
+        long time = new Date().getTime();
         TraceEvent traceEvent = (TraceEvent) serviceMethodInfo.getAttribute(TRACE_EVENT_ATTRIBUTE);
         if (traceEvent != null) {
             TraceEvent endTraceEvent = new TraceEvent(
                     TracingConstants.SERVER_TRACE_END,
                     traceEvent.getTraceId(),
                     traceEvent.getOriginId(),
-                    new Date().getTime()
+                    time
             );
             Response responder = (Response) serviceMethodInfo.getAttribute(RESPONDER_ATTRIBUTE);
             endTraceEvent.setStatusCode(responder.getStatusCode());

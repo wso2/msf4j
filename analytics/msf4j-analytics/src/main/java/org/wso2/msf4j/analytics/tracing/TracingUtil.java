@@ -21,7 +21,7 @@ package org.wso2.msf4j.analytics.tracing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.UUID;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javax.ws.rs.client.ClientBuilder;
@@ -35,12 +35,15 @@ class TracingUtil {
 
     private static final Logger log = LoggerFactory.getLogger(TracingUtil.class);
     private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private static final Random random = new Random();
 
     /**
      * Generate a random string unique identifier.
      */
     static String generateUniqueId() {
-        return UUID.randomUUID().toString();
+        // UUID.randomUUID().toString() is too slow
+        // TODO: Test whether the ID is unique enough
+        return System.currentTimeMillis() + "" + String.format("%08d", random.nextInt(100000000));
     }
 
     /**

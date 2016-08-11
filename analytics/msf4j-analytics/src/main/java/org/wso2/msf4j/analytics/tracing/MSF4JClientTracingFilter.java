@@ -78,6 +78,7 @@ public class MSF4JClientTracingFilter implements ClientRequestFilter, ClientResp
      */
     @Override
     public void filter(ClientRequestContext requestContext) throws IOException {
+        long time = new Date().getTime();
         String clientTraceId;
         String traceOriginId;
         String traceParentId = null;
@@ -93,7 +94,7 @@ public class MSF4JClientTracingFilter implements ClientRequestFilter, ClientResp
                 TracingConstants.CLIENT_TRACE_START,
                 clientTraceId,
                 traceOriginId,
-                new Date().getTime()
+                time
         );
         clientTraceEvent.setInstanceId(instanceId);
         clientTraceEvent.setInstanceName(instanceName);
@@ -112,13 +113,14 @@ public class MSF4JClientTracingFilter implements ClientRequestFilter, ClientResp
      */
     @Override
     public void filter(ClientRequestContext requestContext, ClientResponseContext responseContext) throws IOException {
+        long time = new Date().getTime();
         TraceEvent traceEvent = (TraceEvent) requestContext.getProperty(TRACE_EVENT_ATTRIBUTE);
         if (traceEvent != null) {
             TraceEvent endTraceEvent = new TraceEvent(
                     TracingConstants.CLIENT_TRACE_END,
                     traceEvent.getTraceId(),
                     traceEvent.getOriginId(),
-                    new Date().getTime()
+                    time
             );
             endTraceEvent.setStatusCode(responseContext.getStatus());
             TracingUtil.pushToDAS(endTraceEvent, dasUrl);
