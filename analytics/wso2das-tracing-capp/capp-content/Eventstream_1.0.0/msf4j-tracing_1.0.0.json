@@ -1,0 +1,48 @@
+{
+  "name": "msf4j-tracing",
+  "version": "1.0.0",
+  "nickName": "",
+  "description": "",
+  "payloadData": [
+    {
+      "name": "type",
+      "type": "STRING"
+    },
+    {
+      "name": "time",
+      "type": "LONG"
+    },
+    {
+      "name": "statusCode",
+      "type": "INT"
+    },
+    {
+      "name": "httpMethod",
+      "type": "STRING"
+    },
+    {
+      "name": "instanceId",
+      "type": "STRING"
+    },
+    {
+      "name": "instanceName",
+      "type": "STRING"
+    },
+    {
+      "name": "parentId",
+      "type": "STRING"
+    },
+    {
+      "name": "traceId",
+      "type": "STRING"
+    },
+    {
+      "name": "originId",
+      "type": "STRING"
+    },
+    {
+      "name": "url",
+      "type": "STRING"
+    }
+  ]
+}

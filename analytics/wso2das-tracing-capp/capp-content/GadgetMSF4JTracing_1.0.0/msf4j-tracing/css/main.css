@@ -1,0 +1,241 @@
+body {
+    display: block;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    overflow: hidden;
+}
+
+#refresh-traces {
+    padding: 5px 10px;
+    background-color: #005FB0;
+    color: #ffffff;
+    display: inline-block;
+    margin: 12px 32px;
+    cursor: pointer;
+}
+
+#refresh-traces .pressed {
+    background-color: #ffffff;
+}
+
+#trace-groups {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.trace-group {
+    padding: 12px;
+    cursor: default;
+    border-bottom: 1px solid #dddddd;
+}
+
+.trace-group .inst-name {
+    display: inline-block;
+    margin-left: 20px;
+    max-width: 120px;
+}
+
+.trace-group .endpoint {
+    display: inline-block;
+    margin-left: 20px;
+}
+
+.trace-group .method {
+    font-weight: bold;
+    display: inline-block;
+    margin-left: 20px;
+}
+
+.trace-group .url {
+    margin-left: 20px;
+    display: inline-block;
+}
+
+.trace-group .time {
+    display: inline-block;
+    margin-left: 20px;
+    min-width: 145px;
+}
+
+.trace-bar, .trace-bar * {
+    position: relative;
+}
+
+.trace-bar .bar-row {
+    border-bottom: 1px solid #dddddd;
+}
+
+.trace-bar .left-pane {
+    position: absolute;
+    float: left;
+    left: 0;
+    top: 0;
+    width: 200px;
+    line-height: 20px;
+    padding: 10px 0;
+    cursor: pointer;
+}
+
+.trace-bar .arrow {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #000;
+}
+
+.trace-bar .arrow-down {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 5px solid #000;
+}
+
+.trace-bar .arrow-hide {
+    margin-left: 5px;
+    display: inline-block;
+}
+
+.trace-bar .right-pane {
+    margin-left: 200px;
+    border-left: 1px solid #dddddd;
+    padding: 14px 0;
+}
+
+.trace-bar .bar-wrapper {
+    padding: 0 5px;
+}
+
+.trace-bar .bar {
+    position: relative;
+    background-color: #005FB0;
+    top: 0;
+    height: 12px;
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+.trace-bar .child-container {
+}
+
+#trace-tree-view {
+    position: absolute;
+    display: block;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    background-color: #ffffff;
+    padding-top: 40px;
+    overflow-y: auto;
+}
+
+.bar-info {
+    z-index: 100;
+    margin: 5px auto;
+    width: 600px;
+    position: relative;
+}
+
+.bar-info .row {
+    display: block;
+    position: relative;
+}
+
+.bar-info .row.emp {
+    font-weight: bold;
+}
+
+.bar-info .row.gap {
+    margin-top: 15px;
+}
+
+.bar-info .left-ipane {
+    position: relative;
+    display: block;
+    left: 0;
+    width: 50%;
+    text-align: right;
+}
+
+.bar-info .left-ipane .wrapper.emp, .bar-info .right-ipane .wrapper.emp {
+    padding: 8px;
+}
+
+.bar-info .left-ipane .wrapper, .bar-info .right-ipane .wrapper {
+    padding: 8px;
+}
+
+.bar-info .right-ipane {
+    position: absolute;
+    display: block;
+    left: 50%;
+    width: 50%;
+    top: 0;
+    text-align: left;
+}
+
+.bar-info .close {
+    z-index: 100;
+}
+
+#trace-tree-view .container {
+    border-top: 1px solid #dddddd;
+}
+
+.bar-info .cell {
+    display: inline-block;
+}
+
+#trace-tree-view .close, .bar-info .close {
+    cursor: pointer;
+    position: absolute;
+    display: block;
+    left: 0;
+    top: 0;
+    margin-left: 10px;
+    font-size: 18px;
+}
+
+#trace-tree-view .close .arrow {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-right: 10px solid #666;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    margin-right: 5px;
+    margin-bottom: -2px;
+}
+
+#trace-tree-view .time-line-pane {
+    margin-left: 200px;
+}
+
+#trace-tree-view .time-line-wrapper {
+    position: relative;
+    display: block;
+}
+
+#time-line {
+    width: 100%;
+    height: 20px;
+}
+
+#time-line .unit {
+    border-left: 1px solid #dddddd;
+    color: #666666;
+    min-height: 4px;
+    font-size: 10px;
+    padding-top: 3px;
+    padding-left: 3px;
+    display: inline-block;
+    position: absolute;
+}

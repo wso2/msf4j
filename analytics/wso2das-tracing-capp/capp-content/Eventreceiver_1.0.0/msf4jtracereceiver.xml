@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eventReceiver name="msf4jtracereceiver" statistics="disable"
+    trace="disable" xmlns="http://wso2.org/carbon/eventreceiver">
+    <from eventAdapterType="http">
+        <property name="transports">http</property>
+    </from>
+    <mapping customMapping="enable" type="json">
+        <property>
+            <from jsonPath="$.type"/>
+            <to name="type" type="string"/>
+        </property>
+        <property>
+            <from jsonPath="$.time"/>
+            <to name="time" type="long"/>
+        </property>
+        <property>
+            <from jsonPath="$.statusCode"/>
+            <to default="0" name="statusCode" type="int"/>
+        </property>
+        <property>
+            <from jsonPath="$.httpMethod"/>
+            <to default="" name="httpMethod" type="string"/>
+        </property>
+        <property>
+            <from jsonPath="$.instanceId"/>
+            <to name="instanceId" type="string"/>
+        </property>
+        <property>
+            <from jsonPath="$.instanceName"/>
+            <to name="instanceName" type="string"/>
+        </property>
+        <property>
+            <from jsonPath="$.parentId"/>
+            <to default="" name="parentId" type="string"/>
+        </property>
+        <property>
+            <from jsonPath="$.traceId"/>
+            <to name="traceId" type="string"/>
+        </property>
+        <property>
+            <from jsonPath="$.originId"/>
+            <to name="originId" type="string"/>
+        </property>
+        <property>
+            <from jsonPath="$.url"/>
+            <to default="" name="url" type="string"/>
+        </property>
+    </mapping>
+    <to streamName="msf4j-tracing" version="1.0.0"/>
+</eventReceiver>

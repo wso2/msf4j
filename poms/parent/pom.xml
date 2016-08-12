@@ -15,13 +15,14 @@
   ~ limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
         <groupId>org.wso2</groupId>
         <artifactId>wso2</artifactId>
         <version>5</version>
-        <relativePath />
+        <relativePath/>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -207,6 +208,11 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.msf4j</groupId>
+                <artifactId>zipkin-tracing</artifactId>
+                <version>${msf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.msf4j</groupId>
                 <artifactId>jaxrs-delegates</artifactId>
                 <version>${msf4j.version}</version>
             </dependency>
@@ -235,6 +241,11 @@
                 <groupId>org.wso2.carbon.transport</groupId>
                 <artifactId>org.wso2.carbon.transport.http.netty</artifactId>
                 <version>${org.wso2.carbon.transport.http.netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${org.apache.httpcomponents.httpclient.version}</version>
             </dependency>
 
             <dependency>
@@ -391,6 +402,18 @@
                 <version>${carbon.metrics.version}</version>
             </dependency>
             <!-- Metrics Dependencies - End -->
+            <!-- Zipkin tracing dependencies - Start -->
+            <dependency>
+                <groupId>io.zipkin.brave</groupId>
+                <artifactId>brave-spancollector-http</artifactId>
+                <version>${zipkin.brave.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.zipkin.brave</groupId>
+                <artifactId>brave-http</artifactId>
+                <version>${zipkin.brave.version}</version>
+            </dependency>
+            <!-- Zipkin tracing dependencies - End -->
             <dependency>
                 <groupId>com.nimbusds</groupId>
                 <artifactId>nimbus-jose-jwt</artifactId>
@@ -518,7 +541,9 @@
         <carbon.messaging.version.range>[1.0.4,2)</carbon.messaging.version.range>
         <org.wso2.carbon.transport.http.netty.version>2.1.2</org.wso2.carbon.transport.http.netty.version>
         <org.wso2.carbon.transport.http.netty.version.range>[2.0,3)</org.wso2.carbon.transport.http.netty.version.range>
+        <org.apache.httpcomponents.httpclient.version>4.5.2</org.apache.httpcomponents.httpclient.version>
         <msf4j.version>2.0.1-SNAPSHOT</msf4j.version>
+        <zipkin.brave.version>3.9.1</zipkin.brave.version>
         <carbon.metrics.version>2.0.0</carbon.metrics.version>
         <carbon.metrics.version.range>[2.0,3)</carbon.metrics.version.range>
         <carbon.analytics.common.version>5.0.6</carbon.analytics.common.version>
