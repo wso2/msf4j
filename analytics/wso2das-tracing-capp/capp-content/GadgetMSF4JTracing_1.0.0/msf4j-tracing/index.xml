@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+    <ModulePrefs title="MSF4J Message Tracing" height="700" description="MSF4J Tracing">
+        <Require feature="dynamic-height"/>
+        <Require feature="setprefs"/>
+    </ModulePrefs>
+    <UserPref name="timeBack" display_name="Trace Last Minutes" default_value="1440"/>
+    <UserPref name="dasHost" display_name="DAS Host" default_value="https://localhost:9443"/>
+    <UserPref name="username" display_name="Username" default_value="admin"/>
+    <UserPref name="password" display_name="Password" default_value="admin"/>
+    <Content type="html">
+        <![CDATA[
+        <head>
+            <link type="text/css" rel="stylesheet" href="css/main.css" media="all">
+            <script language="javascript" type="text/javascript" src="js/libs/jquery-3.1.0.min.js"></script>
+            <script language="javascript" type="text/javascript" src="js/libs/jquery.base64.js"></script>
+            <script language="javascript" type="text/javascript" src="js/libs/mustache.min.js"></script>
+            <script language="javascript" type="text/javascript" src="js/main.js"></script>
+        <head>
+        <body>
+            <div>
+                <div>
+                    <div id="refresh-traces">Refresh Traces</div>
+                </div>
+                <div id="trace-groups"></div>
+            </div>
+            <div id="trace-tree-view">
+                <div class="close"><div class="arrow"></div>Back</div>
+                <div>
+                    <div class="container"></div>
+                    <div class="time-line-pane">
+                        <div class="time-line-wrapper">
+                            <div id="time-line"></div>
+                        <div>
+                    </div>
+                </div>
+            </div>
+            <script id="bar-info" type="x-tmpl-mustache">
+                <div class="bar-info">
+                    <!-- <div class="close">Close</div>-->
+                    <div class="row emp">
+                        <div class="left-ipane">
+                            <div class="wrapper emp">
+                                <div class="cell">Client HTTP Method</div>
+                            </div>
+                        </div>
+                        <div class="right-ipane">
+                            <div class="wrapper emp">
+                                <div class="cell">{{chttpMethod}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row emp">
+                        <div class="left-ipane">
+                            <div class="wrapper emp">
+                                <div class="cell">Client Request Path</div>
+                            </div>
+                        </div>
+                        <div class="right-ipane">
+                            <div class="wrapper emp">
+                                <div class="cell">{{clientPath}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row emp">
+                        <div class="left-ipane">
+                            <div class="wrapper emp">
+                                <div class="cell">Microservice HTTP Method</div>
+                            </div>
+                        </div>
+                        <div class="right-ipane">
+                            <div class="wrapper emp">
+                                <div class="cell">{{shttpMethod}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row emp">
+                        <div class="left-ipane">
+                            <div class="wrapper emp">
+                                <div class="cell">Microservice Path</div>
+                            </div>
+                        </div>
+                        <div class="right-ipane">
+                            <div class="wrapper emp">
+                                <div class="cell">{{serverPath}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row emp">
+                        <div class="left-ipane">
+                            <div class="wrapper emp">
+                                <div class="cell">Client Response Status</div>
+                            </div>
+                        </div>
+                        <div class="right-ipane">
+                            <div class="wrapper emp">
+                                <div class="cell">{{cStatusCode}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row emp">
+                        <div class="left-ipane">
+                            <div class="wrapper emp">
+                                <div class="cell">Server Response Status</div>
+                            </div>
+                        </div>
+                        <div class="right-ipane">
+                            <div class="wrapper emp">
+                                <div class="cell">{{sStatusCode}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row gap">
+                        <div class="left-ipane">
+                            <div class="wrapper">
+                                <div class="cell">Client Request Start</div>
+                            </div>
+                        </div>
+                        <div class="right-ipane">
+                            <div class="wrapper">
+                                <div class="cell">{{clientStartTime}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="left-ipane">
+                            <div class="wrapper">
+                                <div class="cell">Server Request Receive</div>
+                            </div>
+                        </div>
+                        <div class="right-ipane">
+                            <div class="wrapper">
+                                <div class="cell">{{serverStartTime}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="left-ipane">
+                            <div class="wrapper">
+                                <div class="cell">Server Response Sent</div>
+                            </div>
+                        </div>
+                        <div class="right-ipane">
+                            <div class="wrapper">
+                                <div class="cell">{{serverEndTime}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="left-ipane">
+                            <div class="wrapper">
+                                <div class="cell">Client Response Receive</div>
+                            </div>
+                        </div>
+                        <div class="right-ipane">
+                            <div class="wrapper">
+                                <div class="cell">{{clientEndTime}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row gap">
+                        <div class="left-ipane">
+                            <div class="wrapper">
+                                <div class="cell">Client Instance Name</div>
+                            </div>
+                        </div>
+                        <div class="right-ipane">
+                            <div class="wrapper">
+                                <div class="cell">{{clientInstName}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="left-ipane">
+                            <div class="wrapper">
+                                <div class="cell">Server Instance Name</div>
+                            </div>
+                        </div>
+                        <div class="right-ipane">
+                            <div class="wrapper">
+                                <div class="cell">{{serverInstName}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </script>
+            <script id="trace-group" type="x-tmpl-mustache">
+                <div class="trace-group">
+                    <div class="inst-name">{{origin.instanceName}}</div>
+                    <div class="time">{{origin.timeStr}}</div>
+                    <div class="endpoint">
+                        <span class="method">{{origin.httpMethod}}</span>
+                        <span class="url">{{origin.url}}</span>
+                    </div>
+                </div>
+            </script>
+            <script id="trace-bar" type="x-tmpl-mustache">
+                <div class="trace-bar">
+                    <div class="bar-row">
+                        <div class="left-pane">
+                            <div class="arrow"></div>
+                            <span class="label">Service-01</span>
+                        </div>
+                        <div class="right-pane">
+                            <div class="bar-wrapper">
+                                <div class="bar"></div>
+                                <div class="bar-info-container"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="child-container"></div>
+                </div>
+            </script>
+        </body>
+        ]]>
+    </Content>
+</Module>

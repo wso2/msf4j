@@ -1,0 +1,102 @@
+{
+  "id": "msf4j-message-tracing",
+  "title": "MSF4J Message Tracing",
+  "description": "",
+  "permissions": {
+    "viewers": [
+      "Internal/everyone"
+    ],
+    "editors": [
+      "Internal/everyone"
+    ]
+  },
+  "pages": [
+    {
+      "id": "landing",
+      "title": "Welcome",
+      "layout": {
+        "content": {
+          "loggedIn": {
+            "blocks": [
+              {
+                "id": "a",
+                "col": 1,
+                "row": 1,
+                "size_x": 12,
+                "size_y": 3,
+                "banner": false
+              }
+            ]
+          }
+        },
+        "fluidLayout": false
+      },
+      "isanon": false,
+      "content": {
+        "default": {
+          "a": [
+            {
+              "id": "n6ql6vcjn4hs1mikmu5trzfr",
+              "content": {
+                "id": "msf4j-message-tracing",
+                "title": "MSF4J Message Tracing",
+                "type": "gadget",
+                "thumbnail": "store://gadget/msf4j-tracing/icon.png",
+                "data": {
+                  "url": "store://gadget/msf4j-tracing/index.xml"
+                },
+                "styles": {
+                  "title": "MSF4J Message Tracing",
+                  "borders": true
+                },
+                "options": {
+                  "timeBack": {
+                    "type": "STRING",
+                    "title": "Trace Last Minutes",
+                    "value": "1440",
+                    "options": [],
+                    "required": false
+                  },
+                  "dasHost": {
+                    "type": "STRING",
+                    "title": "DAS Host",
+                    "value": "https://localhost:9443",
+                    "options": [],
+                    "required": false
+                  },
+                  "username": {
+                    "type": "STRING",
+                    "title": "Username",
+                    "value": "admin",
+                    "options": [],
+                    "required": false
+                  },
+                  "password": {
+                    "type": "STRING",
+                    "title": "Password",
+                    "value": "admin",
+                    "options": [],
+                    "required": false
+                  }
+                },
+                "locale_titles": {}
+              }
+            }
+          ]
+        },
+        "anon": {}
+      }
+    }
+  ],
+  "identityServerUrl": "",
+  "accessTokenUrl": "",
+  "apiKey": "",
+  "apiSecret": "",
+  "banner": {
+    "globalBannerExists": null,
+    "customBannerExists": null
+  },
+  "landing": "landing",
+  "isanon": false,
+  "isUserCustom": false
+}
