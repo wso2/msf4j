@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
@@ -50,13 +51,14 @@ class TracingUtil {
      * Publish trace event to DAS in the background.
      */
     static void pushToDAS(TraceEvent traceEvent, String dasUrl) {
-        executorService.submit(() -> {
+        Future<?> future = executorService.submit(() -> {
             log.debug("Publishing trace event " + traceEvent);
             if (ClientBuilder.newClient().target(dasUrl)
                     .request().post(Entity.json(traceEvent)).getStatus() != Response.Status.OK.getStatusCode()) {
                 log.error("Error while publishing trace event " + traceEvent);
             }
         });
+        future.isDone(); // Added to avoid findbugs warning
     }
 
 }

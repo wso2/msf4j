@@ -67,7 +67,7 @@
                         <phase>package</phase>
                         <configuration>
                             <target>
-                                <move file="${project.build.directory}/${project.artifactId}-${project.version}.zip"
+                                <copy file="${project.build.directory}/${project.artifactId}-${project.version}.zip"
                                       tofile="${project.build.directory}/${project.artifactId}-${project.version}.car"/>
                             </target>
                         </configuration>
