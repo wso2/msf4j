@@ -41,12 +41,12 @@ mvn clean install
 
 Download [WSO2 DAS Version 3.0.1](http://wso2.com/products/data-analytics-server/) and start it with default configurations.
 
-Build [wso2das-tracing-capp](../../analytics/wso2das-tracing-capp) module and get the wso2das-tracing.car file. 
-Then, [deploy wso2das-tracing.car file](https://docs.wso2.com/display/DAS301/Packaging+Artifacts+as+a+C-App+Archive#PackagingArtifactsasaC-AppArchive-DeployingacAppDeployingaC-App) 
-in the WSO2 DAS instance you just started. Now you can see the MSF4J Message Tracing Dashboard at 
+Build [wso2das-tracing-capp](../../analytics/wso2das-tracing-capp) module and get the wso2das-msf4j-tracing-*.car file. 
+Then, [deploy wso2das-msf4j-tracing-*.car file](https://docs.wso2.com/display/DAS301/Packaging+Artifacts+as+a+C-App+Archive#PackagingArtifactsasaC-AppArchive-DeployingacAppDeployingaC-App) 
+in the WSO2 DAS instance you just started. Now you can check the MSF4J Message Tracing Dashboard at 
 [https://localhost:9443/portal/dashboards/msf4j-message-tracing](https://localhost:9443/portal/dashboards/msf4j-message-tracing).
 
-After that, from the target directory of this sample, run
+After that, from the target directory of this sample, run the following command to start the sample microservice.
 ```
 java -jar msf4j-wso2das-tracing-*.jar
 ```
