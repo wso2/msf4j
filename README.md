@@ -371,6 +371,7 @@ Nygard's circuit breaker pattern is supported in MSF4J using the Netflix Hystrix
 * HTTP request & response streaming including support for javax.ws.rs.core.StreamingOutput.
 * [ExceptionMapper]((https://docs.oracle.com/javaee/7/api/javax/ws/rs/ext/ExceptionMapper.html))
 * Support for metrics & visualization of metrics using WSO2 Data Analytics Server (DAS) dashboards
+* Message tracing with WSO2 DAS or Zipkin to get a detailed visual insight to the microservices interactions
 * Supports circuit breaker using Netflix Hystrix. 
 * Support for securing microservices
 * Integration with rendering engines such as Mustache

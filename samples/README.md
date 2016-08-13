@@ -16,6 +16,8 @@ In increasing order of complexity;
 * [Lifecycle](lifecycle) - Using Service Lifecycle Methods
 * [Metrics](metrics) - Using Metrics Interceptor
 * [HTTP Monitoring](http-monitoring) - Using HTTP Monitoring Interceptor
+* [WSO2 DAS Tracing](wso2das-tracing) - Using WSO2 DAS for tracing messages
+* [Zipkin Tracing](zipkin-tracing) - Using Zipkin for tracing messages
 * [Regex PathParam](regex-pathparam) - How to use regex with PathParam annotation
 * [File Server](fileserver) - Handling Files including streaming input & output
 * [FormParam](formparam) - Shows usage of the FormParam annotation
