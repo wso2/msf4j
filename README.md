@@ -327,9 +327,9 @@ in "HTTP Monitoring Dashboard".
 Monitor each HTTP request. This annotation can be used at the Class level and the Method level.
 
 ###HTTP Message Tracing
-MSF4J supports visual message Tracing through user friendly dashboards in WSO2 DAS or Zipkin. MSF4J message tracing provides 
+MSF4J supports visual message tracing through user friendly dashboards in WSO2 DAS or Zipkin. MSF4J message tracing provides 
 a detailed insight to the complex microservices interactions in a system making monitoring, trouble shooting and optimization of 
-microservices very easy. Please check [WSO2 DAS Tracing](wso2das-tracing) and [Zipkin Tracing](zipkin-tracing) samples for more details.
+microservices very easy. Please check [WSO2 DAS Tracing](samples/wso2das-tracing) and [Zipkin Tracing](samples/zipkin-tracing) samples for more details.
 
 
 ###Swagger Annotations
