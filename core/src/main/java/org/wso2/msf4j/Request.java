@@ -144,4 +144,26 @@ public class Request {
         return contentType;
     }
 
+    /**
+     * Returns the current session associated with this request, or if the request does not have a session,
+     * creates one.
+     * @return Session
+     */
+    public Session getSession() {
+        //TODO: impl
+        return null;
+    }
+
+    /**
+     * Returns the current HttpSession associated with this request or, if there is no current session and create is
+     * true, returns a new session.
+     * @param create Create a new session or not
+     * @return Session
+     */
+    public Session getSession(boolean create) {
+
+        //TODO: impl
+        return null;
+    }
+
 }
