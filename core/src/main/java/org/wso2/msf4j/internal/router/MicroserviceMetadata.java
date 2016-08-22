@@ -72,7 +72,15 @@ public final class MicroserviceMetadata {
                         relativePath = method.getAnnotation(Path.class).value();
                     }
                     String absolutePath = String.format("%s/%s", basePath, relativePath);
-                    patternRouter.add(absolutePath, new HttpResourceModel(absolutePath, method, service));
+                    patternRouter.add(absolutePath, new HttpResourceModel(absolutePath, method, service, false));
+                } else if (Modifier.isPublic(method.getModifiers()) && method.getAnnotation(Path.class) != null) {
+                    // Sub resource locator method
+                    String relativePath = method.getAnnotation(Path.class).value();
+                    if (relativePath.startsWith("/")) {
+                        relativePath = relativePath.substring(1);
+                    }
+                    String absolutePath = String.format("%s/%s", basePath, relativePath);
+                    patternRouter.add(absolutePath, new HttpResourceModel(absolutePath, method, service, true));
                 } else {
                     log.trace("Not adding method {}({}) to path routing like. " +
                                     "HTTP calls will not be routed to this method",

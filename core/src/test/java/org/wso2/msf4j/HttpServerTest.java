@@ -46,6 +46,8 @@ import org.wso2.msf4j.pojo.Pet;
 import org.wso2.msf4j.pojo.TextBean;
 import org.wso2.msf4j.pojo.XmlBean;
 import org.wso2.msf4j.service.TestMicroservice;
+import org.wso2.msf4j.service.sub.Player;
+import org.wso2.msf4j.service.sub.Team;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -1140,6 +1142,75 @@ public class HttpServerTest {
         IOUtils.closeQuietly(inputStream);
         urlConn.disconnect();
         assertEquals("{\"name\":\"WSO2\",\"products\":[\"APIM\",\"IS\",\"MSF4J\"]}", response);
+    }
+
+    @Test
+    public void testSubResources() throws Exception {
+        HttpURLConnection urlConn = request("/test/v1/SL/team", HttpMethod.GET);
+        InputStream inputStream = urlConn.getInputStream();
+        String response = StreamUtil.asString(inputStream);
+        IOUtils.closeQuietly(inputStream);
+        urlConn.disconnect();
+        Team team = GSON.fromJson(response, Team.class);
+        assertEquals("Cricket", team.getTeamType());
+        assertEquals("SL", team.getCountryId());
+
+
+        urlConn = request("/test/v1/SL/team", HttpMethod.POST);
+        String rawData = "countryName=SriLanka";
+        ByteBuffer encodedData = Charset.defaultCharset().encode(rawData);
+        urlConn.setRequestMethod("POST");
+        urlConn.setRequestProperty("Content-Type", MediaType.APPLICATION_FORM_URLENCODED);
+        urlConn.setRequestProperty("Content-Length", String.valueOf(encodedData.array().length));
+        try (OutputStream os = urlConn.getOutputStream()) {
+            os.write(Arrays.copyOf(encodedData.array(), encodedData.limit()));
+        }
+        inputStream = urlConn.getInputStream();
+        response = StreamUtil.asString(inputStream);
+        IOUtils.closeQuietly(inputStream);
+        urlConn.disconnect();
+        team = GSON.fromJson(response, Team.class);
+        assertEquals("Cricket", team.getTeamType());
+        assertEquals("SL", team.getCountryId());
+        assertEquals("SriLanka", team.getCountryName());
+
+
+        urlConn = request("/test/v1/SL/team/123", HttpMethod.POST);
+        rawData = "countryName=SriLanka&type=Batsman";
+        encodedData = Charset.defaultCharset().encode(rawData);
+        urlConn.setRequestMethod("POST");
+        urlConn.setRequestProperty("Content-Type", MediaType.APPLICATION_FORM_URLENCODED);
+        urlConn.setRequestProperty("Content-Length", String.valueOf(encodedData.array().length));
+        try (OutputStream os = urlConn.getOutputStream()) {
+            os.write(Arrays.copyOf(encodedData.array(), encodedData.limit()));
+        }
+        inputStream = urlConn.getInputStream();
+        response = StreamUtil.asString(inputStream);
+        IOUtils.closeQuietly(inputStream);
+        urlConn.disconnect();
+        Player player = GSON.fromJson(response, Player.class);
+        assertEquals("player_1", player.getName());
+        assertEquals(123, player.getPlayerId());
+        assertEquals("SL", player.getCountryId());
+        assertEquals("SriLanka", player.getCountryName());
+        assertEquals(30, player.getAge());
+        assertEquals("Batsman", player.getType());
+
+
+        urlConn = request("/test/v1/SL/team/123/details/name", HttpMethod.POST);
+        rawData = "countryName=SriLanka&type=Batsman";
+        encodedData = Charset.defaultCharset().encode(rawData);
+        urlConn.setRequestMethod("POST");
+        urlConn.setRequestProperty("Content-Type", MediaType.APPLICATION_FORM_URLENCODED);
+        urlConn.setRequestProperty("Content-Length", String.valueOf(encodedData.array().length));
+        try (OutputStream os = urlConn.getOutputStream()) {
+            os.write(Arrays.copyOf(encodedData.array(), encodedData.limit()));
+        }
+        inputStream = urlConn.getInputStream();
+        response = StreamUtil.asString(inputStream);
+        IOUtils.closeQuietly(inputStream);
+        urlConn.disconnect();
+        assertEquals("SL_123_name_Batsman_SriLanka", response);
     }
 
     protected Socket createRawSocket(URL url) throws IOException {

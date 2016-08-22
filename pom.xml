@@ -135,6 +135,7 @@
         <module>samples/regex-pathparam</module>
         <module>samples/zipkin-tracing</module>
         <module>samples/wso2das-tracing</module>
+        <module>samples/subresource</module>
 
         <module>perf-benchmark/Samples/wso2msf4j</module>
         <module>features/feature-test</module>

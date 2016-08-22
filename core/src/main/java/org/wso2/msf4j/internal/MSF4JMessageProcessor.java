@@ -126,7 +126,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                 }
                 httpMethodInfo.end();
             } else {
-                httpMethodInfo.invoke();
+                httpMethodInfo.invoke(request, destination);
             }
             interceptorExecutor.execPostCalls(response.getStatusCode()); // postCalls can throw exceptions
         }

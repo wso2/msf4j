@@ -42,6 +42,7 @@ import org.wso2.msf4j.pojo.Person;
 import org.wso2.msf4j.pojo.Pet;
 import org.wso2.msf4j.pojo.TextBean;
 import org.wso2.msf4j.pojo.XmlBean;
+import org.wso2.msf4j.service.sub.Team;
 import org.wso2.msf4j.util.BufferUtil;
 
 import java.io.BufferedReader;
@@ -705,7 +706,14 @@ public class TestMicroservice implements Microservice {
         jsonObject.add("products", jsonArray);
         return Response.ok().entity(jsonObject).build();
     }
-    
+
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{countryId}/team")
+    public Team getCountryTeam(@PathParam("countryId") String countryId) {
+        return new Team(countryId);
+    }
+
+
     /**
      * Custom exception class for testing exception handler.
      */

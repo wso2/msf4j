@@ -177,6 +177,27 @@ public final class PatternPathRouter<T> {
                         groupNameValuesBuilder.build()));
             }
         }
+        //Check for sub-resource locator
+        if (result.isEmpty()) {
+            patternRouteList.stream()
+                            .filter(patternRoute -> patternRoute.getSecond().destination instanceof HttpResourceModel &&
+                                                    ((HttpResourceModel) patternRoute.getSecond().destination)
+                                                            .isSubResourceLocator()).forEach(patternRoute -> {
+                ImmutableMap.Builder<String, String> groupNameValuesBuilder = ImmutableMap.builder();
+                Pattern pattern = Pattern.compile(patternRoute.getFirst().pattern() + ".*");
+                Matcher matcher = pattern.matcher(cleanPath);
+                if (matcher.matches()) {
+                    int matchIndex = 1;
+                    for (String name : patternRoute.getSecond().getGroupNames()) {
+                        String value = matcher.group(matchIndex);
+                        groupNameValuesBuilder.put(name, value);
+                        matchIndex++;
+                    }
+                    result.add(new RoutableDestination<>(patternRoute.getSecond().getDestination(),
+                                                         groupNameValuesBuilder.build()));
+                }
+            });
+        }
         return result;
     }
 
