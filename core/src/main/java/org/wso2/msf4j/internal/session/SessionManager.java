@@ -16,13 +16,14 @@
  *  under the License.
  *
  */
-package org.wso2.msf4j.internal;
+package org.wso2.msf4j.internal.session;
 
 import org.wso2.msf4j.Session;
 
-//import java.util.Map;
-//import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 //
+
 /**
  * Manage transport sessions.
  */
@@ -39,17 +40,19 @@ public class SessionManager {
      */
 //    protected int sessionIdLength = 16;
 
-//    private Map<String, Session> sessions = new ConcurrentHashMap<>();
+    private Map<String, Session> sessions = new ConcurrentHashMap<>();
 
-    public Session getSession() {
+//    protected volatile int maxActive = 0;
+    private SessionIdGenerator sessionIdGenerator = new SessionIdGenerator();
 
-
-        return null;
+    public Session getSession(String sessionId) {
+        return sessions.get(sessionId);
     }
 
-    public Session getSession(boolean create) {
-
-        return null;
+    public Session createSession() {
+        Session session = new Session(this, sessionIdGenerator.generateSessionId(""));
+        sessions.put(session.getId(), session);
+        return session;
     }
 
     public void invalidateSession(Session session) {

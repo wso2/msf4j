@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.internal.router.MicroserviceMetadata;
+import org.wso2.msf4j.internal.session.SessionManager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -48,6 +49,7 @@ public class MicroservicesRegistry {
     private final List<Interceptor> interceptors = new ArrayList<>();
     private volatile MicroserviceMetadata metadata = new MicroserviceMetadata(Collections.emptyList());
     private Map<Class, ExceptionMapper> exceptionMappers = new TreeMap<>(new ClassComparator());
+    private SessionManager sessionManager = new SessionManager();
 
     public void addService(Object... service) {
         Collections.addAll(services, service);
@@ -150,6 +152,10 @@ public class MicroservicesRegistry {
 
     public void preDestroyService(Object httpService) {
         invokeLifecycleMethod(httpService, PreDestroy.class);
+    }
+
+    public SessionManager getSessionManager() {
+        return sessionManager;
     }
 
     private void invokeLifecycleMethods(Class lcAnnotation) {

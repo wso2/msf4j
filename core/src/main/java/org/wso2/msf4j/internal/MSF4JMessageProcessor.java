@@ -25,6 +25,7 @@ import org.wso2.carbon.messaging.CarbonMessageProcessor;
 import org.wso2.carbon.messaging.TransportSender;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
+import org.wso2.msf4j.Session;
 import org.wso2.msf4j.internal.router.HandlerException;
 import org.wso2.msf4j.internal.router.HttpMethodInfo;
 import org.wso2.msf4j.internal.router.HttpMethodInfoBuilder;
@@ -68,9 +69,17 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
             microservicesRegistry = DataHolder.getInstance().getMicroservicesRegistry();
         }
         Request request = new Request(carbonMessage);
+        request.setSessionManager(microservicesRegistry.getSessionManager());
         Response response = new Response(carbonCallback);
         try {
             dispatchMethod(request, response);
+            Session session = request.getSession();
+            if (session != null) {
+                String cookie = response.getHeader("Cookie");
+                if (cookie != null) {
+                    response.setHeader("Cookie", cookie + ";JSESSIONID=" + session.getId());
+                }
+            }
         } catch (HandlerException e) {
             handleHandlerException(e, carbonCallback);
         } catch (InvocationTargetException e) {

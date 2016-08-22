@@ -2,6 +2,7 @@ package org.wso2.msf4j;
 
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.Constants;
+import org.wso2.msf4j.internal.session.SessionManager;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -18,6 +19,7 @@ public class Request {
     private final CarbonMessage carbonMessage;
     private List<String> acceptTypes = null;
     private String contentType = null;
+    private SessionManager sessionManager;
 
     public Request(CarbonMessage carbonMessage) {
         this.carbonMessage = carbonMessage;
@@ -33,6 +35,10 @@ public class Request {
         String contentTypeHeaderStr = carbonMessage.getHeader(HttpHeaders.CONTENT_TYPE);
         //Trim specified charset since UTF-8 is assumed
         contentType = (contentTypeHeaderStr != null) ? contentTypeHeaderStr.split("\\s*;\\s*")[0] : null;
+    }
+
+    public void setSessionManager(SessionManager sessionManager) {
+        this.sessionManager = sessionManager;
     }
 
     /**
@@ -147,23 +153,51 @@ public class Request {
     /**
      * Returns the current session associated with this request, or if the request does not have a session,
      * creates one.
+     *
      * @return Session
      */
     public Session getSession() {
-        //TODO: impl
+        if (sessionManager == null) {
+            throw new IllegalStateException("SessionManager has not been set");
+        }
+        String cookie = getHeader("Cookie");
+        if (cookie != null) {
+            return Arrays.stream(cookie.split(";"))
+                    .filter(s -> s.startsWith("JSESSIONID="))
+                    .findFirst()
+                    .map(s -> sessionManager.getSession(s.substring("JSESSIONID=".length())))
+                    .orElse(sessionManager.createSession());
+
+        }
         return null;
     }
 
     /**
      * Returns the current HttpSession associated with this request or, if there is no current session and create is
      * true, returns a new session.
+     *
      * @param create Create a new session or not
      * @return Session
      */
     public Session getSession(boolean create) {
+        if (sessionManager == null) {
+            throw new IllegalStateException("SessionManager has not been set");
+        }
+        String cookie = getHeader("Cookie");
+        if (cookie != null) {
+            return Arrays.stream(cookie.split(";"))
+                    .filter(s -> s.startsWith("JSESSIONID="))
+                    .findFirst()
+                    .map(s -> {
+                        Session session = sessionManager.getSession(s.substring("JSESSIONID=".length()));
+                        if (session == null && create) {
+                            session = sessionManager.createSession();
+                        }
+                        return session;
+                    })
+                    .orElse(null);
 
-        //TODO: impl
+        }
         return null;
     }
-
 }

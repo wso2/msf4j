@@ -137,6 +137,7 @@ public class StockQuoteService {
     public Stocks getAllStocks(@Context Request request) {
         request.getHeaders().entrySet().stream().
                 forEach(entry -> System.out.println(entry.getKey() + "=" + entry.getValue()));
+        request.getSession().setAttribute("Foo", "Bar");
         return new Stocks(stockQuotes.values());
     }
 }

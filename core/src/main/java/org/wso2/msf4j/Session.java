@@ -18,7 +18,9 @@
  */
 package org.wso2.msf4j;
 
-import org.wso2.msf4j.internal.SessionManager;
+import org.wso2.msf4j.internal.session.SessionManager;
+
+import java.util.Enumeration;
 
 /**
  * Represents a transport session.
@@ -26,21 +28,22 @@ import org.wso2.msf4j.internal.SessionManager;
 public class Session {
 
     private SessionManager manager;
+    private String id;
+    private long creationTime;
 
-    Session(SessionManager manager) {
-
+    public Session(SessionManager manager, String id) {
         this.manager = manager;
+        this.id = id;
+        creationTime = System.currentTimeMillis();
     }
 
 
     public long getCreationTime() {
-
-        return 0;
+        return creationTime;
     }
 
     public String getId() {
-
-        return null;
+        return id;
     }
 
     public long getLastAccessedTime() {
@@ -62,21 +65,21 @@ public class Session {
         return null;
     }
 
-    public java.util.Enumeration<java.lang.String> getAttributeNames() {
+    public Enumeration<String> getAttributeNames() {
 
         return null;
     }
 
-    public void setAttribute(java.lang.String name, java.lang.Object value) {
+    public void setAttribute(String name, Object value) {
 
     }
 
-    public void removeAttribute(java.lang.String name) {
+    public void removeAttribute(String name) {
 
     }
 
     public void invalidate() {
-       manager.invalidateSession(this);
+        manager.invalidateSession(this);
     }
 }
 
