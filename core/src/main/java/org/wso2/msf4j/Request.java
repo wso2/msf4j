@@ -2,6 +2,7 @@ package org.wso2.msf4j;
 
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.Constants;
+import org.wso2.msf4j.internal.MSF4JConstants;
 import org.wso2.msf4j.internal.session.SessionManager;
 
 import java.nio.ByteBuffer;
@@ -162,16 +163,16 @@ public class Request {
             throw new IllegalStateException("SessionManager has not been set");
         }
         if (session != null) {
-            return session;
+            return session.setAccessed();
         }
         String cookieHeader = getHeader("Cookie");
         if (cookieHeader != null) {
             session = Arrays.stream(cookieHeader.split(";"))
-                    .filter(cookie -> cookie.startsWith("JSESSIONID="))
+                    .filter(cookie -> cookie.startsWith(MSF4JConstants.SESSION_ID))
                     .findFirst()
-                    .map(jsession -> sessionManager.getSession(jsession.substring("JSESSIONID=".length())))
+                    .map(jsession -> sessionManager.getSession(jsession.substring(MSF4JConstants.SESSION_ID.length())))
                     .orElse(sessionManager.createSession());
-            return session;
+            return session.setAccessed();
         }
         return session = sessionManager.createSession();
     }
@@ -188,21 +189,21 @@ public class Request {
             throw new IllegalStateException("SessionManager has not been set");
         }
         if (session != null) {
-            return session;
+            return session.setAccessed();
         }
         String cookieHeader = getHeader("Cookie");
         if (cookieHeader != null) {
             session = Arrays.stream(cookieHeader.split(";"))
-                    .filter(cookie -> cookie.startsWith("JSESSIONID="))
+                    .filter(cookie -> cookie.startsWith(MSF4JConstants.SESSION_ID))
                     .findFirst()
-                    .map(jsession -> sessionManager.getSession(jsession.substring("JSESSIONID=".length())))
+                    .map(jsession -> sessionManager.getSession(jsession.substring(MSF4JConstants.SESSION_ID.length())))
                     .orElseGet(() -> {
                         if (create) {
                             return sessionManager.createSession();
                         }
                         return null;
                     });
-            return session;
+            return session.setAccessed();
         } else if (create) {
             return session = sessionManager.createSession();
         }

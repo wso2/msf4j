@@ -20,6 +20,7 @@ import org.wso2.carbon.messaging.CarbonCallback;
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.DefaultCarbonMessage;
 import org.wso2.carbon.transport.http.netty.common.Constants;
+import org.wso2.msf4j.internal.MSF4JConstants;
 import org.wso2.msf4j.internal.entitywriter.EntityWriter;
 import org.wso2.msf4j.internal.entitywriter.EntityWriterRegistry;
 
@@ -264,9 +265,9 @@ public class Response {
             if (session != null) {
                 String cookie = carbonMessage.getHeader("Set-Cookie");
                 if (cookie != null) {
-                    carbonMessage.setHeader("Set-Cookie", cookie + ";JSESSIONID=" + session.getId());
+                    carbonMessage.setHeader("Set-Cookie", cookie + ";" + MSF4JConstants.SESSION_ID + session.getId());
                 } else {
-                    carbonMessage.setHeader("Set-Cookie", "JSESSIONID=" + session.getId());
+                    carbonMessage.setHeader("Set-Cookie", MSF4JConstants.SESSION_ID + session.getId());
                 }
             }
 

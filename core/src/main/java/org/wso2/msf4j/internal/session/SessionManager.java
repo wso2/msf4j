@@ -22,42 +22,62 @@ import org.wso2.msf4j.Session;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 //
 
 /**
  * Manage transport sessions.
  */
 public class SessionManager {
-
     /**
-     * The default maximum inactive interval for Sessions created by
+     * The default maximum inactive interval, in minutes, for Sessions created by
      * this Manager.
      */
-//    protected int maxInactiveInterval = 60;
+    private static final int DEFAULT_MAX_INACTIVE_INTERVAL = 15;  // In minutes
+
+    /**
+     * Max number of sessions that can be active at a given time.
+     */
+    private static final int DEFAULT_MAX_ACTIVE_SESSIONS = 10;
 
     /**
      * The session id length of Sessions created by this Manager.
      */
-//    protected int sessionIdLength = 16;
+    private static final int SESSION_ID_LENGTH = 16;
 
     private Map<String, Session> sessions = new ConcurrentHashMap<>();
-
-//    protected volatile int maxActive = 0;
     private SessionIdGenerator sessionIdGenerator = new SessionIdGenerator();
+
+    public SessionManager() {
+        sessionIdGenerator.setSessionIdLength(SESSION_ID_LENGTH);
+
+        // Session expiry scheduled task
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.scheduleAtFixedRate(() ->
+                        sessions.values().parallelStream()
+                                .filter(session ->
+                                        (System.currentTimeMillis() - session.getLastAccessedTime() >=
+                                                session.getMaxInactiveInterval() * 60 * 1000))
+                                .forEach(session -> sessions.remove(session.getId())),
+                30, 30, TimeUnit.SECONDS);
+    }
 
     public Session getSession(String sessionId) {
         return sessions.get(sessionId);
     }
 
     public Session createSession() {
-        Session session = new Session(this, sessionIdGenerator.generateSessionId(""));
+        if (sessions.size() >= DEFAULT_MAX_ACTIVE_SESSIONS) {
+            throw new IllegalStateException("Too many active sessions");
+        }
+        Session session = new Session(this, sessionIdGenerator.generateSessionId(""), DEFAULT_MAX_INACTIVE_INTERVAL);
         sessions.put(session.getId(), session);
         return session;
     }
 
     public void invalidateSession(Session session) {
-
+        sessions.remove(session.getId());
     }
-
-
 }

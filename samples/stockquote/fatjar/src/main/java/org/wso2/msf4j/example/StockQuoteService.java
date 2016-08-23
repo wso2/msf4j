@@ -138,12 +138,12 @@ public class StockQuoteService {
     public Stocks getAllStocks(@Context Request request) {
         request.getHeaders().entrySet().stream().
                 forEach(entry -> System.out.println(entry.getKey() + "=" + entry.getValue()));
-        Session session = request.getSession(false);
+        Session session = request.getSession(true);
         if(session == null) {
             System.out.println("++++++ No session!");
         } else {
             System.out.println("+++++ Value from session:" + session.getAttribute("Foo"));
-            request.getSession(false).setAttribute("Foo", "Bar" + System.currentTimeMillis());
+            request.getSession(true).setAttribute("Foo", "Bar" + System.currentTimeMillis());
         }
         return new Stocks(stockQuotes.values());
     }

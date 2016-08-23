@@ -20,9 +20,10 @@ package org.wso2.msf4j;
 
 import org.wso2.msf4j.internal.session.SessionManager;
 
-import java.util.Enumeration;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Represents a transport session.
@@ -33,13 +34,16 @@ public class Session {
     private String id;
     private long creationTime;
     private Map<String, Object> attributes = new ConcurrentHashMap<>();
+    private long lastAccessedTime;
+    private int maxInactiveInterval;
 
-    public Session(SessionManager manager, String id) {
+    public Session(SessionManager manager, String id, int maxInactiveInterval) {
         this.manager = manager;
         this.id = id;
+        this.maxInactiveInterval = maxInactiveInterval;
         creationTime = System.currentTimeMillis();
+        lastAccessedTime = creationTime;
     }
-
 
     public long getCreationTime() {
         return creationTime;
@@ -50,26 +54,28 @@ public class Session {
     }
 
     public long getLastAccessedTime() {
+        return lastAccessedTime;
+    }
 
-        return 0;
+    Session setAccessed() {
+        lastAccessedTime = System.currentTimeMillis();
+        return this;
     }
 
     public void setMaxInactiveInterval(int interval) {
-
+        this.maxInactiveInterval = interval;
     }
 
     public int getMaxInactiveInterval() {
-
-        return 0;
+        return maxInactiveInterval;
     }
 
     public Object getAttribute(String name) {
         return attributes.get(name);
     }
 
-    public Enumeration<String> getAttributeNames() {
-
-        return null;
+    public Set<String> getAttributeNames() {
+        return attributes.keySet();
     }
 
     public void setAttribute(String name, Object value) {
