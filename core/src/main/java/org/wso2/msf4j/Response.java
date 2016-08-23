@@ -44,10 +44,16 @@ public class Response {
     private String mediaType = null;
     private Object entity;
     private int chunkSize = NO_CHUNK;
+    private Request request;
 
     public Response(CarbonCallback carbonCallback) {
         carbonMessage = new DefaultCarbonMessage();
         this.carbonCallback = carbonCallback;
+    }
+
+    public Response(CarbonCallback carbonCallback, Request request) {
+        this(carbonCallback);
+        this.request = request;
     }
 
     /**
@@ -252,6 +258,18 @@ public class Response {
     private void processEntity() {
         if (entity != null) {
             EntityWriter entityWriter = EntityWriterRegistry.getEntityWriter(entity.getClass());
+
+            //Set-Cookie: session
+            Session session = request.getSession(false);
+            if (session != null) {
+                String cookie = carbonMessage.getHeader("Set-Cookie");
+                if (cookie != null) {
+                    carbonMessage.setHeader("Set-Cookie", cookie + ";JSESSIONID=" + session.getId());
+                } else {
+                    carbonMessage.setHeader("Set-Cookie", "JSESSIONID=" + session.getId());
+                }
+            }
+
             entityWriter.writeData(carbonMessage, entity, mediaType, chunkSize, carbonCallback);
         } else {
             carbonMessage.addMessageBody(ByteBuffer.allocate(0));

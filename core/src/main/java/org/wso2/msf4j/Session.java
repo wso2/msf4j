@@ -21,6 +21,8 @@ package org.wso2.msf4j;
 import org.wso2.msf4j.internal.session.SessionManager;
 
 import java.util.Enumeration;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Represents a transport session.
@@ -30,6 +32,7 @@ public class Session {
     private SessionManager manager;
     private String id;
     private long creationTime;
+    private Map<String, Object> attributes = new ConcurrentHashMap<>();
 
     public Session(SessionManager manager, String id) {
         this.manager = manager;
@@ -61,8 +64,7 @@ public class Session {
     }
 
     public Object getAttribute(String name) {
-
-        return null;
+        return attributes.get(name);
     }
 
     public Enumeration<String> getAttributeNames() {
@@ -71,11 +73,11 @@ public class Session {
     }
 
     public void setAttribute(String name, Object value) {
-
+        attributes.put(name, value);
     }
 
     public void removeAttribute(String name) {
-
+        attributes.remove(name);
     }
 
     public void invalidate() {

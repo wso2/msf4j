@@ -20,6 +20,7 @@ public class Request {
     private List<String> acceptTypes = null;
     private String contentType = null;
     private SessionManager sessionManager;
+    private Session session;
 
     public Request(CarbonMessage carbonMessage) {
         this.carbonMessage = carbonMessage;
@@ -160,16 +161,19 @@ public class Request {
         if (sessionManager == null) {
             throw new IllegalStateException("SessionManager has not been set");
         }
-        String cookie = getHeader("Cookie");
-        if (cookie != null) {
-            return Arrays.stream(cookie.split(";"))
-                    .filter(s -> s.startsWith("JSESSIONID="))
-                    .findFirst()
-                    .map(s -> sessionManager.getSession(s.substring("JSESSIONID=".length())))
-                    .orElse(sessionManager.createSession());
-
+        if (session != null) {
+            return session;
         }
-        return null;
+        String cookieHeader = getHeader("Cookie");
+        if (cookieHeader != null) {
+            session = Arrays.stream(cookieHeader.split(";"))
+                    .filter(cookie -> cookie.startsWith("JSESSIONID="))
+                    .findFirst()
+                    .map(jsession -> sessionManager.getSession(jsession.substring("JSESSIONID=".length())))
+                    .orElse(sessionManager.createSession());
+            return session;
+        }
+        return session = sessionManager.createSession();
     }
 
     /**
@@ -183,20 +187,24 @@ public class Request {
         if (sessionManager == null) {
             throw new IllegalStateException("SessionManager has not been set");
         }
-        String cookie = getHeader("Cookie");
-        if (cookie != null) {
-            return Arrays.stream(cookie.split(";"))
-                    .filter(s -> s.startsWith("JSESSIONID="))
+        if (session != null) {
+            return session;
+        }
+        String cookieHeader = getHeader("Cookie");
+        if (cookieHeader != null) {
+            session = Arrays.stream(cookieHeader.split(";"))
+                    .filter(cookie -> cookie.startsWith("JSESSIONID="))
                     .findFirst()
-                    .map(s -> {
-                        Session session = sessionManager.getSession(s.substring("JSESSIONID=".length()));
-                        if (session == null && create) {
-                            session = sessionManager.createSession();
+                    .map(jsession -> sessionManager.getSession(jsession.substring("JSESSIONID=".length())))
+                    .orElseGet(() -> {
+                        if (create) {
+                            return sessionManager.createSession();
                         }
-                        return session;
-                    })
-                    .orElse(null);
-
+                        return null;
+                    });
+            return session;
+        } else if (create) {
+            return session = sessionManager.createSession();
         }
         return null;
     }

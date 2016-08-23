@@ -25,7 +25,6 @@ import org.wso2.carbon.messaging.CarbonMessageProcessor;
 import org.wso2.carbon.messaging.TransportSender;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
-import org.wso2.msf4j.Session;
 import org.wso2.msf4j.internal.router.HandlerException;
 import org.wso2.msf4j.internal.router.HttpMethodInfo;
 import org.wso2.msf4j.internal.router.HttpMethodInfoBuilder;
@@ -70,16 +69,9 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
         }
         Request request = new Request(carbonMessage);
         request.setSessionManager(microservicesRegistry.getSessionManager());
-        Response response = new Response(carbonCallback);
+        Response response = new Response(carbonCallback, request);
         try {
             dispatchMethod(request, response);
-            Session session = request.getSession();
-            if (session != null) {
-                String cookie = response.getHeader("Cookie");
-                if (cookie != null) {
-                    response.setHeader("Cookie", cookie + ";JSESSIONID=" + session.getId());
-                }
-            }
         } catch (HandlerException e) {
             handleHandlerException(e, carbonCallback);
         } catch (InvocationTargetException e) {
@@ -87,7 +79,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
             if (targetException instanceof HandlerException) {
                 handleHandlerException((HandlerException) targetException, carbonCallback);
             } else {
-                handleThrowable(targetException, carbonCallback);
+                handleThrowable(targetException, carbonCallback, request);
             }
         } catch (InterceptorException e) {
             log.warn("Interceptors threw an exception", e);
@@ -96,7 +88,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                     .createTextResponse(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
                             HttpUtil.EMPTY_BODY));
         } catch (Throwable t) {
-            handleThrowable(t, carbonCallback);
+            handleThrowable(t, carbonCallback, request);
         } finally {
             // Calling the release method to make sure that there won't be any memory leaks from netty
             carbonMessage.release();
@@ -141,10 +133,11 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
         }
     }
 
-    private void handleThrowable(Throwable throwable, CarbonCallback carbonCallback) {
+    private void handleThrowable(Throwable throwable, CarbonCallback carbonCallback, Request request) {
         Optional<ExceptionMapper> exceptionMapper = microservicesRegistry.getExceptionMapper(throwable);
         if (exceptionMapper.isPresent()) {
-            org.wso2.msf4j.Response msf4jResponse = new org.wso2.msf4j.Response(carbonCallback);
+            org.wso2.msf4j.Response msf4jResponse =
+                    new org.wso2.msf4j.Response(carbonCallback, request);
             msf4jResponse.setEntity(exceptionMapper.get().toResponse(throwable));
             msf4jResponse.send();
         } else {

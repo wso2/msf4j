@@ -25,6 +25,7 @@ import io.swagger.annotations.Info;
 import io.swagger.annotations.License;
 import io.swagger.annotations.SwaggerDefinition;
 import org.wso2.msf4j.Request;
+import org.wso2.msf4j.Session;
 import org.wso2.msf4j.example.exception.DuplicateSymbolException;
 import org.wso2.msf4j.example.exception.SymbolNotFoundException;
 
@@ -137,7 +138,13 @@ public class StockQuoteService {
     public Stocks getAllStocks(@Context Request request) {
         request.getHeaders().entrySet().stream().
                 forEach(entry -> System.out.println(entry.getKey() + "=" + entry.getValue()));
-        request.getSession().setAttribute("Foo", "Bar");
+        Session session = request.getSession(false);
+        if(session == null) {
+            System.out.println("++++++ No session!");
+        } else {
+            System.out.println("+++++ Value from session:" + session.getAttribute("Foo"));
+            request.getSession(false).setAttribute("Foo", "Bar" + System.currentTimeMillis());
+        }
         return new Stocks(stockQuotes.values());
     }
 }
