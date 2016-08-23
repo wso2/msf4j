@@ -25,7 +25,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-//
 
 /**
  * Manage transport sessions.
@@ -35,7 +34,7 @@ public class SessionManager {
      * The default maximum inactive interval, in minutes, for Sessions created by
      * this Manager.
      */
-    private static final int DEFAULT_MAX_INACTIVE_INTERVAL = 15;  // In minutes
+    private static final int DEFAULT_MAX_INACTIVE_INTERVAL = 1;  // In minutes
 
     /**
      * Max number of sessions that can be active at a given time.
@@ -60,7 +59,7 @@ public class SessionManager {
                                 .filter(session ->
                                         (System.currentTimeMillis() - session.getLastAccessedTime() >=
                                                 session.getMaxInactiveInterval() * 60 * 1000))
-                                .forEach(session -> sessions.remove(session.getId())),
+                                .forEach(Session::invalidate),
                 30, 30, TimeUnit.SECONDS);
     }
 

@@ -58,6 +58,7 @@ public class Session {
     }
 
     Session setAccessed() {
+        checkValidity();
         lastAccessedTime = System.currentTimeMillis();
         return this;
     }
@@ -71,19 +72,29 @@ public class Session {
     }
 
     public Object getAttribute(String name) {
+        checkValidity();
         return attributes.get(name);
     }
 
     public Set<String> getAttributeNames() {
+        checkValidity();
         return attributes.keySet();
     }
 
     public void setAttribute(String name, Object value) {
+        checkValidity();
         attributes.put(name, value);
     }
 
     public void removeAttribute(String name) {
+        checkValidity();
         attributes.remove(name);
+    }
+
+    private void checkValidity() {
+        if (!isValid) {
+            throw new IllegalStateException("Session is invalid");
+        }
     }
 
     public void invalidate() {
