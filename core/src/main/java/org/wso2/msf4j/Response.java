@@ -253,7 +253,7 @@ public class Response {
     public void send() {
         carbonMessage.setProperty(Constants.HTTP_STATUS_CODE, getStatusCode());
         //Set-Cookie: session
-        Session session = request.getSession(false);
+        Session session = request.getSessionInternal();
         if (session != null && session.isValid()) {
             String cookie = carbonMessage.getHeader("Set-Cookie");
             if (cookie != null) {

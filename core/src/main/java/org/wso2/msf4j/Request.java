@@ -209,4 +209,8 @@ public class Request {
         }
         return null;
     }
+
+    Session getSessionInternal() {
+        return session;
+    }
 }
