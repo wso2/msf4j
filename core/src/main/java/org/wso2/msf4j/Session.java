@@ -88,6 +88,7 @@ public class Session {
 
     public void invalidate() {
         manager.invalidateSession(this);
+        attributes.clear();
         isValid = false;
     }
 
