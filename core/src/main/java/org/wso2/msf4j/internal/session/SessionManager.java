@@ -34,7 +34,7 @@ public class SessionManager {
      * The default maximum inactive interval, in minutes, for Sessions created by
      * this Manager.
      */
-    private static final int DEFAULT_MAX_INACTIVE_INTERVAL = 1;  // In minutes
+    private static final int DEFAULT_MAX_INACTIVE_INTERVAL = 15;  // In minutes
 
     /**
      * Max number of sessions that can be active at a given time.
