@@ -737,6 +737,12 @@ public class TestMicroservice implements Microservice {
         return (String) request.getSession().getAttribute(SAMPLE_STRING);
     }
 
+    @GET
+    @Path("/expire-session")
+    public void expireSession(@Context Request request) {
+        request.getSession().invalidate();
+    }
+
     /**
      * Custom exception class for testing exception handler.
      */

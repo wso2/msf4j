@@ -78,6 +78,7 @@ import javax.ws.rs.core.Response;
 
 import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertNotNull;
+import static org.testng.AssertJUnit.assertNull;
 import static org.testng.AssertJUnit.assertTrue;
 import static org.testng.AssertJUnit.fail;
 
@@ -1186,6 +1187,48 @@ public class HttpServerTest {
         assertNotNull(setCookieHeader);
         content = getContent(urlConn);  // content retrieved & returned from session
         assertEquals(String.valueOf(value), content);
+        urlConn.disconnect();
+    }
+
+    @Test
+    public void testSessionExpiry() throws Exception {
+        long value = System.currentTimeMillis();
+
+        // Request to first operation
+        HttpURLConnection urlConn = request("/test/v1/set-session2/" + value, HttpMethod.GET);
+        assertEquals(200, urlConn.getResponseCode());
+        String setCookieHeader = urlConn.getHeaderField("Set-Cookie");
+        assertNotNull(setCookieHeader);
+        String content = getContent(urlConn);
+        assertEquals(String.valueOf(value), content);
+        urlConn.disconnect();
+
+        // Request to 2nd operation
+        urlConn = request("/test/v1/get-session/", HttpMethod.GET);
+        urlConn.setRequestProperty("Cookie", setCookieHeader);
+        assertEquals(200, urlConn.getResponseCode());
+        setCookieHeader = urlConn.getHeaderField("Set-Cookie");
+        assertNotNull(setCookieHeader);
+        content = getContent(urlConn);  // content retrieved & returned from session
+        assertEquals(String.valueOf(value), content);
+        urlConn.disconnect();
+
+        // Expire the session
+        urlConn = request("/test/v1/expire-session/", HttpMethod.GET);
+        urlConn.setRequestProperty("Cookie", setCookieHeader);
+        assertEquals(204, urlConn.getResponseCode());
+        setCookieHeader = urlConn.getHeaderField("Set-Cookie");
+        assertNull(setCookieHeader);
+        urlConn.disconnect();
+
+        // Try to retrieve the object stored in the expired session
+        urlConn = request("/test/v1/get-session/", HttpMethod.GET);
+        urlConn.setRequestProperty("Cookie", setCookieHeader);
+        assertEquals(204, urlConn.getResponseCode());
+        setCookieHeader = urlConn.getHeaderField("Set-Cookie");
+        assertNotNull(setCookieHeader);
+        content = getContent(urlConn);  // content retrieved & returned from session
+        assertEquals("", content);
         urlConn.disconnect();
     }
 

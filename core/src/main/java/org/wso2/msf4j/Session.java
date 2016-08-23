@@ -35,6 +35,7 @@ public class Session {
     private Map<String, Object> attributes = new ConcurrentHashMap<>();
     private long lastAccessedTime;
     private int maxInactiveInterval;
+    private boolean isValid = true;
 
     public Session(SessionManager manager, String id, int maxInactiveInterval) {
         this.manager = manager;
@@ -87,6 +88,11 @@ public class Session {
 
     public void invalidate() {
         manager.invalidateSession(this);
+        isValid = false;
+    }
+
+    boolean isValid() {
+        return isValid;
     }
 }
 
