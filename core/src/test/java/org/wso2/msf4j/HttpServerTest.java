@@ -1146,18 +1146,45 @@ public class HttpServerTest {
     @Test
     public void testSetAndGetFromSession() throws Exception {
         long value = System.currentTimeMillis();
+
+        // Request to first operation
         HttpURLConnection urlConn = request("/test/v1/set-session/" + value, HttpMethod.GET);
         assertEquals(204, urlConn.getResponseCode());
         String setCookieHeader = urlConn.getHeaderField("Set-Cookie");
         assertNotNull(setCookieHeader);
         urlConn.disconnect();
 
+        // Request to 2nd operation
         urlConn = request("/test/v1/get-session/", HttpMethod.GET);
         urlConn.setRequestProperty("Cookie", setCookieHeader);
         assertEquals(200, urlConn.getResponseCode());
         setCookieHeader = urlConn.getHeaderField("Set-Cookie");
         assertNotNull(setCookieHeader);
+        String content = getContent(urlConn); // content retrieved & returned from session
+        assertEquals(String.valueOf(value), content);
+        urlConn.disconnect();
+    }
+
+    @Test
+    public void testSetAndGetFromSession2() throws Exception {
+        long value = System.currentTimeMillis();
+
+        // Request to first operation
+        HttpURLConnection urlConn = request("/test/v1/set-session2/" + value, HttpMethod.GET);
+        assertEquals(200, urlConn.getResponseCode());
+        String setCookieHeader = urlConn.getHeaderField("Set-Cookie");
+        assertNotNull(setCookieHeader);
         String content = getContent(urlConn);
+        assertEquals(String.valueOf(value), content);
+        urlConn.disconnect();
+
+        // Request to 2nd operation
+        urlConn = request("/test/v1/get-session/", HttpMethod.GET);
+        urlConn.setRequestProperty("Cookie", setCookieHeader);
+        assertEquals(200, urlConn.getResponseCode());
+        setCookieHeader = urlConn.getHeaderField("Set-Cookie");
+        assertNotNull(setCookieHeader);
+        content = getContent(urlConn);  // content retrieved & returned from session
         assertEquals(String.valueOf(value), content);
         urlConn.disconnect();
     }

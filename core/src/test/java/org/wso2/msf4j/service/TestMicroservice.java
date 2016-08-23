@@ -708,12 +708,29 @@ public class TestMicroservice implements Microservice {
         return Response.ok().entity(jsonObject).build();
     }
 
+    /**
+     * Operation with no content in the response and sets a value in the session.
+     */
     @GET
     @Path("/set-session/{value}")
     public void setObjectInSession(@Context Request request, @PathParam("value") String value) {
         request.getSession().setAttribute(SAMPLE_STRING, value);
     }
 
+    /**
+     * Operation which returns content in the response and sets a value in the session.
+     */
+    @GET
+    @Path("/set-session2/{value}")
+    public String setObjectInSession2(@Context Request request, @PathParam("value") String value) {
+        request.getSession().setAttribute(SAMPLE_STRING, value);
+        return value;
+    }
+
+    /**
+     * Operation which retrieves value set in the session in the {@link #setObjectInSession} &
+     * {@link #setObjectInSession2} methods.
+     */
     @GET
     @Path("/get-session")
     public String getObjectFromSession(@Context Request request) {

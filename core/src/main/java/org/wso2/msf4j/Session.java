@@ -23,7 +23,6 @@ import org.wso2.msf4j.internal.session.SessionManager;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Represents a transport session.
