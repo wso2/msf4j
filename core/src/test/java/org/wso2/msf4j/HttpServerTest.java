@@ -77,6 +77,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertNotNull;
 import static org.testng.AssertJUnit.assertTrue;
 import static org.testng.AssertJUnit.fail;
 
@@ -1125,7 +1126,7 @@ public class HttpServerTest {
         IOUtils.closeQuietly(inputStream);
         urlConn.disconnect();
         assertEquals("{\"abc\":[{\"name\":\"Richard Stallman\",\"age\":63}, {\"name\":\"Linus Torvalds\",\"age\":46}]}",
-                     response);
+                response);
 
         urlConn = request("/test/v1/testJsonProduceWithJsonArray", HttpMethod.GET);
         inputStream = urlConn.getInputStream();
@@ -1140,6 +1141,25 @@ public class HttpServerTest {
         IOUtils.closeQuietly(inputStream);
         urlConn.disconnect();
         assertEquals("{\"name\":\"WSO2\",\"products\":[\"APIM\",\"IS\",\"MSF4J\"]}", response);
+    }
+
+    @Test
+    public void testSetAndGetFromSession() throws Exception {
+        long value = System.currentTimeMillis();
+        HttpURLConnection urlConn = request("/test/v1/set-session/" + value, HttpMethod.GET);
+        assertEquals(204, urlConn.getResponseCode());
+        String setCookieHeader = urlConn.getHeaderField("Set-Cookie");
+        assertNotNull(setCookieHeader);
+        urlConn.disconnect();
+
+        urlConn = request("/test/v1/get-session/", HttpMethod.GET);
+        urlConn.setRequestProperty("Cookie", setCookieHeader);
+        assertEquals(200, urlConn.getResponseCode());
+        setCookieHeader = urlConn.getHeaderField("Set-Cookie");
+        assertNotNull(setCookieHeader);
+        String content = getContent(urlConn);
+        assertEquals(String.valueOf(value), content);
+        urlConn.disconnect();
     }
 
     protected Socket createRawSocket(URL url) throws IOException {

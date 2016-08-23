@@ -252,6 +252,16 @@ public class Response {
      */
     public void send() {
         carbonMessage.setProperty(Constants.HTTP_STATUS_CODE, getStatusCode());
+        //Set-Cookie: session
+        Session session = request.getSession(false);
+        if (session != null) {
+            String cookie = carbonMessage.getHeader("Set-Cookie");
+            if (cookie != null) {
+                carbonMessage.setHeader("Set-Cookie", cookie + ";" + MSF4JConstants.SESSION_ID + session.getId());
+            } else {
+                carbonMessage.setHeader("Set-Cookie", MSF4JConstants.SESSION_ID + session.getId());
+            }
+        }
         processEntity();
     }
 
@@ -259,18 +269,6 @@ public class Response {
     private void processEntity() {
         if (entity != null) {
             EntityWriter entityWriter = EntityWriterRegistry.getEntityWriter(entity.getClass());
-
-            //Set-Cookie: session
-            Session session = request.getSession(false);
-            if (session != null) {
-                String cookie = carbonMessage.getHeader("Set-Cookie");
-                if (cookie != null) {
-                    carbonMessage.setHeader("Set-Cookie", cookie + ";" + MSF4JConstants.SESSION_ID + session.getId());
-                } else {
-                    carbonMessage.setHeader("Set-Cookie", MSF4JConstants.SESSION_ID + session.getId());
-                }
-            }
-
             entityWriter.writeData(carbonMessage, entity, mediaType, chunkSize, carbonCallback);
         } else {
             carbonMessage.addMessageBody(ByteBuffer.allocate(0));
