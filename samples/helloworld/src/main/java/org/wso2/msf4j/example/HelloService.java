@@ -29,7 +29,7 @@ public class HelloService {
 
     @GET
     @Path("/{name}")
-    public String hello(@PathParam("name") String name, @CookieParam("cookie") int cookie) {
+    public String hello(@PathParam("name") String name) {
         System.out.println("Hello");
         return "Hello " + name;
     }

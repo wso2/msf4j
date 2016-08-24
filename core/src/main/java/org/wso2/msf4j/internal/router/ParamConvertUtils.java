@@ -92,6 +92,20 @@ public final class ParamConvertUtils {
     }
 
     /**
+     * Creates a converter function that converts cookie value into an object of the given result type.
+     * It follows the supported types of {@link javax.ws.rs.CookieParam} with the following exceptions:
+     * <ol>
+     * <li>Does not support types registered with {@link javax.ws.rs.ext.ParamConverterProvider}</li>
+     * </ol>
+     *
+     * @param resultType Result type
+     * @return Function the function
+     */
+    public static Function<String, Object> createCookieParamConverter(Type resultType) {
+        return value -> ConvertUtils.convert(value, (Class<?>) resultType);
+    }
+
+    /**
      * Creates a converter function that converts query parameter into an object of the given result type.
      * It follows the supported types of {@link javax.ws.rs.QueryParam} with the following exceptions:
      * <ol>

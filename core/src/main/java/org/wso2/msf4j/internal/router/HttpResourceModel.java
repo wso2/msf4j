@@ -220,7 +220,7 @@ public final class HttpResourceModel {
                 } else if (HeaderParam.class.isAssignableFrom(annotationType)) {
                     converter = ParamConvertUtils.createHeaderParamConverter(parameterType);
                 } else if (CookieParam.class.isAssignableFrom(annotationType)) {
-                    //TODO: Impl CookieParam
+                    converter = ParamConvertUtils.createCookieParamConverter(parameterType);
                 } else if (DefaultValue.class.isAssignableFrom(annotationType)) {
                     defaultVal = ((DefaultValue) annotation).value();
                 }
