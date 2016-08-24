@@ -16,9 +16,9 @@
  *  under the License.
  *
  */
-package org.wso2.msf4j.internal.session;
+package org.wso2.msf4j;
 
-import org.wso2.msf4j.Session;
+import org.wso2.msf4j.internal.session.SessionIdGenerator;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -63,11 +63,15 @@ public class SessionManager {
                 30, 30, TimeUnit.SECONDS);
     }
 
-    public Session getSession(String sessionId) {
-        return sessions.get(sessionId);
+    Session getSession(String sessionId) {
+        Session session = sessions.get(sessionId);
+        if (session != null) {
+            session.setNew(false);
+        }
+        return session;
     }
 
-    public Session createSession() {
+    Session createSession() {
         if (sessions.size() >= DEFAULT_MAX_ACTIVE_SESSIONS) {
             throw new IllegalStateException("Too many active sessions");
         }
@@ -76,7 +80,7 @@ public class SessionManager {
         return session;
     }
 
-    public void invalidateSession(Session session) {
+    void invalidateSession(Session session) {
         sessions.remove(session.getId());
     }
 }

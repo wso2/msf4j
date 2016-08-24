@@ -1160,7 +1160,7 @@ public class HttpServerTest {
         urlConn.setRequestProperty("Cookie", setCookieHeader);
         assertEquals(200, urlConn.getResponseCode());
         setCookieHeader = urlConn.getHeaderField("Set-Cookie");
-        assertNotNull(setCookieHeader);
+        assertNull(setCookieHeader);
         String content = getContent(urlConn); // content retrieved & returned from session
         assertEquals(String.valueOf(value), content);
         urlConn.disconnect();
@@ -1184,7 +1184,7 @@ public class HttpServerTest {
         urlConn.setRequestProperty("Cookie", setCookieHeader);
         assertEquals(200, urlConn.getResponseCode());
         setCookieHeader = urlConn.getHeaderField("Set-Cookie");
-        assertNotNull(setCookieHeader);
+        assertNull(setCookieHeader);
         content = getContent(urlConn);  // content retrieved & returned from session
         assertEquals(String.valueOf(value), content);
         urlConn.disconnect();
@@ -1208,7 +1208,7 @@ public class HttpServerTest {
         urlConn.setRequestProperty("Cookie", setCookieHeader);
         assertEquals(200, urlConn.getResponseCode());
         setCookieHeader = urlConn.getHeaderField("Set-Cookie");
-        assertNotNull(setCookieHeader);
+        assertNull(setCookieHeader);
         content = getContent(urlConn);  // content retrieved & returned from session
         assertEquals(String.valueOf(value), content);
         urlConn.disconnect();

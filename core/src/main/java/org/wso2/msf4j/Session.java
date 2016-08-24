@@ -18,8 +18,6 @@
  */
 package org.wso2.msf4j;
 
-import org.wso2.msf4j.internal.session.SessionManager;
-
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -36,6 +34,7 @@ public class Session {
     private long lastAccessedTime;
     private int maxInactiveInterval;
     private boolean isValid = true;
+    private boolean isNew = true;
 
     public Session(SessionManager manager, String id, int maxInactiveInterval) {
         this.manager = manager;
@@ -45,29 +44,19 @@ public class Session {
         lastAccessedTime = creationTime;
     }
 
-    public long getCreationTime() {
+    long getCreationTime() {
         return creationTime;
     }
 
-    public String getId() {
+    String getId() {
         return id;
     }
 
-    public long getLastAccessedTime() {
-        return lastAccessedTime;
-    }
-
-    Session setAccessed() {
-        checkValidity();
-        lastAccessedTime = System.currentTimeMillis();
-        return this;
-    }
-
-    public void setMaxInactiveInterval(int interval) {
+    void setMaxInactiveInterval(int interval) {
         this.maxInactiveInterval = interval;
     }
 
-    public int getMaxInactiveInterval() {
+    int getMaxInactiveInterval() {
         return maxInactiveInterval;
     }
 
@@ -105,6 +94,24 @@ public class Session {
 
     boolean isValid() {
         return isValid;
+    }
+
+    boolean isNew() {
+        return isNew;
+    }
+
+    void setNew(boolean isNew) {
+        this.isNew = isNew;
+    }
+
+    Session setAccessed() {
+        checkValidity();
+        lastAccessedTime = System.currentTimeMillis();
+        return this;
+    }
+
+    long getLastAccessedTime() {
+        return lastAccessedTime;
     }
 }
 

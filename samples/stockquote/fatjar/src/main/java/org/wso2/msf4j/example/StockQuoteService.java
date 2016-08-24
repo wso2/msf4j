@@ -25,7 +25,6 @@ import io.swagger.annotations.Info;
 import io.swagger.annotations.License;
 import io.swagger.annotations.SwaggerDefinition;
 import org.wso2.msf4j.Request;
-import org.wso2.msf4j.Session;
 import org.wso2.msf4j.example.exception.DuplicateSymbolException;
 import org.wso2.msf4j.example.exception.SymbolNotFoundException;
 
@@ -88,7 +87,7 @@ public class StockQuoteService {
             @ApiResponse(code = 200, message = "Valid stock item found"),
             @ApiResponse(code = 404, message = "Stock item not found")})
     public Response getQuote(@ApiParam(value = "Symbol", required = true)
-                                 @PathParam("symbol") String symbol) throws SymbolNotFoundException {
+                             @PathParam("symbol") String symbol) throws SymbolNotFoundException {
         Stock stock = stockQuotes.get(symbol);
         if (stock == null) {
             throw new SymbolNotFoundException("Symbol " + symbol + " not found");
@@ -111,7 +110,7 @@ public class StockQuoteService {
     @ApiOperation(
             value = "Add a stock item",
             notes = "Add a valid stock item")
-    public void addStock(@ApiParam(value = "Stock object", required = true)  Stock stock)
+    public void addStock(@ApiParam(value = "Stock object", required = true) Stock stock)
             throws DuplicateSymbolException {
         String symbol = stock.getSymbol();
         if (stockQuotes.containsKey(symbol)) {
@@ -138,13 +137,6 @@ public class StockQuoteService {
     public Stocks getAllStocks(@Context Request request) {
         request.getHeaders().entrySet().stream().
                 forEach(entry -> System.out.println(entry.getKey() + "=" + entry.getValue()));
-        Session session = request.getSession(true);
-        if(session == null) {
-            System.out.println("++++++ No session!");
-        } else {
-            System.out.println("+++++ Value from session:" + session.getAttribute("Foo"));
-            request.getSession(true).setAttribute("Foo", "Bar" + System.currentTimeMillis());
-        }
         return new Stocks(stockQuotes.values());
     }
 }

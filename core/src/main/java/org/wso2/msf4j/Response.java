@@ -254,9 +254,10 @@ public class Response {
         carbonMessage.setProperty(Constants.HTTP_STATUS_CODE, getStatusCode());
         //Set-Cookie: session
         Session session = request.getSessionInternal();
-        if (session != null && session.isValid()) {
+        if (session != null && session.isValid() && session.isNew()) {
             String cookie = carbonMessage.getHeader("Set-Cookie");
             if (cookie != null) {
+                // Append the session ID
                 carbonMessage.setHeader("Set-Cookie", cookie + ";" + MSF4JConstants.SESSION_ID + session.getId());
             } else {
                 carbonMessage.setHeader("Set-Cookie", MSF4JConstants.SESSION_ID + session.getId());

@@ -3,7 +3,6 @@ package org.wso2.msf4j;
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.Constants;
 import org.wso2.msf4j.internal.MSF4JConstants;
-import org.wso2.msf4j.internal.session.SessionManager;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
