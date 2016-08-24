@@ -82,6 +82,28 @@ public final class MicroserviceMetadata {
         }
     }
 
+    public void addMicroserviceMetadata(final Object service, String basePath) {
+        //Store the services to call init and destroy on all services.
+        for (Method method : service.getClass().getMethods()) {
+            if (method.isAnnotationPresent(PostConstruct.class) || method.isAnnotationPresent(PreDestroy.class)) {
+                continue;
+            }
+
+            if (Modifier.isPublic(method.getModifiers()) && isHttpMethodAvailable(method)) {
+                String relativePath = "";
+                if (method.getAnnotation(Path.class) != null) {
+                    relativePath = method.getAnnotation(Path.class).value();
+                }
+                String absolutePath = String.format("%s/%s", basePath, relativePath);
+                patternRouter.add(absolutePath, new HttpResourceModel(absolutePath, method, service));
+            } else {
+                log.trace("Not adding method {}({}) to path routing like. " +
+                          "HTTP calls will not be routed to this method", method.getName(), method.getParameterTypes());
+            }
+        }
+
+    }
+
     private boolean isHttpMethodAvailable(Method method) {
         return method.isAnnotationPresent(GET.class) ||
                 method.isAnnotationPresent(PUT.class) ||

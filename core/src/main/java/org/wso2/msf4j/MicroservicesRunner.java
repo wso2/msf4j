@@ -26,9 +26,13 @@ import org.wso2.carbon.transport.http.netty.internal.NettyTransportContextHolder
 import org.wso2.carbon.transport.http.netty.listener.NettyListener;
 import org.wso2.msf4j.internal.MSF4JMessageProcessor;
 import org.wso2.msf4j.internal.MicroservicesRegistry;
+import org.wso2.msf4j.internal.router.RuntimeAnnotations;
 import org.wso2.msf4j.internal.swagger.SwaggerDefinitionService;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
+import javax.ws.rs.Path;
 import javax.ws.rs.ext.ExceptionMapper;
 
 /**
@@ -73,6 +77,21 @@ public class MicroservicesRunner {
      */
     public MicroservicesRunner deploy(Object... microservice) {
         checkState();
+        msRegistry.addService(microservice);
+        return this;
+    }
+
+    /**
+     * Deploy a microservice with dynamic path.
+     *
+     * @param microservice The microservice which is to be deployed
+     * @param basePath The context path for the service
+     * @return this MicroservicesRunner object
+     */
+    public MicroservicesRunner deploy(Object microservice, String basePath) {
+        Map<String, Object> valuesMap = new HashMap<>();
+        valuesMap.put("value", basePath);
+        RuntimeAnnotations.putAnnotation(microservice.getClass(), Path.class, valuesMap);
         msRegistry.addService(microservice);
         return this;
     }

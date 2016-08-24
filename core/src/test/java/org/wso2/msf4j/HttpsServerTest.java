@@ -24,6 +24,7 @@ import org.wso2.msf4j.conf.Constants;
 import org.wso2.msf4j.conf.SSLClientContext;
 import org.wso2.msf4j.exception.TestExceptionMapper;
 import org.wso2.msf4j.exception.TestExceptionMapper2;
+import org.wso2.msf4j.service.TestMicroServiceWithDynamicPath;
 import org.wso2.msf4j.service.TestMicroservice;
 
 import java.io.IOException;
@@ -59,6 +60,7 @@ public class HttpsServerTest extends HttpServerTest {
                 .addExceptionMapper(new TestExceptionMapper(), new TestExceptionMapper2())
                 .deploy(testMicroservice)
                 .start();
+        microservicesRunner.deploy(new TestMicroServiceWithDynamicPath(), "/DynamicPath");
     }
 
     @AfterClass

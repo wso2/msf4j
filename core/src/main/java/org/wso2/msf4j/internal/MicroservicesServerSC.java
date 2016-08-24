@@ -27,8 +27,12 @@ import org.wso2.carbon.kernel.startupresolver.RequiredCapabilityListener;
 import org.wso2.carbon.kernel.transports.CarbonTransport;
 import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Microservice;
+import org.wso2.msf4j.internal.router.RuntimeAnnotations;
 import org.wso2.msf4j.internal.swagger.SwaggerDefinitionService;
 
+import java.util.HashMap;
+import java.util.Map;
+import javax.ws.rs.Path;
 import javax.ws.rs.ext.ExceptionMapper;
 
 /**
@@ -60,8 +64,16 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             policy = ReferencePolicy.DYNAMIC,
             unbind = "removeService"
     )
-    protected void addService(Microservice service) {
-        microservicesRegistry.addService(service);
+    protected void addService(Microservice service, Map properties) {
+        Object contextPath = properties.get("contextPath");
+        if (contextPath != null) {
+            Map<String, Object> valuesMap = new HashMap<>();
+            valuesMap.put("value", contextPath);
+            RuntimeAnnotations.putAnnotation(service.getClass(), Path.class, valuesMap);
+            microservicesRegistry.addService(service);
+        } else {
+            microservicesRegistry.addService(service);
+        }
     }
 
     protected void removeService(Microservice service) {

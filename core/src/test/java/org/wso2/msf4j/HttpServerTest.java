@@ -45,6 +45,7 @@ import org.wso2.msf4j.pojo.Category;
 import org.wso2.msf4j.pojo.Pet;
 import org.wso2.msf4j.pojo.TextBean;
 import org.wso2.msf4j.pojo.XmlBean;
+import org.wso2.msf4j.service.TestMicroServiceWithDynamicPath;
 import org.wso2.msf4j.service.TestMicroservice;
 
 import java.io.BufferedInputStream;
@@ -107,11 +108,21 @@ public class HttpServerTest {
                 .addExceptionMapper(new TestExceptionMapper(), new TestExceptionMapper2())
                 .deploy(testMicroservice)
                 .start();
+        microservicesRunner.deploy(new TestMicroServiceWithDynamicPath(), "/DynamicPath");
     }
 
     @AfterClass
     public void teardown() throws Exception {
         microservicesRunner.stop();
+    }
+
+    @Test
+    public void testDynamicMicroserviceRegistration() throws IOException {
+        HttpURLConnection urlConn = request("/DynamicPath/hello/MSF4J", HttpMethod.GET);
+        assertEquals(200, urlConn.getResponseCode());
+        String content = getContent(urlConn);
+        assertEquals("Hello MSF4J", content);
+        urlConn.disconnect();
     }
 
     @Test
