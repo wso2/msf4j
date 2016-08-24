@@ -27,7 +27,6 @@ import org.wso2.carbon.kernel.startupresolver.RequiredCapabilityListener;
 import org.wso2.carbon.kernel.transports.CarbonTransport;
 import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Microservice;
-import org.wso2.msf4j.internal.swagger.SwaggerDefinitionService;
 
 import javax.ws.rs.ext.ExceptionMapper;
 
@@ -49,8 +48,6 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
     @Activate
     protected void start(final BundleContext bundleContext) {
         DataHolder.getInstance().setMicroservicesRegistry(microservicesRegistry);
-        // Adding swagger documentation service
-        microservicesRegistry.addService(new SwaggerDefinitionService(microservicesRegistry));
     }
 
     @Reference(

@@ -16,6 +16,7 @@
 
 package org.wso2.msf4j.example;
 
+import javax.ws.rs.CookieParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -28,7 +29,7 @@ public class HelloService {
 
     @GET
     @Path("/{name}")
-    public String hello(@PathParam("name") String name) {
+    public String hello(@PathParam("name") String name, @CookieParam("cookie") int cookie) {
         System.out.println("Hello");
         return "Hello " + name;
     }

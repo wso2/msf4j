@@ -74,12 +74,7 @@ public final class ParamConvertUtils {
         if (!(resultType instanceof Class)) {
             throw new IllegalArgumentException("Unsupported @PathParam type " + resultType);
         }
-        return new Function<String, Object>() {
-            @Override
-            public Object apply(String value) {
-                return ConvertUtils.convert(value, (Class<?>) resultType);
-            }
-        };
+        return value -> ConvertUtils.convert(value, (Class<?>) resultType);
     }
 
     /**

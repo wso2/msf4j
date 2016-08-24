@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.SessionManager;
 import org.wso2.msf4j.internal.router.MicroserviceMetadata;
+import org.wso2.msf4j.internal.swagger.SwaggerDefinitionService;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -50,6 +51,11 @@ public class MicroservicesRegistry {
     private volatile MicroserviceMetadata metadata = new MicroserviceMetadata(Collections.emptyList());
     private Map<Class, ExceptionMapper> exceptionMappers = new TreeMap<>(new ClassComparator());
     private SessionManager sessionManager = new SessionManager();
+
+    public MicroservicesRegistry() {
+        // Deploy the Swagger definition service which will return the Swagger definition.
+        services.add(new SwaggerDefinitionService(this));
+    }
 
     public void addService(Object... service) {
         Collections.addAll(services, service);

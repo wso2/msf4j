@@ -26,7 +26,6 @@ import org.wso2.carbon.transport.http.netty.internal.NettyTransportContextHolder
 import org.wso2.carbon.transport.http.netty.listener.NettyListener;
 import org.wso2.msf4j.internal.MSF4JMessageProcessor;
 import org.wso2.msf4j.internal.MicroservicesRegistry;
-import org.wso2.msf4j.internal.swagger.SwaggerDefinitionService;
 
 import java.util.Set;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -56,9 +55,9 @@ public class MicroservicesRunner {
     /**
      * Default constructor which will take care of initializing Netty transports in the file pointed to by the
      * System property <code>transports.netty.conf</code>.
-     *
+     * <p>
      * If that System property is not specified, it will start a single Netty transport on port 8080.
-     *
+     * <p>
      * {@link #MicroservicesRunner(int...)}
      */
     public MicroservicesRunner() {
@@ -154,9 +153,6 @@ public class MicroservicesRunner {
      * Start this Microservices runner. This will startup all the Netty transports.
      */
     public void start() {
-        // Deploy the Swagger definition service which will return the Swagger definition.
-        msRegistry.addService(new SwaggerDefinitionService(msRegistry));
-
         handleServiceLifecycleMethods();
         transportManager.startTransports();
         isStarted = true;
