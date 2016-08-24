@@ -403,12 +403,15 @@ public class HttpResourceModelProcessor {
         CookieParam cookieParam = info.getAnnotation();
         String cookieName = cookieParam.value();
         String cookieHeader = request.getHeader("Cookie");
-        String cookieValue = Arrays.stream(cookieHeader.split(";"))
-                .filter(cookie -> cookie.startsWith(cookieName + "="))
-                .findFirst()
-                .map(cookie -> cookie.substring((cookieName + "=").length()))
-                .orElseGet(info::getDefaultVal);
-        return info.convert(cookieValue);
+        if (cookieHeader != null) {
+            String cookieValue = Arrays.stream(cookieHeader.split(";"))
+                    .filter(cookie -> cookie.startsWith(cookieName + "="))
+                    .findFirst()
+                    .map(cookie -> cookie.substring((cookieName + "=").length()))
+                    .orElseGet(info::getDefaultVal);
+            return info.convert(cookieValue);
+        }
+        return null;
     }
 
     /**
