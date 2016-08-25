@@ -215,6 +215,10 @@ and assigned to that parameter.
 #####@HeaderParam
 To read HTTP request header values. The value will be automatically converted to the corresponding parameter type and
  assigned to that parameter.
+ 
+#####@CookieParam
+Extracts the value from the specified cookie, converts to the corresponding parameter type and assigns the value to 
+that parameter.  
 
 #####@FormParam
 To support HTML form submission with application/x-www-form-urlencoded and multipart/form-data The value will be 

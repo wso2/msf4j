@@ -59,6 +59,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.CookieParam;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
@@ -741,6 +742,12 @@ public class TestMicroservice implements Microservice {
     @Path("/expire-session")
     public void expireSession(@Context Request request) {
         request.getSession().invalidate();
+    }
+
+    @GET
+    @Path("/cookie")
+    public String echoCookieValue(@CookieParam("name") String name) {
+        return name;
     }
 
     /**

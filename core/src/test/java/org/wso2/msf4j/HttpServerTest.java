@@ -1232,6 +1232,18 @@ public class HttpServerTest {
         urlConn.disconnect();
     }
 
+    @Test
+    public void testCookieParam() throws Exception {
+        String value = "wso2";
+
+        HttpURLConnection urlConn = request("/test/v1/cookie/", HttpMethod.GET);
+        urlConn.setRequestProperty("Cookie", "name=" + value);
+        assertEquals(200, urlConn.getResponseCode());
+        String content = getContent(urlConn);
+        assertEquals(value, content);
+        urlConn.disconnect();
+    }
+
     protected Socket createRawSocket(URL url) throws IOException {
         return new Socket(url.getHost(), url.getPort());
     }
