@@ -72,11 +72,13 @@ public class Session {
 
     public void setAttribute(String name, Object value) {
         checkValidity();
+        manager.updateSession(this);
         attributes.put(name, value);
     }
 
     public void removeAttribute(String name) {
         checkValidity();
+        manager.updateSession(this);
         attributes.remove(name);
     }
 

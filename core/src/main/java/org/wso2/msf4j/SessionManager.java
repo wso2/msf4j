@@ -18,69 +18,98 @@
  */
 package org.wso2.msf4j;
 
-import org.wso2.msf4j.internal.session.SessionIdGenerator;
-
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Manage transport sessions.
  */
-public class SessionManager {
-    /**
-     * The default maximum inactive interval, in minutes, for Sessions created by
-     * this Manager.
-     */
-    private static final int DEFAULT_MAX_INACTIVE_INTERVAL = 15;  // In minutes
+public interface SessionManager {
 
     /**
-     * Max number of sessions that can be active at a given time.
+     * Initialize the SessionManager.
      */
-    private static final int DEFAULT_MAX_ACTIVE_SESSIONS = 100000;
+    void init();
 
     /**
-     * The session id length of Sessions created by this Manager.
+     * Retrieve a session with ID.
+     *
+     * @param sessionId ID of the session
+     * @return Session with id <code>sessionId</code> if it exists, and null otherwise.
      */
-    private static final int SESSION_ID_LENGTH = 16;
+    Session getSession(String sessionId);
 
-    private Map<String, Session> sessions = new ConcurrentHashMap<>();
-    private SessionIdGenerator sessionIdGenerator = new SessionIdGenerator();
+    /**
+     * Create a new session.
+     *
+     * @return the newly created session
+     */
+    Session createSession();
 
-    public SessionManager() {
-        sessionIdGenerator.setSessionIdLength(SESSION_ID_LENGTH);
+    /**
+     * Invalidate a session.
+     *
+     * @param session The session to be invalidated.
+     */
+    void invalidateSession(Session session);
 
-        // Session expiry scheduled task
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleAtFixedRate(() ->
-                        sessions.values().parallelStream()
-                                .filter(session ->
-                                        (System.currentTimeMillis() - session.getLastAccessedTime() >=
-                                                session.getMaxInactiveInterval() * 60 * 1000))
-                                .forEach(Session::invalidate),
-                30, 30, TimeUnit.SECONDS);
-    }
+    /**
+     * The maximum time in minutes a session could be inactive before it is expired.
+     *
+     * @return max inactive interval
+     */
+    int getDefaultMaxInactiveInterval();
 
-    Session getSession(String sessionId) {
-        Session session = sessions.get(sessionId);
-        if (session != null) {
-            session.setNew(false);
-        }
-        return session;
-    }
+    /**
+     * The maximum number of active sessions that can exist.
+     *
+     * @return max active sessions
+     */
+    int getDefaultMaxActiveSessions();
 
-    Session createSession() {
-        if (sessions.size() >= DEFAULT_MAX_ACTIVE_SESSIONS) {
-            throw new IllegalStateException("Too many active sessions");
-        }
-        Session session = new Session(this, sessionIdGenerator.generateSessionId(""), DEFAULT_MAX_INACTIVE_INTERVAL);
-        sessions.put(session.getId(), session);
-        return session;
-    }
+    /**
+     * @return Length of the session ID in bytes.
+     */
+    int getSessionIdLength();
 
-    void invalidateSession(Session session) {
-        sessions.remove(session.getId());
-    }
+    /**
+     * Load sessions from a persistent storage, for example, into memory.
+     *
+     * @param sessions The map into which the sessions are to be loaded.
+     */
+    void loadSessions(Map<String, Session> sessions);
+
+    /**
+     * Read a session from a persistent storage, for example, into memory.
+     *
+     * @param sessionId ID of the session to be loaded or read.
+     * @return The Session object.
+     */
+    Session readSession(String sessionId);
+
+    /**
+     * Persist a new session.
+     *
+     * @param session the new session to be persisted.
+     */
+    void saveSession(Session session);
+
+    /**
+     * Delete a session which has been persisted.
+     *
+     * @param session Session to be deleted
+     */
+    void deleteSession(Session session);
+
+
+    /**
+     * Update a session in persistent storage.
+     *
+     * @param session Session to to be updated
+     */
+    void updateSession(Session session);
+
+    /**
+     * Stop this SessionManager
+     */
+    void stop();
 }

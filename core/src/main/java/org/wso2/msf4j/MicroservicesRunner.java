@@ -77,6 +77,17 @@ public class MicroservicesRunner {
     }
 
     /**
+     * Register a custom {@link SessionManager}.
+     *
+     * @param sessionManager The SessionManager instance to be registered.
+     * @return this MicroservicesRunner object
+     */
+    public MicroservicesRunner setSessionManager(SessionManager sessionManager) {
+        msRegistry.setSessionManager(sessionManager);
+        return this;
+    }
+
+    /**
      * Add an interceptor which will get called before &amp; after the deployed microservices are invoked. Multiple
      * interceptors can be added.
      *
@@ -153,6 +164,7 @@ public class MicroservicesRunner {
      * Start this Microservices runner. This will startup all the Netty transports.
      */
     public void start() {
+        msRegistry.getSessionManager().init();
         handleServiceLifecycleMethods();
         transportManager.startTransports();
         isStarted = true;
