@@ -41,7 +41,6 @@ public class CounterService {
         Object attribute = session.getAttribute(COUNTER);
         if (attribute == null) {
             attribute = 0;
-            session.setAttribute(COUNTER, attribute);
         }
         int counter = (int) attribute;
         counter++;

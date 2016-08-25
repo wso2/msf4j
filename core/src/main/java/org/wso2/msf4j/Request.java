@@ -170,7 +170,7 @@ public class Request {
                     .filter(cookie -> cookie.startsWith(MSF4JConstants.SESSION_ID))
                     .findFirst()
                     .map(jsession -> sessionManager.getSession(jsession.substring(MSF4JConstants.SESSION_ID.length())))
-                    .orElse(sessionManager.createSession());
+                    .orElseGet(sessionManager::createSession);
             return session.setAccessed();
         }
         return session = sessionManager.createSession();

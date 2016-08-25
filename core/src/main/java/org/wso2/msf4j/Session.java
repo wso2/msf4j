@@ -18,6 +18,7 @@
  */
 package org.wso2.msf4j;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,19 +26,23 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Represents a transport session.
  */
-public class Session {
+public class Session implements Serializable {
 
-    private SessionManager manager;
+    private static final long serialVersionUID = -3945729418329160933L;
+    private transient SessionManager sessionManager;
+
     private String id;
     private long creationTime;
-    private Map<String, Object> attributes = new ConcurrentHashMap<>();
     private long lastAccessedTime;
     private int maxInactiveInterval;
     private boolean isValid = true;
     private boolean isNew = true;
+    private Map<String, Object> attributes = new ConcurrentHashMap<>();
 
-    public Session(SessionManager manager, String id, int maxInactiveInterval) {
-        this.manager = manager;
+    public Session() {
+    }
+
+    public Session(String id, int maxInactiveInterval) {
         this.id = id;
         this.maxInactiveInterval = maxInactiveInterval;
         creationTime = System.currentTimeMillis();
@@ -72,13 +77,13 @@ public class Session {
 
     public void setAttribute(String name, Object value) {
         checkValidity();
-        manager.updateSession(this);
         attributes.put(name, value);
+        sessionManager.updateSession(this);
     }
 
     public void removeAttribute(String name) {
         checkValidity();
-        manager.updateSession(this);
+        sessionManager.updateSession(this);
         attributes.remove(name);
     }
 
@@ -89,7 +94,7 @@ public class Session {
     }
 
     public void invalidate() {
-        manager.invalidateSession(this);
+        sessionManager.invalidateSession(this);
         attributes.clear();
         isValid = false;
     }
@@ -102,7 +107,11 @@ public class Session {
         return isNew;
     }
 
-    void setNew(boolean isNew) {
+    boolean getIsNew() {
+        return isNew;
+    }
+
+    public void setNew(boolean isNew) {
         this.isNew = isNew;
     }
 
@@ -114,6 +123,10 @@ public class Session {
 
     long getLastAccessedTime() {
         return lastAccessedTime;
+    }
+
+    public void setManager(SessionManager sessionManager) {
+        this.sessionManager = sessionManager;
     }
 }
 

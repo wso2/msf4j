@@ -27,7 +27,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Abstract SessionManager implmentation which leave the sessions persistence related method to be implemented.
+ * Abstract SessionManager implementation which leave the sessions persistence related method to be implemented.
  */
 public abstract class AbstractSessionManager implements SessionManager {
     private boolean isStopped;
@@ -86,7 +86,8 @@ public abstract class AbstractSessionManager implements SessionManager {
         if (sessions.size() >= DEFAULT_MAX_ACTIVE_SESSIONS) {
             throw new IllegalStateException("Too many active sessions");
         }
-        Session session = new Session(this, sessionIdGenerator.generateSessionId(""), DEFAULT_MAX_INACTIVE_INTERVAL);
+        Session session = new Session(sessionIdGenerator.generateSessionId(""), DEFAULT_MAX_INACTIVE_INTERVAL);
+        session.setManager(this);
         sessions.put(session.getId(), session);
         saveSession(session);
         return session;
