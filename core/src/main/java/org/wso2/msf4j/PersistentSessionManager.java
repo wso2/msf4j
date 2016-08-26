@@ -18,6 +18,9 @@
  */
 package org.wso2.msf4j;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -32,28 +35,40 @@ import java.util.Map;
  * This session manager persists sessions in the local file system.
  */
 public class PersistentSessionManager extends AbstractSessionManager {
+    private static final Logger log = LoggerFactory.getLogger(PersistentSessionManager.class);
+    private static final String SESSION_DIR = ".sessions";
+
     public PersistentSessionManager() {
-        File file = new File(".tmp");
-        if (!file.exists() && !file.mkdirs()) {
+        File dir = new File(SESSION_DIR);
+        if (!dir.exists() && !dir.mkdirs()) {
             throw new IllegalStateException("Cannot create .tmp directory");
         }
     }
 
     @Override
     public void loadSessions(Map<String, Session> sessions) {
-        String path = Paths.get(".tmp").toString();
-        if (!new File(path).exists()) {
+        File dir = new File(SESSION_DIR);
+        if (!dir.exists()) {
             return;
         }
-        Arrays.stream(new File(path).listFiles()).forEach(file -> {
+        String path = Paths.get(SESSION_DIR).toString();
+
+        Arrays.stream(new File(path).listFiles()).parallel().forEach(file -> {
             Session session = readSession(file.getName());
-            sessions.put(session.getId(), session);
+
+            // Delete expired session files
+            if (System.currentTimeMillis() - session.getLastAccessedTime() >=
+                    session.getMaxInactiveInterval() * 60 * 1000 && !file.delete()) {
+                log.warn("Couldn't delete expired session file " + file.getAbsolutePath());
+            } else {
+                sessions.put(session.getId(), session);
+            }
         });
     }
 
     @Override
     public Session readSession(String sessionId) {
-        String path = Paths.get(".tmp", sessionId).toString();
+        String path = Paths.get(SESSION_DIR, sessionId).toString();
         if (!new File(path).exists()) {
             return null;
         }
@@ -70,12 +85,9 @@ public class PersistentSessionManager extends AbstractSessionManager {
 
     @Override
     public void saveSession(Session session) {
-        try (FileOutputStream fout = new FileOutputStream(Paths.get(".tmp", session.getId()).toString());
+        try (FileOutputStream fout = new FileOutputStream(Paths.get(SESSION_DIR, session.getId()).toString());
              ObjectOutputStream oos = new ObjectOutputStream(fout)) {
             oos.writeObject(session);
-            oos.reset();
-            oos.flush();
-            oos.close();
         } catch (IOException e) {
             throw new RuntimeException("Cannot save session " + session.getId(), e);
         }
@@ -83,7 +95,7 @@ public class PersistentSessionManager extends AbstractSessionManager {
 
     @Override
     public void deleteSession(Session session) {
-        String pathname = Paths.get(".tmp", session.getId()).toString();
+        String pathname = Paths.get(SESSION_DIR, session.getId()).toString();
         if (!new File(pathname).delete()) {
             throw new IllegalStateException("File " + pathname + " deletion failed");
         }
