@@ -15,6 +15,7 @@
  */
 package org.wso2.msf4j.example;
 
+import com.*;
 import org.wso2.msf4j.spring.MSF4JSpringApplication;
 
 /**
@@ -23,6 +24,10 @@ import org.wso2.msf4j.spring.MSF4JSpringApplication;
 public class Application {
 
     public static void main(String[] args) {
-        MSF4JSpringApplication.run(Application.class, args);
+        MSF4JSpringApplication msf4JSpringApplication = new MSF4JSpringApplication(Application.class);
+        msf4JSpringApplication.run(true, args);
+        msf4JSpringApplication.runA(false, Hello2.class, "/abc");
+        //msf4JSpringApplication.
+        //MSF4JSpringApplication.run(Application.class, args);
     }
 }

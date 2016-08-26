@@ -64,6 +64,12 @@ public class MicroservicesRegistry {
         Arrays.stream(service).forEach(svc -> log.info("Added microservice: " + svc));
     }
 
+    public void addService(String basePath, Object service) {
+        Collections.addAll(services, service);
+        metadata.addMicroserviceMetadata(service, basePath);
+        log.info("Added microservice: " + service);
+    }
+
     public Optional<Object> getServiceWithBasePath(String path) {
         return services.stream().
                 filter(svc -> svc.getClass().getAnnotation(Path.class).value().equals(path)).

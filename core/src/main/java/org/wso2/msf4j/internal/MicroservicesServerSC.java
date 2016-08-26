@@ -28,9 +28,8 @@ import org.wso2.carbon.kernel.transports.CarbonTransport;
 import org.wso2.msf4j.DefaultSessionManager;
 import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Microservice;
-import org.wso2.msf4j.internal.router.RuntimeAnnotations;
-import org.wso2.msf4j.internal.swagger.SwaggerDefinitionService;
 import org.wso2.msf4j.SessionManager;
+import org.wso2.msf4j.internal.router.RuntimeAnnotations;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -67,10 +66,10 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
     protected void addService(Microservice service, Map properties) {
         Object contextPath = properties.get("contextPath");
         if (contextPath != null) {
-            Map<String, Object> valuesMap = new HashMap<>();
-            valuesMap.put("value", contextPath);
-            RuntimeAnnotations.putAnnotation(service.getClass(), Path.class, valuesMap);
-            microservicesRegistry.addService(service);
+            //Map<String, Object> valuesMap = new HashMap<>();
+            //valuesMap.put("value", contextPath);
+            //RuntimeAnnotations.putAnnotation(service.getClass(), Path.class, valuesMap);
+            microservicesRegistry.addService(contextPath.toString(), service);
         } else {
             microservicesRegistry.addService(service);
         }

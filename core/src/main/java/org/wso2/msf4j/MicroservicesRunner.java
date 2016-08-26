@@ -27,7 +27,6 @@ import org.wso2.carbon.transport.http.netty.listener.NettyListener;
 import org.wso2.msf4j.internal.MSF4JMessageProcessor;
 import org.wso2.msf4j.internal.MicroservicesRegistry;
 import org.wso2.msf4j.internal.router.RuntimeAnnotations;
-import org.wso2.msf4j.internal.swagger.SwaggerDefinitionService;
 
 import java.util.HashMap;
 import java.util.Map;
