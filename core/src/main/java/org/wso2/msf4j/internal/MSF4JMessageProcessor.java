@@ -68,7 +68,8 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
             microservicesRegistry = DataHolder.getInstance().getMicroservicesRegistry();
         }
         Request request = new Request(carbonMessage);
-        Response response = new Response(carbonCallback);
+        request.setSessionManager(microservicesRegistry.getSessionManager());
+        Response response = new Response(carbonCallback, request);
         try {
             dispatchMethod(request, response);
         } catch (HandlerException e) {
@@ -78,7 +79,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
             if (targetException instanceof HandlerException) {
                 handleHandlerException((HandlerException) targetException, carbonCallback);
             } else {
-                handleThrowable(targetException, carbonCallback);
+                handleThrowable(targetException, carbonCallback, request);
             }
         } catch (InterceptorException e) {
             log.warn("Interceptors threw an exception", e);
@@ -87,7 +88,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                     .createTextResponse(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
                             HttpUtil.EMPTY_BODY));
         } catch (Throwable t) {
-            handleThrowable(t, carbonCallback);
+            handleThrowable(t, carbonCallback, request);
         } finally {
             // Calling the release method to make sure that there won't be any memory leaks from netty
             carbonMessage.release();
@@ -132,10 +133,11 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
         }
     }
 
-    private void handleThrowable(Throwable throwable, CarbonCallback carbonCallback) {
+    private void handleThrowable(Throwable throwable, CarbonCallback carbonCallback, Request request) {
         Optional<ExceptionMapper> exceptionMapper = microservicesRegistry.getExceptionMapper(throwable);
         if (exceptionMapper.isPresent()) {
-            org.wso2.msf4j.Response msf4jResponse = new org.wso2.msf4j.Response(carbonCallback);
+            org.wso2.msf4j.Response msf4jResponse =
+                    new org.wso2.msf4j.Response(carbonCallback, request);
             msf4jResponse.setEntity(exceptionMapper.get().toResponse(throwable));
             msf4jResponse.send();
         } else {

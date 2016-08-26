@@ -25,10 +25,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.kernel.startupresolver.RequiredCapabilityListener;
 import org.wso2.carbon.kernel.transports.CarbonTransport;
+import org.wso2.msf4j.DefaultSessionManager;
 import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Microservice;
 import org.wso2.msf4j.internal.router.RuntimeAnnotations;
 import org.wso2.msf4j.internal.swagger.SwaggerDefinitionService;
+import org.wso2.msf4j.SessionManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,8 +55,6 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
     @Activate
     protected void start(final BundleContext bundleContext) {
         DataHolder.getInstance().setMicroservicesRegistry(microservicesRegistry);
-        // Adding swagger documentation service
-        microservicesRegistry.addService(new SwaggerDefinitionService(microservicesRegistry));
     }
 
     @Reference(
@@ -121,6 +121,25 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
 
     protected void removeExceptionMapper(ExceptionMapper exceptionMapper) {
         microservicesRegistry.removeExceptionMapper(exceptionMapper);
+    }
+
+    @Reference(
+            name = "session-manager",
+            service = SessionManager.class,
+            cardinality = ReferenceCardinality.OPTIONAL,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "removeSessionManager"
+    )
+    protected void addSessionManager(SessionManager sessionManager) {
+        sessionManager.init();
+        microservicesRegistry.setSessionManager(sessionManager);
+    }
+
+    protected void removeSessionManager(SessionManager sessionManager) {
+        sessionManager.stop();
+        DefaultSessionManager defaultSessionManager = new DefaultSessionManager();
+        defaultSessionManager.init();
+        microservicesRegistry.setSessionManager(defaultSessionManager);
     }
 
     @Override

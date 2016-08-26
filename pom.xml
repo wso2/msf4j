@@ -117,6 +117,7 @@
         <!-- MSF4J Samples -->
         <module>samples/helloworld</module>
         <module>samples/formparam</module>
+        <module>samples/http-session</module>
         <module>samples/stockquote/fatjar</module>
         <module>samples/stockquote/bundle</module>
         <module>samples/basicauth-security</module>

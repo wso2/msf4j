@@ -190,15 +190,19 @@ corresponding parameter's type.
 #####@Context
 Inject additional objects to a resource method. Currently supports injection of  following objects.
 * org.wso2.msf4j.Request - 
-    This object can be used to access properties of the HTTP request.
+    This object can be used to access properties of the HTTP request. The transport session (org.wso2.msf4j.Session) 
+    can also be accessed via org.wso2.msf4j.Request#getSession(). 
+    See the [Session-aware service](samples/http-session) sample.
 * org.wso2.msf4j.Response - 
     This object can be used to send HTTP responses. You can make responses more clean way by returning an instance of 
     javax.ws.rs.core.Response or a POJO. See the [StockQuote-Service]
     (samples/stockquote/fatjar) sample.
 * org.wso2.msf4j.HttpStreamer - 
-    This object can be used to stream a chunked request body and process it while the request is streaming. See the [FileServer](samples/fileserver) sample.
+    This object can be used to stream a chunked request body and process it while the request is streaming. 
+    See the [FileServer](samples/fileserver) sample.
 * org.wso2.msf4j.formparam.FormParamIterator - 
-    This object can be used to stream a HTML form submission request body and process it while the request is streaming. See the [FormParam](samples/formparam) sample.
+    This object can be used to stream a HTML form submission request body and process it while the request is streaming. 
+    See the [FormParam](samples/formparam) sample.
 
 #####@PathParam
 /StockQuote/{symbol} to get value of symbol. The value will be automatically converted to the corresponding parameter
@@ -211,6 +215,10 @@ and assigned to that parameter.
 #####@HeaderParam
 To read HTTP request header values. The value will be automatically converted to the corresponding parameter type and
  assigned to that parameter.
+ 
+#####@CookieParam
+Extracts the value from the specified cookie, converts to the corresponding parameter type and assigns the value to 
+that parameter.  
 
 #####@FormParam
 To support HTML form submission with application/x-www-form-urlencoded and multipart/form-data The value will be 

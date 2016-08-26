@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Set;
 import javax.annotation.Nullable;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.CookieParam;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
@@ -52,9 +53,9 @@ import javax.ws.rs.core.Context;
  */
 public final class HttpResourceModel {
 
-    private static final Set<Class<? extends Annotation>> SUPPORTED_PARAM_ANNOTATIONS = ImmutableSet
-            .of(PathParam.class, QueryParam.class, HeaderParam.class, Context.class, FormParam.class,
-                FormDataParam.class);
+    private static final Set<Class<? extends Annotation>> SUPPORTED_PARAM_ANNOTATIONS =
+            ImmutableSet.of(PathParam.class, QueryParam.class, HeaderParam.class, Context.class, FormParam.class,
+                    FormDataParam.class, CookieParam.class);
     private static final String[] ANY_MEDIA_TYPE = new String[]{"*/*"};
     private static final int STREAMING_REQ_UNKNOWN = 0, STREAMING_REQ_SUPPORTED = 1, STREAMING_REQ_UNSUPPORTED = 2;
 
@@ -218,6 +219,8 @@ public final class HttpResourceModel {
                     converter = ParamConvertUtils.createFormDataParamConverter(parameterType);
                 } else if (HeaderParam.class.isAssignableFrom(annotationType)) {
                     converter = ParamConvertUtils.createHeaderParamConverter(parameterType);
+                } else if (CookieParam.class.isAssignableFrom(annotationType)) {
+                    converter = ParamConvertUtils.createCookieParamConverter(parameterType);
                 } else if (DefaultValue.class.isAssignableFrom(annotationType)) {
                     defaultVal = ((DefaultValue) annotation).value();
                 }

@@ -31,6 +31,7 @@ import org.wso2.msf4j.example.exception.SymbolNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.CookieParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -87,7 +88,35 @@ public class StockQuoteService {
             @ApiResponse(code = 200, message = "Valid stock item found"),
             @ApiResponse(code = 404, message = "Stock item not found")})
     public Response getQuote(@ApiParam(value = "Symbol", required = true)
-                                 @PathParam("symbol") String symbol) throws SymbolNotFoundException {
+                             @PathParam("symbol") String symbol) throws SymbolNotFoundException {
+        System.out.println("Getting symbol using PathParam...");
+        Stock stock = stockQuotes.get(symbol);
+        if (stock == null) {
+            throw new SymbolNotFoundException("Symbol " + symbol + " not found");
+        }
+        return Response.status(Response.Status.OK).entity(stock).build();
+    }
+
+    /**
+     * Retrieve a stock for a given symbol using a cookie.
+     * This method demonstrates the CookieParam JAXRS annotation in action.
+     *
+     * curl -v --header "Cookie: symbol=IBM" http://localhost:8080/stockquote
+     *
+     * @param symbol Stock symbol will be taken from the symbol cookie.
+     * @return Response
+     */
+    @GET
+    @Produces({"application/json", "text/xml"})
+    @ApiOperation(
+            value = "Return stock quote corresponding to the symbol",
+            notes = "Returns HTTP 404 if the symbol is not found")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Valid stock item found"),
+            @ApiResponse(code = 404, message = "Stock item not found")})
+    public Response getQuoteUsingCookieParam(@ApiParam(value = "Symbol", required = true)
+                                             @CookieParam("symbol") String symbol) throws SymbolNotFoundException {
+        System.out.println("Getting symbol using CookieParam...");
         Stock stock = stockQuotes.get(symbol);
         if (stock == null) {
             throw new SymbolNotFoundException("Symbol " + symbol + " not found");
@@ -110,7 +139,7 @@ public class StockQuoteService {
     @ApiOperation(
             value = "Add a stock item",
             notes = "Add a valid stock item")
-    public void addStock(@ApiParam(value = "Stock object", required = true)  Stock stock)
+    public void addStock(@ApiParam(value = "Stock object", required = true) Stock stock)
             throws DuplicateSymbolException {
         String symbol = stock.getSymbol();
         if (stockQuotes.containsKey(symbol)) {

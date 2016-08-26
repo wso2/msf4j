@@ -60,9 +60,9 @@ public class MicroservicesRunner {
     /**
      * Default constructor which will take care of initializing Netty transports in the file pointed to by the
      * System property <code>transports.netty.conf</code>.
-     *
+     * <p>
      * If that System property is not specified, it will start a single Netty transport on port 8080.
-     *
+     * <p>
      * {@link #MicroservicesRunner(int...)}
      */
     public MicroservicesRunner() {
@@ -93,6 +93,17 @@ public class MicroservicesRunner {
         valuesMap.put("value", basePath);
         RuntimeAnnotations.putAnnotation(microservice.getClass(), Path.class, valuesMap);
         msRegistry.addService(microservice);
+        return this;
+    }
+
+    /**
+     * Register a custom {@link SessionManager}.
+     *
+     * @param sessionManager The SessionManager instance to be registered.
+     * @return this MicroservicesRunner object
+     */
+    public MicroservicesRunner setSessionManager(SessionManager sessionManager) {
+        msRegistry.setSessionManager(sessionManager);
         return this;
     }
 
@@ -173,9 +184,7 @@ public class MicroservicesRunner {
      * Start this Microservices runner. This will startup all the Netty transports.
      */
     public void start() {
-        // Deploy the Swagger definition service which will return the Swagger definition.
-        msRegistry.addService(new SwaggerDefinitionService(msRegistry));
-
+        msRegistry.getSessionManager().init();
         handleServiceLifecycleMethods();
         transportManager.startTransports();
         isStarted = true;
