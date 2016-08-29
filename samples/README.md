@@ -17,8 +17,6 @@ In increasing order of complexity;
 * [Lifecycle](lifecycle) - Using Service Lifecycle Methods
 * [Metrics](metrics) - Using Metrics Interceptor
 * [HTTP Monitoring](http-monitoring) - Using HTTP Monitoring Interceptor
-* [WSO2 DAS Tracing](wso2das-tracing) - Using WSO2 DAS for tracing messages
-* [Zipkin Tracing](zipkin-tracing) - Using Zipkin for tracing messages
 * [Regex PathParam](regex-pathparam) - How to use regex with PathParam annotation
 * [File Server](fileserver) - Handling Files including streaming input & output
 * [FormParam](formparam) - Shows usage of the FormParam annotation
@@ -28,5 +26,7 @@ In increasing order of complexity;
 * [BasicAuth Security](basicauth-security) - Securing Microservice using BasicAuth
 * [OAuth2 Security](oauth2-security) - Securing Microservice using OAuth2
 * [Template](template) - Rendering a Model from a Template
+* [WSO2 DAS Tracing](message-tracing/das) - Using WSO2 DAS for tracing messages
+* [Zipkin Tracing](message-tracing/zipkin) - Using Zipkin for tracing messages
 * [Pet-store](petstore) - Running as an MSA Application
 

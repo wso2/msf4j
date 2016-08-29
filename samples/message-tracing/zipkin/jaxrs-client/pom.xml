@@ -15,7 +15,7 @@
   ~ limitations under the License.
   -->
 
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
@@ -27,39 +27,19 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.wso2.msf4j.sample</groupId>
-    <artifactId>msf4j-service-chaining</artifactId>
+    <artifactId>zipkin-tracing-jaxrs-client</artifactId>
 
-    <name>Sample: MSF4J Service Chaining</name>
+    <name>Sample: MSF4J distributed tracing with Zipkin</name>
 
     <dependencies>
         <dependency>
             <groupId>org.wso2.msf4j</groupId>
-            <artifactId>msf4j-analytics</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.github.openfeign</groupId>
-            <artifactId>feign-httpclient</artifactId>
-            <version>${feign.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.openfeign</groupId>
-            <artifactId>feign-core</artifactId>
-            <version>${feign.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.openfeign</groupId>
-            <artifactId>feign-slf4j</artifactId>
-            <version>${feign.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.openfeign</groupId>
-            <artifactId>feign-gson</artifactId>
-            <version>${feign.version}</version>
+            <artifactId>zipkin-tracing</artifactId>
         </dependency>
     </dependencies>
 
     <properties>
-        <feign.version>9.3.0</feign.version>
         <microservice.mainClass>org.wso2.msf4j.example.Application</microservice.mainClass>
     </properties>
+
 </project>

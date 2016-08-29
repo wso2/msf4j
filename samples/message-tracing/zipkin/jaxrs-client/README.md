@@ -17,7 +17,7 @@ Zipkin will start in port 9411 by default. You can see the Zipkin dashboard at [
 
 After that, from the target directory, run
 ```
-java -jar msf4j-zipkin-tracing-*.jar
+java -jar zipkin-tracing-jaxrs-client-*.jar
 ```
 
 ## How to test the sample

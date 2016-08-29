@@ -22,19 +22,19 @@
         <groupId>org.wso2.msf4j</groupId>
         <artifactId>msf4j-service</artifactId>
         <version>2.0.1-SNAPSHOT</version>
-        <relativePath>../../poms/msf4j-service/pom.xml</relativePath>
+        <relativePath>../../../../poms/msf4j-service/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.wso2.msf4j.sample</groupId>
-    <artifactId>msf4j-zipkin-tracing</artifactId>
+    <artifactId>das-tracing-tracing-jaxrs-client</artifactId>
 
-    <name>Sample: MSF4J distributed tracing with Zipkin</name>
+    <name>Sample: MSF4J distributed tracing with WSO2 DAS</name>
 
     <dependencies>
         <dependency>
             <groupId>org.wso2.msf4j</groupId>
-            <artifactId>zipkin-tracing</artifactId>
+            <artifactId>msf4j-analytics</artifactId>
         </dependency>
     </dependencies>
 
