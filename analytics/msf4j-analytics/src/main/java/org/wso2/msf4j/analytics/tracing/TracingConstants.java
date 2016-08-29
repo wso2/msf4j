@@ -21,14 +21,14 @@ package org.wso2.msf4j.analytics.tracing;
 /**
  * Class to hold constants used in tracing.
  */
-class TracingConstants {
+public class TracingConstants {
 
-    static final String CLIENT_TRACE_START = "CTS";
-    static final String CLIENT_TRACE_END = "CTE";
+    public static final String CLIENT_TRACE_START = "CTS";
+    public static final String CLIENT_TRACE_END = "CTE";
     static final String SERVER_TRACE_START = "STS";
     static final String SERVER_TRACE_END = "STE";
-    static final String TRACE_ID_HEADER = "X-msf4j-trace-id";
-    static final String TRACE_ORIGIN_ID_HEADER = "X-msf4j-trace-origin-id";
-    static final String DAS_RECEIVER_URL = "http://localhost:9763/endpoints/msf4jtracereceiver";
+    public static final String TRACE_ID_HEADER = "X-msf4j-trace-id";
+    public static final String TRACE_ORIGIN_ID_HEADER = "X-msf4j-trace-origin-id";
+    public static final String DAS_RECEIVER_URL = "http://localhost:9763/endpoints/msf4jtracereceiver";
 
 }
