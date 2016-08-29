@@ -2,8 +2,8 @@
     "id": "msf4j-message-tracing",
     "title": "MSF4J Message Tracing",
     "type": "gadget",
-    "thumbnail": "local://store/gadget/msf4j-tracing/icon.png",
+    "thumbnail": "store://gadget/msf4j-tracing/icon.png",
     "data": {
-        "url": "local://store/gadget/msf4j-tracing/index.xml"
+        "url": "store://gadget/msf4j-tracing/index.xml"
     }
 }
