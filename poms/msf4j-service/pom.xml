@@ -371,6 +371,11 @@
                     <artifactId>maven-shade-plugin</artifactId>
                     <version>${maven.shadeplugin.version}</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.skife.maven</groupId>
+                    <artifactId>really-executable-jar-maven-plugin</artifactId>
+                    <version>${maven.reallyexecutablejarplugin.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -557,6 +562,7 @@
         <maven.findbugsplugin.version>3.0.3</maven.findbugsplugin.version>
         <maven.buildnumber.plugin.version>1.4</maven.buildnumber.plugin.version>
         <maven.shadeplugin.version>2.4.1</maven.shadeplugin.version>
+        <maven.reallyexecutablejarplugin.version>1.5.0</maven.reallyexecutablejarplugin.version>
 
         <!-- Other dependency versions -->
         <maven.wagon.ssh.version>2.10</maven.wagon.ssh.version>

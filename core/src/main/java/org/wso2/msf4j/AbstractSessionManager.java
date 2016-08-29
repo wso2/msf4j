@@ -41,7 +41,7 @@ public abstract class AbstractSessionManager implements SessionManager {
     /**
      * Max number of sessions that can be active at a given time.
      */
-    private static final int DEFAULT_MAX_ACTIVE_SESSIONS = 100000;
+    private static final int DEFAULT_MAX_ACTIVE_SESSIONS = 100_000;
 
     /**
      * The session id length of Sessions created by this Manager.
