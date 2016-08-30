@@ -91,7 +91,7 @@ public class MicroservicesRunner {
         Map<String, Object> valuesMap = new HashMap<>();
         valuesMap.put("value", basePath);
         RuntimeAnnotations.putAnnotation(microservice.getClass(), Path.class, valuesMap);
-        msRegistry.addService(microservice);
+        msRegistry.addService(basePath, microservice);
         return this;
     }
 

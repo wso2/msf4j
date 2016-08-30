@@ -66,9 +66,9 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
     protected void addService(Microservice service, Map properties) {
         Object contextPath = properties.get("contextPath");
         if (contextPath != null) {
-            //Map<String, Object> valuesMap = new HashMap<>();
-            //valuesMap.put("value", contextPath);
-            //RuntimeAnnotations.putAnnotation(service.getClass(), Path.class, valuesMap);
+            Map<String, Object> valuesMap = new HashMap<>();
+            valuesMap.put("value", contextPath);
+            RuntimeAnnotations.putAnnotation(service.getClass(), Path.class, valuesMap);
             microservicesRegistry.addService(contextPath.toString(), service);
         } else {
             microservicesRegistry.addService(service);
