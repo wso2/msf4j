@@ -1,0 +1,66 @@
+version: '2'
+services:
+  security:
+#    image: wso2msf4j/petstore-security:2.0.0
+#    build: ../../microservices/security/container/docker/
+    build:
+      context: .
+      dockerfile: security-Dockerfile
+    ports:
+      - "80"
+  transaction:
+    build:
+      context: .
+      dockerfile: transaction-Dockerfile
+    ports:
+      - "80"
+
+  pet:
+    build:
+      context: .
+      dockerfile: pet-Dockerfile
+    ports:
+      - "80"
+
+  fileserver:
+    build:
+      context: .
+      dockerfile: fileserver-Dockerfile
+    ports:
+      - "80"
+
+  admin-fe:
+    build:
+      context: .
+      dockerfile: admin-fe-Dockerfile
+    ports:
+      - "80"
+    environment:
+      - FE_FILE_SERVICE_HOST=fileserver
+      - FE_FILE_SERVICE_PORT=80
+      - FE_PET_SERVICE_HOST=pet
+      - FE_PET_SERVICE_PORT=80
+      - FE_USER_SERVICE_HOST=security
+      - FE_USER_SERVICE_HOST=80
+      - FE_FILE_SERVICE_NODE_PORT=31111
+
+  store-fe:
+    build:
+      context: .
+      dockerfile: store-fe-Dockerfile
+    ports:
+      - "80"
+    environment:
+      - FE_FILE_SERVICE_HOST=fileserver
+      - FE_FILE_SERVICE_PORT=80
+      - FE_PET_SERVICE_HOST=pet
+      - FE_PET_SERVICE_PORT=80
+      - FE_USER_SERVICE_HOST=security
+      - FE_USER_SERVICE_PORT=80
+      - FE_TXN_SERVICE_HOST=transaction
+      - FE_TXN_SERVICE_PORT=80
+      - FE_FILE_SERVICE_NODE_PORT=31111
+  redis:
+    image: redis
+volumes:
+  logvolume01: {}
