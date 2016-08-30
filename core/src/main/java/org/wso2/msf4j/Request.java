@@ -2,6 +2,7 @@ package org.wso2.msf4j;
 
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.Constants;
+import org.wso2.msf4j.internal.MSF4JConstants;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -18,6 +19,8 @@ public class Request {
     private final CarbonMessage carbonMessage;
     private List<String> acceptTypes = null;
     private String contentType = null;
+    private SessionManager sessionManager;
+    private Session session;
 
     public Request(CarbonMessage carbonMessage) {
         this.carbonMessage = carbonMessage;
@@ -33,6 +36,10 @@ public class Request {
         String contentTypeHeaderStr = carbonMessage.getHeader(HttpHeaders.CONTENT_TYPE);
         //Trim specified charset since UTF-8 is assumed
         contentType = (contentTypeHeaderStr != null) ? contentTypeHeaderStr.split("\\s*;\\s*")[0] : null;
+    }
+
+    public void setSessionManager(SessionManager sessionManager) {
+        this.sessionManager = sessionManager;
     }
 
     /**
@@ -144,4 +151,65 @@ public class Request {
         return contentType;
     }
 
+    /**
+     * Returns the current session associated with this request, or if the request does not have a session,
+     * creates one.
+     *
+     * @return Session
+     */
+    public Session getSession() {
+        if (sessionManager == null) {
+            throw new IllegalStateException("SessionManager has not been set");
+        }
+        if (session != null) {
+            return session.setAccessed();
+        }
+        String cookieHeader = getHeader("Cookie");
+        if (cookieHeader != null) {
+            session = Arrays.stream(cookieHeader.split(";"))
+                    .filter(cookie -> cookie.startsWith(MSF4JConstants.SESSION_ID))
+                    .findFirst()
+                    .map(jsession -> sessionManager.getSession(jsession.substring(MSF4JConstants.SESSION_ID.length())))
+                    .orElseGet(sessionManager::createSession);
+            return session.setAccessed();
+        }
+        return session = sessionManager.createSession();
+    }
+
+    /**
+     * Returns the current HttpSession associated with this request or, if there is no current session and create is
+     * true, returns a new session.
+     *
+     * @param create Create a new session or not
+     * @return Session
+     */
+    public Session getSession(boolean create) {
+        if (sessionManager == null) {
+            throw new IllegalStateException("SessionManager has not been set");
+        }
+        if (session != null) {
+            return session.setAccessed();
+        }
+        String cookieHeader = getHeader("Cookie");
+        if (cookieHeader != null) {
+            session = Arrays.stream(cookieHeader.split(";"))
+                    .filter(cookie -> cookie.startsWith(MSF4JConstants.SESSION_ID))
+                    .findFirst()
+                    .map(jsession -> sessionManager.getSession(jsession.substring(MSF4JConstants.SESSION_ID.length())))
+                    .orElseGet(() -> {
+                        if (create) {
+                            return sessionManager.createSession();
+                        }
+                        return null;
+                    });
+            return session.setAccessed();
+        } else if (create) {
+            return session = sessionManager.createSession();
+        }
+        return null;
+    }
+
+    Session getSessionInternal() {
+        return session;
+    }
 }

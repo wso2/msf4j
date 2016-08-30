@@ -30,7 +30,6 @@ limitations under the License.
             <class name="org.wso2.msf4j.delegates.client.MSF4JClientBuilderTest"/>
             <class name="org.wso2.msf4j.delegates.client.MSF4JClientTest"/>
             <class name="org.wso2.msf4j.delegates.client.MSF4JWebTargetTest"/>
-            <class name="org.wso2.msf4j.delegates.client.MSF4JInvocationTest"/>
         </classes>
     </test>
 

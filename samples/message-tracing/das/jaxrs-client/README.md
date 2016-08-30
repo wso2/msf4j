@@ -48,7 +48,7 @@ in the WSO2 DAS instance you just started. Now you can check the MSF4J Message T
 
 After that, from the target directory of this sample, run the following command to start the sample microservice.
 ```
-java -jar msf4j-wso2das-tracing-*.jar
+java -jar das-tracing-jaxrs-client-*.jar
 ```
 
 ## How to test the sample

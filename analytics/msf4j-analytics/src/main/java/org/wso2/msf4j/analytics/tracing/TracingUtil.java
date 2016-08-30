@@ -32,7 +32,7 @@ import javax.ws.rs.core.Response;
 /**
  * Utility methods of for MSF4J tracing.
  */
-class TracingUtil {
+public class TracingUtil {
 
     private static final Logger log = LoggerFactory.getLogger(TracingUtil.class);
     private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -41,7 +41,7 @@ class TracingUtil {
     /**
      * Generate a random string unique identifier.
      */
-    static String generateUniqueId() {
+    public static String generateUniqueId() {
         // UUID.randomUUID().toString() is too slow
         // TODO: Test whether the ID is unique enough
         return System.currentTimeMillis() + "" + String.format("%08d", random.nextInt(100000000));
@@ -50,7 +50,7 @@ class TracingUtil {
     /**
      * Publish trace event to DAS in the background.
      */
-    static void pushToDAS(TraceEvent traceEvent, String dasUrl) {
+    public static void pushToDAS(TraceEvent traceEvent, String dasUrl) {
         Future<?> future = executorService.submit(() -> {
             log.debug("Publishing trace event " + traceEvent);
             if (ClientBuilder.newClient().target(dasUrl)

@@ -48,10 +48,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.ws.rs.CookieParam;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.PathParam;
@@ -112,15 +114,18 @@ public class HttpResourceModelProcessor {
                     } else if (HeaderParam.class.isAssignableFrom(annotationType)) {
                         args[idx] = getHeaderParamValue((HttpResourceModel.ParameterInfo<List<String>>) paramInfo,
                                 request);
+                    } else if (CookieParam.class.isAssignableFrom(annotationType)) {
+                        args[idx] = getCookieParamValue((HttpResourceModel.ParameterInfo<String>) paramInfo,
+                                request);
                     } else if (Context.class.isAssignableFrom(annotationType)) {
                         args[idx] = getContextParamValue((HttpResourceModel.ParameterInfo<Object>) paramInfo,
                                 request, responder);
                     } else if (FormParam.class.isAssignableFrom(annotationType)) {
                         args[idx] = getFormParamValue((HttpResourceModel.ParameterInfo<List<Object>>) paramInfo,
-                                                      request);
+                                request);
                     } else if (FormDataParam.class.isAssignableFrom(annotationType)) {
                         args[idx] = getFormDataParamValue((HttpResourceModel.ParameterInfo<List<Object>>) paramInfo,
-                                                          request);
+                                request);
                     } else {
                         createObject(request, args, idx, paramInfo);
                     }
@@ -172,7 +177,7 @@ public class HttpResourceModelProcessor {
         if (paramInfo.getConverter() != null) {
             // We need to skip the conversion for java.io.File types and handle special cases
             if (paramType instanceof ParameterizedType && isNotNull &&
-                parameter.get(0).getClass().isAssignableFrom(File.class)) {
+                    parameter.get(0).getClass().isAssignableFrom(File.class)) {
                 return parameter;
             } else if (isNotNull && parameter.get(0).getClass().isAssignableFrom(File.class)) {
                 return parameter.get(0);
@@ -198,15 +203,15 @@ public class HttpResourceModelProcessor {
     /**
      * Extract the form items in the request.
      *
-     * @param request Request which need to be processed
-     * @param paramInfo of the method
+     * @param request     Request which need to be processed
+     * @param paramInfo   of the method
      * @param addFileInfo if FileInfo object needed to be added to params. In a case of InputStream this should be true
      * @return MultivaluedMap of form items
      * @throws IOException if error occurs while processing the multipart/form-data request
      */
     private MultivaluedMap<String, Object> extractRequestFormParams(Request request,
-                                                       HttpResourceModel.ParameterInfo paramInfo,
-                                                       boolean addFileInfo) throws IOException {
+                                                                    HttpResourceModel.ParameterInfo paramInfo,
+                                                                    boolean addFileInfo) throws IOException {
         MultivaluedMap<String, Object> parameters = new MultivaluedHashMap<>();
         if (MediaType.MULTIPART_FORM_DATA.equals(request.getContentType())) {
             FormParamIterator formParamIterator = new FormParamIterator(request);
@@ -221,14 +226,14 @@ public class HttpResourceModelProcessor {
                     cType = MediaType.TEXT_PLAIN;
                 }
                 boolean isFile = item.getHeaders().getHeader("content-disposition").contains("filename") ||
-                                 MediaType.APPLICATION_OCTET_STREAM.equals(item.getHeaders().getHeader("content-type"));
+                        MediaType.APPLICATION_OCTET_STREAM.equals(item.getHeaders().getHeader("content-type"));
                 formParamContentType.putIfAbsent(item.getFieldName(), cType);
 
                 List<Object> existingValues = parameters.get(item.getFieldName());
                 if (existingValues == null) {
                     parameters.put(item.getFieldName(),
-                                   isFile ? new ArrayList<>(Collections.singletonList(createAndTrackTempFile(item))) :
-                                   new ArrayList<>(Collections.singletonList(StreamUtil.asString(item.openStream()))));
+                            isFile ? new ArrayList<>(Collections.singletonList(createAndTrackTempFile(item))) :
+                                    new ArrayList<>(Collections.singletonList(StreamUtil.asString(item.openStream()))));
                 } else {
                     existingValues.add(isFile ? createAndTrackTempFile(item) : StreamUtil.asString(item.openStream()));
                 }
@@ -298,7 +303,7 @@ public class HttpResourceModelProcessor {
                 ByteBuffer fullContent = BufferUtil.merge(request.getFullMessageBody());
                 String bodyStr = BeanConverter.getConverter(
                         (request.getContentType() != null) ? request.getContentType() : MediaType.WILDCARD)
-                                              .convertToObject(fullContent, paramInfo.getParameterType()).toString();
+                        .convertToObject(fullContent, paramInfo.getParameterType()).toString();
                 QueryStringDecoderUtil queryStringDecoderUtil = new QueryStringDecoderUtil(bodyStr, false);
                 queryStringDecoderUtil.parameters().entrySet().
                         forEach(entry -> parameters.put(entry.getKey(), new ArrayList<>(entry.getValue())));
@@ -340,7 +345,7 @@ public class HttpResourceModelProcessor {
                 ByteBuffer fullContent = BufferUtil.merge(request.getFullMessageBody());
                 String bodyStr = BeanConverter.getConverter(
                         (request.getContentType() != null) ? request.getContentType() : MediaType.WILDCARD)
-                                              .convertToObject(fullContent, paramInfo.getParameterType()).toString();
+                        .convertToObject(fullContent, paramInfo.getParameterType()).toString();
                 QueryStringDecoderUtil queryStringDecoderUtil = new QueryStringDecoderUtil(bodyStr, false);
                 MultivaluedMap<String, Object> finalListMultivaluedMap = listMultivaluedMap;
                 queryStringDecoderUtil.parameters().entrySet().
@@ -393,16 +398,31 @@ public class HttpResourceModelProcessor {
         return info.convert(Collections.singletonList(header));
     }
 
+    @SuppressWarnings("unchecked")
+    private Object getCookieParamValue(HttpResourceModel.ParameterInfo<String> info, Request request) {
+        CookieParam cookieParam = info.getAnnotation();
+        String cookieName = cookieParam.value();
+        String cookieHeader = request.getHeader("Cookie");
+        if (cookieHeader != null) {
+            String cookieValue = Arrays.stream(cookieHeader.split(";"))
+                    .filter(cookie -> cookie.startsWith(cookieName + "="))
+                    .findFirst()
+                    .map(cookie -> cookie.substring((cookieName + "=").length()))
+                    .orElseGet(info::getDefaultVal);
+            return info.convert(cookieValue);
+        }
+        return null;
+    }
+
     /**
-     * @return parameter value of the given key.
      * @param key parameter name.
+     * @return parameter value of the given key.
      */
     private List<Object> getParameter(String key) {
         return formParameters.get(key);
     }
 
     /**
-     *
      * @return Map of request formParameters
      */
     public Map<String, List<Object>> getFormParameters() {

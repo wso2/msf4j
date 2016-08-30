@@ -79,6 +79,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertNotNull;
+import static org.testng.AssertJUnit.assertNull;
 import static org.testng.AssertJUnit.assertTrue;
 import static org.testng.AssertJUnit.fail;
 
@@ -1127,7 +1129,7 @@ public class HttpServerTest {
         IOUtils.closeQuietly(inputStream);
         urlConn.disconnect();
         assertEquals("{\"abc\":[{\"name\":\"Richard Stallman\",\"age\":63}, {\"name\":\"Linus Torvalds\",\"age\":46}]}",
-                     response);
+                response);
 
         urlConn = request("/test/v1/testJsonProduceWithJsonArray", HttpMethod.GET);
         inputStream = urlConn.getInputStream();
@@ -1142,6 +1144,106 @@ public class HttpServerTest {
         IOUtils.closeQuietly(inputStream);
         urlConn.disconnect();
         assertEquals("{\"name\":\"WSO2\",\"products\":[\"APIM\",\"IS\",\"MSF4J\"]}", response);
+    }
+
+    @Test
+    public void testSetAndGetFromSession() throws Exception {
+        long value = System.currentTimeMillis();
+
+        // Request to first operation
+        HttpURLConnection urlConn = request("/test/v1/set-session/" + value, HttpMethod.GET);
+        assertEquals(204, urlConn.getResponseCode());
+        String setCookieHeader = urlConn.getHeaderField("Set-Cookie");
+        assertNotNull(setCookieHeader);
+        urlConn.disconnect();
+
+        // Request to 2nd operation
+        urlConn = request("/test/v1/get-session/", HttpMethod.GET);
+        urlConn.setRequestProperty("Cookie", setCookieHeader);
+        assertEquals(200, urlConn.getResponseCode());
+        setCookieHeader = urlConn.getHeaderField("Set-Cookie");
+        assertNull(setCookieHeader);
+        String content = getContent(urlConn); // content retrieved & returned from session
+        assertEquals(String.valueOf(value), content);
+        urlConn.disconnect();
+    }
+
+    @Test
+    public void testSetAndGetFromSession2() throws Exception {
+        long value = System.currentTimeMillis();
+
+        // Request to first operation
+        HttpURLConnection urlConn = request("/test/v1/set-session2/" + value, HttpMethod.GET);
+        assertEquals(200, urlConn.getResponseCode());
+        String setCookieHeader = urlConn.getHeaderField("Set-Cookie");
+        assertNotNull(setCookieHeader);
+        String content = getContent(urlConn);
+        assertEquals(String.valueOf(value), content);
+        urlConn.disconnect();
+
+        // Request to 2nd operation
+        urlConn = request("/test/v1/get-session/", HttpMethod.GET);
+        urlConn.setRequestProperty("Cookie", setCookieHeader);
+        assertEquals(200, urlConn.getResponseCode());
+        setCookieHeader = urlConn.getHeaderField("Set-Cookie");
+        assertNull(setCookieHeader);
+        content = getContent(urlConn);  // content retrieved & returned from session
+        assertEquals(String.valueOf(value), content);
+        urlConn.disconnect();
+    }
+
+    @Test
+    public void testSessionExpiry() throws Exception {
+        long value = System.currentTimeMillis();
+
+        // Request to first operation
+        HttpURLConnection urlConn = request("/test/v1/set-session2/" + value, HttpMethod.GET);
+        assertEquals(200, urlConn.getResponseCode());
+        String setCookieHeader = urlConn.getHeaderField("Set-Cookie");
+        assertNotNull(setCookieHeader);
+        String content = getContent(urlConn);
+        assertEquals(String.valueOf(value), content);
+        urlConn.disconnect();
+
+        // Request to 2nd operation
+        urlConn = request("/test/v1/get-session/", HttpMethod.GET);
+        urlConn.setRequestProperty("Cookie", setCookieHeader);
+        assertEquals(200, urlConn.getResponseCode());
+        setCookieHeader = urlConn.getHeaderField("Set-Cookie");
+        assertNull(setCookieHeader);
+        content = getContent(urlConn);  // content retrieved & returned from session
+        assertEquals(String.valueOf(value), content);
+        urlConn.disconnect();
+
+        // Expire the session
+        urlConn = request("/test/v1/expire-session/", HttpMethod.GET);
+        urlConn.setRequestProperty("Cookie", setCookieHeader);
+        assertEquals(204, urlConn.getResponseCode());
+        setCookieHeader = urlConn.getHeaderField("Set-Cookie");
+        assertNull(setCookieHeader);
+        urlConn.disconnect();
+
+        // Try to retrieve the object stored in the expired session
+        urlConn = request("/test/v1/get-session/", HttpMethod.GET);
+        urlConn.setRequestProperty("Cookie", setCookieHeader);
+        assertEquals(204, urlConn.getResponseCode());
+        setCookieHeader = urlConn.getHeaderField("Set-Cookie");
+        assertNotNull(setCookieHeader);
+        content = getContent(urlConn);  // content retrieved & returned from session
+        assertEquals("", content);
+        urlConn.disconnect();
+    }
+
+    @Test
+    public void testCookieParam() throws Exception {
+        String value = "wso2";
+
+        HttpURLConnection urlConn = request("/test/v1/cookie/", HttpMethod.GET);
+        urlConn.setRequestProperty("Cookie", "name=" + value);
+        assertEquals(200, urlConn.getResponseCode());
+        String content = getContent(urlConn);
+        assertEquals(value, content);
+        urlConn.disconnect();
     }
 
     @Test

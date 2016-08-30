@@ -60,6 +60,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.CookieParam;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
@@ -84,6 +85,7 @@ import static org.testng.AssertJUnit.fail;
 @SuppressWarnings("UnusedParameters")
 @Path("/test/v1")
 public class TestMicroservice implements Microservice {
+    private static final String SAMPLE_STRING = "foo";
 
     private static final Gson GSON = new Gson();
 
@@ -579,7 +581,7 @@ public class TestMicroservice implements Microservice {
                                 @FormDataParam("people") List<Person> personList,
                                 @FormDataParam("company") Company company) {
         return Response.ok().entity(file.getName() + ":" + id + ":" + personList.size() + ":" + company.getType())
-                       .build();
+                .build();
     }
 
 
@@ -628,7 +630,7 @@ public class TestMicroservice implements Microservice {
         String name = parser.parse(person).getAsJsonArray().get(0).getAsJsonObject().get("name").getAsString();
         String response =
                 "FileCount-" + files.size() + " SecondFileName-" + ((File) files.get(1)).getName() + " FirstPerson-" +
-                name;
+                        name;
         return Response.ok().entity(response).build();
     }
 
@@ -659,6 +661,7 @@ public class TestMicroservice implements Microservice {
     }
 
     private static int initialValue = 0;
+
     @GET
     @Path("/testDualInvocation1")
     public Response testDualInvocation1() {
@@ -706,6 +709,48 @@ public class TestMicroservice implements Microservice {
         jsonObject.add("products", jsonArray);
         return Response.ok().entity(jsonObject).build();
     }
+
+    /**
+     * Operation with no content in the response and sets a value in the session.
+     */
+    @GET
+    @Path("/set-session/{value}")
+    public void setObjectInSession(@Context Request request, @PathParam("value") String value) {
+        request.getSession().setAttribute(SAMPLE_STRING, value);
+    }
+
+    /**
+     * Operation which returns content in the response and sets a value in the session.
+     */
+    @GET
+    @Path("/set-session2/{value}")
+    public String setObjectInSession2(@Context Request request, @PathParam("value") String value) {
+        request.getSession().setAttribute(SAMPLE_STRING, value);
+        return value;
+    }
+
+    /**
+     * Operation which retrieves value set in the session in the {@link #setObjectInSession} &
+     * {@link #setObjectInSession2} methods.
+     */
+    @GET
+    @Path("/get-session")
+    public String getObjectFromSession(@Context Request request) {
+        return (String) request.getSession().getAttribute(SAMPLE_STRING);
+    }
+
+    @GET
+    @Path("/expire-session")
+    public void expireSession(@Context Request request) {
+        request.getSession().invalidate();
+    }
+
+    @GET
+    @Path("/cookie")
+    public String echoCookieValue(@CookieParam("name") String name) {
+        return name;
+    }
+
 
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{countryId}/team")

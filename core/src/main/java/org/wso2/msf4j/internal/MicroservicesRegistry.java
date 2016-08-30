@@ -17,8 +17,11 @@ package org.wso2.msf4j.internal;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.msf4j.DefaultSessionManager;
 import org.wso2.msf4j.Interceptor;
+import org.wso2.msf4j.SessionManager;
 import org.wso2.msf4j.internal.router.MicroserviceMetadata;
+import org.wso2.msf4j.internal.swagger.SwaggerDefinitionService;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -48,6 +51,12 @@ public class MicroservicesRegistry {
     private final List<Interceptor> interceptors = new ArrayList<>();
     private volatile MicroserviceMetadata metadata = new MicroserviceMetadata(Collections.emptyList());
     private Map<Class, ExceptionMapper> exceptionMappers = new TreeMap<>(new ClassComparator());
+    private SessionManager sessionManager = new DefaultSessionManager();
+
+    public MicroservicesRegistry() {
+        // Deploy the Swagger definition service which will return the Swagger definition.
+        services.add(new SwaggerDefinitionService(this));
+    }
 
     public void addService(Object... service) {
         Collections.addAll(services, service);
@@ -64,6 +73,13 @@ public class MicroservicesRegistry {
     public void removeService(Object service) {
         services.remove(service);
         updateMetadata();
+    }
+
+    public void setSessionManager(SessionManager sessionManager) {
+        if (sessionManager == null) {
+            throw new IllegalArgumentException("SessionManager cannot be null");
+        }
+        this.sessionManager = sessionManager;
     }
 
     public MicroserviceMetadata getMetadata() {
@@ -150,6 +166,10 @@ public class MicroservicesRegistry {
 
     public void preDestroyService(Object httpService) {
         invokeLifecycleMethod(httpService, PreDestroy.class);
+    }
+
+    public SessionManager getSessionManager() {
+        return sessionManager;
     }
 
     private void invokeLifecycleMethods(Class lcAnnotation) {

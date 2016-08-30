@@ -21,7 +21,7 @@ package org.wso2.msf4j.analytics.tracing;
 /**
  * Class to hold tracing start event data.
  */
-class TraceEvent {
+public class TraceEvent {
 
     private final String type;
     private final String traceId;
@@ -34,7 +34,7 @@ class TraceEvent {
     private String parentId;
     private String url;
 
-    TraceEvent(String type, String traceId, String originId, long time) {
+    public TraceEvent(String type, String traceId, String originId, long time) {
         this.type = type;
         this.traceId = traceId;
         this.originId = originId;

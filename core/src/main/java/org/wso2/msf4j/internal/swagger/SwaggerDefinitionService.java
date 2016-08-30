@@ -54,6 +54,7 @@ public class SwaggerDefinitionService {
             if (msf4JBeanConfig == null) {
                 MSF4JBeanConfig beanConfig = new MSF4JBeanConfig();
                 serviceRegistry.getHttpServices().stream().
+                        filter(service -> !service.getClass().equals(SwaggerDefinitionService.class)).
                         forEach(service -> beanConfig.addServiceClass(service.getClass()));
                 beanConfig.setScan(true);
                 msf4JBeanConfig = beanConfig;

@@ -16,6 +16,7 @@
 
 package org.wso2.msf4j.example;
 
+import javax.ws.rs.CookieParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
