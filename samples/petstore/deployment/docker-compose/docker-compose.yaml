@@ -34,8 +34,6 @@ services:
     ports:
       - "31111:8080"
 
-    # TODO: volume mounts
-
   admin-fe:
     build:
       context: .
@@ -67,15 +65,28 @@ services:
       - FE_TXN_SERVICE_HOST=transaction
       - FE_TXN_SERVICE_PORT=80
       - FE_FILE_SERVICE_NODE_PORT=31111
-  redis-sentinel:
-     image: kubernetes/redis:v1
-     ports:
-      - "26379"
-     environment:
-      - SENTINEL=true
-  redis:
-    image: kubernetes/redis:v1
 
-    # TODO: volume mounts
+  redis-master:
+    image: redis:3
+
+  redis-slave:
+    image: redis:3
+    command: redis-server --slaveof redis-master 6379
+    links:
+      - redis-master:redis-master
+
+  redis-sentinel:
+    build:
+     context: .
+     dockerfile: redis-sentinel-Dockerfile
+    ports:
+      - "26379"
+    environment:
+      - SENTINEL_DOWN_AFTER=5000
+      - SENTINEL_FAILOVER=5000
+    links:
+      - redis-master:redis-master
+      - redis-slave
+
 volumes:
   logvolume01: {}
