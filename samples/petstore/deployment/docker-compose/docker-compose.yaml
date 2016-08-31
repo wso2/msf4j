@@ -1,33 +1,40 @@
 version: '2'
 services:
   security:
-#    image: wso2msf4j/petstore-security:2.0.0
-#    build: ../../microservices/security/container/docker/
     build:
       context: .
       dockerfile: security-Dockerfile
     ports:
-      - "80"
+      - "8080"
+
   transaction:
     build:
       context: .
       dockerfile: transaction-Dockerfile
     ports:
-      - "80"
+      - "8080"
+    environment:
+      - SENTINEL1_HOST=redis-sentinel
+      - SENTINEL1_PORT=26379
 
   pet:
     build:
       context: .
       dockerfile: pet-Dockerfile
     ports:
-      - "80"
+      - "8080"
+    environment:
+      - SENTINEL1_HOST=redis-sentinel
+      - SENTINEL1_PORT=26379
 
   fileserver:
     build:
       context: .
       dockerfile: fileserver-Dockerfile
     ports:
-      - "80"
+      - "31111:8080"
+
+    # TODO: volume mounts
 
   admin-fe:
     build:
@@ -60,7 +67,15 @@ services:
       - FE_TXN_SERVICE_HOST=transaction
       - FE_TXN_SERVICE_PORT=80
       - FE_FILE_SERVICE_NODE_PORT=31111
+  redis-sentinel:
+     image: kubernetes/redis:v1
+     ports:
+      - "26379"
+     environment:
+      - SENTINEL=true
   redis:
-    image: redis
+    image: kubernetes/redis:v1
+
+    # TODO: volume mounts
 volumes:
   logvolume01: {}

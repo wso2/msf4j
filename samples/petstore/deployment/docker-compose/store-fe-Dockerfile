@@ -11,8 +11,8 @@ EXPOSE 22
 expose 80
 
 RUN rm -fr /var/www/html/*
-COPY html /var/www/html/
-COPY php.ini /etc/php5/apache2/
-COPY init.sh /opt/
+COPY packages/store-fe/html /var/www/html/
+COPY packages/store-fe/php.ini /etc/php5/apache2/
+COPY packages/store-fe/init.sh /opt/
 RUN chmod 755 /opt/init.sh
 ENTRYPOINT /opt/init.sh

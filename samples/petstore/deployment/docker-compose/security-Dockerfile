@@ -24,9 +24,9 @@ WORKDIR /opt
 # --------------------------------
 # Copy scripts, packages & plugins
 # --------------------------------
-COPY packages/client-truststore.jks /opt/
+COPY packages/petstore-security*.jar /opt/
+COPY conf/client-truststore.jks /opt/
 COPY conf/data-agent-conf.xml /opt/
-COPY conf/petstore-security*.jar /opt/
 
 # --------------------------------
 # HTTP Monitoring and metrics specific config
