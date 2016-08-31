@@ -168,7 +168,7 @@ public final class PatternPathRouter<T> {
 
         //Check for sub-resource locator
         if (result.isEmpty()) {
-            patternRouteList.stream().filter(patternRoute -> patternRoute.getSecond()
+            patternRouteList.parallelStream().filter(patternRoute -> patternRoute.getSecond()
                                 .getDestination() instanceof HttpResourceModel &&
                                 ((HttpResourceModel) patternRoute.getSecond().getDestination()).isSubResourceLocator())
                             .forEach(patternRoute -> processDestinations(patternRoute, result, cleanPath, true));
