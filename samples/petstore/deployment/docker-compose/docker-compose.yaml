@@ -6,6 +6,9 @@ services:
       dockerfile: security-Dockerfile
     ports:
       - "8080"
+    environment:
+      - METRICS_REPORTING_DAS_RECEIVERURL=tcp://10.100.1.192:7611
+      - HTTP_MONITORING_DAS_RECEIVERURL=tcp://10.100.1.192:7611
 
   transaction:
     build:
@@ -16,6 +19,8 @@ services:
     environment:
       - SENTINEL1_HOST=redis-sentinel
       - SENTINEL1_PORT=26379
+      - METRICS_REPORTING_DAS_RECEIVERURL=tcp://10.100.1.192:7611
+      - HTTP_MONITORING_DAS_RECEIVERURL=tcp://10.100.1.192:7611
 
   pet:
     build:
@@ -26,6 +31,8 @@ services:
     environment:
       - SENTINEL1_HOST=redis-sentinel
       - SENTINEL1_PORT=26379
+      - METRICS_REPORTING_DAS_RECEIVERURL=tcp://10.100.1.192:7611
+      - HTTP_MONITORING_DAS_RECEIVERURL=tcp://10.100.1.192:7611
 
   fileserver:
     build:
@@ -33,6 +40,9 @@ services:
       dockerfile: fileserver-Dockerfile
     ports:
       - "31111:8080"
+    environment:
+      - METRICS_REPORTING_DAS_RECEIVERURL=tcp://10.100.1.192:7611
+      - HTTP_MONITORING_DAS_RECEIVERURL=tcp://10.100.1.192:7611
 
   admin-fe:
     build:
@@ -42,11 +52,11 @@ services:
       - "80"
     environment:
       - FE_FILE_SERVICE_HOST=fileserver
-      - FE_FILE_SERVICE_PORT=80
+      - FE_FILE_SERVICE_PORT=8080
       - FE_PET_SERVICE_HOST=pet
-      - FE_PET_SERVICE_PORT=80
+      - FE_PET_SERVICE_PORT=8080
       - FE_USER_SERVICE_HOST=security
-      - FE_USER_SERVICE_HOST=80
+      - FE_USER_SERVICE_HOST=8080
       - FE_FILE_SERVICE_NODE_PORT=31111
 
   store-fe:
@@ -54,16 +64,16 @@ services:
       context: .
       dockerfile: store-fe-Dockerfile
     ports:
-      - "80"
+      - "81"
     environment:
       - FE_FILE_SERVICE_HOST=fileserver
-      - FE_FILE_SERVICE_PORT=80
+      - FE_FILE_SERVICE_PORT=8080
       - FE_PET_SERVICE_HOST=pet
-      - FE_PET_SERVICE_PORT=80
+      - FE_PET_SERVICE_PORT=8080
       - FE_USER_SERVICE_HOST=security
-      - FE_USER_SERVICE_PORT=80
+      - FE_USER_SERVICE_PORT=8080
       - FE_TXN_SERVICE_HOST=transaction
-      - FE_TXN_SERVICE_PORT=80
+      - FE_TXN_SERVICE_PORT=8080
       - FE_FILE_SERVICE_NODE_PORT=31111
 
   redis-master:
