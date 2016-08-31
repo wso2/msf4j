@@ -7,8 +7,8 @@ services:
     ports:
       - "8080"
     environment:
-      - METRICS_REPORTING_DAS_RECEIVERURL=tcp://10.100.1.192:7611
-      - HTTP_MONITORING_DAS_RECEIVERURL=tcp://10.100.1.192:7611
+      - METRICS_REPORTING_DAS_RECEIVERURL=tcp://192.168.1.4:7611
+      - HTTP_MONITORING_DAS_RECEIVERURL=tcp://192.168.1.4:7611
 
   transaction:
     build:
@@ -19,8 +19,10 @@ services:
     environment:
       - SENTINEL1_HOST=redis-sentinel
       - SENTINEL1_PORT=26379
-      - METRICS_REPORTING_DAS_RECEIVERURL=tcp://10.100.1.192:7611
-      - HTTP_MONITORING_DAS_RECEIVERURL=tcp://10.100.1.192:7611
+      - METRICS_REPORTING_DAS_RECEIVERURL=tcp://192.168.1.4:7611
+      - HTTP_MONITORING_DAS_RECEIVERURL=tcp://192.168.1.4:7611
+    links:
+       - sentinel:redis-sentinel
 
   pet:
     build:
@@ -29,10 +31,14 @@ services:
     ports:
       - "8080"
     environment:
-      - SENTINEL1_HOST=redis-sentinel
+      - SENTINEL1_HOST=sentinel
       - SENTINEL1_PORT=26379
-      - METRICS_REPORTING_DAS_RECEIVERURL=tcp://10.100.1.192:7611
-      - HTTP_MONITORING_DAS_RECEIVERURL=tcp://10.100.1.192:7611
+      - SENTINEL2_HOST=sentinel
+      - SENTINEL2_PORT=26379
+      - METRICS_REPORTING_DAS_RECEIVERURL=tcp://192.168.1.4:7611
+      - HTTP_MONITORING_DAS_RECEIVERURL=tcp://192.168.1.4:7611
+    links:
+      - sentinel:redis-sentinel
 
   fileserver:
     build:
@@ -41,8 +47,8 @@ services:
     ports:
       - "31111:8080"
     environment:
-      - METRICS_REPORTING_DAS_RECEIVERURL=tcp://10.100.1.192:7611
-      - HTTP_MONITORING_DAS_RECEIVERURL=tcp://10.100.1.192:7611
+      - METRICS_REPORTING_DAS_RECEIVERURL=tcp://192.168.1.4:7611
+      - HTTP_MONITORING_DAS_RECEIVERURL=tcp://192.168.1.4:7611
 
   admin-fe:
     build:
@@ -53,11 +59,15 @@ services:
     environment:
       - FE_FILE_SERVICE_HOST=fileserver
       - FE_FILE_SERVICE_PORT=8080
-      - FE_PET_SERVICE_HOST=pet
-      - FE_PET_SERVICE_PORT=8080
+      - PET_SERVICE_HOST=pet
+      - PET_SERVICE_PORT=8080
       - SECURITY_SERVICE_HOST=security
       - SECURITY_SERVICE_PORT=8080
       - FE_FILE_SERVICE_NODE_PORT=31111
+    links:
+      - pet:pet
+      - security:security
+      - fileserver:fileserver
 
   store-fe:
     build:
@@ -68,35 +78,38 @@ services:
     environment:
       - FE_FILE_SERVICE_HOST=fileserver
       - FE_FILE_SERVICE_PORT=8080
-      - FE_PET_SERVICE_HOST=pet
-      - FE_PET_SERVICE_PORT=8080
+      - PET_SERVICE_HOST=pet
+      - PET_SERVICE_PORT=8080
       - SECURITY_SERVICE_HOST=security
       - SECURITY_SERVICE_PORT=8080
-      - FE_TXN_SERVICE_HOST=transaction
-      - FE_TXN_SERVICE_PORT=8080
+      - TXN_SERVICE_HOST=transaction
+      - TXN_SERVICE_PORT=8080
       - FE_FILE_SERVICE_NODE_PORT=31111
+    links:
+      - pet:pet
+      - security:security
+      - transaction:transaction
+      - fileserver:fileserver
 
-  redis-master:
+  master:
     image: redis:3
-
-  redis-slave:
+  slave:
     image: redis:3
     command: redis-server --slaveof redis-master 6379
     links:
-      - redis-master:redis-master
-
-  redis-sentinel:
+      - master:redis-master
+  sentinel:
     build:
-     context: .
-     dockerfile: redis-sentinel-Dockerfile
+      context: .
+      dockerfile: redis-sentinel-Dockerfile
     ports:
       - "26379"
     environment:
       - SENTINEL_DOWN_AFTER=5000
       - SENTINEL_FAILOVER=5000
     links:
-      - redis-master:redis-master
-      - redis-slave
+      - master:redis-master
+      - slave
 
 volumes:
   logvolume01: {}
