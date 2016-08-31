@@ -49,14 +49,14 @@ services:
       context: .
       dockerfile: admin-fe-Dockerfile
     ports:
-      - "80"
+      - "32080:80"
     environment:
       - FE_FILE_SERVICE_HOST=fileserver
       - FE_FILE_SERVICE_PORT=8080
       - FE_PET_SERVICE_HOST=pet
       - FE_PET_SERVICE_PORT=8080
-      - FE_USER_SERVICE_HOST=security
-      - FE_USER_SERVICE_HOST=8080
+      - SECURITY_SERVICE_HOST=security
+      - SECURITY_SERVICE_PORT=8080
       - FE_FILE_SERVICE_NODE_PORT=31111
 
   store-fe:
@@ -64,14 +64,14 @@ services:
       context: .
       dockerfile: store-fe-Dockerfile
     ports:
-      - "81"
+      - "32081:81"
     environment:
       - FE_FILE_SERVICE_HOST=fileserver
       - FE_FILE_SERVICE_PORT=8080
       - FE_PET_SERVICE_HOST=pet
       - FE_PET_SERVICE_PORT=8080
-      - FE_USER_SERVICE_HOST=security
-      - FE_USER_SERVICE_PORT=8080
+      - SECURITY_SERVICE_HOST=security
+      - SECURITY_SERVICE_PORT=8080
       - FE_TXN_SERVICE_HOST=transaction
       - FE_TXN_SERVICE_PORT=8080
       - FE_FILE_SERVICE_NODE_PORT=31111
