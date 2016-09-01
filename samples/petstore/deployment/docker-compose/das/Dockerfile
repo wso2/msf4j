@@ -19,7 +19,8 @@
 FROM wso2/wso2das:3.0.1
 MAINTAINER architecture@wso2.org
 
+RUN mkdir -p /mnt/wso2das-3.0.1/repository/deployment/server/carbonapps
 COPY packages/msf4j_http_monitoring_capp.car /mnt/wso2das-3.0.1/repository/deployment/server/carbonapps
-COPY packages/wso2das-msf4j-tracing-2.0.1-SNAPSHOT.car /mnt/wso2das-3.0.1/repository/deployment/server/carbonapps
+#COPY packages/wso2das-msf4j-tracing-2.0.1-SNAPSHOT.car /mnt/wso2das-3.0.1/repository/deployment/server/carbonapps
 
 ENTRYPOINT ["/usr/local/bin/init.sh"]
