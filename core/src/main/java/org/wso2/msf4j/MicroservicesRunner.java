@@ -120,12 +120,13 @@ public class MicroservicesRunner {
     protected void configureTransport(int... ports) {
         NettyTransportContextHolder nettyTransportContextHolder = NettyTransportContextHolder.getInstance();
         nettyTransportContextHolder.setHandlerExecutor(new HandlerExecutor());
-        nettyTransportContextHolder.addMessageProcessor(new MSF4JMessageProcessor(msRegistry));
+
         for (int port : ports) {
             ListenerConfiguration listenerConfiguration =
                     new ListenerConfiguration("netty-" + port, "0.0.0.0", port);
             NettyListener listener = new NettyListener(listenerConfiguration);
             transportManager.registerTransport(listener);
+            nettyTransportContextHolder.addMessageProcessor(port, new MSF4JMessageProcessor(msRegistry));
         }
     }
 
@@ -137,10 +138,12 @@ public class MicroservicesRunner {
         Set<ListenerConfiguration> listenerConfigurations = trpConfig.getListenerConfigurations();
         NettyTransportContextHolder nettyTransportContextHolder = NettyTransportContextHolder.getInstance();
         nettyTransportContextHolder.setHandlerExecutor(new HandlerExecutor());
-        nettyTransportContextHolder.addMessageProcessor(new MSF4JMessageProcessor(msRegistry));
+
         for (ListenerConfiguration listenerConfiguration : listenerConfigurations) {
             NettyListener listener = new NettyListener(listenerConfiguration);
             transportManager.registerTransport(listener);
+            nettyTransportContextHolder
+                    .addMessageProcessor(listenerConfiguration.getPort(), new MSF4JMessageProcessor(msRegistry));
         }
     }
 

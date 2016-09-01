@@ -116,7 +116,6 @@ public class SpringMicroservicesRunner extends MicroservicesRunner implements Ap
 
         NettyTransportContextHolder nettyTransportContextHolder = NettyTransportContextHolder.getInstance();
         nettyTransportContextHolder.setHandlerExecutor(new HandlerExecutor());
-        nettyTransportContextHolder.addMessageProcessor(new MSF4JMessageProcessor(getMsRegistry()));
 
         //Add ListenerConfigurations if available on Spring Configuration
         for (ListenerConfiguration listener : listeners) {
@@ -129,6 +128,8 @@ public class SpringMicroservicesRunner extends MicroservicesRunner implements Ap
             if (transportConfig.isEnabled()) {
                 NettyListener nettyListener = createListenerConfiguration(transportConfig);
                 registerTransport(nettyListener);
+                nettyTransportContextHolder
+                        .addMessageProcessor(transportConfig.getPort(), new MSF4JMessageProcessor(getMsRegistry()));
             }
         }
     }
