@@ -106,6 +106,7 @@ services:
       dockerfile: das/Dockerfile
     ports:
       - "39443:9443"
+      - "39763:9763"
 
 volumes:
   logvolume01: {}
