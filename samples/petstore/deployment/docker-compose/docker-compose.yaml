@@ -3,7 +3,7 @@ services:
   security:
     build:
       context: .
-      dockerfile: security-Dockerfile
+      dockerfile: security/Dockerfile
     ports:
       - "8080"
     environment:
@@ -27,7 +27,7 @@ services:
   pet:
     build:
       context: .
-      dockerfile: pet-Dockerfile
+      dockerfile: pet/Dockerfile
     ports:
       - "8080"
     environment:
@@ -41,7 +41,7 @@ services:
   fileserver:
     build:
       context: .
-      dockerfile: fileserver-Dockerfile
+      dockerfile: fileserver/Dockerfile
     ports:
       - "31111:8080"
     environment:
@@ -51,7 +51,7 @@ services:
   admin-fe:
     build:
       context: .
-      dockerfile: admin-fe-Dockerfile
+      dockerfile: admin-fe/Dockerfile
     ports:
       - "32080:80"
     environment:
@@ -62,11 +62,15 @@ services:
       - SECURITY_SERVICE_HOST=security
       - SECURITY_SERVICE_PORT=8080
       - FE_FILE_SERVICE_NODE_PORT=31111
+    links:
+      - pet:pet
+      - security:security
+      - fileserver:fileserver
 
   store-fe:
     build:
       context: .
-      dockerfile: store-fe-Dockerfile
+      dockerfile: store-fe/Dockerfile
     ports:
       - "32081:81"
     environment:
