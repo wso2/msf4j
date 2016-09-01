@@ -12,7 +12,7 @@ expose 80
 
 RUN rm -fr /var/www/html/*
 COPY html /var/www/html/
-COPY php.ini /etc/php5/apache2/
+#COPY php.ini /etc/php5/apache2/
 COPY init.sh /opt/
 RUN chmod 755 /opt/init.sh
 ENTRYPOINT /opt/init.sh 
