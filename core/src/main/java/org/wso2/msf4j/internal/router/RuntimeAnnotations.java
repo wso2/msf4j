@@ -107,9 +107,17 @@ public final class RuntimeAnnotations {
         }
     }
 
-    public static <T extends Annotation> void putAnnotation(Class<?> c, Class<T> annotationClass,
+    /**
+     * Change the given annotation of the given class.
+     *
+     * @param clazz Class need to be change
+     * @param annotationClass Annotation class that need to change
+     * @param valuesMap value map to set
+     * @param <T> Annotation that get change
+     */
+    public static <T extends Annotation> void putAnnotation(Class<?> clazz, Class<T> annotationClass,
                                                             Map<String, Object> valuesMap) {
-        putAnnotation(c, annotationClass, annotationForMap(annotationClass, valuesMap));
+        putAnnotation(clazz, annotationClass, annotationForMap(annotationClass, valuesMap));
     }
 
     @SuppressWarnings("unchecked")

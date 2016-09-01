@@ -82,6 +82,13 @@ public final class MicroserviceMetadata {
         }
     }
 
+    /**
+     * Register given service object with the given base path. Path annotion of the service class will be ignore,
+     * instead use the provided base path.
+     *
+     * @param service HttpHandler object
+     * @param basePath Path the handler should be registered
+     */
     public void addMicroserviceMetadata(final Object service, String basePath) {
         //Store the services to call init and destroy on all services.
         for (Method method : service.getClass().getMethods()) {
