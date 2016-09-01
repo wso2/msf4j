@@ -2,5 +2,6 @@
 
 env >> /etc/environment
 echo ". /etc/environment" >> /etc/apache2/envvars
-/usr/sbin/apache2ctl -D FOREGROUND
+/etc/init.d/apache2 start && \
+tail -F /var/log/apache2/*log
 
