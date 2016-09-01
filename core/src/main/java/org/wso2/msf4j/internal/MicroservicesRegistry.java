@@ -60,17 +60,15 @@ public class MicroservicesRegistry {
     }
 
     public void addService(Object... service) {
-        for(Object svc : service){
+        for (Object svc : service) {
             services.put(svc.getClass().getAnnotation(Path.class).value(), svc);
         }
-        //Collections.addAll(services., service);
         updateMetadata();
         Arrays.stream(service).forEach(svc -> log.info("Added microservice: " + svc));
     }
 
     public void addService(String basePath, Object service) {
         services.put(basePath, service);
-        //Collections.addAll(services, service);
         metadata.addMicroserviceMetadata(service, basePath);
         log.info("Added microservice: " + service);
     }

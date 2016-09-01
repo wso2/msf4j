@@ -23,6 +23,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.wso2.msf4j.HttpServerTest;
 import org.wso2.msf4j.conf.Constants;
+import org.wso2.msf4j.spring.service.second.TestMicroServiceWithDynamicPath;
 
 import java.net.URI;
 
@@ -37,7 +38,11 @@ public class SpringHttpServerTest extends HttpServerTest {
     @BeforeClass
     public void setup() throws Exception {
         baseURI = URI.create(String.format("http://%s:%d", Constants.HOSTNAME, port));
-        configurableApplicationContext = MSF4JSpringApplication.run(SpringHttpServerTest.class, "--http.port=8090");
+        MSF4JSpringApplication msf4JSpringApplication = new MSF4JSpringApplication(SpringHttpServerTest.class);
+        configurableApplicationContext = msf4JSpringApplication.run("--http.port=8090");
+        msf4JSpringApplication
+                .addService(configurableApplicationContext, TestMicroServiceWithDynamicPath.class, "/DynamicPath");
+
     }
 
     @AfterClass
