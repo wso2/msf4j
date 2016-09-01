@@ -13,7 +13,7 @@ services:
   transaction:
     build:
       context: .
-      dockerfile: transaction-Dockerfile
+      dockerfile: transaction/Dockerfile
     ports:
       - "8080"
     environment:
@@ -50,8 +50,8 @@ services:
 
   admin-fe:
     build:
-      context: .
-      dockerfile: admin-fe/Dockerfile
+      context: admin-fe
+      dockerfile: Dockerfile
     ports:
       - "32080:80"
     environment:
@@ -69,8 +69,8 @@ services:
 
   store-fe:
     build:
-      context: .
-      dockerfile: store-fe/Dockerfile
+      context: store-fe
+      dockerfile: Dockerfile
     ports:
       - "32081:81"
     environment:
