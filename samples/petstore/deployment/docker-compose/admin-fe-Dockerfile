@@ -12,7 +12,7 @@ expose 80
 
 RUN rm -fr /var/www/html/*
 COPY packages/admin-fe/html /var/www/html/
-COPY packages/admin-fe/php.ini /etc/php5/apache2/
+# COPY packages/admin-fe/php.ini /etc/php5/apache2/
 COPY packages/admin-fe/init.sh /opt/
 RUN chmod 755 /opt/init.sh
 ENTRYPOINT /opt/init.sh

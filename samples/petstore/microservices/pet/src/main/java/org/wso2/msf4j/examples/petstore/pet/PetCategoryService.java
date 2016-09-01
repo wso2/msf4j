@@ -19,8 +19,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.metrics.core.annotation.Timed;
 import org.wso2.msf4j.analytics.httpmonitoring.HTTPMonitored;
-import org.wso2.msf4j.examples.petstore.util.JedisUtil;
 import org.wso2.msf4j.examples.petstore.util.model.Category;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -40,14 +42,26 @@ import javax.ws.rs.core.Response;
 @Path("/category")
 public class PetCategoryService {
     private static final Logger log = LoggerFactory.getLogger(PetCategoryService.class);
+    private static String REDIS_MASTER_HOST = System.getenv("REDIS_MASTER_HOST");
+    private static int REDIS_MASTER_PORT = Integer.parseInt(System.getenv("REDIS_MASTER_PORT"));
+
+    static {
+        log.info("Using Redis master:" + REDIS_MASTER_HOST + ":" + REDIS_MASTER_PORT);
+    }
+
+    private static final JedisPool pool =
+            new JedisPool(new JedisPoolConfig(), REDIS_MASTER_HOST, REDIS_MASTER_PORT);
 
     @POST
     @Consumes("application/json")
     @Timed
     public Response addCategory(Category category) {
         String name = category.getName();
-        JedisUtil.sadd(org.wso2.msf4j.examples.petstore.pet.PetConstants.CATEGORIES_KEY, name);
-        log.info("Added category");
+        log.info("Using Redis master:" + REDIS_MASTER_HOST + ":" + REDIS_MASTER_PORT);
+        try (Jedis jedis = pool.getResource()) {
+            jedis.sadd(org.wso2.msf4j.examples.petstore.pet.PetConstants.CATEGORIES_KEY, name);
+            log.info("Added category");
+        }
         return Response.status(Response.Status.OK).entity("Category with name " + name + " successfully added").build();
     }
 
@@ -55,13 +69,15 @@ public class PetCategoryService {
     @Path("/{name}")
     @Timed
     public Response deleteCategory(@PathParam("name") String name) {
-        if (!JedisUtil.smembers(PetConstants.CATEGORIES_KEY).contains(name)) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+        try (Jedis jedis = pool.getResource()) {
+            if (!jedis.smembers(PetConstants.CATEGORIES_KEY).contains(name)) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+            String categoryKey = PetConstants.CATEGORY_KEY_PREFIX + name;
+            jedis.srem(PetConstants.CATEGORIES_KEY, name);
+            jedis.del(categoryKey);
+            log.info("Deleted category: " + name);
         }
-        String categoryKey = PetConstants.CATEGORY_KEY_PREFIX + name;
-        JedisUtil.srem(PetConstants.CATEGORIES_KEY, name);
-        JedisUtil.del(categoryKey);
-        log.info("Deleted category: " + name);
         return Response.status(Response.Status.OK).entity("OK").build();
     }
 
@@ -70,10 +86,12 @@ public class PetCategoryService {
     @Path("/{name}")
     @Timed
     public Response getCategory(@PathParam("name") String name) {
-        if (!JedisUtil.smembers(PetConstants.CATEGORIES_KEY).contains(name)) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+        try (Jedis jedis = pool.getResource()) {
+            if (!jedis.smembers(PetConstants.CATEGORIES_KEY).contains(name)) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+            log.info("Got category");
         }
-        log.info("Got category");
         return Response.status(Response.Status.OK).entity(new Category(name)).build();
     }
 
@@ -82,12 +100,14 @@ public class PetCategoryService {
     @Produces("application/json")
     @Timed
     public Set<Category> getAllCategories() {
-        Set<String> smembers = JedisUtil.smembers(PetConstants.CATEGORIES_KEY);
-        Set<Category> categories = new HashSet<>(smembers.size());
-        for (String smember : smembers) {
-            categories.add(new Category(smember));
+        try (Jedis jedis = pool.getResource()) {
+            Set<String> smembers = jedis.smembers(PetConstants.CATEGORIES_KEY);
+            Set<Category> categories = new HashSet<>(smembers.size());
+            for (String smember : smembers) {
+                categories.add(new Category(smember));
+            }
+            return categories;
         }
-        return categories;
     }
 
 }
