@@ -55,13 +55,13 @@ services:
     ports:
       - "32080:80"
     environment:
-      - FE_FILE_SERVICE_HOST=fileserver
-      - FE_FILE_SERVICE_PORT=8080
+      - FILE_SERVICE_HOST=fileserver
+      - FILE_SERVICE_PORT=8080
+      - FILE_SERVICE_NODE_PORT=31111
       - PET_SERVICE_HOST=pet
       - PET_SERVICE_PORT=8080
       - SECURITY_SERVICE_HOST=security
       - SECURITY_SERVICE_PORT=8080
-      - FE_FILE_SERVICE_NODE_PORT=31111
     links:
       - pet:pet
       - security:security
@@ -72,17 +72,17 @@ services:
       context: store-fe
       dockerfile: Dockerfile
     ports:
-      - "32081:81"
+      - "32081:80"
     environment:
-      - FE_FILE_SERVICE_HOST=fileserver
-      - FE_FILE_SERVICE_PORT=8080
+      - FILE_SERVICE_HOST=fileserver
+      - FILE_SERVICE_PORT=8080
+      - FILE_SERVICE_NODE_PORT=31111
       - PET_SERVICE_HOST=pet
       - PET_SERVICE_PORT=8080
       - SECURITY_SERVICE_HOST=security
       - SECURITY_SERVICE_PORT=8080
       - TXN_SERVICE_HOST=transaction
       - TXN_SERVICE_PORT=8080
-      - FE_FILE_SERVICE_NODE_PORT=31111
 
   redis:
     image: redis:3

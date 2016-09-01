@@ -133,7 +133,7 @@ include('includes/header.php');
                 ?>
                 <div class="col-xs-6 col-md-2">
                     <div class="thumbnail">
-                        <img src="<?php echo 'http://'.$_SERVER["SERVER_NAME"].':'.FILE_SERVER_HOST.'/'.$json['image'] ?>"
+                        <img src="<?php echo 'http://'.$_SERVER["SERVER_NAME"].':'.FILE_SERVER_NODE_PORT.'/'.$json['image'] ?>"
                              alt="<?php echo $json['image'] ?>" class="pet-image">
 
                         <div class="caption">

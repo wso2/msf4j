@@ -1,19 +1,17 @@
 <?php
-//get security server env varaible
-$pet_service = getenv('PET_SERVICE_HOST');
-$pet_service_port = getenv('PET_SERVICE_PORT');
-$pet_file_server = getenv('PET_SERVICE_HOST');
-$pet_file_server_port = getenv('FE_FILE_SERVICE_NODE_PORT');
-$transaction_service = getenv('FE_TXN_SERVICE_HOST');
-$transaction_service_port = getenv('FE_TXN_SERVICE_PORT');
-$security_service_host = getenv('SECURITY_SERVICE_HOST');
-$security_service_port = getenv('SECURITY_SERVICE_PORT');
 
-define("SECURITY_SERVER", $security_service_host);
-define("SECURITY_SERVER_PORT", $security_service_port);
-define("PET_SERVICE", $pet_service);
-define("PET_SERVICE_PORT", $pet_service_port);
-define("FILE_SERVER", $pet_file_server);
-define("FILE_SERVER_HOST", $pet_file_server_port);
-define("TRANSACTION_SERVICE", $transaction_service);
-define("TRANSACTION_SERVICE_PORT", $transaction_service_port);
+define("SECURITY_SERVER", getenv('SECURITY_SERVICE_HOST'));
+define("SECURITY_SERVER_PORT", getenv('SECURITY_SERVICE_PORT'));
+
+define("PET_SERVICE", getenv('PET_SERVICE_HOST'));
+define("PET_SERVICE_PORT", getenv('PET_SERVICE_PORT'));
+
+define("FILE_SERVER", getenv('FILE_SERVICE_HOST'));
+define("FILE_SERVER_PORT", getenv('FILE_SERVICE_PORT'));
+define("FILE_SERVER_NODE_PORT", getenv('FILE_SERVICE_NODE_PORT'));
+
+define("TRANSACTION_SERVICE", getenv('TXN_SERVICE_HOST'));
+define("TRANSACTION_SERVICE_PORT", getenv('TXN_SERVICE_PORT'));
+
+?>
+
