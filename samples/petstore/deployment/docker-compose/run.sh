@@ -44,6 +44,13 @@ cd $HOME
 cd ../../microservices/fileserver/
 mvn clean install -Dmaven.test.skip=true
 
+# Copy DAS CApps
+echo "--------------------------------------------------------------"
+echo "Copy DAS CApps"
+echo "--------------------------------------------------------------"
+cd $HOME
+cp -f ../../../../analytics/msf4j_http_monitoring_capp_source/target/*.car $HOME/packages/
+cp -f ../../../../analytics/wso2das-tracing-capp/target/*.car $HOME/packages/
 
 # copy Pet
 echo "--------------------------------------------------------------"
