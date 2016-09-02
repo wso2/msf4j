@@ -161,23 +161,41 @@ public final class PatternPathRouter<T> {
         String cleanPath = (path.endsWith(PATH_SLASH) && path.length() > 0)
                 ? path.substring(0, path.length() - 1) : path;
 
-        List<RoutableDestination<T>> result = Lists.newArrayList();
+        List<RoutableDestination<T>> result = Lists.newCopyOnWriteArrayList();
 
-        for (ImmutablePair<Pattern, RouteDestinationWithGroups> patternRoute : patternRouteList) {
-            ImmutableMap.Builder<String, String> groupNameValuesBuilder = ImmutableMap.builder();
-            Matcher matcher = patternRoute.getFirst().matcher(cleanPath);
-            if (matcher.matches()) {
-                int matchIndex = 1;
-                for (String name : patternRoute.getSecond().getGroupNames()) {
-                    String value = matcher.group(matchIndex);
-                    groupNameValuesBuilder.put(name, value);
-                    matchIndex++;
-                }
-                result.add(new RoutableDestination<>(patternRoute.getSecond().getDestination(),
-                        groupNameValuesBuilder.build()));
-            }
+        patternRouteList.parallelStream()
+                        .forEach(patternRoute -> processDestinations(patternRoute, result, cleanPath, false));
+
+        //Check for sub-resource locator
+        if (result.isEmpty()) {
+            patternRouteList.parallelStream().filter(patternRoute -> patternRoute.getSecond()
+                                .getDestination() instanceof HttpResourceModel &&
+                                ((HttpResourceModel) patternRoute.getSecond().getDestination()).isSubResourceLocator())
+                            .forEach(patternRoute -> processDestinations(patternRoute, result, cleanPath, true));
         }
         return result;
+    }
+
+    private void processDestinations(ImmutablePair<Pattern, RouteDestinationWithGroups> patternRoute,
+                                     List<RoutableDestination<T>> result, String cleanPath, boolean isSubResource) {
+        ImmutableMap.Builder<String, String> groupNameValuesBuilder = ImmutableMap.builder();
+        Matcher matcher;
+        if (isSubResource) {
+            Pattern pattern = Pattern.compile(patternRoute.getFirst().pattern() + ".*");
+            matcher = pattern.matcher(cleanPath);
+        } else {
+            matcher = patternRoute.getFirst().matcher(cleanPath);
+        }
+        if (matcher.matches()) {
+            int matchIndex = 1;
+            for (String name : patternRoute.getSecond().getGroupNames()) {
+                String value = matcher.group(matchIndex);
+                groupNameValuesBuilder.put(name, value);
+                matchIndex++;
+            }
+            result.add(new RoutableDestination<>(patternRoute.getSecond().getDestination(),
+                                                 groupNameValuesBuilder.build()));
+        }
     }
 
     /**
