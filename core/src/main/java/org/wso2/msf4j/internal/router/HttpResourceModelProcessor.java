@@ -140,12 +140,12 @@ public class HttpResourceModelProcessor {
             if (httpStreamer == null) {
                 return new HttpMethodInfo(httpResourceModel.getMethod(),
                         httpResourceModel.getHttpHandler(),
-                        args,
+                        args, formParameters,
                         responder);
             } else {
                 return new HttpMethodInfo(httpResourceModel.getMethod(),
                         httpResourceModel.getHttpHandler(),
-                        args,
+                        args, formParameters,
                         responder,
                         httpStreamer);
             }
@@ -425,7 +425,7 @@ public class HttpResourceModelProcessor {
     /**
      * @return Map of request formParameters
      */
-    private Map<String, List<Object>> getFormParameters() {
+    public Map<String, List<Object>> getFormParameters() {
         return formParameters;
     }
 
@@ -434,7 +434,7 @@ public class HttpResourceModelProcessor {
      *
      * @param parameters request formParameters
      */
-    private void setFormParameters(MultivaluedMap<String, Object> parameters) {
+    public void setFormParameters(MultivaluedMap<String, Object> parameters) {
         this.formParameters = parameters;
     }
 }
