@@ -45,6 +45,7 @@ import org.wso2.msf4j.pojo.Category;
 import org.wso2.msf4j.pojo.Pet;
 import org.wso2.msf4j.pojo.TextBean;
 import org.wso2.msf4j.pojo.XmlBean;
+import org.wso2.msf4j.service.SecondService;
 import org.wso2.msf4j.service.TestMicroservice;
 import org.wso2.msf4j.service.sub.Player;
 import org.wso2.msf4j.service.sub.Team;
@@ -97,11 +98,13 @@ public class HttpServerTest {
     public static File tmpFolder = Files.createTempDir();
 
     private final TestMicroservice testMicroservice = new TestMicroservice();
+    private final SecondService secondService = new SecondService();
 
     private static final int port = Constants.PORT + 1;
     protected static URI baseURI;
 
     private MicroservicesRunner microservicesRunner;
+    private MicroservicesRunner secondMicroservicesRunner;
 
     @BeforeClass
     public void setup() throws Exception {
@@ -111,11 +114,24 @@ public class HttpServerTest {
                 .addExceptionMapper(new TestExceptionMapper(), new TestExceptionMapper2())
                 .deploy(testMicroservice)
                 .start();
+
+        secondMicroservicesRunner = new MicroservicesRunner(port + 1);
+        secondMicroservicesRunner.deploy(secondService).start();
     }
 
     @AfterClass
     public void teardown() throws Exception {
         microservicesRunner.stop();
+    }
+
+    @Test
+    public void testMultipleMicroServiceRunners() throws IOException {
+        HttpURLConnection urlConn = request("/SecondService/addNumbers/9/25", HttpMethod.GET, false, port + 1);
+        assertEquals(200, urlConn.getResponseCode());
+        String content = getContent(urlConn);
+
+        assertEquals(34, Integer.parseInt(content));
+        urlConn.disconnect();
     }
 
     @Test
@@ -1336,6 +1352,20 @@ public class HttpServerTest {
 
     protected HttpURLConnection request(String path, String method, boolean keepAlive) throws IOException {
         URL url = baseURI.resolve(path).toURL();
+        HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
+        if (method.equals(HttpMethod.POST) || method.equals(HttpMethod.PUT)) {
+            urlConn.setDoOutput(true);
+        }
+        urlConn.setRequestMethod(method);
+        if (!keepAlive) {
+            urlConn.setRequestProperty(HEADER_KEY_CONNECTION, HEADER_VAL_CLOSE);
+        }
+
+        return urlConn;
+    }
+
+    protected HttpURLConnection request(String path, String method, boolean keepAlive, int port) throws IOException {
+        URL url = URI.create(String.format("http://%s:%d", Constants.HOSTNAME, port)).resolve(path).toURL();
         HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
         if (method.equals(HttpMethod.POST) || method.equals(HttpMethod.PUT)) {
             urlConn.setDoOutput(true);
