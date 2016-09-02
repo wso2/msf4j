@@ -26,6 +26,10 @@ Try out the following curl commands
 curl http://localhost:8080/country/SL/team
 curl http://localhost:8080/country/SL/team/123/details/name
 curl http://localhost:8080/country/SL/team/123/bowlerType
+```
+
+If you change the Team.getPlayerObj method to return a Player Object you can try out following 
+```
 curl -X POST -H "Content-Type: application/x-www-form-urlencoded" -d 'type=All rounder&countryName=Sri Lanka' "http://localhost:8080/country/2123/team/123"
 curl -X POST -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW" -F "type=All rounder" -F "countryName=Sri Lanka" "http://localhost:8080/country/2123/team/123"
 ```
