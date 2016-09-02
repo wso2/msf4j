@@ -102,8 +102,8 @@ services:
 
   das:
     build:
-      context: .
-      dockerfile: das/Dockerfile
+      context: das
+      dockerfile: Dockerfile
     ports:
       - "39443:9443"
       - "39763:9763"

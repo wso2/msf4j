@@ -21,6 +21,8 @@ if [ $PRE_REQ -eq 0 ];then
     exit;
 fi
 
+rm -rf packages/* security pet transaction fileserver admin-fe store-fe
+
 git pull
 
 [ ! -d $HOME/packages ] && mkdir -p $HOME/packages
@@ -49,8 +51,7 @@ echo "--------------------------------------------------------------"
 echo "Copy DAS CApps"
 echo "--------------------------------------------------------------"
 cd $HOME
-cp -f ../../../../analytics/msf4j_http_monitoring_capp_source/target/*.car $HOME/packages/
-cp -f ../../../../analytics/wso2das-tracing-capp/target/*.car $HOME/packages/
+../../../../analytics/das-setup/setup.sh -d $HOME/das
 
 # copy Pet
 echo "--------------------------------------------------------------"
