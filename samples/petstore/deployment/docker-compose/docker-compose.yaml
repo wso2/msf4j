@@ -53,6 +53,8 @@ services:
       - HTTP_MONITORING_DAS_RECEIVERURL=tcp://das:7611
     depends_on:
       - das
+    volumes:
+      - /tmp/petstore/fileserver:/var/www/html/upload
 
   admin-fe:
     build:
