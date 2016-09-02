@@ -154,7 +154,8 @@ public class OAuth2SecurityInterceptor implements Interceptor {
             HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
             urlConn.setDoOutput(true);
             urlConn.setRequestMethod(HttpMethod.POST);
-            urlConn.getOutputStream().write(("token=" + accessToken).getBytes(Charsets.UTF_8));
+            urlConn.getOutputStream()
+                   .write(("token=" + accessToken + "&token_type_hint=" + BEARER_PREFIX).getBytes(Charsets.UTF_8));
             return new String(ByteStreams.toByteArray(urlConn.getInputStream()), Charsets.UTF_8);
         } catch (java.io.IOException e) {
             log.error("Error invoking Authorization Server", e);
@@ -168,8 +169,18 @@ public class OAuth2SecurityInterceptor implements Interceptor {
      */
     private Map<String, String> getResponseDataMap(String responseStr) {
         Gson gson = new Gson();
-        Type typeOfMapOfStrings = TypeToken.get(Map.class).getType();
+        Type typeOfMapOfStrings = new ExtendedTypeToken<Map<String, String>>() {
+        }.getType();
         return gson.fromJson(responseStr, typeOfMapOfStrings);
+    }
+
+    /**
+     * This class extends the {@link TypeToken}.
+     * Created due to the findbug issue when passing anonymous inner class.
+     *
+     * @param <T> Generic type
+     */
+    private static class ExtendedTypeToken<T> extends TypeToken {
     }
 
     /**
