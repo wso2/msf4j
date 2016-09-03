@@ -16,7 +16,6 @@
 package org.wso2.msf4j.service.sub;
 
 import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -43,7 +42,7 @@ public class Player {
         age = 27;
     }
 
-    @GET
+    @POST
     @Path("/details/{filed}")
     public String getPlayerProfileFiled(@PathParam("countryId") String countryId, @PathParam("playerId") int playerId,
                                         @PathParam("filed") String field, @FormParam("type") String type,
