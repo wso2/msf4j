@@ -1,6 +1,6 @@
 # JAX-RS Sub-Resource Sample
 
-This is the MSF4J Sub resource sample that demonstrate hwo to use sub-resource with msf4j.
+This is the MSF4J Sub resource sample that demonstrate how to use sub-resource with msf4j.
 
 ## How to build the sample
 
