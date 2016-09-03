@@ -21,7 +21,7 @@ if [ $PRE_REQ -eq 0 ];then
     exit;
 fi
 
-rm -rf packages/* security pet transaction fileserver admin-fe store-fe
+rm -rf das/modules das/repository packages/* security pet transaction fileserver admin-fe store-fe
 
 git pull
 
