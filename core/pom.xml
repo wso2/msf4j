@@ -92,6 +92,8 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
+            <version>18.0</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
@@ -126,6 +128,10 @@
                     <groupId>com.fasterxml.jackson.dataformat</groupId>
                     <artifactId>jackson-dataformat-yaml</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -143,6 +149,10 @@
                 <exclusion>
                     <groupId>com.fasterxml.jackson.dataformat</groupId>
                     <artifactId>jackson-dataformat-xml</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -369,7 +379,7 @@
         <import.package>
             org.apache.commons.io.*;version="${commons-io.version.range}",
             com.google.gson.*;version="${gson.version.range}",
-            com.google.common.*;version="${guava.version.range}",
+            <!--com.google.common.*;version="${guava.version.range}",-->
             javax.annotation.*,
             javax.ws.rs.*,
             javax.xml.bind;resolution:=optional,

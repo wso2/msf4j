@@ -16,7 +16,7 @@
 
 package org.wso2.msf4j.internal.entitywriter;
 
-import com.google.common.io.Files;
+import org.apache.commons.io.FilenameUtils;
 import org.wso2.carbon.messaging.CarbonCallback;
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.transport.http.netty.common.Constants;
@@ -53,7 +53,7 @@ public class FileEntityWriter implements EntityWriter<File> {
     public void writeData(CarbonMessage carbonMessage, File file, String mediaType, int chunkSize, CarbonCallback cb) {
         if (mediaType == null || mediaType.equals(MediaType.WILDCARD)) {
             try {
-                mediaType = MimeMapper.getMimeType(Files.getFileExtension(file.getName()));
+                mediaType = MimeMapper.getMimeType(FilenameUtils.getExtension(file.getName()));
             } catch (MimeMappingException e) {
                 mediaType = MediaType.WILDCARD;
             }

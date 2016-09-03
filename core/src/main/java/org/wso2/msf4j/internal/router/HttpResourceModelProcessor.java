@@ -16,7 +16,6 @@
 
 package org.wso2.msf4j.internal.router;
 
-import com.google.common.base.Preconditions;
 import org.apache.commons.io.FileCleaningTracker;
 import org.apache.commons.io.FileDeleteStrategy;
 import org.wso2.msf4j.HttpStreamer;
@@ -353,7 +352,10 @@ public class HttpResourceModelProcessor {
             }
             value = listMultivaluedMap;
         }
-        Preconditions.checkArgument(value != null, "Could not resolve parameter %s", paramType.getTypeName());
+        if (value == null) {
+            throw new IllegalArgumentException(
+                    String.format("Could not resolve parameter %s", paramType.getTypeName()));
+        }
         return value;
     }
 
@@ -367,7 +369,10 @@ public class HttpResourceModelProcessor {
                 value = defaultVal;
             }
         }
-        Preconditions.checkArgument(value != null, "Could not resolve value for parameter %s", pathParam.value());
+        if (value == null) {
+            throw new IllegalArgumentException(
+                    String.format("Could not resolve value for parameter %s", pathParam.value()));
+        }
         return info.convert(value);
     }
 

@@ -16,7 +16,6 @@
 
 package org.wso2.msf4j;
 
-import com.google.common.io.Resources;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.wso2.carbon.transport.http.netty.config.YAMLTransportConfigurationBuilder;
@@ -52,7 +51,7 @@ public class HttpsServerTest extends HttpServerTest {
     public void setup() throws Exception {
         baseURI = URI.create(String.format("https://%s:%d", Constants.HOSTNAME, port));
         System.setProperty(YAMLTransportConfigurationBuilder.NETTY_TRANSPORT_CONF,
-                Resources.getResource("netty-transports-1.yml").getPath());
+                           Thread.currentThread().getContextClassLoader().getResource("netty-transports-1.yml").getPath());
         microservicesRunner = new MicroservicesRunner();
         sslClientContext = new SSLClientContext();
         microservicesRunner

@@ -16,10 +16,7 @@
 
 package org.wso2.msf4j.internal.router;
 
-import com.google.common.base.Function;
-import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.wso2.msf4j.HttpStreamer;
 import org.wso2.msf4j.formparam.FormDataParam;
 
@@ -30,9 +27,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import javax.annotation.Nullable;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
@@ -55,9 +54,22 @@ import javax.ws.rs.core.Context;
  */
 public final class HttpResourceModel {
 
-    private static final Set<Class<? extends Annotation>> SUPPORTED_PARAM_ANNOTATIONS =
-            ImmutableSet.of(PathParam.class, QueryParam.class, HeaderParam.class, Context.class, FormParam.class,
-                    FormDataParam.class, CookieParam.class);
+    private static final Set<Class<? extends Annotation>> SUPPORTED_PARAM_ANNOTATIONS;
+
+    static {
+        Set<Class<? extends Annotation>> supportedAnnotation =
+                new HashSet<>();
+        supportedAnnotation.add(PathParam.class);
+        supportedAnnotation.add(QueryParam.class);
+        supportedAnnotation.add(HeaderParam.class);
+        supportedAnnotation.add(Context.class);
+        supportedAnnotation.add(FormParam.class);
+        supportedAnnotation.add(FormDataParam.class);
+        supportedAnnotation.add(CookieParam.class);
+
+        SUPPORTED_PARAM_ANNOTATIONS = Collections.unmodifiableSet(supportedAnnotation);
+    }
+
     private static final String[] ANY_MEDIA_TYPE = new String[]{"*/*"};
     private static final int STREAMING_REQ_UNKNOWN = 0, STREAMING_REQ_SUPPORTED = 1, STREAMING_REQ_UNSUPPORTED = 2;
 
@@ -194,12 +206,7 @@ public final class HttpResourceModel {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-                .add("httpMethods", httpMethods)
-                .add("path", path)
-                .add("method", method)
-                .add("handler", handler)
-                .toString();
+        return ToStringBuilder.reflectionToString(this);
     }
 
     /**
@@ -210,7 +217,7 @@ public final class HttpResourceModel {
      * @return String representation of HttpMethod from annotations or emptyString as a default.
      */
     private Set<String> getHttpMethods(Method method) {
-        Set<String> httpMethods = Sets.newHashSet();
+        Set<String> httpMethods = new HashSet();
         boolean isSubResourceLocator = true;
         if (method.isAnnotationPresent(GET.class)) {
             httpMethods.add(HttpMethod.GET);
@@ -235,7 +242,7 @@ public final class HttpResourceModel {
             httpMethods.add(HttpMethod.PUT);
             httpMethods.add(HttpMethod.DELETE);
         }
-        return ImmutableSet.copyOf(httpMethods);
+        return httpMethods;
     }
 
     /**
@@ -251,11 +258,11 @@ public final class HttpResourceModel {
             Annotation[] annotations = paramAnnotations[i];
 
             //Can have only one from @PathParam, @QueryParam, @HeaderParam or @Context.
-            if (Sets.intersection(SUPPORTED_PARAM_ANNOTATIONS, ImmutableSet.of(annotations)).size() > 1) {
+            /*if (SUPPORTED_PARAM_ANNOTATIONS.retainAll(Arrays.asList(annotations))) {
                 throw new IllegalArgumentException(
                         String.format("Must have exactly one annotation from %s for parameter %d in method %s",
                                 SUPPORTED_PARAM_ANNOTATIONS, i, method));
-            }
+            }*/
 
             Annotation annotation = null;
             Type parameterType = paramTypes[i];

@@ -15,10 +15,7 @@
  */
 package org.wso2.msf4j;
 
-import com.google.common.io.ByteStreams;
-import com.google.common.io.FileWriteMode;
-import com.google.common.io.Files;
-import com.google.common.io.Resources;
+import org.apache.commons.io.IOUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.wso2.carbon.transport.http.netty.config.YAMLTransportConfigurationBuilder;
@@ -30,6 +27,9 @@ import org.wso2.msf4j.service.TestMicroservice;
 
 import java.io.File;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 
 /**
  * Test the HttpsServer with mutual authentication.
@@ -43,25 +43,23 @@ public class MutualAuthServerTest extends HttpsServerTest {
     private static final int port = Constants.PORT + 5;
     private static File trustKeyStore;
 
-
     @BeforeClass
     public void setup() throws Exception {
         baseURI = URI.create(String.format("https://%s:%d", hostname, port));
         trustKeyStore = new File(tmpFolder, "MutualAuthServerTest.jks");
         trustKeyStore.createNewFile();
-        ByteStreams.copy(
-                Resources.asByteSource(Resources.getResource("client.jks")).openStream(),
-                Files.asByteSink(trustKeyStore, FileWriteMode.APPEND).openStream());
+        /*IOUtils.copy(Thread.currentThread().getContextClassLoader().getResource("client.jks").openStream(),
+                     Files.newOutputStream(trustKeyStore.toPath(), StandardOpenOption.APPEND));*/
+        Files.copy(Thread.currentThread().getContextClassLoader().getResource("client.jks").openStream(), trustKeyStore.toPath(), StandardCopyOption.REPLACE_EXISTING);
         String trustKeyStorePassword = "password";
         setSslClientContext(new SSLClientContext(trustKeyStore, trustKeyStorePassword));
 
         System.setProperty(YAMLTransportConfigurationBuilder.NETTY_TRANSPORT_CONF,
-                Resources.getResource("netty-transports-2.yml").getPath());
+                           Thread.currentThread().getContextClassLoader().getResource("netty-transports-2.yml")
+                                 .getPath());
         microservicesRunner = new MicroservicesRunner();
-        microservicesRunner
-                .addExceptionMapper(new TestExceptionMapper(), new TestExceptionMapper2())
-                .deploy(testMicroservice)
-                .start();
+        microservicesRunner.addExceptionMapper(new TestExceptionMapper(), new TestExceptionMapper2())
+                           .deploy(testMicroservice).start();
     }
 
     @AfterClass

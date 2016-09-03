@@ -15,12 +15,12 @@
  */
 package org.wso2.msf4j;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
+import org.testng.collections.Maps;
 
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -31,7 +31,7 @@ class InterceptorTestBase {
     static URI baseURI;
 
     int doGet(String resource) throws Exception {
-        return doGet(resource, ImmutableMap.of());
+        return doGet(resource, Collections.unmodifiableMap(Collections.emptyMap()));
     }
 
     int doGet(String resource, String key, String value, String... keyValues) throws Exception {

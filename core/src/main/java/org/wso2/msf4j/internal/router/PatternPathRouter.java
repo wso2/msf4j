@@ -16,12 +16,13 @@
 
 package org.wso2.msf4j.internal.router;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,7 +51,7 @@ public final class PatternPathRouter<T> {
      * Initialize PatternPathRouter.
      */
     public PatternPathRouter() {
-        this.patternRouteList = Lists.newArrayList();
+        this.patternRouteList = new ArrayList<>();
     }
 
     public static <T> PatternPathRouter<T> create() {
@@ -74,7 +75,7 @@ public final class PatternPathRouter<T> {
 
         String[] parts = path.split(PATH_SLASH);
         StringBuilder sb = new StringBuilder();
-        List<String> groupNames = Lists.newArrayList();
+        List<String> groupNames = new ArrayList<>();
 
         for (String part : parts) {
             Matcher groupMatcher = GROUP_PATTERN.matcher(part);
@@ -161,7 +162,7 @@ public final class PatternPathRouter<T> {
         String cleanPath = (path.endsWith(PATH_SLASH) && path.length() > 0)
                 ? path.substring(0, path.length() - 1) : path;
 
-        List<RoutableDestination<T>> result = Lists.newCopyOnWriteArrayList();
+        List<RoutableDestination<T>> result = new CopyOnWriteArrayList<>();
 
         patternRouteList.parallelStream()
                         .forEach(patternRoute -> processDestinations(patternRoute, result, cleanPath, false));
@@ -178,7 +179,7 @@ public final class PatternPathRouter<T> {
 
     private void processDestinations(ImmutablePair<Pattern, RouteDestinationWithGroups> patternRoute,
                                      List<RoutableDestination<T>> result, String cleanPath, boolean isSubResource) {
-        ImmutableMap.Builder<String, String> groupNameValuesBuilder = ImmutableMap.builder();
+        Map<String, String> groupNameValuesBuilder = new HashMap<>();
         Matcher matcher;
         if (isSubResource) {
             Pattern pattern = Pattern.compile(patternRoute.getFirst().pattern() + ".*");
@@ -193,8 +194,7 @@ public final class PatternPathRouter<T> {
                 groupNameValuesBuilder.put(name, value);
                 matchIndex++;
             }
-            result.add(new RoutableDestination<>(patternRoute.getSecond().getDestination(),
-                                                 groupNameValuesBuilder.build()));
+            result.add(new RoutableDestination<>(patternRoute.getSecond().getDestination(), groupNameValuesBuilder));
         }
     }
 
@@ -235,10 +235,11 @@ public final class PatternPathRouter<T> {
 
         @Override
         public String toString() {
-            return Objects.toStringHelper(this)
+            return ToStringBuilder.reflectionToString(this);
+            /*return Objects.toStringHelper(this)
                     .add("destination", destination)
                     .add("groupNameValues", groupNameValues)
-                    .toString();
+                    .toString();*/
         }
     }
 
