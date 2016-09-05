@@ -29,6 +29,7 @@ import java.lang.reflect.Modifier;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -161,8 +162,8 @@ public class HttpMethodInfo {
                                               String.format("%s/%s", destination.getDestination().getPath(),
                                                             relativePath);
                         HttpResourceModel resourceModel = new HttpResourceModel(absolutePath, method, returnVal, false);
-                        SubresourceKey subResKey =
-                                new SubresourceKey(absolutePath, method.getDeclaringClass());
+                        SubresourceKey subResKey = new SubresourceKey(absolutePath, method.getDeclaringClass(),
+                                                                      resourceModel.getHttpMethod());
                         destination.getDestination().addSubResources(subResKey, resourceModel);
                     } else if (Modifier.isPublic(method.getModifiers()) && method.getAnnotation(Path.class) != null) {
                         // Sub resource locator method
@@ -175,19 +176,19 @@ public class HttpMethodInfo {
                                                             relativePath);
                         HttpResourceModel resourceModel = new HttpResourceModel(absolutePath, method, returnVal, true);
                         SubresourceKey subResKey =
-                                new SubresourceKey(absolutePath, method.getDeclaringClass());
+                                new SubresourceKey(absolutePath, method.getDeclaringClass(), Collections.emptySet());
                         destination.getDestination().addSubResources(subResKey, resourceModel);
                     }
                 }
                 destination.getDestination().setSubResourceScanned(true);
             }
             String finalRequestPath = requestPath;
-            Optional<Map.Entry<SubresourceKey, HttpResourceModel>>
-                    entry = destination.getDestination().getSubResources().entrySet().stream()
-                                       .filter(e -> finalRequestPath.matches(
-                                               e.getKey().getPath().replaceAll(GROUP_PATTERN, GROUP_PATTERN_REGEX))
-                                                    && returnVal.getClass().equals(e.getKey().getTypedClass()))
-                                       .findFirst();
+            Optional<Map.Entry<SubresourceKey, HttpResourceModel>> entry =
+                    destination.getDestination().getSubResources().entrySet().stream()
+                               .filter(e -> e.getValue().getHttpMethod().contains(request.getHttpMethod()) &&
+                                            finalRequestPath.matches(e.getKey().getPath().replaceAll(GROUP_PATTERN,
+                                                                                             GROUP_PATTERN_REGEX)) &&
+                                            returnVal.getClass().equals(e.getKey().getTypedClass())).findFirst();
             HttpResourceModel resourceModel;
             if (entry.isPresent()) {
                 resourceModel = entry.get().getValue();

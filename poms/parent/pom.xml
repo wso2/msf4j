@@ -279,11 +279,6 @@
                 <version>${gson.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guava.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>com.google.code.findbugs</groupId>
                 <artifactId>jsr305</artifactId>
                 <version>${jsr305.version}</version>
@@ -312,10 +307,6 @@
                         <groupId>org.yaml</groupId>
                         <artifactId>snakeyaml</artifactId>
                     </exclusion>
-                   <!-- <exclusion>
-                        <groupId>com.google.guava</groupId>
-                        <artifactId>guava</artifactId>
-                    </exclusion>-->
                 </exclusions>
             </dependency>
             <dependency>

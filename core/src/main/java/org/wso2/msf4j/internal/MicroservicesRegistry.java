@@ -21,7 +21,6 @@ import org.wso2.msf4j.DefaultSessionManager;
 import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.SessionManager;
 import org.wso2.msf4j.internal.router.MicroserviceMetadata;
-import org.wso2.msf4j.internal.swagger.SwaggerDefinitionService;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -54,8 +53,19 @@ public class MicroservicesRegistry {
     private SessionManager sessionManager = new DefaultSessionManager();
 
     public MicroservicesRegistry() {
-        // Deploy the Swagger definition service which will return the Swagger definition.
-        services.add(new SwaggerDefinitionService(this));
+        /* If we can find the SwaggerDefinitionService, Deploy the Swagger definition service which will return the
+         Swagger definition.*/
+        try {
+            Class swaggerDefinitionServiceClass = Class.forName("org.wso2.msf4j.swagger.SwaggerDefinitionService");
+            services.add(swaggerDefinitionServiceClass.getConstructor(MicroservicesRegistry.class).newInstance(this));
+        } catch (ClassNotFoundException e) {
+            log.info("SwaggerDefinitionService can't be found in classpath.");
+        } catch (NoSuchMethodException | IllegalAccessException | InstantiationException
+                | InvocationTargetException e) {
+            if (log.isDebugEnabled()) {
+                log.debug("Couldn't add the SwaggerDefinitionService.", e);
+            }
+        }
     }
 
     public void addService(Object... service) {

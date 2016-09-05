@@ -16,13 +16,13 @@
 
 package org.wso2.msf4j.internal.router;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.wso2.msf4j.util.Utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -162,40 +162,44 @@ public final class PatternPathRouter<T> {
         String cleanPath = (path.endsWith(PATH_SLASH) && path.length() > 0)
                 ? path.substring(0, path.length() - 1) : path;
 
-        List<RoutableDestination<T>> result = new CopyOnWriteArrayList<>();
+        List<RoutableDestination<T>> result = new ArrayList<>();
 
-        patternRouteList.parallelStream()
-                        .forEach(patternRoute -> processDestinations(patternRoute, result, cleanPath, false));
-
+        for (ImmutablePair<Pattern, RouteDestinationWithGroups> patternRoute : patternRouteList) {
+            Map<String, String> groupNameValues = new HashMap<>();
+            Matcher matcher = patternRoute.getFirst().matcher(cleanPath);
+            if (matcher.matches()) {
+                int matchIndex = 1;
+                for (String name : patternRoute.getSecond().getGroupNames()) {
+                    String value = matcher.group(matchIndex);
+                    groupNameValues.put(name, value);
+                    matchIndex++;
+                }
+                result.add(new RoutableDestination<>(patternRoute.getSecond().getDestination(),
+                                                     Collections.unmodifiableMap(groupNameValues)));
+            }
+        }
         //Check for sub-resource locator
         if (result.isEmpty()) {
-            patternRouteList.parallelStream().filter(patternRoute -> patternRoute.getSecond()
-                                .getDestination() instanceof HttpResourceModel &&
-                                ((HttpResourceModel) patternRoute.getSecond().getDestination()).isSubResourceLocator())
-                            .forEach(patternRoute -> processDestinations(patternRoute, result, cleanPath, true));
+            patternRouteList.stream()
+                            .filter(patternRoute -> patternRoute.getSecond().destination instanceof HttpResourceModel &&
+                                                    ((HttpResourceModel) patternRoute.getSecond().destination)
+                                                            .isSubResourceLocator()).forEach(patternRoute -> {
+                Map<String, String> groupNameValues = new HashMap<>();
+                Pattern pattern = Pattern.compile(patternRoute.getFirst().pattern() + ".*");
+                Matcher matcher = pattern.matcher(cleanPath);
+                if (matcher.matches()) {
+                    int matchIndex = 1;
+                    for (String name : patternRoute.getSecond().getGroupNames()) {
+                        String value = matcher.group(matchIndex);
+                        groupNameValues.put(name, value);
+                        matchIndex++;
+                    }
+                    result.add(new RoutableDestination<>(patternRoute.getSecond().getDestination(),
+                                                         Collections.unmodifiableMap(groupNameValues)));
+                }
+            });
         }
         return result;
-    }
-
-    private void processDestinations(ImmutablePair<Pattern, RouteDestinationWithGroups> patternRoute,
-                                     List<RoutableDestination<T>> result, String cleanPath, boolean isSubResource) {
-        Map<String, String> groupNameValuesBuilder = new HashMap<>();
-        Matcher matcher;
-        if (isSubResource) {
-            Pattern pattern = Pattern.compile(patternRoute.getFirst().pattern() + ".*");
-            matcher = pattern.matcher(cleanPath);
-        } else {
-            matcher = patternRoute.getFirst().matcher(cleanPath);
-        }
-        if (matcher.matches()) {
-            int matchIndex = 1;
-            for (String name : patternRoute.getSecond().getGroupNames()) {
-                String value = matcher.group(matchIndex);
-                groupNameValuesBuilder.put(name, value);
-                matchIndex++;
-            }
-            result.add(new RoutableDestination<>(patternRoute.getSecond().getDestination(), groupNameValuesBuilder));
-        }
     }
 
     /**
@@ -235,11 +239,7 @@ public final class PatternPathRouter<T> {
 
         @Override
         public String toString() {
-            return ToStringBuilder.reflectionToString(this);
-            /*return Objects.toStringHelper(this)
-                    .add("destination", destination)
-                    .add("groupNameValues", groupNameValues)
-                    .toString();*/
+            return Utils.toString(this, new String[] { "destination", "groupNameValues" });
         }
     }
 

@@ -15,7 +15,6 @@
  */
 package org.wso2.msf4j;
 
-import org.apache.commons.io.IOUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.wso2.carbon.transport.http.netty.config.YAMLTransportConfigurationBuilder;
@@ -23,13 +22,13 @@ import org.wso2.msf4j.conf.Constants;
 import org.wso2.msf4j.conf.SSLClientContext;
 import org.wso2.msf4j.exception.TestExceptionMapper;
 import org.wso2.msf4j.exception.TestExceptionMapper2;
+import org.wso2.msf4j.service.SecondService;
 import org.wso2.msf4j.service.TestMicroservice;
 
 import java.io.File;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.nio.file.StandardOpenOption;
 
 /**
  * Test the HttpsServer with mutual authentication.
@@ -37,7 +36,9 @@ import java.nio.file.StandardOpenOption;
 public class MutualAuthServerTest extends HttpsServerTest {
 
     private final TestMicroservice testMicroservice = new TestMicroservice();
+    private final SecondService secondService = new SecondService();
     private MicroservicesRunner microservicesRunner;
+    private MicroservicesRunner secondMicroservicesRunner;
 
     private static String hostname = Constants.HOSTNAME;
     private static final int port = Constants.PORT + 5;
@@ -48,9 +49,8 @@ public class MutualAuthServerTest extends HttpsServerTest {
         baseURI = URI.create(String.format("https://%s:%d", hostname, port));
         trustKeyStore = new File(tmpFolder, "MutualAuthServerTest.jks");
         trustKeyStore.createNewFile();
-        /*IOUtils.copy(Thread.currentThread().getContextClassLoader().getResource("client.jks").openStream(),
-                     Files.newOutputStream(trustKeyStore.toPath(), StandardOpenOption.APPEND));*/
-        Files.copy(Thread.currentThread().getContextClassLoader().getResource("client.jks").openStream(), trustKeyStore.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(Thread.currentThread().getContextClassLoader().getResource("client.jks").openStream(),
+                   trustKeyStore.toPath(), StandardCopyOption.REPLACE_EXISTING);
         String trustKeyStorePassword = "password";
         setSslClientContext(new SSLClientContext(trustKeyStore, trustKeyStorePassword));
 
@@ -60,11 +60,14 @@ public class MutualAuthServerTest extends HttpsServerTest {
         microservicesRunner = new MicroservicesRunner();
         microservicesRunner.addExceptionMapper(new TestExceptionMapper(), new TestExceptionMapper2())
                            .deploy(testMicroservice).start();
+        secondMicroservicesRunner = new MicroservicesRunner(port + 1);
+        secondMicroservicesRunner.deploy(secondService).start();
     }
 
     @AfterClass
     public void teardown() throws Exception {
         microservicesRunner.stop();
+        secondMicroservicesRunner.stop();
         trustKeyStore.delete();
     }
 }

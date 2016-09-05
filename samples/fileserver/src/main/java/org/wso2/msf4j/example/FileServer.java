@@ -17,7 +17,7 @@
 package org.wso2.msf4j.example;
 
 import org.apache.commons.io.FilenameUtils;
-    import org.slf4j.Logger;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.HttpStreamHandler;
 import org.wso2.msf4j.HttpStreamer;

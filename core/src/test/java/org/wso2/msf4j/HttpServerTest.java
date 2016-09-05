@@ -66,6 +66,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -75,7 +76,11 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import static org.testng.AssertJUnit.*;
+import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertNotNull;
+import static org.testng.AssertJUnit.assertNull;
+import static org.testng.AssertJUnit.assertTrue;
+import static org.testng.AssertJUnit.fail;
 
 /**
  * Test the HttpServer.
@@ -93,7 +98,7 @@ public class HttpServerTest {
         try {
             tmpFolder = Files.createTempDirectory("msf4j").toFile();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error while creating tenp directory", e);
         }
     }
     private final TestMicroservice testMicroservice = new TestMicroservice();
@@ -121,11 +126,13 @@ public class HttpServerTest {
     @AfterClass
     public void teardown() throws Exception {
         microservicesRunner.stop();
+        secondMicroservicesRunner.stop();
     }
 
     @Test
     public void testMultipleMicroServiceRunners() throws IOException {
-        HttpURLConnection urlConn = request("/SecondService/addNumbers/9/25", HttpMethod.GET, false, port + 1);
+        HttpURLConnection urlConn =
+                request("/SecondService/addNumbers/9/25", HttpMethod.GET, false, baseURI.getPort() + 1);
         assertEquals(200, urlConn.getResponseCode());
         String content = getContent(urlConn);
 
@@ -467,7 +474,7 @@ public class HttpServerTest {
         urlConn.disconnect();
     }
 
-   /* @Test
+    @Test
     public void testDefaultQueryParam() throws IOException {
         // Submit with no parameters. Each should get the default values.
         HttpURLConnection urlConn = request("/test/v1/defaultValue", HttpMethod.GET);
@@ -479,11 +486,11 @@ public class HttpServerTest {
 
         assertEquals(30, json.get("age").getAsLong());
         assertEquals("hello", json.get("name").getAsString());
-        assertEquals(ImmutableList.of("casking"),
-                GSON.fromJson(json.get("hobby").getAsJsonArray(), hobbyType));
+        assertEquals(Collections.singletonList("casking"),
+                     GSON.fromJson(json.get("hobby").getAsJsonArray(), hobbyType));
 
         urlConn.disconnect();
-    }*/
+    }
 
     @Test(timeOut = 5000)
     public void testConnectionClose() throws Exception {
@@ -709,8 +716,8 @@ public class HttpServerTest {
         String contentEncoding = urlConn.getHeaderField(HttpHeaders.CONTENT_ENCODING);
         assertTrue(contentEncoding == null || !contentEncoding.contains("gzip"));
         InputStream downStream = urlConn.getInputStream();
-        assertTrue(IOUtils.toByteArray(downStream).length ==
-                IOUtils.toByteArray(Thread.currentThread().getContextClassLoader().getResource("testJpgFile.jpg").openStream()).length);
+        assertTrue(IOUtils.toByteArray(downStream).length == IOUtils.toByteArray(
+                Thread.currentThread().getContextClassLoader().getResource("testJpgFile.jpg").openStream()).length);
     }
 
     @Test
@@ -721,8 +728,8 @@ public class HttpServerTest {
         String contentEncoding = urlConn.getHeaderField(HttpHeaders.CONTENT_ENCODING);
         assertTrue("gzip".equalsIgnoreCase(contentEncoding));
         InputStream downStream = urlConn.getInputStream();
-        assertTrue(IOUtils.toByteArray(downStream).length <
-                IOUtils.toByteArray(Thread.currentThread().getContextClassLoader().getResource("testJpgFile.jpg").openStream()).length);
+        assertTrue(IOUtils.toByteArray(downStream).length < IOUtils.toByteArray(
+                Thread.currentThread().getContextClassLoader().getResource("testJpgFile.jpg").openStream()).length);
     }
 
     @Test
@@ -744,30 +751,6 @@ public class HttpServerTest {
         assertTrue(contentType.equalsIgnoreCase(MediaType.TEXT_HTML));
         String content = getContent(urlConn);
         assertEquals("Hello", content);
-        urlConn.disconnect();
-    }
-
-    @Test
-    public void testGlobalSwagger() throws Exception {
-        HttpURLConnection urlConn = request("/swagger", HttpMethod.GET);
-        assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
-        assertEquals(MediaType.APPLICATION_JSON, urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE));
-        urlConn.disconnect();
-    }
-
-    @Test
-    public void testServiceSwagger() throws Exception {
-        HttpURLConnection urlConn = request("/swagger?path=/test/v1", HttpMethod.GET);
-        assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
-        assertEquals(MediaType.APPLICATION_JSON, urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE));
-        urlConn.disconnect();
-    }
-
-    @Test
-    public void testNonExistentServiceSwagger() throws Exception {
-        HttpURLConnection urlConn = request("/swagger?path=/zzaabdf", HttpMethod.GET);
-        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), urlConn.getResponseCode());
-        assertEquals(MediaType.APPLICATION_JSON, urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE));
         urlConn.disconnect();
     }
 
@@ -966,10 +949,9 @@ public class HttpServerTest {
                 .addTextBody("id", "1")
                 .addPart("company", companyText)
                 .addPart("people", personList)
-                .addBinaryBody("file", new File(
-                                       Thread.currentThread().getContextClassLoader().getResource("testTxtFile.txt").toURI()),
-                        ContentType.DEFAULT_BINARY, "testTxtFile.txt")
-                .build();
+                .addBinaryBody("file",
+                        new File(Thread.currentThread().getContextClassLoader().getResource("testTxtFile.txt").toURI()),
+                               ContentType.DEFAULT_BINARY, "testTxtFile.txt").build();
 
         connection.setRequestProperty("Content-Type", reqEntity.getContentType().getValue());
         try (OutputStream out = connection.getOutputStream()) {

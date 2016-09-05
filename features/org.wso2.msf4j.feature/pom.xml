@@ -40,10 +40,6 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
         </dependency>
-        <!--<dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>-->
         <dependency>
             <groupId>org.apache.servicemix.bundles</groupId>
             <artifactId>org.apache.servicemix.bundles.commons-beanutils</artifactId>
@@ -162,10 +158,6 @@
                                     <symbolicName>javax.ws.rs-api</symbolicName>
                                     <version>${rs-api.version}</version>
                                 </bundle>
-                                <!--<bundle>
-                                    <symbolicName>com.google.guava</symbolicName>
-                                    <version>${guava.version}.0</version>
-                                </bundle>-->
                                 <bundle>
                                     <symbolicName>com.google.gson</symbolicName>
                                     <version>${gson.version}</version>

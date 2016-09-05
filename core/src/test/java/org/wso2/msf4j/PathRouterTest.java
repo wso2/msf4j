@@ -19,7 +19,6 @@ package org.wso2.msf4j;
 import org.testng.annotations.Test;
 import org.wso2.msf4j.internal.router.PatternPathRouter;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;

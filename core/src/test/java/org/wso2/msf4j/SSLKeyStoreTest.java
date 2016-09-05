@@ -38,11 +38,8 @@ public class SSLKeyStoreTest {
     public static void setup() throws Exception {
         keyStore = new File(tmpFolder, "KeyStore.jks");
         keyStore.createNewFile();
-        /*ByteStreams.copy(
-                Thread.currentThread().getContextClassLoader().getResource("cert.jks")).openStream(),
-                Files.asByteSink(keyStore, FileWriteMode.APPEND).openStream());*/
-        Files.copy(Thread.currentThread().getContextClassLoader().getResource("cert.jks").openStream(), keyStore.toPath(),
-                   StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(Thread.currentThread().getContextClassLoader().getResource("cert.jks").openStream(),
+                   keyStore.toPath(), StandardCopyOption.REPLACE_EXISTING);
     }
 
     @AfterClass

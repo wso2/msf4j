@@ -30,6 +30,14 @@
     <artifactId>stockquote-fatjar</artifactId>
     <packaging>jar</packaging>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.wso2.msf4j</groupId>
+            <artifactId>msf4j-swagger</artifactId>
+            <version>2.0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
     <name>Sample: StockQuote MSF4J (Fat jar mode)</name>
 
     <build>

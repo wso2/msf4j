@@ -348,13 +348,16 @@ public class TestMicroservice implements Microservice {
     @GET
     public Response serveInputStream(@PathParam("fileType") String fileType) throws Exception {
         if ("png".equals(fileType)) {
-            InputStream ipStream = new FileInputStream(new File(Thread.currentThread().getContextClassLoader().getResource("testPngFile.png").toURI()));
+            InputStream ipStream = new FileInputStream(
+                    new File(Thread.currentThread().getContextClassLoader().getResource("testPngFile.png").toURI()));
             return Response.ok(ipStream).type("image/png").build();
         } else if ("jpg".equals(fileType)) {
-            InputStream ipStream = new FileInputStream(new File(Thread.currentThread().getContextClassLoader().getResource("testJpgFile.jpg").toURI()));
+            InputStream ipStream = new FileInputStream(
+                    new File(Thread.currentThread().getContextClassLoader().getResource("testJpgFile.jpg").toURI()));
             return Response.ok(ipStream).type("image/jpeg").header("X-Custom-Header", "wso2").build();
         } else if ("txt".equals(fileType)) {
-            InputStream ipStream = new FileInputStream(new File(Thread.currentThread().getContextClassLoader().getResource("testTxtFile.txt").toURI()));
+            InputStream ipStream = new FileInputStream(
+                    new File(Thread.currentThread().getContextClassLoader().getResource("testTxtFile.txt").toURI()));
             return Response.ok(ipStream).type("text/plain").build();
         }
         return Response.noContent().build();
@@ -470,7 +473,7 @@ public class TestMicroservice implements Microservice {
     public String testSortedSetQueryParam(@QueryParam("id") SortedSet<Integer> ids) {
         StringBuilder response = new StringBuilder();
         ids.forEach(id -> response.append(id).append(","));
-        if(response.length() > 0) {
+        if (response.length() > 0) {
             response.setLength(response.length() - 1);
         }
         return response.toString();

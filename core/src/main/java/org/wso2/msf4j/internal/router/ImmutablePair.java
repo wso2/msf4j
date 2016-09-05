@@ -16,7 +16,7 @@
 
 package org.wso2.msf4j.internal.router;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.wso2.msf4j.util.Utils;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -86,11 +86,7 @@ final class ImmutablePair<A, B> {
      */
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-        /*return Objects.toStringHelper(this)
-                .add("first", first)
-                .add("second", second)
-                .toString();*/
+        return Utils.toString(this, new String[] { "first", "second" });
     }
 
     /**

@@ -16,15 +16,14 @@
 
 package org.wso2.msf4j.internal.router;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.msf4j.util.Utils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -174,7 +173,7 @@ public final class MicroserviceMetadata {
     getMatchedDestination(List<PatternPathRouter.RoutableDestination<HttpResourceModel>> routableDestinations,
                           String targetHttpMethod, String requestUri) {
 
-        Iterable<String> requestUriParts = Collections.unmodifiableList(Arrays.asList(StringUtils.split(requestUri, '/')));
+        Iterable<String> requestUriParts = Collections.unmodifiableList(Utils.split(requestUri, "/", true));
         List<PatternPathRouter.RoutableDestination<HttpResourceModel>> matchedDestinations =
                 new ArrayList<>(routableDestinations.size());
         int maxExactMatch = 0;
@@ -188,7 +187,7 @@ public final class MicroserviceMetadata {
             for (String httpMethod : resourceModel.getHttpMethod()) {
                 if (targetHttpMethod.equals(httpMethod)) {
                     int exactMatch = getExactPrefixMatchCount(requestUriParts, Collections
-                            .unmodifiableList(Arrays.asList(StringUtils.split(resourceModel.getPath(), '/'))));
+                            .unmodifiableList(Utils.split(resourceModel.getPath(), "/", true)));
 
                     // When there are multiple matches present, the following precedence order is used -
                     // 1. template path that has highest exact prefix match with the url is chosen.

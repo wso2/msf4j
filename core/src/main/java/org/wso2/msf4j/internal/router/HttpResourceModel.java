@@ -16,9 +16,9 @@
 
 package org.wso2.msf4j.internal.router;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.wso2.msf4j.HttpStreamer;
 import org.wso2.msf4j.formparam.FormDataParam;
+import org.wso2.msf4j.util.Utils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -206,7 +206,7 @@ public final class HttpResourceModel {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return Utils.toString(this, new String[] { "httpMethods", "path", "method", "handler" });
     }
 
     /**
@@ -242,7 +242,7 @@ public final class HttpResourceModel {
             httpMethods.add(HttpMethod.PUT);
             httpMethods.add(HttpMethod.DELETE);
         }
-        return httpMethods;
+        return Collections.unmodifiableSet(httpMethods);
     }
 
     /**
@@ -258,11 +258,11 @@ public final class HttpResourceModel {
             Annotation[] annotations = paramAnnotations[i];
 
             //Can have only one from @PathParam, @QueryParam, @HeaderParam or @Context.
-            /*if (SUPPORTED_PARAM_ANNOTATIONS.retainAll(Arrays.asList(annotations))) {
+            if (Utils.getIntersection(SUPPORTED_PARAM_ANNOTATIONS, new HashSet(Arrays.asList(annotations))) > 1) {
                 throw new IllegalArgumentException(
                         String.format("Must have exactly one annotation from %s for parameter %d in method %s",
                                 SUPPORTED_PARAM_ANNOTATIONS, i, method));
-            }*/
+            }
 
             Annotation annotation = null;
             Type parameterType = paramTypes[i];

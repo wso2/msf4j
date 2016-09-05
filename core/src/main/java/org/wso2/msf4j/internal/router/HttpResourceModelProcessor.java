@@ -52,6 +52,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.HeaderParam;
@@ -352,10 +353,7 @@ public class HttpResourceModelProcessor {
             }
             value = listMultivaluedMap;
         }
-        if (value == null) {
-            throw new IllegalArgumentException(
-                    String.format("Could not resolve parameter %s", paramType.getTypeName()));
-        }
+        Objects.requireNonNull(value, String.format("Could not resolve parameter %s", paramType.getTypeName()));
         return value;
     }
 
@@ -369,10 +367,7 @@ public class HttpResourceModelProcessor {
                 value = defaultVal;
             }
         }
-        if (value == null) {
-            throw new IllegalArgumentException(
-                    String.format("Could not resolve value for parameter %s", pathParam.value()));
-        }
+        Objects.requireNonNull(value, String.format("Could not resolve value for parameter %s", pathParam.value()));
         return info.convert(value);
     }
 
