@@ -19,6 +19,7 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,6 +35,7 @@ public class Utils {
      * @return String representation of given object.
      */
     public static String toString(Object object) {
+        Objects.requireNonNull(object);
         StringBuilder sb = new StringBuilder();
         try {
             for (Field field : object.getClass().getFields()) {
@@ -52,10 +54,12 @@ public class Utils {
      * @return String representation of given object.
      */
     public static String toString(Object object, String[] fields) {
+        Objects.requireNonNull(object);
         StringBuilder sb = new StringBuilder();
         try {
             for (String field : fields) {
-                sb.append(field).append(":").append(object.getClass().getField(field).get(object)).append("\n");
+                Objects.requireNonNull(field);
+                sb.append(field).append(":").append(object.getClass().getDeclaredField(field).get(object)).append("\n");
             }
         } catch (IllegalAccessException e) {
             throw new RuntimeException("Error while executing " + object.getClass() + ".toString()", e);
@@ -74,6 +78,8 @@ public class Utils {
      * @return List of values obtained by splitting.
      */
     public static List<String> split(String sequence, String delimiter, boolean omitEmpty) {
+        Objects.requireNonNull(sequence);
+        Objects.requireNonNull(delimiter);
         String[] splittedValues = sequence.split(delimiter);
         List<String> values = Arrays.asList(splittedValues);
         return omitEmpty ? values.stream().filter(value -> !value.isEmpty()).collect(Collectors.toList()) : values;

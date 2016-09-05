@@ -258,7 +258,8 @@ public final class HttpResourceModel {
             Annotation[] annotations = paramAnnotations[i];
 
             //Can have only one from @PathParam, @QueryParam, @HeaderParam or @Context.
-            if (Utils.getIntersection(SUPPORTED_PARAM_ANNOTATIONS, new HashSet(Arrays.asList(annotations))) > 1) {
+            if (Utils.getIntersection(SUPPORTED_PARAM_ANNOTATIONS,
+                                      Collections.unmodifiableSet(new HashSet(Arrays.asList(annotations)))) > 1) {
                 throw new IllegalArgumentException(
                         String.format("Must have exactly one annotation from %s for parameter %d in method %s",
                                 SUPPORTED_PARAM_ANNOTATIONS, i, method));
