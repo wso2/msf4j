@@ -16,7 +16,7 @@
 
 package org.wso2.msf4j.example;
 
-import com.google.common.io.Files;
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.HttpStreamHandler;
@@ -92,7 +92,7 @@ public class FileServer {
     @GET
     @Path("/ip/{fileName}")
     public Response getFileFromInputStream(@PathParam("fileName") String fileName) throws FileNotFoundException {
-        String mimeType = MimeMapper.getMimeType(Files.getFileExtension(fileName));
+        String mimeType = MimeMapper.getMimeType(FilenameUtils.getExtension(fileName));
         File file = Paths.get(MOUNT_PATH.toString(), fileName).toFile();
         return Response.ok(new FileInputStream(file)).type(mimeType).build();
     }
@@ -120,7 +120,7 @@ public class FileServer {
             os.close();
             is.close();
         };
-        String mimeType = MimeMapper.getMimeType(Files.getFileExtension(fileName));
+        String mimeType = MimeMapper.getMimeType(FilenameUtils.getExtension(fileName));
         return Response.ok(stream).type(mimeType).build();
     }
 

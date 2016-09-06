@@ -14,7 +14,6 @@ package org.wso2.msf4j.example;/*
 * limitations under the License.
 */
 
-import com.google.common.io.Resources;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.ContentType;
@@ -72,7 +71,7 @@ public class SampleClient {
         try {
             reqEntity = MultipartEntityBuilder.create().addTextBody("name", "WSO2").addTextBody("age", "10")
                                               .addBinaryBody("file",
-                                                             new File(Resources.getResource("sample.txt").toURI()),
+                                                             new File(Thread.currentThread().getContextClassLoader().getResource("sample.txt").toURI()),
                                                              ContentType.DEFAULT_BINARY, "sample.txt").build();
         } catch (URISyntaxException e) {
             log.error("Error while getting the file from resource." + e.getMessage(), e);
@@ -90,7 +89,7 @@ public class SampleClient {
             reqEntity = MultipartEntityBuilder.create().addTextBody("id", "1")
                                               .addPart("company", companyText)
                                               .addPart("people", personList).addBinaryBody("file", new File(
-                            Resources.getResource("sample.txt").toURI()), ContentType.DEFAULT_BINARY, "sample.txt")
+                            Thread.currentThread().getContextClassLoader().getResource("sample.txt").toURI()), ContentType.DEFAULT_BINARY, "sample.txt")
                                               .build();
         } catch (URISyntaxException e) {
             log.error("Error while getting the file from resource." + e.getMessage(), e);
@@ -102,9 +101,9 @@ public class SampleClient {
         HttpEntity reqEntity = null;
         try {
             reqEntity = MultipartEntityBuilder.create().addBinaryBody("files", new File(
-                    Resources.getResource("sample.txt").toURI()), ContentType.DEFAULT_BINARY, "sample.txt")
+                    Thread.currentThread().getContextClassLoader().getResource("sample.txt").toURI()), ContentType.DEFAULT_BINARY, "sample.txt")
                                               .addBinaryBody("files",
-                                                             new File(Resources.getResource("sample.jpg").toURI()),
+                                                             new File(Thread.currentThread().getContextClassLoader().getResource("sample.jpg").toURI()),
                                                              ContentType.DEFAULT_BINARY, "sample.jpg").build();
         } catch (URISyntaxException e) {
             log.error("Error while getting the file from resource." + e.getMessage(), e);

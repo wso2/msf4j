@@ -16,27 +16,28 @@
 
 package org.wso2.msf4j.internal.router;
 
-import com.google.common.base.Defaults;
-import com.google.common.base.Function;
-import com.google.common.base.Throwables;
-import com.google.common.collect.ImmutableCollection;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSortedSet;
-import com.google.common.collect.Maps;
-import com.google.common.primitives.Primitives;
-import com.google.common.reflect.TypeToken;
+import com.google.gson.reflect.TypeToken;
 import org.apache.commons.beanutils.ConvertUtils;
+import org.wso2.msf4j.util.Defaults;
+import org.wso2.msf4j.util.Primitives;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.function.Function;
 
 /**
  * Util class to convert request parameters.
@@ -47,7 +48,7 @@ public final class ParamConvertUtils {
 
     // Setup methods for converting string into primitive/boxed types
     static {
-        Map<Class<?>, Method> methods = Maps.newIdentityHashMap();
+        Map<Class<?>, Method> methods = new HashMap<>();
         for (Class<?> wrappedType : Primitives.allWrapperTypes()) {
             try {
                 methods.put(wrappedType, wrappedType.getMethod("valueOf", String.class));
@@ -170,7 +171,7 @@ public final class ParamConvertUtils {
      * @see #createQueryParamConverter(Type)
      */
     private static Function<List<String>, Object> createListConverter(Type resultType) {
-        TypeToken<?> typeToken = TypeToken.of(resultType);
+        TypeToken<?> typeToken = TypeToken.get(resultType);
 
         // Use boxed type if raw type is primitive type. Otherwise the type won't change.
         Class<?> resultClass = typeToken.getRawType();
@@ -327,7 +328,7 @@ public final class ParamConvertUtils {
 
         // For SortedSet, the entry type must be Comparable.
         Type elementType = type.getActualTypeArguments()[0];
-        if (rawType == SortedSet.class && !Comparable.class.isAssignableFrom(TypeToken.of(elementType).getRawType())) {
+        if (rawType == SortedSet.class && !Comparable.class.isAssignableFrom(TypeToken.get(elementType).getRawType())) {
             return null;
         }
 
@@ -342,26 +343,26 @@ public final class ParamConvertUtils {
         return new Function<List<String>, Object>() {
             @Override
             public Object apply(List<String> values) {
-                ImmutableCollection.Builder<? extends Comparable> builder;
+                Collection<? extends Comparable> collection;
                 if (rawType == List.class) {
-                    builder = ImmutableList.builder();
+                    collection = new ArrayList<>();
                 } else if (rawType == Set.class) {
-                    builder = ImmutableSet.builder();
+                    collection = new HashSet<>();
                 } else {
-                    builder = ImmutableSortedSet.naturalOrder();
+                    collection = new TreeSet<>();
                 }
 
                 if (values != null) {
                     for (String value : values) {
-                        add(builder, elementConverter.apply(ImmutableList.of(value)));
+                        add(collection, elementConverter.apply(Collections.singletonList(value)));
                     }
                 }
-                return builder.build();
+                return collection;
             }
 
             @SuppressWarnings("unchecked")
-            private <T> void add(ImmutableCollection.Builder<T> builder, Object element) {
-                builder.add((T) element);
+            private <T> void add(Collection<T> collection, Object element) {
+                collection.add((T) element);
             }
         };
     }
@@ -385,7 +386,11 @@ public final class ParamConvertUtils {
             try {
                 return convert(values.get(0));
             } catch (Exception e) {
-                throw Throwables.propagate(e);
+                Objects.requireNonNull(e);
+                if (e instanceof RuntimeException) {
+                    throw (RuntimeException) e;
+                }
+                throw new RuntimeException(e);
             }
         }
 

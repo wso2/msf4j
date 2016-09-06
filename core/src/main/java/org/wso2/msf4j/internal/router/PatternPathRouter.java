@@ -16,10 +16,11 @@
 
 package org.wso2.msf4j.internal.router;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
+import org.wso2.msf4j.util.Utils;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -50,7 +51,7 @@ public final class PatternPathRouter<T> {
      * Initialize PatternPathRouter.
      */
     public PatternPathRouter() {
-        this.patternRouteList = Lists.newArrayList();
+        this.patternRouteList = new ArrayList<>();
     }
 
     public static <T> PatternPathRouter<T> create() {
@@ -74,7 +75,7 @@ public final class PatternPathRouter<T> {
 
         String[] parts = path.split(PATH_SLASH);
         StringBuilder sb = new StringBuilder();
-        List<String> groupNames = Lists.newArrayList();
+        List<String> groupNames = new ArrayList<>();
 
         for (String part : parts) {
             Matcher groupMatcher = GROUP_PATTERN.matcher(part);
@@ -161,20 +162,20 @@ public final class PatternPathRouter<T> {
         String cleanPath = (path.endsWith(PATH_SLASH) && path.length() > 0)
                 ? path.substring(0, path.length() - 1) : path;
 
-        List<RoutableDestination<T>> result = Lists.newArrayList();
+        List<RoutableDestination<T>> result = new ArrayList<>();
 
         for (ImmutablePair<Pattern, RouteDestinationWithGroups> patternRoute : patternRouteList) {
-            ImmutableMap.Builder<String, String> groupNameValuesBuilder = ImmutableMap.builder();
+            Map<String, String> groupNameValues = new HashMap<>();
             Matcher matcher = patternRoute.getFirst().matcher(cleanPath);
             if (matcher.matches()) {
                 int matchIndex = 1;
                 for (String name : patternRoute.getSecond().getGroupNames()) {
                     String value = matcher.group(matchIndex);
-                    groupNameValuesBuilder.put(name, value);
+                    groupNameValues.put(name, value);
                     matchIndex++;
                 }
                 result.add(new RoutableDestination<>(patternRoute.getSecond().getDestination(),
-                                                     groupNameValuesBuilder.build()));
+                                                     Collections.unmodifiableMap(groupNameValues)));
             }
         }
         //Check for sub-resource locator
@@ -183,18 +184,18 @@ public final class PatternPathRouter<T> {
                             .filter(patternRoute -> patternRoute.getSecond().destination instanceof HttpResourceModel &&
                                                     ((HttpResourceModel) patternRoute.getSecond().destination)
                                                             .isSubResourceLocator()).forEach(patternRoute -> {
-                ImmutableMap.Builder<String, String> groupNameValuesBuilder = ImmutableMap.builder();
+                Map<String, String> groupNameValues = new HashMap<>();
                 Pattern pattern = Pattern.compile(patternRoute.getFirst().pattern() + ".*");
                 Matcher matcher = pattern.matcher(cleanPath);
                 if (matcher.matches()) {
                     int matchIndex = 1;
                     for (String name : patternRoute.getSecond().getGroupNames()) {
                         String value = matcher.group(matchIndex);
-                        groupNameValuesBuilder.put(name, value);
+                        groupNameValues.put(name, value);
                         matchIndex++;
                     }
                     result.add(new RoutableDestination<>(patternRoute.getSecond().getDestination(),
-                                                         groupNameValuesBuilder.build()));
+                                                         Collections.unmodifiableMap(groupNameValues)));
                 }
             });
         }
@@ -238,10 +239,7 @@ public final class PatternPathRouter<T> {
 
         @Override
         public String toString() {
-            return Objects.toStringHelper(this)
-                    .add("destination", destination)
-                    .add("groupNameValues", groupNameValues)
-                    .toString();
+            return Utils.toString(this, new String[] { "destination", "groupNameValues" });
         }
     }
 

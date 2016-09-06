@@ -13,90 +13,74 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.wso2.msf4j.swagger;
 
-package org.wso2.msf4j;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import org.apache.commons.io.Charsets;
-import org.apache.commons.io.IOUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.msf4j.MicroservicesRunner;
 import org.wso2.msf4j.conf.Constants;
-import org.wso2.msf4j.service.ExtendedTestMicroservice;
+import org.wso2.msf4j.service.SecondService;
 import org.wso2.msf4j.service.TestMicroservice;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
-import java.util.Map;
 import javax.ws.rs.HttpMethod;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
-import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.Assert.assertEquals;
 
-/**
- * Test for extended (inherited) microservices.
- */
-public class ExtendedServiceTest {
+public class SwaggerTest {
 
     public static final String HEADER_KEY_CONNECTION = "CONNECTION";
     public static final String HEADER_VAL_CLOSE = "CLOSE";
-    protected static final Type STRING_MAP_TYPE = new TypeToken<Map<String, String>>() {
-    }.getType();
-    protected static final Gson GSON = new Gson();
-
-    private final TestMicroservice testMicroservice = new ExtendedTestMicroservice();
-
+    private final TestMicroservice testMicroservice = new TestMicroservice();
     private static final int port = Constants.PORT + 39;
-    protected static URI baseURI;
-
     private MicroservicesRunner microservicesRunner;
+    private MicroservicesRunner secondMicroservicesRunner;
+    private final SecondService secondService = new SecondService();
+    protected static URI baseURI;
 
     @BeforeClass
     public void setup() throws Exception {
         baseURI = URI.create(String.format("http://%s:%d", Constants.HOSTNAME, port));
         microservicesRunner = new MicroservicesRunner(port);
-        microservicesRunner
-                .deploy(testMicroservice)
-                .start();
+        microservicesRunner.deploy(testMicroservice).start();
+        secondMicroservicesRunner = new MicroservicesRunner(port + 1);
+        secondMicroservicesRunner.deploy(secondService).start();
     }
 
     @AfterClass
     public void teardown() throws Exception {
         microservicesRunner.stop();
+        secondMicroservicesRunner.stop();
     }
 
-    /**
-     * Tests that an overridden method gets invoked.
-     *
-     * @throws IOException
-     */
     @Test
-    public void testValidEndPoints() throws IOException {
-        HttpURLConnection urlConn = request("/ext-test/v1/resource?num=10", HttpMethod.GET);
-        assertEquals(200, urlConn.getResponseCode());
-        String content = getContent(urlConn);
-
-        Map<String, String> map = GSON.fromJson(content, STRING_MAP_TYPE);
-        assertEquals(1, map.size());
-        assertEquals("Handled extended get in resource end-point", map.get("status"));
+    public void testGlobalSwagger() throws Exception {
+        HttpURLConnection urlConn = request("/swagger", HttpMethod.GET);
+        assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
+        assertEquals(MediaType.APPLICATION_JSON, urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE));
         urlConn.disconnect();
     }
 
     @Test
-    public void testPutWithData() throws IOException {
-        HttpURLConnection urlConn = request("/ext-test/v1/facebook/1/message", HttpMethod.PUT);
-        writeContent(urlConn, "Hello, World");
-        assertEquals(200, urlConn.getResponseCode());
+    public void testServiceSwagger() throws Exception {
+        HttpURLConnection urlConn = request("/swagger?path=/test/v1", HttpMethod.GET);
+        assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
+        assertEquals(MediaType.APPLICATION_JSON, urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE));
+        urlConn.disconnect();
+    }
 
-        String content = getContent(urlConn);
-
-        Map<String, String> map = GSON.fromJson(content, STRING_MAP_TYPE);
-        assertEquals(1, map.size());
-        assertEquals("Handled put in tweets end-point, id: 1. Content: Hello, World", map.get("result"));
+    @Test
+    public void testNonExistentServiceSwagger() throws Exception {
+        HttpURLConnection urlConn = request("/swagger?path=/zzaabdf", HttpMethod.GET);
+        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), urlConn.getResponseCode());
+        assertEquals(MediaType.APPLICATION_JSON, urlConn.getHeaderField(HttpHeaders.CONTENT_TYPE));
         urlConn.disconnect();
     }
 
@@ -116,13 +100,5 @@ public class ExtendedServiceTest {
         }
 
         return urlConn;
-    }
-
-    private String getContent(HttpURLConnection urlConn) throws IOException {
-        return new String(IOUtils.toByteArray(urlConn.getInputStream()), Charsets.UTF_8);
-    }
-
-    protected void writeContent(HttpURLConnection urlConn, String content) throws IOException {
-        urlConn.getOutputStream().write(content.getBytes(Charsets.UTF_8));
     }
 }

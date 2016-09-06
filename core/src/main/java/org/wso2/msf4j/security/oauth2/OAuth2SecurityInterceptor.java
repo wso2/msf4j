@@ -15,10 +15,10 @@
  */
 package org.wso2.msf4j.security.oauth2;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.ByteStreams;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.apache.commons.io.Charsets;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.Interceptor;
@@ -156,7 +156,7 @@ public class OAuth2SecurityInterceptor implements Interceptor {
             urlConn.setRequestMethod(HttpMethod.POST);
             urlConn.getOutputStream()
                    .write(("token=" + accessToken + "&token_type_hint=" + BEARER_PREFIX).getBytes(Charsets.UTF_8));
-            return new String(ByteStreams.toByteArray(urlConn.getInputStream()), Charsets.UTF_8);
+            return new String(IOUtils.toByteArray(urlConn.getInputStream()), Charsets.UTF_8);
         } catch (java.io.IOException e) {
             log.error("Error invoking Authorization Server", e);
             throw new MSF4JSecurityException(SecurityErrorCode.GENERIC_ERROR, "Error invoking Authorization Server", e);

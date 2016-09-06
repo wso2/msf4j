@@ -16,12 +16,14 @@
 
 package org.wso2.msf4j;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import org.testng.annotations.Test;
 import org.wso2.msf4j.internal.router.PatternPathRouter;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertTrue;
@@ -108,8 +110,13 @@ public class PathRouterTest {
 
         routes = pathRouter.getDestinations("/multi/match/def");
         assertEquals(2, routes.size());
-        assertEquals(ImmutableSet.of("multi-match-def", "multi-match-*"),
-                ImmutableSet.of(routes.get(0).getDestination(), routes.get(1).getDestination()));
+        Set<String> set1 = new HashSet<>();
+        set1.add("multi-match-def");
+        set1.add("multi-match-*");
+        Set<String> set2 = new HashSet<>();
+        set2.add(routes.get(0).getDestination());
+        set2.add(routes.get(1).getDestination());
+        assertEquals(set1, set2);
         assertTrue(routes.get(0).getGroupNameValues().isEmpty());
         assertTrue(routes.get(1).getGroupNameValues().isEmpty());
 
@@ -120,58 +127,109 @@ public class PathRouterTest {
 
         routes = pathRouter.getDestinations("/multi/maxmatch/id1");
         assertEquals(2, routes.size());
-        assertEquals(ImmutableSet.of("multi-max-match-id", "multi-max-match-*"),
-                ImmutableSet.of(routes.get(0).getDestination(), routes.get(1).getDestination()));
+        set1.clear();
+        set1.add("multi-max-match-id");
+        set1.add("multi-max-match-*");
+        set2.clear();
+        set2.add(routes.get(0).getDestination());
+        set2.add(routes.get(1).getDestination());
+        assertEquals(set1, set2);
         //noinspection assertEqualsBetweenInconvertibleTypes
-        assertEquals(ImmutableSet.of(ImmutableMap.of("id", "id1"), ImmutableMap.<String, String>of()),
-                ImmutableSet.of(routes.get(0).getGroupNameValues(), routes.get(1).getGroupNameValues())
-        );
+        Set<Map<String, String>> set11 = new HashSet<>();
+        Set<Map<String, String>> set12 = new HashSet<>();
+        set11.add(Collections.singletonMap("id", "id1"));
+        set11.add(Collections.emptyMap());
+        set12.add(routes.get(0).getGroupNameValues());
+        set12.add(routes.get(1).getGroupNameValues());
+        assertEquals(set11, set12);
 
         routes = pathRouter.getDestinations("/multi/maxmatch/foo");
         assertEquals(3, routes.size());
-        assertEquals(ImmutableSet.of("multi-max-match-id", "multi-max-match-*", "multi-max-match-foo"),
-                ImmutableSet.of(routes.get(0).getDestination(), routes.get(1).getDestination(),
-                        routes.get(2).getDestination()));
+        set1.clear();
+        set1.add("multi-max-match-id");
+        set1.add("multi-max-match-*");
+        set1.add("multi-max-match-foo");
+        set2.clear();
+        set2.add(routes.get(0).getDestination());
+        set2.add(routes.get(1).getDestination());
+        set2.add(routes.get(2).getDestination());
+        assertEquals(set1, set2);
         //noinspection assertEqualsBetweenInconvertibleTypes
-        assertEquals(ImmutableSet.of(ImmutableMap.of("id", "foo"), ImmutableMap.<String, String>of()),
-                ImmutableSet.of(routes.get(0).getGroupNameValues(), routes.get(1).getGroupNameValues())
-        );
+
+        set11.clear();
+        set12.clear();
+        set11.add(Collections.singletonMap("id", "foo"));
+        set11.add(Collections.emptyMap());
+        set12.add(routes.get(0).getGroupNameValues());
+        set12.add(routes.get(1).getGroupNameValues());
+        assertEquals(set11, set12);
 
         routes = pathRouter.getDestinations("/foo/bar/wildcard/id1");
         assertEquals(2, routes.size());
-        assertEquals(ImmutableSet.of("wildcard-id", "slash-wildcard-id"),
-                ImmutableSet.of(routes.get(0).getDestination(), routes.get(1).getDestination()));
+        set1.clear();
+        set1.add("wildcard-id");
+        set1.add("slash-wildcard-id");
+        set2.clear();
+        set2.add(routes.get(0).getDestination());
+        set2.add(routes.get(1).getDestination());
+        assertEquals(set1, set2);
         //noinspection assertEqualsBetweenInconvertibleTypes
-        assertEquals(ImmutableSet.of(ImmutableMap.of("id", "id1"), ImmutableMap.<String, String>of("id", "id1")),
-                ImmutableSet.of(routes.get(0).getGroupNameValues(), routes.get(1).getGroupNameValues())
-        );
+        set11.clear();
+        set12.clear();
+        set11.add(Collections.singletonMap("id", "id1"));
+        set11.add(Collections.singletonMap("id", "id1"));
+        set12.add(routes.get(0).getGroupNameValues());
+        set12.add(routes.get(1).getGroupNameValues());
+        assertEquals(set11, set12);
 
         routes = pathRouter.getDestinations("/wildcard/id1");
         assertEquals(1, routes.size());
         assertEquals("wildcard-id", routes.get(0).getDestination());
-        assertEquals(ImmutableMap.of("id", "id1"), routes.get(0).getGroupNameValues());
+        set11.clear();
+        set11.add(Collections.singletonMap("id", "id1"));
+        assertEquals(Collections.singletonMap("id", "id1"), routes.get(0).getGroupNameValues());
 
         routes = pathRouter.getDestinations("/foo/bar/wildcard/bar/foo/id1");
         assertEquals(2, routes.size());
-        assertEquals(ImmutableSet.of("wildcard-foo-id", "slash-wildcard-foo-id"),
-                ImmutableSet.of(routes.get(0).getDestination(), routes.get(1).getDestination()));
+        set1.clear();
+        set1.add("wildcard-foo-id");
+        set1.add("slash-wildcard-foo-id");
+        set2.clear();
+        set2.add(routes.get(0).getDestination());
+        set2.add(routes.get(1).getDestination());
+        assertEquals(set1, set2);
         //noinspection assertEqualsBetweenInconvertibleTypes
-        assertEquals(ImmutableSet.of(ImmutableMap.of("id", "id1"), ImmutableMap.<String, String>of("id", "id1")),
-                ImmutableSet.of(routes.get(0).getGroupNameValues(), routes.get(1).getGroupNameValues())
-        );
+        set11.clear();
+        set12.clear();
+        set11.add(Collections.singletonMap("id", "id1"));
+        set11.add(Collections.singletonMap("id", "id1"));
+        set12.add(routes.get(0).getGroupNameValues());
+        set12.add(routes.get(1).getGroupNameValues());
+        assertEquals(set11, set12);
 
         routes = pathRouter.getDestinations("/foo/bar/wildcard/bar/foo/id1/baz/bar");
         assertEquals(2, routes.size());
-        assertEquals(ImmutableSet.of("wildcard-foo-id-2", "slash-wildcard-foo-id-2"),
-                ImmutableSet.of(routes.get(0).getDestination(), routes.get(1).getDestination()));
+        set1.clear();
+        set1.add("wildcard-foo-id-2");
+        set1.add("slash-wildcard-foo-id-2");
+        set2.clear();
+        set2.add(routes.get(0).getDestination());
+        set2.add(routes.get(1).getDestination());
+        assertEquals(set1, set2);
         //noinspection assertEqualsBetweenInconvertibleTypes
-        assertEquals(ImmutableSet.of(ImmutableMap.of("id", "id1"), ImmutableMap.<String, String>of("id", "id1")),
-                ImmutableSet.of(routes.get(0).getGroupNameValues(), routes.get(1).getGroupNameValues())
-        );
+        set11.clear();
+        set12.clear();
+        set11.add(Collections.singletonMap("id", "id1"));
+        set11.add(Collections.singletonMap("id", "id1"));
+        set12.add(routes.get(0).getGroupNameValues());
+        set12.add(routes.get(1).getGroupNameValues());
+        assertEquals(set11, set12);
 
         routes = pathRouter.getDestinations("/wildcard/bar/foo/id1/baz/bar");
         assertEquals(1, routes.size());
         assertEquals("wildcard-foo-id-2", routes.get(0).getDestination());
-        assertEquals(ImmutableMap.of("id", "id1"), routes.get(0).getGroupNameValues());
+        set11.clear();
+        set11.add(Collections.singletonMap("id", "id1"));
+        assertEquals(Collections.singletonMap("id", "id1"), routes.get(0).getGroupNameValues());
     }
 }

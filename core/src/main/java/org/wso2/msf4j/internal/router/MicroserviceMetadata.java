@@ -16,14 +16,15 @@
 
 package org.wso2.msf4j.internal.router;
 
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.msf4j.util.Utils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -172,9 +173,9 @@ public final class MicroserviceMetadata {
     getMatchedDestination(List<PatternPathRouter.RoutableDestination<HttpResourceModel>> routableDestinations,
                           String targetHttpMethod, String requestUri) {
 
-        Iterable<String> requestUriParts = Splitter.on('/').omitEmptyStrings().split(requestUri);
+        Iterable<String> requestUriParts = Collections.unmodifiableList(Utils.split(requestUri, "/", true));
         List<PatternPathRouter.RoutableDestination<HttpResourceModel>> matchedDestinations =
-                Lists.newArrayListWithExpectedSize(routableDestinations.size());
+                new ArrayList<>(routableDestinations.size());
         int maxExactMatch = 0;
         int maxGroupMatch = 0;
         int maxPatternLength = 0;
@@ -185,9 +186,8 @@ public final class MicroserviceMetadata {
 
             for (String httpMethod : resourceModel.getHttpMethod()) {
                 if (targetHttpMethod.equals(httpMethod)) {
-
-                    int exactMatch = getExactPrefixMatchCount(
-                            requestUriParts, Splitter.on('/').omitEmptyStrings().split(resourceModel.getPath()));
+                    int exactMatch = getExactPrefixMatchCount(requestUriParts, Collections
+                            .unmodifiableList(Utils.split(resourceModel.getPath(), "/", true)));
 
                     // When there are multiple matches present, the following precedence order is used -
                     // 1. template path that has highest exact prefix match with the url is chosen.

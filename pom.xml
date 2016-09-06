@@ -104,6 +104,7 @@
         <module>poms/parent</module>
         <module>jaxrs-delegates</module>
         <module>core</module>
+        <module>swagger</module>
         <module>spring</module>
         <module>poms/msf4j-service</module>
         <module>analytics/msf4j-analytics</module>

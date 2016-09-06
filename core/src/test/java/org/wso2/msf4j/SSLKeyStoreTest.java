@@ -16,10 +16,6 @@
 
 package org.wso2.msf4j;
 
-import com.google.common.io.ByteStreams;
-import com.google.common.io.FileWriteMode;
-import com.google.common.io.Files;
-import com.google.common.io.Resources;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -27,6 +23,8 @@ import org.wso2.msf4j.conf.SSLConfig;
 import org.wso2.msf4j.conf.SSLHandlerFactory;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 /**
  * Tests SSL KeyStore behaviour.
@@ -40,9 +38,8 @@ public class SSLKeyStoreTest {
     public static void setup() throws Exception {
         keyStore = new File(tmpFolder, "KeyStore.jks");
         keyStore.createNewFile();
-        ByteStreams.copy(
-                Resources.asByteSource(Resources.getResource("cert.jks")).openStream(),
-                Files.asByteSink(keyStore, FileWriteMode.APPEND).openStream());
+        Files.copy(Thread.currentThread().getContextClassLoader().getResource("cert.jks").openStream(),
+                   keyStore.toPath(), StandardCopyOption.REPLACE_EXISTING);
     }
 
     @AfterClass

@@ -1,127 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ Copyright (c) 2016, WSO2 Inc. (http://wso2.com) All Rights Reserved.
-  ~
-  ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ you may not use this file except in compliance with the License.
-  ~ You may obtain a copy of the License at
-  ~
-  ~ http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
-    <modelVersion>4.0.0</modelVersion>
-
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>org.wso2.msf4j</groupId>
         <artifactId>msf4j-parent</artifactId>
         <version>2.0.1-SNAPSHOT</version>
         <relativePath>../poms/parent/pom.xml</relativePath>
     </parent>
-
-    <artifactId>msf4j-core</artifactId>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>msf4j-swagger</artifactId>
     <packaging>bundle</packaging>
 
-    <name>WSO2 MSF4J core</name>
-    <description>WSO2 MSF4J core</description>
+    <name>WSO2 MSF4J Swagger</name>
+    <description>WSO2 MSF4J Swagger</description>
     <url>https://github.com/wso2/msf4j</url>
 
     <dependencies>
         <dependency>
-            <groupId>org.wso2.carbon.messaging</groupId>
-            <artifactId>org.wso2.carbon.messaging</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.wso2.carbon</groupId>
-                    <artifactId>wso2carbon-kernel</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.wso2.carbon</groupId>
-                    <artifactId>org.wso2.carbon.kernel.feature</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.wso2.carbon</groupId>
-                    <artifactId>org.wso2.carbon.runtime.feature</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.transport</groupId>
-            <artifactId>org.wso2.carbon.transport.http.netty</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.wso2.carbon.messaging</groupId>
-                    <artifactId>org.wso2.carbon.messaging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.eclipse.osgi</groupId>
-            <artifactId>org.eclipse.osgi</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.eclipse.osgi</groupId>
-            <artifactId>org.eclipse.osgi.services</artifactId>
+            <groupId>org.wso2.msf4j</groupId>
+            <artifactId>msf4j-core</artifactId>
         </dependency>
         <dependency>
             <groupId>javax.ws.rs</groupId>
             <artifactId>javax.ws.rs-api</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.yaml</groupId>
+                    <artifactId>snakeyaml</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.datatype</groupId>
+                    <artifactId>jackson-datatype-joda</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.dataformat</groupId>
+                    <artifactId>jackson-dataformat-yaml</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-jaxrs</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.ws.rs</groupId>
+                    <artifactId>jsr311-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.code.findbugs</groupId>
+                    <artifactId>annotations</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.dataformat</groupId>
+                    <artifactId>jackson-dataformat-xml</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+        </dependency>
+
+        <!--Test Dependencies-->
+        <dependency>
             <groupId>org.wso2.msf4j</groupId>
-            <artifactId>jaxrs-delegates</artifactId>
+            <artifactId>msf4j-core</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.servicemix.bundles</groupId>
-            <artifactId>org.apache.servicemix.bundles.commons-beanutils</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.nimbusds</groupId>
-            <artifactId>nimbus-jose-jwt</artifactId>
-        </dependency>
-
-
-        <dependency>
-            <groupId>commons-io.wso2</groupId>
-            <artifactId>commons-io</artifactId>
-        </dependency>
-
-        <!-- Test dependencies -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -130,7 +89,6 @@
             <version>4.5.1</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -164,18 +122,6 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.6</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>test-jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
@@ -311,37 +257,15 @@
         </profile>
     </profiles>
 
+
     <properties>
-        <bundle.activator>org.wso2.msf4j.internal.MicroservicesServerActivator</bundle.activator>
-        <private.package>org.wso2.msf4j.internal.*</private.package>
         <export.package>
-            !org.wso2.msf4j.internal.*,
-            !org.wso2.msf4j.delegates.*,
-            org.wso2.msf4j.*;version="${msf4j.version}"
+            org.wso2.msf4j.swagger.*;version="${msf4j.version}"
         </export.package>
         <import.package>
-            org.apache.commons.io.*;version="${commons-io.version.range}",
-            com.google.gson.*;version="${gson.version.range}",
             javax.annotation.*,
             javax.ws.rs.*,
-            javax.xml.bind;resolution:=optional,
-            javax.xml.bind.annotation;resolution:=optional,
-            org.slf4j.*;version="${slf4j.version.range}",
-            org.apache.commons.beanutils.*;version="${beanutils.version.range}",
-            org.osgi.framework.*;version="${osgi.framework.import.version.range}",
-            org.osgi.util.tracker; version="${osgi.service.tracker.import.version.range}",
-            org.wso2.carbon.kernel.transports.*;version="${carbon.kernel.version.range}",
-            org.wso2.carbon.kernel.startupresolver.*;version="${carbon.kernel.version.range}",
-            io.swagger.jaxrs.config.*;version="${io.swagger.version.range}",
-            io.swagger.util.*;version="${io.swagger.version.range}",
-            com.fasterxml.jackson.*;version="${com.fasterxml.jackson.version.range}",
-            org.wso2.carbon.messaging.*,
+            javax.xml.bind;resolution:=optional
         </import.package>
-        <carbon.component>
-            startup.listener;componentName="wso2-microservices-server";requiredService="org.wso2.msf4j.Microservice,org.wso2.msf4j.Interceptor",
-            osgi.service;
-            objectClass="org.wso2.msf4j.internal.MicroservicesServerSC";requiredByComponentName="carbon-transport-mgt",
-            osgi.service; objectClass="org.wso2.carbon.messaging.CarbonMessageProcessor"
-        </carbon.component>
     </properties>
 </project>

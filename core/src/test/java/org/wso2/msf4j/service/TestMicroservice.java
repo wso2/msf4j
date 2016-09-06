@@ -16,15 +16,12 @@
 
 package org.wso2.msf4j.service;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Throwables;
-import com.google.common.io.Resources;
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
+import com.google.gson.reflect.TypeToken;
 import org.apache.commons.io.IOUtils;
 import org.wso2.msf4j.HttpStreamHandler;
 import org.wso2.msf4j.HttpStreamer;
@@ -335,13 +332,13 @@ public class TestMicroservice implements Microservice {
     public Response serveFile(@PathParam("fileType") String fileType) throws Exception {
         File file;
         if ("png".equals(fileType)) {
-            file = new File(Resources.getResource("testPngFile.png").toURI());
+            file = new File(Thread.currentThread().getContextClassLoader().getResource("testPngFile.png").toURI());
             return Response.ok(file).build();
         } else if ("jpg".equals(fileType)) {
-            file = new File(Resources.getResource("testJpgFile.jpg").toURI());
+            file = new File(Thread.currentThread().getContextClassLoader().getResource("testJpgFile.jpg").toURI());
             return Response.ok(file).header("X-Custom-Header", "wso2").build();
         } else if ("txt".equals(fileType)) {
-            file = new File(Resources.getResource("testTxtFile.txt").toURI());
+            file = new File(Thread.currentThread().getContextClassLoader().getResource("testTxtFile.txt").toURI());
             return Response.ok(file).build();
         }
         return Response.noContent().build();
@@ -351,13 +348,16 @@ public class TestMicroservice implements Microservice {
     @GET
     public Response serveInputStream(@PathParam("fileType") String fileType) throws Exception {
         if ("png".equals(fileType)) {
-            InputStream ipStream = new FileInputStream(new File(Resources.getResource("testPngFile.png").toURI()));
+            InputStream ipStream = new FileInputStream(
+                    new File(Thread.currentThread().getContextClassLoader().getResource("testPngFile.png").toURI()));
             return Response.ok(ipStream).type("image/png").build();
         } else if ("jpg".equals(fileType)) {
-            InputStream ipStream = new FileInputStream(new File(Resources.getResource("testJpgFile.jpg").toURI()));
+            InputStream ipStream = new FileInputStream(
+                    new File(Thread.currentThread().getContextClassLoader().getResource("testJpgFile.jpg").toURI()));
             return Response.ok(ipStream).type("image/jpeg").header("X-Custom-Header", "wso2").build();
         } else if ("txt".equals(fileType)) {
-            InputStream ipStream = new FileInputStream(new File(Resources.getResource("testTxtFile.txt").toURI()));
+            InputStream ipStream = new FileInputStream(
+                    new File(Thread.currentThread().getContextClassLoader().getResource("testTxtFile.txt").toURI()));
             return Response.ok(ipStream).type("text/plain").build();
         }
         return Response.noContent().build();
@@ -441,14 +441,14 @@ public class TestMicroservice implements Microservice {
     @Path("/gzipfile")
     @GET
     public Response gzipFile() throws IOException, URISyntaxException {
-        File file = new File(Resources.getResource("testJpgFile.jpg").toURI());
+        File file = new File(Thread.currentThread().getContextClassLoader().getResource("testJpgFile.jpg").toURI());
         return Response.ok().entity(file).build();
     }
 
     @Path("/uexception")
     @GET
     public void testException() {
-        throw Throwables.propagate(new RuntimeException("User Exception"));
+        throw new RuntimeException("User Exception");
     }
 
     @Path("/noresponse")
@@ -471,13 +471,21 @@ public class TestMicroservice implements Microservice {
     @Path("/sortedSetQueryParam")
     @GET
     public String testSortedSetQueryParam(@QueryParam("id") SortedSet<Integer> ids) {
-        return Joiner.on(',').join(ids);
+        StringBuilder response = new StringBuilder();
+        ids.forEach(id -> response.append(id).append(","));
+        if (response.length() > 0) {
+            response.setLength(response.length() - 1);
+        }
+        return response.toString();
     }
 
     @Path("/listHeaderParam")
     @GET
     public String testListHeaderParam(@HeaderParam("name") List<String> names) {
-        return Joiner.on(',').join(names);
+        StringBuilder response = new StringBuilder();
+        names.forEach(name -> response.append(name).append(","));
+        response.setLength(response.length() - 1);
+        return response.toString();
     }
 
     @Path("/headerResponse")
