@@ -20,12 +20,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.HttpStreamHandler;
 import org.wso2.msf4j.HttpStreamer;
+import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.MultivaluedMap;
+
+import static org.wso2.msf4j.internal.router.Util.GROUP_PATTERN;
+import static org.wso2.msf4j.internal.router.Util.GROUP_PATTERN_REGEX;
+import static org.wso2.msf4j.internal.router.Util.WILD_CARD_PATTERN;
 
 /**
  * HttpMethodInfo is a helper class having state information about the http handler method to be invoked, the handler
@@ -37,6 +53,7 @@ public class HttpMethodInfo {
     private final Method method;
     private final Object handler;
     private final Object[] args;
+    private MultivaluedMap<String, Object> formParameters = null;
     private Response responder;
     private HttpStreamHandler httpStreamHandler;
     private static final Logger log = LoggerFactory.getLogger(HttpMethodInfo.class);
@@ -53,10 +70,12 @@ public class HttpMethodInfo {
     public HttpMethodInfo(Method method,
                           Object handler,
                           Object[] args,
+                          MultivaluedMap<String, Object> formParameters,
                           Response responder) {
         this.method = method;
         this.handler = handler;
         this.args = Arrays.copyOf(args, args.length);
+        this.formParameters = formParameters;
         this.responder = responder;
     }
 
@@ -74,9 +93,10 @@ public class HttpMethodInfo {
     public HttpMethodInfo(Method method,
                           Object handler,
                           Object[] args,
+                          MultivaluedMap<String, Object> formParameters,
                           Response responder,
                           HttpStreamer httpStreamer) throws HandlerException {
-        this(method, handler, args, responder);
+        this(method, handler, args, formParameters, responder);
 
         if (!method.getReturnType().equals(Void.TYPE)) {
             throw new HandlerException(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR,
@@ -102,12 +122,145 @@ public class HttpMethodInfo {
     /**
      * Calls the http resource method.
      *
+     * @param request original request
+     * @param destination matching Destinations for the route
      * @throws Exception if error occurs while invoking the resource method
      */
-    public void invoke() throws Exception {
+    public void invoke(Request request, PatternPathRouter.RoutableDestination<HttpResourceModel> destination)
+            throws Exception {
         Object returnVal = method.invoke(handler, args);
+        returnVal = invokeSubResource(request, destination, returnVal);
         responder.setEntity(returnVal);
         responder.send();
+    }
+
+    private Object invokeSubResource(Request request,
+                                   PatternPathRouter.RoutableDestination<HttpResourceModel> destination,
+                                   Object returnVal) throws Exception {
+        // If this is a sub resource locator need to find and invoke the correct method
+        if (destination.getDestination().isSubResourceLocator()) {
+            String requestPath = request.getUri();
+            if (requestPath.endsWith("/")) {
+                requestPath = requestPath.substring(0, requestPath.length() - 1);
+            }
+            if (requestPath.contains("?")) {
+                requestPath = requestPath.substring(0, requestPath.indexOf("?"));
+            }
+
+            if (!destination.getDestination().isSubResourceScanned()) {
+                // Scan the return object class to search the methods
+                for (Method method : returnVal.getClass().getMethods()) {
+                    if (Modifier.isPublic(method.getModifiers()) && Util.isHttpMethodAvailable(method)) {
+                        String relativePath = "";
+                        if (method.getAnnotation(Path.class) != null) {
+                            relativePath = method.getAnnotation(Path.class).value();
+                        }
+                        if (relativePath.startsWith("/")) {
+                            relativePath = relativePath.substring(1);
+                        }
+                        String absolutePath = relativePath.isEmpty() ? destination.getDestination().getPath() :
+                                              String.format("%s/%s", destination.getDestination().getPath(),
+                                                            relativePath);
+                        HttpResourceModel resourceModel = new HttpResourceModel(absolutePath, method, returnVal, false);
+                        SubresourceKey subResKey = new SubresourceKey(absolutePath, method.getDeclaringClass(),
+                                                                      resourceModel.getHttpMethod());
+                        destination.getDestination().addSubResources(subResKey, resourceModel);
+                    } else if (Modifier.isPublic(method.getModifiers()) && method.getAnnotation(Path.class) != null) {
+                        // Sub resource locator method
+                        String relativePath = method.getAnnotation(Path.class).value();
+                        if (relativePath.startsWith("/")) {
+                            relativePath = relativePath.substring(1);
+                        }
+                        String absolutePath = relativePath.isEmpty() ? destination.getDestination().getPath() :
+                                              String.format("%s/%s", destination.getDestination().getPath(),
+                                                            relativePath);
+                        HttpResourceModel resourceModel = new HttpResourceModel(absolutePath, method, returnVal, true);
+                        SubresourceKey subResKey =
+                                new SubresourceKey(absolutePath, method.getDeclaringClass(), Collections.emptySet());
+                        destination.getDestination().addSubResources(subResKey, resourceModel);
+                    }
+                }
+                destination.getDestination().setSubResourceScanned(true);
+            }
+            String finalRequestPath = requestPath;
+            Optional<Map.Entry<SubresourceKey, HttpResourceModel>> entry =
+                    destination.getDestination().getSubResources().entrySet().stream()
+                               .filter(e -> e.getValue().getHttpMethod().contains(request.getHttpMethod()) &&
+                                            finalRequestPath.matches(e.getKey().getPath().replaceAll(GROUP_PATTERN,
+                                                                                             GROUP_PATTERN_REGEX)) &&
+                                            returnVal.getClass().equals(e.getKey().getTypedClass())).findFirst();
+            HttpResourceModel resourceModel;
+            if (entry.isPresent()) {
+                resourceModel = entry.get().getValue();
+            } else {
+                // Another sub-resource call
+                String finalRequestPath1 = requestPath;
+                entry = destination.getDestination().getSubResources().entrySet().stream()
+                                   .filter(e -> finalRequestPath1
+                                         .matches(e.getKey().getPath()
+                                                   .replaceAll(GROUP_PATTERN, GROUP_PATTERN_REGEX).concat(".*"))
+                                                && e.getValue().isSubResourceLocator()
+                                                && returnVal.getClass().equals(e.getKey().getTypedClass()))
+                                   .findFirst();
+                if (entry.isPresent()) {
+                    resourceModel = entry.get().getValue();
+                } else {
+                    throw new HandlerException(javax.ws.rs.core.Response.Status.NOT_FOUND,
+                                               String.format("Problem accessing: %s. Reason: Not Found", requestPath));
+                }
+            }
+
+            // Process path to get the PathParam values
+            Path declaredAnnotation = resourceModel.getMethod().getDeclaredAnnotation(Path.class);
+            String[] parts = declaredAnnotation.value().split("/");
+            StringBuilder sb = new StringBuilder();
+            List<String> groupNames = new ArrayList<>();
+            for (String part : parts) {
+                Matcher groupMatcher = Pattern.compile(GROUP_PATTERN).matcher(part);
+                if (groupMatcher.matches()) {
+                    groupNames.add(Util.stripBraces(part));
+                    sb.append("([^/]+)");
+                } else if (WILD_CARD_PATTERN.matcher(part).matches()) {
+                    sb.append(".*?");
+                } else {
+                    sb.append(part);
+                }
+                sb.append("/");
+            }
+            if (sb.length() > 0) {
+                sb.setLength(sb.length() - 1);
+            }
+
+            Map<String, String> groupNameValues = new HashMap<>();
+            destination.getGroupNameValues().entrySet().forEach(e -> groupNameValues.put(e.getKey(), e.getValue()));
+
+            //Get the sub resource path
+            String[] paths =
+                    requestPath.split(destination.getDestination().getPath().replaceAll(GROUP_PATTERN, "([^/]+)"));
+            String subResPath = "/";
+            if (paths.length != 0) {
+                subResPath = paths[1];
+            }
+
+            Pattern pattern = Pattern.compile(sb.toString() + ".*");
+            Matcher matcher = pattern.matcher(subResPath);
+            if (matcher.matches()) {
+                for (int i = 1; i <= matcher.groupCount(); i++) {
+                    groupNameValues.putIfAbsent(groupNames.get(i - 1), matcher.group(i));
+                }
+            }
+            // Invoke the sub-resource method
+            HttpResourceModelProcessor httpSubResourceModelProcessor = new HttpResourceModelProcessor(resourceModel);
+            httpSubResourceModelProcessor.setFormParameters(formParameters);
+            HttpMethodInfo httpMethodInfo = httpSubResourceModelProcessor
+                    .buildHttpMethodInfo(request, responder, groupNameValues);
+
+            PatternPathRouter.RoutableDestination<HttpResourceModel> newDestination =
+                    new PatternPathRouter.RoutableDestination<>(resourceModel, groupNameValues);
+            Object returnedValue = httpMethodInfo.method.invoke(httpMethodInfo.handler, httpMethodInfo.args);
+            return httpMethodInfo.invokeSubResource(request, newDestination, returnedValue);
+        }
+        return returnVal;
     }
 
     /**

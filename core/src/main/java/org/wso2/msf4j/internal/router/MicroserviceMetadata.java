@@ -16,14 +16,15 @@
 
 package org.wso2.msf4j.internal.router;
 
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.msf4j.util.Utils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -72,7 +73,15 @@ public final class MicroserviceMetadata {
                         relativePath = method.getAnnotation(Path.class).value();
                     }
                     String absolutePath = String.format("%s/%s", basePath, relativePath);
-                    patternRouter.add(absolutePath, new HttpResourceModel(absolutePath, method, service));
+                    patternRouter.add(absolutePath, new HttpResourceModel(absolutePath, method, service, false));
+                } else if (Modifier.isPublic(method.getModifiers()) && method.getAnnotation(Path.class) != null) {
+                    // Sub resource locator method
+                    String relativePath = method.getAnnotation(Path.class).value();
+                    if (relativePath.startsWith("/")) {
+                        relativePath = relativePath.substring(1);
+                    }
+                    String absolutePath = String.format("%s/%s", basePath, relativePath);
+                    patternRouter.add(absolutePath, new HttpResourceModel(absolutePath, method, service, true));
                 } else {
                     log.trace("Not adding method {}({}) to path routing like. " +
                                     "HTTP calls will not be routed to this method",
@@ -102,7 +111,7 @@ public final class MicroserviceMetadata {
                     relativePath = method.getAnnotation(Path.class).value();
                 }
                 String absolutePath = String.format("%s/%s", basePath, relativePath);
-                patternRouter.add(absolutePath, new HttpResourceModel(absolutePath, method, service));
+                patternRouter.add(absolutePath, new HttpResourceModel(absolutePath, method, service, false));
             } else {
                 log.trace("Not adding method {}({}) to path routing like. " +
                           "HTTP calls will not be routed to this method", method.getName(), method.getParameterTypes());
@@ -146,11 +155,28 @@ public final class MicroserviceMetadata {
                     matchedDestinations = getMatchedDestination(routableDestinations, httpMethod, path);
 
             if (!matchedDestinations.isEmpty()) {
-                return matchedDestinations.stream()
-                        .filter(matchedDestination1 -> {
-                            return matchedDestination1.getDestination().matchConsumeMediaType(contentTypeHeader)
-                                    && matchedDestination1.getDestination().matchProduceMediaType(acceptHeader);
-                        }).findFirst().get();
+                if (matchedDestinations.size() == 1) {
+                    return matchedDestinations.stream().filter(matchedDestination1 ->
+                                                                       matchedDestination1.getDestination()
+                                                                                          .matchConsumeMediaType(
+                                                                                                  contentTypeHeader) &&
+                                                                       matchedDestination1.getDestination()
+                                                                                          .matchProduceMediaType(
+                                                                                                  acceptHeader))
+                                              .findFirst().get();
+                } else {
+                    return matchedDestinations.stream().filter(matchedDestination1 ->
+                                                                       matchedDestination1.getDestination()
+                                                                                          .matchConsumeMediaType(
+                                                                                                  contentTypeHeader) &&
+                                                                       matchedDestination1.getDestination()
+                                                                                          .matchProduceMediaType(
+                                                                                                  acceptHeader))
+                                              .filter(destination -> destination.getDestination().getHttpHandler()
+                                                                                .getClass() ==
+                                                                     destination.getDestination().getMethod()
+                                                                                .getDeclaringClass()).findFirst().get();
+                }
             } else if (!routableDestinations.isEmpty()) {
                 //Found a matching resource but could not find the right HttpMethod so return 405
                 throw new HandlerException(Response.Status.METHOD_NOT_ALLOWED, uri);
@@ -176,9 +202,9 @@ public final class MicroserviceMetadata {
     getMatchedDestination(List<PatternPathRouter.RoutableDestination<HttpResourceModel>> routableDestinations,
                           String targetHttpMethod, String requestUri) {
 
-        Iterable<String> requestUriParts = Splitter.on('/').omitEmptyStrings().split(requestUri);
+        Iterable<String> requestUriParts = Collections.unmodifiableList(Utils.split(requestUri, "/", true));
         List<PatternPathRouter.RoutableDestination<HttpResourceModel>> matchedDestinations =
-                Lists.newArrayListWithExpectedSize(routableDestinations.size());
+                new ArrayList<>(routableDestinations.size());
         int maxExactMatch = 0;
         int maxGroupMatch = 0;
         int maxPatternLength = 0;
@@ -189,9 +215,8 @@ public final class MicroserviceMetadata {
 
             for (String httpMethod : resourceModel.getHttpMethod()) {
                 if (targetHttpMethod.equals(httpMethod)) {
-
-                    int exactMatch = getExactPrefixMatchCount(
-                            requestUriParts, Splitter.on('/').omitEmptyStrings().split(resourceModel.getPath()));
+                    int exactMatch = getExactPrefixMatchCount(requestUriParts, Collections
+                            .unmodifiableList(Utils.split(resourceModel.getPath(), "/", true)));
 
                     // When there are multiple matches present, the following precedence order is used -
                     // 1. template path that has highest exact prefix match with the url is chosen.

@@ -16,12 +16,9 @@
 
 package org.wso2.msf4j.internal.router;
 
-import com.google.common.base.Function;
-import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
 import org.wso2.msf4j.HttpStreamer;
 import org.wso2.msf4j.formparam.FormDataParam;
+import org.wso2.msf4j.util.Utils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -29,8 +26,12 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import javax.annotation.Nullable;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
@@ -53,9 +54,22 @@ import javax.ws.rs.core.Context;
  */
 public final class HttpResourceModel {
 
-    private static final Set<Class<? extends Annotation>> SUPPORTED_PARAM_ANNOTATIONS =
-            ImmutableSet.of(PathParam.class, QueryParam.class, HeaderParam.class, Context.class, FormParam.class,
-                    FormDataParam.class, CookieParam.class);
+    private static final Set<Class<? extends Annotation>> SUPPORTED_PARAM_ANNOTATIONS;
+
+    static {
+        Set<Class<? extends Annotation>> supportedAnnotation =
+                new HashSet<>();
+        supportedAnnotation.add(PathParam.class);
+        supportedAnnotation.add(QueryParam.class);
+        supportedAnnotation.add(HeaderParam.class);
+        supportedAnnotation.add(Context.class);
+        supportedAnnotation.add(FormParam.class);
+        supportedAnnotation.add(FormDataParam.class);
+        supportedAnnotation.add(CookieParam.class);
+
+        SUPPORTED_PARAM_ANNOTATIONS = Collections.unmodifiableSet(supportedAnnotation);
+    }
+
     private static final String[] ANY_MEDIA_TYPE = new String[]{"*/*"};
     private static final int STREAMING_REQ_UNKNOWN = 0, STREAMING_REQ_SUPPORTED = 1, STREAMING_REQ_UNSUPPORTED = 2;
 
@@ -67,7 +81,29 @@ public final class HttpResourceModel {
     private List<String> consumesMediaTypes;
     private List<String> producesMediaTypes;
     private int isStreamingReqSupported = STREAMING_REQ_UNKNOWN;
+    private Map<SubresourceKey, HttpResourceModel> subResources = new HashMap<>();
+    private boolean isSubResourceLocator;
+    private boolean isSubResourceScanned;
 
+    public Map<SubresourceKey, HttpResourceModel> getSubResources() {
+        return subResources;
+    }
+
+    public void setSubResources(Map<SubresourceKey, HttpResourceModel> subResources) {
+        this.subResources = subResources;
+    }
+
+    public void addSubResources(SubresourceKey subresourceKey, HttpResourceModel httpResourceModel) {
+        subResources.put(subresourceKey, httpResourceModel);
+    }
+
+    public void setSubResourceScanned(boolean subResourceScanned) {
+        isSubResourceScanned = subResourceScanned;
+    }
+
+    public boolean isSubResourceScanned() {
+        return isSubResourceScanned;
+    }
 
     /**
      * Construct a resource model with HttpMethod, method that handles httprequest, Object that contains the method.
@@ -75,12 +111,14 @@ public final class HttpResourceModel {
      * @param path             path associated with this model.
      * @param method           handler that handles the http request.
      * @param handler          instance {@code HttpHandler}.
+     * @param isSubResourceLocator indicate if this is a subresource locator method
      */
-    public HttpResourceModel(String path, Method method, Object handler) {
+    public HttpResourceModel(String path, Method method, Object handler, boolean isSubResourceLocator) {
         this.httpMethods = getHttpMethods(method);
         this.path = path;
         this.method = method;
         this.handler = handler;
+        this.isSubResourceLocator = isSubResourceLocator;
         this.paramInfoList = makeParamInfoList(method);
         consumesMediaTypes = parseConsumesMediaTypes();
         producesMediaTypes = parseProducesMediaTypes();
@@ -149,14 +187,26 @@ public final class HttpResourceModel {
         return handler;
     }
 
+    /**
+     * Indicate this method as subresource locator method.
+     * @param subResourceLocator boolean value to set method
+     */
+    public void setSubResourceLocator(boolean subResourceLocator) {
+        isSubResourceLocator = subResourceLocator;
+    }
+
+    /**
+     * Return true if this method is a subresource locator method.
+     *
+     * @return boolean true if this method is a subresource locator method.
+     */
+    public boolean isSubResourceLocator() {
+        return isSubResourceLocator;
+    }
+
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-                .add("httpMethods", httpMethods)
-                .add("path", path)
-                .add("method", method)
-                .add("handler", handler)
-                .toString();
+        return Utils.toString(this, new String[] { "httpMethods", "path", "method", "handler" });
     }
 
     /**
@@ -167,20 +217,32 @@ public final class HttpResourceModel {
      * @return String representation of HttpMethod from annotations or emptyString as a default.
      */
     private Set<String> getHttpMethods(Method method) {
-        Set<String> httpMethods = Sets.newHashSet();
+        Set<String> httpMethods = new HashSet();
+        boolean isSubResourceLocator = true;
         if (method.isAnnotationPresent(GET.class)) {
             httpMethods.add(HttpMethod.GET);
+            isSubResourceLocator = false;
         }
         if (method.isAnnotationPresent(PUT.class)) {
             httpMethods.add(HttpMethod.PUT);
+            isSubResourceLocator = false;
         }
         if (method.isAnnotationPresent(POST.class)) {
             httpMethods.add(HttpMethod.POST);
+            isSubResourceLocator = false;
         }
         if (method.isAnnotationPresent(DELETE.class)) {
             httpMethods.add(HttpMethod.DELETE);
+            isSubResourceLocator = false;
         }
-        return ImmutableSet.copyOf(httpMethods);
+        // If this is a sub resource locator need to add all the method designator
+        if (isSubResourceLocator) {
+            httpMethods.add(HttpMethod.GET);
+            httpMethods.add(HttpMethod.POST);
+            httpMethods.add(HttpMethod.PUT);
+            httpMethods.add(HttpMethod.DELETE);
+        }
+        return Collections.unmodifiableSet(httpMethods);
     }
 
     /**
@@ -196,7 +258,8 @@ public final class HttpResourceModel {
             Annotation[] annotations = paramAnnotations[i];
 
             //Can have only one from @PathParam, @QueryParam, @HeaderParam or @Context.
-            if (Sets.intersection(SUPPORTED_PARAM_ANNOTATIONS, ImmutableSet.of(annotations)).size() > 1) {
+            if (Utils.getIntersection(SUPPORTED_PARAM_ANNOTATIONS,
+                                      Collections.unmodifiableSet(new HashSet(Arrays.asList(annotations)))) > 1) {
                 throw new IllegalArgumentException(
                         String.format("Must have exactly one annotation from %s for parameter %d in method %s",
                                 SUPPORTED_PARAM_ANNOTATIONS, i, method));

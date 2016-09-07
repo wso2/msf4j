@@ -23,9 +23,12 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.wso2.msf4j.HttpServerTest;
 import org.wso2.msf4j.conf.Constants;
+import org.wso2.msf4j.service.SecondService;
 import org.wso2.msf4j.spring.service.second.TestMicroServiceWithDynamicPath;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Spring tests.
@@ -33,20 +36,22 @@ import java.net.URI;
 public class SpringHttpServerTest extends HttpServerTest {
 
     private static final int port = Constants.PORT;
-    private ConfigurableApplicationContext configurableApplicationContext;
+    private List<ConfigurableApplicationContext> configurableApplicationContexts = new ArrayList<>();
 
     @BeforeClass
     public void setup() throws Exception {
         baseURI = URI.create(String.format("http://%s:%d", Constants.HOSTNAME, port));
         MSF4JSpringApplication msf4JSpringApplication = new MSF4JSpringApplication(SpringHttpServerTest.class);
-        configurableApplicationContext = msf4JSpringApplication.run("--http.port=8090");
-        msf4JSpringApplication
-                .addService(configurableApplicationContext, TestMicroServiceWithDynamicPath.class, "/DynamicPath");
+        configurableApplicationContexts.add(msf4JSpringApplication.run(SpringHttpServerTest.class, "--http.port=8090"));
+        configurableApplicationContexts.add(MSF4JSpringApplication.run(SecondService.class, "--http.port=8091"));
+        msf4JSpringApplication.addService(configurableApplicationContexts.get(0), TestMicroServiceWithDynamicPath.class,
+                                          "/DynamicPath");
 
     }
 
     @AfterClass
     public void teardown() throws Exception {
-        configurableApplicationContext.close();
+        configurableApplicationContexts.stream().forEach(
+                configurableApplicationContext -> configurableApplicationContext.close());
     }
 }

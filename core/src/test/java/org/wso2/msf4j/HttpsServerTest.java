@@ -16,7 +16,6 @@
 
 package org.wso2.msf4j;
 
-import com.google.common.io.Resources;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.wso2.carbon.transport.http.netty.config.YAMLTransportConfigurationBuilder;
@@ -24,6 +23,7 @@ import org.wso2.msf4j.conf.Constants;
 import org.wso2.msf4j.conf.SSLClientContext;
 import org.wso2.msf4j.exception.TestExceptionMapper;
 import org.wso2.msf4j.exception.TestExceptionMapper2;
+import org.wso2.msf4j.service.SecondService;
 import org.wso2.msf4j.service.TestMicroServiceWithDynamicPath;
 import org.wso2.msf4j.service.TestMicroservice;
 
@@ -44,7 +44,9 @@ public class HttpsServerTest extends HttpServerTest {
     private static SSLClientContext sslClientContext;
 
     private final TestMicroservice testMicroservice = new TestMicroservice();
+    private final SecondService secondService = new SecondService();
     private MicroservicesRunner microservicesRunner;
+    private MicroservicesRunner secondMicroservicesRunner;
 
     private static final int port = Constants.PORT + 4;
 
@@ -53,19 +55,23 @@ public class HttpsServerTest extends HttpServerTest {
     public void setup() throws Exception {
         baseURI = URI.create(String.format("https://%s:%d", Constants.HOSTNAME, port));
         System.setProperty(YAMLTransportConfigurationBuilder.NETTY_TRANSPORT_CONF,
-                Resources.getResource("netty-transports-1.yml").getPath());
+                           Thread.currentThread().getContextClassLoader().getResource("netty-transports-1.yml")
+                                 .getPath());
         microservicesRunner = new MicroservicesRunner();
         sslClientContext = new SSLClientContext();
         microservicesRunner
                 .addExceptionMapper(new TestExceptionMapper(), new TestExceptionMapper2())
                 .deploy(testMicroservice)
                 .start();
+        secondMicroservicesRunner = new MicroservicesRunner(port + 1);
+        secondMicroservicesRunner.deploy(secondService).start();
         microservicesRunner.deploy(new TestMicroServiceWithDynamicPath(), "/DynamicPath");
     }
 
     @AfterClass
     public void teardown() throws Exception {
         microservicesRunner.stop();
+        secondMicroservicesRunner.stop();
     }
 
     @Override

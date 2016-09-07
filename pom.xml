@@ -22,7 +22,7 @@
         <groupId>org.wso2</groupId>
         <artifactId>wso2</artifactId>
         <version>5</version>
-        <relativePath/>
+        <relativePath />
     </parent>
 
     <groupId>org.wso2.msf4j</groupId>
@@ -104,6 +104,7 @@
         <module>poms/parent</module>
         <module>jaxrs-delegates</module>
         <module>core</module>
+        <module>swagger</module>
         <module>spring</module>
         <module>poms/msf4j-service</module>
         <module>analytics/msf4j-analytics</module>
@@ -141,6 +142,7 @@
         <module>samples/message-tracing/das/jaxrs-client</module>
         <module>samples/message-tracing/das/feign-client</module>
         <module>samples/message-tracing/zipkin/jaxrs-client</module>
+        <module>samples/subresource</module>
 
         <module>perf-benchmark/Samples/wso2msf4j</module>
         <module>features/feature-test</module>

@@ -16,8 +16,7 @@
 
 package org.wso2.msf4j.conf;
 
-import com.google.common.base.Throwables;
-import com.google.common.io.Closeables;
+import org.apache.commons.io.IOUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -52,7 +51,7 @@ public class SSLClientContext {
             clientContext = SSLContext.getInstance(protocol);
             clientContext.init(kmf == null ? null : kmf.getKeyManagers(), TrustManagerFactory.getTrustManagers(), null);
         } catch (Exception e) {
-            throw Throwables.propagate(new Exception("Failed to initialize the client-side SSLContext", e));
+            throw new RuntimeException("Failed to initialize the client-side SSLContext", e);
         }
     }
 
@@ -68,7 +67,7 @@ public class SSLClientContext {
             }
             throw new IOException(ex);
         } finally {
-            Closeables.closeQuietly(is);
+            IOUtils.closeQuietly(is);
         }
         return ks;
     }

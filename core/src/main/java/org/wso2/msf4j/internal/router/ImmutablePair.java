@@ -16,7 +16,10 @@
 
 package org.wso2.msf4j.internal.router;
 
-import com.google.common.base.Objects;
+import org.wso2.msf4j.util.Utils;
+
+import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * An {@link ImmutablePair} consists of two elements within. The elements once set
@@ -83,10 +86,7 @@ final class ImmutablePair<A, B> {
      */
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-                .add("first", first)
-                .add("second", second)
-                .toString();
+        return Utils.toString(this, new String[] { "first", "second" });
     }
 
     /**
@@ -96,7 +96,7 @@ final class ImmutablePair<A, B> {
      */
     @Override
     public int hashCode() {
-        return Objects.hashCode(first, second);
+        return Arrays.hashCode(new ImmutablePair[]{ (ImmutablePair) first, (ImmutablePair) second });
     }
 
     /**
@@ -114,6 +114,6 @@ final class ImmutablePair<A, B> {
             return false;
         }
         ImmutablePair<?, ?> other = (ImmutablePair<?, ?>) o;
-        return Objects.equal(first, other.first) && Objects.equal(second, other.second);
+        return Objects.equals(first, other.first) && Objects.equals(second, other.second);
     }
 }

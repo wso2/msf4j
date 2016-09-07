@@ -16,7 +16,7 @@
 
 package org.wso2.msf4j.conf;
 
-import com.google.common.io.Closeables;
+import org.apache.commons.io.IOUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -83,7 +83,7 @@ public class SSLHandlerFactory {
             }
             throw new IOException(ex);
         } finally {
-            Closeables.closeQuietly(is);
+            IOUtils.closeQuietly(is);
         }
         return ks;
     }

@@ -16,10 +16,10 @@
 
 package org.wso2.msf4j;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.ByteStreams;
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import org.apache.commons.io.Charsets;
+import org.apache.commons.io.IOUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -121,7 +121,7 @@ public class ExtendedServiceTest {
     }
 
     private String getContent(HttpURLConnection urlConn) throws IOException {
-        return new String(ByteStreams.toByteArray(urlConn.getInputStream()), Charsets.UTF_8);
+        return new String(IOUtils.toByteArray(urlConn.getInputStream()), Charsets.UTF_8);
     }
 
     protected void writeContent(HttpURLConnection urlConn, String content) throws IOException {

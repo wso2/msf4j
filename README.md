@@ -285,7 +285,7 @@ WSO2 Data Analytics Server (DAS).
 
 The Metrics data will be published to WSO2 DAS periodically. However the HTTP Monitoring events are published on each request.
 
-For a detailed example, check out the [Metrics and HTTP Monitoring sample](samples/metrics-httpmon/metrics-httpmon-fatjar). 
+For a detailed example, check out the [Metrics and HTTP Monitoring sample](samples/http-monitoring). 
 
 ###Metrics Annotations
 
@@ -337,7 +337,7 @@ Monitor each HTTP request. This annotation can be used at the Class level and th
 ###HTTP Message Tracing
 MSF4J supports visual message tracing through user friendly dashboards in WSO2 DAS or Zipkin. MSF4J message tracing provides 
 a detailed insight to the complex microservices interactions in a system making monitoring, trouble shooting and optimization of 
-microservices very easy. Please check [WSO2 DAS Tracing](samples/wso2das-tracing) and [Zipkin Tracing](samples/zipkin-tracing) samples for more details.
+microservices very easy. Please check [WSO2 DAS Tracing](samples/message-tracing/das) and [Zipkin Tracing](samples/message-tracing/zipkin) samples for more details.
 
 
 ###Swagger Annotations

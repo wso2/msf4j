@@ -15,10 +15,10 @@
  */
 package org.wso2.msf4j.security.oauth2;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.ByteStreams;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.apache.commons.io.Charsets;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.Interceptor;
@@ -154,8 +154,9 @@ public class OAuth2SecurityInterceptor implements Interceptor {
             HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
             urlConn.setDoOutput(true);
             urlConn.setRequestMethod(HttpMethod.POST);
-            urlConn.getOutputStream().write(("token=" + accessToken).getBytes(Charsets.UTF_8));
-            return new String(ByteStreams.toByteArray(urlConn.getInputStream()), Charsets.UTF_8);
+            urlConn.getOutputStream()
+                   .write(("token=" + accessToken + "&token_type_hint=" + BEARER_PREFIX).getBytes(Charsets.UTF_8));
+            return new String(IOUtils.toByteArray(urlConn.getInputStream()), Charsets.UTF_8);
         } catch (java.io.IOException e) {
             log.error("Error invoking Authorization Server", e);
             throw new MSF4JSecurityException(SecurityErrorCode.GENERIC_ERROR, "Error invoking Authorization Server", e);
@@ -168,8 +169,18 @@ public class OAuth2SecurityInterceptor implements Interceptor {
      */
     private Map<String, String> getResponseDataMap(String responseStr) {
         Gson gson = new Gson();
-        Type typeOfMapOfStrings = TypeToken.get(Map.class).getType();
+        Type typeOfMapOfStrings = new ExtendedTypeToken<Map<String, String>>() {
+        }.getType();
         return gson.fromJson(responseStr, typeOfMapOfStrings);
+    }
+
+    /**
+     * This class extends the {@link TypeToken}.
+     * Created due to the findbug issue when passing anonymous inner class.
+     *
+     * @param <T> Generic type
+     */
+    private static class ExtendedTypeToken<T> extends TypeToken {
     }
 
     /**

@@ -16,7 +16,6 @@
 
 package org.wso2.msf4j.internal.router;
 
-import com.google.common.base.Preconditions;
 import org.apache.commons.io.FileCleaningTracker;
 import org.apache.commons.io.FileDeleteStrategy;
 import org.wso2.msf4j.HttpStreamer;
@@ -53,6 +52,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.HeaderParam;
@@ -140,12 +140,12 @@ public class HttpResourceModelProcessor {
             if (httpStreamer == null) {
                 return new HttpMethodInfo(httpResourceModel.getMethod(),
                         httpResourceModel.getHttpHandler(),
-                        args,
+                        args, formParameters,
                         responder);
             } else {
                 return new HttpMethodInfo(httpResourceModel.getMethod(),
                         httpResourceModel.getHttpHandler(),
-                        args,
+                        args, formParameters,
                         responder,
                         httpStreamer);
             }
@@ -353,7 +353,7 @@ public class HttpResourceModelProcessor {
             }
             value = listMultivaluedMap;
         }
-        Preconditions.checkArgument(value != null, "Could not resolve parameter %s", paramType.getTypeName());
+        Objects.requireNonNull(value, String.format("Could not resolve parameter %s", paramType.getTypeName()));
         return value;
     }
 
@@ -367,7 +367,7 @@ public class HttpResourceModelProcessor {
                 value = defaultVal;
             }
         }
-        Preconditions.checkArgument(value != null, "Could not resolve value for parameter %s", pathParam.value());
+        Objects.requireNonNull(value, String.format("Could not resolve value for parameter %s", pathParam.value()));
         return info.convert(value);
     }
 
@@ -425,7 +425,7 @@ public class HttpResourceModelProcessor {
     /**
      * @return Map of request formParameters
      */
-    private Map<String, List<Object>> getFormParameters() {
+    public Map<String, List<Object>> getFormParameters() {
         return formParameters;
     }
 
@@ -434,7 +434,7 @@ public class HttpResourceModelProcessor {
      *
      * @param parameters request formParameters
      */
-    private void setFormParameters(MultivaluedMap<String, Object> parameters) {
+    public void setFormParameters(MultivaluedMap<String, Object> parameters) {
         this.formParameters = parameters;
     }
 }
