@@ -19,7 +19,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.DefaultSessionManager;
 import org.wso2.msf4j.Interceptor;
+import org.wso2.msf4j.MicroserviceRegistry;
 import org.wso2.msf4j.SessionManager;
+import org.wso2.msf4j.SwaggerService;
 import org.wso2.msf4j.internal.router.MicroserviceMetadata;
 
 import java.lang.reflect.InvocationTargetException;
@@ -29,9 +31,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.TreeMap;
 import javax.annotation.PostConstruct;
@@ -42,7 +46,7 @@ import javax.ws.rs.ext.ExceptionMapper;
 /**
  * MicroservicesRegistry for the MSF4J component.
  */
-public class MicroservicesRegistry {
+public class MicroservicesRegistry implements MicroserviceRegistry {
 
     private static final Logger log = LoggerFactory.getLogger(MicroservicesRegistry.class);
     private final Set<Object> services = new HashSet<>();
@@ -55,16 +59,12 @@ public class MicroservicesRegistry {
     public MicroservicesRegistry() {
         /* If we can find the SwaggerDefinitionService, Deploy the Swagger definition service which will return the
          Swagger definition.*/
-        try {
-            Class swaggerDefinitionServiceClass = Class.forName("org.wso2.msf4j.swagger.SwaggerDefinitionService");
-            services.add(swaggerDefinitionServiceClass.getConstructor(MicroservicesRegistry.class).newInstance(this));
-        } catch (ClassNotFoundException e) {
-            log.info("SwaggerDefinitionService can't be found in classpath.");
-        } catch (NoSuchMethodException | IllegalAccessException | InstantiationException
-                | InvocationTargetException e) {
-            if (log.isDebugEnabled()) {
-                log.debug("Couldn't add the SwaggerDefinitionService.", e);
-            }
+        ServiceLoader<SwaggerService> swaggerServices = ServiceLoader.load(SwaggerService.class);
+        Iterator<SwaggerService> iterator = swaggerServices.iterator();
+        if (iterator.hasNext()) {
+            SwaggerService swaggerService = iterator.next();
+            swaggerService.init(this);
+            services.add(swaggerService);
         }
     }
 

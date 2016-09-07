@@ -57,6 +57,14 @@
             <artifactId>jaxrs-delegates</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.wso2.msf4j</groupId>
+            <artifactId>msf4j-swagger</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-core</artifactId>
         </dependency>
@@ -153,6 +161,14 @@
                                 <bundle>
                                     <symbolicName>jaxrs-delegates</symbolicName>
                                     <version>${msf4j.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>msf4j-swagger</symbolicName>
+                                    <version>${msf4j.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>com.google.guava</symbolicName>
+                                    <version>${guava.version}.0</version>
                                 </bundle>
                                 <bundle>
                                     <symbolicName>javax.ws.rs-api</symbolicName>

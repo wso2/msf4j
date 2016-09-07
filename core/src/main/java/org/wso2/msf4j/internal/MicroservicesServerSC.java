@@ -28,6 +28,7 @@ import org.wso2.carbon.kernel.transports.CarbonTransport;
 import org.wso2.msf4j.DefaultSessionManager;
 import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Microservice;
+import org.wso2.msf4j.MicroserviceRegistry;
 import org.wso2.msf4j.SessionManager;
 
 import javax.ws.rs.ext.ExceptionMapper;
@@ -50,6 +51,8 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
     @Activate
     protected void start(final BundleContext bundleContext) {
         DataHolder.getInstance().setMicroservicesRegistry(microservicesRegistry);
+        DataHolder.getInstance().getBundleContext()
+                  .registerService(MicroserviceRegistry.class, microservicesRegistry, null);
     }
 
     @Reference(
@@ -75,9 +78,12 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             unbind = "removeCarbonTransport"
     )
     protected void addCarbonTransport(CarbonTransport carbonTransport) {
+        log.info("All microservices are available");
     }
 
     protected void removeCarbonTransport(CarbonTransport carbonTransport) {
+        log.info("All microservices are available");
+
     }
 
     @Reference(
