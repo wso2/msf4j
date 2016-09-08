@@ -21,9 +21,13 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
-import org.wso2.msf4j.Microservice;
 import org.wso2.msf4j.MicroserviceRegistry;
+import org.wso2.msf4j.SwaggerService;
 import org.wso2.msf4j.swagger.SwaggerDefinitionService;
+
+import java.util.Dictionary;
+import java.util.Hashtable;
+import java.util.Map;
 
 /**
  * OSGi service component for SwaggerDefinitionService.
@@ -36,11 +40,18 @@ public class SwaggerDefinitionSC {
     @Reference(
             name = "microserviceregsitry",
             service = MicroserviceRegistry.class,
-            cardinality = ReferenceCardinality.MANDATORY,
+            cardinality = ReferenceCardinality.AT_LEAST_ONE,
             policy = ReferencePolicy.DYNAMIC,
             unbind = "removeRegistry")
-    protected void addRegistry(MicroserviceRegistry registry) {
-        DataHolder.getInstance().setMicroserviceRegistry(registry);
+    protected void addRegistry(MicroserviceRegistry registry, Map properties) {
+        DataHolder.getInstance().addMicroserviceRegistry(properties.get("registryId").toString(), registry);
+        Dictionary<String, String> serviceProperties = new Hashtable<>();
+        serviceProperties.put("registryId", properties.get("registryId").toString());
+
+        if (DataHolder.getInstance().getBundleContext() != null) {
+            DataHolder.getInstance().getBundleContext()
+                      .registerService(SwaggerService.class, new SwaggerDefinitionService(registry), serviceProperties);
+        }
     }
 
     protected void removeRegistry(MicroserviceRegistry registry) {
@@ -48,11 +59,11 @@ public class SwaggerDefinitionSC {
 
     @Activate
     protected void start(final BundleContext bundleContext) {
-        MicroserviceRegistry microserviceRegistry = DataHolder.getInstance().getMicroserviceRegistry();
-        if (microserviceRegistry != null) {
-            bundleContext.registerService(Microservice.class, new SwaggerDefinitionService(microserviceRegistry), null);
-        } else {
-            throw new IllegalStateException("MicroserviceRegistry instance should be registered");
-        }
+        DataHolder.getInstance().setBundleContext(bundleContext);
+        DataHolder.getInstance().getMicroserviceRegistries().forEach((registryId, registry) -> {
+            Dictionary<String, String> properties = new Hashtable<>();
+            properties.put("registryId", registryId);
+            bundleContext.registerService(SwaggerService.class, new SwaggerDefinitionService(registry), properties);
+        });
     }
 }

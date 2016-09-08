@@ -65,7 +65,8 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
     @Override
     public boolean receive(CarbonMessage carbonMessage, CarbonCallback carbonCallback) {
         if (microservicesRegistry == null) {
-            microservicesRegistry = DataHolder.getInstance().getMicroservicesRegistry();
+            microservicesRegistry =
+                    DataHolder.getInstance().getMicroservicesRegistries().get(carbonMessage.getProperty("ID"));
         }
         Request request = new Request(carbonMessage);
         request.setSessionManager(microservicesRegistry.getSessionManager());

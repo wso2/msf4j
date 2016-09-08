@@ -19,6 +19,7 @@ package org.wso2.msf4j;
 /**
  * Interface need to implement for Swagger service.
  */
-public interface SwaggerService extends Microservice {
+public interface SwaggerService {
+
     void init(MicroserviceRegistry serviceRegistry);
 }

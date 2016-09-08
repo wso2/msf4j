@@ -275,7 +275,7 @@
             javax.xml.bind;resolution:=optional,
         </import.package>
         <carbon.component>
-            osgi.service;objectClass="org.wso2.msf4j.Microservice"
+            osgi.service;objectClass="org.wso2.msf4j.SwaggerService
         </carbon.component>
     </properties>
 </project>

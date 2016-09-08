@@ -30,7 +30,12 @@ import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Microservice;
 import org.wso2.msf4j.MicroserviceRegistry;
 import org.wso2.msf4j.SessionManager;
+import org.wso2.msf4j.SwaggerService;
 
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
 import javax.ws.rs.ext.ExceptionMapper;
 
 /**
@@ -46,13 +51,11 @@ import javax.ws.rs.ext.ExceptionMapper;
 @SuppressWarnings("unused")
 public class MicroservicesServerSC implements RequiredCapabilityListener {
     private static final Logger log = LoggerFactory.getLogger(MicroservicesServerSC.class);
-    private final MicroservicesRegistry microservicesRegistry = new MicroservicesRegistry();
+    private final Map<String, MicroservicesRegistry> microservicesRegistries = new HashMap<>();
 
     @Activate
     protected void start(final BundleContext bundleContext) {
-        DataHolder.getInstance().setMicroservicesRegistry(microservicesRegistry);
-        DataHolder.getInstance().getBundleContext()
-                  .registerService(MicroserviceRegistry.class, microservicesRegistry, null);
+        DataHolder.getInstance().setMicroservicesRegistries(microservicesRegistries);
     }
 
     @Reference(
@@ -62,12 +65,43 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             policy = ReferencePolicy.DYNAMIC,
             unbind = "removeService"
     )
-    protected void addService(Microservice service) {
-        microservicesRegistry.addService(service);
+    protected void addService(Microservice service, Map properties) {
+        Object registryId = properties.get("registryId");
+        if (registryId != null) {
+            microservicesRegistries.get(registryId.toString()).addService(service);
+        } else {
+            microservicesRegistries.values().forEach(registry -> registry.addService(service));
+        }
     }
 
-    protected void removeService(Microservice service) {
-        microservicesRegistry.removeService(service);
+    protected void removeService(Microservice service, Map properties) {
+        Object registryId = properties.get("registryId");
+        if (registryId != null) {
+            microservicesRegistries.get(registryId.toString()).removeService(service);
+        }
+    }
+
+    @Reference(
+            name = "swaggerservice",
+            service = SwaggerService.class,
+            cardinality = ReferenceCardinality.MULTIPLE,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "removeSwaggerService"
+    )
+    protected void addSwaggerService(SwaggerService service, Map properties) {
+        Object registryId = properties.get("registryId");
+        if (registryId != null) {
+            microservicesRegistries.get(registryId.toString()).addService(service);
+        } else {
+            microservicesRegistries.values().forEach(registry -> registry.addService(service));
+        }
+    }
+
+    protected void removeSwaggerService(SwaggerService service, Map properties) {
+        Object id = properties.get("registryId");
+        if (id != null) {
+            microservicesRegistries.get(id.toString()).removeService(service);
+        }
     }
 
     @Reference(
@@ -78,12 +112,16 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             unbind = "removeCarbonTransport"
     )
     protected void addCarbonTransport(CarbonTransport carbonTransport) {
-        log.info("All microservices are available");
+        MicroservicesRegistry microservicesRegistry = new MicroservicesRegistry();
+        Dictionary<String, String> properties = new Hashtable<>();
+        properties.put("registryId", carbonTransport.getId());
+        microservicesRegistries.put(carbonTransport.getId(), microservicesRegistry);
+        DataHolder.getInstance().getBundleContext()
+                  .registerService(MicroserviceRegistry.class, microservicesRegistry, properties);
     }
 
     protected void removeCarbonTransport(CarbonTransport carbonTransport) {
-        log.info("All microservices are available");
-
+        microservicesRegistries.remove(carbonTransport.getId());
     }
 
     @Reference(
@@ -93,12 +131,20 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             policy = ReferencePolicy.DYNAMIC,
             unbind = "removeInterceptor"
     )
-    protected void addInterceptor(Interceptor interceptor) {
-        microservicesRegistry.addInterceptor(interceptor);
+    protected void addInterceptor(Interceptor interceptor, Map properties) {
+        Object registryId = properties.get("registryId");
+        if (registryId != null) {
+            microservicesRegistries.get(registryId.toString()).addInterceptor(interceptor);
+        } else {
+            microservicesRegistries.values().forEach(registry -> registry.addInterceptor(interceptor));
+        }
     }
 
-    protected void removeInterceptor(Interceptor interceptor) {
-        microservicesRegistry.removeInterceptor(interceptor);
+    protected void removeInterceptor(Interceptor interceptor, Map properties) {
+        Object registryId = properties.get("registryId");
+        if (registryId != null) {
+            microservicesRegistries.get(registryId.toString()).removeInterceptor(interceptor);
+        }
     }
 
     @Reference(
@@ -108,12 +154,20 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             policy = ReferencePolicy.DYNAMIC,
             unbind = "removeExceptionMapper"
     )
-    protected void addExceptionMapper(ExceptionMapper exceptionMapper) {
-        microservicesRegistry.addExceptionMapper(exceptionMapper);
+    protected void addExceptionMapper(ExceptionMapper exceptionMapper, Map properties) {
+        Object registryId = properties.get("registryId");
+        if (registryId != null) {
+            microservicesRegistries.get(registryId.toString()).addExceptionMapper(exceptionMapper);
+        } else {
+            microservicesRegistries.values().forEach(registry -> registry.addExceptionMapper(exceptionMapper));
+        }
     }
 
-    protected void removeExceptionMapper(ExceptionMapper exceptionMapper) {
-        microservicesRegistry.removeExceptionMapper(exceptionMapper);
+    protected void removeExceptionMapper(ExceptionMapper exceptionMapper, Map properties) {
+        Object registryId = properties.get("registryId");
+        if (registryId != null) {
+            microservicesRegistries.get(registryId.toString()).removeExceptionMapper(exceptionMapper);
+        }
     }
 
     @Reference(
@@ -123,16 +177,24 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             policy = ReferencePolicy.DYNAMIC,
             unbind = "removeSessionManager"
     )
-    protected void addSessionManager(SessionManager sessionManager) {
+    protected void addSessionManager(SessionManager sessionManager, Map properties) {
+        Object registryId = properties.get("registryId");
         sessionManager.init();
-        microservicesRegistry.setSessionManager(sessionManager);
+        if (registryId != null) {
+            microservicesRegistries.get(registryId.toString()).setSessionManager(sessionManager);
+        } else {
+            microservicesRegistries.values().forEach(registry -> registry.setSessionManager(sessionManager));
+        }
     }
 
-    protected void removeSessionManager(SessionManager sessionManager) {
-        sessionManager.stop();
-        DefaultSessionManager defaultSessionManager = new DefaultSessionManager();
-        defaultSessionManager.init();
-        microservicesRegistry.setSessionManager(defaultSessionManager);
+    protected void removeSessionManager(SessionManager sessionManager, Map properties) {
+        Object registryId = properties.get("registryId");
+        if (registryId != null) {
+            sessionManager.stop();
+            DefaultSessionManager defaultSessionManager = new DefaultSessionManager();
+            defaultSessionManager.init();
+            microservicesRegistries.get(registryId.toString()).setSessionManager(defaultSessionManager);
+        }
     }
 
     @Override
