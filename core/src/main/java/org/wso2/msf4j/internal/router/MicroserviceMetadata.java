@@ -34,6 +34,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
+import javax.ws.rs.OPTIONS;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
@@ -95,7 +96,8 @@ public final class MicroserviceMetadata {
         return method.isAnnotationPresent(GET.class) ||
                 method.isAnnotationPresent(PUT.class) ||
                 method.isAnnotationPresent(POST.class) ||
-                method.isAnnotationPresent(DELETE.class);
+                method.isAnnotationPresent(DELETE.class) ||
+                method.isAnnotationPresent(OPTIONS.class);
     }
 
     /**
