@@ -19,7 +19,8 @@
 package org.wso2.msf4j.swagger;
 
 import io.swagger.util.Json;
-import org.wso2.msf4j.internal.MicroservicesRegistry;
+import org.wso2.msf4j.MicroserviceRegistry;
+import org.wso2.msf4j.SwaggerService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,13 +36,20 @@ import javax.ws.rs.core.Response;
  * This service returns the Swagger definition of all the APIs of the microservices deployed in this runtime.
  */
 @Path("/swagger")
-public class SwaggerDefinitionService {
+public class SwaggerDefinitionService implements SwaggerService {
     private static final String GLOBAL = "global";
 
     private Map<String, MSF4JBeanConfig> swaggerBeans = new HashMap<>();
-    private MicroservicesRegistry serviceRegistry;
+    private MicroserviceRegistry serviceRegistry;
 
-    public SwaggerDefinitionService(MicroservicesRegistry serviceRegistry) {
+    public SwaggerDefinitionService() {
+    }
+
+    public SwaggerDefinitionService(MicroserviceRegistry serviceRegistry) {
+        this.serviceRegistry = serviceRegistry;
+    }
+
+    public void init(MicroserviceRegistry serviceRegistry) {
         this.serviceRegistry = serviceRegistry;
     }
 

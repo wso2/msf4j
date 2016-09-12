@@ -129,7 +129,7 @@ public class SpringMicroservicesRunner extends MicroservicesRunner implements Ap
                 NettyListener nettyListener = createListenerConfiguration(transportConfig);
                 registerTransport(nettyListener);
                 nettyTransportContextHolder
-                        .addMessageProcessor(transportConfig.getPort(), new MSF4JMessageProcessor(getMsRegistry()));
+                        .addMessageProcessor(transportConfig.getId(), new MSF4JMessageProcessor(getMsRegistry()));
             }
         }
     }
