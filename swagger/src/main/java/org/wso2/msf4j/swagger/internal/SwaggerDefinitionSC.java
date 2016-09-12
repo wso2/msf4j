@@ -36,6 +36,7 @@ import java.util.Map;
         service = SwaggerDefinitionSC.class,
         immediate = true)
 public class SwaggerDefinitionSC {
+    private static final String CHANNEL_ID = "CHANNEL_ID";
 
     @Reference(
             name = "microserviceregsitry",
@@ -44,9 +45,9 @@ public class SwaggerDefinitionSC {
             policy = ReferencePolicy.DYNAMIC,
             unbind = "removeRegistry")
     protected void addRegistry(MicroserviceRegistry registry, Map properties) {
-        DataHolder.getInstance().addMicroserviceRegistry(properties.get("registryId").toString(), registry);
+        DataHolder.getInstance().addMicroserviceRegistry(properties.get(CHANNEL_ID).toString(), registry);
         Dictionary<String, String> serviceProperties = new Hashtable<>();
-        serviceProperties.put("registryId", properties.get("registryId").toString());
+        serviceProperties.put(CHANNEL_ID, properties.get(CHANNEL_ID).toString());
 
         if (DataHolder.getInstance().getBundleContext() != null) {
             DataHolder.getInstance().getBundleContext()
@@ -62,7 +63,7 @@ public class SwaggerDefinitionSC {
         DataHolder.getInstance().setBundleContext(bundleContext);
         DataHolder.getInstance().getMicroserviceRegistries().forEach((registryId, registry) -> {
             Dictionary<String, String> properties = new Hashtable<>();
-            properties.put("registryId", registryId);
+            properties.put(CHANNEL_ID, registryId);
             bundleContext.registerService(SwaggerService.class, new SwaggerDefinitionService(registry), properties);
         });
     }

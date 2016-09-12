@@ -64,9 +64,10 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
      */
     @Override
     public boolean receive(CarbonMessage carbonMessage, CarbonCallback carbonCallback) {
-        if (microservicesRegistry == null) {
-            microservicesRegistry =
-                    DataHolder.getInstance().getMicroservicesRegistries().get(carbonMessage.getProperty("ID"));
+        // If we are running on OSGi mode need to get the regustry based on the channel_id.
+        if (DataHolder.getInstance().getBundleContext() != null) {
+            microservicesRegistry = DataHolder.getInstance().getMicroservicesRegistries()
+                                              .get(carbonMessage.getProperty(MSF4JConstants.CHANNEL_ID));
         }
         Request request = new Request(carbonMessage);
         request.setSessionManager(microservicesRegistry.getSessionManager());

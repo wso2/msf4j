@@ -57,14 +57,16 @@ public class MicroservicesRegistry implements MicroserviceRegistry {
     private SessionManager sessionManager = new DefaultSessionManager();
 
     public MicroservicesRegistry() {
-        /* If we can find the SwaggerDefinitionService, Deploy the Swagger definition service which will return the
-         Swagger definition.*/
-        ServiceLoader<SwaggerService> swaggerServices = ServiceLoader.load(SwaggerService.class);
-        Iterator<SwaggerService> iterator = swaggerServices.iterator();
-        if (iterator.hasNext()) {
-            SwaggerService swaggerService = iterator.next();
-            swaggerService.init(this);
-            services.add(swaggerService);
+        /* In non OSGi mode, if we can find the SwaggerDefinitionService, Deploy the Swagger definition service which
+        will return the Swagger definition.*/
+        if (DataHolder.getInstance().getBundleContext() == null) {
+            ServiceLoader<SwaggerService> swaggerServices = ServiceLoader.load(SwaggerService.class);
+            Iterator<SwaggerService> iterator = swaggerServices.iterator();
+            if (iterator.hasNext()) {
+                SwaggerService swaggerService = iterator.next();
+                swaggerService.init(this);
+                services.add(swaggerService);
+            }
         }
     }
 

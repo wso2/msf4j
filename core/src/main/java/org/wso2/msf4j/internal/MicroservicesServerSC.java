@@ -66,18 +66,19 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             unbind = "removeService"
     )
     protected void addService(Microservice service, Map properties) {
-        Object registryId = properties.get("registryId");
-        if (registryId != null) {
-            microservicesRegistries.get(registryId.toString()).addService(service);
+
+        Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
+        if (channelId != null) {
+            microservicesRegistries.get(channelId.toString()).addService(service);
         } else {
             microservicesRegistries.values().forEach(registry -> registry.addService(service));
         }
     }
 
     protected void removeService(Microservice service, Map properties) {
-        Object registryId = properties.get("registryId");
-        if (registryId != null) {
-            microservicesRegistries.get(registryId.toString()).removeService(service);
+        Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
+        if (channelId != null) {
+            microservicesRegistries.get(channelId.toString()).removeService(service);
         }
     }
 
@@ -89,18 +90,18 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             unbind = "removeSwaggerService"
     )
     protected void addSwaggerService(SwaggerService service, Map properties) {
-        Object registryId = properties.get("registryId");
-        if (registryId != null) {
-            microservicesRegistries.get(registryId.toString()).addService(service);
+        Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
+        if (channelId != null) {
+            microservicesRegistries.get(channelId.toString()).addService(service);
         } else {
             microservicesRegistries.values().forEach(registry -> registry.addService(service));
         }
     }
 
     protected void removeSwaggerService(SwaggerService service, Map properties) {
-        Object id = properties.get("registryId");
-        if (id != null) {
-            microservicesRegistries.get(id.toString()).removeService(service);
+        Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
+        if (channelId != null) {
+            microservicesRegistries.get(channelId.toString()).removeService(service);
         }
     }
 
@@ -114,7 +115,7 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
     protected void addCarbonTransport(CarbonTransport carbonTransport) {
         MicroservicesRegistry microservicesRegistry = new MicroservicesRegistry();
         Dictionary<String, String> properties = new Hashtable<>();
-        properties.put("registryId", carbonTransport.getId());
+        properties.put(MSF4JConstants.CHANNEL_ID, carbonTransport.getId());
         microservicesRegistries.put(carbonTransport.getId(), microservicesRegistry);
         DataHolder.getInstance().getBundleContext()
                   .registerService(MicroserviceRegistry.class, microservicesRegistry, properties);
@@ -132,18 +133,18 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             unbind = "removeInterceptor"
     )
     protected void addInterceptor(Interceptor interceptor, Map properties) {
-        Object registryId = properties.get("registryId");
-        if (registryId != null) {
-            microservicesRegistries.get(registryId.toString()).addInterceptor(interceptor);
+        Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
+        if (channelId != null) {
+            microservicesRegistries.get(channelId.toString()).addInterceptor(interceptor);
         } else {
             microservicesRegistries.values().forEach(registry -> registry.addInterceptor(interceptor));
         }
     }
 
     protected void removeInterceptor(Interceptor interceptor, Map properties) {
-        Object registryId = properties.get("registryId");
-        if (registryId != null) {
-            microservicesRegistries.get(registryId.toString()).removeInterceptor(interceptor);
+        Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
+        if (channelId != null) {
+            microservicesRegistries.get(channelId.toString()).removeInterceptor(interceptor);
         }
     }
 
@@ -155,18 +156,18 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             unbind = "removeExceptionMapper"
     )
     protected void addExceptionMapper(ExceptionMapper exceptionMapper, Map properties) {
-        Object registryId = properties.get("registryId");
-        if (registryId != null) {
-            microservicesRegistries.get(registryId.toString()).addExceptionMapper(exceptionMapper);
+        Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
+        if (channelId != null) {
+            microservicesRegistries.get(channelId.toString()).addExceptionMapper(exceptionMapper);
         } else {
             microservicesRegistries.values().forEach(registry -> registry.addExceptionMapper(exceptionMapper));
         }
     }
 
     protected void removeExceptionMapper(ExceptionMapper exceptionMapper, Map properties) {
-        Object registryId = properties.get("registryId");
-        if (registryId != null) {
-            microservicesRegistries.get(registryId.toString()).removeExceptionMapper(exceptionMapper);
+        Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
+        if (channelId != null) {
+            microservicesRegistries.get(channelId.toString()).removeExceptionMapper(exceptionMapper);
         }
     }
 
@@ -178,22 +179,22 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             unbind = "removeSessionManager"
     )
     protected void addSessionManager(SessionManager sessionManager, Map properties) {
-        Object registryId = properties.get("registryId");
+        Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
         sessionManager.init();
-        if (registryId != null) {
-            microservicesRegistries.get(registryId.toString()).setSessionManager(sessionManager);
+        if (channelId != null) {
+            microservicesRegistries.get(channelId.toString()).setSessionManager(sessionManager);
         } else {
             microservicesRegistries.values().forEach(registry -> registry.setSessionManager(sessionManager));
         }
     }
 
     protected void removeSessionManager(SessionManager sessionManager, Map properties) {
-        Object registryId = properties.get("registryId");
-        if (registryId != null) {
+        Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
+        if (channelId != null) {
             sessionManager.stop();
             DefaultSessionManager defaultSessionManager = new DefaultSessionManager();
             defaultSessionManager.init();
-            microservicesRegistries.get(registryId.toString()).setSessionManager(defaultSessionManager);
+            microservicesRegistries.get(channelId.toString()).setSessionManager(defaultSessionManager);
         }
     }
 
