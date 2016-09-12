@@ -41,6 +41,7 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.HttpMethod;
+import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
@@ -235,12 +236,17 @@ public final class HttpResourceModel {
             httpMethods.add(HttpMethod.DELETE);
             isSubResourceLocator = false;
         }
+        if (method.isAnnotationPresent(OPTIONS.class)) {
+            httpMethods.add(HttpMethod.OPTIONS);
+            isSubResourceLocator = false;
+        }
         // If this is a sub resource locator need to add all the method designator
         if (isSubResourceLocator) {
             httpMethods.add(HttpMethod.GET);
             httpMethods.add(HttpMethod.POST);
             httpMethods.add(HttpMethod.PUT);
             httpMethods.add(HttpMethod.DELETE);
+            httpMethods.add(HttpMethod.OPTIONS);
         }
         return Collections.unmodifiableSet(httpMethods);
     }

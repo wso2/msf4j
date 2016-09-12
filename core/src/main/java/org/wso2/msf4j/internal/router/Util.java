@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.util.regex.Pattern;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 
@@ -41,7 +42,8 @@ public class Util {
         return method.isAnnotationPresent(GET.class) ||
                method.isAnnotationPresent(PUT.class) ||
                method.isAnnotationPresent(POST.class) ||
-               method.isAnnotationPresent(DELETE.class);
+               method.isAnnotationPresent(DELETE.class) ||
+               method.isAnnotationPresent(OPTIONS.class);
     }
 
     /**

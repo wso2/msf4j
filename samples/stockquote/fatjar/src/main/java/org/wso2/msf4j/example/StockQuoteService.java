@@ -33,6 +33,7 @@ import java.util.Map;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -167,5 +168,20 @@ public class StockQuoteService {
         request.getHeaders().entrySet().stream().
                 forEach(entry -> System.out.println(entry.getKey() + "=" + entry.getValue()));
         return new Stocks(stockQuotes.values());
+    }
+
+    /**
+     * Retrieve information on what methods are allowed on the Request-URI.
+     * curl -i -X OPTIONS http://localhost:8080/stockquote/all
+     *
+     * @return Response
+     */
+    @OPTIONS
+    @Path("/all")
+    @ApiOperation(
+            value = "Get supported reuest methods",
+            notes = "Return a response with headers that show the supported HTTP Requests on the Request-URI")
+    public Response getCommunicationInformationForRequestURI(){
+        return Response.status(Response.Status.OK).header("Access-Control-Allow-Methods","GET,OPTIONS").build();
     }
 }
