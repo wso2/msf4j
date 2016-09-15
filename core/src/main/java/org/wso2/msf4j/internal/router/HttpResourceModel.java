@@ -85,6 +85,15 @@ public final class HttpResourceModel {
     private Map<SubresourceKey, HttpResourceModel> subResources = new HashMap<>();
     private boolean isSubResourceLocator;
     private boolean isSubResourceScanned;
+    private HttpResourceModel parent;
+
+    public HttpResourceModel getParent() {
+        return parent;
+    }
+
+    public void setParent(HttpResourceModel parent) {
+        this.parent = parent;
+    }
 
     public Map<SubresourceKey, HttpResourceModel> getSubResources() {
         return subResources;

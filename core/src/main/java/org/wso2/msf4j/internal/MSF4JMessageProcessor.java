@@ -30,12 +30,11 @@ import org.wso2.msf4j.internal.router.HttpMethodInfo;
 import org.wso2.msf4j.internal.router.HttpMethodInfoBuilder;
 import org.wso2.msf4j.internal.router.HttpResourceModel;
 import org.wso2.msf4j.internal.router.PatternPathRouter;
+import org.wso2.msf4j.internal.router.Util;
 import org.wso2.msf4j.util.HttpUtil;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;
 import java.util.Optional;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.ExceptionMapper;
 
 /**
@@ -107,8 +106,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                         getDestinationMethod(request.getUri(), request.getHttpMethod(), request.getContentType(),
                                 request.getAcceptTypes());
         HttpResourceModel resourceModel = destination.getDestination();
-        response.setMediaType(getResponseType(request.getAcceptTypes(),
-                resourceModel.getProducesMediaTypes()));
+        response.setMediaType(Util.getResponseType(request.getAcceptTypes(), resourceModel.getProducesMediaTypes()));
         InterceptorExecutor interceptorExecutor =
                 new InterceptorExecutor(resourceModel, request, response, microservicesRegistry.getInterceptors());
         if (interceptorExecutor.execPreCalls()) { // preCalls can throw exceptions
@@ -152,24 +150,6 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
         carbonCallback.done(e.getFailureResponse());
     }
 
-    /**
-     * Process accept type considering the produce type and the
-     * accept types of the request header.
-     *
-     * @param acceptTypes accept types of the request.
-     * @return processed accept type
-     */
-    private String getResponseType(List<String> acceptTypes, List<String> producesMediaTypes) {
-        String responseType = MediaType.WILDCARD;
-        if (!producesMediaTypes.contains(MediaType.WILDCARD) && acceptTypes != null) {
-            responseType =
-                    (acceptTypes.contains(MediaType.WILDCARD)) ? producesMediaTypes.get(0) :
-                            producesMediaTypes.stream().filter(acceptTypes::contains).findFirst().get();
-        } else if (acceptTypes == null && !producesMediaTypes.isEmpty()) {
-            responseType = producesMediaTypes.get(0);
-        }
-        return responseType;
-    }
 
     @Override
     public void setTransportSender(TransportSender transportSender) {

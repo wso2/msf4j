@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MultivaluedMap;
 
@@ -162,6 +163,7 @@ public class HttpMethodInfo {
                                               String.format("%s/%s", destination.getDestination().getPath(),
                                                             relativePath);
                         HttpResourceModel resourceModel = new HttpResourceModel(absolutePath, method, returnVal, false);
+                        resourceModel.setParent(destination.getDestination());
                         SubresourceKey subResKey = new SubresourceKey(absolutePath, method.getDeclaringClass(),
                                                                       resourceModel.getHttpMethod());
                         destination.getDestination().addSubResources(subResKey, resourceModel);
@@ -175,6 +177,7 @@ public class HttpMethodInfo {
                                               String.format("%s/%s", destination.getDestination().getPath(),
                                                             relativePath);
                         HttpResourceModel resourceModel = new HttpResourceModel(absolutePath, method, returnVal, true);
+                        resourceModel.setParent(destination.getDestination());
                         SubresourceKey subResKey =
                                 new SubresourceKey(absolutePath, method.getDeclaringClass(), Collections.emptySet());
                         destination.getDestination().addSubResources(subResKey, resourceModel);
@@ -183,25 +186,41 @@ public class HttpMethodInfo {
                 destination.getDestination().setSubResourceScanned(true);
             }
             String finalRequestPath = requestPath;
-            Optional<Map.Entry<SubresourceKey, HttpResourceModel>> entry =
+
+            List<Map.Entry<SubresourceKey, HttpResourceModel>> entries =
                     destination.getDestination().getSubResources().entrySet().stream()
                                .filter(e -> e.getValue().getHttpMethod().contains(request.getHttpMethod()) &&
                                             finalRequestPath.matches(e.getKey().getPath().replaceAll(GROUP_PATTERN,
-                                                                                             GROUP_PATTERN_REGEX)) &&
-                                            returnVal.getClass().equals(e.getKey().getTypedClass())).findFirst();
+                                                                                                GROUP_PATTERN_REGEX)) &&
+                                            returnVal.getClass().equals(e.getKey().getTypedClass()))
+                               .collect(Collectors.toList());
+            Optional<Map.Entry<SubresourceKey, HttpResourceModel>> entry = entries.stream().filter(
+                    entryPair -> entryPair.getValue().matchConsumeMediaType(request.getContentType()) &&
+                                 entryPair.getValue().matchProduceMediaType(request.getAcceptTypes()))
+                                                                                  .findFirst();
+
             HttpResourceModel resourceModel;
             if (entry.isPresent()) {
                 resourceModel = entry.get().getValue();
             } else {
                 // Another sub-resource call
                 String finalRequestPath1 = requestPath;
-                entry = destination.getDestination().getSubResources().entrySet().stream()
-                                   .filter(e -> finalRequestPath1
-                                         .matches(e.getKey().getPath()
-                                                   .replaceAll(GROUP_PATTERN, GROUP_PATTERN_REGEX).concat(".*"))
-                                                && e.getValue().isSubResourceLocator()
-                                                && returnVal.getClass().equals(e.getKey().getTypedClass()))
-                                   .findFirst();
+                entries = destination.getDestination().getSubResources().entrySet().stream()
+                           .filter(e -> finalRequestPath1
+                                                .matches(e.getKey().getPath()
+                                                          .replaceAll(GROUP_PATTERN, GROUP_PATTERN_REGEX).concat(".*"))
+                               && e.getValue().isSubResourceLocator()
+                               && returnVal.getClass().equals(e.getKey().getTypedClass())).collect(Collectors.toList());
+                entry = entries.stream().filter(entryPair ->
+                                                entryPair
+                                                        .getValue()
+                                                        .matchConsumeMediaType(
+                                                                request.getContentType()) &&
+                                                entryPair
+                                                        .getValue()
+                                                        .matchProduceMediaType(
+                                                                request.getAcceptTypes()))
+                       .findFirst();
                 if (entry.isPresent()) {
                     resourceModel = entry.get().getValue();
                 } else {

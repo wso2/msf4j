@@ -16,12 +16,14 @@ package org.wso2.msf4j.internal.router;
  */
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.regex.Pattern;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
+import javax.ws.rs.core.MediaType;
 
 /**
  * Util class
@@ -55,5 +57,24 @@ public class Util {
     public static String stripBraces(String token) {
         return token.charAt(0) == '{' && token.charAt(token.length() - 1) == '}' ?
                token.substring(1, token.length() - 1) : token;
+    }
+
+    /**
+     * Process accept type considering the produce type and the
+     * accept types of the request header.
+     *
+     * @param acceptTypes accept types of the request.
+     * @return processed accept type
+     */
+    public static String getResponseType(List<String> acceptTypes, List<String> producesMediaTypes) {
+        String responseType = MediaType.WILDCARD;
+        if (!producesMediaTypes.contains(MediaType.WILDCARD) && acceptTypes != null) {
+            responseType =
+                    (acceptTypes.contains(MediaType.WILDCARD)) ? producesMediaTypes.get(0) :
+                    producesMediaTypes.stream().filter(acceptTypes::contains).findFirst().get();
+        } else if (acceptTypes == null && !producesMediaTypes.isEmpty()) {
+            responseType = producesMediaTypes.get(0);
+        }
+        return responseType;
     }
 }
