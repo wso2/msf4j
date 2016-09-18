@@ -39,6 +39,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.HEAD;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.OPTIONS;
@@ -236,6 +237,10 @@ public final class HttpResourceModel {
             httpMethods.add(HttpMethod.DELETE);
             isSubResourceLocator = false;
         }
+        if (method.isAnnotationPresent(HEAD.class)) {
+            httpMethods.add(HttpMethod.HEAD);
+            isSubResourceLocator = false;
+        }
         if (method.isAnnotationPresent(OPTIONS.class)) {
             httpMethods.add(HttpMethod.OPTIONS);
             isSubResourceLocator = false;
@@ -246,6 +251,7 @@ public final class HttpResourceModel {
             httpMethods.add(HttpMethod.POST);
             httpMethods.add(HttpMethod.PUT);
             httpMethods.add(HttpMethod.DELETE);
+            httpMethods.add(HttpMethod.HEAD);
             httpMethods.add(HttpMethod.OPTIONS);
         }
         return Collections.unmodifiableSet(httpMethods);
