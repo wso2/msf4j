@@ -19,6 +19,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
+/**
+ * Simple RESTful web service.
+ */
 @Path("/SecondService")
 public class SecondService {
 

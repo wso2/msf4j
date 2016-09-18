@@ -24,7 +24,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 
 /**
- * Util class
+ * Util class.
  */
 public class Util {
 
@@ -33,7 +33,7 @@ public class Util {
     public static final Pattern WILD_CARD_PATTERN = Pattern.compile("\\*\\*");
 
     /**
-     * Check if http verb is available for the method
+     * Check if http verb is available for the method.
      *
      * @param method
      * @return
