@@ -66,10 +66,13 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             unbind = "removeService"
     )
     protected void addService(Microservice service, Map properties) {
-
         Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
         if (channelId != null) {
-            microservicesRegistries.get(channelId.toString()).addService(service);
+            MicroservicesRegistry microservicesRegistry = microservicesRegistries.get(channelId.toString());
+            if (microservicesRegistry == null) {
+                throw new RuntimeException("Couldn't found the registry for channel ID " + channelId);
+            }
+            microservicesRegistry.addService(service);
         } else {
             microservicesRegistries.values().forEach(registry -> registry.addService(service));
         }
@@ -78,7 +81,11 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
     protected void removeService(Microservice service, Map properties) {
         Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
         if (channelId != null) {
-            microservicesRegistries.get(channelId.toString()).removeService(service);
+            MicroservicesRegistry microservicesRegistry = microservicesRegistries.get(channelId.toString());
+            if (microservicesRegistry == null) {
+                throw new RuntimeException("Couldn't found the registry for channel ID " + channelId);
+            }
+            microservicesRegistry.removeService(service);
         }
     }
 
@@ -92,7 +99,11 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
     protected void addSwaggerService(SwaggerService service, Map properties) {
         Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
         if (channelId != null) {
-            microservicesRegistries.get(channelId.toString()).addService(service);
+            MicroservicesRegistry microservicesRegistry = microservicesRegistries.get(channelId.toString());
+            if (microservicesRegistry == null) {
+                throw new RuntimeException("Couldn't found the registry for channel ID " + channelId);
+            }
+            microservicesRegistry.addService(service);
         } else {
             microservicesRegistries.values().forEach(registry -> registry.addService(service));
         }
@@ -101,7 +112,11 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
     protected void removeSwaggerService(SwaggerService service, Map properties) {
         Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
         if (channelId != null) {
-            microservicesRegistries.get(channelId.toString()).removeService(service);
+            MicroservicesRegistry microservicesRegistry = microservicesRegistries.get(channelId.toString());
+            if (microservicesRegistry == null) {
+                throw new RuntimeException("Couldn't found the registry for channel ID " + channelId);
+            }
+            microservicesRegistry.removeService(service);
         }
     }
 
@@ -135,7 +150,11 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
     protected void addInterceptor(Interceptor interceptor, Map properties) {
         Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
         if (channelId != null) {
-            microservicesRegistries.get(channelId.toString()).addInterceptor(interceptor);
+            MicroservicesRegistry microservicesRegistry = microservicesRegistries.get(channelId.toString());
+            if (microservicesRegistry == null) {
+                throw new RuntimeException("Couldn't found the registry for channel ID " + channelId);
+            }
+            microservicesRegistry.addInterceptor(interceptor);
         } else {
             microservicesRegistries.values().forEach(registry -> registry.addInterceptor(interceptor));
         }
@@ -158,7 +177,11 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
     protected void addExceptionMapper(ExceptionMapper exceptionMapper, Map properties) {
         Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
         if (channelId != null) {
-            microservicesRegistries.get(channelId.toString()).addExceptionMapper(exceptionMapper);
+            MicroservicesRegistry microservicesRegistry = microservicesRegistries.get(channelId.toString());
+            if (microservicesRegistry == null) {
+                throw new RuntimeException("Couldn't found the registry for channel ID " + channelId);
+            }
+            microservicesRegistry.addExceptionMapper(exceptionMapper);
         } else {
             microservicesRegistries.values().forEach(registry -> registry.addExceptionMapper(exceptionMapper));
         }
@@ -182,7 +205,11 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
         Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
         sessionManager.init();
         if (channelId != null) {
-            microservicesRegistries.get(channelId.toString()).setSessionManager(sessionManager);
+            MicroservicesRegistry microservicesRegistry = microservicesRegistries.get(channelId.toString());
+            if (microservicesRegistry == null) {
+                throw new RuntimeException("Couldn't found the registry for channel ID " + channelId);
+            }
+            microservicesRegistry.setSessionManager(sessionManager);
         } else {
             microservicesRegistries.values().forEach(registry -> registry.setSessionManager(sessionManager));
         }

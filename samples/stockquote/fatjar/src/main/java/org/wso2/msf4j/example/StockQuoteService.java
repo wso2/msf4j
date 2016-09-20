@@ -187,8 +187,7 @@ public class StockQuoteService {
             response = Stocks.class,
             responseContainer = "List")
     public Stocks getAllStocks(@Context Request request) {
-        request.getHeaders().entrySet().stream().
-                forEach(entry -> System.out.println(entry.getKey() + "=" + entry.getValue()));
+        request.getHeaders().getAll().forEach(entry -> System.out.println(entry.getName() + "=" + entry.getValue()));
         return new Stocks(stockQuotes.values());
     }
 
