@@ -33,7 +33,9 @@ import org.wso2.msf4j.internal.router.PatternPathRouter;
 import org.wso2.msf4j.util.HttpUtil;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -49,14 +51,15 @@ import javax.ws.rs.ext.ExceptionMapper;
 public class MSF4JMessageProcessor implements CarbonMessageProcessor {
 
     private static final Logger log = LoggerFactory.getLogger(MSF4JMessageProcessor.class);
-    private MicroservicesRegistry microservicesRegistry;
+    private static Map<String, MicroservicesRegistry> microservicesRegistries = new HashMap<>();
+    private MicroservicesRegistry currentMicroservicesRegistry;
     private static final String MSF4J_MSG_PROC_ID = "MSF4J-CM-PROCESSOR";
 
     public MSF4JMessageProcessor() {
     }
 
-    public MSF4JMessageProcessor(MicroservicesRegistry microservicesRegistry) {
-        this.microservicesRegistry = microservicesRegistry;
+    public MSF4JMessageProcessor(String channelId, MicroservicesRegistry microservicesRegistry) {
+        this.microservicesRegistries.put(channelId, microservicesRegistry);
     }
 
     /**
@@ -64,13 +67,16 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
      */
     @Override
     public boolean receive(CarbonMessage carbonMessage, CarbonCallback carbonCallback) {
-        // If we are running on OSGi mode need to get the regustry based on the channel_id.
+        // If we are running on OSGi mode need to get the registry based on the channel_id.
         if (DataHolder.getInstance().getBundleContext() != null) {
-            microservicesRegistry = DataHolder.getInstance().getMicroservicesRegistries()
-                                              .get(carbonMessage.getProperty(MSF4JConstants.CHANNEL_ID));
+            currentMicroservicesRegistry = DataHolder.getInstance().getMicroservicesRegistries()
+                                                .get(carbonMessage.getProperty(MSF4JConstants.CHANNEL_ID));
+        } else {
+            currentMicroservicesRegistry =
+                    microservicesRegistries.get(carbonMessage.getProperty(MSF4JConstants.CHANNEL_ID));
         }
         Request request = new Request(carbonMessage);
-        request.setSessionManager(microservicesRegistry.getSessionManager());
+        request.setSessionManager(currentMicroservicesRegistry.getSessionManager());
         Response response = new Response(carbonCallback, request);
         try {
             dispatchMethod(request, response);
@@ -104,15 +110,16 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
     private void dispatchMethod(Request request, Response response) throws Exception {
         HttpUtil.setConnectionHeader(request, response);
         PatternPathRouter.RoutableDestination<HttpResourceModel> destination =
-                microservicesRegistry.
+                currentMicroservicesRegistry.
                         getMetadata().
                         getDestinationMethod(request.getUri(), request.getHttpMethod(), request.getContentType(),
                                 request.getAcceptTypes());
         HttpResourceModel resourceModel = destination.getDestination();
         response.setMediaType(getResponseType(request.getAcceptTypes(),
                 resourceModel.getProducesMediaTypes()));
-        InterceptorExecutor interceptorExecutor =
-                new InterceptorExecutor(resourceModel, request, response, microservicesRegistry.getInterceptors());
+        InterceptorExecutor interceptorExecutor = new InterceptorExecutor(resourceModel, request, response,
+                                                                          currentMicroservicesRegistry
+                                                                                  .getInterceptors());
         if (interceptorExecutor.execPreCalls()) { // preCalls can throw exceptions
 
             HttpMethodInfoBuilder httpMethodInfoBuilder =
@@ -136,7 +143,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
     }
 
     private void handleThrowable(Throwable throwable, CarbonCallback carbonCallback, Request request) {
-        Optional<ExceptionMapper> exceptionMapper = microservicesRegistry.getExceptionMapper(throwable);
+        Optional<ExceptionMapper> exceptionMapper = currentMicroservicesRegistry.getExceptionMapper(throwable);
         if (exceptionMapper.isPresent()) {
             org.wso2.msf4j.Response msf4jResponse =
                     new org.wso2.msf4j.Response(carbonCallback, request);

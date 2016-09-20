@@ -126,7 +126,7 @@ public class MicroservicesRunner {
                     new ListenerConfiguration("netty-" + port, "0.0.0.0", port);
             NettyListener listener = new NettyListener(listenerConfiguration);
             transportManager.registerTransport(listener);
-            nettyTransportContextHolder.addMessageProcessor("netty-" + port, new MSF4JMessageProcessor(msRegistry));
+            nettyTransportContextHolder.setMessageProcessor(new MSF4JMessageProcessor("netty-" + port, msRegistry));
         }
     }
 
@@ -143,7 +143,7 @@ public class MicroservicesRunner {
             NettyListener listener = new NettyListener(listenerConfiguration);
             transportManager.registerTransport(listener);
             nettyTransportContextHolder
-                    .addMessageProcessor(listenerConfiguration.getId(), new MSF4JMessageProcessor(msRegistry));
+                    .setMessageProcessor(new MSF4JMessageProcessor(listenerConfiguration.getId(), msRegistry));
         }
     }
 

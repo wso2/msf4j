@@ -24,7 +24,7 @@ public class TraceableHttpServerRequestTest extends Assert {
     public void setUp() throws IOException {
         CarbonMessage carbonMessage = new DefaultCarbonMessage();
         request = new Request(carbonMessage);
-        request.getHeaders().put("testK", "testV");
+        request.getHeaders().set("testK", "testV");
         request.setProperty("TO", "msf4j");
         request.setProperty("HTTP_METHOD", HttpMethod.GET);
         httpServerRequest = new TraceableHttpServerRequest(request);
