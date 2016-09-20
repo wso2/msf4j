@@ -19,7 +19,7 @@
 package org.wso2.msf4j.swagger;
 
 import io.swagger.util.Json;
-import org.wso2.msf4j.MicroserviceRegistry;
+import org.wso2.msf4j.MicroservicesRegistry;
 import org.wso2.msf4j.SwaggerService;
 
 import java.util.HashMap;
@@ -40,16 +40,16 @@ public class SwaggerDefinitionService implements SwaggerService {
     private static final String GLOBAL = "global";
 
     private Map<String, MSF4JBeanConfig> swaggerBeans = new HashMap<>();
-    private MicroserviceRegistry serviceRegistry;
+    private MicroservicesRegistry serviceRegistry;
 
     public SwaggerDefinitionService() {
     }
 
-    public SwaggerDefinitionService(MicroserviceRegistry serviceRegistry) {
+    public SwaggerDefinitionService(MicroservicesRegistry serviceRegistry) {
         this.serviceRegistry = serviceRegistry;
     }
 
-    public void init(MicroserviceRegistry serviceRegistry) {
+    public void init(MicroservicesRegistry serviceRegistry) {
         this.serviceRegistry = serviceRegistry;
     }
 

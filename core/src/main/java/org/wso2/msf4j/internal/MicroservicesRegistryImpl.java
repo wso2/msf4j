@@ -19,7 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.DefaultSessionManager;
 import org.wso2.msf4j.Interceptor;
-import org.wso2.msf4j.MicroserviceRegistry;
+import org.wso2.msf4j.MicroservicesRegistry;
 import org.wso2.msf4j.SessionManager;
 import org.wso2.msf4j.SwaggerService;
 import org.wso2.msf4j.internal.router.MicroserviceMetadata;
@@ -46,9 +46,9 @@ import javax.ws.rs.ext.ExceptionMapper;
 /**
  * MicroservicesRegistry for the MSF4J component.
  */
-public class MicroservicesRegistry implements MicroserviceRegistry {
+public class MicroservicesRegistryImpl implements MicroservicesRegistry {
 
-    private static final Logger log = LoggerFactory.getLogger(MicroservicesRegistry.class);
+    private static final Logger log = LoggerFactory.getLogger(MicroservicesRegistryImpl.class);
     private final Set<Object> services = new HashSet<>();
 
     private final List<Interceptor> interceptors = new ArrayList<>();
@@ -56,7 +56,7 @@ public class MicroservicesRegistry implements MicroserviceRegistry {
     private Map<Class, ExceptionMapper> exceptionMappers = new TreeMap<>(new ClassComparator());
     private SessionManager sessionManager = new DefaultSessionManager();
 
-    public MicroservicesRegistry() {
+    public MicroservicesRegistryImpl() {
         /* In non OSGi mode, if we can find the SwaggerDefinitionService, Deploy the Swagger definition service which
         will return the Swagger definition.*/
         if (DataHolder.getInstance().getBundleContext() == null) {

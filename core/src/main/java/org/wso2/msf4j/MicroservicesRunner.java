@@ -25,7 +25,7 @@ import org.wso2.carbon.transport.http.netty.config.YAMLTransportConfigurationBui
 import org.wso2.carbon.transport.http.netty.internal.NettyTransportContextHolder;
 import org.wso2.carbon.transport.http.netty.listener.NettyListener;
 import org.wso2.msf4j.internal.MSF4JMessageProcessor;
-import org.wso2.msf4j.internal.MicroservicesRegistry;
+import org.wso2.msf4j.internal.MicroservicesRegistryImpl;
 
 import java.util.Set;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -40,7 +40,7 @@ public class MicroservicesRunner {
     private TransportManager transportManager = new TransportManager();
     private long startTime = System.currentTimeMillis();
     private boolean isStarted;
-    private MicroservicesRegistry msRegistry = new MicroservicesRegistry();
+    private MicroservicesRegistryImpl msRegistry = new MicroservicesRegistryImpl();
 
     /**
      * Creates a MicroservicesRunner instance which will be used for deploying microservices. Allows specifying
@@ -187,7 +187,7 @@ public class MicroservicesRunner {
      *
      * @return MicroservicesRegistry instance of this runner
      */
-    public MicroservicesRegistry getMsRegistry() {
+    public MicroservicesRegistryImpl getMsRegistry() {
         return msRegistry;
     }
 

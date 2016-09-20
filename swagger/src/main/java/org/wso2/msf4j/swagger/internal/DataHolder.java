@@ -16,7 +16,7 @@
 package org.wso2.msf4j.swagger.internal;
 
 import org.osgi.framework.BundleContext;
-import org.wso2.msf4j.MicroserviceRegistry;
+import org.wso2.msf4j.MicroservicesRegistry;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +28,7 @@ public class DataHolder {
 
     private static final DataHolder instance = new DataHolder();
 
-    private Map<String, MicroserviceRegistry> microserviceRegistries = new HashMap<>();
+    private Map<String, MicroservicesRegistry> microserviceRegistries = new HashMap<>();
 
     private BundleContext bundleContext;
 
@@ -39,15 +39,15 @@ public class DataHolder {
         return instance;
     }
 
-    public MicroserviceRegistry getMicroserviceRegistry(String registryId) {
+    public MicroservicesRegistry getMicroserviceRegistry(String registryId) {
         return microserviceRegistries.get(registryId);
     }
 
-    public void addMicroserviceRegistry(String registryId, MicroserviceRegistry microservicesRegistry) {
+    public void addMicroserviceRegistry(String registryId, MicroservicesRegistry microservicesRegistry) {
         microserviceRegistries.put(registryId, microservicesRegistry);
     }
 
-    public Map<String, MicroserviceRegistry> getMicroserviceRegistries() {
+    public Map<String, MicroservicesRegistry> getMicroserviceRegistries() {
         return microserviceRegistries;
     }
 

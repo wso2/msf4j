@@ -27,7 +27,7 @@ public class DataHolder {
 
     private static final DataHolder instance = new DataHolder();
     private BundleContext bundleContext;
-    private Map<String, MicroservicesRegistry> microservicesRegistries = new HashMap<>();
+    private Map<String, MicroservicesRegistryImpl> microservicesRegistries = new HashMap<>();
 
     private DataHolder() {
     }
@@ -44,7 +44,7 @@ public class DataHolder {
         this.bundleContext = bundleContext;
     }
 
-    public Map<String, MicroservicesRegistry> getMicroservicesRegistries() {
+    public Map<String, MicroservicesRegistryImpl> getMicroservicesRegistries() {
         return microservicesRegistries;
     }
 

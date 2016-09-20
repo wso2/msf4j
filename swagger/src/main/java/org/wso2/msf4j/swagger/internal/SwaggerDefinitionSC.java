@@ -21,7 +21,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
-import org.wso2.msf4j.MicroserviceRegistry;
+import org.wso2.msf4j.MicroservicesRegistry;
 import org.wso2.msf4j.SwaggerService;
 import org.wso2.msf4j.swagger.SwaggerDefinitionService;
 
@@ -40,22 +40,23 @@ public class SwaggerDefinitionSC {
 
     @Reference(
             name = "microserviceregsitry",
-            service = MicroserviceRegistry.class,
+            service = MicroservicesRegistry.class,
             cardinality = ReferenceCardinality.AT_LEAST_ONE,
             policy = ReferencePolicy.DYNAMIC,
             unbind = "removeRegistry")
-    protected void addRegistry(MicroserviceRegistry registry, Map properties) {
+    protected void addRegistry(MicroservicesRegistry registry, Map properties) {
         DataHolder.getInstance().addMicroserviceRegistry(properties.get(CHANNEL_ID).toString(), registry);
         Dictionary<String, String> serviceProperties = new Hashtable<>();
         serviceProperties.put(CHANNEL_ID, properties.get(CHANNEL_ID).toString());
 
-        if (DataHolder.getInstance().getBundleContext() != null) {
-            DataHolder.getInstance().getBundleContext()
-                      .registerService(SwaggerService.class, new SwaggerDefinitionService(registry), serviceProperties);
+        BundleContext bundleContext = DataHolder.getInstance().getBundleContext();
+        if (bundleContext != null) {
+            bundleContext.registerService(SwaggerService.class,
+                    new SwaggerDefinitionService(registry), serviceProperties);
         }
     }
 
-    protected void removeRegistry(MicroserviceRegistry registry) {
+    protected void removeRegistry(MicroservicesRegistry registry) {
     }
 
     @Activate

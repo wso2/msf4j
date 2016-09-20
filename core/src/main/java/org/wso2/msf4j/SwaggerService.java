@@ -21,5 +21,5 @@ package org.wso2.msf4j;
  */
 public interface SwaggerService {
 
-    void init(MicroserviceRegistry serviceRegistry);
+    void init(MicroservicesRegistry serviceRegistry);
 }

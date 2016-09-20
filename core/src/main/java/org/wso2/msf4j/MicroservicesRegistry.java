@@ -22,7 +22,7 @@ import java.util.Set;
 /**
  * Interface that needs to be implemented for handle the registry.
  */
-public interface MicroserviceRegistry {
+public interface MicroservicesRegistry {
     Optional<Object> getServiceWithBasePath(String path);
 
     Set<Object> getHttpServices();

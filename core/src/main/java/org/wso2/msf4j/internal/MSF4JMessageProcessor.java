@@ -49,13 +49,13 @@ import javax.ws.rs.ext.ExceptionMapper;
 public class MSF4JMessageProcessor implements CarbonMessageProcessor {
 
     private static final Logger log = LoggerFactory.getLogger(MSF4JMessageProcessor.class);
-    private MicroservicesRegistry currentMicroservicesRegistry;
+    private MicroservicesRegistryImpl currentMicroservicesRegistry;
     private static final String MSF4J_MSG_PROC_ID = "MSF4J-CM-PROCESSOR";
 
     public MSF4JMessageProcessor() {
     }
 
-    public MSF4JMessageProcessor(String channelId, MicroservicesRegistry microservicesRegistry) {
+    public MSF4JMessageProcessor(String channelId, MicroservicesRegistryImpl microservicesRegistry) {
         DataHolder.getInstance().getMicroservicesRegistries().put(channelId, microservicesRegistry);
     }
 
