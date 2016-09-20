@@ -33,7 +33,6 @@ import org.wso2.msf4j.SessionManager;
 import org.wso2.msf4j.SwaggerService;
 
 import java.util.Dictionary;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -51,11 +50,10 @@ import javax.ws.rs.ext.ExceptionMapper;
 @SuppressWarnings("unused")
 public class MicroservicesServerSC implements RequiredCapabilityListener {
     private static final Logger log = LoggerFactory.getLogger(MicroservicesServerSC.class);
-    private final Map<String, MicroservicesRegistry> microservicesRegistries = new HashMap<>();
 
     @Activate
     protected void start(final BundleContext bundleContext) {
-        DataHolder.getInstance().setMicroservicesRegistries(microservicesRegistries);
+
     }
 
     @Reference(
@@ -67,6 +65,8 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
     )
     protected void addService(Microservice service, Map properties) {
         Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
+        Map<String, MicroservicesRegistry> microservicesRegistries =
+                DataHolder.getInstance().getMicroservicesRegistries();
         if (channelId != null) {
             MicroservicesRegistry microservicesRegistry = microservicesRegistries.get(channelId.toString());
             if (microservicesRegistry == null) {
@@ -80,6 +80,8 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
 
     protected void removeService(Microservice service, Map properties) {
         Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
+        Map<String, MicroservicesRegistry> microservicesRegistries =
+                DataHolder.getInstance().getMicroservicesRegistries();
         if (channelId != null) {
             MicroservicesRegistry microservicesRegistry = microservicesRegistries.get(channelId.toString());
             if (microservicesRegistry == null) {
@@ -98,6 +100,8 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
     )
     protected void addSwaggerService(SwaggerService service, Map properties) {
         Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
+        Map<String, MicroservicesRegistry> microservicesRegistries =
+                DataHolder.getInstance().getMicroservicesRegistries();
         if (channelId != null) {
             MicroservicesRegistry microservicesRegistry = microservicesRegistries.get(channelId.toString());
             if (microservicesRegistry == null) {
@@ -111,6 +115,8 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
 
     protected void removeSwaggerService(SwaggerService service, Map properties) {
         Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
+        Map<String, MicroservicesRegistry> microservicesRegistries =
+                DataHolder.getInstance().getMicroservicesRegistries();
         if (channelId != null) {
             MicroservicesRegistry microservicesRegistry = microservicesRegistries.get(channelId.toString());
             if (microservicesRegistry == null) {
@@ -129,6 +135,8 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
     )
     protected void addCarbonTransport(CarbonTransport carbonTransport) {
         MicroservicesRegistry microservicesRegistry = new MicroservicesRegistry();
+        Map<String, MicroservicesRegistry> microservicesRegistries =
+                DataHolder.getInstance().getMicroservicesRegistries();
         Dictionary<String, String> properties = new Hashtable<>();
         properties.put(MSF4JConstants.CHANNEL_ID, carbonTransport.getId());
         microservicesRegistries.put(carbonTransport.getId(), microservicesRegistry);
@@ -137,7 +145,7 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
     }
 
     protected void removeCarbonTransport(CarbonTransport carbonTransport) {
-        microservicesRegistries.remove(carbonTransport.getId());
+        DataHolder.getInstance().getMicroservicesRegistries().remove(carbonTransport.getId());
     }
 
     @Reference(
@@ -149,6 +157,8 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
     )
     protected void addInterceptor(Interceptor interceptor, Map properties) {
         Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
+        Map<String, MicroservicesRegistry> microservicesRegistries =
+                DataHolder.getInstance().getMicroservicesRegistries();
         if (channelId != null) {
             MicroservicesRegistry microservicesRegistry = microservicesRegistries.get(channelId.toString());
             if (microservicesRegistry == null) {
@@ -162,6 +172,8 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
 
     protected void removeInterceptor(Interceptor interceptor, Map properties) {
         Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
+        Map<String, MicroservicesRegistry> microservicesRegistries =
+                DataHolder.getInstance().getMicroservicesRegistries();
         if (channelId != null) {
             microservicesRegistries.get(channelId.toString()).removeInterceptor(interceptor);
         }
@@ -176,6 +188,8 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
     )
     protected void addExceptionMapper(ExceptionMapper exceptionMapper, Map properties) {
         Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
+        Map<String, MicroservicesRegistry> microservicesRegistries =
+                DataHolder.getInstance().getMicroservicesRegistries();
         if (channelId != null) {
             MicroservicesRegistry microservicesRegistry = microservicesRegistries.get(channelId.toString());
             if (microservicesRegistry == null) {
@@ -189,6 +203,8 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
 
     protected void removeExceptionMapper(ExceptionMapper exceptionMapper, Map properties) {
         Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
+        Map<String, MicroservicesRegistry> microservicesRegistries =
+                DataHolder.getInstance().getMicroservicesRegistries();
         if (channelId != null) {
             microservicesRegistries.get(channelId.toString()).removeExceptionMapper(exceptionMapper);
         }
@@ -203,6 +219,8 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
     )
     protected void addSessionManager(SessionManager sessionManager, Map properties) {
         Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
+        Map<String, MicroservicesRegistry> microservicesRegistries =
+                DataHolder.getInstance().getMicroservicesRegistries();
         sessionManager.init();
         if (channelId != null) {
             MicroservicesRegistry microservicesRegistry = microservicesRegistries.get(channelId.toString());
@@ -217,6 +235,8 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
 
     protected void removeSessionManager(SessionManager sessionManager, Map properties) {
         Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
+        Map<String, MicroservicesRegistry> microservicesRegistries =
+                DataHolder.getInstance().getMicroservicesRegistries();
         if (channelId != null) {
             sessionManager.stop();
             DefaultSessionManager defaultSessionManager = new DefaultSessionManager();
