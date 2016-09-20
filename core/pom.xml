@@ -332,9 +332,6 @@
             org.osgi.util.tracker; version="${osgi.service.tracker.import.version.range}",
             org.wso2.carbon.kernel.transports.*;version="${carbon.kernel.version.range}",
             org.wso2.carbon.kernel.startupresolver.*;version="${carbon.kernel.version.range}",
-            io.swagger.jaxrs.config.*;version="${io.swagger.version.range}",
-            io.swagger.util.*;version="${io.swagger.version.range}",
-            com.fasterxml.jackson.*;version="${com.fasterxml.jackson.version.range}",
             org.wso2.carbon.messaging.*,
         </import.package>
         <carbon.component>

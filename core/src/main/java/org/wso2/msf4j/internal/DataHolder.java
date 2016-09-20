@@ -17,6 +17,8 @@ package org.wso2.msf4j.internal;
 
 import org.osgi.framework.BundleContext;
 
+import java.util.Map;
+
 /**
  * DataHolder for MSF4J.
  */
@@ -24,7 +26,7 @@ public class DataHolder {
 
     private static final DataHolder instance = new DataHolder();
     private BundleContext bundleContext;
-    private MicroservicesRegistry microservicesRegistry;
+    private Map<String, MicroservicesRegistry> microservicesRegistries;
 
     private DataHolder() {
     }
@@ -41,11 +43,11 @@ public class DataHolder {
         this.bundleContext = bundleContext;
     }
 
-    public MicroservicesRegistry getMicroservicesRegistry() {
-        return microservicesRegistry;
+    public Map<String, MicroservicesRegistry> getMicroservicesRegistries() {
+        return microservicesRegistries;
     }
 
-    public void setMicroservicesRegistry(MicroservicesRegistry microservicesRegistry) {
-        this.microservicesRegistry = microservicesRegistry;
+    public void setMicroservicesRegistries(Map<String, MicroservicesRegistry> microservicesRegistries) {
+        this.microservicesRegistries = microservicesRegistries;
     }
 }
