@@ -33,9 +33,7 @@ import org.wso2.msf4j.internal.router.PatternPathRouter;
 import org.wso2.msf4j.util.HttpUtil;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -51,7 +49,6 @@ import javax.ws.rs.ext.ExceptionMapper;
 public class MSF4JMessageProcessor implements CarbonMessageProcessor {
 
     private static final Logger log = LoggerFactory.getLogger(MSF4JMessageProcessor.class);
-    private static Map<String, MicroservicesRegistry> microservicesRegistries = new HashMap<>();
     private MicroservicesRegistry currentMicroservicesRegistry;
     private static final String MSF4J_MSG_PROC_ID = "MSF4J-CM-PROCESSOR";
 
@@ -59,7 +56,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
     }
 
     public MSF4JMessageProcessor(String channelId, MicroservicesRegistry microservicesRegistry) {
-        this.microservicesRegistries.put(channelId, microservicesRegistry);
+        DataHolder.getInstance().getMicroservicesRegistries().put(channelId, microservicesRegistry);
     }
 
     /**
@@ -68,13 +65,8 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
     @Override
     public boolean receive(CarbonMessage carbonMessage, CarbonCallback carbonCallback) {
         // If we are running on OSGi mode need to get the registry based on the channel_id.
-        if (DataHolder.getInstance().getBundleContext() != null) {
-            currentMicroservicesRegistry = DataHolder.getInstance().getMicroservicesRegistries()
+        currentMicroservicesRegistry = DataHolder.getInstance().getMicroservicesRegistries()
                                                 .get(carbonMessage.getProperty(MSF4JConstants.CHANNEL_ID));
-        } else {
-            currentMicroservicesRegistry =
-                    microservicesRegistries.get(carbonMessage.getProperty(MSF4JConstants.CHANNEL_ID));
-        }
         Request request = new Request(carbonMessage);
         request.setSessionManager(currentMicroservicesRegistry.getSessionManager());
         Response response = new Response(carbonCallback, request);
