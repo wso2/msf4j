@@ -109,7 +109,7 @@ public interface SessionManager {
     void updateSession(Session session);
 
     /**
-     * Stop this SessionManager
+     * Stop this SessionManager.
      */
     void stop();
 }

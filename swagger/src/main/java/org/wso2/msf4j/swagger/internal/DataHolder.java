@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, WSO2 Inc. (http://wso2.com) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.msf4j.internal;
+package org.wso2.msf4j.swagger.internal;
 
 import org.osgi.framework.BundleContext;
+import org.wso2.msf4j.MicroservicesRegistry;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * DataHolder for MSF4J.
+ * DataHolder for Swagger component.
  */
 public class DataHolder {
 
     private static final DataHolder instance = new DataHolder();
+
+    private Map<String, MicroservicesRegistry> microserviceRegistries = new HashMap<>();
+
     private BundleContext bundleContext;
-    private Map<String, MicroservicesRegistryImpl> microservicesRegistries = new HashMap<>();
 
     private DataHolder() {
     }
@@ -36,16 +39,23 @@ public class DataHolder {
         return instance;
     }
 
-    public BundleContext getBundleContext() {
-        return bundleContext;
+    public MicroservicesRegistry getMicroserviceRegistry(String registryId) {
+        return microserviceRegistries.get(registryId);
+    }
+
+    public void addMicroserviceRegistry(String registryId, MicroservicesRegistry microservicesRegistry) {
+        microserviceRegistries.put(registryId, microservicesRegistry);
+    }
+
+    public Map<String, MicroservicesRegistry> getMicroserviceRegistries() {
+        return microserviceRegistries;
     }
 
     public void setBundleContext(BundleContext bundleContext) {
         this.bundleContext = bundleContext;
     }
 
-    public Map<String, MicroservicesRegistryImpl> getMicroservicesRegistries() {
-        return microservicesRegistries;
+    public BundleContext getBundleContext() {
+        return bundleContext;
     }
-
 }

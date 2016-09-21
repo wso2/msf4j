@@ -19,11 +19,13 @@ import java.lang.reflect.Method;
 import java.util.regex.Pattern;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HEAD;
+import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 
 /**
- * Util class
+ * Util class.
  */
 public class Util {
 
@@ -32,7 +34,7 @@ public class Util {
     public static final Pattern WILD_CARD_PATTERN = Pattern.compile("\\*\\*");
 
     /**
-     * Check if http verb is available for the method
+     * Check if http verb is available for the method.
      *
      * @param method
      * @return
@@ -41,7 +43,9 @@ public class Util {
         return method.isAnnotationPresent(GET.class) ||
                method.isAnnotationPresent(PUT.class) ||
                method.isAnnotationPresent(POST.class) ||
-               method.isAnnotationPresent(DELETE.class);
+               method.isAnnotationPresent(DELETE.class) ||
+               method.isAnnotationPresent(HEAD.class) ||
+               method.isAnnotationPresent(OPTIONS.class);
     }
 
     /**

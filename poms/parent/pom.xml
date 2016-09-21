@@ -218,6 +218,16 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.msf4j</groupId>
+                <artifactId>msf4j-swagger</artifactId>
+                <version>${msf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.msf4j</groupId>
                 <artifactId>org.wso2.msf4j.feature</artifactId>
                 <version>${msf4j.version}</version>
                 <type>zip</type>
@@ -532,9 +542,9 @@
         <!-- Dependencies -->
         <carbon.kernel.version>5.1.0</carbon.kernel.version>
         <carbon.kernel.version.range>[5.0.0,6.0.0)</carbon.kernel.version.range>
-        <carbon.messaging.version>1.0.4</carbon.messaging.version>
+        <carbon.messaging.version>1.0.6</carbon.messaging.version>
         <carbon.messaging.version.range>[1.0.4,2)</carbon.messaging.version.range>
-        <org.wso2.carbon.transport.http.netty.version>2.1.3</org.wso2.carbon.transport.http.netty.version>
+        <org.wso2.carbon.transport.http.netty.version>2.1.4</org.wso2.carbon.transport.http.netty.version>
         <org.wso2.carbon.transport.http.netty.version.range>[2.0,3)</org.wso2.carbon.transport.http.netty.version.range>
         <org.apache.httpcomponents.httpclient.version>4.5.2</org.apache.httpcomponents.httpclient.version>
         <msf4j.version>2.0.1-SNAPSHOT</msf4j.version>

@@ -154,7 +154,7 @@ public class MSF4JSpringApplication {
         classPathBeanDefinitionScanner.scan(serviceClass.getPackage().getName());
         SpringMicroservicesRunner springMicroservicesRunner =
                 configurableApplicationContext.getBean(SpringMicroservicesRunner.class);
-        springMicroservicesRunner.deploy(configurableApplicationContext.getBean(serviceClass), basePath);
+        springMicroservicesRunner.deploy(basePath, configurableApplicationContext.getBean(serviceClass));
     }
 }
 

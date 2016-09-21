@@ -13,16 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.msf4j.example;
 
-import org.wso2.msf4j.spring.MSF4JSpringApplication;
+package org.wso2.msf4j.spring.service.second;
+
+import org.springframework.stereotype.Component;
 
 /**
- * Main Application class to run this sample.
+ * HelloService class to be injected to Hello resource through Spring
  */
-public class Application {
+@Component
+public class CustomService {
 
-    public static void main(String[] args) {
-        MSF4JSpringApplication.run(Application.class, args);
+    public String sayHello(String name) {
+        return "Hello " + name;
+    }
+
+    public int add(int no1, int no2) {
+        return no1 + no2;
     }
 }

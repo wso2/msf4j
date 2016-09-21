@@ -29,7 +29,9 @@
  * {@link javax.ws.rs.GET GET},
  * {@link javax.ws.rs.PUT PUT},
  * {@link javax.ws.rs.POST POST},
- * {@link javax.ws.rs.DELETE DELETE}.
+ * {@link javax.ws.rs.DELETE DELETE},
+ * {@link javax.ws.rs.HEAD HEAD},
+ * {@link javax.ws.rs.OPTIONS OPTIONS}.
  *
  * Note: Doesn't support getting Annotations from base class if the HttpHandler implements also extends
  * a class with annotation.

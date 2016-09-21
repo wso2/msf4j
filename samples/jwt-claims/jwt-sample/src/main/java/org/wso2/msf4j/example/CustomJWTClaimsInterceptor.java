@@ -20,6 +20,7 @@ import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.messaging.Headers;
 import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
@@ -38,7 +39,7 @@ public class CustomJWTClaimsInterceptor implements Interceptor {
 
     @Override
     public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) throws Exception {
-        Map<String, String> headers = request.getHeaders();
+        Headers headers = request.getHeaders();
         if (headers != null) {
             String jwtHeader = headers.get(JWT_HEADER);
             if (jwtHeader != null) {

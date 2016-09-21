@@ -65,7 +65,7 @@ public class HttpsServerTest extends HttpServerTest {
                 .start();
         secondMicroservicesRunner = new MicroservicesRunner(port + 1);
         secondMicroservicesRunner.deploy(secondService).start();
-        microservicesRunner.deploy(new TestMicroServiceWithDynamicPath(), "/DynamicPath");
+        microservicesRunner.deploy("/DynamicPath", new TestMicroServiceWithDynamicPath());
     }
 
     @AfterClass

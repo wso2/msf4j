@@ -63,7 +63,7 @@ public class ExtendedServiceTest {
         microservicesRunner
                 .deploy(testMicroservice)
                 .start();
-        microservicesRunner.deploy(new TestMicroServiceWithDynamicPath(), "/DynamicPath");
+        microservicesRunner.deploy("/DynamicPath", new TestMicroServiceWithDynamicPath());
     }
 
     @AfterClass

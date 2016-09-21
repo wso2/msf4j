@@ -13,25 +13,13 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package org.wso2.msf4j.spring.service.second;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+package org.wso2.msf4j;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+/**
+ * Interface need to implement for Swagger service.
+ */
+public interface SwaggerService {
 
-@SuppressWarnings("UnusedParameters")
-@Component
-public class TestMicroServiceWithDynamicPath {
-
-    @Autowired
-    private CustomService customService;
-
-    @GET
-    @Path("/hello/{name}")
-    public String sayHello(@PathParam("name") String name) {
-        return customService.sayHello(name);
-    }
+    void init(MicroservicesRegistry serviceRegistry);
 }

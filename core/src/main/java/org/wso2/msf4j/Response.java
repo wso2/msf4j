@@ -19,6 +19,7 @@ package org.wso2.msf4j;
 import org.wso2.carbon.messaging.CarbonCallback;
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.DefaultCarbonMessage;
+import org.wso2.carbon.messaging.Headers;
 import org.wso2.carbon.transport.http.netty.common.Constants;
 import org.wso2.msf4j.internal.MSF4JConstants;
 import org.wso2.msf4j.internal.entitywriter.EntityWriter;
@@ -88,7 +89,7 @@ public class Response {
     /**
      * @return map of headers in the response object
      */
-    public Map<String, String> getHeaders() {
+    public Headers getHeaders() {
         return carbonMessage.getHeaders();
     }
 

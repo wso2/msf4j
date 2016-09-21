@@ -119,7 +119,7 @@ public class HttpServerTest {
                 .addExceptionMapper(new TestExceptionMapper(), new TestExceptionMapper2())
                 .deploy(testMicroservice)
                 .start();
-        microservicesRunner.deploy(new TestMicroServiceWithDynamicPath(), "/DynamicPath");
+        microservicesRunner.deploy("/DynamicPath", new TestMicroServiceWithDynamicPath());
 
         secondMicroservicesRunner = new MicroservicesRunner(port + 1);
         secondMicroservicesRunner.deploy(secondService).start();

@@ -24,8 +24,6 @@ import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.ServiceMethodInfo;
 
-import java.util.Map;
-
 /**
  * Spring based MSF4J Interceptor class which print HTTP headers from incoming messages.
  */
@@ -36,10 +34,8 @@ public class LogHeadersInterceptor implements Interceptor {
 
     @Override
     public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) throws Exception {
-        Map<String, String> headers = request.getHeaders();
-        for (Map.Entry<String, String> entry : headers.entrySet()) {
-            log.info("Header - " + entry.getKey() + " : " + entry.getValue());
-        }
+        request.getHeaders().getAll()
+               .forEach(header -> log.info("Header - " + header.getName() + " : " + header.getValue()));
         return true;
     }
 
