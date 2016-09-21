@@ -13,19 +13,25 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
+package org.wso2.msf4j.spring.service.second;
 
-package org.wso2.msf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 
-/**
- * Interface that needs to be implemented for handle the registry.
- */
-public interface MicroservicesRegistry {
-    Optional<Map.Entry<String, Object>> getServiceWithBasePath(String path);
+@SuppressWarnings("UnusedParameters")
+@Component
+public class TestMicroServiceWithDynamicPath {
 
-    Set<Object> getHttpServices();
+    @Autowired
+    private CustomService customService;
 
+    @GET
+    @Path("/hello/{name}")
+    public String sayHello(@PathParam("name") String name) {
+        return customService.sayHello(name);
+    }
 }

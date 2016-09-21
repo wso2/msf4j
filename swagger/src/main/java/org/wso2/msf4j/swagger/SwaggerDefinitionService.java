@@ -21,6 +21,7 @@ package org.wso2.msf4j.swagger;
 import io.swagger.util.Json;
 import org.wso2.msf4j.MicroservicesRegistry;
 import org.wso2.msf4j.SwaggerService;
+import org.wso2.msf4j.internal.router.RuntimeAnnotations;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -71,10 +72,14 @@ public class SwaggerDefinitionService implements SwaggerService {
         } else {
             msf4JBeanConfig = swaggerBeans.get(path);
             if (msf4JBeanConfig == null) {
-                Optional<Object> service = serviceRegistry.getServiceWithBasePath(path);
+                Optional<Map.Entry<String, Object>> service = serviceRegistry.getServiceWithBasePath(path);
                 if (service.isPresent()) {
                     MSF4JBeanConfig beanConfig = new MSF4JBeanConfig();
-                    beanConfig.addServiceClass(service.get().getClass());
+                    Map<String, Object> valuesMap = new HashMap<>();
+                    valuesMap.put("value", path);
+                    RuntimeAnnotations.putAnnotation(service.get().getValue().getClass(), Path.class, valuesMap);
+                    beanConfig.addServiceClass(service.get().getValue().getClass());
+                    beanConfig.setBasePath(service.get().getKey());
                     beanConfig.setScan(true);
                     msf4JBeanConfig = beanConfig;
                     swaggerBeans.put(path, msf4JBeanConfig);

@@ -40,6 +40,7 @@ import org.wso2.msf4j.pojo.Pet;
 import org.wso2.msf4j.pojo.TextBean;
 import org.wso2.msf4j.pojo.XmlBean;
 import org.wso2.msf4j.service.SecondService;
+import org.wso2.msf4j.service.TestMicroServiceWithDynamicPath;
 import org.wso2.msf4j.service.TestMicroservice;
 import org.wso2.msf4j.service.sub.Player;
 import org.wso2.msf4j.service.sub.Team;
@@ -118,6 +119,7 @@ public class HttpServerTest {
                 .addExceptionMapper(new TestExceptionMapper(), new TestExceptionMapper2())
                 .deploy(testMicroservice)
                 .start();
+        microservicesRunner.deploy("/DynamicPath", new TestMicroServiceWithDynamicPath());
 
         secondMicroservicesRunner = new MicroservicesRunner(port + 1);
         secondMicroservicesRunner.deploy(secondService).start();
@@ -137,6 +139,15 @@ public class HttpServerTest {
         String content = getContent(urlConn);
 
         assertEquals(34, Integer.parseInt(content));
+        urlConn.disconnect();
+    }
+
+    @Test
+    public void testDynamicMicroserviceRegistration() throws IOException {
+        HttpURLConnection urlConn = request("/DynamicPath/hello/MSF4J", HttpMethod.GET);
+        assertEquals(200, urlConn.getResponseCode());
+        String content = getContent(urlConn);
+        assertEquals("Hello MSF4J", content);
         urlConn.disconnect();
     }
 

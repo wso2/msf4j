@@ -23,6 +23,7 @@ import org.wso2.msf4j.conf.SSLClientContext;
 import org.wso2.msf4j.exception.TestExceptionMapper;
 import org.wso2.msf4j.exception.TestExceptionMapper2;
 import org.wso2.msf4j.service.SecondService;
+import org.wso2.msf4j.service.TestMicroServiceWithDynamicPath;
 import org.wso2.msf4j.service.TestMicroservice;
 
 import java.io.File;
@@ -62,6 +63,7 @@ public class MutualAuthServerTest extends HttpsServerTest {
                            .deploy(testMicroservice).start();
         secondMicroservicesRunner = new MicroservicesRunner(port + 1);
         secondMicroservicesRunner.deploy(secondService).start();
+        microservicesRunner.deploy("/DynamicPath", new TestMicroServiceWithDynamicPath());
     }
 
     @AfterClass

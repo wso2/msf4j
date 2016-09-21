@@ -25,6 +25,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.msf4j.conf.Constants;
 import org.wso2.msf4j.service.ExtendedTestMicroservice;
+import org.wso2.msf4j.service.TestMicroServiceWithDynamicPath;
 import org.wso2.msf4j.service.TestMicroservice;
 
 import java.io.IOException;
@@ -62,6 +63,7 @@ public class ExtendedServiceTest {
         microservicesRunner
                 .deploy(testMicroservice)
                 .start();
+        microservicesRunner.deploy("/DynamicPath", new TestMicroServiceWithDynamicPath());
     }
 
     @AfterClass

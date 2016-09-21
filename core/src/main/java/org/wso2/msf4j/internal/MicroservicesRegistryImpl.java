@@ -30,7 +30,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +38,7 @@ import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ws.rs.Path;
@@ -49,7 +50,7 @@ import javax.ws.rs.ext.ExceptionMapper;
 public class MicroservicesRegistryImpl implements MicroservicesRegistry {
 
     private static final Logger log = LoggerFactory.getLogger(MicroservicesRegistryImpl.class);
-    private final Set<Object> services = new HashSet<>();
+    private final Map<String, Object> services = new HashMap<>();
 
     private final List<Interceptor> interceptors = new ArrayList<>();
     private volatile MicroserviceMetadata metadata = new MicroserviceMetadata(Collections.emptyList());
@@ -65,21 +66,28 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
             if (iterator.hasNext()) {
                 SwaggerService swaggerService = iterator.next();
                 swaggerService.init(this);
-                services.add(swaggerService);
+                services.put("/swagger", swaggerService);
             }
         }
     }
 
     public void addService(Object... service) {
-        Collections.addAll(services, service);
+        for (Object svc : service) {
+            services.put(svc.getClass().getAnnotation(Path.class).value(), svc);
+        }
         updateMetadata();
         Arrays.stream(service).forEach(svc -> log.info("Added microservice: " + svc));
     }
 
-    public Optional<Object> getServiceWithBasePath(String path) {
-        return services.stream().
-                filter(svc -> svc.getClass().getAnnotation(Path.class).value().equals(path)).
-                findAny();
+    public void addService(String basePath, Object service) {
+        updateMetadata();
+        services.put(basePath, service);
+        metadata.addMicroserviceMetadata(service, basePath);
+        log.info("Added microservice: " + service);
+    }
+
+    public Optional<Map.Entry<String, Object>> getServiceWithBasePath(String path) {
+        return services.entrySet().stream().filter(svc -> svc.getKey().equals(path)).findAny();
     }
 
     public void removeService(Object service) {
@@ -99,7 +107,7 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
     }
 
     public Set<Object> getHttpServices() {
-        return Collections.unmodifiableSet(services);
+        return Collections.unmodifiableSet(services.values().stream().collect(Collectors.toSet()));
     }
 
     public void addInterceptor(Interceptor... interceptor) {
@@ -161,7 +169,7 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
     }
 
     private void updateMetadata() {
-        metadata = new MicroserviceMetadata(Collections.unmodifiableSet(services));
+        metadata = new MicroserviceMetadata(Collections.unmodifiableCollection(services.values()));
     }
 
     public void initServices() {
@@ -185,7 +193,7 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
     }
 
     private void invokeLifecycleMethods(Class lcAnnotation) {
-        services.stream().forEach(httpService -> invokeLifecycleMethod(httpService, lcAnnotation));
+        services.values().stream().forEach(httpService -> invokeLifecycleMethod(httpService, lcAnnotation));
     }
 
     private void invokeLifecycleMethod(Object httpService, Class lcAnnotation) {

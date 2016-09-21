@@ -17,9 +17,11 @@
 package org.wso2.msf4j.spring;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
 import org.springframework.core.env.SimpleCommandLinePropertySource;
 import org.springframework.core.io.ResourceLoader;
 
@@ -136,6 +138,23 @@ public class MSF4JSpringApplication {
 
     public void setInitializers(List<ApplicationContextInitializer<?>> initializers) {
         this.initializers = initializers;
+    }
+
+    /**
+     * This will add a given service class to the running instnace with given base path.
+     *
+     * @param configurableApplicationContext ConfigurableApplicationContext of running app
+     * @param serviceClass Service class
+     * @param basePath Base path teh servuce get registered
+     */
+    public void addService(ConfigurableApplicationContext configurableApplicationContext, Class serviceClass,
+                           String basePath) {
+        ClassPathBeanDefinitionScanner classPathBeanDefinitionScanner =
+                new ClassPathBeanDefinitionScanner((BeanDefinitionRegistry) configurableApplicationContext);
+        classPathBeanDefinitionScanner.scan(serviceClass.getPackage().getName());
+        SpringMicroservicesRunner springMicroservicesRunner =
+                configurableApplicationContext.getBean(SpringMicroservicesRunner.class);
+        springMicroservicesRunner.deploy(basePath, configurableApplicationContext.getBean(serviceClass));
     }
 }
 

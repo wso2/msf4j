@@ -1,3 +1,4 @@
+package org.wso2.msf4j.service;
 /*
 * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
@@ -14,18 +15,15 @@
 * limitations under the License.
 */
 
-package org.wso2.msf4j;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+public class TestMicroServiceWithDynamicPath {
 
-/**
- * Interface that needs to be implemented for handle the registry.
- */
-public interface MicroservicesRegistry {
-    Optional<Map.Entry<String, Object>> getServiceWithBasePath(String path);
-
-    Set<Object> getHttpServices();
-
+    @GET
+    @Path("/hello/{name}")
+    public String sayHello(@PathParam("name") String name) {
+        return "Hello " + name;
+    }
 }
