@@ -15,6 +15,7 @@
 */
 package org.wso2.msf4j.spring.service.second;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.GET;
@@ -26,9 +27,12 @@ import javax.ws.rs.PathParam;
 @Path("/SecondService")
 public class SecondService {
 
+    @Autowired
+    private CustomService customService;
+
     @GET
     @Path("/addNumbers/{no1}/{no2}")
     public int add(@PathParam("no1") int no1, @PathParam("no2") int no2) {
-        return no1 + no2;
+        return customService.add(no1, no2);
     }
 }

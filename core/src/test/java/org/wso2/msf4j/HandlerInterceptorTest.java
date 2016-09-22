@@ -22,6 +22,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.wso2.msf4j.conf.Constants;
 import org.wso2.msf4j.interceptor.TestInterceptor;
+import org.wso2.msf4j.service.TestMicroServiceWithDynamicPath;
 import org.wso2.msf4j.service.TestMicroservice;
 
 import java.net.URI;
@@ -51,6 +52,7 @@ public class HandlerInterceptorTest extends InterceptorTestBase {
                 .addInterceptor(interceptor1)
                 .addInterceptor(interceptor2)
                 .start();
+        microservicesRunner.deploy("/DynamicPath", new TestMicroServiceWithDynamicPath());
         baseURI = URI.create(String.format("http://%s:%d", Constants.HOSTNAME, port));
     }
 

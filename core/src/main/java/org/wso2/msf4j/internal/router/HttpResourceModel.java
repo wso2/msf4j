@@ -39,6 +39,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.HEAD;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.OPTIONS;
@@ -87,18 +88,36 @@ public final class HttpResourceModel {
     private boolean isSubResourceScanned;
     private HttpResourceModel parent;
 
+    /**
+     * If this is a subresource locator, get the parent of this Model.
+     * @return HttpResourceModel parent model.
+     */
     public HttpResourceModel getParent() {
         return parent;
     }
 
+    /**
+     * If this is a subresource locator, set the parent Model.
+     * @param parent HttpResourceModel of this.
+     */
     public void setParent(HttpResourceModel parent) {
         this.parent = parent;
+        consumesMediaTypes = parseConsumesMediaTypes();
+        producesMediaTypes = parseProducesMediaTypes();
     }
 
+    /**
+     * Get the sub resource locators of this model.
+     * @return Map of subresource locators of this.
+     */
     public Map<SubresourceKey, HttpResourceModel> getSubResources() {
         return subResources;
     }
 
+    /**
+     * Set the sub resource locators of this model.
+     * @param subResources Map of sub resource locators.
+     */
     public void setSubResources(Map<SubresourceKey, HttpResourceModel> subResources) {
         this.subResources = subResources;
     }
@@ -107,10 +126,18 @@ public final class HttpResourceModel {
         subResources.put(subresourceKey, httpResourceModel);
     }
 
+    /**
+     * Set if this model is already scanned for sub resource locators.
+     * @param subResourceScanned boolean indicate whether this already scanned for sub resource locators.
+     */
     public void setSubResourceScanned(boolean subResourceScanned) {
         isSubResourceScanned = subResourceScanned;
     }
 
+    /**
+     * Check if this model is already scanned for sub resource locators.
+     * @return boolean whether this model already scanned for sub resources.
+     */
     public boolean isSubResourceScanned() {
         return isSubResourceScanned;
     }
@@ -135,20 +162,40 @@ public final class HttpResourceModel {
     }
 
     private List<String> parseConsumesMediaTypes() {
-        String[] consumesMediaTypeArr = method.isAnnotationPresent(Consumes.class) ?
-                method.getAnnotation(Consumes.class).value() :
+        String[] consumesMediaTypeArr =
+                method.isAnnotationPresent(Consumes.class) ? method.getAnnotation(Consumes.class).value() :
                 handler.getClass().isAnnotationPresent(Consumes.class) ?
-                        handler.getClass().getAnnotation(Consumes.class).value() :
-                        ANY_MEDIA_TYPE;
+                handler.getClass().getAnnotation(Consumes.class).value() :
+                parent == null ? ANY_MEDIA_TYPE : new String[] {};
+        if (parent != null && consumesMediaTypeArr.length == 0) {
+            HttpResourceModel tmpParent = parent;
+            while (tmpParent.getConsumesMediaTypes().size() != 0 && tmpParent.getParent() != null) {
+                tmpParent = parent.getParent();
+            }
+            consumesMediaTypeArr = tmpParent.getMethod().isAnnotationPresent(Consumes.class) ?
+                                   tmpParent.getMethod().getAnnotation(Consumes.class).value() :
+                                   handler.getClass().isAnnotationPresent(Consumes.class) ?
+                                   handler.getClass().getAnnotation(Consumes.class).value() : ANY_MEDIA_TYPE;
+        }
         return Arrays.asList(consumesMediaTypeArr);
     }
 
     private List<String> parseProducesMediaTypes() {
-        String[] producesMediaTypeArr = method.isAnnotationPresent(Produces.class) ?
-                method.getAnnotation(Produces.class).value() :
+        String[] producesMediaTypeArr =
+                method.isAnnotationPresent(Produces.class) ? method.getAnnotation(Produces.class).value() :
                 handler.getClass().isAnnotationPresent(Produces.class) ?
-                        handler.getClass().getAnnotation(Produces.class).value() :
-                        ANY_MEDIA_TYPE;
+                handler.getClass().getAnnotation(Produces.class).value() :
+                parent == null ? ANY_MEDIA_TYPE : new String[] {};
+        if (parent != null && producesMediaTypeArr.length == 0) {
+            HttpResourceModel tmpParent = parent;
+            while (tmpParent.getProducesMediaTypes().size() != 0 && tmpParent.getParent() != null) {
+                tmpParent = parent.getParent();
+            }
+            producesMediaTypeArr = tmpParent.getMethod().isAnnotationPresent(Produces.class) ?
+                                   tmpParent.getMethod().getAnnotation(Produces.class).value() :
+                                   handler.getClass().isAnnotationPresent(Produces.class) ?
+                                   handler.getClass().getAnnotation(Produces.class).value() : ANY_MEDIA_TYPE;
+        }
         return Arrays.asList(producesMediaTypeArr);
     }
 
@@ -245,6 +292,10 @@ public final class HttpResourceModel {
             httpMethods.add(HttpMethod.DELETE);
             isSubResourceLocator = false;
         }
+        if (method.isAnnotationPresent(HEAD.class)) {
+            httpMethods.add(HttpMethod.HEAD);
+            isSubResourceLocator = false;
+        }
         if (method.isAnnotationPresent(OPTIONS.class)) {
             httpMethods.add(HttpMethod.OPTIONS);
             isSubResourceLocator = false;
@@ -255,6 +306,7 @@ public final class HttpResourceModel {
             httpMethods.add(HttpMethod.POST);
             httpMethods.add(HttpMethod.PUT);
             httpMethods.add(HttpMethod.DELETE);
+            httpMethods.add(HttpMethod.HEAD);
             httpMethods.add(HttpMethod.OPTIONS);
         }
         return Collections.unmodifiableSet(httpMethods);

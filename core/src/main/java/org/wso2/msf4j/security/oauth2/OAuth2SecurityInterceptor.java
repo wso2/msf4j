@@ -21,6 +21,7 @@ import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.messaging.Headers;
 import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
@@ -74,8 +75,8 @@ public class OAuth2SecurityInterceptor implements Interceptor {
         SecurityErrorCode errorCode;
 
         try {
-            Map<String, String> headers = request.getHeaders();
-            if (headers != null && headers.containsKey(AUTHORIZATION_HTTP_HEADER)) {
+            Headers headers = request.getHeaders();
+            if (headers != null && headers.contains(AUTHORIZATION_HTTP_HEADER)) {
                 String authHeader = headers.get(AUTHORIZATION_HTTP_HEADER);
                 return validateToken(authHeader);
             } else {

@@ -32,6 +32,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HEAD;
 import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -92,11 +93,41 @@ public final class MicroserviceMetadata {
         }
     }
 
+    /**
+     * Register given service object with the given base path. Path annotion of the service class will be ignore,
+     * instead use the provided base path.
+     *
+     * @param service HttpHandler object
+     * @param basePath Path the handler should be registered
+     */
+    public void addMicroserviceMetadata(final Object service, String basePath) {
+        //Store the services to call init and destroy on all services.
+        for (Method method : service.getClass().getMethods()) {
+            if (method.isAnnotationPresent(PostConstruct.class) || method.isAnnotationPresent(PreDestroy.class)) {
+                continue;
+            }
+
+            if (Modifier.isPublic(method.getModifiers()) && isHttpMethodAvailable(method)) {
+                String relativePath = "";
+                if (method.getAnnotation(Path.class) != null) {
+                    relativePath = method.getAnnotation(Path.class).value();
+                }
+                String absolutePath = String.format("%s/%s", basePath, relativePath);
+                patternRouter.add(absolutePath, new HttpResourceModel(absolutePath, method, service, false));
+            } else {
+                log.trace("Not adding method {}({}) to path routing like. " +
+                          "HTTP calls will not be routed to this method", method.getName(), method.getParameterTypes());
+            }
+        }
+
+    }
+
     private boolean isHttpMethodAvailable(Method method) {
         return method.isAnnotationPresent(GET.class) ||
                 method.isAnnotationPresent(PUT.class) ||
                 method.isAnnotationPresent(POST.class) ||
                 method.isAnnotationPresent(DELETE.class) ||
+                method.isAnnotationPresent(HEAD.class) ||
                 method.isAnnotationPresent(OPTIONS.class);
     }
 

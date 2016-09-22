@@ -181,6 +181,9 @@ HTTP POST method. Specify that the resource method supports HTTP POST method.
 #####@DELETE
 HTTP DELETE method. Specify that the resource method supports HTTP DELETE method.
 
+#####@HEAD
+HTTP HEAD method. Specify that the resource method supports HTTP HEAD method.
+
 #####@OPTIONS
 HTTP OPTIONS method. Specify that the resource method supports HTTP OPTIONS method.
 

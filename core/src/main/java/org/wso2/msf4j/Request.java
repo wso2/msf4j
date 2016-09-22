@@ -2,6 +2,7 @@ package org.wso2.msf4j;
 
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.Constants;
+import org.wso2.carbon.messaging.Headers;
 import org.wso2.msf4j.internal.MSF4JConstants;
 
 import java.nio.ByteBuffer;
@@ -73,7 +74,7 @@ public class Request {
     /**
      * @return map of headers of the HTTP request
      */
-    public Map<String, String> getHeaders() {
+    public Headers getHeaders() {
         return carbonMessage.getHeaders();
     }
 

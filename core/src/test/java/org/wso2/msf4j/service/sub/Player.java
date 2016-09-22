@@ -20,6 +20,9 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
+/**
+ * Simple RESTful web service for Player.
+ */
 @Path("/")
 public class Player {
 

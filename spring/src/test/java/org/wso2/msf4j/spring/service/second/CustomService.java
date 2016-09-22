@@ -13,13 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.msf4j.internal;
+
+package org.wso2.msf4j.spring.service.second;
+
+import org.springframework.stereotype.Component;
 
 /**
- * MSF4J Constants.
+ * HelloService class to be injected to Hello resource through Spring
  */
-public class MSF4JConstants {
+@Component
+public class CustomService {
 
-    public static final String SESSION_ID = "JSESSIONID=";
-    public static final String CHANNEL_ID = "CHANNEL_ID";
+    public String sayHello(String name) {
+        return "Hello " + name;
+    }
+
+    public int add(int no1, int no2) {
+        return no1 + no2;
+    }
 }

@@ -25,9 +25,13 @@ import org.wso2.carbon.transport.http.netty.config.YAMLTransportConfigurationBui
 import org.wso2.carbon.transport.http.netty.internal.NettyTransportContextHolder;
 import org.wso2.carbon.transport.http.netty.listener.NettyListener;
 import org.wso2.msf4j.internal.MSF4JMessageProcessor;
-import org.wso2.msf4j.internal.MicroservicesRegistry;
+import org.wso2.msf4j.internal.MicroservicesRegistryImpl;
+import org.wso2.msf4j.internal.router.RuntimeAnnotations;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
+import javax.ws.rs.Path;
 import javax.ws.rs.ext.ExceptionMapper;
 
 /**
@@ -40,7 +44,7 @@ public class MicroservicesRunner {
     private TransportManager transportManager = new TransportManager();
     private long startTime = System.currentTimeMillis();
     private boolean isStarted;
-    private MicroservicesRegistry msRegistry = new MicroservicesRegistry();
+    private MicroservicesRegistryImpl msRegistry = new MicroservicesRegistryImpl();
 
     /**
      * Creates a MicroservicesRunner instance which will be used for deploying microservices. Allows specifying
@@ -73,6 +77,21 @@ public class MicroservicesRunner {
     public MicroservicesRunner deploy(Object... microservice) {
         checkState();
         msRegistry.addService(microservice);
+        return this;
+    }
+
+    /**
+     * Deploy a microservice with dynamic path.
+     *
+     * @param microservice The microservice which is to be deployed
+     * @param basePath The context path for the service
+     * @return this MicroservicesRunner object
+     */
+    public MicroservicesRunner deploy(String basePath, Object microservice) {
+        Map<String, Object> valuesMap = new HashMap<>();
+        valuesMap.put("value", basePath);
+        RuntimeAnnotations.putAnnotation(microservice.getClass(), Path.class, valuesMap);
+        msRegistry.addService(basePath, microservice);
         return this;
     }
 
@@ -126,7 +145,7 @@ public class MicroservicesRunner {
                     new ListenerConfiguration("netty-" + port, "0.0.0.0", port);
             NettyListener listener = new NettyListener(listenerConfiguration);
             transportManager.registerTransport(listener);
-            nettyTransportContextHolder.addMessageProcessor(port, new MSF4JMessageProcessor(msRegistry));
+            nettyTransportContextHolder.setMessageProcessor(new MSF4JMessageProcessor("netty-" + port, msRegistry));
         }
     }
 
@@ -143,7 +162,7 @@ public class MicroservicesRunner {
             NettyListener listener = new NettyListener(listenerConfiguration);
             transportManager.registerTransport(listener);
             nettyTransportContextHolder
-                    .addMessageProcessor(listenerConfiguration.getPort(), new MSF4JMessageProcessor(msRegistry));
+                    .setMessageProcessor(new MSF4JMessageProcessor(listenerConfiguration.getId(), msRegistry));
         }
     }
 
@@ -187,7 +206,7 @@ public class MicroservicesRunner {
      *
      * @return MicroservicesRegistry instance of this runner
      */
-    public MicroservicesRegistry getMsRegistry() {
+    public MicroservicesRegistryImpl getMsRegistry() {
         return msRegistry;
     }
 

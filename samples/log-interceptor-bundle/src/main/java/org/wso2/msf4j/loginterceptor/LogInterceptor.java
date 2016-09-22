@@ -24,9 +24,6 @@ import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.ServiceMethodInfo;
 
-import java.util.Iterator;
-import java.util.Map;
-
 /**
  * Sample Interceptor which logs HTTP headers of the request.
  */
@@ -41,11 +38,8 @@ public class LogInterceptor implements Interceptor {
 
     @Override
     public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) {
-        Iterator<Map.Entry<String, String>> itr = request.getHeaders().entrySet().iterator();
-        while (itr.hasNext()) {
-            Map.Entry<String, String> entry = itr.next();
-            log.info("Header Name: " + entry.getKey() + " value : " + entry.getValue());
-        }
+        request.getHeaders().getAll().stream()
+               .forEach(header -> log.info("Header Name: " + header.getName() + " value : " + header.getValue()));
         return true;
     }
 

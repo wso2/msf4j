@@ -16,6 +16,8 @@
 package org.wso2.msf4j.util;
 
 import java.lang.reflect.Field;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -56,16 +58,26 @@ public class Utils {
     public static String toString(Object object, String[] fields) {
         Objects.requireNonNull(object);
         StringBuilder sb = new StringBuilder();
-        try {
-            for (String field : fields) {
-                Objects.requireNonNull(field);
-                sb.append(field).append(":").append(object.getClass().getDeclaredField(field).get(object)).append("\n");
+
+        AccessController.doPrivileged(new PrivilegedAction<Object>() {
+            @Override
+            public Object run() {
+                try {
+                    for (String field : fields) {
+                        Objects.requireNonNull(field);
+                        Field declaredField = object.getClass().getDeclaredField(field);
+                        declaredField.setAccessible(true);
+                        sb.append(field).append(":").append(declaredField.get(object)).append("\n");
+                        declaredField.setAccessible(false);
+                    }
+                    return sb;
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException("Error while executing " + object.getClass() + ".toString()", e);
+                } catch (NoSuchFieldException e) {
+                    throw new RuntimeException("Error while executing " + object.getClass() + ".toString()", e);
+                }
             }
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException("Error while executing " + object.getClass() + ".toString()", e);
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException("Error while executing " + object.getClass() + ".toString()", e);
-        }
+        });
         return sb.toString();
     }
 

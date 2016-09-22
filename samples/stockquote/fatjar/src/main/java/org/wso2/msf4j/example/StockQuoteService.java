@@ -33,6 +33,7 @@ import java.util.Map;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.HEAD;
 import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -96,6 +97,27 @@ public class StockQuoteService {
             throw new SymbolNotFoundException("Symbol " + symbol + " not found");
         }
         return Response.status(Response.Status.OK).entity(stock).build();
+    }
+
+    /**
+     * Retrieve metainformation about the entity implied by the request.
+     * curl -i -X HEAD http://localhost:8080/stockquote/IBM
+     *
+     * @return Response
+     */
+    @HEAD
+    @Path("/{symbol}")
+    @Produces({"application/json", "text/xml"})
+    @ApiOperation(
+            value = "Returns headers of corresponding GET request ",
+            notes = "Returns metainformation contained in the HTTP header identical to the corresponding GET Request")
+    public Response getMetaInformationForQuote(@ApiParam(value = "Symbol", required = true)
+                                               @PathParam("symbol") String symbol) throws SymbolNotFoundException {
+        Stock stock = stockQuotes.get(symbol);
+        if (stock == null) {
+            throw new SymbolNotFoundException();
+        }
+        return Response.status(Response.Status.OK).build();
     }
 
     /**
@@ -165,8 +187,7 @@ public class StockQuoteService {
             response = Stocks.class,
             responseContainer = "List")
     public Stocks getAllStocks(@Context Request request) {
-        request.getHeaders().entrySet().stream().
-                forEach(entry -> System.out.println(entry.getKey() + "=" + entry.getValue()));
+        request.getHeaders().getAll().forEach(entry -> System.out.println(entry.getName() + "=" + entry.getValue()));
         return new Stocks(stockQuotes.values());
     }
 

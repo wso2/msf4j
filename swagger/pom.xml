@@ -257,15 +257,25 @@
         </profile>
     </profiles>
 
-
     <properties>
+        <private.package>org.wso2.msf4j.swagger.internal.*</private.package>
         <export.package>
+            !org.wso2.msf4j.swagger.internal.*,
             org.wso2.msf4j.swagger.*;version="${msf4j.version}"
         </export.package>
         <import.package>
             javax.annotation.*,
             javax.ws.rs.*,
-            javax.xml.bind;resolution:=optional
+            org.wso2.msf4j.*;version="${msf4j.version}",
+            com.google.common.*;version="${guava.version.range}",
+            org.slf4j.*;version="${slf4j.version.range}",
+            io.swagger.jaxrs.config.*;version="${io.swagger.version.range}",
+            io.swagger.util.*;version="${io.swagger.version.range}",
+            com.fasterxml.jackson.*;version="${com.fasterxml.jackson.version.range}",
+            javax.xml.bind;resolution:=optional,
         </import.package>
+        <carbon.component>
+            osgi.service;objectClass="org.wso2.msf4j.SwaggerService"
+        </carbon.component>
     </properties>
 </project>

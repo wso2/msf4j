@@ -18,6 +18,7 @@ package org.wso2.msf4j.analytics.httpmonitoring;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.messaging.Headers;
 import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
@@ -206,7 +207,7 @@ public class HTTPMonitoringInterceptor implements Interceptor {
             httpMonitoringEvent.setRequestUri(request.getUri());
             httpMonitoringEvent.setServiceContext(servicePath);
 
-            Map<String, String> httpHeaders = request.getHeaders();
+            Headers httpHeaders = request.getHeaders();
 
             httpMonitoringEvent.setHttpMethod(request.getHttpMethod());
             httpMonitoringEvent.setContentType(httpHeaders.get(HttpHeaders.CONTENT_TYPE));

@@ -271,6 +271,8 @@ public class HttpMethodInfo {
             // Invoke the sub-resource method
             HttpResourceModelProcessor httpSubResourceModelProcessor = new HttpResourceModelProcessor(resourceModel);
             httpSubResourceModelProcessor.setFormParameters(formParameters);
+            responder.setMediaType(
+                    Util.getResponseType(request.getAcceptTypes(), resourceModel.getProducesMediaTypes()));
             HttpMethodInfo httpMethodInfo = httpSubResourceModelProcessor
                     .buildHttpMethodInfo(request, responder, groupNameValues);
 

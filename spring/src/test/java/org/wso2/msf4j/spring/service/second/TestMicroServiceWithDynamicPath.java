@@ -13,21 +13,25 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package org.wso2.msf4j.service;
+package org.wso2.msf4j.spring.service.second;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
-/**
- * Simple RESTful web service.
- */
-@Path("/SecondService")
-public class SecondService {
+@SuppressWarnings("UnusedParameters")
+@Component
+public class TestMicroServiceWithDynamicPath {
+
+    @Autowired
+    private CustomService customService;
 
     @GET
-    @Path("/addNumbers/{no1}/{no2}")
-    public int add(@PathParam("no1") int no1, @PathParam("no2") int no2) {
-        return no1 + no2;
+    @Path("/hello/{name}")
+    public String sayHello(@PathParam("name") String name) {
+        return customService.sayHello(name);
     }
 }

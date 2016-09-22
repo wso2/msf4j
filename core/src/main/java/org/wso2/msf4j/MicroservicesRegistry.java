@@ -13,21 +13,19 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package org.wso2.msf4j.service;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+package org.wso2.msf4j;
+
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 /**
- * Simple RESTful web service.
+ * Interface that needs to be implemented for handle the registry.
  */
-@Path("/SecondService")
-public class SecondService {
+public interface MicroservicesRegistry {
+    Optional<Map.Entry<String, Object>> getServiceWithBasePath(String path);
 
-    @GET
-    @Path("/addNumbers/{no1}/{no2}")
-    public int add(@PathParam("no1") int no1, @PathParam("no2") int no2) {
-        return no1 + no2;
-    }
+    Set<Object> getHttpServices();
+
 }
