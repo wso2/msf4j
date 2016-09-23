@@ -31,7 +31,7 @@ import org.wso2.msf4j.Microservice;
 import org.wso2.msf4j.MicroservicesRegistry;
 import org.wso2.msf4j.SessionManager;
 import org.wso2.msf4j.SwaggerService;
-import org.wso2.msf4j.internal.router.RuntimeAnnotations;
+import org.wso2.msf4j.util.RuntimeAnnotations;
 
 import java.util.Dictionary;
 import java.util.HashMap;
