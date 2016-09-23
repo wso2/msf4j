@@ -21,7 +21,7 @@ package org.wso2.msf4j.swagger;
 import io.swagger.util.Json;
 import org.wso2.msf4j.MicroservicesRegistry;
 import org.wso2.msf4j.SwaggerService;
-import org.wso2.msf4j.internal.router.RuntimeAnnotations;
+import org.wso2.msf4j.util.RuntimeAnnotations;
 
 import java.util.HashMap;
 import java.util.Map;
