@@ -352,6 +352,14 @@ or through network traffic inspection.
 
 MSF4J supports all [Swagger annotations](https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X) out of the box.
 
+To enable swagger support you need to add the following dependency to your project
+```xml
+<dependency>
+     <groupId>org.wso2.msf4j</groupId>
+     <artifactId>msf4j-swagger</artifactId>
+     <version>2.1.0-SNAPSHOT</version>
+</dependency>
+```
 In order to retrieve Swagger definitions of your microservice, go to <br/>http://&lt;host&gt;:&lt;port&gt;/swagger?path=&lt;service_base_path&gt;.
 
 e.g. [http://localhost:8080/swagger?path=/hello](http://localhost:8080/swagger?path=/hello)
