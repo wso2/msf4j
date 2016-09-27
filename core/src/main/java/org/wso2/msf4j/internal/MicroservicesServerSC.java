@@ -94,10 +94,9 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
                 DataHolder.getInstance().getMicroservicesRegistries();
         if (channelId != null) {
             MicroservicesRegistryImpl microservicesRegistry = microservicesRegistries.get(channelId.toString());
-            if (microservicesRegistry == null) {
-                throw new RuntimeException("Couldn't found the registry for channel ID " + channelId);
+            if (microservicesRegistry != null) {
+                microservicesRegistry.removeService(service);
             }
-            microservicesRegistry.removeService(service);
         }
     }
 
@@ -129,10 +128,9 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
                 DataHolder.getInstance().getMicroservicesRegistries();
         if (channelId != null) {
             MicroservicesRegistryImpl microservicesRegistry = microservicesRegistries.get(channelId.toString());
-            if (microservicesRegistry == null) {
-                throw new RuntimeException("Couldn't found the registry for channel ID " + channelId);
+            if (microservicesRegistry != null) {
+                microservicesRegistry.removeService(service);
             }
-            microservicesRegistry.removeService(service);
         }
     }
 
