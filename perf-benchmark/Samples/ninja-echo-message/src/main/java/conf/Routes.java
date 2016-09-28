@@ -30,8 +30,7 @@ import com.google.inject.Inject;
 
 public class Routes implements ApplicationRoutes {
 
-    Logger logger = LoggerFactory.getLogger(Routes.class);
-
+    private Logger logger = LoggerFactory.getLogger(Routes.class);
     private NinjaProperties ninjaProperties;
 
     @Inject
@@ -44,7 +43,5 @@ public class Routes implements ApplicationRoutes {
     public void init(Router router) {
         JaxyRoutes jaxyRoutes = new JaxyRoutes(ninjaProperties);
         jaxyRoutes.init(router);
-        //router.POST().route("/echo").with(ApplicationController.class, "index");
     }
-
 }

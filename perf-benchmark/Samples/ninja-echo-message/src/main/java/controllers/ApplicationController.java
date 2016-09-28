@@ -15,7 +15,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package controllers;
 
 import com.google.inject.Singleton;
@@ -46,8 +45,7 @@ public class ApplicationController {
     @POST
     public Result fileecho(String body) throws InterruptedException, IOException {
         java.nio.file.Path tempfile = Files.createTempFile(UUID.randomUUID().toString(), ".tmp");
-        Files.write(tempfile, body.getBytes(Charset.defaultCharset()),
-                    StandardOpenOption.CREATE,
+        Files.write(tempfile, body.getBytes(Charset.defaultCharset()), StandardOpenOption.CREATE,
                     StandardOpenOption.TRUNCATE_EXISTING);
         String returnStr = new String(Files.readAllBytes(tempfile), Charset.defaultCharset());
         Files.delete(tempfile);

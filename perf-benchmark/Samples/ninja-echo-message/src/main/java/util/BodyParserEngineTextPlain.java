@@ -15,7 +15,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package util;
 
 import ninja.Context;
@@ -60,5 +59,4 @@ public class BodyParserEngineTextPlain implements BodyParserEngine {
     public String getContentType() {
         return "text/plain";
     }
-
 }
