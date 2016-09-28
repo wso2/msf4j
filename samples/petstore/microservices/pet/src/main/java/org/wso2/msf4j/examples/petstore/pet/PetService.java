@@ -20,8 +20,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.metrics.core.annotation.Timed;
 import org.wso2.msf4j.analytics.httpmonitoring.HTTPMonitored;
-import org.wso2.msf4j.examples.petstore.util.JedisUtil;
 import org.wso2.msf4j.examples.petstore.util.model.Pet;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,10 +46,15 @@ import javax.ws.rs.core.Response;
 public class PetService {
     private static final Logger log = LoggerFactory.getLogger(PetService.class);
 
+    private static String REDIS_MASTER_HOST = System.getenv("REDIS_MASTER_HOST");
+    private static int REDIS_MASTER_PORT = Integer.parseInt(System.getenv("REDIS_MASTER_PORT"));
+
     static {
-        log.info("SENTINEL_HOST: {}", JedisUtil.getSentinelHost());
-        log.info("SENTINEL1_PORT: {}", JedisUtil.getSentinelPort());
+        log.info("Using Redis master:" + REDIS_MASTER_HOST + ":" + REDIS_MASTER_PORT);
     }
+
+    private static final JedisPool pool =
+            new JedisPool(new JedisPoolConfig(), REDIS_MASTER_HOST, REDIS_MASTER_PORT);
 
     @POST
     @Consumes("application/json")
@@ -55,21 +62,23 @@ public class PetService {
     public Response addPet(Pet pet) {
         log.info("Adding pet");
         String categoryName = pet.getCategory().getName();
-        if (!JedisUtil.smembers(PetConstants.CATEGORIES_KEY).contains(categoryName)) {
-            JedisUtil.sadd(PetConstants.CATEGORIES_KEY, categoryName);
+        try (Jedis jedis = pool.getResource()) {
+            if (!jedis.smembers(PetConstants.CATEGORIES_KEY).contains(categoryName)) {
+                jedis.sadd(PetConstants.CATEGORIES_KEY, categoryName);
+            }
+            String categoryKey = PetConstants.CATEGORY_KEY_PREFIX + categoryName;
+            jedis.sadd(categoryKey, pet.getId());
+            String id = pet.getId();
+            String petKey = PetConstants.PET_ID_KEY_PREFIX + id;
+            if (jedis.get(petKey) != null) {
+                return Response.status(Response.Status.CONFLICT).
+                        entity("Pet with ID " + id + " already exists").build();
+            } else {
+                jedis.set(petKey, new Gson().toJson(pet));
+                log.info("Added pet");
+            }
+            return Response.status(Response.Status.OK).entity("Pet with ID " + id + " successfully added").build();
         }
-        String categoryKey = PetConstants.CATEGORY_KEY_PREFIX + categoryName;
-        JedisUtil.sadd(categoryKey, pet.getId());
-        String id = pet.getId();
-        String petKey = PetConstants.PET_ID_KEY_PREFIX + id;
-        if (JedisUtil.get(petKey) != null) {
-            return Response.status(Response.Status.CONFLICT).
-                    entity("Pet with ID " + id + " already exists").build();
-        } else {
-            JedisUtil.set(petKey, new Gson().toJson(pet));
-            log.info("Added pet");
-        }
-        return Response.status(Response.Status.OK).entity("Pet with ID " + id + " successfully added").build();
     }
 
     @DELETE
@@ -77,16 +86,18 @@ public class PetService {
     @Timed
     public Response deletePet(@PathParam("id") String id) {
         String petKey = PetConstants.PET_ID_KEY_PREFIX + id;
-        String petValue = JedisUtil.get(petKey);
-        if (petValue == null || petValue.isEmpty()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+        try (Jedis jedis = pool.getResource()) {
+            String petValue = jedis.get(petKey);
+            if (petValue == null || petValue.isEmpty()) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+            Pet pet = new Gson().fromJson(petValue, Pet.class);
+            String categoryKey = PetConstants.CATEGORY_KEY_PREFIX + pet.getCategory().getName();
+            jedis.srem(categoryKey, pet.getId());
+            jedis.del(petKey);
+            log.info("Deleted pet");
+            return Response.status(Response.Status.OK).entity("OK").build();
         }
-        Pet pet = new Gson().fromJson(petValue, Pet.class);
-        String categoryKey = PetConstants.CATEGORY_KEY_PREFIX + pet.getCategory().getName();
-        JedisUtil.srem(categoryKey, pet.getId());
-        JedisUtil.del(petKey);
-        log.info("Deleted pet");
-        return Response.status(Response.Status.OK).entity("OK").build();
     }
 
     @PUT
@@ -95,13 +106,15 @@ public class PetService {
     public Response updatePet(Pet pet) {
         String id = pet.getId();
         String petKey = PetConstants.PET_ID_KEY_PREFIX + id;
-        String json = JedisUtil.get(petKey);
-        if (json == null || json.isEmpty()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        } else {
-            JedisUtil.set(petKey, new Gson().toJson(pet));
-            log.info("Updated pet");
-            return Response.status(Response.Status.OK).entity("Pet with ID " + id + " successfully updated").build();
+        try (Jedis jedis = pool.getResource()) {
+            String json = jedis.get(petKey);
+            if (json == null || json.isEmpty()) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            } else {
+                jedis.set(petKey, new Gson().toJson(pet));
+                log.info("Updated pet");
+                return Response.status(Response.Status.OK).entity("Pet with ID " + id + " successfully updated").build();
+            }
         }
     }
 
@@ -110,12 +123,14 @@ public class PetService {
     @Path("/{id}")
     @Timed
     public Response getPet(@PathParam("id") String id) {
-        String json = JedisUtil.get(PetConstants.PET_ID_KEY_PREFIX + id);
-        if (json == null || json.isEmpty()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+        try (Jedis jedis = pool.getResource()) {
+            String json = jedis.get(PetConstants.PET_ID_KEY_PREFIX + id);
+            if (json == null || json.isEmpty()) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+            log.info("Got pet");
+            return Response.status(Response.Status.OK).entity(new Gson().fromJson(json, Pet.class)).build();
         }
-        log.info("Got pet");
-        return Response.status(Response.Status.OK).entity(new Gson().fromJson(json, Pet.class)).build();
     }
 
     @GET
@@ -124,14 +139,16 @@ public class PetService {
     @Timed
     public List<Pet> getAllPets() {
         List<Pet> result = new ArrayList<>();
-        Set<String> categories = JedisUtil.smembers(PetConstants.CATEGORIES_KEY);
-        for (String category : categories) {
-            Set<String> pets = JedisUtil.smembers(PetConstants.CATEGORY_KEY_PREFIX + category);
-            for (String petID : pets) {
-                String petValue = JedisUtil.get(PetConstants.PET_ID_KEY_PREFIX + petID);
-                result.add(new Gson().fromJson(petValue, Pet.class));
+        try (Jedis jedis = pool.getResource()) {
+            Set<String> categories = jedis.smembers(PetConstants.CATEGORIES_KEY);
+            for (String category : categories) {
+                Set<String> pets = jedis.smembers(PetConstants.CATEGORY_KEY_PREFIX + category);
+                for (String petID : pets) {
+                    String petValue = jedis.get(PetConstants.PET_ID_KEY_PREFIX + petID);
+                    result.add(new Gson().fromJson(petValue, Pet.class));
+                }
             }
+            return result;
         }
-        return result;
     }
 }

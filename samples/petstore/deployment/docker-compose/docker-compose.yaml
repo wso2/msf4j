@@ -1,0 +1,113 @@
+version: '2'
+services:
+  security:
+    build:
+      context: .
+      dockerfile: security/Dockerfile
+    ports:
+      - "8080"
+    environment:
+      - METRICS_REPORTING_DAS_RECEIVERURL=tcp://das:7611
+      - HTTP_MONITORING_DAS_RECEIVERURL=tcp://das:7611
+    depends_on:
+      - das
+
+  transaction:
+    build:
+      context: .
+      dockerfile: transaction/Dockerfile
+    ports:
+      - "8080"
+    environment:
+      - REDIS_MASTER_HOST=redis
+      - REDIS_MASTER_PORT=6379
+      - METRICS_REPORTING_DAS_RECEIVERURL=tcp://das:7611
+      - HTTP_MONITORING_DAS_RECEIVERURL=tcp://das:7611
+    depends_on:
+       - redis
+       - das
+
+  pet:
+    build:
+      context: .
+      dockerfile: pet/Dockerfile
+    ports:
+      - "8080"
+    environment:
+      - REDIS_MASTER_HOST=redis
+      - REDIS_MASTER_PORT=6379
+      - METRICS_REPORTING_DAS_RECEIVERURL=tcp://das:7611
+      - HTTP_MONITORING_DAS_RECEIVERURL=tcp://das:7611
+    depends_on:
+      - redis
+      - das
+
+  fileserver:
+    build:
+      context: .
+      dockerfile: fileserver/Dockerfile
+    ports:
+      - "31111:8080"
+    environment:
+      - METRICS_REPORTING_DAS_RECEIVERURL=tcp://das:7611
+      - HTTP_MONITORING_DAS_RECEIVERURL=tcp://das:7611
+    depends_on:
+      - das
+    volumes:
+      - /tmp/petstore/fileserver:/var/www/html/upload
+
+  admin-fe:
+    build:
+      context: admin-fe
+      dockerfile: Dockerfile
+    ports:
+      - "32080:80"
+    environment:
+      - FILE_SERVICE_HOST=fileserver
+      - FILE_SERVICE_PORT=8080
+      - FILE_SERVICE_NODE_PORT=31111
+      - PET_SERVICE_HOST=pet
+      - PET_SERVICE_PORT=8080
+      - SECURITY_SERVICE_HOST=security
+      - SECURITY_SERVICE_PORT=8080
+    depends_on:
+      - pet
+      - security
+      - fileserver
+
+  store-fe:
+    build:
+      context: store-fe
+      dockerfile: Dockerfile
+    ports:
+      - "32081:80"
+    environment:
+      - FILE_SERVICE_HOST=fileserver
+      - FILE_SERVICE_PORT=8080
+      - FILE_SERVICE_NODE_PORT=31111
+      - PET_SERVICE_HOST=pet
+      - PET_SERVICE_PORT=8080
+      - SECURITY_SERVICE_HOST=security
+      - SECURITY_SERVICE_PORT=8080
+      - TXN_SERVICE_HOST=transaction
+      - TXN_SERVICE_PORT=8080
+    depends_on:
+      - pet
+      - security
+      - fileserver
+      - transaction
+
+  redis:
+    image: redis:3
+    ports:
+      - "36379:6379"
+    volumes:
+      - /tmp/petstore/redis/data:/data
+
+  das:
+    build:
+      context: das
+      dockerfile: Dockerfile
+    ports:
+      - "39443:9443"
+      - "39763:9763"
