@@ -23,7 +23,6 @@ https://docs.docker.com/docker-for-windows/
 
 https://docs.docker.com/compose/install/
 
-
 ##Run automated deployment 
 
 Run the following commands.
