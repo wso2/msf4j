@@ -42,7 +42,7 @@ Point your browser to http://localhost:32081
 ./clean.sh
 ```
 
-Clean.sh will clean all k8s resources
+Clean.sh will clean all docker compose resources
 
 
 
