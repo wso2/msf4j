@@ -58,6 +58,7 @@ Change docker-compose image names according to your docker private registry or p
 
 eg. If you have a docker public registry account (say account name is "lakwarus"), you can change images as following
 
+```
 docker.wso2.com/petstore-security	-> lakwarus/petstore-security
 docker.wso2.com/petstore-transaction	-> lakwarus/petstore-transaction
 docker.wso2.com/petstore-pet		-> lakwarus/petstore-pet
@@ -65,7 +66,7 @@ docker.wso2.com/petstore-fileserver	-> lakwarus/petstore-fileserver
 docker.wso2.com/petstore-admin-fe	-> lakwarus/petstore-admin-fe
 docker.wso2.com/petstore-store-fe	-> lakwarus/petstore-store-fe
 docker.wso2.com/petstore-das		-> lakwarus/petstore-das
-
+```
 ```
 docker-compose build
 ```
