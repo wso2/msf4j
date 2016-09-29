@@ -3,7 +3,26 @@
 ## Pre-requisites
 
  * Docker 
- * DOcker compose
+ * Docker compose
+
+### Docker installation for linux
+```
+wget -qO- https://get.docker.com/ | sh
+
+```
+
+### Docker installation for Mac
+
+https://docs.docker.com/docker-for-mac/
+
+### Docker installation for Windows
+
+https://docs.docker.com/docker-for-windows/
+
+### Docker Compose Installation
+
+https://docs.docker.com/compose/install/
+
 
 ##Run automated deployment 
 
