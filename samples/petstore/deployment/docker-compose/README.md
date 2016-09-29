@@ -88,7 +88,15 @@ Copy dockercompose.dab file to docker swarm manager node and run following
 ```
 docker deploy dockercompose
 ```
+This will deploy all docker services on swarm cluster
 
+```
+docker service update --publish-add 32080:80 dockercompose_admin-fe
+docker service update --publish-add 32081:80 dockercompose_store-fe
+docker service update --publish-add 39763:9763 dockercompose_das
+```
+
+Point your browser to AWS ELB domain with relevent ports to access deployed petstore in swarm cluster
 
 
 
