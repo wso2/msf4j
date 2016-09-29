@@ -5,21 +5,21 @@
  * Docker 
  * Docker compose
 
-### Docker installation for linux
+#### Docker installation for linux
 ```
 wget -qO- https://get.docker.com/ | sh
 
 ```
 
-### Docker installation for Mac
+#### Docker installation for Mac
 
 https://docs.docker.com/docker-for-mac/
 
-### Docker installation for Windows
+#### Docker installation for Windows
 
 https://docs.docker.com/docker-for-windows/
 
-### Docker Compose Installation
+#### Docker Compose Installation
 
 https://docs.docker.com/compose/install/
 
@@ -33,10 +33,14 @@ Run the following commands.
 ```
 #### Access Petstore Admin UI
 
-Point your browser to http://localhost:32080
+http://localhost:32080
 
 #### Access Petstore Store UI
-Point your browser to http://localhost:32081
+http://localhost:32081
+
+#### Access Analytics UI
+http://localhost:39763/monitoring/
+
 
 ```
 ./clean.sh
