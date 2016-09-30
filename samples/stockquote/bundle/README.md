@@ -44,7 +44,16 @@ mvn clean install
 
 ### Using OSGi Console
 
-Unzip wso2 MSF4J product and navigate to the bin directory. Then run the following command to start the MSF4J server.
+First you need to install the MSF4J feature in to carbon kernel. To do go to the resource directory at the bundle level
+and execute the following command
+```
+mvn clean install
+```
+This will install the msf4j and other required features to the kernel and build up a product.
+You can find the product in the resources/target directory
+
+Go to the target/wso2msf4j-<version>/bin directory
+Then run the following command to start the MSF4J server.
 ```
 ./carbon.sh
 ```
@@ -82,5 +91,5 @@ loaded and it's microservices that are there as OSGi services will be exposed as
 
 Use following cURL commands.
 ```
-curl http://localhost:8080/stockquote/IBM
+curl http://localhost:9090/stockquote/IBM
 ```
