@@ -519,10 +519,6 @@
                     <artifactId>org.wso2.carbon.runtime.feature</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>org.wso2.orbit.org.yaml</groupId>
-                    <artifactId>snakeyaml</artifactId>
-                </exclusion>
-                <exclusion>
                     <groupId>org.wso2.carbon</groupId>
                     <artifactId>org.wso2.carbon.kernel.feature</artifactId>
                 </exclusion>
