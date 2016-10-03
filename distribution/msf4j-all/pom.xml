@@ -54,6 +54,10 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.msf4j</groupId>
+            <artifactId>msf4j-swagger</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.msf4j</groupId>
             <artifactId>msf4j-analytics</artifactId>
         </dependency>
     </dependencies>

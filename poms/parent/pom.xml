@@ -385,6 +385,11 @@
                 <artifactId>commons-io</artifactId>
                 <version>${commons-io.wso2.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.orbit.org.yaml</groupId>
+                <artifactId>snakeyaml</artifactId>
+                <version>${org.snakeyaml.version}</version>
+            </dependency>
             <!-- Metrics Dependencies - Start -->
             <dependency>
                 <groupId>org.wso2.carbon.metrics</groupId>

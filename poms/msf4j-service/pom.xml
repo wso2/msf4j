@@ -480,6 +480,11 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.msf4j</groupId>
+                <artifactId>msf4j-swagger</artifactId>
+                <version>${msf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.msf4j</groupId>
                 <artifactId>zipkin-tracing</artifactId>
                 <version>${msf4j.version}</version>
             </dependency>
@@ -517,10 +522,6 @@
                 <exclusion>
                     <groupId>org.wso2.carbon</groupId>
                     <artifactId>org.wso2.carbon.runtime.feature</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.wso2.orbit.org.yaml</groupId>
-                    <artifactId>snakeyaml</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.wso2.carbon</groupId>
