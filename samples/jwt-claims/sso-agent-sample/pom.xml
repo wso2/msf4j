@@ -10,17 +10,6 @@
     <artifactId>sso-agent-sample</artifactId>
     <name>Travelocity.COM ServiceProvider / RelyingParty Webapp</name>
 
-    <repositories>
-        <repository>
-            <id>customized-sso-agent-for-jwt-github-mvn-repo</id>
-            <url>https://raw.github.com/maheshakya/sso-agent-for-jwt/mvn-repo/</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </repository>
-    </repositories>
-
     <build>
         <plugins>
             <plugin>
@@ -50,7 +39,5 @@
             </plugin>
         </plugins>
     </build>
-
-
 
 </project>
