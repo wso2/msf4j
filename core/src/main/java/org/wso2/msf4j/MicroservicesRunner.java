@@ -212,7 +212,7 @@ public class MicroservicesRunner {
         handleServiceLifecycleMethods();
         transportManager.startTransports();
         isStarted = true;
-        log.info("Microservices server started now in " + (System.currentTimeMillis() - startTime) + "ms");
+        log.info("Microservices server started in " + (System.currentTimeMillis() - startTime) + "ms");
     }
 
     /**
