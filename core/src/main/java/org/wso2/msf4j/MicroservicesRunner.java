@@ -96,6 +96,28 @@ public class MicroservicesRunner {
     }
 
     /**
+     * Deploy microservices with a common base application path.
+     *
+     * @param microservice The microservice which is to be deployed
+     * @param applicationPath The application path for the service
+     * @return this MicroservicesRunner object
+     */
+    public MicroservicesRunner deploy(String applicationPath, Object... microservice) {
+        Map<String, Object> valuesMap;
+        String servicePath;
+        for (Object service :
+                microservice) {
+            valuesMap = new HashMap<>();
+            servicePath = String.format("/%s/%s", applicationPath,
+                    service.getClass().getAnnotation(Path.class).value());
+            valuesMap.put("value", servicePath);
+            RuntimeAnnotations.putAnnotation(service.getClass(), Path.class, valuesMap);
+            msRegistry.addService(servicePath, service);
+        }
+        return this;
+    }
+
+    /**
      * Register a custom {@link SessionManager}.
      *
      * @param sessionManager The SessionManager instance to be registered.
@@ -190,7 +212,7 @@ public class MicroservicesRunner {
         handleServiceLifecycleMethods();
         transportManager.startTransports();
         isStarted = true;
-        log.info("Microservices server started in " + (System.currentTimeMillis() - startTime) + "ms");
+        log.info("Microservices server started now in " + (System.currentTimeMillis() - startTime) + "ms");
     }
 
     /**
