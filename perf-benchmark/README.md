@@ -19,7 +19,7 @@ each concurrency level is calculated and plotted for each framework.
 ![EchoThroughput](graphs/echotps.png) 
 ![FileEchoThroughput](graphs/fileechotps.png) 
 
-All services were run out of the box without any tuning separately on a 32 core 64GB server in JVM v1.8.0_60 with default configuration.
+All services were run out of the box without any tuning separately on a 16 core 24GB server in JVM v1.8.0_51 with default configuration.
 
 ### Performing the throughput test
 
