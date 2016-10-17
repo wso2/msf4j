@@ -19,6 +19,7 @@ package org.wso2.msf4j;
 import org.wso2.carbon.messaging.CarbonCallback;
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.DefaultCarbonMessage;
+import org.wso2.carbon.messaging.Header;
 import org.wso2.carbon.messaging.Headers;
 import org.wso2.carbon.transport.http.netty.common.Constants;
 import org.wso2.msf4j.internal.MSF4JConstants;
@@ -26,9 +27,11 @@ import org.wso2.msf4j.internal.entitywriter.EntityWriter;
 import org.wso2.msf4j.internal.entitywriter.EntityWriterRegistry;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.NewCookie;
 
 /**
  * Class that represents an HTTP response in MSF4J level.
@@ -47,6 +50,7 @@ public class Response {
     private Object entity;
     private int chunkSize = NO_CHUNK;
     private Request request;
+    private javax.ws.rs.core.Response jaxrsResponse;
 
     public Response(CarbonCallback carbonCallback) {
         carbonMessage = new DefaultCarbonMessage();
@@ -223,11 +227,14 @@ public class Response {
         }
         if (entity instanceof javax.ws.rs.core.Response) {
             javax.ws.rs.core.Response response = (javax.ws.rs.core.Response) entity;
+            this.jaxrsResponse = response;
             this.entity = response.getEntity();
-            MultivaluedMap<String, String> multivaluedMap = response.getStringHeaders();
+
+            //TODO: if you remove these lines, the tests fail.
+            /*MultivaluedMap<String, String> multivaluedMap = response.getStringHeaders();
             if (multivaluedMap != null) {
                 multivaluedMap.forEach((key, strings) -> setHeader(key, String.join(COMMA_SEPARATOR, strings)));
-            }
+            }*/
             setStatus(response.getStatus());
             if (response.getMediaType() != null) {
                 setMediaType(response.getMediaType().toString());
@@ -253,11 +260,28 @@ public class Response {
      */
     public void send() {
         carbonMessage.setProperty(Constants.HTTP_STATUS_CODE, getStatusCode());
+
+        List<Header> cookiesHeader = new ArrayList<>();
+
+        if (jaxrsResponse != null) {
+            MultivaluedMap<String, String> multivaluedMap = jaxrsResponse.getStringHeaders();
+            if (multivaluedMap != null) {
+                multivaluedMap.forEach((key, strings) -> setHeader(key, String.join(COMMA_SEPARATOR, strings)));
+            }
+
+            // String - cookie name
+            Map<String, NewCookie> cookies = jaxrsResponse.getCookies();
+            cookies.forEach((name, cookie) ->
+                    cookiesHeader.add(new Header("Set-Cookie", cookie.getName() + "=" + cookie.getValue())));
+        }
+
+
         //Set-Cookie: session
         Session session = request.getSessionInternal();
         if (session != null && session.isValid() && session.isNew()) {
-            carbonMessage.setHeader("Set-Cookie", MSF4JConstants.SESSION_ID + session.getId());
+            cookiesHeader.add(new Header("Set-Cookie", MSF4JConstants.SESSION_ID + session.getId()));
         }
+        carbonMessage.getHeaders().set(cookiesHeader);
         processEntity();
     }
 

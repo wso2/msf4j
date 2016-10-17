@@ -18,7 +18,9 @@ package org.wso2.msf4j.delegates;
 
 import java.lang.annotation.Annotation;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -42,10 +44,15 @@ public class MSF4JResponse extends Response {
     private Object entity;
     private int status;
     private MultivaluedMap<String, String> headers;
+    private Map<String, NewCookie> cookies = new HashMap<>();
     private MediaType type;
 
     public void setHeaders(MultivaluedMap<String, String> headers) {
         this.headers = headers;
+    }
+
+    public void setCookies(Map<String, NewCookie> cookies) {
+        this.cookies = cookies;
     }
 
     @Override
@@ -93,7 +100,7 @@ public class MSF4JResponse extends Response {
 
     @Override
     public boolean hasEntity() {
-        return false;
+        return entity != null;
     }
 
     @Override
@@ -128,7 +135,7 @@ public class MSF4JResponse extends Response {
 
     @Override
     public Map<String, NewCookie> getCookies() {
-        throw new UnsupportedOperationException();
+        return cookies;
     }
 
     @Override
@@ -193,7 +200,7 @@ public class MSF4JResponse extends Response {
     /**
      * Trimmed Convenient builder for MSF4JResponse instances.
      */
-    public static class Builder extends ResponseBuilder {
+    public class Builder extends ResponseBuilder {
 
         private Object entity;
         private int status;
@@ -207,6 +214,7 @@ public class MSF4JResponse extends Response {
             msf4jResponse.setEntity(entity);
             msf4jResponse.setHeaders(headers);
             msf4jResponse.setType(type);
+            msf4jResponse.setCookies(cookies);
             return msf4jResponse;
         }
 
@@ -307,7 +315,8 @@ public class MSF4JResponse extends Response {
 
         @Override
         public ResponseBuilder cookie(NewCookie... cookies) {
-            throw new UnsupportedOperationException();
+            Arrays.asList(cookies).forEach(cookie -> MSF4JResponse.this.cookies.put(cookie.getName(), cookie));
+            return this;
         }
 
         @Override

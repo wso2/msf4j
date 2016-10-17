@@ -48,7 +48,7 @@ public class MSF4JRuntimeDelegate extends RuntimeDelegate {
 
     @Override
     public ResponseBuilder createResponseBuilder() {
-        return new MSF4JResponse.Builder();
+        return new MSF4JResponse().new Builder();
     }
 
     @Override
