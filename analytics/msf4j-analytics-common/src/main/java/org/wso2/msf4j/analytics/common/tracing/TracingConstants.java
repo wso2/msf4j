@@ -16,24 +16,19 @@
 *  under the License.
 */
 
-package org.wso2.msf4j.analytics.tracing;
+package org.wso2.msf4j.analytics.common.tracing;
 
 /**
- * Class for holding the thread local of tracing events.
- * This class help the Client interceptors to access the
- * request trace event of the containing service to keep
- * the correlation.
+ * Class to hold constants used in tracing.
  */
-public class TracingEventTracker {
+public class TracingConstants {
 
-    private static final ThreadLocal<TraceEvent> traceEventThreadLocal = new ThreadLocal<>();
-
-    public static void setTraceEvent(TraceEvent traceEvent) {
-        traceEventThreadLocal.set(traceEvent);
-    }
-
-    public static TraceEvent getTraceEvent() {
-        return traceEventThreadLocal.get();
-    }
+    public static final String CLIENT_TRACE_START = "CTS";
+    public static final String CLIENT_TRACE_END = "CTE";
+    public static final String SERVER_TRACE_START = "STS";
+    public static final String SERVER_TRACE_END = "STE";
+    public static final String TRACE_ID_HEADER = "X-msf4j-trace-id";
+    public static final String TRACE_ORIGIN_ID_HEADER = "X-msf4j-trace-origin-id";
+    public static final String DAS_RECEIVER_URL = "http://localhost:9763/endpoints/msf4jtracereceiver";
 
 }

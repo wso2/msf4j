@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.msf4j.example;
+package org.wso2.msf4j.example.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +39,7 @@ public class InvoiceService {
     private static final Logger log = LoggerFactory.getLogger(InvoiceService.class);
     private Map<String, Invoice> invoiceMap = new HashMap<>();
 
-    InvoiceService() {
+    public InvoiceService() {
         invoiceMap.put("I001", new Invoice("I001", "C001", 250.15, new Date(System.currentTimeMillis())));
     }
 
@@ -56,6 +56,7 @@ public class InvoiceService {
     public Response getCustomer(@PathParam("id") String id) throws InvoiceNotFoundException {
         Invoice invoice = invoiceMap.get(id);
         if (invoice == null) {
+            log.info("Request for non-existing invoice: " + id);
             throw new InvoiceNotFoundException("Invoice ID " + id + " not found");
         }
         return Response.status(Response.Status.OK).entity(invoice).build();

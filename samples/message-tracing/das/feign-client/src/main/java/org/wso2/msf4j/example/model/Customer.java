@@ -17,13 +17,10 @@ package org.wso2.msf4j.example.model;
 
 import org.wso2.msf4j.example.ModelUtils;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
 /**
- * Represents a stock item. @XmlRootElement is used to support xml conversion.
+ * Represents a Customer item
  */
 @SuppressWarnings("unused")
-@XmlRootElement
 public class Customer {
 
     private String id;
@@ -32,7 +29,7 @@ public class Customer {
     private String address;
 
     /**
-     * No arg constructor is required for xml marshalling
+     * No arg constructor is required for marshalling
      */
     public Customer() {
     }
