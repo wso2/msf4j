@@ -13,19 +13,16 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package org.wso2.msf4j.example;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+package org.wso2.msf4j.client.exception;
 
 /**
- * Converts Object to gson
+ * Base exception class for REST service error responses
  */
-public class ModelUtils {
-    public static final Gson GSON = new GsonBuilder().setPrettyPrinting()
-            .disableHtmlEscaping().create();
+public class RestServiceException extends Exception {
 
-    public static String toString(Object o) {
-        return GSON.toJson(o);
+    // Always throw the exception HTTP REST service error response
+    public RestServiceException(String message) {
+        super(message);
     }
 }

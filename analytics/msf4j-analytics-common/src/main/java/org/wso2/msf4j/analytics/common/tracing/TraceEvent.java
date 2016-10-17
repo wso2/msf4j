@@ -16,7 +16,7 @@
 *  under the License.
 */
 
-package org.wso2.msf4j.analytics.tracing;
+package org.wso2.msf4j.analytics.common.tracing;
 
 /**
  * Class to hold tracing start event data.

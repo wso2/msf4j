@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.msf4j.analytics.tracing;
+package org.wso2.msf4j.analytics.common.tracing;
 
 import java.io.IOException;
 import java.util.Date;
