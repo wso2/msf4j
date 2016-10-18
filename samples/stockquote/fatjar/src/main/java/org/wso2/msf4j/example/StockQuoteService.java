@@ -40,6 +40,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 
 /**
@@ -96,7 +97,7 @@ public class StockQuoteService {
         if (stock == null) {
             throw new SymbolNotFoundException("Symbol " + symbol + " not found");
         }
-        return Response.status(Response.Status.OK).entity(stock).build();
+        return Response.ok().entity(stock).cookie(new NewCookie("symbol", symbol)).build();
     }
 
     /**
@@ -117,7 +118,7 @@ public class StockQuoteService {
         if (stock == null) {
             throw new SymbolNotFoundException();
         }
-        return Response.status(Response.Status.OK).build();
+        return Response.ok().build();
     }
 
     /**
@@ -144,7 +145,7 @@ public class StockQuoteService {
         if (stock == null) {
             throw new SymbolNotFoundException("Symbol " + symbol + " not found");
         }
-        return Response.status(Response.Status.OK).entity(stock).build();
+        return Response.ok().entity(stock).build();
     }
 
     /**
@@ -203,6 +204,6 @@ public class StockQuoteService {
             value = "Get supported reuest methods",
             notes = "Return a response with headers that show the supported HTTP Requests on the Request-URI")
     public Response getCommunicationInformationForRequestURI(){
-        return Response.status(Response.Status.OK).header("Access-Control-Allow-Methods","GET,OPTIONS").build();
+        return Response.ok().header("Access-Control-Allow-Methods","GET,OPTIONS").build();
     }
 }

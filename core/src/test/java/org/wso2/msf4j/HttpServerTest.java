@@ -1249,6 +1249,9 @@ public class HttpServerTest {
         assertEquals(200, urlConn.getResponseCode());
         String content = getContent(urlConn);
         assertEquals(value, content);
+        String cookie = urlConn.getHeaderField("Set-Cookie");
+        assertNotNull(cookie);
+        assertEquals("test-cookie=" + value, cookie);
         urlConn.disconnect();
     }
 
