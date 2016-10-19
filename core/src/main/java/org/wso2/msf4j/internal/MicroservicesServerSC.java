@@ -31,10 +31,13 @@ import org.wso2.msf4j.Microservice;
 import org.wso2.msf4j.MicroservicesRegistry;
 import org.wso2.msf4j.SessionManager;
 import org.wso2.msf4j.SwaggerService;
+import org.wso2.msf4j.util.RuntimeAnnotations;
 
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
+import javax.ws.rs.Path;
 import javax.ws.rs.ext.ExceptionMapper;
 
 /**
@@ -66,6 +69,11 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
     protected void addService(Microservice service, Map properties) {
         Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
         Object contextPath = properties.get("contextPath");
+        if (contextPath != null) {
+            Map<String, Object> valuesMap = new HashMap<>();
+            valuesMap.put("value", contextPath);
+            RuntimeAnnotations.putAnnotation(service.getClass(), Path.class, valuesMap);
+        }
         Map<String, MicroservicesRegistryImpl> microservicesRegistries =
                 DataHolder.getInstance().getMicroservicesRegistries();
         if (channelId != null) {
