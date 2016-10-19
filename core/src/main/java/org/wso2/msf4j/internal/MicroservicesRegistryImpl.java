@@ -80,7 +80,6 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
     }
 
     public void addService(String basePath, Object service) {
-        updateMetadata();
         services.put(basePath, service);
         metadata.addMicroserviceMetadata(service, basePath);
         log.info("Added microservice: " + service);

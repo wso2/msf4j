@@ -120,6 +120,7 @@ public class HttpServerTest {
                 .deploy(testMicroservice)
                 .start();
         microservicesRunner.deploy("/DynamicPath", new TestMicroServiceWithDynamicPath());
+        microservicesRunner.deploy("/DynamicPath2", new TestMicroServiceWithDynamicPath());
 
         secondMicroservicesRunner = new MicroservicesRunner(port + 1);
         secondMicroservicesRunner.deploy(secondService).start();
@@ -147,6 +148,12 @@ public class HttpServerTest {
         HttpURLConnection urlConn = request("/DynamicPath/hello/MSF4J", HttpMethod.GET);
         assertEquals(200, urlConn.getResponseCode());
         String content = getContent(urlConn);
+        assertEquals("Hello MSF4J", content);
+        urlConn.disconnect();
+
+        urlConn = request("/DynamicPath2/hello/MSF4J", HttpMethod.GET);
+        assertEquals(200, urlConn.getResponseCode());
+        content = getContent(urlConn);
         assertEquals("Hello MSF4J", content);
         urlConn.disconnect();
     }

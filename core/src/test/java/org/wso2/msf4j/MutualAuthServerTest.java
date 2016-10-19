@@ -64,6 +64,7 @@ public class MutualAuthServerTest extends HttpsServerTest {
         secondMicroservicesRunner = new MicroservicesRunner(port + 1);
         secondMicroservicesRunner.deploy(secondService).start();
         microservicesRunner.deploy("/DynamicPath", new TestMicroServiceWithDynamicPath());
+        microservicesRunner.deploy("/DynamicPath2", new TestMicroServiceWithDynamicPath());
     }
 
     @AfterClass

@@ -81,7 +81,11 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             if (microservicesRegistry == null) {
                 throw new RuntimeException("Couldn't found the registry for channel ID " + channelId);
             }
-
+            if (contextPath == null) {
+                microservicesRegistry.addService(service);
+            } else {
+                microservicesRegistry.addService(contextPath.toString(), service);
+            }
             microservicesRegistry.addService(service);
         } else {
             microservicesRegistries.values().forEach(registry -> registry.addService(service));

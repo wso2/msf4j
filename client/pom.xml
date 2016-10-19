@@ -14,7 +14,8 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -32,4 +33,72 @@
     <description>WSO2 MSF4J client</description>
     <url>https://github.com/wso2/msf4j</url>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.wso2.msf4j</groupId>
+            <artifactId>msf4j-analytics</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.wso2.msf4j</groupId>
+                    <artifactId>msf4j-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.wso2.orbit.org.apache.httpcomponents</groupId>
+                    <artifactId>httpclient</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-jackson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-gson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-hystrix</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient-osgi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore-osgi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
+    </dependencies>
+
+    <properties>
+        <private.package>org.wso2.msf4j.internal.*</private.package>
+        <export.package>
+            !org.wso2.msf4j.client.internal.*,
+            org.wso2.msf4j.client.*;version="${msf4j.version}"
+        </export.package>
+        <import.package>
+            feign.*;version="${feign.version}",
+            feign.gson.*;version="${feign.version}",
+            com.google.gson.*;version="${gson.version.range}",
+            com.google.common.*;version="${guava.version.range}",
+            javax.annotation.*,
+            javax.ws.rs.*,
+            javax.xml.bind;resolution:=optional,
+            javax.xml.bind.annotation;resolution:=optional,
+            org.osgi.framework.*;version="${osgi.framework.import.version.range}",
+            org.osgi.util.tracker; version="${osgi.service.tracker.import.version.range}"
+        </import.package>
+    </properties>
 </project>

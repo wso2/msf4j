@@ -18,18 +18,22 @@
  */
 package org.wso2.msf4j.example.exception;
 
+import org.wso2.msf4j.example.model.ServiceErrorResponse;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 
 /**
- * ExceptionMapper which handled CustomerNotFoundException.
+ * ExceptionMapper which handles InvoiceNotFoundException.
  */
 public class InvoiceNotFoundMapper implements ExceptionMapper<InvoiceNotFoundException> {
 
+    private static final String ERROR_CODE = "30002";
+
     public Response toResponse(InvoiceNotFoundException ex) {
-        return Response.status(404).
-                entity(ex.getMessage() + " [from InvoiceNotFoundMapper]").
-                type("text/plain").
-                build();
+        return Response.status(404)
+                .entity(new ServiceErrorResponse(ERROR_CODE, ex.getMessage()))
+                .type("text/plain")
+                .build();
     }
 }

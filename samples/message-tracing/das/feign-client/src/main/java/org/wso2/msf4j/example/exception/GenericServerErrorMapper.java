@@ -18,28 +18,23 @@
  */
 package org.wso2.msf4j.example.exception;
 
+import org.wso2.msf4j.example.model.ServiceErrorResponse;
+
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+
 /**
- * Thrown when a Customer record is not found.
+ * ExceptionMapper which handled GenericServerErrorException.
  */
-public class CustomerNotFoundException extends EntityNotFoundException {
-    public CustomerNotFoundException() {
-        super();
-    }
+public class GenericServerErrorMapper implements ExceptionMapper<GenericServerErrorException> {
 
-    public CustomerNotFoundException(String message) {
-        super(message);
-    }
+    private static final String ERROR_CODE = "10000";
 
-    public CustomerNotFoundException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public CustomerNotFoundException(Throwable cause) {
-        super(cause);
-    }
-
-    protected CustomerNotFoundException(String message, Throwable cause,
-                                        boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    @Override
+    public Response toResponse(GenericServerErrorException ex) {
+        return Response.status(500)
+                .entity(new ServiceErrorResponse(ERROR_CODE, ex.getMessage()))
+                .type("text/plain")
+                .build();
     }
 }

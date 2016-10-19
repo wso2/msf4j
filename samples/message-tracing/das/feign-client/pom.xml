@@ -34,32 +34,11 @@
     <dependencies>
         <dependency>
             <groupId>org.wso2.msf4j</groupId>
-            <artifactId>msf4j-analytics</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.github.openfeign</groupId>
-            <artifactId>feign-httpclient</artifactId>
-            <version>${feign.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.openfeign</groupId>
-            <artifactId>feign-core</artifactId>
-            <version>${feign.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.openfeign</groupId>
-            <artifactId>feign-slf4j</artifactId>
-            <version>${feign.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.openfeign</groupId>
-            <artifactId>feign-gson</artifactId>
-            <version>${feign.version}</version>
+            <artifactId>msf4j-client</artifactId>
         </dependency>
     </dependencies>
 
     <properties>
-        <feign.version>9.3.0</feign.version>
         <microservice.mainClass>org.wso2.msf4j.example.Application</microservice.mainClass>
     </properties>
 </project>
