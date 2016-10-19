@@ -110,7 +110,6 @@
         <module>analytics/msf4j-analytics</module>
         <module>analytics/msf4j-analytics-common</module>
         <module>analytics/wso2das-tracing-capp</module>
-        <module>analytics/zipkin-tracing</module>
 
         <module>client</module>
 
@@ -140,9 +139,7 @@
         <module>samples/jpa</module>
         <module>samples/circuitbreaker</module>
         <module>samples/regex-pathparam</module>
-        <module>samples/message-tracing/das/jaxrs-client</module>
-        <module>samples/message-tracing/das/feign-client</module>
-        <module>samples/message-tracing/zipkin/jaxrs-client</module>
+        <module>samples/message-tracing</module>
         <module>samples/subresource</module>
 
         <module>perf-benchmark/Samples/wso2msf4j</module>
