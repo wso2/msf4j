@@ -46,7 +46,8 @@ public class SpringHttpServerTest extends HttpServerTest {
         configurableApplicationContexts.add(MSF4JSpringApplication.run(SecondService.class, "--http.port=8091"));
         msf4JSpringApplication.addService(configurableApplicationContexts.get(1), TestMicroServiceWithDynamicPath.class,
                                           "/DynamicPath");
-
+        msf4JSpringApplication.addService(configurableApplicationContexts.get(1), TestMicroServiceWithDynamicPath.class,
+                                          "/DynamicPath2");
     }
 
     @AfterClass

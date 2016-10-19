@@ -53,6 +53,7 @@ public class InterceptorTest extends InterceptorTestBase {
                 addInterceptor(interceptor2)
                 .start();
         microservicesRunner.deploy("/DynamicPath", new TestMicroServiceWithDynamicPath());
+        microservicesRunner.deploy("/DynamicPath2", new TestMicroServiceWithDynamicPath());
         baseURI = URI.create(String.format("http://%s:%d", Constants.HOSTNAME, port));
     }
 
