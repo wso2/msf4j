@@ -488,6 +488,11 @@
                 <artifactId>zipkin-tracing</artifactId>
                 <version>${msf4j.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.msf4j</groupId>
+                <artifactId>msf4j-client</artifactId>
+                <version>${msf4j.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <dependencies>
@@ -564,6 +569,7 @@
         <maven.buildnumber.plugin.version>1.4</maven.buildnumber.plugin.version>
         <maven.shadeplugin.version>2.4.1</maven.shadeplugin.version>
         <maven.reallyexecutablejarplugin.version>1.5.0</maven.reallyexecutablejarplugin.version>
+        <feign.version>9.3.1</feign.version>
 
         <!-- Other dependency versions -->
         <maven.wagon.ssh.version>2.10</maven.wagon.ssh.version>

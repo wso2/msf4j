@@ -19,7 +19,7 @@
 package org.wso2.msf4j.example.exception;
 
 /**
- * Thrown when a Symbol is not found.
+ * Thrown when a Invoice record is not found.
  */
 public class InvoiceNotFoundException extends EntityNotFoundException {
     public InvoiceNotFoundException() {

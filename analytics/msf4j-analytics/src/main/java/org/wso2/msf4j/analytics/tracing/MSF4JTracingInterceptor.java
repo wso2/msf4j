@@ -20,6 +20,10 @@ import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.ServiceMethodInfo;
+import org.wso2.msf4j.analytics.common.tracing.TraceEvent;
+import org.wso2.msf4j.analytics.common.tracing.TracingConstants;
+import org.wso2.msf4j.analytics.common.tracing.TracingEventTracker;
+import org.wso2.msf4j.analytics.common.tracing.TracingUtil;
 
 import java.util.Date;
 

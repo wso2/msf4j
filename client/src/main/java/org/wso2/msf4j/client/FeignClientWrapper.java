@@ -13,19 +13,27 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package org.wso2.msf4j.example;
+package org.wso2.msf4j.client;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import feign.Client;
+import feign.Request;
+import feign.Response;
+
+import java.io.IOException;
 
 /**
- * Converts Object to gson
+ * Wrapper for #Feign.Client
  */
-public class ModelUtils {
-    public static final Gson GSON = new GsonBuilder().setPrettyPrinting()
-            .disableHtmlEscaping().create();
+public class FeignClientWrapper implements Client {
 
-    public static String toString(Object o) {
-        return GSON.toJson(o);
+    private final Client clientDelegate;
+
+    public FeignClientWrapper(Client client) {
+        this.clientDelegate = client;
+    }
+
+    @Override
+    public Response execute(Request request, Request.Options options) throws IOException {
+        return clientDelegate.execute(request, options);
     }
 }

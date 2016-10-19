@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package org.wso2.msf4j.example;
+package org.wso2.msf4j.example.client.api;
 
 import feign.Param;
 import feign.RequestLine;
-import org.wso2.msf4j.example.exception.ClientException;
+import org.wso2.msf4j.example.client.exception.InvoiceNotFoundRestServiceException;
 import org.wso2.msf4j.example.model.Invoice;
 
 public interface InvoiceServiceAPI {
     // Invoice service
     @RequestLine("GET /invoice/{id}")
-    Invoice getInvoice(@Param("id") String id) throws ClientException;
+    Invoice getInvoice(@Param("id") String id) throws InvoiceNotFoundRestServiceException;
 }

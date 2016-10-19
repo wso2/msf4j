@@ -22,6 +22,6 @@ MAINTAINER architecture@wso2.org
 RUN mkdir -p /mnt/wso2das-3.0.1/repository/deployment/server/carbonapps
 COPY modules /mnt/wso2-artifacts/modules/
 COPY repository /mnt/wso2-artifacts/repository/
-#COPY packages/wso2das-msf4j-tracing-2.0.1-SNAPSHOT.car /mnt/wso2das-3.0.1/repository/deployment/server/carbonapps
+#COPY packages/wso2das-msf4j-tracing-2.1.0-SNAPSHOT.car /mnt/wso2das-3.0.1/repository/deployment/server/carbonapps
 
 ENTRYPOINT ["/usr/local/bin/init.sh"]
