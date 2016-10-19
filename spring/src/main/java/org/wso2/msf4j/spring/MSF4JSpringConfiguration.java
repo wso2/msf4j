@@ -36,7 +36,10 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
                 name = "applicationProperties"),
         @PropertySource(value = "classpath:application.properties", ignoreResourceNotFound = true,
                 name = "applicationProperties"),
-
+        @PropertySource(value = "file:application-${spring.profiles.active}.properties", ignoreResourceNotFound = true,
+                name = "applicationProperties"),
+        @PropertySource(value = "classpath:application-${spring.profiles.active}.properties",
+                ignoreResourceNotFound = true, name = "applicationProperties")
 })
 public class MSF4JSpringConfiguration {
 
