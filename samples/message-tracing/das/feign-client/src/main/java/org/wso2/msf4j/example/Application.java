@@ -20,6 +20,11 @@ import org.wso2.msf4j.MicroservicesRunner;
 import org.wso2.msf4j.analytics.tracing.MSF4JTracingInterceptor;
 import org.wso2.msf4j.example.exception.CustomerNotFoundMapper;
 import org.wso2.msf4j.example.exception.EntityNotFoundMapper;
+import org.wso2.msf4j.example.exception.GenericServerErrorMapper;
+import org.wso2.msf4j.example.exception.InvoiceNotFoundMapper;
+import org.wso2.msf4j.example.service.CustomerService;
+import org.wso2.msf4j.example.service.InvoiceService;
+import org.wso2.msf4j.example.service.ReportService;
 
 /**
  * Application entry point.
@@ -27,11 +32,23 @@ import org.wso2.msf4j.example.exception.EntityNotFoundMapper;
 public class Application {
     public static void main(String[] args) {
 
-        new MicroservicesRunner()
-                .addExceptionMapper(new EntityNotFoundMapper(), new CustomerNotFoundMapper())
-                .addInterceptor(new MSF4JTracingInterceptor("Service-Chaining"))
-                .deploy(new InvoiceService())
+        new MicroservicesRunner(8081)
+                .addExceptionMapper(new EntityNotFoundMapper(), new CustomerNotFoundMapper(), new
+                        GenericServerErrorMapper())
+                .addInterceptor(new MSF4JTracingInterceptor("Customer-Service"))
                 .deploy(new CustomerService())
+                .start();
+
+        new MicroservicesRunner(8082)
+                .addExceptionMapper(new EntityNotFoundMapper(), new InvoiceNotFoundMapper(), new
+                        GenericServerErrorMapper())
+                .addInterceptor(new MSF4JTracingInterceptor("Invoice-Service"))
+                .deploy(new InvoiceService())
+                .start();
+        new MicroservicesRunner()
+                .addExceptionMapper(new EntityNotFoundMapper(), new CustomerNotFoundMapper(), new
+                        InvoiceNotFoundMapper(), new GenericServerErrorMapper())
+                .addInterceptor(new MSF4JTracingInterceptor("Report-Service"))
                 .deploy(new ReportService())
                 .start();
     }

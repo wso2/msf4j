@@ -16,7 +16,7 @@
 
 package org.wso2.msf4j.example;
 
-import org.wso2.msf4j.analytics.tracing.MSF4JClientTracingFilter;
+import org.wso2.msf4j.analytics.common.tracing.MSF4JClientTracingFilter;
 
 import java.util.Random;
 import javax.ws.rs.GET;
