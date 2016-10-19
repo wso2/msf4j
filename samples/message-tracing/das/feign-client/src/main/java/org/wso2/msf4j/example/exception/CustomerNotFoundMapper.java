@@ -18,18 +18,22 @@
  */
 package org.wso2.msf4j.example.exception;
 
+import org.wso2.msf4j.example.model.ServiceErrorResponse;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 
 /**
- * ExceptionMapper which handled CustomerNotFoundException.
+ * ExceptionMapper which handles CustomerNotFoundException.
  */
 public class CustomerNotFoundMapper implements ExceptionMapper<CustomerNotFoundException> {
 
+    private static final String ERROR_CODE = "30001";
+
     public Response toResponse(CustomerNotFoundException ex) {
-        return Response.status(404).
-                entity(ex.getMessage() + " [from CustomerNotFoundMapper]").
-                type("text/plain").
-                build();
+        return Response.status(404)
+                .entity(new ServiceErrorResponse(ERROR_CODE, ex.getMessage()))
+                .type("text/plain")
+                .build();
     }
 }

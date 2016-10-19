@@ -15,14 +15,14 @@
  */
 package org.wso2.msf4j.example.model;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import org.wso2.msf4j.example.ModelUtils;
+
 import java.util.Date;
 
 /**
- * Represents a stock item. @XmlRootElement is used to support xml conversion.
+ * Represents an Invoice Report item.
  */
 @SuppressWarnings("unused")
-@XmlRootElement
 public class InvoiceReport {
 
     private String id;
@@ -31,7 +31,7 @@ public class InvoiceReport {
     private Date date;
 
     /**
-     * No arg constructor is required for xml marshalling
+     * No arg constructor is required for marshalling
      */
     public InvoiceReport() {
     }
@@ -80,5 +80,10 @@ public class InvoiceReport {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    @Override
+    public String toString() {
+        return ModelUtils.toString(this);
     }
 }

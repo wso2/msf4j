@@ -15,16 +15,15 @@
  */
 package org.wso2.msf4j.example.model;
 
+
 import org.wso2.msf4j.example.ModelUtils;
 
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 
 /**
- * Represents a stock item. @XmlRootElement is used to support xml conversion.
+ * Represents an Invoice item
  */
 @SuppressWarnings("unused")
-@XmlRootElement
 public class Invoice {
 
     private String id;
@@ -33,7 +32,7 @@ public class Invoice {
     private Date date;
 
     /**
-     * No arg constructor is required for xml marshalling
+     * No arg constructor is required for marshalling
      */
     public Invoice() {
     }

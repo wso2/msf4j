@@ -13,43 +13,40 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package org.wso2.msf4j.example;
+package org.wso2.msf4j.client;
 
 import feign.Client;
 import feign.Request;
 import feign.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.msf4j.analytics.tracing.TraceEvent;
-import org.wso2.msf4j.analytics.tracing.TracingConstants;
-import org.wso2.msf4j.analytics.tracing.TracingEventTracker;
-import org.wso2.msf4j.analytics.tracing.TracingUtil;
+import org.wso2.msf4j.analytics.common.tracing.TraceEvent;
+import org.wso2.msf4j.analytics.common.tracing.TracingConstants;
+import org.wso2.msf4j.analytics.common.tracing.TracingEventTracker;
+import org.wso2.msf4j.analytics.common.tracing.TracingUtil;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
-class FeignTracingClient extends Client.Default {
+/**
+ * Supports tracing capabilities with WSO2DAS
+ */
+class FeignTracingClient implements Client {
     private static final Logger log = LoggerFactory.getLogger(FeignTracingClient.class);
-    private String instanceId;
-    private String instanceName;
-    private String dasUrl;
+    private final String instanceId;
+    private final String instanceName;
+    private final String dasUrl;
+    private final Client clientDelegate;
 
     /**
      * Constructor of FeignTracingClient.
      */
-    public FeignTracingClient(String instanceName) {
-        this(instanceName, TracingConstants.DAS_RECEIVER_URL);
-    }
-
-    /**
-     * Constructor of FeignTracingClient.
-     *
-     * @param dasReceiverUrl URL of the receiver of DAS server
-     */
-    public FeignTracingClient(String instanceName, String dasReceiverUrl) {
-        this(null, null, instanceName, dasReceiverUrl);
+    public FeignTracingClient(Client client, String instanceName) {
+        this(client, instanceName, TracingConstants.DAS_RECEIVER_URL);
     }
 
     /**
@@ -57,19 +54,18 @@ class FeignTracingClient extends Client.Default {
      *
      * @param dasReceiverUrl URL of the receiver of DAS server
      */
-    public FeignTracingClient(SSLSocketFactory sslContextFactory, HostnameVerifier hostnameVerifier,
-                              String instanceName, String dasReceiverUrl) {
-        super(sslContextFactory, hostnameVerifier);
+    public FeignTracingClient(Client client, String instanceName, String dasReceiverUrl) {
         this.instanceName = instanceName;
         this.dasUrl = dasReceiverUrl;
         this.instanceId = TracingUtil.generateUniqueId();
+        this.clientDelegate = client;
     }
 
     @Override
     public Response execute(Request request, Request.Options options) throws IOException {
         TraceEvent clientStartTraceEvent = generateClientStartTraceEvent(request);
         Request traceableRequest = tracePreRequest(request, clientStartTraceEvent);
-        Response response = super.execute(traceableRequest, options);
+        Response response = clientDelegate.execute(traceableRequest, options);
         tracePostRequest(response, clientStartTraceEvent);
         return response;
     }

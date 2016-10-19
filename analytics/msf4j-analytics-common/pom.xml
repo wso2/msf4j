@@ -14,7 +14,8 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -25,37 +26,17 @@
         <relativePath>../../poms/parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>msf4j-analytics</artifactId>
+    <artifactId>msf4j-analytics-common</artifactId>
     <packaging>bundle</packaging>
 
-    <name>WSO2 MSF4J Analytics</name>
-    <description>WSO2 MSF4J Analytics</description>
+    <name>WSO2 MSF4J Analytics Common</name>
+    <description>WSO2 MSF4J Analytics Common</description>
     <url>https://github.com/wso2/msf4j</url>
 
     <dependencies>
         <dependency>
             <groupId>org.wso2.msf4j</groupId>
             <artifactId>msf4j-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.metrics</groupId>
-            <artifactId>org.wso2.carbon.metrics.core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.metrics</groupId>
-            <artifactId>org.wso2.carbon.metrics.jdbc.core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.metrics</groupId>
-            <artifactId>org.wso2.carbon.metrics.das.core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.metrics</groupId>
-            <artifactId>org.wso2.carbon.metrics.config</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.msf4j</groupId>
-            <artifactId>msf4j-analytics-common</artifactId>
         </dependency>
         <dependency>
             <groupId>org.testng</groupId>
@@ -229,16 +210,9 @@
             org.wso2.msf4j.analytics.*;version="${msf4j.version}"
         </export.package>
         <import.package>
-            javax.annotation.*,
             org.slf4j.*;version="${slf4j.version.range}",
-            org.apache.commons.beanutils.*;version="${beanutils.version.range}",
             org.osgi.framework.*;version="${osgi.framework.import.version.range}",
             org.osgi.util.tracker; version="${osgi.service.tracker.import.version.range}",
-            org.wso2.carbon.kernel.utils.*;version="${carbon.kernel.version.range}",
-            org.wso2.carbon.metrics.core.*;version="${carbon.metrics.version.range}",
-            org.wso2.carbon.kernel.startupresolver.*;version="${carbon.kernel.version.range}",
-            org.wso2.msf4j.*,
-            org.wso2.msf4j.util.*,
             javax.ws.rs.*,
         </import.package>
         <carbon.component>

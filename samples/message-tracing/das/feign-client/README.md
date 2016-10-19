@@ -22,10 +22,6 @@ Add the msf4j tracing and Open Feign dependencies to the pom of you MSF4J servic
         <!-- Feign -->
         <dependency>
             <groupId>io.github.openfeign</groupId>
-            <artifactId>feign-httpclient</artifactId>            
-        </dependency>
-        <dependency>
-            <groupId>io.github.openfeign</groupId>
             <artifactId>feign-core</artifactId>            
         </dependency>
         <dependency>

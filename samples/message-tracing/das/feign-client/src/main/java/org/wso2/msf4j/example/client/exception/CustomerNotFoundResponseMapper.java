@@ -13,15 +13,24 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package org.wso2.msf4j.example;
+package org.wso2.msf4j.example.client.exception;
 
-import feign.Response;
-import feign.codec.ErrorDecoder;
-import org.wso2.msf4j.example.exception.ClientException;
+import org.wso2.msf4j.client.codec.RestErrorResponseMapper;
 
-public class ClientErrorDecoder implements ErrorDecoder {
+/**
+ * RestErrorResponseMapper which maps REST service response error to CustomerNotFoundRestServiceException
+ */
+public class CustomerNotFoundResponseMapper extends RestErrorResponseMapper<CustomerNotFoundRestServiceException> {
+
+    public static final String ERROR_CODE = "30001";
+
     @Override
-    public Exception decode(String methodKey, Response response) {
-        return new ClientException(methodKey, response);
+    public String getExceptionKey() {
+        return ERROR_CODE;
+    }
+
+    @Override
+    public Class<CustomerNotFoundRestServiceException> getExceptionClass() {
+        return CustomerNotFoundRestServiceException.class;
     }
 }
