@@ -12,8 +12,8 @@ In increasing order of complexity;
 * [Hello World](helloworld) - Running a basic Microservice
 * [Spring Hello World](spring-helloworld) - Running a basic Microservice using the Spring framework  
 * [Session-aware Service](http-session) - Shows how to use HTTP sessions in services 
-* [StockQuote (Fat jar)](stockquote/stockquote-fatjar) - Developing a Microservice as a single jar which packs all the dependencies
-* [StockQuote (OSGi bundle)](stockquote/stockquote-bundle) - Creating a Microservice as an OSGi Bundle
+* [StockQuote (Fat jar)](stockquote/fatjar) - Developing a Microservice as a single jar which packs all the dependencies
+* [StockQuote (OSGi bundle)](stockquote/bundle) - Creating a Microservice as an OSGi Bundle
 * [Lifecycle](lifecycle) - Using Service Lifecycle Methods
 * [Metrics](metrics) - Using Metrics Interceptor
 * [HTTP Monitoring](http-monitoring) - Using HTTP Monitoring Interceptor

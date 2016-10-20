@@ -27,7 +27,7 @@
                                 <artifactItem>
                                     <groupId>org.wso2.msf4j</groupId>
                                     <artifactId>sso-agent-sample-webapp</artifactId>
-                                    <version>1.0.0</version>
+                                    <version>${project.version}</version>
                                     <type>war</type>
                                     <destFileName>travelocity.com.war</destFileName>
                                 </artifactItem>
