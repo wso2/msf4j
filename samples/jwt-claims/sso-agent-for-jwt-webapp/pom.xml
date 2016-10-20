@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.wso2.msf4j</groupId>
-    <artifactId>sso-agent-sample</artifactId>
+    <artifactId>sso-agent-sample-webapp</artifactId>
     <version>1.0.0</version>
     <packaging>war</packaging>
     <name>Travelocity.COM ServiceProvider / RelyingParty Webapp</name>
