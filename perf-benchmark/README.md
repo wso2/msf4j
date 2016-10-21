@@ -19,7 +19,7 @@ each concurrency level is calculated and plotted for each framework.
 ![EchoThroughput](graphs/echotps.png) 
 ![FileEchoThroughput](graphs/fileechotps.png) 
 
-All services were run out of the box without any tuning separately on a 32 core 64GB server in JVM v1.8.0_60 with default configuration.
+All services were run out of the box without any tuning separately on a 16 core 24GB server in JVM v1.8.0_51 with default configuration.
 
 ### Performing the throughput test
 
@@ -72,7 +72,7 @@ Latency was measured using apache bench output. These values were plotted for ea
 **Note**
 Due to higher latency values, some of the framework are been removed from the charts.
 
-![MeanLatency](graphs/meanlatencysmall.png)
+![MeanLatency](graphs/meanlatency.png)
 ![MedianLatency](graphs/medianlatency.png)
 ![90thPercentilLatency](graphs/90thpercentile.png)
 ![95thPercentilLatency](graphs/95thpercentile.png)
@@ -85,8 +85,12 @@ Run the perf test samples one at a time and execute the run-latency.sh script.
 ./run-latency.sh   service-url
 ```
 e.g.
+```
 ./run-latency.sh http://localhost:8080/EchoService/echo
+```
 This will output the latency results to a latency-results.csv file. If you want to create seperate file you can pass the file suffix as 2nd parameter
 e.g.
+```
 ./run-latency.sh http://localhost:8080/EchoService/echo msf4j
+```
 This will output the latency results to a latency-results-msf4j.csv
