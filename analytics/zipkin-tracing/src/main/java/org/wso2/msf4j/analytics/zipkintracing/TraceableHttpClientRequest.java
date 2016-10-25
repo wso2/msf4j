@@ -19,33 +19,40 @@
 package org.wso2.msf4j.analytics.zipkintracing;
 
 import com.github.kristofa.brave.http.HttpClientRequest;
+import feign.Request;
 
 import java.net.URI;
-import javax.ws.rs.client.ClientRequestContext;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Adaptor class for client side request object tracing
  */
-class TraceableHttpClientRequest implements HttpClientRequest {
+public class TraceableHttpClientRequest implements HttpClientRequest {
 
-    private final ClientRequestContext request;
+    private final Request request;
 
-    TraceableHttpClientRequest(ClientRequestContext request) {
+    public TraceableHttpClientRequest(Request request) {
         this.request = request;
     }
 
     @Override
     public void addHeader(String header, String value) {
-        request.getHeaders().putSingle(header, value);
+        Collection<String> existingValues = request.headers().get(header);
+        if (existingValues == null) {
+            existingValues = new ArrayList<>();
+        }
+        existingValues.add(value);
+        request.headers().put(header, existingValues);
     }
 
     @Override
     public URI getUri() {
-        return request.getUri();
+        return URI.create(request.url());
     }
 
     @Override
     public String getHttpMethod() {
-        return request.getMethod();
+        return request.method();
     }
 }

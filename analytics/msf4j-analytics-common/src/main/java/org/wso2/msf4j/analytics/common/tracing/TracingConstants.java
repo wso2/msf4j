@@ -30,5 +30,13 @@ public class TracingConstants {
     public static final String TRACE_ID_HEADER = "X-msf4j-trace-id";
     public static final String TRACE_ORIGIN_ID_HEADER = "X-msf4j-trace-origin-id";
     public static final String DAS_RECEIVER_URL = "http://localhost:9763/endpoints/msf4jtracereceiver";
+    public static final String DEFAULT_ZIPKIN_URL = "http://0.0.0.0:9411";
+
+    /**
+     * Tracing Types.
+     */
+    public enum TracingType {
+        DAS, ZIPKIN
+    }
 
 }

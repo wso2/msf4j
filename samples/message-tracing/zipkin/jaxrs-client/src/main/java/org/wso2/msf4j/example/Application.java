@@ -17,7 +17,7 @@
 package org.wso2.msf4j.example;
 
 import org.wso2.msf4j.MicroservicesRunner;
-import org.wso2.msf4j.analytics.zipkintracing.MSF4JTracingInterceptor;
+import org.wso2.msf4j.analytics.zipkintracing.MSF4JZipkinTracingInterceptor;
 
 /**
  * Application entry point.
@@ -26,7 +26,7 @@ public class Application {
     public static void main(String[] args) {
 
         new MicroservicesRunner()
-                .addInterceptor(new MSF4JTracingInterceptor("Traceable-service"))
+                .addInterceptor(new MSF4JZipkinTracingInterceptor("Traceable-service"))
                 .deploy(new TraceableService())
                 .start();
     }

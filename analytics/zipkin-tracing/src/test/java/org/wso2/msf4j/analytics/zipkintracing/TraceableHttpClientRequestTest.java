@@ -1,34 +1,36 @@
 package org.wso2.msf4j.analytics.zipkintracing;
 
 import com.github.kristofa.brave.http.HttpClientRequest;
+import feign.Request;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.msf4j.delegates.client.MSF4JClientRequestContext;
 
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.nio.charset.Charset;
+import java.util.HashMap;
 import javax.ws.rs.HttpMethod;
-import javax.ws.rs.client.ClientRequestContext;
 
 /**
  * Class for testing TraceableHttpClient.
  */
 public class TraceableHttpClientRequestTest extends Assert {
 
-    private ClientRequestContext clientRequestContext;
+    private Request request;
     private HttpClientRequest httpRequest;
 
     @BeforeClass
-    public void setUp() {
-        clientRequestContext = new MSF4JClientRequestContext(null, URI.create("msf4j"));
-        clientRequestContext.setMethod(HttpMethod.GET);
-        httpRequest = new TraceableHttpClientRequest(clientRequestContext);
+    public void setUp() throws MalformedURLException {
+        request = Request.create(HttpMethod.GET, URI.create("msf4j").toString(), new HashMap<>(), null,
+                                 Charset.defaultCharset());
+        httpRequest = new TraceableHttpClientRequest(request);
     }
 
     @Test
     public void testAddHeader() {
         httpRequest.addHeader("testK", "testV");
-        assertEquals(clientRequestContext.getHeaders().getFirst("testK"), "testV");
+        assertTrue(request.headers().get("testK").contains("testV"));
     }
 
     @Test

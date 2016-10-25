@@ -140,7 +140,6 @@
         <module>samples/jpa</module>
         <module>samples/circuitbreaker</module>
         <module>samples/regex-pathparam</module>
-        <module>samples/message-tracing/das/jaxrs-client</module>
         <module>samples/message-tracing/das/feign-client</module>
         <module>samples/message-tracing/zipkin/jaxrs-client</module>
         <module>samples/subresource</module>

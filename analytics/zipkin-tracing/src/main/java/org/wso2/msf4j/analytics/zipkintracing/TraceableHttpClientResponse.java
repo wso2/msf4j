@@ -19,22 +19,21 @@
 package org.wso2.msf4j.analytics.zipkintracing;
 
 import com.github.kristofa.brave.http.HttpResponse;
-
-import javax.ws.rs.client.ClientResponseContext;
+import feign.Response;
 
 /**
  * Adaptor class for client side response object tracing
  */
-class TraceableHttpClientResponse implements HttpResponse {
+public class TraceableHttpClientResponse implements HttpResponse {
 
-    private final ClientResponseContext response;
+    private final Response response;
 
-    TraceableHttpClientResponse(ClientResponseContext response) {
+    public TraceableHttpClientResponse(Response response) {
         this.response = response;
     }
 
     @Override
     public int getHttpStatusCode() {
-        return response.getStatus();
+        return response.status();
     }
 }

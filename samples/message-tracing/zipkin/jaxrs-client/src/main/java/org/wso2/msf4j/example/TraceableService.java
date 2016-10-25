@@ -16,13 +16,13 @@
 
 package org.wso2.msf4j.example;
 
-import org.wso2.msf4j.analytics.zipkintracing.MSF4JClientTracingFilter;
+import org.wso2.msf4j.analytics.common.tracing.TracingConstants;
+import org.wso2.msf4j.client.MSF4JClient;
+import org.wso2.msf4j.client.codec.MSF4JDecoder;
 
 import java.util.Random;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 
 /**
  * TraceableService resource class.
@@ -32,17 +32,21 @@ public class TraceableService {
 
     final private Random random = new Random();
 
+    private MSF4JClient<TraceableServiceInterface> client = new MSF4JClient.Builder<TraceableServiceInterface>()
+            .apiClass(TraceableServiceInterface.class)
+            .enableTracing()
+            .decoder(new MSF4JDecoder())
+            .tracingType(TracingConstants.TracingType.ZIPKIN)
+            .instanceName("TraceableServiceClient")
+            .analyticsEndpoint("http://localhost:9411")
+            .serviceEndpoint("http://localhost:8080")
+            .build();
+
     @GET
     @Path("/aaaa")
     public String aaaaEndpoint() throws InterruptedException {
-        Client client = ClientBuilder.newClient()
-                .register(new MSF4JClientTracingFilter("Client-A"));
-        String responseB = client.target("http://0.0.0.0:8080").path("service/bbbb").request()
-                .get()
-                .getEntity().toString();
-        String responseC = client.target("http://0.0.0.0:8080").path("service/cccc").request()
-                .get()
-                .getEntity().toString();
+        String responseB = client.api().bbbbEndpoint();
+        String responseC = client.api().ccccEndpoint();
         Thread.sleep(random.nextInt(1000));
         return "aaaa-res:" + responseB + ":" + responseC;
     }
@@ -50,14 +54,8 @@ public class TraceableService {
     @GET
     @Path("/bbbb")
     public String bbbbEndpoint() throws InterruptedException {
-        Client client = ClientBuilder.newClient()
-                .register(new MSF4JClientTracingFilter("Client-B"));
-        String responseD = client.target("http://0.0.0.0:8080").path("service/dddd").request()
-                .get()
-                .getEntity().toString();
-        String responseE = client.target("http://0.0.0.0:8080").path("service/eeee").request()
-                .get()
-                .getEntity().toString();
+        String responseD = client.api().ddddEndpoint();
+        String responseE = client.api().eeeeEndpoint();
         Thread.sleep(random.nextInt(1000));
         return "bbbb-res:" + responseD + ":" + responseE;
     }
@@ -65,11 +63,7 @@ public class TraceableService {
     @GET
     @Path("/cccc")
     public String ccccEndpoint() throws InterruptedException {
-        String responseF = ClientBuilder.newClient()
-                .register(new MSF4JClientTracingFilter("Client-C"))
-                .target("http://0.0.0.0:8080").path("service/ffff").request()
-                .get()
-                .getEntity().toString();
+        String responseF = client.api().ffffEndpoint();
         Thread.sleep(random.nextInt(1000));
         return "cccc-res:" + responseF;
     }
@@ -91,13 +85,9 @@ public class TraceableService {
     @GET
     @Path("/ffff")
     public String ffffEndpoint() throws InterruptedException {
-        String responseG = ClientBuilder.newClient()
-                .register(new MSF4JClientTracingFilter("Client-F"))
-                .target("http://0.0.0.0:8080").path("service/gggg").request()
-                .get()
-                .getEntity().toString();
+        //String responseG = client.api().ggggEndpoint();
         Thread.sleep(random.nextInt(1000));
-        return "ffff-res:" + responseG;
+        return "ffff-res:" /*+ responseG*/;
     }
 
     @GET

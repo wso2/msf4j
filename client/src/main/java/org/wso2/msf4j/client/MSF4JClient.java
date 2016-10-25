@@ -21,6 +21,8 @@ package org.wso2.msf4j.client;
 import feign.Client;
 import feign.Feign;
 import feign.RequestInterceptor;
+import feign.codec.Decoder;
+import feign.codec.Encoder;
 import feign.codec.ErrorDecoder;
 import feign.gson.GsonDecoder;
 import feign.gson.GsonEncoder;
@@ -31,6 +33,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.kernel.utils.StringUtils;
+import org.wso2.msf4j.analytics.common.tracing.TracingConstants;
 import org.wso2.msf4j.client.codec.DefaultErrorDecoder;
 import org.wso2.msf4j.client.codec.RestErrorResponseMapper;
 import org.wso2.msf4j.client.exception.RestServiceException;
@@ -80,17 +83,20 @@ public class MSF4JClient<T> {
         private boolean decode404;
         private Class<T> apiClass;
         private ErrorDecoder errorDecoder = new DefaultErrorDecoder(errorCodeExceptionMap);
+        private Encoder encoder = new GsonEncoder(ModelUtils.GSON);
+        private Decoder decoder = new GsonDecoder(ModelUtils.GSON);
+        private TracingConstants.TracingType tracingType = TracingConstants.TracingType.DAS;
 
         public Feign.Builder newFeignClientBuilder() {
             return Feign.builder()
-                    .encoder(new GsonEncoder(ModelUtils.GSON))
-                    .decoder(new GsonDecoder(ModelUtils.GSON));
+                    .encoder(encoder)
+                    .decoder(decoder);
         }
 
         public HystrixFeign.Builder newHystrixFeignClientBuilder() {
             return HystrixFeign.builder()
-                    .encoder(new GsonEncoder(ModelUtils.GSON))
-                    .decoder(new GsonDecoder(ModelUtils.GSON));
+                    .encoder(encoder)
+                    .decoder(decoder);
         }
 
         /**
@@ -156,6 +162,21 @@ public class MSF4JClient<T> {
             return this;
         }
 
+        public MSF4JClient.Builder<T> encoder(Encoder encoder) {
+            this.encoder = encoder;
+            return this;
+        }
+
+        public MSF4JClient.Builder<T> decoder(Decoder decoder) {
+            this.decoder = decoder;
+            return this;
+        }
+
+        public MSF4JClient.Builder<T> tracingType(TracingConstants.TracingType tracingType) {
+            this.tracingType = tracingType;
+            return this;
+        }
+
         public MSF4JClient.Builder<T> addErrorResponseMapper(RestErrorResponseMapper... responseMappers) {
             Arrays.stream(responseMappers).forEach(rm -> {
                 Arrays.stream(rm.getClass().getMethods()).
@@ -202,8 +223,15 @@ public class MSF4JClient<T> {
                     .build();
 
             if (enableTracing) {
-                client = new FeignClientWrapper(new FeignTracingClient(new ApacheHttpClient(apacheHttpClient),
-                        instanceName, analyticsEndpoint));
+                if (tracingType == TracingConstants.TracingType.ZIPKIN) {
+                    client = new FeignClientWrapper(
+                            new FeginZipkinTracingClient(new ApacheHttpClient(apacheHttpClient), instanceName,
+                                                         analyticsEndpoint));
+                } else {
+                    client = new FeignClientWrapper(
+                            new FeignTracingClient(new ApacheHttpClient(apacheHttpClient), instanceName,
+                                                   analyticsEndpoint));
+                }
             } else {
                 client = new FeignClientWrapper(new ApacheHttpClient(apacheHttpClient));
             }

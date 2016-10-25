@@ -30,11 +30,12 @@ import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.ServiceMethodInfo;
+import org.wso2.msf4j.analytics.common.tracing.TracingConstants;
 
 /**
- * Interceptor for tracing server side request/response flows.
+ * Interceptor for tracing server side request/response flows to Zipkin.
  */
-public class MSF4JTracingInterceptor implements Interceptor {
+public class MSF4JZipkinTracingInterceptor implements Interceptor {
 
     private final ServerRequestInterceptor reqInterceptor;
     private final ServerResponseInterceptor respInterceptor;
@@ -45,8 +46,8 @@ public class MSF4JTracingInterceptor implements Interceptor {
      *
      * @param microServiceName Name of the Microservice
      */
-    public MSF4JTracingInterceptor(String microServiceName) {
-        this(microServiceName, ZipkinConstants.DEFAULT_ZIPKIN_URL);
+    public MSF4JZipkinTracingInterceptor(String microServiceName) {
+        this(microServiceName, TracingConstants.DEFAULT_ZIPKIN_URL);
     }
 
     /**
@@ -55,7 +56,7 @@ public class MSF4JTracingInterceptor implements Interceptor {
      * @param microServiceName Name of the Microservice
      * @param zipkinUrl        Base URL of the Zipkin server
      */
-    public MSF4JTracingInterceptor(String microServiceName, String zipkinUrl) {
+    public MSF4JZipkinTracingInterceptor(String microServiceName, String zipkinUrl) {
         Brave.Builder builder = new Brave.Builder(microServiceName);
         builder.spanCollector(HttpSpanCollector.create(zipkinUrl, new EmptySpanCollectorMetricsHandler()));
         Brave brave = builder.build();
