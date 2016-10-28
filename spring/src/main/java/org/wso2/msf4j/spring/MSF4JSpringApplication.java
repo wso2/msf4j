@@ -65,6 +65,7 @@ public class MSF4JSpringApplication {
             this.source = source;
         }
         setInitializers((Collection) getSpringFactoriesInstances(ApplicationContextInitializer.class));
+        //TODO need to load config through support application.yml file
         addInitializers(new YamlFileApplicationContextInitializer());
     }
 
