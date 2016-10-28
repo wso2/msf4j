@@ -88,7 +88,12 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             }
             microservicesRegistry.addService(service);
         } else {
-            microservicesRegistries.values().forEach(registry -> registry.addService(service));
+            if (contextPath == null) {
+                microservicesRegistries.values().forEach(registry -> registry.addService(service));
+            } else {
+                microservicesRegistries.values()
+                                       .forEach(registry -> registry.addService(contextPath.toString(), service));
+            }
         }
     }
 
