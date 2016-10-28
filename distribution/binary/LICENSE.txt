@@ -74,7 +74,7 @@ org.wso2.carbon.databridge.commons.binary.5.0.11.jar                            
 org.wso2.carbon.databridge.commons.thrift.5.0.11.jar                            bundle        apache2
 org.wso2.carbon.kernel.feature.5.1.0.jar                                        carbon-feature   apache2
 org.wso2.carbon.launcher.5.1.0.jar                                              jar           apache2
-org.wso2.carbon.messaging.1.0.4.jar                                             bundle        apache2
+org.wso2.carbon.messaging.1.0.6.jar                                             bundle        apache2
 org.wso2.carbon.metrics.config.2.0.0.jar                                        jar           apache2
 org.wso2.carbon.metrics.core.2.0.0.jar                                          bundle        apache2
 org.wso2.carbon.metrics.das.core.2.0.0.jar                                      bundle        apache2
@@ -83,7 +83,7 @@ org.wso2.carbon.metrics.jdbc.core.2.0.0.jar                                     
 org.wso2.carbon.metrics.jdbc.reporter.2.0.0.jar                                 bundle        apache2
 org.wso2.carbon.runtime.feature.5.1.0.jar                                       carbon-feature   apache2
 org.wso2.carbon.tools.core.5.1.0.jar                                            jar           apache2
-org.wso2.carbon.transport.http.netty.2.1.1.jar                                  bundle        apache2
+org.wso2.carbon.transport.http.netty.2.1.4.jar                                  bundle        apache2
 pax-logging-api.1.8.5.jar                                                       bundle        alv2
 pax-logging-log4j2.1.8.5.jar                                                    bundle        alv2
 reflections.0.9.10.jar                                                          jar           wtfpl+bsd

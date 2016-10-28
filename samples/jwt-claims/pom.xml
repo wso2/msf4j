@@ -14,7 +14,7 @@
     <modules>
         <module>sso-agent-for-jwt-webapp</module>
         <module>jwt-sample</module>
-        <module>sso-agent-sample</module>
+        <!--<module>sso-agent-sample</module>-->
         <module>JWTAccessTokenBuilder</module>
     </modules>
 
