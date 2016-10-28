@@ -37,8 +37,10 @@ libthrift.0.8.0.wso2v1.jar                                                      
 log4j.1.2.14.jar                                                                jar           apache2
 metrics-core.3.1.2.jar                                                          bundle        apache2
 metrics-jvm.3.1.2.jar                                                           bundle        apache2
-msf4j-analytics.2.0.0.jar                                                       bundle        apache2
-msf4j-core.2.0.0.jar                                                            bundle        apache2
+msf4j-analytics.2.1.0.jar                                                       bundle        apache2
+msf4j-analytics-common_2.1.0.jar                                                bundle        apache2
+msf4j-core.2.1.0.jar                                                            bundle        apache2
+msf4j-swagger.2.1.0.jar                                                         bundle        apache2
 netty-buffer.4.0.30.final.jar                                                   jar           apache2
 netty-codec-http.4.0.30.final.jar                                               jar           apache2
 netty-codec.4.0.30.final.jar                                                    jar           apache2
