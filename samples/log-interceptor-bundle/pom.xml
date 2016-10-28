@@ -50,6 +50,7 @@
             org.osgi.framework.*;version="${osgi.framework.import.version.range}",
             org.wso2.msf4j.*,
             org.slf4j.*,
+            org.wso2.carbon.messaging,
         </import.package>
         <carbon.component>
             osgi.service;objectClass="org.wso2.msf4j.Interceptor"
