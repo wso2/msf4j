@@ -21,16 +21,7 @@ import org.wso2.msf4j.spring.transport.HTTPTransportConfig;
 
 @Configuration
 public class TransportConfig {
-    private String greeting;
-
-    public String getGreeting() {
-        return greeting;
-    }
-
-    public void setGreeting(String greeting) {
-        this.greeting = greeting;
-    }
-
+    
     @Bean
     public HTTPTransportConfig http() {
         return new HTTPTransportConfig(6060);

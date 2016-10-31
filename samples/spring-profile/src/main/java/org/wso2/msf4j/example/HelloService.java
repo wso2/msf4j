@@ -15,7 +15,6 @@
 */
 package org.wso2.msf4j.example;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -27,5 +26,4 @@ public class HelloService {
     public String hello(String name) {
         return "Hello " + name;
     }
-
 }
