@@ -22,13 +22,13 @@
     <parent>
         <groupId>org.wso2.msf4j</groupId>
         <artifactId>msf4j-service</artifactId>
-        <version>2.1.0</version>
+        <version>2.1.1-SNAPSHOT</version>
         <relativePath>../../../poms/msf4j-service/pom.xml</relativePath>
     </parent>
 
     <groupId>org.wso2.msf4j.perftest.echo</groupId>
     <artifactId>wso2msf4j-echo-message</artifactId>
-    <version>2.1.0</version>
+    <version>2.1.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>WSO2 MSF4J Microservice benchmark service</name>

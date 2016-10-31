@@ -27,13 +27,13 @@
     <groupId>org.wso2.msf4j</groupId>
     <artifactId>msf4j</artifactId>
     <packaging>pom</packaging>
-    <version>2.1.0</version>
+    <version>2.1.1-SNAPSHOT</version>
 
     <scm>
         <url>https://github.com/wso2/msf4j.git</url>
         <developerConnection>scm:git:https://github.com/wso2/msf4j.git</developerConnection>
         <connection>scm:git:https://github.com/wso2/msf4j.git</connection>
-        <tag>v2.1.0-rc3</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <developers>

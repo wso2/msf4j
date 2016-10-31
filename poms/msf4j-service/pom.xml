@@ -20,7 +20,7 @@
     <groupId>org.wso2.msf4j</groupId>
     <artifactId>msf4j-service</artifactId>
     <packaging>pom</packaging>
-    <version>2.1.0</version>
+    <version>2.1.1-SNAPSHOT</version>
 
     <name>MSF4J-Parent</name>
 
@@ -151,7 +151,7 @@
         <connection>scm:git:https://github.com/wso2/carbon-parent.git</connection>
         <url>https://github.com/wso2/carbon-parent.git</url>
         <developerConnection>scm:git:https://github.com/wso2/carbon-parent.git</developerConnection>
-        <tag>v2.1.0-rc3</tag>
+        <tag>carbon-parent-4</tag>
     </scm>
 
     <build>
@@ -574,7 +574,7 @@
         <!-- Other dependency versions -->
         <maven.wagon.ssh.version>2.10</maven.wagon.ssh.version>
 
-        <msf4j.version>2.1.0</msf4j.version>
+        <msf4j.version>2.1.1-SNAPSHOT</msf4j.version>
 
         <wso2.maven.compiler.source>1.8</wso2.maven.compiler.source>
         <wso2.maven.compiler.target>1.8</wso2.maven.compiler.target>
