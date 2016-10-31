@@ -42,7 +42,7 @@ public class SpringHttpServerTest extends HttpServerTest {
     public void setup() throws Exception {
         baseURI = URI.create(String.format("http://%s:%d", Constants.HOSTNAME, port));
         MSF4JSpringApplication msf4JSpringApplication = new MSF4JSpringApplication(SpringHttpServerTest.class);
-        configurableApplicationContexts.add(msf4JSpringApplication.run("--http.port=8090"));
+        configurableApplicationContexts.add(msf4JSpringApplication.run(true, "--http.port=8090"));
         configurableApplicationContexts.add(MSF4JSpringApplication.run(SecondService.class, "--http.port=8091"));
         msf4JSpringApplication.addService(configurableApplicationContexts.get(1), TestMicroServiceWithDynamicPath.class,
                                           "/DynamicPath");

@@ -65,7 +65,6 @@ public class MSF4JSpringApplication {
             this.source = source;
         }
         setInitializers((Collection) getSpringFactoriesInstances(ApplicationContextInitializer.class));
-        //TODO need to load config through support application.yml file
         addInitializers(new YamlFileApplicationContextInitializer());
     }
 
@@ -116,8 +115,9 @@ public class MSF4JSpringApplication {
 
     public static ConfigurableApplicationContext run(Class sources, String... args) {
         MSF4JSpringApplication application = new MSF4JSpringApplication(sources);
-        ConfigurableApplicationContext context = application.run(args);
+        ConfigurableApplicationContext context = application.run(false, args);
         application.applyInitializers(context);
+        context.refresh();
         return context;
     }
 
@@ -130,7 +130,7 @@ public class MSF4JSpringApplication {
         }
     }
 
-    protected ConfigurableApplicationContext run(String... args) {
+    protected ConfigurableApplicationContext run(boolean doRefresh, String... args) {
         ConfigurableApplicationContext context = createApplicationContext();
         if (configurationClass != null) {
             registerIfAnnotationConfigApplicationContext(context);
@@ -140,7 +140,9 @@ public class MSF4JSpringApplication {
 
         context.getEnvironment().getPropertySources().addFirst(new SimpleCommandLinePropertySource(args));
 
-        context.refresh();
+        if (doRefresh) {
+            context.refresh();
+        }
         return context;
     }
 

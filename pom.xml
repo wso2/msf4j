@@ -141,6 +141,7 @@
         <module>samples/regex-pathparam</module>
         <module>samples/message-tracing</module>
         <module>samples/subresource</module>
+        <module>samples/spring-profile</module>
 
         <module>perf-benchmark/Samples/wso2msf4j</module>
         <module>features/feature-test</module>
