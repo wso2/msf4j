@@ -72,7 +72,7 @@
         <hr/>
     </div>
     <div id="footer-area">
-        <p>©2015 WSO2</p>
+        <p>©2016 WSO2</p>
     </div>
 </div>
 </body>

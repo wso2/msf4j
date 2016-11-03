@@ -25,12 +25,4 @@ limitations under the License.
         </classes>
     </test>
 
-    <test name="jax-rs-client-delegates-unit-tests" preserve-order="true" parallel="false">
-        <classes>
-            <class name="org.wso2.msf4j.delegates.client.MSF4JClientBuilderTest"/>
-            <class name="org.wso2.msf4j.delegates.client.MSF4JClientTest"/>
-            <class name="org.wso2.msf4j.delegates.client.MSF4JWebTargetTest"/>
-        </classes>
-    </test>
-
 </suite>
