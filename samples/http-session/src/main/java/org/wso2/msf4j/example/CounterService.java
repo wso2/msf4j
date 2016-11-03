@@ -26,7 +26,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 
 /**
- * Session-aware counter service which counts & returns the number of requests from each session.
+ * Session-aware counter service which counts &amp; returns the number of requests from each session.
  */
 @Path("/")
 public class CounterService {
