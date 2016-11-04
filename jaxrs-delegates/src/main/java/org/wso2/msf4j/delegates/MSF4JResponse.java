@@ -18,6 +18,7 @@ package org.wso2.msf4j.delegates;
 
 import java.lang.annotation.Annotation;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -35,6 +36,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Variant;
+import javax.ws.rs.ext.RuntimeDelegate;
 
 /**
  * Trimmed MSF4J implementation of javax.ws.rs.core.Response.
@@ -66,7 +68,22 @@ public class MSF4JResponse extends Response {
 
     @Override
     public StatusType getStatusInfo() {
-        throw new UnsupportedOperationException();
+        return new Response.StatusType() {
+
+            public Status.Family getFamily() {
+                return Response.Status.Family.familyOf(MSF4JResponse.this.status);
+            }
+
+            public String getReasonPhrase() {
+                Response.Status statusEnum = Response.Status.fromStatusCode(MSF4JResponse.this.status);
+                return statusEnum != null ? statusEnum.getReasonPhrase() : "";
+            }
+
+            public int getStatusCode() {
+                return MSF4JResponse.this.status;
+            }
+
+        };
     }
 
     @Override
