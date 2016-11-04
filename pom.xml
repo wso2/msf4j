@@ -139,8 +139,8 @@
         <module>samples/jpa</module>
         <module>samples/circuitbreaker</module>
         <module>samples/regex-pathparam</module>
-        <module>samples/message-tracing/das/feign-client</module>
-        <module>samples/message-tracing/zipkin/jaxrs-client</module>
+        <module>samples/message-tracing/das/</module>
+        <module>samples/message-tracing/zipkin/</module>
         <module>samples/subresource</module>
         <module>samples/spring-profile</module>
 

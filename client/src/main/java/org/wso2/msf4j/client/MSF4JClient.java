@@ -28,8 +28,9 @@ import feign.gson.GsonDecoder;
 import feign.gson.GsonEncoder;
 import feign.hystrix.FallbackFactory;
 import feign.hystrix.HystrixFeign;
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.kernel.utils.StringUtils;
@@ -217,10 +218,16 @@ public class MSF4JClient<T> {
         public MSF4JClient<T> build() {
             MSF4JClient<T> msf4JClient;
             Client client;
-            HttpClient apacheHttpClient = HttpClientBuilder.create()
-                    .setSSLContext(sslContext)
-                    .setSSLHostnameVerifier(hostnameVerifier)
-                    .build();
+
+            PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
+            cm.setMaxTotal(200);
+            cm.setDefaultMaxPerRoute(20);
+
+            CloseableHttpClient apacheHttpClient = HttpClients.custom()
+                                                              .setSSLContext(sslContext)
+                                                              .setSSLHostnameVerifier(hostnameVerifier)
+                                                              .setConnectionManager(cm)
+                                                              .build();
 
             if (enableTracing) {
                 if (tracingType == TracingConstants.TracingType.ZIPKIN) {

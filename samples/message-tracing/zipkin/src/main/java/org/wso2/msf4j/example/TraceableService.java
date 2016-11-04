@@ -85,9 +85,9 @@ public class TraceableService {
     @GET
     @Path("/ffff")
     public String ffffEndpoint() throws InterruptedException {
-        //String responseG = client.api().ggggEndpoint();
+        String responseG = client.api().ggggEndpoint();
         Thread.sleep(random.nextInt(1000));
-        return "ffff-res:" /*+ responseG*/;
+        return "ffff-res:" + responseG;
     }
 
     @GET
