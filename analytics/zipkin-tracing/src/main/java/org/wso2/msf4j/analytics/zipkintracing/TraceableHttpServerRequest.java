@@ -26,7 +26,7 @@ import java.net.URI;
 /**
  * Adaptor class for server side request object tracing
  */
-class TraceableHttpServerRequest implements HttpServerRequest {
+public class TraceableHttpServerRequest implements HttpServerRequest {
 
     private final Request req;
 

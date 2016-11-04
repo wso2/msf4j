@@ -24,7 +24,7 @@ import org.wso2.msf4j.Response;
 /**
  * Adaptor class for server side response object tracing
  */
-class TraceableHttpServerResponse implements HttpResponse {
+public class TraceableHttpServerResponse implements HttpResponse {
 
     private Response response;
 

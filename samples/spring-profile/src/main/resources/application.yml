@@ -1,0 +1,9 @@
+http.port: 10000
+---
+spring:
+ profiles: dev
+http.port: 15000
+---
+spring:
+ profiles: prod
+http.port: 20000

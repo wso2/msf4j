@@ -30,7 +30,7 @@ Here we use WSO2 Identity server as the authorization server.
 3) Add the following property in <IS_HOME>/repository/conf/identity/identity.xml under oauth tag:
 "\<IdentityOAuthTokenGenerator\>com.wso2.jwt.token.builder.JWTAccessTokenBuilder\</IdentityOAuthTokenGenerator\>"
 
-4) Using the sso-agent-sample/target/travelocity.com.war, configure the single sign-on web app as indicated in this
+4) Using the sso-agent-for-jwt-webapp/target/travelocity.com.war, configure the single sign-on web app as indicated in this
 document:
 [https://docs.wso2.com/display/IS520/Configuring+Single+Sign-On]
 (https://docs.wso2.com/display/IS520/Configuring+Single+Sign-On)

@@ -16,18 +16,13 @@
 
 package org.wso2.msf4j.example;
 
-import org.wso2.msf4j.MicroservicesRunner;
-import org.wso2.msf4j.analytics.zipkintracing.MSF4JZipkinTracingInterceptor;
+import feign.Param;
+import feign.RequestLine;
+import org.wso2.msf4j.client.test.client.exception.InvoiceNotFoundRestServiceException;
+import org.wso2.msf4j.client.test.model.Invoice;
 
-/**
- * Application entry point.
- */
-public class Application {
-    public static void main(String[] args) {
-
-        new MicroservicesRunner()
-                .addInterceptor(new MSF4JZipkinTracingInterceptor("Traceable-service"))
-                .deploy(new TraceableService())
-                .start();
-    }
+public interface InvoiceServiceAPI {
+    // Invoice service
+    @RequestLine("GET /invoice/{id}")
+    Invoice getInvoice(@Param("id") String id) throws InvoiceNotFoundRestServiceException;
 }
