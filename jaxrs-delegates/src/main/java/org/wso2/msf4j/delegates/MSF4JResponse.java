@@ -18,7 +18,6 @@ package org.wso2.msf4j.delegates;
 
 import java.lang.annotation.Annotation;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,6 +28,7 @@ import java.util.Set;
 import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
@@ -36,7 +36,6 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Variant;
-import javax.ws.rs.ext.RuntimeDelegate;
 
 /**
  * Trimmed MSF4J implementation of javax.ws.rs.core.Response.
@@ -142,7 +141,11 @@ public class MSF4JResponse extends Response {
 
     @Override
     public int getLength() {
-        return 0;
+        if (headers != null) {
+            String length = headers.getFirst(HttpHeaders.CONTENT_LENGTH);
+            return length == null ? -1 : Integer.parseInt(length);
+        }
+        return -1;
     }
 
     @Override
