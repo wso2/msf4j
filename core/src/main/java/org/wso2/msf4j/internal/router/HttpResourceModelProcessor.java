@@ -21,7 +21,6 @@ import org.apache.commons.io.FileDeleteStrategy;
 import org.wso2.msf4j.HttpStreamer;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
-import org.wso2.msf4j.beanconversion.BeanConversionException;
 import org.wso2.msf4j.beanconversion.MediaTypeConverter;
 import org.wso2.msf4j.formparam.FileInfo;
 import org.wso2.msf4j.formparam.FormDataParam;
@@ -264,7 +263,7 @@ public class HttpResourceModelProcessor {
             ByteBuffer value = ByteBuffer.wrap(parameter.get(0).toString().getBytes(Charset.defaultCharset()));
             return converter.convertToObject(value, paramType);
         }
-        throw new BeanConversionException("Content cannot be null");
+        return null;
     }
 
     private File createAndTrackTempFile(FormItem item) throws IOException {
