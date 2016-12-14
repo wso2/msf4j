@@ -151,6 +151,17 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <configuration>
+                        <archive>
+                            <manifestEntries>
+                                <Microservices>${microservice.resourceClasses}</Microservices>
+                            </manifestEntries>
+                        </archive>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-shade-plugin</artifactId>
                     <version>${maven.shadeplugin.version}</version>
                 </plugin>
@@ -189,6 +200,11 @@
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.launcher</artifactId>
                 <version>${carbon.kernel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.deployment</groupId>
+                <artifactId>org.wso2.carbon.deployment.engine</artifactId>
+                <version>${carbon.deployment.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.msf4j</groupId>
@@ -583,6 +599,8 @@
         <!-- Dependencies -->
         <carbon.kernel.version>5.1.0</carbon.kernel.version>
         <carbon.kernel.version.range>[5.0.0,6.0.0)</carbon.kernel.version.range>
+        <carbon.deployment.version>5.0.0</carbon.deployment.version>
+        <carbon.deployment.version.range>[5.0.0,6.0.0)</carbon.deployment.version.range>
         <carbon.messaging.version>1.0.6</carbon.messaging.version>
         <carbon.messaging.version.range>[1.0.4,2)</carbon.messaging.version.range>
         <org.wso2.carbon.transport.http.netty.version>2.1.4</org.wso2.carbon.transport.http.netty.version>
@@ -634,7 +652,7 @@
 
         <osgi.framework.import.version.range>[1.8.0, 2.0.0)</osgi.framework.import.version.range>
         <osgi.service.tracker.import.version.range>[1.5.1, 2.0.0)</osgi.service.tracker.import.version.range>
-        <carbon.feature.plugin.version>2.0.0</carbon.feature.plugin.version>
+        <carbon.feature.plugin.version>2.0.1</carbon.feature.plugin.version>
 
         <!-- Dependencies for OSGi PAX exam tests -->
         <!--PAX Logging related dependency versions-->

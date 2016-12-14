@@ -125,6 +125,11 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>resources</directory>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.wso2.carbon.maven</groupId>
@@ -256,6 +261,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.metrics.das.core.feature</id>
                                     <version>${carbon.metrics.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.deployment.engine.feature</id>
+                                    <version>${carbon.deployment.version}</version>
                                 </feature>
                             </importFeatures>
                         </configuration>
