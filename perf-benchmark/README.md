@@ -6,6 +6,8 @@ In this performance test, a sample echo service with 2 operations were created.
 Client was created with each subjected microservices framework. See [echo-samples](echo-samples) directory for the 
 sample services that were created for each framework.
 
+See [Performance advantages MSF4J 2.0 brings to Spring](https://jaxenter.com/performance-advantages-wso2-microservices-framework-for-java-2-0-to-spring-128340.html) article that covers the details of a simple echo test based benchmark between MSF4J 2 and SpringBoot 1.4.1.
+
 ## Prerequisite
 * **apache2-utils** - This performance tests are executed using ApacheBench. Therefore in order to run the tests, apache2-utils
 should be installed in the machine.
