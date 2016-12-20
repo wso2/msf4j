@@ -23,6 +23,10 @@ import org.wso2.carbon.messaging.CarbonCallback;
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.CarbonMessageProcessor;
 import org.wso2.carbon.messaging.TransportSender;
+import org.wso2.carbon.messaging.websocket.CloseWebSocketCarbonMessage;
+import org.wso2.carbon.messaging.websocket.TextWebSocketCarbonMessage;
+import org.wso2.carbon.messaging.websocket.WebSocketCarbonMessage;
+import org.wso2.carbon.transport.http.netty.common.Constants;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.internal.router.HandlerException;
@@ -62,36 +66,48 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
      */
     @Override
     public boolean receive(CarbonMessage carbonMessage, CarbonCallback carbonCallback) {
-        // If we are running on OSGi mode need to get the registry based on the channel_id.
-        MicroservicesRegistryImpl currentMicroservicesRegistry = DataHolder.getInstance().getMicroservicesRegistries()
-                                                .get(carbonMessage.getProperty(MSF4JConstants.CHANNEL_ID));
-        Request request = new Request(carbonMessage);
-        request.setSessionManager(currentMicroservicesRegistry.getSessionManager());
-        Response response = new Response(carbonCallback, request);
-        try {
-            dispatchMethod(currentMicroservicesRegistry, request, response);
-        } catch (HandlerException e) {
-            handleHandlerException(e, carbonCallback);
-        } catch (InvocationTargetException e) {
-            Throwable targetException = e.getTargetException();
-            if (targetException instanceof HandlerException) {
-                handleHandlerException((HandlerException) targetException, carbonCallback);
-            } else {
-                handleThrowable(currentMicroservicesRegistry, targetException, carbonCallback, request);
+        if (carbonMessage instanceof WebSocketCarbonMessage) {
+            log.info("To : " + carbonMessage.getProperty(Constants.TO));
+            if (carbonMessage instanceof TextWebSocketCarbonMessage) {
+                log.info("TextWebSocketCarbonMessage Received");
+                log.info("Data : " + ((TextWebSocketCarbonMessage) carbonMessage).getText());
             }
-        } catch (InterceptorException e) {
-            log.warn("Interceptors threw an exception", e);
-            // TODO: improve the response
-            carbonCallback.done(HttpUtil
-                    .createTextResponse(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
-                            HttpUtil.EMPTY_BODY));
-        } catch (Throwable t) {
-            handleThrowable(currentMicroservicesRegistry, t, carbonCallback, request);
-        } finally {
-            // Calling the release method to make sure that there won't be any memory leaks from netty
-            carbonMessage.release();
+            if (carbonMessage instanceof CloseWebSocketCarbonMessage) {
+                log.info("CloseWebSocketCarbonMessage Received");
+                log.info("Data Status code: " + ((CloseWebSocketCarbonMessage) carbonMessage).getStatusCode());
+            }
+            return true;
+        } else {
+            // If we are running on OSGi mode need to get the registry based on the channel_id.
+            MicroservicesRegistryImpl currentMicroservicesRegistry = DataHolder.getInstance()
+                    .getMicroservicesRegistries().get(carbonMessage.getProperty(MSF4JConstants.CHANNEL_ID));
+            Request request = new Request(carbonMessage);
+            request.setSessionManager(currentMicroservicesRegistry.getSessionManager());
+            Response response = new Response(carbonCallback, request);
+            try {
+                dispatchMethod(currentMicroservicesRegistry, request, response);
+            } catch (HandlerException e) {
+                handleHandlerException(e, carbonCallback);
+            } catch (InvocationTargetException e) {
+                Throwable targetException = e.getTargetException();
+                if (targetException instanceof HandlerException) {
+                    handleHandlerException((HandlerException) targetException, carbonCallback);
+                } else {
+                    handleThrowable(currentMicroservicesRegistry, targetException, carbonCallback, request);
+                }
+            } catch (InterceptorException e) {
+                log.warn("Interceptors threw an exception", e);
+                // TODO: improve the response
+                carbonCallback.done(HttpUtil.createTextResponse(
+                        javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), HttpUtil.EMPTY_BODY));
+            } catch (Throwable t) {
+                handleThrowable(currentMicroservicesRegistry, t, carbonCallback, request);
+            } finally {
+                // Calling the release method to make sure that there won't be any memory leaks from netty
+                carbonMessage.release();
+            }
+            return true;
         }
-        return true;
     }
 
     /**
