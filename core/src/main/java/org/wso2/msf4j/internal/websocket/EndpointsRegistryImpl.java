@@ -20,10 +20,13 @@ package org.wso2.msf4j.internal.websocket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.messaging.websocket.WebSocketCarbonMessage;
+import org.wso2.carbon.transport.http.netty.common.Constants;
 import org.wso2.msf4j.WebSocketEndpoint;
 import org.wso2.msf4j.WebSocketEndpointsRegistry;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -34,10 +37,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
 
-    private final Logger logger = LoggerFactory.getLogger(EndpointsRegistryImpl.class);
-    private static final EndpointsRegistryImpl webSocketEndpointsRegistry =
-            new EndpointsRegistryImpl();
-    private Map<URI, WebSocketEndpoint> regiteredEndpoints = new ConcurrentHashMap<>();
+    private final Logger log = LoggerFactory.getLogger(EndpointsRegistryImpl.class);
+    private static final EndpointsRegistryImpl webSocketEndpointsRegistry = new EndpointsRegistryImpl();
+    private Map<URI, DispatchedEndpoint> registeredEndpoints = new ConcurrentHashMap<>();
 
     //Makes the class singleton
     private EndpointsRegistryImpl() {
@@ -46,12 +48,36 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
     /**
      * @return the {@link EndpointsRegistryImpl} instance
      */
-    protected EndpointsRegistryImpl getWebSocketEndpointsRegistryInstandce() {
+    public static EndpointsRegistryImpl getInstance() {
         return webSocketEndpointsRegistry;
     }
 
-    public void addEndpoint(WebSocketEndpoint webSocketEndpoint){
-        //TODO : Implementation
+    protected void addEndpoint(WebSocketEndpoint... webSocketEndpoints) {
+        Arrays.stream(webSocketEndpoints).forEach(
+                webSocketEndpoint -> {
+                    try {
+                        DispatchedEndpoint dispatchedEndpoint = dispatchEndpoint(webSocketEndpoint);
+                        registeredEndpoints.put(dispatchedEndpoint.getUri(), dispatchedEndpoint);
+                    } catch (Exception e) {
+                        log.error(e.toString());
+                    }
+                }
+        );
+    }
+
+    protected void removeEndpoint(WebSocketEndpoint webSocketEndpoint) throws Exception {
+        DispatchedEndpoint dispatchedEndpoint = dispatchEndpoint(webSocketEndpoint);
+        registeredEndpoints.remove(dispatchedEndpoint.getUri());
+    }
+
+    protected DispatchedEndpoint dispatchEndpoint(WebSocketEndpoint webSocketEndpoint) throws Exception {
+        EndpointDispatcher dispatcher = new EndpointDispatcher(webSocketEndpoint);
+        return dispatcher.getDispatchedEndpoint();
+    }
+
+    public DispatchedEndpoint getDispatchedEndpoint(WebSocketCarbonMessage webSocketCarbonMessage) {
+        URI uri = (URI) webSocketCarbonMessage.getProperty(Constants.TO);
+        return registeredEndpoints.get(uri);
     }
 
     @Override

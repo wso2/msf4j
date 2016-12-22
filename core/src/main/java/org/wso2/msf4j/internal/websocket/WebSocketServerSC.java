@@ -43,6 +43,7 @@ import org.wso2.msf4j.WebSocketEndpoint;
 public class WebSocketServerSC implements RequiredCapabilityListener {
 
     Logger log = LoggerFactory.getLogger(WebSocketServerSC.class);
+    EndpointsRegistryImpl endpointsRegistry = EndpointsRegistryImpl.getInstance();
 
     @Activate
     protected void start(final BundleContext bundleContext) {
@@ -57,10 +58,12 @@ public class WebSocketServerSC implements RequiredCapabilityListener {
         unbind = "removeEndpoint"
     )
     protected void addEndpoint(WebSocketEndpoint endpoint) {
-        log.info("Endpoint added");
+        endpointsRegistry.addEndpoint(endpoint);
+        log.info("Endpoint registered");
     }
 
-    protected void removeEndpoint(WebSocketEndpoint endpoint) {
+    protected void removeEndpoint(WebSocketEndpoint endpoint) throws Exception {
+        endpointsRegistry.removeEndpoint(endpoint);
         log.info("Endpoint removed");
     }
 
