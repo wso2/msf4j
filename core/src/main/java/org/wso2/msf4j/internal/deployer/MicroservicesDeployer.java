@@ -100,17 +100,13 @@ public class MicroservicesDeployer implements Deployer, RequiredCapabilityListen
             if (resourcesList.size() == 0) {
                 throw new CarbonDeploymentException("No classes to initialize in artifact: " + artifactPath);
             }
-            boolean deployed = false;
-            for (Object resource : resourcesList) {
-                if (resource instanceof Microservice) {
-                    deployed = addService((Microservice) resource);
-                    if (!deployed) {
-                        // If one service not deployed correctly, process should retry later.
-                        break;
-                    }
-                }
-            }
-            if (deployed) {
+
+            boolean deployed = resourcesList.stream()
+                    .filter(resource -> resource instanceof Microservice)
+                    .map(resource -> addService((Microservice) resource))
+                    .anyMatch(result -> result == Boolean.FALSE);
+
+            if (!deployed) {
                 // If one service not deployed correctly, process should retry later.
                 artifact.setKey(artifactPath);
                 deployedArtifacts.put(artifactPath, resourcesList);
@@ -130,11 +126,11 @@ public class MicroservicesDeployer implements Deployer, RequiredCapabilityListen
         log.info("Undeploying artifact: {}", key);
         List<Object> resourcesList = deployedArtifacts.get(key);
         if (resourcesList != null) {
-            for (Object resource : resourcesList) {
+            resourcesList.forEach(resource -> {
                 if (resource instanceof Microservice) {
                     removeService((Microservice) resource);
                 }
-            }
+            });
         }
     }
 

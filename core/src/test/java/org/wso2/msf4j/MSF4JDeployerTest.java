@@ -73,7 +73,7 @@ public class MSF4JDeployerTest {
     @Test
     public void testJarArtifactDeployment() throws Exception {
         File file = new File(Thread.currentThread().getContextClassLoader()
-                .getResource("stockquote-deployable-jar-2.1.1.jar").getFile());
+                .getResource("stockquote-deployable-jar-2.1.1.zip").getFile());
         Artifact artifact = new Artifact(file);
         deployer.deploy(artifact);
 
@@ -91,7 +91,7 @@ public class MSF4JDeployerTest {
     @Test(dependsOnMethods = "testJarArtifactDeployment")
     public void testJarArtifactUndeployment() throws Exception {
         File file = new File(Thread.currentThread().getContextClassLoader()
-                .getResource("stockquote-deployable-jar-2.1.1.jar").getFile());
+                .getResource("stockquote-deployable-jar-2.1.1.zip").getFile());
         deployer.undeploy(file.getAbsolutePath());
         HttpURLConnection urlConn = request("/stockquote/IBM", HttpMethod.GET);
         assertEquals(HttpURLConnection.HTTP_NOT_FOUND, urlConn.getResponseCode());
@@ -101,7 +101,7 @@ public class MSF4JDeployerTest {
             expectedExceptionsMessageRegExp = "Error while processing the artifact.*")
     public void testFatJarArtifactDeployment() throws Exception {
         File file = new File(Thread.currentThread().getContextClassLoader()
-                .getResource("stockquote-fatjar-2.1.1.jar").getFile());
+                .getResource("stockquote-fatjar-2.1.1.zip").getFile());
         Artifact artifact = new Artifact(file);
         deployer.deploy(artifact);
     }
@@ -110,7 +110,7 @@ public class MSF4JDeployerTest {
             expectedExceptionsMessageRegExp = "Error while processing the artifact.*")
     public void testBundleArtifactDeployment() throws Exception {
         File file = new File(Thread.currentThread().getContextClassLoader()
-                .getResource("stockquote-bundle-2.1.1.jar").getFile());
+                .getResource("stockquote-bundle-2.1.1.zip").getFile());
         Artifact artifact = new Artifact(file);
         deployer.deploy(artifact);
     }
