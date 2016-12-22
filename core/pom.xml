@@ -138,7 +138,12 @@
             <version>4.5.1</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.maven.shared</groupId>
+            <artifactId>maven-invoker</artifactId>
+            <version>2.1.1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -163,6 +168,10 @@
                     <suiteXmlFiles>
                         <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
+                    <systemPropertyVariables>
+                        <maven.home>${maven.home}</maven.home>
+                        <sample.filepath>${project.basedir}/../samples</sample.filepath>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
             <plugin>

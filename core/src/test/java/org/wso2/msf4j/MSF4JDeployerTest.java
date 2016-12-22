@@ -19,6 +19,11 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
+import org.apache.maven.shared.invoker.DefaultInvocationRequest;
+import org.apache.maven.shared.invoker.DefaultInvoker;
+import org.apache.maven.shared.invoker.InvocationRequest;
+import org.apache.maven.shared.invoker.Invoker;
+import org.apache.maven.shared.invoker.MavenInvocationException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -34,10 +39,17 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Stream;
 import javax.ws.rs.HttpMethod;
 
 import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertTrue;
 
 /**
  * Tests microservice deployer.
@@ -51,6 +63,7 @@ public class MSF4JDeployerTest {
     private static final Type STRING_MAP_TYPE = new TypeToken<Map<String, String>>() {
     }.getType();
     protected static URI baseURI;
+    private String stockqoutesSamplesFile;
 
     @BeforeClass
     public void setup() throws Exception {
@@ -61,6 +74,8 @@ public class MSF4JDeployerTest {
         microservicesRegistries.put("test", microservicesRunner.getMsRegistry());
         deployer = new MicroservicesDeployer();
         baseURI = URI.create(String.format("http://%s:%d", Constants.HOSTNAME, 8090));
+        // get the stockquote sample project path. sample.filepath property is added to surefire plugins configuration
+        stockqoutesSamplesFile = Paths.get(System.getProperty("sample.filepath"), "stockquote").toString();
     }
 
     @AfterClass
@@ -72,8 +87,13 @@ public class MSF4JDeployerTest {
 
     @Test
     public void testJarArtifactDeployment() throws Exception {
-        File file = new File(Thread.currentThread().getContextClassLoader()
-                .getResource("stockquote-deployable-jar-2.1.1.zip").getFile());
+        // compile the stockqoute deployable-jar sample
+        compileTestSamples(Paths.get(stockqoutesSamplesFile, "deployable-jar", "pom.xml").toFile());
+        // get the jar file path
+        Optional<Path> path = getSampleJarFile(Paths.get(stockqoutesSamplesFile, "deployable-jar", "target"));
+        assertTrue("Sample artifact doesn't found in output directory : "
+                + Paths.get(stockqoutesSamplesFile, "deployable-jar", "target"), path.isPresent());
+        File file = path.get().toFile();
         Artifact artifact = new Artifact(file);
         deployer.deploy(artifact);
 
@@ -90,8 +110,10 @@ public class MSF4JDeployerTest {
 
     @Test(dependsOnMethods = "testJarArtifactDeployment")
     public void testJarArtifactUndeployment() throws Exception {
-        File file = new File(Thread.currentThread().getContextClassLoader()
-                .getResource("stockquote-deployable-jar-2.1.1.zip").getFile());
+        Optional<Path> path = getSampleJarFile(Paths.get(stockqoutesSamplesFile, "deployable-jar", "target"));
+        assertTrue("Sample artifact doesn't found in output directory : "
+                + Paths.get(stockqoutesSamplesFile, "deployable-jar", "target"), path.isPresent());
+        File file = path.get().toFile();
         deployer.undeploy(file.getAbsolutePath());
         HttpURLConnection urlConn = request("/stockquote/IBM", HttpMethod.GET);
         assertEquals(HttpURLConnection.HTTP_NOT_FOUND, urlConn.getResponseCode());
@@ -100,8 +122,12 @@ public class MSF4JDeployerTest {
     @Test(expectedExceptions = CarbonDeploymentException.class,
             expectedExceptionsMessageRegExp = "Error while processing the artifact.*")
     public void testFatJarArtifactDeployment() throws Exception {
-        File file = new File(Thread.currentThread().getContextClassLoader()
-                .getResource("stockquote-fatjar-2.1.1.zip").getFile());
+        // compile the stockqoute fatjar sample
+        compileTestSamples(Paths.get(stockqoutesSamplesFile, "fatjar", "pom.xml").toFile());
+        Optional<Path> path = getSampleJarFile(Paths.get(stockqoutesSamplesFile, "fatjar", "target"));
+        assertTrue("Sample artifact doesn't found in output directory : "
+                + Paths.get(stockqoutesSamplesFile, "fatjar", "target"), path.isPresent());
+        File file = path.get().toFile();
         Artifact artifact = new Artifact(file);
         deployer.deploy(artifact);
     }
@@ -109,8 +135,12 @@ public class MSF4JDeployerTest {
     @Test(expectedExceptions = CarbonDeploymentException.class,
             expectedExceptionsMessageRegExp = "Error while processing the artifact.*")
     public void testBundleArtifactDeployment() throws Exception {
-        File file = new File(Thread.currentThread().getContextClassLoader()
-                .getResource("stockquote-bundle-2.1.1.zip").getFile());
+        // compile the stockqoute bundle sample
+        compileTestSamples(Paths.get(stockqoutesSamplesFile, "bundle", "pom.xml").toFile());
+        Optional<Path> path = getSampleJarFile(Paths.get(stockqoutesSamplesFile, "bundle", "target"));
+        assertTrue("Sample artifact doesn't found in output directory : "
+                + Paths.get(stockqoutesSamplesFile, "bundle", "target"), path.isPresent());
+        File file = path.get().toFile();
         Artifact artifact = new Artifact(file);
         deployer.deploy(artifact);
     }
@@ -135,5 +165,32 @@ public class MSF4JDeployerTest {
 
     private String getContent(HttpURLConnection urlConn) throws IOException {
         return new String(IOUtils.toByteArray(urlConn.getInputStream()), Charsets.UTF_8);
+    }
+
+    /**
+     * compile the sample project in the given filepath
+     * @param projectFile sample project pom file location
+     * @throws MavenInvocationException
+     */
+    private void compileTestSamples(File projectFile) throws MavenInvocationException {
+        InvocationRequest request = new DefaultInvocationRequest();
+        request.setPomFile(projectFile);
+        request.setGoals(Collections.singletonList("install"));
+
+        Invoker invoker = new DefaultInvoker();
+        invoker.execute(request);
+    }
+
+    /**
+     * Returns the jar file in the given project target directory location
+     * @param targetDirectory target file path
+     * @return
+     * @throws IOException
+     */
+    private Optional<Path> getSampleJarFile(Path targetDirectory) throws IOException {
+        try (Stream<Path> paths = Files.walk(targetDirectory)) {
+            return paths.filter(filePath -> Files.isRegularFile(filePath) && filePath.toString().endsWith(".jar"))
+                    .findFirst();
+        }
     }
 }
