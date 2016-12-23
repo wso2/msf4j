@@ -33,16 +33,19 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Implementation for {@link WebSocketEndpointsRegistry}
- * This is a singleton class
+ * Endpoints will be registered in a {@link java.util.HashMap} as a pair of {@link URI} & {@link DispatchedEndpoint}
  */
 public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
 
     private final Logger log = LoggerFactory.getLogger(EndpointsRegistryImpl.class);
     private static final EndpointsRegistryImpl webSocketEndpointsRegistry = new EndpointsRegistryImpl();
+
+    /*
+
+     */
     private Map<URI, DispatchedEndpoint> registeredEndpoints = new ConcurrentHashMap<>();
 
-    //Makes the class singleton
-    private EndpointsRegistryImpl() {
+    public EndpointsRegistryImpl() {
     }
 
     /**
@@ -52,7 +55,7 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
         return webSocketEndpointsRegistry;
     }
 
-    protected void addEndpoint(WebSocketEndpoint... webSocketEndpoints) {
+    public void addEndpoint(WebSocketEndpoint... webSocketEndpoints) {
         Arrays.stream(webSocketEndpoints).forEach(
                 webSocketEndpoint -> {
                     try {
@@ -65,12 +68,12 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
         );
     }
 
-    protected void removeEndpoint(WebSocketEndpoint webSocketEndpoint) throws Exception {
+    public void removeEndpoint(WebSocketEndpoint webSocketEndpoint) throws Exception {
         DispatchedEndpoint dispatchedEndpoint = dispatchEndpoint(webSocketEndpoint);
         registeredEndpoints.remove(dispatchedEndpoint.getUri());
     }
 
-    protected DispatchedEndpoint dispatchEndpoint(WebSocketEndpoint webSocketEndpoint) throws Exception {
+    public DispatchedEndpoint dispatchEndpoint(WebSocketEndpoint webSocketEndpoint) throws Exception {
         EndpointDispatcher dispatcher = new EndpointDispatcher(webSocketEndpoint);
         return dispatcher.getDispatchedEndpoint();
     }
