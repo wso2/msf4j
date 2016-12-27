@@ -31,7 +31,7 @@ public class Stocks {
     private Collection<Stock> stocks;
 
     /**
-     * No arg constructor is required for xml marshalling
+     * No arg constructor is required for xml marshalling.
      */
     public Stocks() {
     }

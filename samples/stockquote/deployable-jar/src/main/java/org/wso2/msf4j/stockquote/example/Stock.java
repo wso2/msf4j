@@ -31,7 +31,7 @@ public class Stock {
     private double high;
 
     /**
-     * No arg constructor is required for xml marshalling
+     * No arg constructor is required for xml marshalling.
      */
     public Stock() {
     }

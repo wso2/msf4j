@@ -75,7 +75,8 @@ public class MSF4JDeployerTest {
         deployer = new MicroservicesDeployer();
         baseURI = URI.create(String.format("http://%s:%d", Constants.HOSTNAME, 8090));
         // get the stockquote sample project path. sample.filepath property is added to surefire plugins configuration
-        stockqoutesSamplesFile = Paths.get(System.getProperty("sample.filepath"), "stockquote").toString();
+        String rootDirectory = Paths.get(System.getProperty("project.filepath")).getParent().toString();
+        stockqoutesSamplesFile = Paths.get(rootDirectory, "samples", "stockquote").toString();
     }
 
     @AfterClass
@@ -168,7 +169,7 @@ public class MSF4JDeployerTest {
     }
 
     /**
-     * compile the sample project in the given filepath
+     * compile the sample project in the given filepath.
      * @param projectFile sample project pom file location
      * @throws MavenInvocationException
      */
@@ -182,7 +183,7 @@ public class MSF4JDeployerTest {
     }
 
     /**
-     * Returns the jar file in the given project target directory location
+     * Returns the jar file in the given project target directory location.
      * @param targetDirectory target file path
      * @return
      * @throws IOException

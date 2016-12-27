@@ -44,9 +44,9 @@ import java.util.Map;
 import javax.ws.rs.Path;
 
 /**
- * Implementation of the microservices service deployer. This will be picked by the
- * DeploymentEngine service according to the whiteboard pattern to deploy
- * microservice POJO artifacts.
+ * Implementation of the micro service deployer.
+ * This will be picked by the DeploymentEngine service according to the whiteboard pattern to deploy
+ * micro service POJO artifacts.
  */
 @Component(
         name = "org.wso2.carbon.mss.internal.deployer.MicroservicesDeployer",
@@ -135,7 +135,7 @@ public class MicroservicesDeployer implements Deployer, RequiredCapabilityListen
     }
 
     /**
-     * Update the artifact from the netty-http service
+     * Update the artifact from the netty-http service.
      * @param artifact the artifact to be deployed
      * @return A key to identify the deployed artifact
      * @throws CarbonDeploymentException If update fails
