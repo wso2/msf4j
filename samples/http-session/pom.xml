@@ -27,8 +27,12 @@
 
     <groupId>org.wso2.msf4j.sample</groupId>
     <artifactId>session</artifactId>
+    <packaging>pom</packaging>
 
     <name>Sample: Session-aware Microservice</name>
+    <modules>
+        <module>../websocket</module>
+    </modules>
 
     <properties>
         <microservice.mainClass>org.wso2.msf4j.example.Application</microservice.mainClass>

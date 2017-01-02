@@ -27,7 +27,6 @@ import org.wso2.carbon.transport.http.netty.common.Constants;
 import org.wso2.msf4j.WebSocketEndpoint;
 import org.wso2.msf4j.internal.websocket.DispatchedEndpoint;
 import org.wso2.msf4j.internal.websocket.EndpointsRegistryImpl;
-import org.wso2.msf4j.websocket.endpointRegistry.TestEndpoint;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;

@@ -18,8 +18,8 @@
 
 package org.wso2.msf4j.internal.websocket;
 
-import org.wso2.carbon.messaging.websocket.BinaryWebSocketCarbonMessage;
-import org.wso2.carbon.messaging.websocket.TextWebSocketCarbonMessage;
+import org.wso2.carbon.messaging.websocket.BinaryWebSocketMessage;
+import org.wso2.carbon.messaging.websocket.TextWebSocketMessage;
 import org.wso2.carbon.messaging.websocket.WebSocketResponder;
 
 import java.io.IOException;
@@ -49,7 +49,7 @@ public class BasicRemoteEndpoint implements RemoteEndpoint.Basic {
      */
     @Override
     public void sendText(String text) throws IOException {
-        webSocketResponder.pushToClient(new TextWebSocketCarbonMessage(text, null));
+        webSocketResponder.pushToClient(new TextWebSocketMessage(text, null));
     }
 
     /**
@@ -61,7 +61,7 @@ public class BasicRemoteEndpoint implements RemoteEndpoint.Basic {
      */
     @Override
     public void sendBinary(ByteBuffer data) throws IOException {
-        webSocketResponder.pushToClient(new BinaryWebSocketCarbonMessage(data, true, null));
+        webSocketResponder.pushToClient(new BinaryWebSocketMessage(data, true, null));
     }
 
     /**
@@ -92,7 +92,7 @@ public class BasicRemoteEndpoint implements RemoteEndpoint.Basic {
      */
     @Override
     public void sendBinary(ByteBuffer partialByte, boolean isLast) throws IOException {
-        webSocketResponder.pushToClient(new BinaryWebSocketCarbonMessage(partialByte, isLast, null));
+        webSocketResponder.pushToClient(new BinaryWebSocketMessage(partialByte, isLast, null));
     }
 
     /**

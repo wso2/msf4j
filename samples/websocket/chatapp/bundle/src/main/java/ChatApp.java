@@ -16,34 +16,22 @@
  *  under the License.
  */
 
-package org.wso2.msf4j.websocket.endpointRegistry;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.wso2.msf4j.WebSocketEndpoint;
-
-import javax.websocket.OnClose;
-import javax.websocket.OnMessage;
+import java.util.LinkedList;
+import java.util.List;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
-@ServerEndpoint("/test")
-public class TestEndpoint implements WebSocketEndpoint {
-    Logger log = LoggerFactory.getLogger(TestEndpoint.class);
+/**
+ * This is a chat sample app demonstration
+ */
+@ServerEndpoint("/chatapp")
+public class ChatApp {
+    List<Session> sessionsList = new LinkedList<>();
 
     @OnOpen
     public void onOpen(Session session) {
-        log.info(session.getId());
+        sessionsList.add(session);
     }
 
-    @OnMessage
-    public String onStringMessage(String str, Session session) {
-        log.info("Test str is : " + str);
-        return str;
-    }
-
-    @OnClose
-    public void onClose(String reasonText, int statusCode) {
-    }
 }

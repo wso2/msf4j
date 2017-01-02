@@ -18,7 +18,7 @@
 
 package org.wso2.msf4j.internal.websocket;
 
-import org.wso2.carbon.messaging.websocket.CloseWebSocketCarbonMessage;
+import org.wso2.carbon.messaging.websocket.CloseWebSocketMessage;
 import org.wso2.carbon.messaging.websocket.WebSocketResponder;
 
 import java.io.IOException;
@@ -172,7 +172,7 @@ public class SessionImpl implements Session {
 
     @Override
     public void close() throws IOException {
-        webSocketResponder.pushToClient(new CloseWebSocketCarbonMessage(
+        webSocketResponder.pushToClient(new CloseWebSocketMessage(
                 CloseReason.CloseCodes.GOING_AWAY.getCode(),
                 null,
                 null
@@ -181,7 +181,7 @@ public class SessionImpl implements Session {
 
     @Override
     public void close(CloseReason closeReason) throws IOException {
-        webSocketResponder.pushToClient(new CloseWebSocketCarbonMessage(
+        webSocketResponder.pushToClient(new CloseWebSocketMessage(
                 closeReason.getCloseCode().getCode(),
                 closeReason.getReasonPhrase(),
                 null
