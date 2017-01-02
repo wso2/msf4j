@@ -258,6 +258,13 @@ public class MicroservicesDeployer implements Deployer, RequiredCapabilityListen
         }
     }
 
+    /**
+     * To deploy micro services, we need to have at least one micro service registry in the system.
+     * Since microservice registry is added when microservice server is active, added the reference to wait till
+     * microservices server is active.
+     * Otherwise if deployer registered before at least one registry is added, Deployer will start to deploy services
+     * and will fail deployment.
+     */
     @Reference(
             name = "microservices-server",
             service = MicroservicesServerSC.class,
