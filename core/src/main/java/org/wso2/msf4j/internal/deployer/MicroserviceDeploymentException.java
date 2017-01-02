@@ -19,12 +19,12 @@ package org.wso2.msf4j.internal.deployer;
  * Exception that is thrown when processing jar files
  * by MicroserviceProcessor.
  */
-public class MicroserviceProcessException extends Exception {
-    public MicroserviceProcessException(String message) {
+public class MicroserviceDeploymentException extends Exception {
+    public MicroserviceDeploymentException(String message) {
         super(message);
     }
 
-    public MicroserviceProcessException(String message, Exception e) {
+    public MicroserviceDeploymentException(String message, Exception e) {
         super(message, e);
     }
 }

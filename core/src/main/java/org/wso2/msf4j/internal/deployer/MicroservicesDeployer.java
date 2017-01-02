@@ -61,7 +61,7 @@ public class MicroservicesDeployer implements Deployer, RequiredCapabilityListen
     private static final String MICROSERVICE_ARTIFACT_TYPE = "microservices";
     private URL deploymentLocation;
     private ArtifactType artifactType;
-    private HashMap<Object, List<Object>> deployedArtifacts = new HashMap<>();
+    private Map<Object, List<Object>> deployedArtifacts = new HashMap<>();
 
     public void init() {
         if (log.isDebugEnabled()) {
@@ -93,8 +93,8 @@ public class MicroservicesDeployer implements Deployer, RequiredCapabilityListen
             log.info("Deploying microservice artifact: {}", artifactPath);
             List<Object> resourcesList;
             try {
-                resourcesList = MicroserviceProcessUtils.getRourceInstances(artifactFile);
-            } catch (MicroserviceProcessException e) {
+                resourcesList = MicroserviceDeploymentUtils.getRourceInstances(artifactFile);
+            } catch (MicroserviceDeploymentException e) {
                 throw new CarbonDeploymentException("Error while processing the artifact: " + artifactPath, e);
             }
             if (resourcesList.size() == 0) {
@@ -225,7 +225,7 @@ public class MicroservicesDeployer implements Deployer, RequiredCapabilityListen
             return false;
         }
         microservicesRegistries.values().forEach(registry -> registry.addService(service));
-        log.info("Microservice deployed successfully");
+        log.info("Microservice {} deployed successfully", service.getClass().getName());
         return true;
     }
 
@@ -246,7 +246,7 @@ public class MicroservicesDeployer implements Deployer, RequiredCapabilityListen
                     .getAnnotation(Path.class).value());
             registry.preDestroyService(service);
         });
-        log.info("Microservice undeployed successfully");
+        log.info("Microservice {} undeployed successfully", service.getClass().getName());
         return true;
     }
 

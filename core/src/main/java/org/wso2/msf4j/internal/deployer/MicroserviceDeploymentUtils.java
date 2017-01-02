@@ -35,8 +35,8 @@ import java.util.jar.Manifest;
  * Dynamically initialising a set of objects from a given jar
  * according to the manifest entry 'microservices'.
  */
-public class MicroserviceProcessUtils {
-    private static final Logger logger = LoggerFactory.getLogger(MicroserviceProcessUtils.class);
+public class MicroserviceDeploymentUtils {
+    private static final Logger logger = LoggerFactory.getLogger(MicroserviceDeploymentUtils.class);
     private static final String MICROSERVICES_MANIFEST_KEY = "Microservices";
 
     /**
@@ -44,9 +44,9 @@ public class MicroserviceProcessUtils {
      * classes in the jar's manifest file under 'microservices' key.
      *
      * @return micro services object list
-     * @throws MicroserviceProcessException if an error occurs while processing the jar file
+     * @throws MicroserviceDeploymentException if an error occurs while processing the jar file
      */
-    public static List<Object> getRourceInstances(File artifactFile) throws MicroserviceProcessException {
+    public static List<Object> getRourceInstances(File artifactFile) throws MicroserviceDeploymentException {
         String jarPath = artifactFile.getAbsolutePath();
         final String[] serviceClassNames = readManifestEntry(jarPath);
         List<Object> resourceInstances = new ArrayList<>();
@@ -54,7 +54,7 @@ public class MicroserviceProcessUtils {
         //Parent class loader is required to provide classes that are outside of the jar
         try {
             AccessController.doPrivileged(new PrivilegedExceptionAction<Void>() {
-                public Void run() throws MicroserviceProcessException {
+                public Void run() throws MicroserviceDeploymentException {
                     try {
                         URLClassLoader classLoader =
                                 new URLClassLoader(new URL[]{artifactFile.toURI().toURL()},
@@ -64,15 +64,16 @@ public class MicroserviceProcessUtils {
                                 Class classToLoad = classLoader.loadClass(className);
                                 resourceInstances.add(classToLoad.newInstance());
                             } catch (ClassNotFoundException e) {
-                                throw new MicroserviceProcessException("Class: " + className + " not found", e);
+                                throw new MicroserviceDeploymentException("Class: " + className + " not found", e);
                             } catch (InstantiationException e) {
-                                throw new MicroserviceProcessException("Failed to initialize class: " + className, e);
+                                throw new MicroserviceDeploymentException("Failed to initialize class: "
+                                        + className, e);
                             } catch (IllegalAccessException e) {
-                                throw new MicroserviceProcessException("Failed to access class: " + className, e);
+                                throw new MicroserviceDeploymentException("Failed to access class: " + className, e);
                             }
                         }
                     } catch (MalformedURLException e) {
-                        throw new MicroserviceProcessException("Path to jar is invalid", e);
+                        throw new MicroserviceDeploymentException("Path to jar is invalid", e);
                     }
                     return null;
                 }
@@ -80,8 +81,8 @@ public class MicroserviceProcessUtils {
         } catch (PrivilegedActionException e) {
             //This assignment is required to fix unchecked/unconfirmed cast findbugs issue
             Exception e1 = e.getException();
-            if (e1 instanceof MicroserviceProcessException) {
-                throw (MicroserviceProcessException) e1;
+            if (e1 instanceof MicroserviceDeploymentException) {
+                throw (MicroserviceDeploymentException) e1;
             }
         }
         return resourceInstances;
@@ -94,20 +95,20 @@ public class MicroserviceProcessUtils {
      * @param jarPath absolute path to the jar file
      * @return String array of fully qualified class names
      */
-    private static String[] readManifestEntry(String jarPath) throws MicroserviceProcessException {
+    private static String[] readManifestEntry(String jarPath) throws MicroserviceDeploymentException {
         try (JarFile jarFile = new JarFile(jarPath)) {
             Manifest manifest = jarFile.getManifest();
             if (manifest == null) {
-                throw new MicroserviceProcessException("Error retrieving manifest: " + jarPath);
+                throw new MicroserviceDeploymentException("Error retrieving manifest: " + jarPath);
             }
             Attributes mainAttributes = manifest.getMainAttributes();
             String serviceEntry = mainAttributes.getValue(MICROSERVICES_MANIFEST_KEY);
             if (serviceEntry == null) {
-                throw new MicroserviceProcessException("Manifest entry 'microservices' not found: " + jarPath);
+                throw new MicroserviceDeploymentException("Manifest entry 'microservices' not found: " + jarPath);
             }
             return serviceEntry.split("\\s*,\\s*");
         } catch (IOException e) {
-            throw new MicroserviceProcessException("Error retrieving manifest: " + jarPath, e);
+            throw new MicroserviceDeploymentException("Error retrieving manifest: " + jarPath, e);
         }
     }
 }
