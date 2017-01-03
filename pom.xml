@@ -124,6 +124,7 @@
         <module>samples/http-session</module>
         <module>samples/stockquote/fatjar</module>
         <module>samples/stockquote/bundle</module>
+        <module>samples/stockquote/deployable-jar</module>
         <module>samples/basicauth-security</module>
         <module>samples/oauth2-security</module>
         <module>samples/metrics</module>

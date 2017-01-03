@@ -62,6 +62,10 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>org.wso2.carbon.deployment</groupId>
+            <artifactId>org.wso2.carbon.deployment.engine</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.eclipse.osgi</groupId>
             <artifactId>org.eclipse.osgi</artifactId>
         </dependency>
@@ -134,7 +138,12 @@
             <version>4.5.1</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.maven.shared</groupId>
+            <artifactId>maven-invoker</artifactId>
+            <version>2.2</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -159,6 +168,10 @@
                     <suiteXmlFiles>
                         <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
+                    <systemPropertyVariables>
+                        <maven.home>${maven.home}</maven.home>
+                        <project.filepath>${project.basedir}</project.filepath>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
             <plugin>
@@ -336,13 +349,15 @@
             org.osgi.util.tracker; version="${osgi.service.tracker.import.version.range}",
             org.wso2.carbon.kernel.transports.*;version="${carbon.kernel.version.range}",
             org.wso2.carbon.kernel.startupresolver.*;version="${carbon.kernel.version.range}",
+            org.wso2.carbon.deployment.engine.*;version="${carbon.deployment.version.range}",
             org.wso2.carbon.messaging.*,
         </import.package>
         <carbon.component>
             startup.listener;componentName="wso2-microservices-server";requiredService="org.wso2.msf4j.Microservice,org.wso2.msf4j.Interceptor",
             osgi.service;
             objectClass="org.wso2.msf4j.internal.MicroservicesServerSC";requiredByComponentName="carbon-transport-mgt",
-            osgi.service; objectClass="org.wso2.carbon.messaging.CarbonMessageProcessor"
+            osgi.service; objectClass="org.wso2.carbon.messaging.CarbonMessageProcessor",
+            osgi.service; objectClass="org.wso2.carbon.deployment.engine.Deployer"
         </carbon.component>
     </properties>
 </project>
