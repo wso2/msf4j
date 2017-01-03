@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.msf4j.client.test.client.api;
+package org.wso2.msf4j.example;
 
 import feign.Param;
 import feign.RequestLine;
