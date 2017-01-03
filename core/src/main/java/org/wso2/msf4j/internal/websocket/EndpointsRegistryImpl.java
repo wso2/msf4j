@@ -20,7 +20,7 @@ package org.wso2.msf4j.internal.websocket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.messaging.websocket.WebSocketMessage;
+import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.transport.http.netty.common.Constants;
 import org.wso2.msf4j.WebSocketEndpoint;
 import org.wso2.msf4j.WebSocketEndpointsRegistry;
@@ -78,8 +78,8 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
         return dispatcher.getDispatchedEndpoint();
     }
 
-    public DispatchedEndpoint getDispatchedEndpoint(WebSocketMessage webSocketMessage) {
-        URI uri = (URI) webSocketMessage.getProperty(Constants.TO);
+    public DispatchedEndpoint getDispatchedEndpoint(CarbonMessage carbonMessage) {
+        URI uri = (URI) carbonMessage.getProperty(Constants.TO);
         return registeredEndpoints.get(uri);
     }
 

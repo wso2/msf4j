@@ -341,6 +341,7 @@
             org.osgi.util.tracker; version="${osgi.service.tracker.import.version.range}",
             org.wso2.carbon.kernel.transports.*;version="${carbon.kernel.version.range}",
             org.wso2.carbon.kernel.startupresolver.*;version="${carbon.kernel.version.range}",
+            org.wso2.carbon.transports.netty.*;version="${org.wso2.carbon.transport.http.netty.version}",
             org.wso2.carbon.messaging.*,
         </import.package>
         <carbon.component>

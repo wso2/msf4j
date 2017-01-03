@@ -56,7 +56,7 @@ public class SessionManager {
         if (sessionMap.containsKey(sessionId)) {
             return sessionMap.get(sessionId);
         } else {
-            return createSession(webSocketMessage);
+            return null;
         }
     }
 

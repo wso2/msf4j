@@ -23,10 +23,12 @@ import org.wso2.carbon.messaging.CarbonCallback;
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.CarbonMessageProcessor;
 import org.wso2.carbon.messaging.TransportSender;
-import org.wso2.carbon.messaging.websocket.BinaryWebSocketCarbonMessage;
-import org.wso2.carbon.messaging.websocket.CloseWebSocketCarbonMessage;
-import org.wso2.carbon.messaging.websocket.TextWebSocketCarbonMessage;
-import org.wso2.carbon.messaging.websocket.WebSocketCarbonMessage;
+import org.wso2.carbon.messaging.websocket.BinaryWebSocketMessage;
+import org.wso2.carbon.messaging.websocket.CloseWebSocketMessage;
+import org.wso2.carbon.messaging.websocket.TextWebSocketMessage;
+import org.wso2.carbon.messaging.websocket.WebSocketHandshaker;
+import org.wso2.carbon.messaging.websocket.WebSocketMessage;
+import org.wso2.carbon.transport.http.netty.common.Constants;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.internal.router.HandlerException;
@@ -77,15 +79,35 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
     @Override
     public boolean receive(CarbonMessage carbonMessage, CarbonCallback carbonCallback)
             throws InvocationTargetException, IllegalAccessException, IOException {
-        if (carbonMessage instanceof WebSocketCarbonMessage) {
+        if (carbonMessage instanceof WebSocketMessage) {
             log.info("WebSocketCarbonMessage Received");
-            WebSocketCarbonMessage webSocketCarbonMessage = (WebSocketCarbonMessage) carbonMessage;
+            WebSocketMessage webSocketMessage = (WebSocketMessage) carbonMessage;
             EndpointsRegistryImpl endpointsRegistry = EndpointsRegistryImpl.getInstance();
-            DispatchedEndpoint endpoint = endpointsRegistry.getDispatchedEndpoint(webSocketCarbonMessage);
-            dispatchWebSocketMethod(endpoint, webSocketCarbonMessage);
+            DispatchedEndpoint dispatchedEndpoint = endpointsRegistry.getDispatchedEndpoint(webSocketMessage);
+            dispatchWebSocketMethod(dispatchedEndpoint, webSocketMessage);
             return true;
         } else {
             // If we are running on OSGi mode need to get the registry based on the channel_id.
+
+            String connection = (String) carbonMessage.getProperty(Constants.CONNECTION);
+            if (connection.equalsIgnoreCase("Upgrade")) {
+                String upgrade = (String) carbonMessage.getProperty(Constants.UPGRADE);
+                if (upgrade.equalsIgnoreCase("websocket")) {
+                    WebSocketHandshaker webSocketHandshaker =
+                            (WebSocketHandshaker) carbonMessage.getProperty(Constants.WEBSOCKET_HANDSHAKER);
+                    EndpointsRegistryImpl endpointsRegistry = EndpointsRegistryImpl.getInstance();
+                    if (endpointsRegistry.getDispatchedEndpoint(carbonMessage) == null) {
+                        webSocketHandshaker.cancel();
+                        log.info("Handshake is cancelled. Requested endpoint not found.");
+                    } else {
+                        webSocketHandshaker.handshake();
+                        log.info("Handshake is done.");
+                    }
+
+                }
+                return true;
+            }
+
             log.debug("HTTPCarbonMessage Received");
             MicroservicesRegistryImpl currentMicroservicesRegistry = DataHolder.getInstance()
                     .getMicroservicesRegistries().get(carbonMessage.getProperty(MSF4JConstants.CHANNEL_ID));
@@ -122,27 +144,27 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
     /**
      * Dispatch the message to correct WebSocket endpoint method
      * @param dispatchedEndpoint dispatched endpoint for a given endpoint
-     * @param webSocketCarbonMessage incoming webSocketCarbonMessage
+     * @param webSocketMessage incoming webSocketMessage
      * @throws InvocationTargetException problem with invocation of the given method
-     * @throws IllegalAccessException
+     * @throws IllegalAccessException Illegal access when invoking the method
      */
     private void dispatchWebSocketMethod(DispatchedEndpoint dispatchedEndpoint,
-                                         WebSocketCarbonMessage webSocketCarbonMessage)
-            throws InvocationTargetException, IllegalAccessException, IOException {
+                                         WebSocketMessage webSocketMessage)
+            throws InvocationTargetException, IllegalAccessException {
 
         //Invoke correct method with correct parameters
-        if (webSocketCarbonMessage instanceof TextWebSocketCarbonMessage) {
-            TextWebSocketCarbonMessage textWebSocketCarbonMessage =
-                    (TextWebSocketCarbonMessage) webSocketCarbonMessage;
+        if (webSocketMessage instanceof TextWebSocketMessage) {
+            TextWebSocketMessage textWebSocketMessage =
+                    (TextWebSocketMessage) webSocketMessage;
             Method method = dispatchedEndpoint.getOnStringMessageMethod();
             List<Object> parameterList = new LinkedList<>();
             Arrays.stream(method.getParameterTypes()).forEach(
                     parameterType -> {
                         if (parameterType == String.class) {
-                            parameterList.add(textWebSocketCarbonMessage.getText());
+                            parameterList.add(textWebSocketMessage.getText());
                         } else if (parameterType == Session.class) {
                             SessionManager sessionManager = SessionManager.getInstance();
-                            Session session = sessionManager.getSession(webSocketCarbonMessage);
+                            Session session = sessionManager.getSession(webSocketMessage);
                             parameterList.add(session);
                         } else {
                             parameterList.add(null);
@@ -152,49 +174,51 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
 
             method.invoke(dispatchedEndpoint.getWebSocketEndpoint(), parameterList.toArray());
 
-        } else if (webSocketCarbonMessage instanceof BinaryWebSocketCarbonMessage) {
-            BinaryWebSocketCarbonMessage binaryWebSocketCarbonMessage =
-                    (BinaryWebSocketCarbonMessage) webSocketCarbonMessage;
+        } else if (webSocketMessage instanceof BinaryWebSocketMessage) {
+            BinaryWebSocketMessage binaryWebSocketMessage =
+                    (BinaryWebSocketMessage) webSocketMessage;
             Method method = dispatchedEndpoint.getOnBinaryMessageMethod();
             List<Object> parameterList = new LinkedList<>();
             Arrays.stream(method.getParameterTypes()).forEach(
                     parameterType -> {
                         if (parameterType == ByteBuffer.class) {
-                            parameterList.add(binaryWebSocketCarbonMessage.readBytes());
+                            parameterList.add(binaryWebSocketMessage.readBytes());
                         } else if (parameterType == byte[].class) {
-                            parameterList.add(binaryWebSocketCarbonMessage.readBytes().array());
+                            parameterList.add(binaryWebSocketMessage.readBytes().array());
                         } else if (parameterType == boolean.class) {
-                            parameterList.add(binaryWebSocketCarbonMessage.isFinalFragment());
+                            parameterList.add(binaryWebSocketMessage.isFinalFragment());
                         } else if (parameterType == Session.class) {
                             SessionManager sessionManager = SessionManager.getInstance();
-                            Session session = sessionManager.getSession(binaryWebSocketCarbonMessage);
+                            Session session = sessionManager.getSession(binaryWebSocketMessage);
                             parameterList.add(session);
                         } else {
                             parameterList.add(null);
                         }
                     }
             );
-
             method.invoke(dispatchedEndpoint.getWebSocketEndpoint(), parameterList.toArray());
 
-        } else if (webSocketCarbonMessage instanceof CloseWebSocketCarbonMessage) {
-            CloseWebSocketCarbonMessage closeWebSocketCarbonMessage =
-                    (CloseWebSocketCarbonMessage) webSocketCarbonMessage;
+        } else if (webSocketMessage instanceof CloseWebSocketMessage) {
+            CloseWebSocketMessage closeWebSocketMessage =
+                    (CloseWebSocketMessage) webSocketMessage;
+
             Method method = dispatchedEndpoint.getOnCloseMethod();
-            List<Object> parameterList = new LinkedList<>();
-            Arrays.stream(method.getParameterTypes()).forEach(
-                    parameterType -> {
-                        if (parameterType == String.class) {
-                            parameterList.add(closeWebSocketCarbonMessage.getReasonText());
-                        } else if (parameterType == int.class) {
-                            parameterList.add(closeWebSocketCarbonMessage.getStatusCode());
-                        } else {
-                            parameterList.add(null);
+            if (method != null) {
+                List<Object> parameterList = new LinkedList<>();
+                Arrays.stream(method.getParameterTypes()).forEach(
+                        parameterType -> {
+                            if (parameterType == String.class) {
+                                parameterList.add(closeWebSocketMessage.getReasonText());
+                            } else if (parameterType == int.class) {
+                                parameterList.add(closeWebSocketMessage.getStatusCode());
+                            } else {
+                                parameterList.add(null);
+                            }
                         }
-                    }
-            );
+                );
 
-            method.invoke(dispatchedEndpoint.getWebSocketEndpoint(), parameterList.toArray());
+                method.invoke(dispatchedEndpoint.getWebSocketEndpoint(), parameterList.toArray());
+            }
         }
     }
 
