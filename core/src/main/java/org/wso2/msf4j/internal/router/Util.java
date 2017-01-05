@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HEAD;
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -48,6 +49,32 @@ public class Util {
                method.isAnnotationPresent(DELETE.class) ||
                method.isAnnotationPresent(HEAD.class) ||
                method.isAnnotationPresent(OPTIONS.class);
+    }
+
+    /**
+     * Fetches the HttpMethod from annotations and returns String representation of HttpMethod.
+     * Return emptyString if not present.
+     *
+     * @param method Method handling the http request.
+     * @return String representation of HttpMethod from annotations or emptyString as a default.
+     */
+    public static String getHttpMethod(Method method) {
+        String httpMethodType = "";
+
+        if (method.isAnnotationPresent(GET.class)) {
+            httpMethodType = HttpMethod.GET;
+        } else if (method.isAnnotationPresent(PUT.class)) {
+            httpMethodType = HttpMethod.PUT;
+        } else if (method.isAnnotationPresent(POST.class)) {
+            httpMethodType = HttpMethod.POST;
+        } else if (method.isAnnotationPresent(DELETE.class)) {
+            httpMethodType = HttpMethod.DELETE;
+        } else if (method.isAnnotationPresent(HEAD.class)) {
+            httpMethodType = HttpMethod.HEAD;
+        } else if (method.isAnnotationPresent(OPTIONS.class)) {
+            httpMethodType = HttpMethod.OPTIONS;
+        }
+        return httpMethodType;
     }
 
     /**

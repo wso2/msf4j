@@ -144,6 +144,9 @@
         <module>samples/message-tracing/zipkin/</module>
         <module>samples/subresource</module>
         <module>samples/spring-profile</module>
+        <module>samples/rest-interceptor/common</module>
+        <module>samples/rest-interceptor/bundle</module>
+        <module>samples/rest-interceptor/fatjar</module>
 
         <module>perf-benchmark/Samples/wso2msf4j</module>
         <module>features/feature-test</module>
