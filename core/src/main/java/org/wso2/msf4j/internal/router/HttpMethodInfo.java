@@ -29,7 +29,6 @@ import java.lang.reflect.Modifier;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -178,8 +177,8 @@ public class HttpMethodInfo {
                                                             relativePath);
                         HttpResourceModel resourceModel = new HttpResourceModel(absolutePath, method, returnVal, true);
                         resourceModel.setParent(destination.getDestination());
-                        SubresourceKey subResKey =
-                                new SubresourceKey(absolutePath, method.getDeclaringClass(), Collections.emptySet());
+                        SubresourceKey subResKey = new SubresourceKey(absolutePath, method.getDeclaringClass(),
+                                resourceModel.getHttpMethod());
                         destination.getDestination().addSubResources(subResKey, resourceModel);
                     }
                 }
@@ -189,7 +188,7 @@ public class HttpMethodInfo {
 
             List<Map.Entry<SubresourceKey, HttpResourceModel>> entries =
                     destination.getDestination().getSubResources().entrySet().stream()
-                               .filter(e -> e.getValue().getHttpMethod().contains(request.getHttpMethod()) &&
+                               .filter(e -> e.getValue().getHttpMethod().equals(request.getHttpMethod()) &&
                                             finalRequestPath.matches(e.getKey().getPath().replaceAll(GROUP_PATTERN,
                                                                                                 GROUP_PATTERN_REGEX)) &&
                                             returnVal.getClass().equals(e.getKey().getTypedClass()))

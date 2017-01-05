@@ -27,11 +27,16 @@ import org.wso2.carbon.transport.http.netty.config.YAMLTransportConfigurationBui
 import org.wso2.carbon.transport.http.netty.internal.HTTPTransportContextHolder;
 import org.wso2.carbon.transport.http.netty.listener.HTTPTransportListener;
 import org.wso2.msf4j.internal.DataHolder;
+import org.wso2.msf4j.exception.FilterRegistrationException;
+import org.wso2.msf4j.filter.MSF4JRequestFilter;
+import org.wso2.msf4j.filter.MSF4JResponseFilter;
 import org.wso2.msf4j.internal.MSF4JMessageProcessor;
 import org.wso2.msf4j.internal.MicroservicesRegistryImpl;
 import org.wso2.msf4j.util.RuntimeAnnotations;
 
 import java.util.Collections;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -121,6 +126,56 @@ public class MicroservicesRunner {
     public MicroservicesRunner addInterceptor(Interceptor... interceptor) {
         checkState();
         msRegistry.addInterceptor(interceptor);
+        return this;
+    }
+
+    /**
+     * Register MSF4J request filter.
+     *
+     * @param requestFilterClass MSF4J filter instance type
+     */
+    public MicroservicesRunner registerRequestFilter(Class<?> requestFilterClass) {
+        checkState();
+        try {
+            Constructor constructor = requestFilterClass.getConstructor();
+            MSF4JRequestFilter requestFilter = (MSF4JRequestFilter) constructor.newInstance();
+            msRegistry.registerRequestFilter(requestFilter, requestFilterClass);
+        } catch (InstantiationException e) {
+            throw new FilterRegistrationException("Error occurred when instantiating " +
+                    "ContainerRequestFilter instance", e);
+        } catch (InvocationTargetException e) {
+            throw new FilterRegistrationException("Invocation target exception occurred", e);
+        } catch (NoSuchMethodException e) {
+            throw new FilterRegistrationException("Default constructor for ContainerRequestFilter class not found", e);
+        } catch (IllegalAccessException e) {
+            throw new FilterRegistrationException("Illegal access exception when invoking " +
+                    "ContainerRequestFilter constructor", e);
+        }
+        return this;
+    }
+
+    /**
+     * Register MSF4J response filter.
+     *
+     * @param responseFilterClass MSF4J filter instance type
+     */
+    public MicroservicesRunner registerResponseFilter(Class<?> responseFilterClass) {
+        checkState();
+        try {
+            Constructor constructor = responseFilterClass.getConstructor();
+            MSF4JResponseFilter responseFilter = (MSF4JResponseFilter) constructor.newInstance();
+            msRegistry.registerResponseFilter(responseFilter, responseFilterClass);
+        } catch (InstantiationException e) {
+            throw new FilterRegistrationException("Error occurred when instantiating " +
+                    "ContainerResponseFilter instance", e);
+        } catch (InvocationTargetException e) {
+            throw new FilterRegistrationException("Invocation target exception occurred", e);
+        } catch (NoSuchMethodException e) {
+            throw new FilterRegistrationException("Default constructor for ContainerResponseFilter class not found", e);
+        } catch (IllegalAccessException e) {
+            throw new FilterRegistrationException("Illegal access exception when invoking " +
+                    "ContainerResponseFilter constructor", e);
+        }
         return this;
     }
 

@@ -25,6 +25,7 @@ import org.wso2.carbon.messaging.CarbonMessageProcessor;
 import org.wso2.carbon.messaging.TransportSender;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
+import org.wso2.msf4j.filter.AnnotationFilterExecutor;
 import org.wso2.msf4j.internal.router.HandlerException;
 import org.wso2.msf4j.internal.router.HttpMethodInfo;
 import org.wso2.msf4j.internal.router.HttpMethodInfoBuilder;
@@ -34,6 +35,7 @@ import org.wso2.msf4j.internal.router.Util;
 import org.wso2.msf4j.util.HttpUtil;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -78,6 +80,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
             Response response = new Response(carbonCallback, request);
             try {
                 dispatchMethod(currentMicroservicesRegistry, request, response);
+                dispatchNewInterceptionMethod(currentMicroservicesRegistry, request, response);
             } catch (HandlerException e) {
                 handleHandlerException(e, carbonCallback);
             } catch (InvocationTargetException e) {
@@ -100,6 +103,47 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
             }
         });
         return true;
+    }
+
+    /**
+     * Dispatch appropriate resource method.
+     */
+    private void dispatchNewInterceptionMethod(MicroservicesRegistryImpl currentMicroservicesRegistry, Request request,
+                                               Response response) throws Exception {
+
+        HttpUtil.setConnectionHeader(request, response);
+        PatternPathRouter.RoutableDestination<HttpResourceModel> destination =
+                currentMicroservicesRegistry.
+                        getMetadata().
+                        getDestinationMethod(request.getUri(), request.getHttpMethod(), request.getContentType(),
+                                request.getAcceptTypes());
+        HttpResourceModel resourceModel = destination.getDestination();
+        response.setMediaType(Util.getResponseType(request.getAcceptTypes(),
+                resourceModel.getProducesMediaTypes()));
+
+        AnnotationFilterExecutor annotationFilterExecutor = new AnnotationFilterExecutor();
+        Method method = resourceModel.getMethod();
+        annotationFilterExecutor
+                .processRequestFilterAnnotation(currentMicroservicesRegistry, method, request);
+
+        HttpMethodInfoBuilder httpMethodInfoBuilder =
+                new HttpMethodInfoBuilder().
+                        httpResourceModel(resourceModel).
+                        httpRequest(request).
+                        httpResponder(response).
+                        requestInfo(destination.getGroupNameValues());
+
+        HttpMethodInfo httpMethodInfo = httpMethodInfoBuilder.build();
+        if (httpMethodInfo.isStreamingSupported()) {
+            while (!(request.isEmpty() && request.isEomAdded())) {
+                httpMethodInfo.chunk(request.getMessageBody());
+            }
+            httpMethodInfo.end();
+        } else {
+            httpMethodInfo.invoke(request, destination);
+        }
+        annotationFilterExecutor
+                .processResponseFilterAnnotation(currentMicroservicesRegistry, method, request, response);
     }
 
     /**
