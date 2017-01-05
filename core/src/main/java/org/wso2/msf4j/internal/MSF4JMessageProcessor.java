@@ -37,6 +37,7 @@ import org.wso2.msf4j.internal.router.HttpMethodInfoBuilder;
 import org.wso2.msf4j.internal.router.HttpResourceModel;
 import org.wso2.msf4j.internal.router.PatternPathRouter;
 import org.wso2.msf4j.internal.router.Util;
+import org.wso2.msf4j.internal.websocket.CloseCodeImpl;
 import org.wso2.msf4j.internal.websocket.DispatchedEndpoint;
 import org.wso2.msf4j.internal.websocket.EndpointsRegistryImpl;
 import org.wso2.msf4j.internal.websocket.SessionManager;
@@ -45,11 +46,13 @@ import org.wso2.msf4j.util.HttpUtil;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import javax.websocket.CloseReason;
 import javax.websocket.Session;
 import javax.ws.rs.ext.ExceptionMapper;
 
@@ -78,7 +81,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
      */
     @Override
     public boolean receive(CarbonMessage carbonMessage, CarbonCallback carbonCallback)
-            throws InvocationTargetException, IllegalAccessException, IOException {
+            throws InvocationTargetException, IllegalAccessException, IOException, URISyntaxException {
         if (carbonMessage instanceof WebSocketMessage) {
             log.info("WebSocketCarbonMessage Received");
             WebSocketMessage webSocketMessage = (WebSocketMessage) carbonMessage;
@@ -88,22 +91,42 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
             return true;
         } else {
             // If we are running on OSGi mode need to get the registry based on the channel_id.
-
             String connection = (String) carbonMessage.getProperty(Constants.CONNECTION);
-            if (connection.equalsIgnoreCase("Upgrade")) {
+            if (connection != null && connection.equalsIgnoreCase("Upgrade")) {
                 String upgrade = (String) carbonMessage.getProperty(Constants.UPGRADE);
                 if (upgrade.equalsIgnoreCase("websocket")) {
                     WebSocketHandshaker webSocketHandshaker =
                             (WebSocketHandshaker) carbonMessage.getProperty(Constants.WEBSOCKET_HANDSHAKER);
                     EndpointsRegistryImpl endpointsRegistry = EndpointsRegistryImpl.getInstance();
-                    if (endpointsRegistry.getDispatchedEndpoint(carbonMessage) == null) {
-                        webSocketHandshaker.cancel();
-                        log.info("Handshake is cancelled. Requested endpoint not found.");
-                    } else {
-                        webSocketHandshaker.handshake();
-                        log.info("Handshake is done.");
-                    }
+                    DispatchedEndpoint dispatchedEndpoint = endpointsRegistry.getDispatchedEndpoint(carbonMessage);
 
+                    if (dispatchedEndpoint == null) {
+                        /*
+                        If DispatchedEndpoint cannot be found that means there is no registered
+                        endpoint for requested URI.
+                        So cancel the handshake request.
+                         */
+                        webSocketHandshaker.cancel();
+                    } else {
+                        /*
+                        If DispatchedEndpoint exists do the needful to handshake and register the client.
+                         */
+                        webSocketHandshaker.handshake();
+                        SessionManager sessionManager = SessionManager.getInstance();
+                        Session session = sessionManager.createSession(carbonMessage);
+                        Method method = dispatchedEndpoint.getOnOpenMethod();
+                        List<Object> parameterList = new LinkedList<>();
+                        Arrays.stream(method.getParameterTypes()).forEach(
+                                parameterType -> {
+                                   if (parameterType == Session.class) {
+                                        parameterList.add(session);
+                                    } else {
+                                       parameterList.add(null);
+                                   }
+                                }
+                        );
+                        method.invoke(dispatchedEndpoint.getWebSocketEndpoint(), parameterList.toArray());
+                    }
                 }
                 return true;
             }
@@ -150,7 +173,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
      */
     private void dispatchWebSocketMethod(DispatchedEndpoint dispatchedEndpoint,
                                          WebSocketMessage webSocketMessage)
-            throws InvocationTargetException, IllegalAccessException {
+            throws InvocationTargetException, IllegalAccessException, IOException {
 
         //Invoke correct method with correct parameters
         if (webSocketMessage instanceof TextWebSocketMessage) {
@@ -171,7 +194,6 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                         }
                     }
             );
-
             method.invoke(dispatchedEndpoint.getWebSocketEndpoint(), parameterList.toArray());
 
         } else if (webSocketMessage instanceof BinaryWebSocketMessage) {
@@ -207,17 +229,22 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                 List<Object> parameterList = new LinkedList<>();
                 Arrays.stream(method.getParameterTypes()).forEach(
                         parameterType -> {
-                            if (parameterType == String.class) {
-                                parameterList.add(closeWebSocketMessage.getReasonText());
-                            } else if (parameterType == int.class) {
-                                parameterList.add(closeWebSocketMessage.getStatusCode());
+                            if (parameterType == CloseReason.class) {
+                                CloseReason.CloseCode closeCode = new CloseCodeImpl(
+                                        closeWebSocketMessage.getStatusCode());
+                                CloseReason closeReason = new CloseReason(
+                                        closeCode, closeWebSocketMessage.getReasonText());
+                                parameterList.add(closeReason);
+                            } else if (parameterType == Session.class) {
+                                SessionManager sessionManager = SessionManager.getInstance();
+                                parameterList.add(sessionManager.getSession(closeWebSocketMessage));
                             } else {
                                 parameterList.add(null);
                             }
                         }
                 );
-
                 method.invoke(dispatchedEndpoint.getWebSocketEndpoint(), parameterList.toArray());
+                SessionManager.getInstance().removeSession(closeWebSocketMessage);
             }
         }
     }
