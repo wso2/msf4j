@@ -21,10 +21,11 @@ package org.wso2.msf4j.websocket;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.messaging.websocket.TextWebSocketCarbonMessage;
-import org.wso2.carbon.messaging.websocket.WebSocketCarbonMessage;
+import org.wso2.carbon.messaging.websocket.TextWebSocketMessage;
+import org.wso2.carbon.messaging.websocket.WebSocketMessage;
 import org.wso2.carbon.transport.http.netty.common.Constants;
 import org.wso2.msf4j.WebSocketEndpoint;
+import org.wso2.msf4j.internal.router.PatternPathRouter;
 import org.wso2.msf4j.internal.websocket.DispatchedEndpoint;
 import org.wso2.msf4j.internal.websocket.EndpointsRegistryImpl;
 
@@ -41,8 +42,8 @@ public class EndpointRegistryTest {
 
     private final String testText = "test";
     private WebSocketEndpoint testEndpoint = new TestEndpoint();
-    private EndpointsRegistryImpl endpointsRegistry = new EndpointsRegistryImpl();
-    private WebSocketCarbonMessage webSocketCarbonMessage = new TextWebSocketCarbonMessage(testText, null);
+    private EndpointsRegistryImpl endpointsRegistry = EndpointsRegistryImpl.getInstance();
+    private WebSocketMessage textWebSocketMessage = new TextWebSocketMessage(testText);
 
     public EndpointRegistryTest() throws URISyntaxException {
     }
@@ -50,13 +51,15 @@ public class EndpointRegistryTest {
     @BeforeClass
     public void onRegister() throws URISyntaxException {
         URI uri = new URI("/test");
-        webSocketCarbonMessage.setProperty(Constants.TO, uri);
+        textWebSocketMessage.setProperty(Constants.TO, uri);
     }
 
     @Test
-    public void registerEndpoint() throws InvocationTargetException, IllegalAccessException {
+    public void registerEndpoint() throws InvocationTargetException, IllegalAccessException, URISyntaxException {
         endpointsRegistry.addEndpoint(testEndpoint);
-        DispatchedEndpoint dispatchedEndpoint = endpointsRegistry.getDispatchedEndpoint(webSocketCarbonMessage);
+        PatternPathRouter.RoutableDestination<DispatchedEndpoint> routableEndpoint =
+                endpointsRegistry.getRoutableEndpoint(textWebSocketMessage);
+        DispatchedEndpoint dispatchedEndpoint = routableEndpoint.getDestination();
         List<Object> paralist = new LinkedList<>();
         paralist.add(testText);
         paralist.add(null);
@@ -68,7 +71,7 @@ public class EndpointRegistryTest {
     @Test
     public void removeEndpoint() throws Exception {
         endpointsRegistry.removeEndpoint(testEndpoint);
-        Assert.assertTrue(endpointsRegistry.getDispatchedEndpoint(webSocketCarbonMessage) == null);
+        Assert.assertTrue(endpointsRegistry.getRoutableEndpoint(textWebSocketMessage) == null);
     }
 
 }

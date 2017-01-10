@@ -20,25 +20,28 @@ package org.wso2.msf4j.internal.websocket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.websocket.WebSocketMessage;
 import org.wso2.carbon.messaging.websocket.WebSocketResponder;
 import org.wso2.carbon.transport.http.netty.common.Constants;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.websocket.Session;
 
 /**
  * Internal session manager for WebSocket messages
+ * @since 1.0.0
  */
 public class SessionManager {
 
-    Logger log = LoggerFactory.getLogger(SessionManager.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SessionManager.class);
 
     private static SessionManager sessionManager = new SessionManager();
-    private final Map<String, Session> sessionMap = new ConcurrentHashMap<>();
+    private Map<String, Session> sessionMap = new ConcurrentHashMap<>();
 
     private SessionManager() {
     }
@@ -48,11 +51,11 @@ public class SessionManager {
     }
 
     /**
-     * @param webSocketMessage incoming {@link WebSocketMessage}
+     * @param carbonMessage incoming {@link WebSocketMessage}
      * @return requested {@link Session} for given channel
      */
-    public Session getSession(WebSocketMessage webSocketMessage) {
-        String sessionId = getSessionId(webSocketMessage);
+    public Session getSession(CarbonMessage carbonMessage) {
+        String sessionId = getSessionId(carbonMessage);
         if (sessionMap.containsKey(sessionId)) {
             return sessionMap.get(sessionId);
         } else {
@@ -61,43 +64,51 @@ public class SessionManager {
     }
 
     /**
-     * This method creates session for a given channel
-     * Here unlike http channel ID was taken as the session ID
-     * @param webSocketMessage incoming {@link WebSocketMessage}
-     * @return created {@link Session} for given channel
+     * This method creates session for a given channel.
+     * Here unlike http channel ID was taken as the session ID.
+     * @param carbonMessage Request carbon Message.
+     * @return Created new {@link Session}.
+     * @throws URISyntaxException throws if URI syntax is wrong.
      */
-    public Session createSession(WebSocketMessage webSocketMessage) {
-        String sessionId = getSessionId(webSocketMessage);
-        WebSocketResponder webSocketResponder = webSocketMessage.getWebSocketResponder();
-        URI uri = (URI) webSocketMessage.getProperty(Constants.TO);
+    public Session createSession(CarbonMessage carbonMessage) throws URISyntaxException {
+        String sessionId = getSessionId(carbonMessage);
+        URI uri = (URI) carbonMessage.getProperty(Constants.TO);
+        WebSocketResponder webSocketResponder =
+                (WebSocketResponder) carbonMessage.getProperty(Constants.WEBSOCKET_RESPONDER);
         SessionImpl session = new SessionImpl(webSocketResponder, sessionId, uri, true, true, null, null, null);
         sessionMap.put(sessionId, session);
-        log.info("Session created for channel " + sessionId);
+        LOGGER.info("Session created for channel " + sessionId);
         return session;
     }
 
+    /**
+     * Checks whether the session is contained in the session manager.
+     * @param webSocketMessage incoming {@link WebSocketMessage}.
+     * @return true if the session is in the {@link SessionManager}.
+     */
     public boolean containsSession(WebSocketMessage webSocketMessage) {
         String sessionId = getSessionId(webSocketMessage);
         return sessionMap.containsKey(sessionId);
     }
 
     /**
-     * Close the channel for given session and remove session from the session manager
-     * @param webSocketMessage
+     * Close the channel for given session.
+     * Remove session from the session manager.
+     * @param carbonMessage {@link CarbonMessage} which includes the session ID.
      */
-    public void removeSession(WebSocketMessage webSocketMessage) throws IOException {
-        String sessionId = getSessionId(webSocketMessage);
+    public void removeSession(CarbonMessage carbonMessage) throws IOException {
+        String sessionId = getSessionId(carbonMessage);
         if (sessionMap.containsKey(sessionId)) {
             sessionMap.remove(sessionId).close();
-            log.info("Removed session ID for channel " + sessionId);
+            LOGGER.info("Removed session ID for channel " + sessionId);
         } else {
-            log.info("There is no session created to remove for channel " + sessionId);
+            LOGGER.info("There is no session created to remove for channel " + sessionId);
         }
     }
 
 
-    private String getSessionId(WebSocketMessage webSocketMessage) {
-        return (String) webSocketMessage.getProperty(Constants.CHANNEL_ID);
+    private String getSessionId(CarbonMessage carbonMessage) {
+        return (String) carbonMessage.getProperty(Constants.CHANNEL_ID);
     }
 
 

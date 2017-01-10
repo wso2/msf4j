@@ -1,3 +1,21 @@
+<!--
+  ~   Copyright (c) ${date}, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~   WSO2 Inc. licenses this file to you under the Apache License,
+  ~   Version 2.0 (the "License"); you may not use this file except
+  ~   in compliance with the License.
+  ~   You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
@@ -8,21 +26,21 @@
     <packaging>pom</packaging>
     <name>New feature</name>
 
-<properties>
-    <carbon.messaging.version>1.0.12-SNAPSHOT</carbon.messaging.version>
-    <carbon.transport.http.netty.version>2.1.19-SNAPSHOT</carbon.transport.http.netty.version>
-    <carbon.metrics.version>2.0.0</carbon.metrics.version>
-    <msf4j.version>2.1.1-SNAPSHOT</msf4j.version>
-    <carbon.feature.plugin.version>2.1.0</carbon.feature.plugin.version>
-    <carbon.kernel.version>5.1.0</carbon.kernel.version>
-    <osgi.api.version>6.0.0</osgi.api.version>
-    <carbon.jndi.version>1.0.0</carbon.jndi.version>
-    <carbon.cache.version>1.0.0</carbon.cache.version>
-    <carbon.deployment.version>5.0.0</carbon.deployment.version>
-    <carbon.datasources.version>1.0.0</carbon.datasources.version>    
-</properties>
+    <properties>
+        <carbon.messaging.version>1.0.12-SNAPSHOT</carbon.messaging.version>
+        <carbon.transport.http.netty.version>2.1.19-SNAPSHOT</carbon.transport.http.netty.version>
+        <carbon.metrics.version>2.0.0</carbon.metrics.version>
+        <msf4j.version>2.1.1-SNAPSHOT</msf4j.version>
+        <carbon.feature.plugin.version>2.1.0</carbon.feature.plugin.version>
+        <carbon.kernel.version>5.1.0</carbon.kernel.version>
+        <osgi.api.version>6.0.0</osgi.api.version>
+        <carbon.jndi.version>1.0.0</carbon.jndi.version>
+        <carbon.cache.version>1.0.0</carbon.cache.version>
+        <carbon.deployment.version>5.0.0</carbon.deployment.version>
+        <carbon.datasources.version>1.0.0</carbon.datasources.version>
+    </properties>
 
-   <dependencies>
+    <dependencies>
         <!-- Carbon -->
         <dependency>
             <groupId>org.wso2.carbon</groupId>
@@ -106,15 +124,15 @@
             <type>zip</type>
         </dependency>
 
-       <!-- https://mvnrepository.com/artifact/javax.websocket/javax.websocket-api -->
-       <dependency>
-           <groupId>javax.websocket</groupId>
-           <artifactId>javax.websocket-api</artifactId>
-           <version>1.1</version>
-       </dependency>
+        <!-- https://mvnrepository.com/artifact/javax.websocket/javax.websocket-api -->
+        <dependency>
+            <groupId>javax.websocket</groupId>
+            <artifactId>javax.websocket-api</artifactId>
+            <version>1.1</version>
+        </dependency>
 
 
-   </dependencies>
+    </dependencies>
 
     <build>
         <plugins>
@@ -202,7 +220,7 @@
                                     <id>org.wso2.carbon.datasource.core.feature</id>
                                     <version>${carbon.datasources.version}</version>
                                 </feature>
-                            
+
                             </features>
                         </configuration>
                     </execution>
@@ -291,7 +309,7 @@
                                     <id>org.wso2.carbon.datasource.core.feature.group</id>
                                     <version>${carbon.datasources.version}</version>
                                 </feature>
-                                
+
                             </features>
                         </configuration>
                     </execution>
@@ -324,7 +342,7 @@
                                 <delete dir="target/dependency-maven-plugin-markers" />
                                 <delete dir="target/org.eclipse.equinox.executable-3.5.0.v20110530-7P7NFUFFLWUl76mart" />
                                 <delete dir="target/p2-repo" />
-                               
+
                                 <delete file="target/tmp" />
                                 <delete dir="target/wso2msf4j-${msf4j.version}" />
                                 <delete dir="target/antrun" />
@@ -340,8 +358,8 @@
         </plugins>
     </build>
 
-    
-    
+
+
     <pluginRepositories>
         <pluginRepository>
             <id>wso2-nexus</id>

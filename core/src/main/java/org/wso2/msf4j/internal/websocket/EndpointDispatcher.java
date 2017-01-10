@@ -18,10 +18,11 @@
 
 package org.wso2.msf4j.internal.websocket;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.WebSocketEndpoint;
 
 import java.lang.reflect.Method;
-import java.net.URI;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
@@ -35,7 +36,8 @@ import javax.websocket.server.ServerEndpoint;
  * Dispatch the registered endpoints
  */
 public class EndpointDispatcher {
-    private URI uri;
+    private static final Logger LOGGER = LoggerFactory.getLogger(EndpointDispatcher.class);
+    private String uri;
     private Method onOpenMethod = null;
     private Method onStringMessageMethod = null;
     private Method onBinaryMessageMethod = null;
@@ -61,8 +63,7 @@ public class EndpointDispatcher {
             throw new Exception("ServerEndpoint is not declared");
         }
 
-        uri = new URI(serverEndpointAnnotation.value());
-
+        uri = serverEndpointAnnotation.value();
         Method[] methods = webSocketEndpoint.getClass().getMethods();
         Arrays.stream(methods).forEach(
                 method -> {
@@ -70,12 +71,12 @@ public class EndpointDispatcher {
                         //Adding OnMessage according to their types
                         Class<?>[] paraTypes = method.getParameterTypes();
                         List<Class<?>> paraList = Arrays.asList(paraTypes);
-                        if (paraList.contains(String.class)) {
-                            onStringMessageMethod = method;
-                        } else if (paraList.contains(byte[].class) || paraList.contains(ByteBuffer.class)) {
+                        if (paraList.contains(byte[].class) || paraList.contains(ByteBuffer.class)) {
                             onBinaryMessageMethod = method;
                         } else if (paraList.contains(PongMessage.class)) {
                             onPongMessageMethod = method;
+                        } else if (paraList.contains(String.class)) {
+                            onStringMessageMethod = method;
                         }
                     } else if (method.isAnnotationPresent(OnOpen.class)) {
                         onOpenMethod = method;

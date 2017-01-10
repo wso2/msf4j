@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.kernel.startupresolver.RequiredCapabilityListener;
 import org.wso2.msf4j.WebSocketEndpoint;
+import org.wso2.msf4j.internal.DataHolder;
 
 /**
  * OSGi Service component for WebSocket server
@@ -42,12 +43,12 @@ import org.wso2.msf4j.WebSocketEndpoint;
 )
 public class WebSocketServerSC implements RequiredCapabilityListener {
 
-    Logger log = LoggerFactory.getLogger(WebSocketServerSC.class);
-    EndpointsRegistryImpl endpointsRegistry = EndpointsRegistryImpl.getInstance();
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketServerSC.class);
+    private EndpointsRegistryImpl endpointsRegistry = EndpointsRegistryImpl.getInstance();
 
     @Activate
     protected void start(final BundleContext bundleContext) {
-
+        LOGGER.debug("Endpoint Activated.");
     }
 
     @Reference(
@@ -59,12 +60,10 @@ public class WebSocketServerSC implements RequiredCapabilityListener {
     )
     protected void addEndpoint(WebSocketEndpoint endpoint) {
         endpointsRegistry.addEndpoint(endpoint);
-        log.info("Endpoint registered");
     }
 
     protected void removeEndpoint(WebSocketEndpoint endpoint) throws Exception {
         endpointsRegistry.removeEndpoint(endpoint);
-        log.info("Endpoint removed");
     }
 
     /**
@@ -72,6 +71,7 @@ public class WebSocketServerSC implements RequiredCapabilityListener {
      */
     @Override
     public void onAllRequiredCapabilitiesAvailable() {
-        log.info("All required capabilities are available");
+        DataHolder.getInstance().getBundleContext().registerService(WebSocketServerSC.class, this, null);
+        LOGGER.info("All required capabilities are available");
     }
 }

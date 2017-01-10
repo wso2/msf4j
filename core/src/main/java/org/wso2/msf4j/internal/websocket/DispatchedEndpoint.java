@@ -21,13 +21,12 @@ package org.wso2.msf4j.internal.websocket;
 import org.wso2.msf4j.WebSocketEndpoint;
 
 import java.lang.reflect.Method;
-import java.net.URI;
 
 /**
  * After dispatching the endpoint all the methods will be found and stored in here
  */
 public class DispatchedEndpoint {
-    private final URI uri;
+    private final String uri;
     private final Method onOpenMethod;
     private final Method onStringMessageMethod;
     private final Method onBinaryMessageMethod;
@@ -35,7 +34,7 @@ public class DispatchedEndpoint {
     private final Method onCloseMethod;
     private final WebSocketEndpoint webSocketEndpoint;
 
-    public DispatchedEndpoint(URI uri, Method onOpenMethod, Method onStringMessageMethod,
+    public DispatchedEndpoint(String uri, Method onOpenMethod, Method onStringMessageMethod,
                               Method onBinaryMessageMethod, Method onPongMessageMethod,
                               Method onCloseMethod, WebSocketEndpoint webSocketEndpoint) {
         this.uri = uri;
@@ -47,7 +46,7 @@ public class DispatchedEndpoint {
         this.webSocketEndpoint = webSocketEndpoint;
     }
 
-    public URI getUri() {
+    public String getUri() {
         return uri;
     }
 

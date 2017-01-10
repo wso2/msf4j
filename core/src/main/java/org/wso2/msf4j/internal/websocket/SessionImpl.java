@@ -174,7 +174,6 @@ public class SessionImpl implements Session {
     public void close() throws IOException {
         webSocketResponder.pushToClient(new CloseWebSocketMessage(
                 CloseReason.CloseCodes.GOING_AWAY.getCode(),
-                null,
                 null
         ));
     }
@@ -183,8 +182,7 @@ public class SessionImpl implements Session {
     public void close(CloseReason closeReason) throws IOException {
         webSocketResponder.pushToClient(new CloseWebSocketMessage(
                 closeReason.getCloseCode().getCode(),
-                closeReason.getReasonPhrase(),
-                null
+                closeReason.getReasonPhrase()
         ));
     }
 

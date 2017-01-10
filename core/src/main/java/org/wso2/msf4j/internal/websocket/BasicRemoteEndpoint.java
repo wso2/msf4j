@@ -49,7 +49,7 @@ public class BasicRemoteEndpoint implements RemoteEndpoint.Basic {
      */
     @Override
     public void sendText(String text) throws IOException {
-        webSocketResponder.pushToClient(new TextWebSocketMessage(text, null));
+        webSocketResponder.pushToClient(new TextWebSocketMessage(text));
     }
 
     /**
@@ -61,7 +61,7 @@ public class BasicRemoteEndpoint implements RemoteEndpoint.Basic {
      */
     @Override
     public void sendBinary(ByteBuffer data) throws IOException {
-        webSocketResponder.pushToClient(new BinaryWebSocketMessage(data, true, null));
+        webSocketResponder.pushToClient(new BinaryWebSocketMessage(data, true));
     }
 
     /**
@@ -92,7 +92,7 @@ public class BasicRemoteEndpoint implements RemoteEndpoint.Basic {
      */
     @Override
     public void sendBinary(ByteBuffer partialByte, boolean isLast) throws IOException {
-        webSocketResponder.pushToClient(new BinaryWebSocketMessage(partialByte, isLast, null));
+        webSocketResponder.pushToClient(new BinaryWebSocketMessage(partialByte, isLast));
     }
 
     /**

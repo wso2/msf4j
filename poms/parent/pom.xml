@@ -585,7 +585,7 @@
         <carbon.kernel.version.range>[5.0.0,6.0.0)</carbon.kernel.version.range>
         <carbon.messaging.version>1.0.12-SNAPSHOT</carbon.messaging.version>
         <carbon.messaging.version.range>[1.0.4,2)</carbon.messaging.version.range>
-        <org.wso2.carbon.transport.http.netty.version>2.1.4</org.wso2.carbon.transport.http.netty.version>
+        <org.wso2.carbon.transport.http.netty.version>2.1.19-SNAPSHOT</org.wso2.carbon.transport.http.netty.version>
         <org.wso2.carbon.transport.http.netty.version.range>[2.0,3)</org.wso2.carbon.transport.http.netty.version.range>
         <org.apache.httpcomponents.httpclient.version>4.5.2</org.apache.httpcomponents.httpclient.version>
         <msf4j.version>2.1.1-SNAPSHOT</msf4j.version>
@@ -604,6 +604,7 @@
         <feign.version>9.3.1</feign.version>
         <httpclient.version>4.5.2</httpclient.version>
         <httpcore.version>4.4.5</httpcore.version>
+        <javax.websocket.version>1.1</javax.websocket.version>
 
         <osgi.api.version>6.0.0</osgi.api.version>
         <equinox.osgi.version>3.10.2.v20150203-1939</equinox.osgi.version>

@@ -36,6 +36,13 @@
             <groupId>javax.ws.rs</groupId>
             <artifactId>javax.ws.rs-api</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>javax.websocket</groupId>
+            <artifactId>javax.websocket-api</artifactId>
+            <version>${javax.websocket.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
@@ -238,6 +245,10 @@
                                 <bundle>
                                     <symbolicName>commons-io</symbolicName>
                                     <version>${commons-io.wso2.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>javax.websocket-api</symbolicName>
+                                    <version>${javax.websocket.version}</version>
                                 </bundle>
                             </bundles>
                             <importFeatures>

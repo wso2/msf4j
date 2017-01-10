@@ -24,12 +24,14 @@ import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.transport.http.netty.common.Constants;
 import org.wso2.msf4j.WebSocketEndpoint;
 import org.wso2.msf4j.WebSocketEndpointsRegistry;
+import org.wso2.msf4j.internal.router.PatternPathRouter;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
-import java.util.Map;
+import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import javax.websocket.server.ServerEndpoint;
 
 /**
  * Implementation for {@link WebSocketEndpointsRegistry}
@@ -37,15 +39,11 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
 
-    private final Logger log = LoggerFactory.getLogger(EndpointsRegistryImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EndpointsRegistryImpl.class);
     private static final EndpointsRegistryImpl webSocketEndpointsRegistry = new EndpointsRegistryImpl();
+    private PatternPathRouter<DispatchedEndpoint> endpointPatternPathRouter = PatternPathRouter.create();
 
-    /*
-
-     */
-    private Map<URI, DispatchedEndpoint> registeredEndpoints = new ConcurrentHashMap<>();
-
-    public EndpointsRegistryImpl() {
+    private EndpointsRegistryImpl() {
     }
 
     /**
@@ -60,17 +58,22 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
                 webSocketEndpoint -> {
                     try {
                         DispatchedEndpoint dispatchedEndpoint = dispatchEndpoint(webSocketEndpoint);
-                        registeredEndpoints.put(dispatchedEndpoint.getUri(), dispatchedEndpoint);
+                        endpointPatternPathRouter.add(dispatchedEndpoint.getUri(), dispatchedEndpoint);
+                        LOGGER.info("Endpoint Registered : " + dispatchedEndpoint.getUri().toString());
                     } catch (Exception e) {
-                        log.error(e.toString());
+                        LOGGER.error(e.toString());
                     }
                 }
         );
     }
 
     public void removeEndpoint(WebSocketEndpoint webSocketEndpoint) throws Exception {
-        DispatchedEndpoint dispatchedEndpoint = dispatchEndpoint(webSocketEndpoint);
-        registeredEndpoints.remove(dispatchedEndpoint.getUri());
+        String uri = webSocketEndpoint.getClass().getAnnotation(ServerEndpoint.class).value();
+//        List<PatternPathRouter.RoutableDestination<DispatchedEndpoint>> routableDestinations =
+//                endpointPatternPathRouter.getDestinations(uri);
+        LOGGER.info("Removed endpoint : " + uri);
+        //TODO : Implement remove correctly
+
     }
 
     public DispatchedEndpoint dispatchEndpoint(WebSocketEndpoint webSocketEndpoint) throws Exception {
@@ -78,9 +81,49 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
         return dispatcher.getDispatchedEndpoint();
     }
 
-    public DispatchedEndpoint getDispatchedEndpoint(CarbonMessage carbonMessage) {
+    public PatternPathRouter.RoutableDestination<DispatchedEndpoint> getRoutableEndpoint(
+            CarbonMessage carbonMessage) throws URISyntaxException {
         URI uri = (URI) carbonMessage.getProperty(Constants.TO);
-        return registeredEndpoints.get(uri);
+        String uriStr = uri.toString();
+        List<PatternPathRouter.RoutableDestination<DispatchedEndpoint>> routableDestinations =
+                endpointPatternPathRouter.getDestinations(uriStr);
+        return getBestEndpoint(routableDestinations, uriStr);
+    }
+
+
+    /*
+    Find the best matching RoutableDestination from the All matching RoutableDestinations
+     */
+    private PatternPathRouter.RoutableDestination<DispatchedEndpoint> getBestEndpoint(
+            List<PatternPathRouter.RoutableDestination<DispatchedEndpoint>> routableDestinationList,
+            String requestUri) {
+        PatternPathRouter.RoutableDestination<DispatchedEndpoint> bestRoutableDestination = null;
+        int currentBestHitCount = 0;
+        for (PatternPathRouter.RoutableDestination<DispatchedEndpoint>
+                currentRoutableDestination: routableDestinationList) {
+            int tempCount = getHitCount(currentRoutableDestination.getDestination().getUri().split("/"),
+                                        requestUri.split("/"));
+
+            if (tempCount > currentBestHitCount) {
+                bestRoutableDestination = currentRoutableDestination;
+                currentBestHitCount = tempCount;
+            }
+        }
+        return bestRoutableDestination;
+    }
+
+
+    /*
+    Compare and find number of equalities of the Endpoint URI and Requested URI
+     */
+    private int getHitCount(String[] destinationUriChunkArray, String[] requestUriChunkArray) {
+        int count = 0;
+        for (int i = 0; i < destinationUriChunkArray.length; i++) {
+            if (destinationUriChunkArray[i].equals(requestUriChunkArray[i])) {
+                count++;
+            }
+        }
+        return count;
     }
 
     @Override
