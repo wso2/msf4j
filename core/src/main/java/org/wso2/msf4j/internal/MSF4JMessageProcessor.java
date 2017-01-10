@@ -86,6 +86,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
             throws InvocationTargetException, IllegalAccessException, IOException, URISyntaxException {
         if (carbonMessage instanceof WebSocketMessage) {
             log.info("WebSocketMessage Received");
+
             WebSocketMessage webSocketMessage = (WebSocketMessage) carbonMessage;
             EndpointsRegistryImpl endpointsRegistry = EndpointsRegistryImpl.getInstance();
             PatternPathRouter.RoutableDestination<DispatchedEndpoint>
