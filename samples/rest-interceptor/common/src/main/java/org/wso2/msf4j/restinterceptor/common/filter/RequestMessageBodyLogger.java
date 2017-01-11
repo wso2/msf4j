@@ -24,15 +24,19 @@ import org.wso2.msf4j.Request;
 import org.wso2.msf4j.filter.MSF4JRequestFilter;
 
 import java.io.IOException;
+import javax.annotation.Priority;
+import javax.ws.rs.Priorities;
 
 /**
  * Class for logging the message body of the http request.
+ * Please note that the @Component annotation is only required in OSGI mode
  */
 @Component(
         name = "org.wso2.msf4j.restinterceptor.common.filter.RequestMessageBodyLogger",
         service = MSF4JRequestFilter.class,
         immediate = true
 )
+@Priority(Priorities.AUTHENTICATION)
 public class RequestMessageBodyLogger implements MSF4JRequestFilter {
 
     private static final Logger log = LoggerFactory.getLogger(HTTPRequestLogger.class);

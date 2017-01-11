@@ -75,4 +75,10 @@ limitations under the License.
             <class name="org.wso2.msf4j.ExtendedServiceTest"/>
         </classes>
     </test>
+
+    <test name="filter-tests" preserve-order="true" parallel="false">
+        <classes>
+            <class name="org.wso2.msf4j.FilterTest"/>
+        </classes>
+    </test>
 </suite>

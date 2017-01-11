@@ -30,9 +30,11 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
@@ -192,15 +194,15 @@ public final class MicroserviceMetadata {
      * @param services Services
      * @return Filter class list for all services
      */
-    public List<Class<?>> scanRequestFilterAnnotations(
+    public Set<Class<?>> scanRequestFilterAnnotations(
             Iterable<? extends Object> services) {
 
-        List<Class<?>> allFilterClassesList = Collections.emptyList();
+        Set<Class<?>> allFilterClassSet = new HashSet<>();
 
         for (Object service : services) {
             Class<?> serviceClass = service.getClass();
             List<FilterRequest> classFilterRequests = new ArrayList<>();
-            List<Class<?>> filterClassList = new ArrayList<>();
+            Set<Class<?>> filterClassSet = new HashSet<>();
 
             // Annotations in resources
             if (serviceClass.isAnnotationPresent(FilterRequest.class) ||
@@ -216,15 +218,15 @@ public final class MicroserviceMetadata {
                         (method.isAnnotationPresent(FilterRequest.class) ||
                                 method.isAnnotationPresent(FilterRequests.class))) {
                     methodFilterRequests.addAll(Arrays.asList(method.getAnnotationsByType(FilterRequest.class)));
-                    filterClassList = Stream
+                    filterClassSet = Stream
                             .concat(classFilterRequests.stream(), methodFilterRequests.stream())
                             .map(FilterRequest::value)
-                            .collect(Collectors.toList());
+                            .collect(Collectors.toSet());
                 }
             }
-            allFilterClassesList.addAll(filterClassList);
+            allFilterClassSet.addAll(filterClassSet);
         }
-        return allFilterClassesList;
+        return allFilterClassSet;
     }
 
     /**
@@ -233,15 +235,15 @@ public final class MicroserviceMetadata {
      * @param services Services
      * @return Filter class list for all services
      */
-    public List<Class<?>> scanResponseFilterAnnotations(
+    public Set<Class<?>> scanResponseFilterAnnotations(
             Iterable<? extends Object> services) {
 
-        List<Class<?>> allFilterClassesList = Collections.emptyList();
+        Set<Class<?>> allFilterClassesSet = new HashSet<>();
 
         for (Object service : services) {
             Class<?> serviceClass = service.getClass();
             List<FilterResponse> classFilterResponses = new ArrayList<>();
-            List<Class<?>> filterClassList = new ArrayList<>();
+            Set<Class<?>> filterClassSet = new HashSet<>();
 
             // Annotations in resources
             if (serviceClass.isAnnotationPresent(FilterResponse.class) ||
@@ -257,15 +259,15 @@ public final class MicroserviceMetadata {
                         (method.isAnnotationPresent(FilterResponse.class) ||
                                 method.isAnnotationPresent(FilterResponses.class))) {
                     methodFilterResponses.addAll(Arrays.asList(method.getAnnotationsByType(FilterResponse.class)));
-                    filterClassList = Stream
+                    filterClassSet = Stream
                             .concat(classFilterResponses.stream(), methodFilterResponses.stream())
                             .map(FilterResponse::value)
-                            .collect(Collectors.toList());
+                            .collect(Collectors.toSet());
                 }
             }
-            allFilterClassesList.addAll(filterClassList);
+            allFilterClassesSet.addAll(filterClassSet);
         }
-        return allFilterClassesList;
+        return allFilterClassesSet;
     }
 
     /**

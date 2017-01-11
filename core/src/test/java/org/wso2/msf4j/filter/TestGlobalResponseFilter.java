@@ -15,36 +15,40 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package org.wso2.msf4j.restinterceptor.common.filter;
+package org.wso2.msf4j.filter;
 
-import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
-import org.wso2.msf4j.filter.MSF4JResponseFilter;
 
 import java.io.IOException;
-import javax.annotation.Priority;
-import javax.ws.rs.Priorities;
+import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * HTTP response logging class.
- * Please note that the @Component annotation is only required in OSGI mode
- */
-@Component(
-        name = "org.wso2.msf4j.restinterceptor.common.filter.HTTPResponseLogger",
-        service = MSF4JResponseFilter.class,
-        immediate = true
-)
-@Priority(Priorities.AUTHENTICATION)
-public class HTTPResponseLogger implements MSF4JResponseFilter {
+public class TestGlobalResponseFilter implements MSF4JResponseFilter {
 
-    private static final Logger log = LoggerFactory.getLogger(HTTPResponseLogger.class);
+    private static AtomicInteger filterCalls = new AtomicInteger(0);
+    private static final Logger log = LoggerFactory.getLogger(TestGlobalResponseFilter.class);
+
+    /**
+     * Reset filter call count.
+     */
+    public static void reset() {
+        filterCalls.set(0);
+    }
+
+    /**
+     * Get the number of filter calls.
+     *
+     * @return number of calls
+     */
+    public static int getFilterCalls() {
+        return filterCalls.get();
+    }
 
     @Override
     public void filter(Request request, Response response) throws IOException {
-        log.info(String.format("Logging HTTP response { Status code: %s }",
-                response.getStatusCode()));
+        filterCalls.incrementAndGet();
+        log.info(String.format("%s filter called %d times", this.getClass().getName(), filterCalls.get()));
     }
 }

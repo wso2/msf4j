@@ -20,8 +20,8 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>msf4j-service</artifactId>
         <groupId>org.wso2.msf4j</groupId>
+        <artifactId>msf4j-service</artifactId>
         <version>2.1.1-SNAPSHOT</version>
         <relativePath>../../../poms/msf4j-service/pom.xml</relativePath>
     </parent>
@@ -42,6 +42,7 @@
             <plugin>
                 <groupId>org.skife.maven</groupId>
                 <artifactId>really-executable-jar-maven-plugin</artifactId>
+                <version>${maven.reallyexecutablejarplugin.version}</version>
                 <configuration>
                     <programFile>restinterceptor</programFile>
                 </configuration>
