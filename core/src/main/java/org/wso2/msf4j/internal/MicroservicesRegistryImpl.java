@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -57,8 +58,8 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
     private final List<Interceptor> interceptors = new ArrayList<>();
     private Map<Class<?>, MSF4JRequestFilter> msf4JRequestFilterListMap = new HashMap<>();
     private Map<Class<?>, MSF4JResponseFilter> msf4JResponseFilterListMap = new HashMap<>();
-    private List<Class<?>> globalRequestFilterClassList = new ArrayList<>();
-    private List<Class<?>> globalResponseFilterClassList = new ArrayList<>();
+    private Set<Class<?>> globalRequestFilterClassSet = new HashSet<>();
+    private Set<Class<?>> globalResponseFilterClassSet = new HashSet<>();
     private volatile MicroserviceMetadata metadata = new MicroserviceMetadata(Collections.emptyList());
     private Map<Class, ExceptionMapper> exceptionMappers = new TreeMap<>(new ClassComparator());
     private SessionManager sessionManager = new DefaultSessionManager();
@@ -127,7 +128,7 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
     public void registerRequestFilter(MSF4JRequestFilter requestFilter, Class<?> type) {
         if (!msf4JRequestFilterListMap.containsKey(type)) {
             msf4JRequestFilterListMap.put(type, requestFilter);
-            updateGlobalRequestFilterList(); // Update global filter class list
+            updateGlobalRequestFilterSet(); // Update global filter class set
         }
     }
 
@@ -139,7 +140,7 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
     public void registerResponseFilter(MSF4JResponseFilter responseFilter, Class<?> type) {
         if (!msf4JResponseFilterListMap.containsKey(type)) {
             msf4JResponseFilterListMap.put(type, responseFilter);
-            updateGlobalResponseFilterList(); // Update global filter class list
+            updateGlobalResponseFilterSet(); // Update global filter class set
         }
     }
 
@@ -150,7 +151,7 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
      */
     public void removeRequestFilter(Class<?> requestFilterClass) {
         msf4JRequestFilterListMap.remove(requestFilterClass);
-        updateGlobalRequestFilterList(); // Update global filter class list
+        updateGlobalRequestFilterSet(); // Update global filter class set
     }
 
     /**
@@ -160,7 +161,7 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
      */
     public void removeResponseFilter(Class<?> responseFilterClass) {
         msf4JResponseFilterListMap.remove(responseFilterClass);
-        updateGlobalResponseFilterList(); // Update global filter class list
+        updateGlobalResponseFilterSet(); // Update global filter class set
     }
 
     /**
@@ -182,21 +183,21 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
     }
 
     /**
-     * Get a list of request filter classes,
+     * Get a set of request filter classes,
      *
-     * @return list of request filter classes
+     * @return set of request filter classes
      */
-    public List<Class<?>> getGlobalRequestFilterClassList() {
-        return globalRequestFilterClassList;
+    public Set<Class<?>> getGlobalRequestFilterClassSet() {
+        return globalRequestFilterClassSet;
     }
 
     /**
-     * Get a list of response filter classes,
+     * Get a set of response filter classes,
      *
-     * @return list of response filter classes
+     * @return set of response filter classes
      */
-    public List<Class<?>> getGlobalResponseFilterClassList() {
-        return globalResponseFilterClassList;
+    public Set<Class<?>> getGlobalResponseFilterClassSet() {
+        return globalResponseFilterClassSet;
     }
 
     public void addExceptionMapper(ExceptionMapper... mapper) {
@@ -252,25 +253,25 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
     }
 
     /**
-     * Update request global filter class list.
+     * Update request global filter class set.
      */
-    private void updateGlobalRequestFilterList() {
-        List<Class<?>> appliedFiltersList =
+    private void updateGlobalRequestFilterSet() {
+        Set<Class<?>> appliedFiltersList =
                 metadata.scanRequestFilterAnnotations(Collections.unmodifiableCollection(services.values()));
-        globalRequestFilterClassList = msf4JRequestFilterListMap.keySet().stream()
+        globalRequestFilterClassSet = msf4JRequestFilterListMap.keySet().stream()
                 .filter(c -> !appliedFiltersList.contains(c))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     /**
-     * Update response global filter class list.
+     * Update response global filter class set.
      */
-    private void updateGlobalResponseFilterList() {
-        List<Class<?>> appliedFiltersList =
+    private void updateGlobalResponseFilterSet() {
+        Set<Class<?>> appliedFiltersList =
                 metadata.scanResponseFilterAnnotations(Collections.unmodifiableCollection(services.values()));
-        globalResponseFilterClassList = msf4JResponseFilterListMap.keySet().stream()
+        globalResponseFilterClassSet = msf4JResponseFilterListMap.keySet().stream()
                 .filter(c -> !appliedFiltersList.contains(c))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     private void updateMetadata() {

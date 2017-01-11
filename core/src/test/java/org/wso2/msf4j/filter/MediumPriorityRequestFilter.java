@@ -15,35 +15,27 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package org.wso2.msf4j.restinterceptor.common.filter;
+package org.wso2.msf4j.filter;
 
-import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.Request;
-import org.wso2.msf4j.filter.MSF4JRequestFilter;
 
 import java.io.IOException;
 import javax.annotation.Priority;
 import javax.ws.rs.Priorities;
 
 /**
- * Class for logging HTTP requests.
- * Please note that the @Component annotation is only required in OSGI mode
+ * Medium priority request filter.
  */
-@Component(
-        name = "org.wso2.msf4j.restinterceptor.common.filter.HTTPRequestLogger",
-        service = MSF4JRequestFilter.class,
-        immediate = true
-)
-@Priority(Priorities.AUTHENTICATION)
-public class HTTPRequestLogger implements MSF4JRequestFilter {
+@Priority(Priorities.HEADER_DECORATOR)
+public class MediumPriorityRequestFilter implements MSF4JRequestFilter {
 
-    private static final Logger log = LoggerFactory.getLogger(HTTPRequestLogger.class);
+    private static final Logger log = LoggerFactory.getLogger(MediumPriorityRequestFilter.class);
 
     @Override
     public void filter(Request request) throws IOException {
-        log.info(String.format("Logging HTTP request { HTTPMethod: %s, URI: %s}",
-                request.getHttpMethod(), request.getUri()));
+        PriorityDataHolder.setPriorityOrder(PriorityDataHolder.getPriorityOrder() + this.getClass().getName());
+        log.info("Medium priority request filter");
     }
 }

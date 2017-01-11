@@ -25,11 +25,19 @@ import org.wso2.msf4j.filter.annotation.FilterResponse;
 import org.wso2.msf4j.filter.annotation.FilterResponses;
 import org.wso2.msf4j.internal.MicroservicesRegistryImpl;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import javax.annotation.Priority;
+import javax.ws.rs.Priorities;
 
 /**
  * Class for executing filtering annotations.
@@ -43,8 +51,8 @@ public class AnnotationFilterExecutor {
      * @param method                Method
      * @param request               msf4j context
      */
-    public boolean processRequestFilterAnnotation(MicroservicesRegistryImpl microServicesRegistry, Method method,
-                                                  Request request) {
+    public void processRequestFilterAnnotation(MicroservicesRegistryImpl microServicesRegistry, Method method,
+                                               Request request) throws IOException {
         Class<?> methodDeclaringClass = method.getDeclaringClass();
         boolean isMethodAnnotationPresent = method.isAnnotationPresent(FilterRequest.class) ||
                 method.isAnnotationPresent(FilterRequests.class);
@@ -61,14 +69,21 @@ public class AnnotationFilterExecutor {
 
         // MSF4J request instances
         Map<Class<?>, MSF4JRequestFilter> requestFilterMap = microServicesRegistry.getMsf4JRequestFilterListMap();
-
         // Global filters
-        List<Class<?>> globalFilterClassList = microServicesRegistry.getGlobalRequestFilterClassList();
-
+        Set<Class<?>> globalFilterClassSet = microServicesRegistry.getGlobalRequestFilterClassSet();
         // Prioritise
+        List<Class<?>> classList = Stream
+                .concat(filterRequests.stream().map(FilterRequest::value), globalFilterClassSet.stream())
+                .collect(Collectors.toList());
+        // For requests priorities are ascending
+        TreeMap<Integer, List<Class<?>>> priorityClassMap = getPriorityClassMap(classList, false);
 
-        // Code to fix build failure
-        return requestFilterMap.isEmpty() || globalFilterClassList.isEmpty() || filterRequests.isEmpty();
+        // For requests priorities are in ascending order
+        for (Map.Entry<Integer, List<Class<?>>> entry : priorityClassMap.entrySet()) {
+            for (Class<?> clazz : entry.getValue()) {
+                requestFilterMap.get(clazz).filter(request);
+            }
+        }
     }
 
     /**
@@ -78,8 +93,8 @@ public class AnnotationFilterExecutor {
      * @param method                Method
      * @param request               msf4j context
      */
-    public boolean processResponseFilterAnnotation(MicroservicesRegistryImpl microServicesRegistry, Method method,
-                                                   Request request, Response response) {
+    public void processResponseFilterAnnotation(MicroservicesRegistryImpl microServicesRegistry, Method method,
+                                                Request request, Response response) throws IOException {
         Class<?> methodDeclaringClass = method.getDeclaringClass();
         boolean isMethodAnnotationPresent = method.isAnnotationPresent(FilterResponse.class) ||
                 method.isAnnotationPresent(FilterResponses.class);
@@ -94,15 +109,47 @@ public class AnnotationFilterExecutor {
             filterResponses.addAll(Arrays.asList(methodDeclaringClass.getAnnotationsByType(FilterResponse.class)));
         }
 
-        // MSF4J request instances
+        // MSF4J response instances
         Map<Class<?>, MSF4JResponseFilter> responseFilterMap = microServicesRegistry.getMsf4JResponseFilterListMap();
-
         // Global filters
-        List<Class<?>> globalFilterClassList = microServicesRegistry.getGlobalResponseFilterClassList();
-
+        Set<Class<?>> globalFilterClassSet = microServicesRegistry.getGlobalResponseFilterClassSet();
         // Prioritise
+        List<Class<?>> classList = Stream
+                .concat(filterResponses.stream().map(FilterResponse::value), globalFilterClassSet.stream())
+                .collect(Collectors.toList());
+        // For response priorities are descending
+        TreeMap<Integer, List<Class<?>>> priorityClassMap = getPriorityClassMap(classList, true);
 
-        // Code to fix build failure
-        return responseFilterMap.isEmpty() || globalFilterClassList.isEmpty() || filterResponses.isEmpty();
+        // For requests priorities are in ascending order
+        for (Map.Entry<Integer, List<Class<?>>> entry : priorityClassMap.entrySet()) {
+            for (Class<?> clazz : entry.getValue()) {
+                responseFilterMap.get(clazz).filter(request, response);
+            }
+        }
+    }
+
+    /**
+     * Get the priority class map for filter classes.
+     *
+     * @return priority class map
+     */
+    private TreeMap<Integer, List<Class<?>>> getPriorityClassMap(List<Class<?>> classList, boolean isReverseOrder) {
+
+        TreeMap<Integer, List<Class<?>>> priorityClassMap = isReverseOrder
+                ? new TreeMap<>(Collections.reverseOrder())
+                : new TreeMap<>();
+
+        for (Class<?> clazz : classList) {
+            Integer priority = clazz.isAnnotationPresent(Priority.class)
+                    ? clazz.getAnnotation(Priority.class).value()
+                    : Priorities.USER;
+            if (priorityClassMap.containsKey(priority)) {
+                priorityClassMap.get(priority).add(clazz);
+            } else {
+                priorityClassMap.put(priority, new ArrayList<>());
+                priorityClassMap.get(priority).add(clazz);
+            }
+        }
+        return priorityClassMap;
     }
 }
