@@ -13,16 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.wso2.msf4j.internal.deployer;
 
-package org.wso2.msf4j.example;
+/**
+ * Exception that is thrown when processing jar files
+ * by MicroserviceProcessor.
+ */
+public class MicroserviceDeploymentException extends Exception {
+    public MicroserviceDeploymentException(String message) {
+        super(message);
+    }
 
-import feign.Param;
-import feign.RequestLine;
-import org.wso2.msf4j.client.test.client.exception.InvoiceNotFoundRestServiceException;
-import org.wso2.msf4j.client.test.model.Invoice;
-
-public interface InvoiceServiceAPI {
-    // Invoice service
-    @RequestLine("GET /invoice/{id}")
-    Invoice getInvoice(@Param("id") String id) throws InvoiceNotFoundRestServiceException;
+    public MicroserviceDeploymentException(String message, Exception e) {
+        super(message, e);
+    }
 }

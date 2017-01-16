@@ -109,6 +109,7 @@
         <module>analytics/msf4j-analytics</module>
         <module>analytics/msf4j-analytics-common</module>
         <module>analytics/wso2das-tracing-capp</module>
+        <module>analytics/zipkin-tracing</module>
 
         <module>client</module>
 
@@ -124,6 +125,7 @@
         <module>samples/http-session</module>
         <module>samples/stockquote/fatjar</module>
         <module>samples/stockquote/bundle</module>
+        <module>samples/stockquote/deployable-jar</module>
         <module>samples/basicauth-security</module>
         <module>samples/oauth2-security</module>
         <module>samples/metrics</module>
@@ -138,7 +140,8 @@
         <module>samples/jpa</module>
         <module>samples/circuitbreaker</module>
         <module>samples/regex-pathparam</module>
-        <module>samples/message-tracing</module>
+        <module>samples/message-tracing/das/</module>
+        <module>samples/message-tracing/zipkin/</module>
         <module>samples/subresource</module>
         <module>samples/spring-profile</module>
 

@@ -14,7 +14,8 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -79,6 +80,18 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.zipkin.brave</groupId>
+            <artifactId>brave-spancollector-http</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.zipkin.brave</groupId>
+            <artifactId>brave-http</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.msf4j</groupId>
+            <artifactId>zipkin-tracing</artifactId>
+        </dependency>
 
         <!-- Test Dependencies-->
         <dependency>
@@ -107,7 +120,10 @@
             javax.xml.bind;resolution:=optional,
             javax.xml.bind.annotation;resolution:=optional,
             org.osgi.framework.*;version="${osgi.framework.import.version.range}",
-            org.osgi.util.tracker; version="${osgi.service.tracker.import.version.range}"
+            org.osgi.util.tracker; version="${osgi.service.tracker.import.version.range}",
+            com.github.kristofa.brave.*;resolution:=optional,
+            org.wso2.msf4j.analytics.*;version="${msf4j.version}";resolution:=optional,
+            org.slf4j.*;version="${slf4j.version.range}";resolution:=optional,
         </import.package>
     </properties>
 </project>

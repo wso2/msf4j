@@ -91,7 +91,12 @@
             <version>${carbon.metrics.version}</version>
             <type>zip</type>
         </dependency>
-
+       <dependency>
+           <groupId>org.wso2.carbon.deployment</groupId>
+           <artifactId>org.wso2.carbon.deployment.engine.feature</artifactId>
+           <version>${carbon.deployment.version}</version>
+           <type>zip</type>
+       </dependency>
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.core</artifactId>
@@ -202,7 +207,10 @@
                                     <id>org.wso2.carbon.datasource.core.feature</id>
                                     <version>${carbon.datasources.version}</version>
                                 </feature>
-                            
+                                <feature>
+                                    <id>org.wso2.carbon.deployment.engine.feature</id>
+                                    <version>${carbon.deployment.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>
@@ -291,7 +299,10 @@
                                     <id>org.wso2.carbon.datasource.core.feature.group</id>
                                     <version>${carbon.datasources.version}</version>
                                 </feature>
-                                
+                                <feature>
+                                    <id>org.wso2.carbon.deployment.engine.feature.group</id>
+                                    <version>${carbon.deployment.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>
