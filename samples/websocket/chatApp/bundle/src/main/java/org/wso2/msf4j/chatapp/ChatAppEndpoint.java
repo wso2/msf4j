@@ -59,7 +59,7 @@ public class ChatAppEndpoint implements WebSocketEndpoint {
     @OnMessage
     public void onTextMessage(@PathParam("name") String name, String text, Session session) throws IOException {
         String msg = name + " : " + text;
-        LOGGER.info("Received Text : " + text + " from  " + name);
+        LOGGER.info("Received Text : " + text + " from  " + name + session.getId());
         sendMessageToAll(msg);
     }
 

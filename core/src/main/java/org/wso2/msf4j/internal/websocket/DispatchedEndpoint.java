@@ -23,7 +23,9 @@ import org.wso2.msf4j.WebSocketEndpoint;
 import java.lang.reflect.Method;
 
 /**
- * After dispatching the endpoint all the methods will be found and stored in here
+ * After dispatching the endpoint all the methods will be found and stored in here.
+ *
+ * @since 1.0.0
  */
 public class DispatchedEndpoint {
     private final String uri;

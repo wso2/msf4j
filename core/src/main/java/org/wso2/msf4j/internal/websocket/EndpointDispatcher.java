@@ -33,7 +33,9 @@ import javax.websocket.PongMessage;
 import javax.websocket.server.ServerEndpoint;
 
 /**
- * Dispatch the registered endpoints
+ * Dispatch the registered endpoints.
+ *
+ * @since 1.0.0
  */
 public class EndpointDispatcher {
     private static final Logger LOGGER = LoggerFactory.getLogger(EndpointDispatcher.class);

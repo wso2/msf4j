@@ -31,7 +31,10 @@ import org.wso2.msf4j.WebSocketEndpoint;
 import org.wso2.msf4j.internal.DataHolder;
 
 /**
- * OSGi Service component for WebSocket server
+ * OSGi Service component for WebSocket server. This will identify the endpoints which are trying to identify
+ * and register them as WebSocket Server Endpoints
+ *
+ * @since 1.0.0
  */
 
 @Component(

@@ -21,12 +21,9 @@ package org.wso2.msf4j.internal.websocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.messaging.CarbonMessage;
-import org.wso2.carbon.messaging.websocket.WebSocketMessage;
-import org.wso2.carbon.messaging.websocket.WebSocketResponder;
 import org.wso2.carbon.transport.http.netty.common.Constants;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -51,7 +48,7 @@ public class SessionManager {
     }
 
     /**
-     * @param carbonMessage incoming {@link WebSocketMessage}
+     * @param carbonMessage incoming WebSocketMessage
      * @return requested {@link Session} for given channel
      */
     public Session getSession(CarbonMessage carbonMessage) {
@@ -70,23 +67,19 @@ public class SessionManager {
      * @return Created new {@link Session}.
      * @throws URISyntaxException throws if URI syntax is wrong.
      */
-    public Session createSession(CarbonMessage carbonMessage) throws URISyntaxException {
-        String sessionId = getSessionId(carbonMessage);
-        URI uri = (URI) carbonMessage.getProperty(Constants.TO);
-        WebSocketResponder webSocketResponder =
-                (WebSocketResponder) carbonMessage.getProperty(Constants.WEBSOCKET_RESPONDER);
-        SessionImpl session = new SessionImpl(webSocketResponder, sessionId, uri, true, true, null, null, null);
-        sessionMap.put(sessionId, session);
-        LOGGER.info("Session created for channel " + sessionId);
+    public Session add(CarbonMessage carbonMessage) throws URISyntaxException {
+        Session session = (Session) carbonMessage.getProperty(Constants.WEBSOCKET_SESSION);
+        sessionMap.put(getSessionId(carbonMessage), session);
+        LOGGER.info("Added session for channel " + session.getId());
         return session;
     }
 
     /**
      * Checks whether the session is contained in the session manager.
-     * @param webSocketMessage incoming {@link WebSocketMessage}.
+     * @param webSocketMessage incoming {@link CarbonMessage} with websocket details.
      * @return true if the session is in the {@link SessionManager}.
      */
-    public boolean containsSession(WebSocketMessage webSocketMessage) {
+    public boolean containsSession(CarbonMessage webSocketMessage) {
         String sessionId = getSessionId(webSocketMessage);
         return sessionMap.containsKey(sessionId);
     }

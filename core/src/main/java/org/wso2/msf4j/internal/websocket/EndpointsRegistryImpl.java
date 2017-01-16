@@ -26,7 +26,6 @@ import org.wso2.msf4j.WebSocketEndpoint;
 import org.wso2.msf4j.WebSocketEndpointsRegistry;
 import org.wso2.msf4j.internal.router.PatternPathRouter;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
@@ -35,7 +34,10 @@ import javax.websocket.server.ServerEndpoint;
 
 /**
  * Implementation for {@link WebSocketEndpointsRegistry}
- * Endpoints will be registered in a {@link java.util.HashMap} as a pair of {@link URI} & {@link DispatchedEndpoint}
+ * Endpoints are Dispatched and Stored in a {@link PatternPathRouter}. So when new request comes it will be routed to
+ * best matching URI.
+ *
+ * @since 1.0.0
  */
 public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
 
@@ -83,11 +85,10 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
 
     public PatternPathRouter.RoutableDestination<DispatchedEndpoint> getRoutableEndpoint(
             CarbonMessage carbonMessage) throws URISyntaxException {
-        URI uri = (URI) carbonMessage.getProperty(Constants.TO);
-        String uriStr = uri.toString();
+        String uri = (String) carbonMessage.getProperty(Constants.TO);
         List<PatternPathRouter.RoutableDestination<DispatchedEndpoint>> routableDestinations =
-                endpointPatternPathRouter.getDestinations(uriStr);
-        return getBestEndpoint(routableDestinations, uriStr);
+                endpointPatternPathRouter.getDestinations(uri);
+        return getBestEndpoint(routableDestinations, uri);
     }
 
 

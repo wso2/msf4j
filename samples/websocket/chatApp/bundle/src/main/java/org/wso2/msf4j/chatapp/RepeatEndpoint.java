@@ -57,6 +57,7 @@ public class RepeatEndpoint implements WebSocketEndpoint {
     public String onTextMessage(String text, Session session) throws IOException {
         LOGGER.info("Received Text : " + text + " from  " + session.getId());
         String msg =  "You said : " + text;
+        session.getBasicRemote().sendText(msg);
         return msg;
     }
 

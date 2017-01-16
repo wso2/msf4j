@@ -22,7 +22,9 @@ package org.wso2.msf4j.internal.websocket;
 import javax.websocket.CloseReason;
 
 /**
- * Created by irunika on 1/5/17.
+ * {@link javax.websocket.CloseReason.CloseCode} implementation for WebSocket in MSF4J
+ *
+ * @since 1.0.0
  */
 public class CloseCodeImpl implements CloseReason.CloseCode {
     /**

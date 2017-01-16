@@ -21,8 +21,8 @@ package org.wso2.msf4j.websocket;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.messaging.websocket.TextWebSocketMessage;
-import org.wso2.carbon.messaging.websocket.WebSocketMessage;
+import org.wso2.carbon.messaging.CarbonMessage;
+import org.wso2.carbon.messaging.TextCarbonMessage;
 import org.wso2.carbon.transport.http.netty.common.Constants;
 import org.wso2.msf4j.WebSocketEndpoint;
 import org.wso2.msf4j.internal.router.PatternPathRouter;
@@ -43,7 +43,7 @@ public class EndpointRegistryTest {
     private final String testText = "test";
     private WebSocketEndpoint testEndpoint = new TestEndpoint();
     private EndpointsRegistryImpl endpointsRegistry = EndpointsRegistryImpl.getInstance();
-    private WebSocketMessage textWebSocketMessage = new TextWebSocketMessage(testText);
+    private CarbonMessage textCarbonMessage = new TextCarbonMessage(testText);
 
     public EndpointRegistryTest() throws URISyntaxException {
     }
@@ -51,14 +51,14 @@ public class EndpointRegistryTest {
     @BeforeClass
     public void onRegister() throws URISyntaxException {
         URI uri = new URI("/test");
-        textWebSocketMessage.setProperty(Constants.TO, uri);
+        textCarbonMessage.setProperty(Constants.TO, uri);
     }
 
     @Test
     public void registerEndpoint() throws InvocationTargetException, IllegalAccessException, URISyntaxException {
         endpointsRegistry.addEndpoint(testEndpoint);
         PatternPathRouter.RoutableDestination<DispatchedEndpoint> routableEndpoint =
-                endpointsRegistry.getRoutableEndpoint(textWebSocketMessage);
+                endpointsRegistry.getRoutableEndpoint(textCarbonMessage);
         DispatchedEndpoint dispatchedEndpoint = routableEndpoint.getDestination();
         List<Object> paralist = new LinkedList<>();
         paralist.add(testText);
@@ -71,7 +71,7 @@ public class EndpointRegistryTest {
     @Test
     public void removeEndpoint() throws Exception {
         endpointsRegistry.removeEndpoint(testEndpoint);
-        Assert.assertTrue(endpointsRegistry.getRoutableEndpoint(textWebSocketMessage) == null);
+        Assert.assertTrue(endpointsRegistry.getRoutableEndpoint(textCarbonMessage) == null);
     }
 
 }

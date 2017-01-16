@@ -28,7 +28,7 @@
 
     <properties>
         <carbon.messaging.version>1.0.12-SNAPSHOT</carbon.messaging.version>
-        <carbon.transport.http.netty.version>2.1.19-SNAPSHOT</carbon.transport.http.netty.version>
+        <carbon.transport.http.netty.version>3.0.2-SNAPSHOT</carbon.transport.http.netty.version>
         <carbon.metrics.version>2.0.0</carbon.metrics.version>
         <msf4j.version>2.1.1-SNAPSHOT</msf4j.version>
         <carbon.feature.plugin.version>2.1.0</carbon.feature.plugin.version>
@@ -109,7 +109,12 @@
             <version>${carbon.metrics.version}</version>
             <type>zip</type>
         </dependency>
-
+        <dependency>
+            <groupId>org.wso2.carbon.deployment</groupId>
+            <artifactId>org.wso2.carbon.deployment.engine.feature</artifactId>
+            <version>${carbon.deployment.version}</version>
+            <type>zip</type>
+        </dependency>
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.core</artifactId>
@@ -217,10 +222,13 @@
                                     <version>${carbon.metrics.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.deployment.engine.feature</id>
+                                    <version>${carbon.deployment.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.datasource.core.feature</id>
                                     <version>${carbon.datasources.version}</version>
                                 </feature>
-
                             </features>
                         </configuration>
                     </execution>
@@ -304,6 +312,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.metrics.das.core.feature.group</id>
                                     <version>${carbon.metrics.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.deployment.engine.feature.group</id>
+                                    <version>${carbon.deployment.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.datasource.core.feature.group</id>
