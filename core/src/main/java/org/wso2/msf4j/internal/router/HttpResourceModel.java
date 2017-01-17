@@ -35,9 +35,16 @@ import java.util.function.Function;
 import javax.annotation.Nullable;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.HEAD;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.HttpMethod;
+import javax.ws.rs.OPTIONS;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -68,7 +75,7 @@ public final class HttpResourceModel {
     private static final String[] ANY_MEDIA_TYPE = new String[]{"*/*"};
     private static final int STREAMING_REQ_UNKNOWN = 0, STREAMING_REQ_SUPPORTED = 1, STREAMING_REQ_UNSUPPORTED = 2;
 
-    private final String httpMethod;
+    private final Set<String> httpMethods;
     private final String path;
     private final Method method;
     private final Object handler;
@@ -144,7 +151,7 @@ public final class HttpResourceModel {
      * @param isSubResourceLocator indicate if this is a subresource locator method
      */
     public HttpResourceModel(String path, Method method, Object handler, boolean isSubResourceLocator) {
-        this.httpMethod = Util.getHttpMethod(method);
+        this.httpMethods = getHttpMethods(method);
         this.path = path;
         this.method = method;
         this.handler = handler;
@@ -210,10 +217,10 @@ public final class HttpResourceModel {
     }
 
     /**
-     * @return httpMethod.
+     * @return httpMethods.
      */
-    public String getHttpMethod() {
-        return httpMethod;
+    public Set<String> getHttpMethod() {
+        return httpMethods;
     }
 
     /**
@@ -256,7 +263,53 @@ public final class HttpResourceModel {
 
     @Override
     public String toString() {
-        return Utils.toString(this, new String[]{"httpMethod", "path", "method", "handler"});
+        return Utils.toString(this, new String[] { "httpMethods", "path", "method", "handler" });
+    }
+
+    /**
+     * Fetches the HttpMethod from annotations and returns String representation of HttpMethod.
+     * Return emptyString if not present.
+     *
+     * @param method Method handling the http request.
+     * @return String representation of HttpMethod from annotations or emptyString as a default.
+     */
+    private Set<String> getHttpMethods(Method method) {
+        Set<String> httpMethods = new HashSet();
+        boolean isSubResourceLocator = true;
+        if (method.isAnnotationPresent(GET.class)) {
+            httpMethods.add(HttpMethod.GET);
+            isSubResourceLocator = false;
+        }
+        if (method.isAnnotationPresent(PUT.class)) {
+            httpMethods.add(HttpMethod.PUT);
+            isSubResourceLocator = false;
+        }
+        if (method.isAnnotationPresent(POST.class)) {
+            httpMethods.add(HttpMethod.POST);
+            isSubResourceLocator = false;
+        }
+        if (method.isAnnotationPresent(DELETE.class)) {
+            httpMethods.add(HttpMethod.DELETE);
+            isSubResourceLocator = false;
+        }
+        if (method.isAnnotationPresent(HEAD.class)) {
+            httpMethods.add(HttpMethod.HEAD);
+            isSubResourceLocator = false;
+        }
+        if (method.isAnnotationPresent(OPTIONS.class)) {
+            httpMethods.add(HttpMethod.OPTIONS);
+            isSubResourceLocator = false;
+        }
+        // If this is a sub resource locator need to add all the method designator
+        if (isSubResourceLocator) {
+            httpMethods.add(HttpMethod.GET);
+            httpMethods.add(HttpMethod.POST);
+            httpMethods.add(HttpMethod.PUT);
+            httpMethods.add(HttpMethod.DELETE);
+            httpMethods.add(HttpMethod.HEAD);
+            httpMethods.add(HttpMethod.OPTIONS);
+        }
+        return Collections.unmodifiableSet(httpMethods);
     }
 
     /**

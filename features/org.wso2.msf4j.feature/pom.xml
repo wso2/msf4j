@@ -122,10 +122,6 @@
             <groupId>org.javassist</groupId>
             <artifactId>javassist</artifactId>
         </dependency>
-        <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>javax.annotation-api</artifactId>
-        </dependency>
     </dependencies>
 
     <build>
@@ -247,10 +243,6 @@
                                 <bundle>
                                     <symbolicName>commons-io</symbolicName>
                                     <version>${commons-io.wso2.version}</version>
-                                </bundle>
-                                <bundle>
-                                    <symbolicName>javax.annotation-api</symbolicName>
-                                    <version>${javax.annotation-api.version}</version>
                                 </bundle>
                             </bundles>
                             <importFeatures>

@@ -46,7 +46,10 @@ See the following example to use the annotation at the Method level.
 **How to add and initialize HTTP Monitoring Interceptor**
 
 ```java
-new MicroservicesRunner().addInterceptor(new HTTPMonitoringInterceptor())
+HTTPMonitoringInterceptor httpMonitoringInterceptor = new HTTPMonitoringInterceptor();
+new MicroservicesRunner()
+        .registerGlobalRequestInterceptor(httpMonitoringInterceptor)
+        .registerGlobalResponseInterceptor(httpMonitoringInterceptor)
 ```
 
 ## How to build the sample

@@ -18,27 +18,24 @@ package org.wso2.msf4j.internal.router;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.msf4j.filter.annotation.FilterRequest;
-import org.wso2.msf4j.filter.annotation.FilterRequests;
-import org.wso2.msf4j.filter.annotation.FilterResponse;
-import org.wso2.msf4j.filter.annotation.FilterResponses;
 import org.wso2.msf4j.util.Utils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.HEAD;
+import javax.ws.rs.OPTIONS;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
@@ -72,7 +69,7 @@ public final class MicroserviceMetadata {
                     continue;
                 }
 
-                if (Modifier.isPublic(method.getModifiers()) && Util.isHttpMethodAvailable(method)) {
+                if (Modifier.isPublic(method.getModifiers()) && isHttpMethodAvailable(method)) {
                     String relativePath = "";
                     if (method.getAnnotation(Path.class) != null) {
                         relativePath = method.getAnnotation(Path.class).value();
@@ -100,7 +97,7 @@ public final class MicroserviceMetadata {
      * Register given service object with the given base path. Path annotion of the service class will be ignore,
      * instead use the provided base path.
      *
-     * @param service  HttpHandler object
+     * @param service HttpHandler object
      * @param basePath Path the handler should be registered
      */
     public void addMicroserviceMetadata(final Object service, String basePath) {
@@ -110,7 +107,7 @@ public final class MicroserviceMetadata {
                 continue;
             }
 
-            if (Modifier.isPublic(method.getModifiers()) && Util.isHttpMethodAvailable(method)) {
+            if (Modifier.isPublic(method.getModifiers()) && isHttpMethodAvailable(method)) {
                 String relativePath = "";
                 if (method.getAnnotation(Path.class) != null) {
                     relativePath = method.getAnnotation(Path.class).value();
@@ -119,10 +116,19 @@ public final class MicroserviceMetadata {
                 patternRouter.add(absolutePath, new HttpResourceModel(absolutePath, method, service, false));
             } else {
                 log.trace("Not adding method {}({}) to path routing like. " +
-                        "HTTP calls will not be routed to this method", method.getName(), method.getParameterTypes());
+                          "HTTP calls will not be routed to this method", method.getName(), method.getParameterTypes());
             }
         }
 
+    }
+
+    private boolean isHttpMethodAvailable(Method method) {
+        return method.isAnnotationPresent(GET.class) ||
+                method.isAnnotationPresent(PUT.class) ||
+                method.isAnnotationPresent(POST.class) ||
+                method.isAnnotationPresent(DELETE.class) ||
+                method.isAnnotationPresent(HEAD.class) ||
+                method.isAnnotationPresent(OPTIONS.class);
     }
 
     /**
@@ -155,25 +161,25 @@ public final class MicroserviceMetadata {
             if (!matchedDestinations.isEmpty()) {
                 if (matchedDestinations.size() == 1) {
                     return matchedDestinations.stream().filter(matchedDestination1 ->
-                            matchedDestination1.getDestination()
-                                    .matchConsumeMediaType(
-                                            contentTypeHeader) &&
-                                    matchedDestination1.getDestination()
-                                            .matchProduceMediaType(
-                                                    acceptHeader))
-                            .findFirst().get();
+                                                                       matchedDestination1.getDestination()
+                                                                                          .matchConsumeMediaType(
+                                                                                                  contentTypeHeader) &&
+                                                                       matchedDestination1.getDestination()
+                                                                                          .matchProduceMediaType(
+                                                                                                  acceptHeader))
+                                              .findFirst().get();
                 } else {
                     return matchedDestinations.stream().filter(matchedDestination1 ->
-                            matchedDestination1.getDestination()
-                                    .matchConsumeMediaType(
-                                            contentTypeHeader) &&
-                                    matchedDestination1.getDestination()
-                                            .matchProduceMediaType(
-                                                    acceptHeader))
-                            .filter(destination -> destination.getDestination().getHttpHandler()
-                                    .getClass() ==
-                                    destination.getDestination().getMethod()
-                                            .getDeclaringClass()).findFirst().get();
+                                                                       matchedDestination1.getDestination()
+                                                                                          .matchConsumeMediaType(
+                                                                                                  contentTypeHeader) &&
+                                                                       matchedDestination1.getDestination()
+                                                                                          .matchProduceMediaType(
+                                                                                                  acceptHeader))
+                                              .filter(destination -> destination.getDestination().getHttpHandler()
+                                                                                .getClass() ==
+                                                                     destination.getDestination().getMethod()
+                                                                                .getDeclaringClass()).findFirst().get();
                 }
             } else if (!routableDestinations.isEmpty()) {
                 //Found a matching resource but could not find the right HttpMethod so return 405
@@ -186,88 +192,6 @@ public final class MicroserviceMetadata {
             throw new HandlerException(Response.Status.UNSUPPORTED_MEDIA_TYPE,
                     String.format("Problem accessing: %s. Reason: Unsupported Media Type", uri), ex);
         }
-    }
-
-    /**
-     * Get a list of all the applying request filter classes for all services.
-     *
-     * @param services Services
-     * @return Filter class list for all services
-     */
-    public Set<Class<?>> scanRequestFilterAnnotations(
-            Iterable<? extends Object> services) {
-
-        Set<Class<?>> allFilterClassSet = new HashSet<>();
-
-        for (Object service : services) {
-            Class<?> serviceClass = service.getClass();
-            List<FilterRequest> classFilterRequests = new ArrayList<>();
-            Set<Class<?>> filterClassSet = new HashSet<>();
-
-            // Annotations in resources
-            if (serviceClass.isAnnotationPresent(FilterRequest.class) ||
-                    serviceClass.isAnnotationPresent(FilterRequests.class)) {
-                classFilterRequests.addAll(Arrays.asList(serviceClass.getAnnotationsByType(FilterRequest.class)));
-            }
-
-            // Annotations for sub resources
-            for (Method method : serviceClass.getMethods()) {
-                List<FilterRequest> methodFilterRequests = new ArrayList<>();
-
-                if (Modifier.isPublic(method.getModifiers()) && Util.isHttpMethodAvailable(method) &&
-                        (method.isAnnotationPresent(FilterRequest.class) ||
-                                method.isAnnotationPresent(FilterRequests.class))) {
-                    methodFilterRequests.addAll(Arrays.asList(method.getAnnotationsByType(FilterRequest.class)));
-                    filterClassSet = Stream
-                            .concat(classFilterRequests.stream(), methodFilterRequests.stream())
-                            .map(FilterRequest::value)
-                            .collect(Collectors.toSet());
-                }
-            }
-            allFilterClassSet.addAll(filterClassSet);
-        }
-        return allFilterClassSet;
-    }
-
-    /**
-     * Get a list of all the applying response filter classes for all services.
-     *
-     * @param services Services
-     * @return Filter class list for all services
-     */
-    public Set<Class<?>> scanResponseFilterAnnotations(
-            Iterable<? extends Object> services) {
-
-        Set<Class<?>> allFilterClassesSet = new HashSet<>();
-
-        for (Object service : services) {
-            Class<?> serviceClass = service.getClass();
-            List<FilterResponse> classFilterResponses = new ArrayList<>();
-            Set<Class<?>> filterClassSet = new HashSet<>();
-
-            // Annotations in resources
-            if (serviceClass.isAnnotationPresent(FilterResponse.class) ||
-                    serviceClass.isAnnotationPresent(FilterResponses.class)) {
-                classFilterResponses.addAll(Arrays.asList(serviceClass.getAnnotationsByType(FilterResponse.class)));
-            }
-
-            // Annotations for sub resources
-            for (Method method : serviceClass.getMethods()) {
-                List<FilterResponse> methodFilterResponses = new ArrayList<>();
-
-                if (Modifier.isPublic(method.getModifiers()) && Util.isHttpMethodAvailable(method) &&
-                        (method.isAnnotationPresent(FilterResponse.class) ||
-                                method.isAnnotationPresent(FilterResponses.class))) {
-                    methodFilterResponses.addAll(Arrays.asList(method.getAnnotationsByType(FilterResponse.class)));
-                    filterClassSet = Stream
-                            .concat(classFilterResponses.stream(), methodFilterResponses.stream())
-                            .map(FilterResponse::value)
-                            .collect(Collectors.toSet());
-                }
-            }
-            allFilterClassesSet.addAll(filterClassSet);
-        }
-        return allFilterClassesSet;
     }
 
     /**
@@ -293,28 +217,30 @@ public final class MicroserviceMetadata {
             HttpResourceModel resourceModel = destination.getDestination();
             int groupMatch = destination.getGroupNameValues().size();
 
-            if (targetHttpMethod.equals(resourceModel.getHttpMethod())) {
-                int exactMatch = getExactPrefixMatchCount(requestUriParts, Collections
-                        .unmodifiableList(Utils.split(resourceModel.getPath(), "/", true)));
+            for (String httpMethod : resourceModel.getHttpMethod()) {
+                if (targetHttpMethod.equals(httpMethod)) {
+                    int exactMatch = getExactPrefixMatchCount(requestUriParts, Collections
+                            .unmodifiableList(Utils.split(resourceModel.getPath(), "/", true)));
 
-                // When there are multiple matches present, the following precedence order is used -
-                // 1. template path that has highest exact prefix match with the url is chosen.
-                // 2. template path has the maximum groups is chosen.
-                // 3. finally, template path that has the longest length is chosen.
-                if (exactMatch > maxExactMatch) {
-                    maxExactMatch = exactMatch;
-                    maxGroupMatch = groupMatch;
-                    maxPatternLength = resourceModel.getPath().length();
-
-                    matchedDestinations.clear();
-                    matchedDestinations.add(destination);
-                } else if (exactMatch == maxExactMatch && groupMatch >= maxGroupMatch) {
-                    if (groupMatch > maxGroupMatch || resourceModel.getPath().length() > maxPatternLength) {
+                    // When there are multiple matches present, the following precedence order is used -
+                    // 1. template path that has highest exact prefix match with the url is chosen.
+                    // 2. template path has the maximum groups is chosen.
+                    // 3. finally, template path that has the longest length is chosen.
+                    if (exactMatch > maxExactMatch) {
+                        maxExactMatch = exactMatch;
                         maxGroupMatch = groupMatch;
                         maxPatternLength = resourceModel.getPath().length();
+
                         matchedDestinations.clear();
+                        matchedDestinations.add(destination);
+                    } else if (exactMatch == maxExactMatch && groupMatch >= maxGroupMatch) {
+                        if (groupMatch > maxGroupMatch || resourceModel.getPath().length() > maxPatternLength) {
+                            maxGroupMatch = groupMatch;
+                            maxPatternLength = resourceModel.getPath().length();
+                            matchedDestinations.clear();
+                        }
+                        matchedDestinations.add(destination);
                     }
-                    matchedDestinations.add(destination);
                 }
             }
         }

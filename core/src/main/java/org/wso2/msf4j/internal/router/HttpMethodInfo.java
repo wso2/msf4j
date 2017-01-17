@@ -16,12 +16,16 @@
 
 package org.wso2.msf4j.internal.router;
 
+import javafx.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.HttpStreamHandler;
 import org.wso2.msf4j.HttpStreamer;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
+import org.wso2.msf4j.interceptor.InterceptorExecutor;
+import org.wso2.msf4j.internal.MSF4JConstants;
+import org.wso2.msf4j.internal.MicroservicesRegistryImpl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -29,6 +33,7 @@ import java.lang.reflect.Modifier;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +62,8 @@ public class HttpMethodInfo {
     private Response responder;
     private HttpStreamHandler httpStreamHandler;
     private static final Logger log = LoggerFactory.getLogger(HttpMethodInfo.class);
+    private static final String DECLARING_CLASS_LIST_CONSTANT = "declaringClassList";
+    private static final String RESOURCE_METHOD_LIST_CONSTANT = "resourceMethodList";
 
     /**
      * Construct HttpMethodInfo object for a handler
@@ -122,21 +129,90 @@ public class HttpMethodInfo {
     /**
      * Calls the http resource method.
      *
-     * @param request original request
-     * @param destination matching Destinations for the route
+     * @param destination           matching Destinations for the route
+     * @param request               original request
+     * @param httpMethodInfo        http method information
+     * @param microservicesRegistry micro-services registry
      * @throws Exception if error occurs while invoking the resource method
      */
-    public void invoke(Request request, PatternPathRouter.RoutableDestination<HttpResourceModel> destination)
+    public void invoke(PatternPathRouter.RoutableDestination<HttpResourceModel> destination, Request request,
+                       HttpMethodInfo httpMethodInfo, MicroservicesRegistryImpl microservicesRegistry)
             throws Exception {
-        Object returnVal = method.invoke(handler, args);
-        returnVal = invokeSubResource(request, destination, returnVal);
-        responder.setEntity(returnVal);
+        request.setProperty(DECLARING_CLASS_LIST_CONSTANT, new ArrayList<Class<?>>());
+        request.setProperty(RESOURCE_METHOD_LIST_CONSTANT, new ArrayList<Method>());
+        Pair<Boolean, Object> returnVal =
+                invokeResource(destination, httpMethodInfo, request, microservicesRegistry, false);
+
+        // Execute method level interceptors of sub-resources and resources (first in - last out order)
+        if (returnVal.getKey()
+                && InterceptorExecutor.executeMethodResponseInterceptorsForMethods(microservicesRegistry, request,
+                httpMethodInfo.responder, (ArrayList<Method>) request.getProperty(RESOURCE_METHOD_LIST_CONSTANT))
+                // Execute class level interceptors of sub-resources and resources (first in - last out order)
+                && InterceptorExecutor.executeClassResponseInterceptorsForClasses(microservicesRegistry, request,
+                httpMethodInfo.responder, (ArrayList<Class<?>>) request.getProperty(DECLARING_CLASS_LIST_CONSTANT))
+                // Execute global interceptors
+                && InterceptorExecutor.executeGlobalResponseInterceptors(microservicesRegistry, request,
+                httpMethodInfo.responder)) {
+            responder.setEntity(returnVal.getValue());
+        }
         responder.send();
     }
 
-    private Object invokeSubResource(Request request,
-                                   PatternPathRouter.RoutableDestination<HttpResourceModel> destination,
-                                   Object returnVal) throws Exception {
+    /**
+     * Execute http resource.
+     *
+     * @param destination           matching Destinations for the route
+     * @param httpMethodInfo        http method information
+     * @param request               original request
+     * @param microservicesRegistry micro-services registry
+     * @return value returned from executing the sub-resource method
+     * @throws Exception if error occurs while invoking the sub-resource method
+     */
+    private Pair<Boolean, Object> invokeResource(PatternPathRouter.RoutableDestination<HttpResourceModel> destination,
+                                                 HttpMethodInfo httpMethodInfo, Request request,
+                                                 MicroservicesRegistryImpl microservicesRegistry, boolean isSubResource)
+            throws Exception {
+        Class<?> clazz = httpMethodInfo.method.getDeclaringClass();
+        request.setProperty(MSF4JConstants.METHOD_PROPERTY_NAME, httpMethodInfo.method); // Required for analytics
+
+        // Execute global request interceptors if not a sub-resource (global interceptors will only be executed
+        // at the parent resource
+        if (!isSubResource && !InterceptorExecutor
+                .executeGlobalRequestInterceptors(microservicesRegistry, request, httpMethodInfo.responder)) {
+            return new Pair<>(false, new Object());
+        }
+        // Execute class level request interceptors
+        if (InterceptorExecutor.executeClassLevelRequestInterceptors(microservicesRegistry, request,
+                httpMethodInfo.responder, clazz)
+                // Execute method level request interceptors
+                && InterceptorExecutor.executeMethodLevelRequestInterceptors(microservicesRegistry, request,
+                httpMethodInfo.responder, httpMethodInfo.method)) {
+            Object returnedValue = httpMethodInfo.method.invoke(httpMethodInfo.handler, httpMethodInfo.args);
+
+            // Class level response interceptors - add to the top of the execution stack
+            ((ArrayList<Class<?>>) request.getProperty(DECLARING_CLASS_LIST_CONSTANT)).add(0, clazz);
+            // Method level response interceptors - add to the top of the execution stack
+            ((ArrayList<Method>) request.getProperty(RESOURCE_METHOD_LIST_CONSTANT)).add(0, httpMethodInfo.method);
+            return httpMethodInfo
+                    .invokeSubResource(request, destination, returnedValue, microservicesRegistry);
+        }
+        return new Pair<>(false, new Object());
+    }
+
+    /**
+     * Calls http sub-resource method.
+     *
+     * @param request               original request
+     * @param destination           matching Destinations for the route
+     * @param returnVal             value returned from the method execution
+     * @param microservicesRegistry micro-services registry
+     * @return value returned from executing the sub-resource method
+     * @throws Exception if error occurs while invoking the sub-resource method
+     */
+    private Pair<Boolean, Object> invokeSubResource(
+            Request request, PatternPathRouter.RoutableDestination<HttpResourceModel> destination, Object returnVal,
+            MicroservicesRegistryImpl microservicesRegistry)
+            throws Exception {
         // If this is a sub resource locator need to find and invoke the correct method
         if (destination.getDestination().isSubResourceLocator()) {
             String requestPath = request.getUri();
@@ -177,8 +253,8 @@ public class HttpMethodInfo {
                                                             relativePath);
                         HttpResourceModel resourceModel = new HttpResourceModel(absolutePath, method, returnVal, true);
                         resourceModel.setParent(destination.getDestination());
-                        SubresourceKey subResKey = new SubresourceKey(absolutePath, method.getDeclaringClass(),
-                                resourceModel.getHttpMethod());
+                        SubresourceKey subResKey =
+                                new SubresourceKey(absolutePath, method.getDeclaringClass(), Collections.emptySet());
                         destination.getDestination().addSubResources(subResKey, resourceModel);
                     }
                 }
@@ -188,7 +264,7 @@ public class HttpMethodInfo {
 
             List<Map.Entry<SubresourceKey, HttpResourceModel>> entries =
                     destination.getDestination().getSubResources().entrySet().stream()
-                               .filter(e -> e.getValue().getHttpMethod().equals(request.getHttpMethod()) &&
+                               .filter(e -> e.getValue().getHttpMethod().contains(request.getHttpMethod()) &&
                                             finalRequestPath.matches(e.getKey().getPath().replaceAll(GROUP_PATTERN,
                                                                                                 GROUP_PATTERN_REGEX)) &&
                                             returnVal.getClass().equals(e.getKey().getTypedClass()))
@@ -277,10 +353,9 @@ public class HttpMethodInfo {
 
             PatternPathRouter.RoutableDestination<HttpResourceModel> newDestination =
                     new PatternPathRouter.RoutableDestination<>(resourceModel, groupNameValues);
-            Object returnedValue = httpMethodInfo.method.invoke(httpMethodInfo.handler, httpMethodInfo.args);
-            return httpMethodInfo.invokeSubResource(request, newDestination, returnedValue);
+            return invokeResource(newDestination, httpMethodInfo, request, microservicesRegistry, true);
         }
-        return returnVal;
+        return new Pair<>(true, returnVal);
     }
 
     /**
@@ -302,16 +377,43 @@ public class HttpMethodInfo {
     /**
      * If chunk handling is supported end streaming chunks.
      *
+     * @param request        msf4j request
+     * @param httpMethodInfo http method information
+     * @param registry       micro-services registry
+     * @return if execution was fully completed
      * @throws Exception if error occurs while stopping streaming handlers
      */
-    public void end() throws Exception {
-        try {
-            httpStreamHandler.end();
-        } catch (Throwable e) {
-            log.error("Exception while invoking streaming handlers", e);
-            httpStreamHandler.error(e);
-            throw e;
+    public boolean end(Request request, HttpMethodInfo httpMethodInfo, MicroservicesRegistryImpl registry)
+            throws Exception {
+        Class<?> clazz = httpMethodInfo.method.getDeclaringClass();
+        // Execute request interceptors
+        if (InterceptorExecutor.executeGlobalRequestInterceptors(registry, request, httpMethodInfo.responder)
+                // Execute class level request interceptors
+                && InterceptorExecutor.executeClassLevelRequestInterceptors(registry, request,
+                httpMethodInfo.responder, clazz)
+                // Execute method level request interceptors
+                && InterceptorExecutor.executeMethodLevelRequestInterceptors(registry, request,
+                httpMethodInfo.responder, httpMethodInfo.method)) {
+
+            try {
+                httpStreamHandler.end();
+            } catch (Throwable e) {
+                log.error("Exception while invoking streaming handlers", e);
+                httpStreamHandler.error(e);
+                throw e;
+            }
+
+            // Execute method level interceptors (first in - last out order)
+            return InterceptorExecutor.executeMethodResponseInterceptorsForMethods(registry, request,
+                    httpMethodInfo.responder, (ArrayList<Method>) request.getProperty(RESOURCE_METHOD_LIST_CONSTANT))
+                    // Execute class level interceptors (first in - last out order)
+                    && InterceptorExecutor.executeClassResponseInterceptorsForClasses(registry, request,
+                    httpMethodInfo.responder, (ArrayList<Class<?>>) request.getProperty(DECLARING_CLASS_LIST_CONSTANT))
+                    // Execute global interceptors
+                    && InterceptorExecutor.executeGlobalResponseInterceptors(registry, request,
+                    httpMethodInfo.responder);
         }
+        return false;
     }
 
     /**

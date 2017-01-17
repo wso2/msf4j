@@ -15,6 +15,12 @@
  */
 package org.wso2.msf4j.service.sub;
 
+import org.wso2.msf4j.interceptor.PriorityDataHolder;
+import org.wso2.msf4j.interceptor.TestRequestInterceptor;
+import org.wso2.msf4j.interceptor.TestResponseInterceptor;
+import org.wso2.msf4j.interceptor.annotation.RequestInterceptor;
+import org.wso2.msf4j.interceptor.annotation.ResponseInterceptor;
+
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -69,6 +75,14 @@ public class Team {
 
     @Path("/{playerId}")
     public Player getPlayerObj(@PathParam("countryId") String countryId, @PathParam("playerId") int playerId) {
+        return new Player(countryId, playerId);
+    }
+
+    @Path("/interceptorTest/{playerId}")
+    @RequestInterceptor(TestRequestInterceptor.class)
+    @ResponseInterceptor(TestResponseInterceptor.class)
+    public Player getPlayer(@PathParam("playerId") int playerId) {
+        PriorityDataHolder.setPriorityOrder(PriorityDataHolder.getPriorityOrder() + "[HTTP SUB RESOURCE METHOD]");
         return new Player(countryId, playerId);
     }
 

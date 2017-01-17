@@ -37,9 +37,11 @@ Add the msf4j tracing and Open Feign dependencies to the pom of you MSF4J servic
 
 Register the tracing interceptor when starting the microservice.
 ```java
+        MSF4JTracingInterceptor tracingInterceptor = new MSF4JTracingInterceptor("Service-Chaining");
         new MicroservicesRunner()
                 .addExceptionMapper(new EntityNotFoundMapper(), new CustomerNotFoundMapper())
-                .addInterceptor(new MSF4JTracingInterceptor("Service-Chaining"))
+                .registerGlobalRequestInterceptor(httpMonitoringInterceptor)
+                .registerGlobalResponseInterceptor(httpMonitoringInterceptor)
                 .deploy(new InvoiceService())
                 .deploy(new CustomerService())
                 .deploy(new ReportService())

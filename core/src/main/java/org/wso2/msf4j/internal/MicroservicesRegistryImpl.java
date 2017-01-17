@@ -18,12 +18,11 @@ package org.wso2.msf4j.internal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.DefaultSessionManager;
-import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.MicroservicesRegistry;
 import org.wso2.msf4j.SessionManager;
 import org.wso2.msf4j.SwaggerService;
-import org.wso2.msf4j.filter.MSF4JRequestFilter;
-import org.wso2.msf4j.filter.MSF4JResponseFilter;
+import org.wso2.msf4j.interceptor.MSF4JRequestInterceptor;
+import org.wso2.msf4j.interceptor.MSF4JResponseInterceptor;
 import org.wso2.msf4j.internal.router.MicroserviceMetadata;
 
 import java.lang.reflect.InvocationTargetException;
@@ -33,7 +32,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -55,11 +53,12 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
     private static final Logger log = LoggerFactory.getLogger(MicroservicesRegistryImpl.class);
     private final Map<String, Object> services = new HashMap<>();
 
-    private final List<Interceptor> interceptors = new ArrayList<>();
-    private Map<Class<?>, MSF4JRequestFilter> msf4JRequestFilterListMap = new HashMap<>();
-    private Map<Class<?>, MSF4JResponseFilter> msf4JResponseFilterListMap = new HashMap<>();
-    private Set<Class<?>> globalRequestFilterClassSet = new HashSet<>();
-    private Set<Class<?>> globalResponseFilterClassSet = new HashSet<>();
+    private Map<Class<? extends MSF4JRequestInterceptor>, MSF4JRequestInterceptor> requestInterceptorMap =
+            new HashMap<>();
+    private Map<Class<? extends MSF4JResponseInterceptor>, MSF4JResponseInterceptor> responseInterceptorMap =
+            new HashMap<>();
+    private List<MSF4JRequestInterceptor> globalRequestInterceptorList = new ArrayList<>();
+    private List<MSF4JResponseInterceptor> globalResponseInterceptorList = new ArrayList<>();
     private volatile MicroserviceMetadata metadata = new MicroserviceMetadata(Collections.emptyList());
     private Map<Class, ExceptionMapper> exceptionMappers = new TreeMap<>(new ClassComparator());
     private SessionManager sessionManager = new DefaultSessionManager();
@@ -116,88 +115,102 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
         return Collections.unmodifiableSet(services.values().stream().collect(Collectors.toSet()));
     }
 
-    public void addInterceptor(Interceptor... interceptor) {
-        Collections.addAll(interceptors, interceptor);
-    }
-
     /**
-     * Register MSF4J request filter.
+     * Register MSF4J request interceptors.
      *
-     * @param requestFilter MSF4J filter instance.
+     * @param isGlobal                is a global interceptor?
+     * @param msf4JRequestInterceptor MSF4J interceptor instances.
      */
-    public void registerRequestFilter(MSF4JRequestFilter requestFilter, Class<?> type) {
-        if (!msf4JRequestFilterListMap.containsKey(type)) {
-            msf4JRequestFilterListMap.put(type, requestFilter);
-            updateGlobalRequestFilterSet(); // Update global filter class set
+    public void registerRequestInterceptor(boolean isGlobal, MSF4JRequestInterceptor... msf4JRequestInterceptor) {
+        for (MSF4JRequestInterceptor requestInterceptor : msf4JRequestInterceptor) {
+            Class<? extends MSF4JRequestInterceptor> type = requestInterceptor.getClass();
+            if (isGlobal) {
+                globalRequestInterceptorList.add(requestInterceptor);
+            }
+            if (!requestInterceptorMap.containsKey(type)) {
+                requestInterceptorMap.put(type, requestInterceptor);
+            }
         }
     }
 
     /**
-     * Register MSF4J response filter.
+     * Register MSF4J response interceptors.
      *
-     * @param responseFilter MSF4J filter instance.
+     * @param isGlobal                 is a global interceptor?
+     * @param msf4JResponseInterceptor MSF4J interceptor instances.
      */
-    public void registerResponseFilter(MSF4JResponseFilter responseFilter, Class<?> type) {
-        if (!msf4JResponseFilterListMap.containsKey(type)) {
-            msf4JResponseFilterListMap.put(type, responseFilter);
-            updateGlobalResponseFilterSet(); // Update global filter class set
+    public void registerResponseInterceptor(boolean isGlobal, MSF4JResponseInterceptor... msf4JResponseInterceptor) {
+        for (MSF4JResponseInterceptor responseInterceptor : msf4JResponseInterceptor) {
+            Class<? extends MSF4JResponseInterceptor> type = responseInterceptor.getClass();
+            if (isGlobal) {
+                globalResponseInterceptorList.add(responseInterceptor);
+            }
+            if (!responseInterceptorMap.containsKey(type)) {
+                responseInterceptorMap.put(type, responseInterceptor);
+            }
         }
     }
 
     /**
-     * Remove msf4j request filter.
+     * Remove msf4j request interceptor.
      *
-     * @param requestFilterClass MSF4J filter instance type.
+     * @param isGlobal                is a global interceptor?
+     * @param requestInterceptor MSF4J interceptor instance.
      */
-    public void removeRequestFilter(Class<?> requestFilterClass) {
-        msf4JRequestFilterListMap.remove(requestFilterClass);
-        updateGlobalRequestFilterSet(); // Update global filter class set
+    public void removeRequestInterceptor(boolean isGlobal, MSF4JRequestInterceptor requestInterceptor) {
+        if (isGlobal) {
+            globalRequestInterceptorList.remove(requestInterceptor);
+        }
+        requestInterceptorMap.remove(requestInterceptor.getClass());
     }
 
     /**
-     * Remove msf4j response filter.
+     * Remove msf4j response interceptor.
      *
-     * @param responseFilterClass MSF4J filter instance type.
+     * @param isGlobal                 is a global interceptor?
+     * @param responseInterceptor MSF4J interceptor instance.
      */
-    public void removeResponseFilter(Class<?> responseFilterClass) {
-        msf4JResponseFilterListMap.remove(responseFilterClass);
-        updateGlobalResponseFilterSet(); // Update global filter class set
+    public void removeResponseInterceptor(boolean isGlobal, MSF4JResponseInterceptor responseInterceptor) {
+        if (isGlobal) {
+            globalResponseInterceptorList.remove(responseInterceptor);
+        }
+        responseInterceptorMap.remove(responseInterceptor.getClass());
     }
 
     /**
-     * Map against class and msf4j filter instance.
+     * Map against class and msf4j interceptor instance.
      *
-     * @return Map against class -> msf4j filter instance.
+     * @return Map against class -> msf4j interceptor instance.
      */
-    public Map<Class<?>, MSF4JRequestFilter> getMsf4JRequestFilterListMap() {
-        return msf4JRequestFilterListMap;
+    public Map<Class<? extends MSF4JRequestInterceptor>, MSF4JRequestInterceptor> getRequestInterceptorMap() {
+        return requestInterceptorMap;
     }
 
     /**
-     * Map against class and msf4j filter instance.
+     * Map against class and msf4j interceptor instance.
      *
-     * @return Map against class -> msf4j filter instance.
+     * @return Map against class -> msf4j interceptor instance.
      */
-    public Map<Class<?>, MSF4JResponseFilter> getMsf4JResponseFilterListMap() {
-        return msf4JResponseFilterListMap;
+    public Map<Class<? extends MSF4JResponseInterceptor>, MSF4JResponseInterceptor> getResponseInterceptorMap() {
+        return responseInterceptorMap;
     }
 
     /**
-     * Get a set of request filter classes,
+     * Get global request interceptor list.
      *
-     * @return set of request filter classes
+     * @return global request interceptor list
      */
-    public Set<Class<?>> getGlobalRequestFilterClassSet() {
-        return globalRequestFilterClassSet;
+    public List<MSF4JRequestInterceptor> getGlobalRequestInterceptorList() {
+        return globalRequestInterceptorList;
     }
 
     /**
-     * Get a set of response filter classes,
+     * Get global response interceptor list.
      *
-     * @return set of response filter classes
+     * @return global response interceptor list
      */
-    public Set<Class<?>> getGlobalResponseFilterClassSet() {
-        return globalResponseFilterClassSet;
+    public List<MSF4JResponseInterceptor> getGlobalResponseInterceptorList() {
+        return globalResponseInterceptorList;
     }
 
     public void addExceptionMapper(ExceptionMapper... mapper) {
@@ -240,38 +253,8 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
                 });
     }
 
-    public List<Interceptor> getInterceptors() {
-        return interceptors;
-    }
-
-    public void removeInterceptor(Interceptor interceptor) {
-        interceptors.remove(interceptor);
-    }
-
     public int getServiceCount() {
         return services.size();
-    }
-
-    /**
-     * Update request global filter class set.
-     */
-    private void updateGlobalRequestFilterSet() {
-        Set<Class<?>> appliedFiltersList =
-                metadata.scanRequestFilterAnnotations(Collections.unmodifiableCollection(services.values()));
-        globalRequestFilterClassSet = msf4JRequestFilterListMap.keySet().stream()
-                .filter(c -> !appliedFiltersList.contains(c))
-                .collect(Collectors.toSet());
-    }
-
-    /**
-     * Update response global filter class set.
-     */
-    private void updateGlobalResponseFilterSet() {
-        Set<Class<?>> appliedFiltersList =
-                metadata.scanResponseFilterAnnotations(Collections.unmodifiableCollection(services.values()));
-        globalResponseFilterClassSet = msf4JResponseFilterListMap.keySet().stream()
-                .filter(c -> !appliedFiltersList.contains(c))
-                .collect(Collectors.toSet());
     }
 
     private void updateMetadata() {

@@ -215,7 +215,8 @@
             javax.ws.rs.*,
         </import.package>
         <carbon.component>
-            osgi.service;objectClass="org.wso2.carbon.kernel.startupresolver.CapabilityProvider";capabilityName="org.wso2.msf4j.Interceptor"
+            osgi.service;objectClass="org.wso2.carbon.kernel.startupresolver.CapabilityProvider";capabilityName="org.wso2.msf4j.interceptor.OSGiRequestInterceptorConfig",
+            osgi.service;objectClass="org.wso2.carbon.kernel.startupresolver.CapabilityProvider";capabilityName="org.wso2.msf4j.interceptor.OSGiResponseInterceptorConfig"
         </carbon.component>
     </properties>
 </project>

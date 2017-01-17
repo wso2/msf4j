@@ -29,6 +29,9 @@ public class Application {
 
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
+    private Application() {
+    }
+
     public static void main(String[] args) {
         logger.info("Starting the Microservice");
 
@@ -38,7 +41,7 @@ public class Application {
         }
 
         new MicroservicesRunner()
-                .addInterceptor(new OAuth2SecurityInterceptor())
+                .registerGlobalRequestInterceptor(new OAuth2SecurityInterceptor())
                 .deploy(new Helloworld())
                 .start();
     }

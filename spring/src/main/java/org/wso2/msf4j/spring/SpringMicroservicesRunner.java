@@ -26,10 +26,14 @@ import org.springframework.stereotype.Component;
 import org.wso2.carbon.messaging.handler.HandlerExecutor;
 import org.wso2.carbon.transport.http.netty.config.ListenerConfiguration;
 import org.wso2.carbon.transport.http.netty.config.Parameter;
+import org.wso2.carbon.transport.http.netty.internal.NettyTransportContextHolder;
+import org.wso2.carbon.transport.http.netty.listener.NettyListener;
 import org.wso2.carbon.transport.http.netty.internal.HTTPTransportContextHolder;
 import org.wso2.carbon.transport.http.netty.listener.HTTPTransportListener;
 import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.MicroservicesRunner;
+import org.wso2.msf4j.interceptor.MSF4JRequestInterceptor;
+import org.wso2.msf4j.interceptor.MSF4JResponseInterceptor;
 import org.wso2.msf4j.internal.DataHolder;
 import org.wso2.msf4j.internal.MSF4JMessageProcessor;
 import org.wso2.msf4j.spring.transport.HTTPSTransportConfig;
@@ -72,9 +76,16 @@ public class SpringMicroservicesRunner extends MicroservicesRunner implements Ap
             deploy(entry.getValue());
         }
 
-        for (Map.Entry<String, Interceptor> entry : applicationContext.getBeansOfType(Interceptor.class).entrySet()) {
-            log.info("Adding " + entry.getKey() + "  Interceptor");
-            addInterceptor(entry.getValue());
+        for (Map.Entry<String, MSF4JRequestInterceptor> entry :
+                applicationContext.getBeansOfType(MSF4JRequestInterceptor.class).entrySet()) {
+            log.info("Adding " + entry.getKey() + "  MSF4JRequestInterceptor");
+            registerGlobalRequestInterceptor(entry.getValue());
+        }
+
+        for (Map.Entry<String, MSF4JResponseInterceptor> entry :
+                applicationContext.getBeansOfType(MSF4JResponseInterceptor.class).entrySet()) {
+            log.info("Adding " + entry.getKey() + "  MSF4JResponseInterceptor");
+            registerGlobalResponseInterceptor(entry.getValue());
         }
 
         for (Map.Entry<String, ExceptionMapper> exceptionMapper :
