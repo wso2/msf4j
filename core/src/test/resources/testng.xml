@@ -24,7 +24,6 @@ limitations under the License.
         </classes>
     </test>
 
-
     <test name="interceptor-unit-tests" preserve-order="true" parallel="false">
         <classes>
             <class name="org.wso2.msf4j.InterceptorTest"/>
@@ -78,7 +77,7 @@ limitations under the License.
 
     <test name="filter-tests" preserve-order="true" parallel="false">
         <classes>
-            <class name="org.wso2.msf4j.FilterTest"/>
+            <class name="org.wso2.msf4j.InterceptorTest"/>
         </classes>
     </test>
 </suite>

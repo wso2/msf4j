@@ -318,11 +318,6 @@
                 <artifactId>org.apache.servicemix.bundles.commons-beanutils</artifactId>
                 <version>${beanutils.version}</version>
             </dependency>
-            <dependency>
-                <groupId>javax.annotation</groupId>
-                <artifactId>javax.annotation-api</artifactId>
-                <version>${javax.annotation-api.version}</version>
-            </dependency>
 
             <dependency>
                 <groupId>io.swagger</groupId>
@@ -658,7 +653,6 @@
         <osgi.framework.import.version.range>[1.8.0, 2.0.0)</osgi.framework.import.version.range>
         <osgi.service.tracker.import.version.range>[1.5.1, 2.0.0)</osgi.service.tracker.import.version.range>
         <carbon.feature.plugin.version>2.0.1</carbon.feature.plugin.version>
-        <javax.annotation-api.version>1.3</javax.annotation-api.version>
 
         <!-- Dependencies for OSGi PAX exam tests -->
         <!--PAX Logging related dependency versions-->

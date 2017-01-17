@@ -16,10 +16,19 @@
 
 package org.wso2.msf4j;
 
+import org.wso2.msf4j.interceptor.MSF4JRequestInterceptor;
+import org.wso2.msf4j.interceptor.MSF4JResponseInterceptor;
+import org.wso2.msf4j.interceptor.deprecated.ServiceMethodInfo;
+import org.wso2.msf4j.internal.MSF4JConstants;
+
+import java.lang.reflect.Method;
+
 /**
  * Interface that needs to be implemented to intercept handler method calls.
+ *
+ * @deprecated
  */
-public interface Interceptor {
+public interface Interceptor extends MSF4JRequestInterceptor, MSF4JResponseInterceptor {
 
     /**
      * preCall is run before a handler method call is made. If any of the preCalls throw exception or return false then
@@ -32,6 +41,7 @@ public interface Interceptor {
      * @return true if the request processing can continue, otherwise the hook should send response and return false to
      * stop further processing.
      * @throws Exception if error occurs while executing the preCall
+     * @deprecated
      */
     boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) throws Exception;
 
@@ -44,6 +54,24 @@ public interface Interceptor {
      * @param status            Http status returned to the client.
      * @param serviceMethodInfo Info on handler method that was called.
      * @throws Exception if error occurs while executing the postCall
+     * @deprecated
      */
     void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) throws Exception;
+
+    @Override
+    default boolean interceptRequest(Request request, Response response) throws Exception {
+        Method method = (Method) request.getProperty(MSF4JConstants.METHOD_PROPERTY_NAME);
+        ServiceMethodInfo serviceMethodInfo = new ServiceMethodInfo(method.getName(), method, request);
+        request.getProperties().forEach(serviceMethodInfo::setAttribute);
+        return preCall(request, response, serviceMethodInfo);
+    }
+
+    @Override
+    default boolean interceptResponse(Request request, Response response) throws Exception {
+        Method method = (Method) request.getProperty(MSF4JConstants.METHOD_PROPERTY_NAME);
+        ServiceMethodInfo serviceMethodInfo = new ServiceMethodInfo(method.getName(), method, request);
+        request.getProperties().forEach(serviceMethodInfo::setAttribute);
+        postCall(request, response.getStatusCode(), serviceMethodInfo);
+        return true;
+    }
 }

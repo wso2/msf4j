@@ -1,3 +1,4 @@
+package org.wso2.msf4j.internal.router;
 /*
 * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
@@ -14,7 +15,8 @@
 * limitations under the License.
 */
 
-package org.wso2.msf4j.internal.router;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This class is used to track the sub-resources.
@@ -23,13 +25,13 @@ package org.wso2.msf4j.internal.router;
 public class SubresourceKey {
     private Class<?> typedClass;
     private String path;
-    private String httpMethod;
+    private Set<String> httpMethods = new HashSet<>();
 
 
-    public SubresourceKey(String path, Class<?> tClass, String httpMethod) {
+    public SubresourceKey(String path, Class<?> tClass, Set<String> httpMethods) {
         this.path = path;
         typedClass = tClass;
-        this.httpMethod = httpMethod;
+        this.httpMethods = httpMethods;
     }
 
     /**
@@ -51,12 +53,12 @@ public class SubresourceKey {
     }
 
     /**
-     * Get method's http verb.
+     * Get method's http verbs.
      *
-     * @return http method
+     * @return available http methods
      */
-    public String getHttpMethod() {
-        return httpMethod;
+    public Set<String> getHttpMethods() {
+        return httpMethods;
     }
 
     @Override
@@ -66,7 +68,7 @@ public class SubresourceKey {
         }
         SubresourceKey other = (SubresourceKey) o;
         return path.equals(other.path) && typedClass == other.typedClass &&
-                httpMethod.equals(other.httpMethod);
+               httpMethods.equals(((SubresourceKey) o).httpMethods);
     }
 
     @Override

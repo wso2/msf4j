@@ -22,4 +22,7 @@ public class MSF4JConstants {
 
     public static final String SESSION_ID = "JSESSIONID=";
     public static final String CHANNEL_ID = "CHANNEL_ID";
+
+    // Property constants
+    public static final String METHOD_PROPERTY_NAME = "method";
 }

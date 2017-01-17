@@ -30,25 +30,35 @@ import org.wso2.msf4j.example.service.ReportService;
  * Application entry point.
  */
 public class Application {
+
+    private Application() {
+    }
+
     public static void main(String[] args) {
+        MSF4JTracingInterceptor customerServiceTracingInterceptor = new MSF4JTracingInterceptor("Customer-Service");
+        MSF4JTracingInterceptor invoiceServiceTracingInterceptor = new MSF4JTracingInterceptor("Invoice-Service");
+        MSF4JTracingInterceptor reportServiceTracingInterceptor = new MSF4JTracingInterceptor("Report-Service");
 
         new MicroservicesRunner(8081)
                 .addExceptionMapper(new EntityNotFoundMapper(), new CustomerNotFoundMapper(), new
                         GenericServerErrorMapper())
-                .addInterceptor(new MSF4JTracingInterceptor("Customer-Service"))
+                .registerGlobalRequestInterceptor(customerServiceTracingInterceptor)
+                .registerGlobalResponseInterceptor(customerServiceTracingInterceptor)
                 .deploy(new CustomerService())
                 .start();
 
         new MicroservicesRunner(8082)
                 .addExceptionMapper(new EntityNotFoundMapper(), new InvoiceNotFoundMapper(), new
                         GenericServerErrorMapper())
-                .addInterceptor(new MSF4JTracingInterceptor("Invoice-Service"))
+                .registerGlobalRequestInterceptor(invoiceServiceTracingInterceptor)
+                .registerGlobalResponseInterceptor(invoiceServiceTracingInterceptor)
                 .deploy(new InvoiceService())
                 .start();
         new MicroservicesRunner()
                 .addExceptionMapper(new EntityNotFoundMapper(), new CustomerNotFoundMapper(), new
                         InvoiceNotFoundMapper(), new GenericServerErrorMapper())
-                .addInterceptor(new MSF4JTracingInterceptor("Report-Service"))
+                .registerGlobalRequestInterceptor(reportServiceTracingInterceptor)
+                .registerGlobalResponseInterceptor(reportServiceTracingInterceptor)
                 .deploy(new ReportService())
                 .start();
     }

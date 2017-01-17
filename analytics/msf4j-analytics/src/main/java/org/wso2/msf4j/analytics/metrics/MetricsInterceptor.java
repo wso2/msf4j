@@ -15,7 +15,6 @@
  */
 package org.wso2.msf4j.analytics.metrics;
 
-import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.metrics.core.Counter;
@@ -25,10 +24,11 @@ import org.wso2.carbon.metrics.core.Timer;
 import org.wso2.carbon.metrics.core.annotation.Counted;
 import org.wso2.carbon.metrics.core.annotation.Metered;
 import org.wso2.carbon.metrics.core.annotation.Timed;
-import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
-import org.wso2.msf4j.ServiceMethodInfo;
+import org.wso2.msf4j.interceptor.MSF4JRequestInterceptor;
+import org.wso2.msf4j.interceptor.MSF4JResponseInterceptor;
+import org.wso2.msf4j.internal.MSF4JConstants;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -39,11 +39,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * Collecting Metrics via annotations.
  */
-@Component(
-        name = "org.wso2.msf4j.analytics.metrics.MetricsInterceptor",
-        service = Interceptor.class
-)
-public class MetricsInterceptor implements Interceptor {
+public class MetricsInterceptor implements MSF4JRequestInterceptor, MSF4JResponseInterceptor {
 
     private static final Logger logger = LoggerFactory.getLogger(MetricsInterceptor.class);
 
@@ -80,81 +76,91 @@ public class MetricsInterceptor implements Interceptor {
     }
 
     @Override
-    public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) throws Exception {
-        Method method = serviceMethodInfo.getMethod();
+    public boolean interceptRequest(Request request, Response response) throws Exception {
+        Method method = (Method) request.getProperty(MSF4JConstants.METHOD_PROPERTY_NAME);
         MethodInterceptors methodInterceptors = map.get(method);
         if (methodInterceptors == null || !methodInterceptors.annotationScanned) {
-            List<Interceptor> interceptors = new CopyOnWriteArrayList<>();
+            List<MSF4JRequestInterceptor> msf4JRequestInterceptors = new CopyOnWriteArrayList<>();
+            List<MSF4JResponseInterceptor> msf4JResponseInterceptors = new CopyOnWriteArrayList<>();
             Timed timed = getTimedAnnotation(method);
             if (timed != null) {
                 Timer timer = MetricAnnotation.timer(Metrics.getInstance().getMetricService(), timed, method);
-                Interceptor interceptor = new TimerInterceptor(timer);
-                interceptors.add(interceptor);
+                TimerInterceptor timerInterceptor = new TimerInterceptor(timer);
+                msf4JRequestInterceptors.add(timerInterceptor);
+                msf4JResponseInterceptors.add(timerInterceptor);
             }
             Metered metered = getMeteredAnnotation(method);
             if (metered != null) {
                 Meter meter = MetricAnnotation.meter(Metrics.getInstance().getMetricService(), metered, method);
-                Interceptor interceptor = new MeterInterceptor(meter);
-                interceptors.add(interceptor);
+                MSF4JRequestInterceptor msf4JRequestInterceptor = new MeterInterceptor(meter);
+                msf4JRequestInterceptors.add(msf4JRequestInterceptor);
             }
             Counted counted = getCountedAnnotation(method);
             if (counted != null) {
                 Counter counter = MetricAnnotation.counter(Metrics.getInstance().getMetricService(), counted, method);
-                Interceptor interceptor = new CounterInterceptor(counter, counted.monotonic());
-                interceptors.add(interceptor);
+                CounterInterceptor counterInterceptor = new CounterInterceptor(counter, counted.monotonic());
+                msf4JRequestInterceptors.add(counterInterceptor);
+                msf4JResponseInterceptors.add(counterInterceptor);
             }
 
-            methodInterceptors = new MethodInterceptors(true, interceptors);
+            methodInterceptors = new MethodInterceptors(true, msf4JRequestInterceptors, msf4JResponseInterceptors);
             map.put(method, methodInterceptors);
         }
 
-        return methodInterceptors.preCall(request, responder, serviceMethodInfo);
+        return methodInterceptors.interceptRequest(request, response);
     }
 
     @Override
-    public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) throws Exception {
-        Method method = serviceMethodInfo.getMethod();
+    public boolean interceptResponse(Request request, Response response) throws Exception {
+        Method method = (Method) request.getProperty(MSF4JConstants.METHOD_PROPERTY_NAME);
         MethodInterceptors methodInterceptors = map.get(method);
-        if (methodInterceptors != null) {
-            methodInterceptors.postCall(request, status, serviceMethodInfo);
-        }
+        return !(methodInterceptors != null && !methodInterceptors.interceptResponse(request, response));
     }
 
-    private static class MethodInterceptors implements Interceptor {
+    private static class MethodInterceptors implements MSF4JRequestInterceptor, MSF4JResponseInterceptor {
 
         private final boolean annotationScanned;
+        private MSF4JRequestInterceptor[] msf4JRequestInterceptors;
+        private MSF4JResponseInterceptor[] msf4JResponseInterceptors;
 
-        private Interceptor[] interceptors;
-
-        MethodInterceptors(boolean annotationScanned, List<Interceptor> interceptors) {
+        MethodInterceptors(boolean annotationScanned, List<MSF4JRequestInterceptor> requestInterceptors,
+                           List<MSF4JResponseInterceptor> responseInterceptors) {
             this.annotationScanned = annotationScanned;
-            if (!interceptors.isEmpty()) {
-                this.interceptors = interceptors.toArray(new Interceptor[interceptors.size()]);
+            if (!requestInterceptors.isEmpty()) {
+                this.msf4JRequestInterceptors =
+                        requestInterceptors.toArray(new MSF4JRequestInterceptor[requestInterceptors.size()]);
+            }
+
+            if (!responseInterceptors.isEmpty()) {
+                this.msf4JResponseInterceptors =
+                        responseInterceptors.toArray(new MSF4JResponseInterceptor[responseInterceptors.size()]);
             }
         }
 
         @Override
-        public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo)
-                throws Exception {
-            if (interceptors != null) {
-                for (Interceptor interceptor : interceptors) {
-                    interceptor.preCall(request, responder, serviceMethodInfo);
+        public boolean interceptRequest(Request request, Response response) throws Exception {
+            if (msf4JRequestInterceptors != null) {
+                for (MSF4JRequestInterceptor interceptor : msf4JRequestInterceptors) {
+                    interceptor.interceptRequest(request, response);
                 }
             }
             return true;
         }
 
         @Override
-        public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) throws Exception {
-            if (interceptors != null) {
-                for (Interceptor interceptor : interceptors) {
-                    interceptor.postCall(request, status, serviceMethodInfo);
+        public boolean interceptResponse(Request request, Response response) throws Exception {
+            if (msf4JResponseInterceptors != null) {
+                for (MSF4JResponseInterceptor interceptor : msf4JResponseInterceptors) {
+                    if (!interceptor.interceptResponse(request, response)) {
+                        return false;
+                    }
                 }
             }
+            return true;
         }
     }
 
-    private static class TimerInterceptor implements Interceptor {
+    private static class TimerInterceptor implements MSF4JRequestInterceptor, MSF4JResponseInterceptor {
 
         private final Timer timer;
 
@@ -165,20 +171,21 @@ public class MetricsInterceptor implements Interceptor {
         }
 
         @Override
-        public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) {
+        public boolean interceptRequest(Request request, Response response) throws Exception {
             Timer.Context context = timer.start();
-            serviceMethodInfo.setAttribute(TIMER_CONTEXT, context);
+            request.setProperty(TIMER_CONTEXT, context);
             return true;
         }
 
         @Override
-        public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) {
-            Timer.Context context = (Timer.Context) serviceMethodInfo.getAttribute(TIMER_CONTEXT);
+        public boolean interceptResponse(Request request, Response response) throws Exception {
+            Timer.Context context = (Timer.Context) request.getProperty(TIMER_CONTEXT);
             context.stop();
+            return true;
         }
     }
 
-    private static class MeterInterceptor implements Interceptor {
+    private static class MeterInterceptor implements MSF4JRequestInterceptor {
 
         private final Meter meter;
 
@@ -187,17 +194,13 @@ public class MetricsInterceptor implements Interceptor {
         }
 
         @Override
-        public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) {
+        public boolean interceptRequest(Request request, Response response) throws Exception {
             meter.mark();
             return true;
         }
-
-        @Override
-        public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) {
-        }
     }
 
-    private static class CounterInterceptor implements Interceptor {
+    private static class CounterInterceptor implements MSF4JRequestInterceptor, MSF4JResponseInterceptor {
 
         private final Counter counter;
         private final boolean monotonic;
@@ -208,16 +211,17 @@ public class MetricsInterceptor implements Interceptor {
         }
 
         @Override
-        public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) {
+        public boolean interceptRequest(Request request, Response response) throws Exception {
             counter.inc();
             return true;
         }
 
         @Override
-        public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) {
+        public boolean interceptResponse(Request request, Response response) throws Exception {
             if (!monotonic) {
                 counter.dec();
             }
+            return true;
         }
     }
 }

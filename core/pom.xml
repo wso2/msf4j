@@ -109,10 +109,7 @@
             <groupId>org.wso2.orbit.org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
         </dependency>
-        <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>javax.annotation-api</artifactId>
-        </dependency>
+
 
         <dependency>
             <groupId>commons-io.wso2</groupId>
@@ -356,7 +353,7 @@
             org.wso2.carbon.messaging.*,
         </import.package>
         <carbon.component>
-            startup.listener;componentName="wso2-microservices-server";requiredService="org.wso2.msf4j.Microservice,org.wso2.msf4j.Interceptor",
+            startup.listener;componentName="wso2-microservices-server";requiredService="org.wso2.msf4j.Microservice",
             osgi.service;
             objectClass="org.wso2.msf4j.internal.MicroservicesServerSC";requiredByComponentName="carbon-transport-mgt",
             osgi.service; objectClass="org.wso2.carbon.messaging.CarbonMessageProcessor",

@@ -15,7 +15,6 @@
  */
 package org.wso2.msf4j.internal;
 
-import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -32,15 +31,21 @@ import org.wso2.msf4j.Microservice;
 import org.wso2.msf4j.MicroservicesRegistry;
 import org.wso2.msf4j.SessionManager;
 import org.wso2.msf4j.SwaggerService;
-import org.wso2.msf4j.exception.FilterRegistrationException;
-import org.wso2.msf4j.filter.MSF4JRequestFilter;
-import org.wso2.msf4j.filter.MSF4JResponseFilter;
+import org.wso2.msf4j.exception.MSF4JOSGiDeclarativeServiceException;
+import org.wso2.msf4j.interceptor.MSF4JRequestInterceptor;
+import org.wso2.msf4j.interceptor.MSF4JResponseInterceptor;
+import org.wso2.msf4j.interceptor.OSGiRequestInterceptorConfig;
+import org.wso2.msf4j.interceptor.OSGiResponseInterceptorConfig;
 import org.wso2.msf4j.util.RuntimeAnnotations;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.ws.rs.Path;
 import javax.ws.rs.ext.ExceptionMapper;
 
@@ -169,6 +174,118 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
     }
 
     @Reference(
+            name = "request-interceptor-config",
+            service = OSGiRequestInterceptorConfig.class,
+            cardinality = ReferenceCardinality.MULTIPLE,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "removeRequestInterceptorConfig"
+    )
+    protected void addRequestInterceptorConfig(OSGiRequestInterceptorConfig osgiRequestInterceptorConfig,
+                                               Map properties) {
+        Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
+        Map<String, MicroservicesRegistryImpl> microservicesRegistries =
+                DataHolder.getInstance().getMicroservicesRegistries();
+        if (channelId != null) {
+            MicroservicesRegistryImpl microServicesRegistry = microservicesRegistries.get(channelId.toString());
+            if (microServicesRegistry == null) {
+                throw new MSF4JOSGiDeclarativeServiceException("Couldn't found the registry for channel ID " +
+                        channelId);
+            }
+            microServicesRegistry.registerRequestInterceptor(true,
+                    osgiRequestInterceptorConfig.getGlobalRequestInterceptorArray());
+            microServicesRegistry.registerRequestInterceptor(false,
+                    osgiRequestInterceptorConfig.getRequestInterceptorArray());
+        } else {
+            microservicesRegistries.values().forEach(registry -> {
+                registry.registerRequestInterceptor(true,
+                        osgiRequestInterceptorConfig.getGlobalRequestInterceptorArray());
+                registry.registerRequestInterceptor(false,
+                        osgiRequestInterceptorConfig.getRequestInterceptorArray());
+            });
+        }
+    }
+
+    protected void removeRequestInterceptorConfig(OSGiRequestInterceptorConfig osgiRequestInterceptorConfig,
+                                                  Map properties) {
+        Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
+        if (channelId != null) {
+            MicroservicesRegistryImpl microServicesRegistry = DataHolder.getInstance().getMicroservicesRegistries()
+                    .get(channelId.toString());
+            Map<Boolean, MSF4JRequestInterceptor> globalRequestInterceptorMap = Arrays
+                    .stream(osgiRequestInterceptorConfig.getGlobalRequestInterceptorArray())
+                    .collect(Collectors.toMap(m -> true, m -> m));
+            Map<Boolean, MSF4JRequestInterceptor> requestInterceptorMap = Arrays
+                    .stream(osgiRequestInterceptorConfig.getRequestInterceptorArray())
+                    .collect(Collectors.toMap(m -> false, m -> m));
+            Stream.of(globalRequestInterceptorMap, requestInterceptorMap)
+                    .map(Map::entrySet).flatMap(Collection::stream)
+                    .forEach(m ->
+                            microServicesRegistry.removeRequestInterceptor(m.getKey(), m.getValue())
+                    );
+        }
+    }
+
+    @Reference(
+            name = "response-interceptor-config",
+            service = OSGiResponseInterceptorConfig.class,
+            cardinality = ReferenceCardinality.MULTIPLE,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "removeResponseInterceptorConfig"
+    )
+    protected void addResponseInterceptorConfig(OSGiResponseInterceptorConfig osgiResponseInterceptorConfig,
+                                                Map properties) {
+        Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
+        Map<String, MicroservicesRegistryImpl> microservicesRegistries =
+                DataHolder.getInstance().getMicroservicesRegistries();
+        if (channelId != null) {
+            MicroservicesRegistryImpl microServicesRegistry = microservicesRegistries.get(channelId.toString());
+            if (microServicesRegistry == null) {
+                throw new MSF4JOSGiDeclarativeServiceException("Couldn't found the registry for channel ID " +
+                        channelId);
+            }
+            microServicesRegistry.registerResponseInterceptor(true,
+                    osgiResponseInterceptorConfig.getGlobalResponseInterceptorArray());
+            microServicesRegistry.registerResponseInterceptor(false,
+                    osgiResponseInterceptorConfig.getResponseInterceptorArray());
+        } else {
+            microservicesRegistries.values().forEach(registry -> {
+                registry.registerResponseInterceptor(true,
+                        osgiResponseInterceptorConfig.getGlobalResponseInterceptorArray());
+                registry.registerResponseInterceptor(false,
+                        osgiResponseInterceptorConfig.getResponseInterceptorArray());
+            });
+        }
+    }
+
+    protected void removeResponseInterceptorConfig(OSGiResponseInterceptorConfig osgiResponseInterceptorConfig,
+                                                   Map properties) {
+        Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
+        if (channelId != null) {
+            MicroservicesRegistryImpl microServicesRegistry = DataHolder.getInstance().getMicroservicesRegistries()
+                    .get(channelId.toString());
+            Map<Boolean, MSF4JResponseInterceptor> globalResponseInterceptorMap = Arrays
+                    .stream(osgiResponseInterceptorConfig.getGlobalResponseInterceptorArray())
+                    .collect(Collectors.toMap(m -> true, m -> m));
+            Map<Boolean, MSF4JResponseInterceptor> responseInterceptorMap = Arrays
+                    .stream(osgiResponseInterceptorConfig.getResponseInterceptorArray())
+                    .collect(Collectors.toMap(m -> false, m -> m));
+            Stream.of(globalResponseInterceptorMap, responseInterceptorMap)
+                    .map(Map::entrySet).flatMap(Collection::stream)
+                    .forEach(m ->
+                            microServicesRegistry.removeResponseInterceptor(m.getKey(), m.getValue())
+                    );
+        }
+    }
+
+    /**
+     * Add interceptor.
+     * Please note that the order of this interceptor execution is unpredictable
+     *
+     * @param interceptor interceptor to be added
+     * @param properties  map of properties of the interceptor to be added
+     * @deprecated
+     */
+    @Reference(
             name = "interceptor",
             service = Interceptor.class,
             cardinality = ReferenceCardinality.MULTIPLE,
@@ -184,118 +301,30 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             if (microservicesRegistry == null) {
                 throw new RuntimeException("Couldn't found the registry for channel ID " + channelId);
             }
-            microservicesRegistry.addInterceptor(interceptor);
+            microservicesRegistry.registerRequestInterceptor(true, interceptor);
+            microservicesRegistry.registerResponseInterceptor(true, interceptor);
         } else {
-            microservicesRegistries.values().forEach(registry -> registry.addInterceptor(interceptor));
+            microservicesRegistries.values().forEach(registry ->
+                    registry.registerRequestInterceptor(true, interceptor));
+            microservicesRegistries.values().forEach(registry ->
+                    registry.registerResponseInterceptor(true, interceptor));
         }
     }
 
+    /**
+     * Remove interceptor.
+     *
+     * @param interceptor interceptor to be removed
+     * @param properties  map of interceptor component properties
+     * @deprecated
+     */
     protected void removeInterceptor(Interceptor interceptor, Map properties) {
         Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
         Map<String, MicroservicesRegistryImpl> microservicesRegistries =
                 DataHolder.getInstance().getMicroservicesRegistries();
         if (channelId != null) {
-            microservicesRegistries.get(channelId.toString()).removeInterceptor(interceptor);
-        }
-    }
-
-    @Reference(
-            name = "request-filter",
-            service = MSF4JRequestFilter.class,
-            cardinality = ReferenceCardinality.MULTIPLE,
-            policy = ReferencePolicy.DYNAMIC,
-            unbind = "removeRequestFilter"
-    )
-    protected void addRequestFilter(MSF4JRequestFilter msf4JRequestFilter, Map properties) {
-        Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
-        Map<String, MicroservicesRegistryImpl> microservicesRegistries =
-                DataHolder.getInstance().getMicroservicesRegistries();
-        String className = properties.get("component.name").toString();
-        Long bundleId = (Long) properties.get("service.bundleid");
-        Bundle bundle = DataHolder.getInstance().getBundleContext().getBundle(bundleId);
-        Class<?> classType;
-        try {
-            classType = bundle.loadClass(className);
-        } catch (ClassNotFoundException e) {
-            throw new FilterRegistrationException("Class for request filter not found", e);
-        }
-        if (channelId != null) {
-            MicroservicesRegistryImpl microServicesRegistry = microservicesRegistries.get(channelId.toString());
-            if (microServicesRegistry == null) {
-                throw new RuntimeException("Couldn't found the registry for channel ID " + channelId);
-            }
-            microServicesRegistry.registerRequestFilter(msf4JRequestFilter, classType);
-        } else {
-            microservicesRegistries.values().forEach(registry ->
-                    registry.registerRequestFilter(msf4JRequestFilter, classType));
-        }
-    }
-
-    protected void removeRequestFilter(MSF4JRequestFilter msf4JRequestFilter, Map properties) {
-        Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
-        Map<String, MicroservicesRegistryImpl> microServicesRegistry =
-                DataHolder.getInstance().getMicroservicesRegistries();
-        String className = properties.get("component.name").toString();
-        Long bundleId = (Long) properties.get("service.bundleid");
-        Bundle bundle = DataHolder.getInstance().getBundleContext().getBundle(bundleId);
-        Class<?> classType;
-        try {
-            classType = bundle.loadClass(className);
-        } catch (ClassNotFoundException e) {
-            throw new FilterRegistrationException("Class for request filter not found", e);
-        }
-        if (channelId != null) {
-            microServicesRegistry.get(channelId.toString()).removeRequestFilter(classType);
-        }
-    }
-
-    @Reference(
-            name = "response-filter",
-            service = MSF4JResponseFilter.class,
-            cardinality = ReferenceCardinality.MULTIPLE,
-            policy = ReferencePolicy.DYNAMIC,
-            unbind = "removeResponseFilter"
-    )
-    protected void addResponseFilter(MSF4JResponseFilter msf4JResponseFilter, Map properties) {
-        Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
-        Map<String, MicroservicesRegistryImpl> microservicesRegistries =
-                DataHolder.getInstance().getMicroservicesRegistries();
-        String className = properties.get("component.name").toString();
-        Long bundleId = (Long) properties.get("service.bundleid");
-        Bundle bundle = DataHolder.getInstance().getBundleContext().getBundle(bundleId);
-        Class<?> classType;
-        try {
-            classType = bundle.loadClass(className);
-        } catch (ClassNotFoundException e) {
-            throw new FilterRegistrationException("Class for response filter not found", e);
-        }
-        if (channelId != null) {
-            MicroservicesRegistryImpl microservicesRegistry = microservicesRegistries.get(channelId.toString());
-            if (microservicesRegistry == null) {
-                throw new RuntimeException("Couldn't found the registry for channel ID " + channelId);
-            }
-            microservicesRegistry.registerResponseFilter(msf4JResponseFilter, classType);
-        } else {
-            microservicesRegistries.values().forEach(registry ->
-                    registry.registerResponseFilter(msf4JResponseFilter, classType));
-        }
-    }
-
-    protected void removeResponseFilter(MSF4JResponseFilter msf4JResponseFilter, Map properties) {
-        Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
-        Map<String, MicroservicesRegistryImpl> microservicesRegistries =
-                DataHolder.getInstance().getMicroservicesRegistries();
-        String className = properties.get("component.name").toString();
-        Long bundleId = (Long) properties.get("service.bundleid");
-        Bundle bundle = DataHolder.getInstance().getBundleContext().getBundle(bundleId);
-        Class<?> classType;
-        try {
-            classType = bundle.loadClass(className);
-        } catch (ClassNotFoundException e) {
-            throw new FilterRegistrationException("Class for response filter not found", e);
-        }
-        if (channelId != null) {
-            microservicesRegistries.get(channelId.toString()).removeResponseFilter(classType);
+            microservicesRegistries.get(channelId.toString()).removeRequestInterceptor(true, interceptor);
+            microservicesRegistries.get(channelId.toString()).removeResponseInterceptor(true, interceptor);
         }
     }
 
