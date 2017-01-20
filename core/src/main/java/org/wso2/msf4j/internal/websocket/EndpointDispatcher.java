@@ -20,13 +20,13 @@ package org.wso2.msf4j.internal.websocket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.msf4j.WebSocketEndpoint;
 
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
 import javax.websocket.OnClose;
+import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.PongMessage;
@@ -45,20 +45,21 @@ public class EndpointDispatcher {
     private Method onBinaryMessageMethod = null;
     private Method onPongMessageMethod = null;
     private Method onCloseMethod = null;
-    private WebSocketEndpoint webSocketEndpoint = null;
+    private Method onErrorMethod = null;
+    private Object webSocketEndpoint = null;
 
-    public EndpointDispatcher(WebSocketEndpoint webSocketEndpoint) throws Exception {
+    public EndpointDispatcher(Object webSocketEndpoint) throws Exception {
         this.webSocketEndpoint = webSocketEndpoint;
         dispatch(webSocketEndpoint);
     }
 
     public DispatchedEndpoint getDispatchedEndpoint() {
         return new DispatchedEndpoint(uri, onOpenMethod, onStringMessageMethod, onBinaryMessageMethod,
-                                      onPongMessageMethod, onCloseMethod, webSocketEndpoint);
+                                      onPongMessageMethod, onCloseMethod, onErrorMethod, webSocketEndpoint);
     }
 
     //Dispatch the WebSocketEndpoint
-    private void dispatch(WebSocketEndpoint webSocketEndpoint) throws Exception {
+    private void dispatch(Object webSocketEndpoint) throws Exception {
 
         ServerEndpoint serverEndpointAnnotation = webSocketEndpoint.getClass().getAnnotation(ServerEndpoint.class);
         if (serverEndpointAnnotation == null) {
@@ -84,6 +85,8 @@ public class EndpointDispatcher {
                         onOpenMethod = method;
                     } else if (method.isAnnotationPresent(OnClose.class)) {
                         onCloseMethod = method;
+                    } else if (method.isAnnotationPresent(OnError.class)) {
+                        onErrorMethod = method;
                     }
                 }
         );

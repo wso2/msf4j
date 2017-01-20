@@ -16,14 +16,14 @@
  *  under the License.
  */
 
-package org.wso2.msf4j.chatapp;
+package org.wso2.msf4j.sample.echoServer;
 
-import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.WebSocketEndpoint;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import javax.websocket.CloseReason;
@@ -35,37 +35,46 @@ import javax.websocket.server.ServerEndpoint;
 
 /**
  * This is a Sample class for WebSocket.
- * This provides a chat with multiple users.
  */
-@Component(
-        name = "org.wso2.msf4j.repeatApp",
-        service = WebSocketEndpoint.class,
-        immediate = true
-)
-@ServerEndpoint("/repeat")
-public class RepeatEndpoint implements WebSocketEndpoint {
-    private static final Logger LOGGER = LoggerFactory.getLogger(RepeatEndpoint.class);
-    private List<Session> sessions = new ArrayList<>();
+@ServerEndpoint("/echo")
+public class EchoEndpoint implements WebSocketEndpoint {
+    private static final Logger LOGGER = LoggerFactory.getLogger(EchoEndpoint.class);
 
     @OnOpen
     public void onOpen(Session session) {
         LOGGER.info(session.getId() + " connected to repeat-app");
-        sessions.add(session);
     }
 
+    /**
+     * Echo the same {@link String} to user.
+     */
     @OnMessage
     public String onTextMessage(String text, Session session) throws IOException {
         LOGGER.info("Received Text : " + text + " from  " + session.getId());
         String msg =  "You said : " + text;
-        session.getBasicRemote().sendText(msg);
         return msg;
+    }
+
+    /**
+     * Echo the same {@link ByteBuffer} X 2 to user.
+     */
+    @OnMessage
+    public byte[] onBinaryMessage(byte[] buffer, Session session) {
+        String values = "";
+        byte[] bytes = new byte[buffer.length];
+        for (int i = 0; i < buffer.length; i++) {
+            byte b = buffer[i];
+            bytes[i] = (byte) (b * 2);
+            values = values.concat(" " + b);
+        }
+        LOGGER.info("Binary message values from " + session.getId() + " : " + values);
+        return bytes;
     }
 
     @OnClose
     public void onClose(CloseReason closeReason, Session session) {
         LOGGER.info("Connection is closed with status code : " + closeReason.getCloseCode().getCode()
                             + " On reason " + closeReason.getReasonPhrase());
-        sessions.remove(session);
     }
 
 }

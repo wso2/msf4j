@@ -26,7 +26,6 @@ import org.wso2.msf4j.WebSocketEndpoint;
 import org.wso2.msf4j.WebSocketEndpointsRegistry;
 import org.wso2.msf4j.internal.router.PatternPathRouter;
 
-import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -55,7 +54,7 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
         return webSocketEndpointsRegistry;
     }
 
-    public void addEndpoint(WebSocketEndpoint... webSocketEndpoints) {
+    public void addEndpoint(Object... webSocketEndpoints) {
         Arrays.stream(webSocketEndpoints).forEach(
                 webSocketEndpoint -> {
                     try {
@@ -69,7 +68,7 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
         );
     }
 
-    public void removeEndpoint(WebSocketEndpoint webSocketEndpoint) throws Exception {
+    public void removeEndpoint(WebSocketEndpoint webSocketEndpoint) {
         String uri = webSocketEndpoint.getClass().getAnnotation(ServerEndpoint.class).value();
 //        List<PatternPathRouter.RoutableDestination<DispatchedEndpoint>> routableDestinations =
 //                endpointPatternPathRouter.getDestinations(uri);
@@ -78,13 +77,13 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
 
     }
 
-    public DispatchedEndpoint dispatchEndpoint(WebSocketEndpoint webSocketEndpoint) throws Exception {
+    public DispatchedEndpoint dispatchEndpoint(Object webSocketEndpoint) throws Exception {
         EndpointDispatcher dispatcher = new EndpointDispatcher(webSocketEndpoint);
         return dispatcher.getDispatchedEndpoint();
     }
 
     public PatternPathRouter.RoutableDestination<DispatchedEndpoint> getRoutableEndpoint(
-            CarbonMessage carbonMessage) throws URISyntaxException {
+            CarbonMessage carbonMessage) {
         String uri = (String) carbonMessage.getProperty(Constants.TO);
         List<PatternPathRouter.RoutableDestination<DispatchedEndpoint>> routableDestinations =
                 endpointPatternPathRouter.getDestinations(uri);

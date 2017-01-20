@@ -1,7 +1,7 @@
 #Simple Chat Application MSF4J OSGi bundle sample
 
 This sample demonstrate how to use MSF4J WebSocket support 
-to write a simple chat application. 
+to write a simple chat application for OSGi. 
 
 In this sample we exposed chat application as an OSGi service 
 which implements org.wso2.msf4j.WebSocketEndpoint interface

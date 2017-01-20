@@ -24,7 +24,6 @@ import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.transport.http.netty.common.Constants;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.websocket.Session;
@@ -56,7 +55,7 @@ public class SessionManager {
         if (sessionMap.containsKey(sessionId)) {
             return sessionMap.get(sessionId);
         } else {
-            return null;
+            throw new NullPointerException("No session found.");
         }
     }
 
@@ -65,9 +64,8 @@ public class SessionManager {
      * Here unlike http channel ID was taken as the session ID.
      * @param carbonMessage Request carbon Message.
      * @return Created new {@link Session}.
-     * @throws URISyntaxException throws if URI syntax is wrong.
      */
-    public Session add(CarbonMessage carbonMessage) throws URISyntaxException {
+    public Session add(CarbonMessage carbonMessage) {
         Session session = (Session) carbonMessage.getProperty(Constants.WEBSOCKET_SESSION);
         sessionMap.put(getSessionId(carbonMessage), session);
         LOGGER.info("Added session for channel " + session.getId());
@@ -93,7 +91,7 @@ public class SessionManager {
         String sessionId = getSessionId(carbonMessage);
         if (sessionMap.containsKey(sessionId)) {
             sessionMap.remove(sessionId).close();
-            LOGGER.info("Removed session ID for channel " + sessionId);
+            LOGGER.info("Removed session for channel " + sessionId);
         } else {
             LOGGER.info("There is no session created to remove for channel " + sessionId);
         }

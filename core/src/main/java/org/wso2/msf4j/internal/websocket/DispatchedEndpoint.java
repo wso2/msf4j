@@ -18,7 +18,6 @@
 
 package org.wso2.msf4j.internal.websocket;
 
-import org.wso2.msf4j.WebSocketEndpoint;
 
 import java.lang.reflect.Method;
 
@@ -34,17 +33,19 @@ public class DispatchedEndpoint {
     private final Method onBinaryMessageMethod;
     private final Method onPongMessageMethod;
     private final Method onCloseMethod;
-    private final WebSocketEndpoint webSocketEndpoint;
+    private final Method onErrorMethod;
+    private final Object webSocketEndpoint;
 
     public DispatchedEndpoint(String uri, Method onOpenMethod, Method onStringMessageMethod,
                               Method onBinaryMessageMethod, Method onPongMessageMethod,
-                              Method onCloseMethod, WebSocketEndpoint webSocketEndpoint) {
+                              Method onCloseMethod, Method onErrorMethod, Object webSocketEndpoint) {
         this.uri = uri;
         this.onOpenMethod = onOpenMethod;
         this.onStringMessageMethod = onStringMessageMethod;
         this.onBinaryMessageMethod = onBinaryMessageMethod;
         this.onPongMessageMethod = onPongMessageMethod;
         this.onCloseMethod = onCloseMethod;
+        this.onErrorMethod = onErrorMethod;
         this.webSocketEndpoint = webSocketEndpoint;
     }
 
@@ -72,7 +73,11 @@ public class DispatchedEndpoint {
         return onCloseMethod;
     }
 
-    public WebSocketEndpoint getWebSocketEndpoint() {
+    public Method getOnErrorMethod() {
+        return onErrorMethod;
+    }
+
+    public Object getWebSocketEndpoint() {
         return webSocketEndpoint;
     }
 }

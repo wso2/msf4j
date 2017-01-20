@@ -16,7 +16,7 @@
  *  under the License.
  */
 
-package org.wso2.msf4j.chatapp;
+package org.wso2.msf4j.sample.echoServer.echoserver;
 
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.WebSocketEndpoint;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import javax.websocket.CloseReason;
@@ -31,57 +32,58 @@ import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
-import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
 /**
  * This is a Sample class for WebSocket.
- * This provides a chat with multiple users.
  */
 @Component(
-        name = "org.wso2.msf4j.chatroom",
+        name = "org.wso2.msf4j.echoSever",
         service = WebSocketEndpoint.class,
         immediate = true
 )
-@ServerEndpoint("/chat/chatroom/{name}")
-public class ChatRoomApp implements WebSocketEndpoint {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ChatRoomApp.class);
+@ServerEndpoint("/echo")
+public class EchoEndpoint implements WebSocketEndpoint {
+    private static final Logger LOGGER = LoggerFactory.getLogger(EchoEndpoint.class);
     private List<Session> sessions = new ArrayList<>();
 
     @OnOpen
-    public void onOpen(@PathParam("name") String name, Session session) {
+    public void onOpen(Session session) {
+        LOGGER.info(session.getId() + " connected to repeat-app");
         sessions.add(session);
-        String msg = name + " connected to chat room";
-        LOGGER.info(msg);
-        sendMessageToAll(msg);
     }
 
+    /**
+     * Echo the same {@link String} to user.
+     */
     @OnMessage
-    public void onTextMessage(@PathParam("name") String name, String text, Session session) throws IOException {
-        String msg = name + " : " + text;
-        LOGGER.info("Received Text : " + text + " from  " + name);
-        sendMessageToAll(msg);
+    public String onTextMessage(String text, Session session) throws IOException {
+        LOGGER.info("Received Text : " + text + " from  " + session.getId());
+        String msg =  "You said : " + text;
+        return msg;
+    }
+
+    /**
+     * Echo the same {@link ByteBuffer} X 2 to user.
+     */
+    @OnMessage
+    public byte[] onBinaryMessage(ByteBuffer buffer, Session session) {
+        String values = "";
+        byte[] bytes = new byte[buffer.capacity()];
+        for (int i = 0; i < buffer.capacity(); i++) {
+            byte b = buffer.get();
+            bytes[i] = (byte) (b * 2);
+            values = values.concat(" " + b);
+        }
+        LOGGER.info("Binary message values from " + session.getId() + " : " + values);
+        return bytes;
     }
 
     @OnClose
-    public void onClose(@PathParam("name") String name, CloseReason closeReason, Session session) {
+    public void onClose(CloseReason closeReason, Session session) {
         LOGGER.info("Connection is closed with status code : " + closeReason.getCloseCode().getCode()
                             + " On reason " + closeReason.getReasonPhrase());
         sessions.remove(session);
-        String msg = name + " left the chat";
-        sendMessageToAll(msg);
     }
 
-
-    private void sendMessageToAll(String message) {
-        sessions.forEach(
-                session -> {
-                    try {
-                        session.getBasicRemote().sendText(message);
-                    } catch (IOException e) {
-                        LOGGER.error(e.toString());
-                    }
-                }
-        );
-    }
 }

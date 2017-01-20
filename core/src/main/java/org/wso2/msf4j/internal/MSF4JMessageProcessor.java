@@ -93,9 +93,8 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                 if (connection.equalsIgnoreCase("upgrade")) {
                     String upgrade = (String) carbonMessage.getProperty(Constants.UPGRADE);
                     if (upgrade.equalsIgnoreCase("websocket")) {
-                        handleWebSocketHandshake(carbonMessage);
+                        return handleWebSocketHandshake(carbonMessage);
                     }
-                    return true;
                 }
             }
 
@@ -245,79 +244,88 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
     /*
     Handle WebSocket handshake
      */
-    private void handleWebSocketHandshake(CarbonMessage carbonMessage)
-            throws URISyntaxException, InvocationTargetException, IllegalAccessException {
+    private boolean handleWebSocketHandshake(CarbonMessage carbonMessage) throws IOException {
         EndpointsRegistryImpl endpointsRegistry = EndpointsRegistryImpl.getInstance();
-        PatternPathRouter.RoutableDestination<DispatchedEndpoint>
-                routableEndpoint = endpointsRegistry.getRoutableEndpoint(carbonMessage);
-
+            PatternPathRouter.RoutableDestination<DispatchedEndpoint>
+                    routableEndpoint = endpointsRegistry.getRoutableEndpoint(carbonMessage);
         SessionManager sessionManager = SessionManager.getInstance();
         Session session = sessionManager.add(carbonMessage);
-        Method method = routableEndpoint.getDestination().getOnOpenMethod();
-        List<Object> parameterList = new LinkedList<>();
-        Map<String, String> paramValues = routableEndpoint.getGroupNameValues();
-        Arrays.stream(method.getParameters()).forEach(
-                parameter -> {
-                    if (parameter.getType() == Session.class) {
-                        parameterList.add(session);
-                    } else if (parameter.getType() == String.class) {
-                        PathParam pathParam = parameter.getAnnotation(PathParam.class);
-                        if (pathParam != null) {
-                            parameterList.add(paramValues.get(pathParam.value()));
-                        } else {
-                            throw new IllegalArgumentException("String parameters without @PathParam annotation");
-                        }
-                    } else {
-                        parameterList.add(null);
-                    }
-                }
-        );
-        method.invoke(routableEndpoint.getDestination().getWebSocketEndpoint(), parameterList.toArray());
 
+        try {
+            //If endpoint cannot be found close the connection
+            if (routableEndpoint == null) {
+                throw new NullPointerException("Cannot find the URI for the endpoint");
+            }
+
+            Method method = routableEndpoint.getDestination().getOnOpenMethod();
+            List<Object> parameterList = new LinkedList<>();
+            Map<String, String> paramValues = routableEndpoint.getGroupNameValues();
+            Arrays.stream(method.getParameters()).forEach(
+                    parameter -> {
+                        if (parameter.getType() == Session.class) {
+                            parameterList.add(session);
+                        } else if (parameter.getType() == String.class) {
+                            PathParam pathParam = parameter.getAnnotation(PathParam.class);
+                            if (pathParam != null) {
+                                parameterList.add(paramValues.get(pathParam.value()));
+                            } else {
+                                parameterList.add(null);
+                                throw new IllegalArgumentException("String parameters without" +
+                                                                                 " @PathParam annotation");
+                            }
+                        } else {
+                            parameterList.add(null);
+                        }
+                    }
+            );
+            executeMethod(method, routableEndpoint.getDestination().getWebSocketEndpoint(), parameterList, session);
+            return true;
+        } catch (Throwable throwable) {
+            handleError(carbonMessage, throwable, routableEndpoint);
+            session.close();
+            return false;
+        }
     }
 
     /*
     Handle Text WebSocket Message
      */
     private void handleTextWebSocketMessage(TextCarbonMessage textCarbonMessage,
-                                           PatternPathRouter.RoutableDestination<DispatchedEndpoint> routableEndpoint)
-            throws InvocationTargetException, IllegalAccessException, IOException {
+                                           PatternPathRouter.RoutableDestination<DispatchedEndpoint>
+                                                   routableEndpoint) {
         DispatchedEndpoint dispatchedEndpoint = routableEndpoint.getDestination();
         Map<String, String> paramValues = routableEndpoint.getGroupNameValues();
         Method method = dispatchedEndpoint.getOnStringMessageMethod();
-        SessionManager sessionManager = SessionManager.getInstance();
-        Session session = sessionManager.getSession(textCarbonMessage);
-        List<Object> parameterList = new LinkedList<>();
-        boolean isStringSatifsfied = false;
-        Arrays.stream(method.getParameters()).forEach(
-                parameter -> {
-                    if (parameter.getType() == String.class) {
-                        PathParam pathParam = parameter.getAnnotation(PathParam.class);
-                        if (pathParam == null) {
-                            parameterList.add(textCarbonMessage.getText());
-                        } else {
-                            if (isStringSatifsfied == false) {
-                                parameterList.add(paramValues.get(pathParam.value()));
+        try {
+            SessionManager sessionManager = SessionManager.getInstance();
+            Session session = sessionManager.getSession(textCarbonMessage);
+            List<Object> parameterList = new LinkedList<>();
+            boolean isStringSatifsfied = false;
+            Arrays.stream(method.getParameters()).forEach(
+                    parameter -> {
+                        if (parameter.getType() == String.class) {
+                            PathParam pathParam = parameter.getAnnotation(PathParam.class);
+                            if (pathParam == null) {
+                                parameterList.add(textCarbonMessage.getText());
                             } else {
-                                throw new IllegalArgumentException("More than one String parameter without " +
-                                                                           "@PathParam annotation");
+                                if (isStringSatifsfied == false) {
+                                    parameterList.add(paramValues.get(pathParam.value()));
+                                } else {
+                                    parameterList.add(null);
+                                    throw new IllegalArgumentException("String parameters without" +
+                                                                                     " @PathParam annotation");
+                                }
                             }
+                        } else if (parameter.getType() == Session.class) {
+                            parameterList.add(session);
+                        } else {
+                            parameterList.add(null);
                         }
-                    } else if (parameter.getType() == Session.class) {
-
-                        parameterList.add(session);
-                    } else {
-                         parameterList.add(null);
                     }
-                }
-        );
-
-        if (method.getReturnType() == String.class) {
-            String returnValue = (String) method.invoke(
-                    dispatchedEndpoint.getWebSocketEndpoint(), parameterList.toArray());
-            session.getBasicRemote().sendText(returnValue);
-        } else {
-            method.invoke(dispatchedEndpoint.getWebSocketEndpoint(), parameterList.toArray());
+            );
+            executeMethod(method, dispatchedEndpoint.getWebSocketEndpoint(), parameterList, session);
+        } catch (Throwable throwable) {
+            handleError(textCarbonMessage, throwable, routableEndpoint);
         }
     }
 
@@ -327,47 +335,46 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
 
     private void handleBinaryWebSocketMessage(BinaryCarbonMessage binaryCarbonMessage,
                                               PatternPathRouter.RoutableDestination<DispatchedEndpoint>
-                                                      routableEndpoint)
-            throws InvocationTargetException, IllegalAccessException, IOException {
+                                                      routableEndpoint) {
         DispatchedEndpoint dispatchedEndpoint = routableEndpoint.getDestination();
         Map<String, String> paramValues = routableEndpoint.getGroupNameValues();
         Method method = dispatchedEndpoint.getOnBinaryMessageMethod();
-        SessionManager sessionManager = SessionManager.getInstance();
-        Session session = sessionManager.getSession(binaryCarbonMessage);
-        List<Object> parameterList = new LinkedList<>();
-        Arrays.stream(method.getParameters()).forEach(
-                parameter -> {
-                    if (parameter.getType() == ByteBuffer.class) {
-                        parameterList.add(binaryCarbonMessage.readBytes());
-                    } else if (parameter.getType() == byte[].class) {
-                        parameterList.add(binaryCarbonMessage.readBytes().array());
-                    } else if (parameter.getType() == boolean.class) {
-                        parameterList.add(binaryCarbonMessage.isFinalFragment());
-                    } else if (parameter.getType() == Session.class) {
-                        parameterList.add(session);
-                    } else if (parameter.getType() == String.class) {
-                        PathParam pathParam = parameter.getAnnotation(PathParam.class);
-                        if (pathParam != null) {
-                            parameterList.add(paramValues.get(pathParam.value()));
+        try {
+            SessionManager sessionManager = SessionManager.getInstance();
+            Session session = sessionManager.getSession(binaryCarbonMessage);
+            List<Object> parameterList = new LinkedList<>();
+            Arrays.stream(method.getParameters()).forEach(
+                    parameter -> {
+                        if (parameter.getType() == ByteBuffer.class) {
+                            parameterList.add(binaryCarbonMessage.readBytes());
+                        } else if (parameter.getType() == byte[].class) {
+                            ByteBuffer buffer = binaryCarbonMessage.readBytes();
+                            byte[] bytes = new byte[buffer.capacity()];
+                            for (int i = 0; i < buffer.capacity(); i++) {
+                                bytes[i] = buffer.get();
+                            }
+                            parameterList.add(bytes);
+                        } else if (parameter.getType() == boolean.class) {
+                            parameterList.add(binaryCarbonMessage.isFinalFragment());
+                        } else if (parameter.getType() == Session.class) {
+                            parameterList.add(session);
+                        } else if (parameter.getType() == String.class) {
+                            PathParam pathParam = parameter.getAnnotation(PathParam.class);
+                            if (pathParam != null) {
+                                parameterList.add(paramValues.get(pathParam.value()));
+                            } else {
+                                parameterList.add(null);
+                                throw new IllegalArgumentException("String parameters without" +
+                                                                                 " @PathParam annotation");
+                            }
                         } else {
-                            throw new IllegalArgumentException("String parameters without @PathParam annotation");
+                            parameterList.add(null);
                         }
-                    } else {
-                        parameterList.add(null);
                     }
-                }
-        );
-
-        if (method.getReturnType() == ByteBuffer.class) {
-            ByteBuffer byteBuffer = (ByteBuffer) method.invoke(
-                    dispatchedEndpoint.getWebSocketEndpoint(), parameterList.toArray());
-            session.getBasicRemote().sendBinary(byteBuffer);
-        } else if (method.getReturnType() == byte[].class) {
-            byte[] bytes = (byte[]) method.invoke(
-                    dispatchedEndpoint.getWebSocketEndpoint(), parameterList.toArray());
-            session.getBasicRemote().sendBinary(ByteBuffer.wrap(bytes));
-        } else {
-            method.invoke(dispatchedEndpoint.getWebSocketEndpoint(), parameterList.toArray());
+            );
+            executeMethod(method, dispatchedEndpoint.getWebSocketEndpoint(), parameterList, session);
+        } catch (Throwable throwable) {
+            handleError(binaryCarbonMessage, throwable, routableEndpoint);
         }
     }
 
@@ -375,38 +382,108 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
     Handle close WebSocket Message
      */
     private void handleCloseWebSocketMessage(CloseCarbonMessage closeCarbonMessage,
-                                             PatternPathRouter.RoutableDestination<DispatchedEndpoint> routableEndpoint)
-            throws InvocationTargetException, IllegalAccessException, IOException {
+                                             PatternPathRouter.RoutableDestination<DispatchedEndpoint>
+                                                     routableEndpoint) {
         DispatchedEndpoint dispatchedEndpoint = routableEndpoint.getDestination();
         Map<String, String> paramValues = routableEndpoint.getGroupNameValues();
         Method method = dispatchedEndpoint.getOnCloseMethod();
+        SessionManager sessionManager = SessionManager.getInstance();
+        Session session = sessionManager.getSession(closeCarbonMessage);
+        try {
+            if (method != null) {
+                List<Object> parameterList = new LinkedList<>();
+                Arrays.stream(method.getParameters()).forEach(
+                        parameter -> {
+                            if (parameter.getType() == CloseReason.class) {
+                                CloseReason.CloseCode closeCode = new CloseCodeImpl(
+                                        closeCarbonMessage.getStatusCode());
+                                CloseReason closeReason = new CloseReason(
+                                        closeCode, closeCarbonMessage.getReasonText());
+                                parameterList.add(closeReason);
+                            } else if (parameter.getType() == Session.class) {
+                                parameterList.add(session);
+                            } else if (parameter.getType() == String.class) {
+                                PathParam pathParam = parameter.getAnnotation(PathParam.class);
+                                if (pathParam != null) {
+                                    parameterList.add(paramValues.get(pathParam.value()));
+                                } else {
+                                    parameterList.add(null);
+                                    throw new IllegalArgumentException("String parameters without" +
+                                                                                     " @PathParam annotation");
+                                }
+                            } else {
+                                parameterList.add(null);
+                            }
+                        }
+                );
+                executeMethod(method, dispatchedEndpoint.getWebSocketEndpoint(), parameterList, session);
+            }
+        } catch (Throwable throwable) {
+            handleError(closeCarbonMessage, throwable, routableEndpoint);
+        }
+    }
+
+
+    private void handleError(CarbonMessage carbonMessage, Throwable throwable,
+                             PatternPathRouter.RoutableDestination<DispatchedEndpoint> routableEndpoint) {
+        DispatchedEndpoint dispatchedEndpoint = routableEndpoint.getDestination();
+        Map<String, String> paramValues = routableEndpoint.getGroupNameValues();
+        Method method = dispatchedEndpoint.getOnErrorMethod();
+        SessionManager sessionManager = SessionManager.getInstance();
+        Session session = sessionManager.getSession(carbonMessage);
+
         if (method != null) {
             List<Object> parameterList = new LinkedList<>();
             Arrays.stream(method.getParameters()).forEach(
                     parameter -> {
-                        if (parameter.getType() == CloseReason.class) {
-                            CloseReason.CloseCode closeCode = new CloseCodeImpl(
-                                    closeCarbonMessage.getStatusCode());
-                            CloseReason closeReason = new CloseReason(
-                                    closeCode, closeCarbonMessage.getReasonText());
-                            parameterList.add(closeReason);
+                        if (parameter.getType() == Throwable.class) {
+                            parameterList.add(throwable);
                         } else if (parameter.getType() == Session.class) {
-                            SessionManager sessionManager = SessionManager.getInstance();
-                            parameterList.add(sessionManager.getSession(closeCarbonMessage));
+                            parameterList.add(session);
                         } else if (parameter.getType() == String.class) {
                             PathParam pathParam = parameter.getAnnotation(PathParam.class);
                             if (pathParam != null) {
                                 parameterList.add(paramValues.get(pathParam.value()));
                             } else {
-                                throw new IllegalArgumentException("String parameters without @PathParam annotation");
+                                throw new IllegalArgumentException("String parameters " +
+                                                                           "without @PathParam annotation");
                             }
                         } else {
                             parameterList.add(null);
                         }
                     }
             );
-            method.invoke(dispatchedEndpoint.getWebSocketEndpoint(), parameterList.toArray());
-            SessionManager.getInstance().removeSession(closeCarbonMessage);
+
+            executeMethod(method, dispatchedEndpoint.getWebSocketEndpoint(), parameterList, session);
+        } else {
+            log.error(throwable.toString());
         }
     }
+
+    private void executeMethod(Method method, Object webSocketEndpoint,
+                               List<Object> parameterList, Session session) {
+        try {
+            if (method.getReturnType() == String.class) {
+                String returnStr = (String) method.invoke(webSocketEndpoint, parameterList.toArray());
+                session.getBasicRemote().sendText(returnStr);
+            } else if (method.getReturnType() == ByteBuffer.class) {
+                ByteBuffer buffer = (ByteBuffer) method.invoke(webSocketEndpoint, parameterList.toArray());
+                session.getBasicRemote().sendBinary(buffer);
+            } else if (method.getReturnType() == byte[].class) {
+                byte[] bytes = (byte[]) method.invoke(webSocketEndpoint, parameterList.toArray());
+                session.getBasicRemote().sendBinary(ByteBuffer.wrap(bytes));
+            } else if (method.getReturnType() == void.class) {
+                method.invoke(webSocketEndpoint, parameterList.toArray());
+            } else {
+                throw new IllegalArgumentException("Unknown return type");
+            }
+        } catch (IllegalAccessException e) {
+            log.error(e.toString());
+        } catch (InvocationTargetException e) {
+            log.error(e.toString());
+        } catch (IOException e) {
+            log.error(e.toString());
+        }
+    }
+
 }
