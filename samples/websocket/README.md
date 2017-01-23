@@ -82,7 +82,7 @@ Text message method parameters :
     * String - Mandatory</br>
     Indicates that this @OnMessage is for text messages
     * javax.websocket.Session - Optional
-    * 0 to n String parameters annotated with a @PathParam annotation - Optional
+    * 0 to n String parameters annotated with a [@PathParam](#@PathParam) annotation - Optional
 
 * Binary</br>
 All the binary messages are dispatched to this method. </br>
