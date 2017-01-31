@@ -22,27 +22,28 @@ import org.wso2.carbon.kernel.startupresolver.CapabilityProvider;
 
 /**
  * This class signals Startup Order Resolver module in kernel that this bundle provides
- * q service of type {@code OSGiResponseInterceptorConfig}
+ * two services of type {@code Interceptor}
  */
 @Component(
-        name = "org.wso2.msf4j.analytics.internal.ResponseInterceptorCapabilityProvider",
+        name = "org.wso2.msf4j.analytics.internal.InterceptorCapabilityProvider",
         immediate = true,
-        property = "capabilityName=org.wso2.msf4j.interceptor.OSGiResponseInterceptorConfig"
+        property = "capabilityName=org.wso2.msf4j.Interceptor"
 )
-public class ResponseInterceptorCapabilityProvider implements CapabilityProvider {
+public class InterceptorCapabilityProvider implements CapabilityProvider {
 
     /**
-     * Returns the count of {@code OSGiResponseInterceptorConfig} OSGi services registered by this bundle.
+     * Returns the count of {@code Interceptor} OSGi services registered by this bundle.
      * <p>
-     * This bundle registers two Response Interceptors
+     * This bundle registers two Interceptors
      * 1. {@code HTTPMonitoringInterceptor}
      * 2. {@code MetricsInterceptor}
-     * <p>
      *
-     * @return count of {@code OSGiResponseInterceptorConfig} services registered by this bundle.
+     * But here we return count as one, due to a bug in the startup launcher in Kernel.
+     *
+     * @return count of {@code Interceptor} services registered by this bundle.
      */
     @Override
     public int getCount() {
-        return 1;
+        return 2;
     }
 }

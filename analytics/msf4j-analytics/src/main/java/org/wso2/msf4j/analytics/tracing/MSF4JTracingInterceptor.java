@@ -16,14 +16,14 @@
 
 package org.wso2.msf4j.analytics.tracing;
 
+import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
+import org.wso2.msf4j.ServiceMethodInfo;
 import org.wso2.msf4j.analytics.common.tracing.TraceEvent;
 import org.wso2.msf4j.analytics.common.tracing.TracingConstants;
 import org.wso2.msf4j.analytics.common.tracing.TracingEventTracker;
 import org.wso2.msf4j.analytics.common.tracing.TracingUtil;
-import org.wso2.msf4j.interceptor.MSF4JRequestInterceptor;
-import org.wso2.msf4j.interceptor.MSF4JResponseInterceptor;
 
 import java.util.Date;
 
@@ -31,7 +31,7 @@ import java.util.Date;
  * Interceptor for tracing server side request/response flows.
  */
 // TODO: Write tests and add the OSGi mode support
-public class MSF4JTracingInterceptor implements MSF4JRequestInterceptor, MSF4JResponseInterceptor {
+public class MSF4JTracingInterceptor implements Interceptor {
 
     private static final String RESPONDER_ATTRIBUTE = "responder-attribute";
     private static final String TRACE_EVENT_ATTRIBUTE = "trace-event-attribute";
@@ -65,9 +65,9 @@ public class MSF4JTracingInterceptor implements MSF4JRequestInterceptor, MSF4JRe
      * to be published to the DAS for tracing.
      */
     @Override
-    public boolean interceptRequest(Request request, Response response) throws Exception {
+    public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) throws Exception {
         long time = new Date().getTime();
-        request.setProperty(RESPONDER_ATTRIBUTE, response);
+        serviceMethodInfo.setAttribute(RESPONDER_ATTRIBUTE, responder);
         String traceOriginId = request.getHeader(TracingConstants.TRACE_ORIGIN_ID_HEADER);
         String serverTraceId;
         if (traceOriginId == null) {
@@ -89,7 +89,7 @@ public class MSF4JTracingInterceptor implements MSF4JRequestInterceptor, MSF4JRe
         serverTraceEvent.setHttpMethod(request.getHttpMethod());
         serverTraceEvent.setUrl(request.getUri());
         TracingEventTracker.setTraceEvent(serverTraceEvent);
-        request.setProperty(TRACE_EVENT_ATTRIBUTE, serverTraceEvent);
+        serviceMethodInfo.setAttribute(TRACE_EVENT_ATTRIBUTE, serverTraceEvent);
         TracingUtil.pushToDAS(serverTraceEvent, dasUrl);
         return true;
     }
@@ -99,9 +99,9 @@ public class MSF4JTracingInterceptor implements MSF4JRequestInterceptor, MSF4JRe
      * to be published to the DAS for tracing.
      */
     @Override
-    public boolean interceptResponse(Request request, Response response) throws Exception {
+    public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) throws Exception {
         long time = new Date().getTime();
-        TraceEvent traceEvent = (TraceEvent) request.getProperty(TRACE_EVENT_ATTRIBUTE);
+        TraceEvent traceEvent = (TraceEvent) serviceMethodInfo.getAttribute(TRACE_EVENT_ATTRIBUTE);
         if (traceEvent != null) {
             TraceEvent endTraceEvent = new TraceEvent(
                     TracingConstants.SERVER_TRACE_END,
@@ -109,10 +109,9 @@ public class MSF4JTracingInterceptor implements MSF4JRequestInterceptor, MSF4JRe
                     traceEvent.getOriginId(),
                     time
             );
-            Response responder = (Response) request.getProperty(RESPONDER_ATTRIBUTE);
+            Response responder = (Response) serviceMethodInfo.getAttribute(RESPONDER_ATTRIBUTE);
             endTraceEvent.setStatusCode(responder.getStatusCode());
             TracingUtil.pushToDAS(endTraceEvent, dasUrl);
         }
-        return true;
     }
 }

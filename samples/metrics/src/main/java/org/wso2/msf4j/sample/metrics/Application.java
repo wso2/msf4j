@@ -26,17 +26,12 @@ import org.wso2.msf4j.sample.metrics.service.DemoService;
  */
 public class Application {
 
-    private Application() {
-    }
-
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
     public static void main(String[] args) {
         logger.info("Starting the Microservice with Metrics");
-        MetricsInterceptor metricsInterceptor = new MetricsInterceptor();
         new MicroservicesRunner()
-                .registerGlobalRequestInterceptor(metricsInterceptor)
-                .registerGlobalResponseInterceptor(metricsInterceptor)
+                .addInterceptor(new MetricsInterceptor())
                 .deploy(new DemoService())
                 .start();
     }

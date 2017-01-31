@@ -26,16 +26,16 @@ import com.github.kristofa.brave.http.HttpServerRequest;
 import com.github.kristofa.brave.http.HttpServerRequestAdapter;
 import com.github.kristofa.brave.http.HttpServerResponseAdapter;
 import com.github.kristofa.brave.http.HttpSpanCollector;
+import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
+import org.wso2.msf4j.ServiceMethodInfo;
 import org.wso2.msf4j.analytics.common.tracing.TracingConstants;
-import org.wso2.msf4j.interceptor.MSF4JRequestInterceptor;
-import org.wso2.msf4j.interceptor.MSF4JResponseInterceptor;
 
 /**
  * Interceptor for tracing server side request/response flows to Zipkin.
  */
-public class MSF4JZipkinTracingInterceptor implements MSF4JRequestInterceptor, MSF4JResponseInterceptor {
+public class MSF4JZipkinTracingInterceptor implements Interceptor {
 
     private final ServerRequestInterceptor reqInterceptor;
     private final ServerResponseInterceptor respInterceptor;
@@ -69,8 +69,8 @@ public class MSF4JZipkinTracingInterceptor implements MSF4JRequestInterceptor, M
      * to be published to the Zipkin server for tracing.
      */
     @Override
-    public boolean interceptRequest(Request request, Response response) throws Exception {
-        request.setProperty(RESPONDER_ATTRIBUTE, response);
+    public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) throws Exception {
+        serviceMethodInfo.setAttribute(RESPONDER_ATTRIBUTE, responder);
         HttpServerRequest req = new TraceableHttpServerRequest(request);
         HttpServerRequestAdapter reqAdapter = new HttpServerRequestAdapter(req, new DefaultSpanNameProvider());
         reqInterceptor.handle(reqAdapter);
@@ -82,11 +82,10 @@ public class MSF4JZipkinTracingInterceptor implements MSF4JRequestInterceptor, M
      * to be published to the Zipkin server for tracing.
      */
     @Override
-    public boolean interceptResponse(Request request, Response response) throws Exception {
-        HttpResponse httpResponse =
-                new TraceableHttpServerResponse((Response) request.getProperty(RESPONDER_ATTRIBUTE));
+    public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) throws Exception {
+        HttpResponse httpResponse = new TraceableHttpServerResponse((Response) serviceMethodInfo
+                .getAttribute(RESPONDER_ATTRIBUTE));
         HttpServerResponseAdapter adapter = new HttpServerResponseAdapter(httpResponse);
         respInterceptor.handle(adapter);
-        return true;
     }
 }
