@@ -29,16 +29,11 @@ public class Application {
 
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
-    private Application() {
-    }
-
     public static void main(String[] args) {
         logger.info("Starting the Microservice with HTTP Monitoring");
-        HTTPMonitoringInterceptor httpMonitoringInterceptor = new HTTPMonitoringInterceptor();
-        MetricsInterceptor metricsInterceptor = new MetricsInterceptor();
         new MicroservicesRunner()
-                .registerGlobalRequestInterceptor(httpMonitoringInterceptor, metricsInterceptor)
-                .registerGlobalResponseInterceptor(httpMonitoringInterceptor, metricsInterceptor)
+                .addInterceptor(new HTTPMonitoringInterceptor())
+                .addInterceptor(new MetricsInterceptor())
                 .deploy(new StudentService())
                 .start();
     }

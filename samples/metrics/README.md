@@ -64,10 +64,7 @@ public class DemoService {
 The init() method accepts the MetricReporter types.
 
 ```java
-MetricsInterceptor metricsInterceptor = new MetricsInterceptor();
-new MicroservicesRunner()
-                .registerGlobalRequestInterceptor(metricsInterceptor)
-                .registerGlobalResponseInterceptor(metricsInterceptor)
+new MicroservicesRunner().addInterceptor(new MetricsInterceptor())
 ```
 
 ## How to build the sample

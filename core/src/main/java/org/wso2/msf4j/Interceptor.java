@@ -18,7 +18,6 @@ package org.wso2.msf4j;
 
 import org.wso2.msf4j.interceptor.MSF4JRequestInterceptor;
 import org.wso2.msf4j.interceptor.MSF4JResponseInterceptor;
-import org.wso2.msf4j.interceptor.deprecated.ServiceMethodInfo;
 import org.wso2.msf4j.internal.MSF4JConstants;
 
 import java.lang.reflect.Method;
@@ -72,6 +71,20 @@ public interface Interceptor extends MSF4JRequestInterceptor, MSF4JResponseInter
         ServiceMethodInfo serviceMethodInfo = new ServiceMethodInfo(method.getName(), method, request);
         request.getProperties().forEach(serviceMethodInfo::setAttribute);
         postCall(request, response.getStatusCode(), serviceMethodInfo);
+        return true;
+    }
+
+    /**
+     * As of according to the deprecated interceptors, the post call is void and there was no control given to the user
+     * to control the interceptor flow in the post call. True is returned to depict the same behaviour to ensure
+     * proper backward compatibility.
+     *
+     * @param request  MSF4J request.
+     * @param response MSF4J Response.
+     * @return should interception flow proceed?
+     */
+    @Override
+    default boolean onResponseInterceptionError(Request request, Response response, Exception e) {
         return true;
     }
 }

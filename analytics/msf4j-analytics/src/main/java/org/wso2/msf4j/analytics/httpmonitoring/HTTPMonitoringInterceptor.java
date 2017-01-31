@@ -15,16 +15,16 @@
  */
 package org.wso2.msf4j.analytics.httpmonitoring;
 
+import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.messaging.Headers;
+import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
+import org.wso2.msf4j.ServiceMethodInfo;
 import org.wso2.msf4j.analytics.httpmonitoring.config.HTTPMonitoringConfigBuilder;
 import org.wso2.msf4j.analytics.httpmonitoring.config.model.HTTPMonitoringConfig;
-import org.wso2.msf4j.interceptor.MSF4JRequestInterceptor;
-import org.wso2.msf4j.interceptor.MSF4JResponseInterceptor;
-import org.wso2.msf4j.internal.MSF4JConstants;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -37,7 +37,11 @@ import javax.ws.rs.core.HttpHeaders;
 /**
  * Monitor HTTP Requests for methods with {@link HTTPMonitored} annotations.
  */
-public class HTTPMonitoringInterceptor implements MSF4JRequestInterceptor, MSF4JResponseInterceptor {
+@Component(
+        name = "org.wso2.msf4j.analytics.httpmonitoring.HTTPMonitoringInterceptor",
+        service = Interceptor.class,
+        immediate = true)
+public class HTTPMonitoringInterceptor implements Interceptor {
 
     private static final Logger logger = LoggerFactory.getLogger(HTTPMonitoringInterceptor.class);
 
@@ -74,64 +78,67 @@ public class HTTPMonitoringInterceptor implements MSF4JRequestInterceptor, MSF4J
     }
 
     @Override
-    public boolean interceptRequest(Request request, Response response) throws Exception {
+    public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) throws Exception {
         if (!enabled) {
             return true;
         }
-        Method method = (Method) request.getProperty(MSF4JConstants.METHOD_PROPERTY_NAME);
+        Method method = serviceMethodInfo.getMethod();
         MethodInterceptor methodInterceptor = map.get(method);
         if (methodInterceptor == null || !methodInterceptor.annotationScanned) {
             HTTPMonitored httpMon = extractFinalAnnotation(method);
-            MSF4JRequestInterceptor msf4JRequestInterceptor = null;
-            MSF4JResponseInterceptor msf4JResponseInterceptor = null;
+            Interceptor interceptor = null;
             if (httpMon != null) {
-                HTTPInterceptor httpInterceptor = new HTTPInterceptor(httpMon.tracing());
-                msf4JRequestInterceptor = httpInterceptor;
-                msf4JResponseInterceptor = httpInterceptor;
+                interceptor = new HTTPInterceptor(httpMon.tracing());
             }
 
-            methodInterceptor = new MethodInterceptor(true, msf4JRequestInterceptor, msf4JResponseInterceptor);
+            methodInterceptor = new MethodInterceptor(true, interceptor);
             map.put(method, methodInterceptor);
         }
-        return methodInterceptor.interceptRequest(request, response);
+
+        return methodInterceptor.preCall(request, responder, serviceMethodInfo);
     }
 
     @Override
-    public boolean interceptResponse(Request request, Response response) throws Exception {
+    public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) throws Exception {
         if (!enabled) {
-            return true; // Proceed with the interception flow
+            return;
         }
-        Method method = (Method) request.getProperty(MSF4JConstants.METHOD_PROPERTY_NAME);
+        Method method = serviceMethodInfo.getMethod();
         MethodInterceptor methodInterceptor = map.get(method);
-        return !(methodInterceptor != null && !methodInterceptor.interceptResponse(request, response));
+        if (methodInterceptor != null) {
+            methodInterceptor.postCall(request, status, serviceMethodInfo);
+        }
     }
 
-    private static class MethodInterceptor implements MSF4JRequestInterceptor, MSF4JResponseInterceptor {
+    private static class MethodInterceptor implements Interceptor {
 
         private final boolean annotationScanned;
 
-        private final MSF4JRequestInterceptor msf4JRequestInterceptor;
-        private final MSF4JResponseInterceptor msf4JResponseInterceptor;
+        private final Interceptor interceptor;
 
-        MethodInterceptor(boolean annotationScanned, MSF4JRequestInterceptor requestInterceptor,
-                          MSF4JResponseInterceptor responseInterceptor) {
+        MethodInterceptor(boolean annotationScanned, Interceptor interceptor) {
             this.annotationScanned = annotationScanned;
-            this.msf4JRequestInterceptor = requestInterceptor;
-            this.msf4JResponseInterceptor = responseInterceptor;
+            this.interceptor = interceptor;
         }
 
         @Override
-        public boolean interceptRequest(Request request, Response response) throws Exception {
-            return msf4JRequestInterceptor == null || msf4JRequestInterceptor.interceptRequest(request, response);
+        public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo)
+                throws Exception {
+            if (interceptor != null) {
+                return interceptor.preCall(request, responder, serviceMethodInfo);
+            }
+            return true;
         }
 
         @Override
-        public boolean interceptResponse(Request request, Response response) throws Exception {
-            return msf4JResponseInterceptor == null || msf4JResponseInterceptor.interceptResponse(request, response);
+        public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) throws Exception {
+            if (interceptor != null) {
+                interceptor.postCall(request, status, serviceMethodInfo);
+            }
         }
     }
 
-    private class HTTPInterceptor implements MSF4JRequestInterceptor, MSF4JResponseInterceptor {
+    private class HTTPInterceptor implements Interceptor {
 
         private static final String DEFAULT_TRACE_ID = "DEFAULT";
 
@@ -163,8 +170,7 @@ public class HTTPMonitoringInterceptor implements MSF4JRequestInterceptor, MSF4J
         }
 
         private void handleTracing(Request request, HTTPMonitoringEvent httpMonitoringEvent) {
-            String traceId;
-            String parentRequest;
+            String traceId, parentRequest;
             if (this.isTracing()) {
                 traceId = request.getHeader(ACTIVITY_ID);
                 if (traceId == null) {
@@ -180,18 +186,18 @@ public class HTTPMonitoringInterceptor implements MSF4JRequestInterceptor, MSF4J
         }
 
         @Override
-        public boolean interceptRequest(Request request, Response response) throws Exception {
+        public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) {
             HTTPMonitoringEvent httpMonitoringEvent = new HTTPMonitoringEvent();
             httpMonitoringEvent.setTimestamp(System.currentTimeMillis());
             httpMonitoringEvent.setStartNanoTime(System.nanoTime());
             if (serviceClass == null) {
-                Method method = (Method) request.getProperty(MSF4JConstants.METHOD_PROPERTY_NAME);
-                Class<?> clazz = method.getDeclaringClass();
-                serviceClass = clazz.getName();
-                serviceName = clazz.getSimpleName();
+                Method method = serviceMethodInfo.getMethod();
+                Class<?> serviceClass = method.getDeclaringClass();
+                this.serviceClass = serviceClass.getName();
+                serviceName = serviceClass.getSimpleName();
                 serviceMethod = method.getName();
-                if (clazz.isAnnotationPresent(Path.class)) {
-                    Path path = clazz.getAnnotation(Path.class);
+                if (serviceClass.isAnnotationPresent(Path.class)) {
+                    Path path = serviceClass.getAnnotation(Path.class);
                     servicePath = path.value();
                 }
             }
@@ -210,20 +216,22 @@ public class HTTPMonitoringInterceptor implements MSF4JRequestInterceptor, MSF4J
                 httpMonitoringEvent.setRequestSizeBytes(Long.parseLong(contentLength));
             }
             httpMonitoringEvent.setReferrer(httpHeaders.get(REFERER));
+
             this.handleTracing(request, httpMonitoringEvent);
-            request.setProperty(MONITORING_EVENT, httpMonitoringEvent);
+
+            serviceMethodInfo.setAttribute(MONITORING_EVENT, httpMonitoringEvent);
+
             return true;
         }
 
         @Override
-        public boolean interceptResponse(Request request, Response response) throws Exception {
+        public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) {
             HTTPMonitoringEvent httpMonitoringEvent =
-                    (HTTPMonitoringEvent) request.getProperty(MONITORING_EVENT);
+                    (HTTPMonitoringEvent) serviceMethodInfo.getAttribute(MONITORING_EVENT);
             httpMonitoringEvent.setResponseTime(
                     TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - httpMonitoringEvent.getStartNanoTime()));
-            httpMonitoringEvent.setResponseHttpStatusCode(response.getStatusCode());
+            httpMonitoringEvent.setResponseHttpStatusCode(status);
             httpMonitoringDataPublisher.publishEvent(httpMonitoringEvent);
-            return true;
         }
     }
 }

@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package org.wso2.msf4j.interceptor.deprecated;
+package org.wso2.msf4j;
 
-
-import org.wso2.msf4j.Request;
 
 import java.lang.reflect.Method;
 
 /**
  * Contains information about service method details.
+ * @deprecated
  */
 public class ServiceMethodInfo {
 

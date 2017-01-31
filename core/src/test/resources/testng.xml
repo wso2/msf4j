@@ -75,7 +75,13 @@ limitations under the License.
         </classes>
     </test>
 
-    <test name="filter-tests" preserve-order="true" parallel="false">
+    <test name="deprecated-interceptor-unit-tests" preserve-order="true" parallel="false">
+        <classes>
+            <class name="org.wso2.msf4j.DeprecatedInterceptorTest"/>
+        </classes>
+    </test>
+
+    <test name="interceptor-unit-tests" preserve-order="true" parallel="false">
         <classes>
             <class name="org.wso2.msf4j.InterceptorTest"/>
         </classes>

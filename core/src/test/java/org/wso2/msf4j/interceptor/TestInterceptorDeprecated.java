@@ -20,7 +20,7 @@ package org.wso2.msf4j.interceptor;
 import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
-import org.wso2.msf4j.interceptor.deprecated.ServiceMethodInfo;
+import org.wso2.msf4j.ServiceMethodInfo;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

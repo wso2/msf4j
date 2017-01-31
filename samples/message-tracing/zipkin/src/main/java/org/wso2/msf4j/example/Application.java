@@ -19,18 +19,8 @@ import org.wso2.msf4j.MicroservicesRunner;
 import org.wso2.msf4j.analytics.zipkintracing.MSF4JZipkinTracingInterceptor;
 
 public class Application {
-
-    private Application() {
-    }
-
     public static void main(String[] args) {
-        MSF4JZipkinTracingInterceptor msf4JZipkinTracingInterceptor =
-                new MSF4JZipkinTracingInterceptor("message-tracing");
-
-        new MicroservicesRunner()
-                .registerGlobalRequestInterceptor(msf4JZipkinTracingInterceptor)
-                .registerGlobalResponseInterceptor(msf4JZipkinTracingInterceptor)
-                .deploy(new TraceableService())
-                .start();
+        new MicroservicesRunner().addInterceptor(new MSF4JZipkinTracingInterceptor("message-tracing"))
+                                 .deploy(new TraceableService()).start();
     }
 }

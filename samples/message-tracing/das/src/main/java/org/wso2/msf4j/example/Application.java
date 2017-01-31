@@ -30,35 +30,25 @@ import org.wso2.msf4j.example.service.ReportService;
  * Application entry point.
  */
 public class Application {
-
-    private Application() {
-    }
-
     public static void main(String[] args) {
-        MSF4JTracingInterceptor customerServiceTracingInterceptor = new MSF4JTracingInterceptor("Customer-Service");
-        MSF4JTracingInterceptor invoiceServiceTracingInterceptor = new MSF4JTracingInterceptor("Invoice-Service");
-        MSF4JTracingInterceptor reportServiceTracingInterceptor = new MSF4JTracingInterceptor("Report-Service");
 
         new MicroservicesRunner(8081)
                 .addExceptionMapper(new EntityNotFoundMapper(), new CustomerNotFoundMapper(), new
                         GenericServerErrorMapper())
-                .registerGlobalRequestInterceptor(customerServiceTracingInterceptor)
-                .registerGlobalResponseInterceptor(customerServiceTracingInterceptor)
+                .addInterceptor(new MSF4JTracingInterceptor("Customer-Service"))
                 .deploy(new CustomerService())
                 .start();
 
         new MicroservicesRunner(8082)
                 .addExceptionMapper(new EntityNotFoundMapper(), new InvoiceNotFoundMapper(), new
                         GenericServerErrorMapper())
-                .registerGlobalRequestInterceptor(invoiceServiceTracingInterceptor)
-                .registerGlobalResponseInterceptor(invoiceServiceTracingInterceptor)
+                .addInterceptor(new MSF4JTracingInterceptor("Invoice-Service"))
                 .deploy(new InvoiceService())
                 .start();
         new MicroservicesRunner()
                 .addExceptionMapper(new EntityNotFoundMapper(), new CustomerNotFoundMapper(), new
                         InvoiceNotFoundMapper(), new GenericServerErrorMapper())
-                .registerGlobalRequestInterceptor(reportServiceTracingInterceptor)
-                .registerGlobalResponseInterceptor(reportServiceTracingInterceptor)
+                .addInterceptor(new MSF4JTracingInterceptor("Report-Service"))
                 .deploy(new ReportService())
                 .start();
     }
