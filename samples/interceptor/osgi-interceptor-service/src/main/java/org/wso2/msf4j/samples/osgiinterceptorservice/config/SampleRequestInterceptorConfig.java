@@ -29,7 +29,7 @@ import org.wso2.msf4j.samples.interceptor.common.PropertyAddRequestInterceptor;
  * OSGi request interceptor configuration.
  */
 @Component(
-        name = "SampleRequestInterceptorConfig",
+        name = "org.wso2.msf4j.samples.osgiinterceptorservice.config.SampleRequestInterceptorConfig",
         service = OSGiRequestInterceptorConfig.class,
         immediate = true
 )

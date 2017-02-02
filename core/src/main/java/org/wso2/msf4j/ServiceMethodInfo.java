@@ -60,7 +60,6 @@ public class ServiceMethodInfo {
      * @param obj  the {@link Object} to be stored
      */
     public void setAttribute(String name, Object obj) {
-
         request.setProperty(name, obj);
     }
 }

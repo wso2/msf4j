@@ -30,6 +30,7 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.Map;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.MediaType;
 
@@ -38,56 +39,51 @@ import javax.ws.rs.core.MediaType;
  */
 abstract class InterceptorTestBase {
 
-    static URI baseURI;
-    final String microServiceBaseUrl = "/test/interceptorTest/";
-    final String priorityMicroServiceBaseUrl = "/test/priorityInterceptorTest/";
     private final Gson gson = new Gson();
+    protected static URI baseURI;
 
     /**
-     * Get http url connection for the path and method specified.
-     *
      * @param path      http path
-     * @param method    http method
      * @param keepAlive should the connection be kept alive
-     * @return http url connection instance
-     * @throws IOException on error creating http url connection
+     * @param headers   request headers
+     * @return object from response
+     * @throws IOException on any exception
      */
-    protected HttpURLConnection request(String path, String method, boolean keepAlive) throws IOException {
-        URL url = baseURI.resolve(path).toURL();
-        HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
-        if (method.equals(HttpMethod.POST) || method.equals(HttpMethod.PUT)) {
-            urlConn.setDoOutput(true);
+    protected int doGetAndGetStatusCode(String path, boolean keepAlive, Map<String, String> headers)
+            throws IOException {
+        HttpURLConnection urlConn = request(path, HttpMethod.GET, keepAlive, headers);
+        try {
+            return urlConn.getResponseCode();
+        } finally {
+            urlConn.disconnect();
         }
-        urlConn.setRequestMethod(method);
-        if (!keepAlive) {
-            urlConn.setRequestProperty("CONNECTION", "CLOSE");
-        }
-        return urlConn;
     }
 
     /**
      * @param path      http path
      * @param keepAlive should the connection be kept alive
      * @param tClass    type of the expected object
+     * @param headers   request headers
      * @param <T>       type of the expected object
      * @return object from response
-     * @throws Exception on any exception
+     * @throws IOException on any exception
      */
-    protected <T> T getAndGetResponseObject(String path, boolean keepAlive, Class<T> tClass)
-            throws Exception {
-        HttpURLConnection urlConn = request(path, HttpMethod.GET, keepAlive);
+    protected <T> T doGetAndGetResponseObject(String path, boolean keepAlive, Class<T> tClass,
+                                              Map<String, String> headers) throws IOException {
+        HttpURLConnection urlConn = request(path, HttpMethod.GET, keepAlive, headers);
         return getResponseObject(urlConn, tClass);
     }
 
     /**
      * @param path      http path
      * @param keepAlive should the connection be kept alive
+     * @param headers   request headers
      * @return object from response
-     * @throws Exception on any exception
+     * @throws IOException on any exception
      */
-    protected String getAndGetResponseString(String path, boolean keepAlive)
-            throws Exception {
-        HttpURLConnection urlConn = request(path, HttpMethod.GET, keepAlive);
+    protected String doGetAndGetResponseString(String path, boolean keepAlive, Map<String, String> headers)
+            throws IOException {
+        HttpURLConnection urlConn = request(path, HttpMethod.GET, keepAlive, headers);
         return getResponseString(urlConn);
     }
 
@@ -96,13 +92,14 @@ abstract class InterceptorTestBase {
      * @param rawData   data to post
      * @param keepAlive should the connection be kept alive
      * @param tClass    type of the expected object
+     * @param headers   request headers
      * @param <T>       type of the expected object
      * @return object from response
-     * @throws Exception on any exception
+     * @throws IOException on any exception
      */
-    protected <T> T postAndGetResponse(String path, String rawData, boolean keepAlive, Class<T> tClass)
-            throws Exception {
-        HttpURLConnection urlConn = request(path, HttpMethod.POST, keepAlive);
+    protected <T> T doPostAndGetResponseObject(String path, String rawData, boolean keepAlive, Class<T> tClass,
+                                               Map<String, String> headers) throws IOException {
+        HttpURLConnection urlConn = request(path, HttpMethod.POST, keepAlive, headers);
         ByteBuffer encodedData = Charset.defaultCharset().encode(rawData);
         urlConn.setRequestMethod("POST");
         urlConn.setRequestProperty("Content-Type", MediaType.APPLICATION_FORM_URLENCODED);
@@ -120,9 +117,9 @@ abstract class InterceptorTestBase {
      * @param tClass  type of the expected object
      * @param <T>     type of the expected object
      * @return object from response
-     * @throws Exception on any exception
+     * @throws IOException on any exception
      */
-    protected <T> T getResponseObject(HttpURLConnection urlConn, Class<T> tClass) throws Exception {
+    protected <T> T getResponseObject(HttpURLConnection urlConn, Class<T> tClass) throws IOException {
         return gson.fromJson(getResponseString(urlConn), tClass);
     }
 
@@ -131,13 +128,40 @@ abstract class InterceptorTestBase {
      *
      * @param urlConn http url connection
      * @return string from response
-     * @throws Exception on any exception
+     * @throws IOException on any exception
      */
-    protected String getResponseString(HttpURLConnection urlConn) throws Exception {
+    protected String getResponseString(HttpURLConnection urlConn) throws IOException {
         InputStream inputStream = urlConn.getInputStream();
         String response = StreamUtil.asString(inputStream);
         IOUtils.closeQuietly(inputStream);
         urlConn.disconnect();
         return response;
+    }
+
+    /**
+     * Get http url connection for the path and method specified.
+     *
+     * @param path      http path
+     * @param method    http method
+     * @param keepAlive should the connection be kept alive
+     * @param headers   request headers
+     * @return http url connection instance
+     * @throws IOException on error creating http url connection
+     */
+    private HttpURLConnection request(String path, String method, boolean keepAlive, Map<String, String> headers)
+            throws IOException {
+        URL url = baseURI.resolve(path).toURL();
+        HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
+        if (headers != null) {
+            headers.entrySet().forEach(header -> urlConn.setRequestProperty(header.getKey(), header.getValue()));
+        }
+        if (method.equals(HttpMethod.POST) || method.equals(HttpMethod.PUT)) {
+            urlConn.setDoOutput(true);
+        }
+        urlConn.setRequestMethod(method);
+        if (!keepAlive) {
+            urlConn.setRequestProperty("CONNECTION", "CLOSE");
+        }
+        return urlConn;
     }
 }

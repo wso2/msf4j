@@ -35,7 +35,7 @@ import javax.ws.rs.Path;
  * Interceptor example micro-service class.
  */
 @Component(
-        name = "InterceptorService",
+        name = "org.wso2.msf4j.samples.osgiinterceptorservice.InterceptorService",
         service = Microservice.class,
         immediate = true
 )

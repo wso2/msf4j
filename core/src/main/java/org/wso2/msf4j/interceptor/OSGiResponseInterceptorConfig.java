@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * OSGi response interceptor registration component.
  */
-public abstract class OSGiResponseInterceptorConfig {
+public class OSGiResponseInterceptorConfig {
 
     private final List<MSF4JResponseInterceptor> responseInterceptorList = new ArrayList<>();
     private final List<MSF4JResponseInterceptor> globalResponseInterceptorList = new ArrayList<>();

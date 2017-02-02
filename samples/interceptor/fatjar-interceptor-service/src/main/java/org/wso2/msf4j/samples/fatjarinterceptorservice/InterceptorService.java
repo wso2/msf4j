@@ -39,6 +39,7 @@ public class InterceptorService {
 
     /**
      * Method for getting the micro-service name.
+     * curl http://localhost:8081/interceptor-service/service-name
      *
      * @return name of the micro-service.
      */

@@ -44,8 +44,9 @@ public class Application {
         URL resource = Thread.currentThread().getContextClassLoader().getResource("netty-transports.yml");
         if (resource != null) {
             System.setProperty(YAMLTransportConfigurationBuilder.NETTY_TRANSPORT_CONF, resource.getPath());
+        } else {
+            log.error("netty-transports.yml not found in resources - proceeding with default netty configuration");
         }
-        log.error("netty-transports.yml not found in resources - proceeding with default netty configuration");
         new MicroservicesRunner()
                 .deploy(new InterceptorService())
                 .registerRequestInterceptor(new HTTPRequestLogger(), new LogTextRequestInterceptor())
