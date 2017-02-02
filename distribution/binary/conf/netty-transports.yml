@@ -13,25 +13,33 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 ################################################################################
+transportProperties:
+ -
+  name: "latency.metrics.enabled"
+  value: true
+ -
+  name: "server.bootstrap.boss.group.size"
+  value: 4
+ -
+  name: "server.bootstrap.worker.group.size"
+  value: 8
 listenerConfigurations:
- -
+-
   id: "msf4j-http"
-  host: "127.0.0.1"
+  host: "0.0.0.0"
   port: 8080
-  bossThreadPoolSize: 2
-  workerThreadPoolSize: 250
-  parameters:
-    -
-     name: "executor.workerpool.size"
-     value: 60
-
- -
+-
+  id: "msf4j-http2"
+  host: "0.0.0.0"
+  port: 8081
+-
   id: "msf4j-https"
-  host: "127.0.0.1"
+  host: "0.0.0.0"
   port: 8443
-  bossThreadPoolSize: 2
-  workerThreadPoolSize: 250
   scheme: https
-  keyStoreFile: "wso2carbon.jks"
+  keyStoreFile: "/home/thusitha/Work/Git/msf4j/distribution/binary/conf/wso2carbon.jks"
   keyStorePass: wso2carbon
   certPass: wso2carbon
+senderConfigurations:
+ -
+  id: "netty-gw"

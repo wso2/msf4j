@@ -19,16 +19,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.kernel.transports.TransportManager;
 import org.wso2.carbon.messaging.handler.HandlerExecutor;
+import org.wso2.carbon.transport.http.netty.common.Constants;
 import org.wso2.carbon.transport.http.netty.config.ListenerConfiguration;
+import org.wso2.carbon.transport.http.netty.config.TransportProperty;
 import org.wso2.carbon.transport.http.netty.config.TransportsConfiguration;
 import org.wso2.carbon.transport.http.netty.config.YAMLTransportConfigurationBuilder;
-import org.wso2.carbon.transport.http.netty.internal.NettyTransportContextHolder;
-import org.wso2.carbon.transport.http.netty.listener.NettyListener;
+import org.wso2.carbon.transport.http.netty.internal.HTTPTransportContextHolder;
+import org.wso2.carbon.transport.http.netty.listener.HTTPTransportListener;
+import org.wso2.msf4j.internal.DataHolder;
 import org.wso2.msf4j.internal.MSF4JMessageProcessor;
 import org.wso2.msf4j.internal.MicroservicesRegistryImpl;
 import org.wso2.msf4j.util.RuntimeAnnotations;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import javax.ws.rs.Path;
@@ -137,15 +142,27 @@ public class MicroservicesRunner {
      * @param ports The port on which the microservices are exposed
      */
     protected void configureTransport(int... ports) {
-        NettyTransportContextHolder nettyTransportContextHolder = NettyTransportContextHolder.getInstance();
-        nettyTransportContextHolder.setHandlerExecutor(new HandlerExecutor());
+        HTTPTransportContextHolder httpTransportContextHolder = HTTPTransportContextHolder.getInstance();
+        httpTransportContextHolder.setHandlerExecutor(new HandlerExecutor());
 
+        Set<TransportProperty> transportProperties = new HashSet<>();
+        TransportProperty transportProperty = new TransportProperty();
+        int bossGroupSize = Runtime.getRuntime().availableProcessors();
+        transportProperty.setName(Constants.SERVER_BOOTSTRAP_BOSS_GROUP_SIZE);
+        transportProperty.setValue(bossGroupSize);
+        TransportProperty workerGroup = new TransportProperty();
+        int workerGroupSize = Runtime.getRuntime().availableProcessors() * 2;
+        workerGroup.setName(Constants.SERVER_BOOTSTRAP_WORKER_GROUP_SIZE);
+        workerGroup.setValue(workerGroupSize);
+        transportProperties.add(transportProperty);
+        transportProperties.add(workerGroup);
+        httpTransportContextHolder.setMessageProcessor(new MSF4JMessageProcessor());
         for (int port : ports) {
-            ListenerConfiguration listenerConfiguration =
-                    new ListenerConfiguration("netty-" + port, "0.0.0.0", port);
-            NettyListener listener = new NettyListener(listenerConfiguration);
+            ListenerConfiguration listenerConfiguration = new ListenerConfiguration("netty-" + port, "0.0.0.0", port);
+            HTTPTransportListener listener =
+                    new HTTPTransportListener(transportProperties, Collections.singleton(listenerConfiguration));
             transportManager.registerTransport(listener);
-            nettyTransportContextHolder.setMessageProcessor(new MSF4JMessageProcessor("netty-" + port, msRegistry));
+            DataHolder.getInstance().getMicroservicesRegistries().put("netty-" + port, msRegistry);
         }
     }
 
@@ -155,24 +172,36 @@ public class MicroservicesRunner {
     protected void configureTransport() {
         TransportsConfiguration trpConfig = YAMLTransportConfigurationBuilder.build();
         Set<ListenerConfiguration> listenerConfigurations = trpConfig.getListenerConfigurations();
-        NettyTransportContextHolder nettyTransportContextHolder = NettyTransportContextHolder.getInstance();
-        nettyTransportContextHolder.setHandlerExecutor(new HandlerExecutor());
+        HTTPTransportContextHolder httpTransportContextHolder = HTTPTransportContextHolder.getInstance();
+        httpTransportContextHolder.setHandlerExecutor(new HandlerExecutor());
 
+        Set<TransportProperty> transportProperties = new HashSet<>();
+        TransportProperty transportProperty = new TransportProperty();
+        int bossGroupSize = Runtime.getRuntime().availableProcessors();
+        transportProperty.setName(Constants.SERVER_BOOTSTRAP_BOSS_GROUP_SIZE);
+        transportProperty.setValue(bossGroupSize);
+        TransportProperty workerGroup = new TransportProperty();
+        int workerGroupSize = Runtime.getRuntime().availableProcessors() * 2;
+        workerGroup.setName(Constants.SERVER_BOOTSTRAP_WORKER_GROUP_SIZE);
+        workerGroup.setValue(workerGroupSize);
+        transportProperties.add(transportProperty);
+        transportProperties.add(workerGroup);
+        httpTransportContextHolder.setMessageProcessor(new MSF4JMessageProcessor());
         for (ListenerConfiguration listenerConfiguration : listenerConfigurations) {
-            NettyListener listener = new NettyListener(listenerConfiguration);
+            HTTPTransportListener listener =
+                    new HTTPTransportListener(transportProperties, Collections.singleton(listenerConfiguration));
             transportManager.registerTransport(listener);
-            nettyTransportContextHolder
-                    .setMessageProcessor(new MSF4JMessageProcessor(listenerConfiguration.getId(), msRegistry));
+            DataHolder.getInstance().getMicroservicesRegistries().put(listenerConfiguration.getId(), msRegistry);
         }
     }
 
 
     /**
-     * Method to register NettyListeners.
+     * Method to register HTTPTransportListeners.
      *
-     * @param listener The NettyListener to be added
+     * @param listener The HTTPTransportListener to be added
      */
-    protected void registerTransport(NettyListener listener) {
+    protected void registerTransport(HTTPTransportListener listener) {
         transportManager.registerTransport(listener);
     }
 
@@ -183,7 +212,7 @@ public class MicroservicesRunner {
     }
 
     /**
-     * Start this Microservices runner. This will startup all the Netty transports.
+     * Start this Microservices runner. This will startup all the HTTP transports.
      */
     public void start() {
         msRegistry.getSessionManager().init();
@@ -194,7 +223,7 @@ public class MicroservicesRunner {
     }
 
     /**
-     * Stop this Microservices runner. This will stop all the Netty transports.
+     * Stop this Microservices runner. This will stop all the HTTP Transports.
      */
     public void stop() {
         transportManager.stopTransports();

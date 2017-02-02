@@ -35,6 +35,8 @@ import org.wso2.msf4j.util.HttpUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.ws.rs.ext.ExceptionMapper;
 
 /**
@@ -50,6 +52,10 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
     private static final Logger log = LoggerFactory.getLogger(MSF4JMessageProcessor.class);
     private static final String MSF4J_MSG_PROC_ID = "MSF4J-CM-PROCESSOR";
 
+    //TODO need to way to configure the pool size
+    private ExecutorService executorService =
+            Executors.newFixedThreadPool(60, new MSF4JThreadFactory(new ThreadGroup("msf4j.executor.workerpool")));
+
     public MSF4JMessageProcessor() {
     }
 
@@ -63,34 +69,36 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
     @Override
     public boolean receive(CarbonMessage carbonMessage, CarbonCallback carbonCallback) {
         // If we are running on OSGi mode need to get the registry based on the channel_id.
-        MicroservicesRegistryImpl currentMicroservicesRegistry = DataHolder.getInstance().getMicroservicesRegistries()
-                                                .get(carbonMessage.getProperty(MSF4JConstants.CHANNEL_ID));
-        Request request = new Request(carbonMessage);
-        request.setSessionManager(currentMicroservicesRegistry.getSessionManager());
-        Response response = new Response(carbonCallback, request);
-        try {
-            dispatchMethod(currentMicroservicesRegistry, request, response);
-        } catch (HandlerException e) {
-            handleHandlerException(e, carbonCallback);
-        } catch (InvocationTargetException e) {
-            Throwable targetException = e.getTargetException();
-            if (targetException instanceof HandlerException) {
-                handleHandlerException((HandlerException) targetException, carbonCallback);
-            } else {
-                handleThrowable(currentMicroservicesRegistry, targetException, carbonCallback, request);
+        executorService.execute(() -> {
+            MicroservicesRegistryImpl currentMicroservicesRegistry =
+                    DataHolder.getInstance().getMicroservicesRegistries()
+                              .get(carbonMessage.getProperty(MSF4JConstants.CHANNEL_ID));
+            Request request = new Request(carbonMessage);
+            request.setSessionManager(currentMicroservicesRegistry.getSessionManager());
+            Response response = new Response(carbonCallback, request);
+            try {
+                dispatchMethod(currentMicroservicesRegistry, request, response);
+            } catch (HandlerException e) {
+                handleHandlerException(e, carbonCallback);
+            } catch (InvocationTargetException e) {
+                Throwable targetException = e.getTargetException();
+                if (targetException instanceof HandlerException) {
+                    handleHandlerException((HandlerException) targetException, carbonCallback);
+                } else {
+                    handleThrowable(currentMicroservicesRegistry, targetException, carbonCallback, request);
+                }
+            } catch (InterceptorException e) {
+                log.warn("Interceptors threw an exception", e);
+                // TODO: improve the response
+                carbonCallback.done(HttpUtil.createTextResponse(
+                        javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), HttpUtil.EMPTY_BODY));
+            } catch (Throwable t) {
+                handleThrowable(currentMicroservicesRegistry, t, carbonCallback, request);
+            } finally {
+                // Calling the release method to make sure that there won't be any memory leaks from netty
+                carbonMessage.release();
             }
-        } catch (InterceptorException e) {
-            log.warn("Interceptors threw an exception", e);
-            // TODO: improve the response
-            carbonCallback.done(HttpUtil
-                    .createTextResponse(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
-                            HttpUtil.EMPTY_BODY));
-        } catch (Throwable t) {
-            handleThrowable(currentMicroservicesRegistry, t, carbonCallback, request);
-        } finally {
-            // Calling the release method to make sure that there won't be any memory leaks from netty
-            carbonMessage.release();
-        }
+        });
         return true;
     }
 
