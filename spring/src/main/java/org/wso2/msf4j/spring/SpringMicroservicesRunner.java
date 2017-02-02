@@ -30,6 +30,7 @@ import org.wso2.carbon.transport.http.netty.internal.HTTPTransportContextHolder;
 import org.wso2.carbon.transport.http.netty.listener.HTTPTransportListener;
 import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.MicroservicesRunner;
+import org.wso2.msf4j.internal.DataHolder;
 import org.wso2.msf4j.internal.MSF4JMessageProcessor;
 import org.wso2.msf4j.spring.transport.HTTPSTransportConfig;
 import org.wso2.msf4j.spring.transport.TransportConfig;
@@ -126,12 +127,12 @@ public class SpringMicroservicesRunner extends MicroservicesRunner implements Ap
         }
 
         //Add NettyTransportConfig if available on Spring Configuration
+        nettyTransportContextHolder.setMessageProcessor(new MSF4JMessageProcessor());
         for (TransportConfig transportConfig : transportConfigs) {
             if (transportConfig.isEnabled()) {
                 HTTPTransportListener nettyListener = createListenerConfiguration(transportConfig);
                 registerTransport(nettyListener);
-                nettyTransportContextHolder
-                        .setMessageProcessor(new MSF4JMessageProcessor(transportConfig.getId(), getMsRegistry()));
+                DataHolder.getInstance().getMicroservicesRegistries().put(transportConfig.getId(), getMsRegistry());
             }
         }
     }

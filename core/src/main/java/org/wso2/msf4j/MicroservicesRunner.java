@@ -26,6 +26,7 @@ import org.wso2.carbon.transport.http.netty.config.TransportsConfiguration;
 import org.wso2.carbon.transport.http.netty.config.YAMLTransportConfigurationBuilder;
 import org.wso2.carbon.transport.http.netty.internal.HTTPTransportContextHolder;
 import org.wso2.carbon.transport.http.netty.listener.HTTPTransportListener;
+import org.wso2.msf4j.internal.DataHolder;
 import org.wso2.msf4j.internal.MSF4JMessageProcessor;
 import org.wso2.msf4j.internal.MicroservicesRegistryImpl;
 import org.wso2.msf4j.util.RuntimeAnnotations;
@@ -155,12 +156,13 @@ public class MicroservicesRunner {
         workerGroup.setValue(workerGroupSize);
         transportProperties.add(transportProperty);
         transportProperties.add(workerGroup);
+        httpTransportContextHolder.setMessageProcessor(new MSF4JMessageProcessor());
         for (int port : ports) {
             ListenerConfiguration listenerConfiguration = new ListenerConfiguration("netty-" + port, "0.0.0.0", port);
             HTTPTransportListener listener =
                     new HTTPTransportListener(transportProperties, Collections.singleton(listenerConfiguration));
             transportManager.registerTransport(listener);
-            httpTransportContextHolder.setMessageProcessor(new MSF4JMessageProcessor("netty-" + port, msRegistry));
+            DataHolder.getInstance().getMicroservicesRegistries().put("netty-" + port, msRegistry);
         }
     }
 
@@ -184,15 +186,13 @@ public class MicroservicesRunner {
         workerGroup.setValue(workerGroupSize);
         transportProperties.add(transportProperty);
         transportProperties.add(workerGroup);
-        // for (ListenerConfiguration listenerConfiguration : listenerConfigurations) {
+        httpTransportContextHolder.setMessageProcessor(new MSF4JMessageProcessor());
         for (ListenerConfiguration listenerConfiguration : listenerConfigurations) {
             HTTPTransportListener listener =
                     new HTTPTransportListener(transportProperties, Collections.singleton(listenerConfiguration));
             transportManager.registerTransport(listener);
-            httpTransportContextHolder
-                    .setMessageProcessor(new MSF4JMessageProcessor(listenerConfiguration.getId(), msRegistry));
+            DataHolder.getInstance().getMicroservicesRegistries().put(listenerConfiguration.getId(), msRegistry);
         }
-       // }
     }
 
 
