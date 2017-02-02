@@ -56,6 +56,7 @@ import org.wso2.msf4j.service.sub.Team;
 
 import java.net.URI;
 import java.net.URL;
+import java.util.Collections;
 
 import static org.testng.AssertJUnit.assertEquals;
 
@@ -67,6 +68,7 @@ import static org.testng.AssertJUnit.assertEquals;
 public class InterceptorTest extends InterceptorTestBase {
 
     private static final int port = Constants.PORT + 6;
+    private final String microServiceBaseUrl = "/test/interceptorTest/";
     private MicroservicesRunner microservicesRunner;
     private final InterceptorTestMicroService interceptorTestMicroService = new InterceptorTestMicroService();
     private final PriorityInterceptorTestMicroService priorityInterceptorTestMicroService =
@@ -141,8 +143,8 @@ public class InterceptorTest extends InterceptorTestBase {
     @Test
     public void interceptionTest() throws Exception {
         // No sub resource
-        Team team = getAndGetResponseObject(microServiceBaseUrl + "subResourceLocatorTest/SL/",
-                false, Team.class);
+        Team team = doGetAndGetResponseObject(microServiceBaseUrl + "subResourceLocatorTest/SL/",
+                false, Team.class, Collections.unmodifiableMap(Collections.emptyMap()));
 
         // Assert response
         assertEquals("Cricket", team.getTeamType());
@@ -175,8 +177,9 @@ public class InterceptorTest extends InterceptorTestBase {
     public void subResourceInterceptionTest() throws Exception {
         // 1 sub resource
         String rawData = "countryName=SriLanka&type=Batsman";
-        Player player = postAndGetResponse(microServiceBaseUrl + "subResourceLocatorTest/SL/" +
-                "interceptorTest/99/", rawData, false, Player.class);
+        Player player = doPostAndGetResponseObject(microServiceBaseUrl + "subResourceLocatorTest/SL/" +
+                        "interceptorTest/99/", rawData, false, Player.class,
+                Collections.unmodifiableMap(Collections.emptyMap()));
 
         // Assert response
         assertEquals("player_1", player.getName());
@@ -251,7 +254,8 @@ public class InterceptorTest extends InterceptorTestBase {
      */
     @Test
     public void priorityTest() throws Exception {
-        String response = getAndGetResponseString(priorityMicroServiceBaseUrl + "priorityTest", false);
+        String response = doGetAndGetResponseString("/test/priorityInterceptorTest/priorityTest", false,
+                Collections.unmodifiableMap(Collections.emptyMap()));
         assertEquals("Priority interceptor test", response);
         String executionOrderString = "HighPriorityGlobalRequestInterceptor" +
                 "MediumPriorityGlobalRequestInterceptor" +
@@ -283,7 +287,8 @@ public class InterceptorTest extends InterceptorTestBase {
     @Test
     public void interceptorFlowBreakOnExceptionTest() {
         try {
-            getAndGetResponseString(microServiceBaseUrl + "interceptorBreakOnExceptionTest", false);
+            doGetAndGetResponseString(microServiceBaseUrl + "interceptorBreakOnExceptionTest", false,
+                    Collections.unmodifiableMap(Collections.emptyMap()));
             Assert.fail(); // Fail test if exception is not thrown
         } catch (Exception e) {
             assertEquals(e.getClass().getName(), "java.io.IOException");
@@ -312,7 +317,8 @@ public class InterceptorTest extends InterceptorTestBase {
     @Test
     public void requestInterceptorFlowBreakByUserTest() throws Exception {
         String response =
-                getAndGetResponseString(microServiceBaseUrl + "requestInterceptorBreakByUserTest", false);
+                doGetAndGetResponseString(microServiceBaseUrl + "requestInterceptorBreakByUserTest",
+                        false, Collections.unmodifiableMap(Collections.emptyMap()));
         assertEquals(response, "");
         // Request interceptors
         assertEquals(1, HighPriorityGlobalRequestInterceptor.getFilterCalls()); // Global interceptors
@@ -339,7 +345,8 @@ public class InterceptorTest extends InterceptorTestBase {
     @Test
     public void responseInterceptorFlowBreakByUserTest() throws Exception {
         String response =
-                getAndGetResponseString(microServiceBaseUrl + "responseInterceptorBreakByUserTest", false);
+                doGetAndGetResponseString(microServiceBaseUrl + "responseInterceptorBreakByUserTest",
+                        false, Collections.unmodifiableMap(Collections.emptyMap()));
         assertEquals(response, "");
 
         // Request interceptors

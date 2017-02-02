@@ -13,25 +13,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 ################################################################################
+---
 listenerConfigurations:
- -
-  id: "msf4j-http"
-  host: "127.0.0.1"
-  port: 8081
-  bossThreadPoolSize: 2
-  workerThreadPoolSize: 250
-  parameters:
-    -
-     name: "execThreadPoolSize"
-     value: 60
-
- -
-  id: "msf4j-https"
-  host: "127.0.0.1"
-  port: 8444
-  bossThreadPoolSize: 2
-  workerThreadPoolSize: 250
-  scheme: https
-  keyStoreFile: "./samples/interceptor/fatjar-interceptor-service/src/main/resources/wso2carbon.jks"
-  keyStorePass: wso2carbon
-  certPass: wso2carbon
+  -
+    host: "127.0.0.1"
+    id: msf4j-http
+    port: 8081
+  -
+    certPass: wso2carbon
+    host: "0.0.0.0"
+    id: msf4j-https
+    keyStoreFile: ./samples/interceptor/fatjar-interceptor-service/src/main/resources/wso2carbon.jks
+    keyStorePass: wso2carbon
+    port: 8444
+    scheme: https
+senderConfigurations:
+  -
+    id: netty-gw
+transportProperties:
+  -
+    name: latency.metrics.enabled
+    value: true
+  -
+    name: server.bootstrap.boss.group.size
+    value: 4
+  -
+    name: server.bootstrap.worker.group.size
+    value: 8

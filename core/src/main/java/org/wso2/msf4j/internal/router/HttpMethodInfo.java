@@ -16,7 +16,6 @@
 
 package org.wso2.msf4j.internal.router;
 
-import javafx.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.HttpStreamHandler;
@@ -140,11 +139,11 @@ public class HttpMethodInfo {
             throws Exception {
         request.setProperty(DECLARING_CLASS_LIST_CONSTANT, new ArrayList<Class<?>>());
         request.setProperty(RESOURCE_METHOD_LIST_CONSTANT, new ArrayList<Method>());
-        Pair<Boolean, Object> returnVal =
+        ImmutablePair<Boolean, Object> returnVal =
                 invokeResource(destination, httpMethodInfo, request, microservicesRegistry, false);
 
         // Execute method level interceptors of sub-resources and resources (first in - last out order)
-        if (returnVal.getKey()
+        if (returnVal.getFirst()
                 && InterceptorExecutor.executeMethodResponseInterceptorsForMethods(microservicesRegistry, request,
                 httpMethodInfo.responder, (ArrayList<Method>) request.getProperty(RESOURCE_METHOD_LIST_CONSTANT))
                 // Execute class level interceptors of sub-resources and resources (first in - last out order)
@@ -153,7 +152,7 @@ public class HttpMethodInfo {
                 // Execute global interceptors
                 && InterceptorExecutor.executeGlobalResponseInterceptors(microservicesRegistry, request,
                 httpMethodInfo.responder)) {
-            responder.setEntity(returnVal.getValue());
+            responder.setEntity(returnVal.getSecond());
         }
         responder.send();
     }
@@ -168,10 +167,9 @@ public class HttpMethodInfo {
      * @return value returned from executing the sub-resource method
      * @throws Exception if error occurs while invoking the sub-resource method
      */
-    private Pair<Boolean, Object> invokeResource(PatternPathRouter.RoutableDestination<HttpResourceModel> destination,
-                                                 HttpMethodInfo httpMethodInfo, Request request,
-                                                 MicroservicesRegistryImpl microservicesRegistry, boolean isSubResource)
-            throws Exception {
+    private ImmutablePair<Boolean, Object> invokeResource(
+            PatternPathRouter.RoutableDestination<HttpResourceModel> destination, HttpMethodInfo httpMethodInfo,
+            Request request, MicroservicesRegistryImpl microservicesRegistry, boolean isSubResource) throws Exception {
         Class<?> clazz = httpMethodInfo.method.getDeclaringClass();
         request.setProperty(MSF4JConstants.METHOD_PROPERTY_NAME, httpMethodInfo.method); // Required for analytics
 
@@ -179,7 +177,7 @@ public class HttpMethodInfo {
         // at the parent resource
         if (!isSubResource && !InterceptorExecutor
                 .executeGlobalRequestInterceptors(microservicesRegistry, request, httpMethodInfo.responder)) {
-            return new Pair<>(false, new Object());
+            return ImmutablePair.of(false, new Object());
         }
         // Execute class level request interceptors
         if (InterceptorExecutor.executeClassLevelRequestInterceptors(microservicesRegistry, request,
@@ -196,7 +194,7 @@ public class HttpMethodInfo {
             return httpMethodInfo
                     .invokeSubResource(request, destination, returnedValue, microservicesRegistry);
         }
-        return new Pair<>(false, new Object());
+        return ImmutablePair.of(false, new Object());
     }
 
     /**
@@ -209,10 +207,9 @@ public class HttpMethodInfo {
      * @return value returned from executing the sub-resource method
      * @throws Exception if error occurs while invoking the sub-resource method
      */
-    private Pair<Boolean, Object> invokeSubResource(
+    private ImmutablePair<Boolean, Object> invokeSubResource(
             Request request, PatternPathRouter.RoutableDestination<HttpResourceModel> destination, Object returnVal,
-            MicroservicesRegistryImpl microservicesRegistry)
-            throws Exception {
+            MicroservicesRegistryImpl microservicesRegistry) throws Exception {
         // If this is a sub resource locator need to find and invoke the correct method
         if (destination.getDestination().isSubResourceLocator()) {
             String requestPath = request.getUri();
@@ -355,7 +352,7 @@ public class HttpMethodInfo {
                     new PatternPathRouter.RoutableDestination<>(resourceModel, groupNameValues);
             return invokeResource(newDestination, httpMethodInfo, request, microservicesRegistry, true);
         }
-        return new Pair<>(true, returnVal);
+        return ImmutablePair.of(true, returnVal);
     }
 
     /**

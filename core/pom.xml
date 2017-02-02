@@ -353,7 +353,10 @@
             org.wso2.carbon.messaging.*,
         </import.package>
         <carbon.component>
-            startup.listener;componentName="wso2-microservices-server";requiredService="org.wso2.msf4j.Microservice",
+            startup.listener;componentName="wso2-microservices-server";
+            requiredService="org.wso2.msf4j.Microservice,org.wso2.msf4j.Interceptor,
+            org.wso2.msf4j.interceptor.OSGiRequestInterceptorConfig,
+            org.wso2.msf4j.interceptor.OSGiResponseInterceptorConfig",
             osgi.service;
             objectClass="org.wso2.msf4j.internal.MicroservicesServerSC";requiredByComponentName="carbon-transport-mgt",
             osgi.service; objectClass="org.wso2.carbon.messaging.CarbonMessageProcessor",

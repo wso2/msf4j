@@ -20,16 +20,14 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.testng.collections.Maps;
 import org.wso2.msf4j.conf.Constants;
 import org.wso2.msf4j.interceptor.TestInterceptor;
 import org.wso2.msf4j.service.TestMicroServiceWithDynamicPath;
 import org.wso2.msf4j.service.TestMicroservice;
 
-import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URL;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.Response;
@@ -39,25 +37,23 @@ import static org.testng.AssertJUnit.assertEquals;
 /**
  * Tests handler interceptor.
  */
-public class DeprecatedInterceptorTest {
+public class DeprecatedInterceptorTest extends InterceptorTestBase {
     private final TestInterceptor interceptor1 = new TestInterceptor();
     private final TestInterceptor interceptor2 = new TestInterceptor();
     private final TestMicroservice testMicroservice = new TestMicroservice();
     private static final int port = Constants.PORT + 7;
     private MicroservicesRunner microservicesRunner;
-    private static URI baseURI;
 
     @BeforeClass
     public void setup() throws Exception {
         microservicesRunner = new MicroservicesRunner(port);
         microservicesRunner
                 .deploy(testMicroservice)
-                .addInterceptor(interceptor1)
-                .addInterceptor(interceptor2)
+                .addInterceptor(interceptor1, interceptor2)
                 .start();
         microservicesRunner.deploy("/DynamicPath", new TestMicroServiceWithDynamicPath());
         microservicesRunner.deploy("/DynamicPath2", new TestMicroServiceWithDynamicPath());
-        baseURI = URI.create(String.format("http://%s:%d", Constants.HOSTNAME, port));
+        baseURI = URI.create("http://" + Constants.HOSTNAME + ":" + port);
     }
 
     @AfterClass
@@ -73,7 +69,9 @@ public class DeprecatedInterceptorTest {
 
     @Test
     public void testPreInterceptorReject() throws Exception {
-        int status = doGet("/test/v1/resource", "X-Request-Type", "Reject");
+        Map<String, String> headers = new HashMap<>();
+        headers.put("X-Request-Type", "Reject");
+        int status = doGetAndGetStatusCode("/test/v1/resource", false, headers);
         assertEquals(Response.Status.NOT_ACCEPTABLE.getStatusCode(), status);
 
         // Wait for any post handlers to be called
@@ -87,10 +85,11 @@ public class DeprecatedInterceptorTest {
         assertEquals(0, interceptor2.getNumPostCalls());
     }
 
-    // TODO Fix  WMS-82
     @Test
     public void testPreException() throws Exception {
-        int status = doGet("/test/v1/resource", "X-Request-Type", "PreException");
+        Map<String, String> headers = new HashMap<>();
+        headers.put("X-Request-Type", "PreException");
+        int status = doGetAndGetStatusCode("/test/v1/resource", false, headers);
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), status);
 
         // Wait for any post handlers to be called
@@ -106,7 +105,9 @@ public class DeprecatedInterceptorTest {
 
     @Test
     public void testPostException() throws Exception {
-        int status = doGet("/test/v1/resource", "X-Request-Type", "PostException");
+        Map<String, String> headers = new HashMap<>();
+        headers.put("X-Request-Type", "PostException");
+        int status = doGetAndGetStatusCode("/test/v1/resource", false, headers);
         assertEquals(Response.Status.OK.getStatusCode(), status);
 
         assertEquals(1, interceptor1.getNumPreCalls());
@@ -118,7 +119,8 @@ public class DeprecatedInterceptorTest {
 
     @Test
     public void testUnknownPath() throws Exception {
-        int status = doGet("/unknown/path/test/v1/resource");
+        int status = doGetAndGetStatusCode("/unknown/path/test/v1/resource", false,
+                Collections.unmodifiableMap(Collections.emptyMap()));
         assertEquals(Response.Status.NOT_FOUND.getStatusCode(), status);
 
         // Wait for any post handlers to be called
@@ -128,34 +130,5 @@ public class DeprecatedInterceptorTest {
 
         assertEquals(0, interceptor2.getNumPreCalls());
         assertEquals(0, interceptor2.getNumPostCalls());
-    }
-
-    private int doGet(String resource) throws Exception {
-        return doGet(resource, Collections.unmodifiableMap(Collections.emptyMap()));
-    }
-
-    private int doGet(String resource, String key, String value, String... keyValues) throws Exception {
-        Map<String, String> headerMap = Maps.newHashMap();
-        headerMap.put(key, value);
-
-        for (int i = 0; i < keyValues.length; i += 2) {
-            headerMap.put(keyValues[i], keyValues[i + 1]);
-        }
-        return doGet(resource, headerMap);
-    }
-
-    private int doGet(String resource, Map<String, String> headers) throws Exception {
-        URL url = baseURI.resolve(resource).toURL();
-        HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
-        try {
-            if (headers != null) {
-                for (Map.Entry<String, String> entry : headers.entrySet()) {
-                    urlConn.setRequestProperty(entry.getKey(), entry.getValue());
-                }
-            }
-            return urlConn.getResponseCode();
-        } finally {
-            urlConn.disconnect();
-        }
     }
 }
