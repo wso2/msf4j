@@ -9,8 +9,8 @@
     <name>New feature</name>
 
 <properties>
-    <carbon.messaging.version>1.0.11</carbon.messaging.version>
-    <carbon.transport.http.netty.version>3.0.4</carbon.transport.http.netty.version>
+    <carbon.messaging.version>1.1.1-SNAPSHOT</carbon.messaging.version>
+    <carbon.transport.http.netty.version>3.0.5-SNAPSHOT</carbon.transport.http.netty.version>
     <carbon.metrics.version>2.0.0</carbon.metrics.version>
     <msf4j.version>2.1.1-SNAPSHOT</msf4j.version>
     <carbon.feature.plugin.version>2.1.0</carbon.feature.plugin.version>

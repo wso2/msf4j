@@ -18,22 +18,25 @@ package org.wso2.msf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.kernel.transports.TransportManager;
-import org.wso2.carbon.messaging.handler.HandlerExecutor;
+import org.wso2.carbon.messaging.ServerConnector;
 import org.wso2.carbon.transport.http.netty.common.Constants;
 import org.wso2.carbon.transport.http.netty.config.ListenerConfiguration;
 import org.wso2.carbon.transport.http.netty.config.TransportProperty;
 import org.wso2.carbon.transport.http.netty.config.TransportsConfiguration;
 import org.wso2.carbon.transport.http.netty.config.YAMLTransportConfigurationBuilder;
-import org.wso2.carbon.transport.http.netty.internal.HTTPTransportContextHolder;
+import org.wso2.carbon.transport.http.netty.listener.HTTPServerConnector;
+import org.wso2.carbon.transport.http.netty.listener.HTTPServerConnectorProvider;
 import org.wso2.carbon.transport.http.netty.listener.HTTPTransportListener;
+import org.wso2.carbon.transport.http.netty.listener.ServerConnectorController;
 import org.wso2.msf4j.internal.DataHolder;
 import org.wso2.msf4j.internal.MSF4JMessageProcessor;
 import org.wso2.msf4j.internal.MicroservicesRegistryImpl;
 import org.wso2.msf4j.util.RuntimeAnnotations;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.ws.rs.Path;
@@ -47,6 +50,7 @@ public class MicroservicesRunner {
 
     private static final Logger log = LoggerFactory.getLogger(MicroservicesRunner.class);
     private TransportManager transportManager = new TransportManager();
+    protected List<ServerConnector> serverConnectors = new ArrayList<>();
     private long startTime = System.currentTimeMillis();
     private boolean isStarted;
     private MicroservicesRegistryImpl msRegistry = new MicroservicesRegistryImpl();
@@ -142,9 +146,6 @@ public class MicroservicesRunner {
      * @param ports The port on which the microservices are exposed
      */
     protected void configureTransport(int... ports) {
-        HTTPTransportContextHolder httpTransportContextHolder = HTTPTransportContextHolder.getInstance();
-        httpTransportContextHolder.setHandlerExecutor(new HandlerExecutor());
-
         Set<TransportProperty> transportProperties = new HashSet<>();
         TransportProperty transportProperty = new TransportProperty();
         int bossGroupSize = Runtime.getRuntime().availableProcessors();
@@ -156,45 +157,56 @@ public class MicroservicesRunner {
         workerGroup.setValue(workerGroupSize);
         transportProperties.add(transportProperty);
         transportProperties.add(workerGroup);
-        httpTransportContextHolder.setMessageProcessor(new MSF4JMessageProcessor());
+
+        TransportsConfiguration transportsConfiguration = new TransportsConfiguration();
+        ServerConnectorController serverConnectorController = new ServerConnectorController(transportsConfiguration);
+        serverConnectorController.start();
+        HTTPServerConnectorProvider httpServerConnectorProvider = new HTTPServerConnectorProvider();
+        transportsConfiguration.setTransportProperties(transportProperties);
+        Set<ListenerConfiguration> listenerConfigurations = new HashSet<>();
         for (int port : ports) {
             ListenerConfiguration listenerConfiguration = new ListenerConfiguration("netty-" + port, "0.0.0.0", port);
-            HTTPTransportListener listener =
-                    new HTTPTransportListener(transportProperties, Collections.singleton(listenerConfiguration));
-            transportManager.registerTransport(listener);
-            DataHolder.getInstance().getMicroservicesRegistries().put("netty-" + port, msRegistry);
+            listenerConfiguration.setBindOnStartup(false);
+            DataHolder.getInstance().getMicroservicesRegistries().put(listenerConfiguration.getId(), msRegistry);
+            listenerConfigurations.add(listenerConfiguration);
         }
+        transportsConfiguration.setListenerConfigurations(listenerConfigurations);
+        serverConnectors.addAll(httpServerConnectorProvider.initializeConnectors(transportsConfiguration));
+        serverConnectors.forEach(serverConnector -> serverConnector.setMessageProcessor(new MSF4JMessageProcessor()));
     }
 
     /**
      * Method to configure transports.
      */
     protected void configureTransport() {
-        TransportsConfiguration trpConfig = YAMLTransportConfigurationBuilder.build();
-        Set<ListenerConfiguration> listenerConfigurations = trpConfig.getListenerConfigurations();
-        HTTPTransportContextHolder httpTransportContextHolder = HTTPTransportContextHolder.getInstance();
-        httpTransportContextHolder.setHandlerExecutor(new HandlerExecutor());
+        TransportsConfiguration transportsConfiguration = YAMLTransportConfigurationBuilder.build();
+        ServerConnectorController serverConnectorController = new ServerConnectorController(transportsConfiguration);
+        serverConnectorController.start();
+        transportsConfiguration.getListenerConfigurations()
+                               .forEach(listenerConfiguration -> {
+                                   listenerConfiguration.setBindOnStartup(false);
+                                   DataHolder.getInstance().getMicroservicesRegistries()
+                                             .put(listenerConfiguration.getId(), msRegistry);
+                               });
+        HTTPServerConnectorProvider httpServerConnectorProvider = new HTTPServerConnectorProvider();
+        serverConnectors.addAll(httpServerConnectorProvider.initializeConnectors(transportsConfiguration));
+        serverConnectors.forEach(serverConnector -> serverConnector.setMessageProcessor(new MSF4JMessageProcessor()));
 
-        Set<TransportProperty> transportProperties = new HashSet<>();
-        TransportProperty transportProperty = new TransportProperty();
-        int bossGroupSize = Runtime.getRuntime().availableProcessors();
-        transportProperty.setName(Constants.SERVER_BOOTSTRAP_BOSS_GROUP_SIZE);
-        transportProperty.setValue(bossGroupSize);
-        TransportProperty workerGroup = new TransportProperty();
-        int workerGroupSize = Runtime.getRuntime().availableProcessors() * 2;
-        workerGroup.setName(Constants.SERVER_BOOTSTRAP_WORKER_GROUP_SIZE);
-        workerGroup.setValue(workerGroupSize);
-        transportProperties.add(transportProperty);
-        transportProperties.add(workerGroup);
-        httpTransportContextHolder.setMessageProcessor(new MSF4JMessageProcessor());
-        for (ListenerConfiguration listenerConfiguration : listenerConfigurations) {
-            HTTPTransportListener listener =
-                    new HTTPTransportListener(transportProperties, Collections.singleton(listenerConfiguration));
-            transportManager.registerTransport(listener);
-            DataHolder.getInstance().getMicroservicesRegistries().put(listenerConfiguration.getId(), msRegistry);
-        }
+        /*ServiceLoader<ServerConnectorProvider> serverConnectorProviderLoader =
+                ServiceLoader.load(ServerConnectorProvider.class);
+        serverConnectorProviderLoader.
+                                             forEach(serverConnectorProvider -> {
+                                                 serverConnectors
+                                                         .addAll(serverConnectorProvider.initializeConnectors());
+                                                 serverConnectors.forEach(serverConnector -> {
+                                                     serverConnector.setMessageProcessor(new MSF4JMessageProcessor());
+                                                     DataHolder.getInstance().getMicroservicesRegistries()
+                                                               .put(serverConnector.getId(), msRegistry);
+                                                     ((HTTPServerConnector) serverConnector).getListenerConfiguration()
+                                                                                            .setBindOnStartup(false);
+                                                 });
+                                             });*/
     }
-
 
     /**
      * Method to register HTTPTransportListeners.
@@ -217,7 +229,7 @@ public class MicroservicesRunner {
     public void start() {
         msRegistry.getSessionManager().init();
         handleServiceLifecycleMethods();
-        transportManager.startTransports();
+        serverConnectors.forEach(serverConnector -> ((HTTPServerConnector) serverConnector).bind());
         isStarted = true;
         log.info("Microservices server started in " + (System.currentTimeMillis() - startTime) + "ms");
     }
@@ -226,7 +238,7 @@ public class MicroservicesRunner {
      * Stop this Microservices runner. This will stop all the HTTP Transports.
      */
     public void stop() {
-        transportManager.stopTransports();
+        serverConnectors.forEach(serverConnector -> ((HTTPServerConnector) serverConnector).unbind());
         log.info("Microservices server stopped");
     }
 
