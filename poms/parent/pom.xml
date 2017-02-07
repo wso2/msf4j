@@ -686,8 +686,4 @@
         <org.jacoco.ant.version>0.7.5.201505241946</org.jacoco.ant.version>
         <org.osgi.compendium.version>4.3.1</org.osgi.compendium.version>
     </properties>
-
-  <scm>
-    <tag>v2.1.0-rc3</tag>
-  </scm>
 </project>
