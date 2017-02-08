@@ -337,6 +337,7 @@
             org.wso2.msf4j.*;version="${msf4j.version}"
         </export.package>
         <import.package>
+            org.wso2.msf4j.delegates.*;version="${msf4j.version}",
             org.apache.commons.io.*;version="${commons-io.version.range}",
             com.google.gson.*;version="${gson.version.range}",
             javax.annotation.*,
