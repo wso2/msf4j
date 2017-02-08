@@ -1331,6 +1331,21 @@ public class HttpServerTest {
         assertEquals("SL_123_name_Batsman_SriLanka", response);
     }
 
+    @Test
+    public void testLocation() throws Exception {
+        HttpURLConnection urlConn = request("/test/v1/locationRealtiveUriTest", HttpMethod.GET);
+        assertEquals(201, urlConn.getResponseCode());
+        String location = urlConn.getHeaderField("Location");
+        assertEquals("http://" + baseURI.getHost() + ":" + baseURI.getPort() + "/entity/1", location);
+        urlConn.disconnect();
+
+        urlConn = request("/test/v1/locationAbsoluteUriTest", HttpMethod.GET);
+        assertEquals(201, urlConn.getResponseCode());
+        location = urlConn.getHeaderField("Location");
+        assertEquals("http://localhost:8080/products/entity/2", location);
+        urlConn.disconnect();
+    }
+
     protected Socket createRawSocket(URL url) throws IOException {
         return new Socket(url.getHost(), url.getPort());
     }
