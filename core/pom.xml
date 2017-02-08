@@ -337,6 +337,7 @@
             org.wso2.msf4j.*;version="${msf4j.version}"
         </export.package>
         <import.package>
+            org.wso2.msf4j.delegates.*;version="${msf4j.version}",
             org.apache.commons.io.*;version="${commons-io.version.range}",
             com.google.gson.*;version="${gson.version.range}",
             javax.annotation.*,
@@ -354,7 +355,7 @@
             org.wso2.carbon.messaging.*,
         </import.package>
         <carbon.component>
-            startup.listener;componentName="wso2-microservices-server";requiredService="org.wso2.msf4j.Microservice,org.wso2.msf4j.Interceptor",
+            startup.listener;componentName="wso2-microservices-server";requiredService="org.wso2.carbon.messaging.ServerConnectorProvider,org.wso2.msf4j.Microservice,org.wso2.msf4j.Interceptor",
             startup.listener;componentName="wso2-websocket-server";requiredService="org.wso2.msf4j.WebSocketEndpoint",
             osgi.service;objectClass="org.wso2.msf4j.internal.MicroservicesServerSC";requiredByComponentName="wso2-server-connector-sc",
             osgi.service;objectClass="org.wso2.msf4j.internal.websocket.WebSocketServerSC";requiredByComponentName="wso2-server-connector-sc",

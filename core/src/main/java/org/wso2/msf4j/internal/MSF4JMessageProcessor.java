@@ -24,13 +24,14 @@ import org.wso2.carbon.messaging.CarbonCallback;
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.CarbonMessageProcessor;
 import org.wso2.carbon.messaging.ClientConnector;
+import org.wso2.carbon.messaging.Constants;
 import org.wso2.carbon.messaging.ControlCarbonMessage;
 import org.wso2.carbon.messaging.StatusCarbonMessage;
 import org.wso2.carbon.messaging.TextCarbonMessage;
 import org.wso2.carbon.messaging.TransportSender;
-import org.wso2.carbon.transport.http.netty.common.Constants;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
+import org.wso2.msf4j.delegates.MSF4JResponse;
 import org.wso2.msf4j.internal.router.HandlerException;
 import org.wso2.msf4j.internal.router.HttpMethodInfo;
 import org.wso2.msf4j.internal.router.HttpMethodInfoBuilder;
@@ -48,10 +49,13 @@ import org.wso2.msf4j.websocket.exception.WebSocketEndpointMethodReturnTypeExcep
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
@@ -61,6 +65,13 @@ import javax.websocket.PongMessage;
 import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.ws.rs.ext.ExceptionMapper;
+
+import static org.wso2.msf4j.internal.MSF4JConstants.CONNECTION;
+import static org.wso2.msf4j.internal.MSF4JConstants.PROTOCOL_NAME;
+import static org.wso2.msf4j.internal.MSF4JConstants.UPGRADE;
+import static org.wso2.msf4j.internal.MSF4JConstants.WEBSOCKET_PROTOCOL_NAME;
+import static org.wso2.msf4j.internal.MSF4JConstants.WEBSOCKET_SESSION;
+import static org.wso2.msf4j.internal.MSF4JConstants.WEBSOCKET_UPGRADE;
 
 /**
  * Process carbon messages for MSF4J.
@@ -96,12 +107,13 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
             //Identify the protocol name before doing the processing
             String protocolName = (String) carbonMessage.getProperty(Constants.PROTOCOL);
 
-            if (Constants.PROTOCOL_NAME.equalsIgnoreCase(protocolName)) {
+            if (PROTOCOL_NAME.equalsIgnoreCase(protocolName)) {
                 MicroservicesRegistryImpl currentMicroservicesRegistry =
                         DataHolder.getInstance().getMicroservicesRegistries()
                                 .get(carbonMessage.getProperty(MSF4JConstants.CHANNEL_ID));
                 Request request = new Request(carbonMessage);
                 request.setSessionManager(currentMicroservicesRegistry.getSessionManager());
+                setBaseUri(request);
                 Response response = new Response(carbonCallback, request);
                 try {
                     dispatchMethod(currentMicroservicesRegistry, request, response);
@@ -123,13 +135,14 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                 } catch (Throwable t) {
                     handleThrowable(currentMicroservicesRegistry, t, carbonCallback, request);
                 } finally {
+                    MSF4JResponse.clearBaseUri();
                     // Calling the release method to make sure that there won't be any memory leaks from netty
                     carbonMessage.release();
                 }
-            } else if (Constants.WEBSOCKET_PROTOCOL_NAME.equalsIgnoreCase(protocolName)) {
+            } else if (WEBSOCKET_PROTOCOL_NAME.equalsIgnoreCase(protocolName)) {
                 EndpointsRegistryImpl endpointsRegistry = EndpointsRegistryImpl.getInstance();
                 PatternPathRouter.RoutableDestination<Object> routableEndpoint = null;
-                Session session = (Session) carbonMessage.getProperty(Constants.WEBSOCKET_SESSION);
+                Session session = (Session) carbonMessage.getProperty(WEBSOCKET_SESSION);
                 String uri = (String) carbonMessage.getProperty(Constants.TO);
                 try {
                     routableEndpoint = endpointsRegistry.getRoutableEndpoint(uri);
@@ -143,6 +156,20 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
             }
         });
         return true;
+    }
+
+    private void setBaseUri(Request request) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(request.getProperty(Constants.PROTOCOL).toString().toLowerCase(Locale.US)).append("://")
+               .append(request.getHeader(Constants.HOST));
+        if (builder.charAt(builder.length() - 1) != '/') {
+            builder.append("/");
+        }
+        try {
+            MSF4JResponse.setBaseUri(new URI(builder.toString()));
+        } catch (URISyntaxException e) {
+            log.error("Error while setting the Base URI. " + e.getMessage(), e);
+        }
     }
 
     /**
@@ -212,7 +239,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
      */
     private void dispatchWebSocketMethod(PatternPathRouter.RoutableDestination<Object> routableEndpoint,
                                          CarbonMessage carbonMessage) throws WebSocketEndpointAnnotationException {
-        Session session = (Session) carbonMessage.getProperty(Constants.WEBSOCKET_SESSION);
+        Session session = (Session) carbonMessage.getProperty(WEBSOCKET_SESSION);
         if (session == null) {
             throw new IllegalStateException("WebSocket session not found.");
         }
@@ -226,10 +253,9 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
         } else if (carbonMessage instanceof StatusCarbonMessage) {
             StatusCarbonMessage statusCarbonMessage = (StatusCarbonMessage) carbonMessage;
             if (org.wso2.carbon.messaging.Constants.STATUS_OPEN.equals(statusCarbonMessage.getStatus())) {
-                String connection = (String) carbonMessage.getProperty(Constants.CONNECTION);
-                String upgrade = (String) carbonMessage.getProperty(Constants.UPGRADE);
-                if (Constants.UPGRADE.equalsIgnoreCase(connection) &&
-                        Constants.WEBSOCKET_UPGRADE.equalsIgnoreCase(upgrade)) {
+                String connection = (String) carbonMessage.getProperty(CONNECTION);
+                String upgrade = (String) carbonMessage.getProperty(UPGRADE);
+                if (UPGRADE.equalsIgnoreCase(connection) && WEBSOCKET_UPGRADE.equalsIgnoreCase(upgrade)) {
                     handleWebSocketHandshake(carbonMessage, session);
                 }
             } else if (org.wso2.carbon.messaging.Constants.STATUS_CLOSE.equals(statusCarbonMessage.getStatus())) {

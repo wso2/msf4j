@@ -48,6 +48,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -767,6 +768,18 @@ public class TestMicroservice implements Microservice {
         return new Team(countryId);
     }
 
+    @GET
+    @Path("/locationRealtiveUriTest")
+    public Response locationRealtiveUriTest() {
+        return Response.status(Response.Status.CREATED).location(URI.create("/entity/1")).build();
+    }
+
+    @GET
+    @Path("/locationAbsoluteUriTest")
+    public Response locationAbsoluteUriTest() {
+        return Response.status(Response.Status.CREATED).location(URI.create("http://localhost:8080/products/entity/2"))
+                       .build();
+    }
 
     /**
      * Custom exception class for testing exception handler.
