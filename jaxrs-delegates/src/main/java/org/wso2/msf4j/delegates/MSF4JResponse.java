@@ -28,6 +28,7 @@ import java.util.Set;
 import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
@@ -46,6 +47,53 @@ public class MSF4JResponse extends Response {
     private MultivaluedMap<String, String> headers;
     private Map<String, NewCookie> cookies = new HashMap<>();
     private MediaType type;
+    private static final ThreadLocal<URI> baseUriThreadLocal = new ThreadLocal<>();
+
+    /**
+     * Set the {@code baseUri} of the actual request into the {@link InheritableThreadLocal}.
+     * <p>
+     * The {@code baseUri} will be used for absolutizing the location header
+     * content in case that only a relative URI is provided.
+     * </p>
+     * <p>
+     * After resource method invocation when the value is not needed
+     * any more to be stored in {@code ThreadLocal} {@link #clearBaseUri() clearBaseUri()} should be
+     * called for cleanup in order to prevent possible memory leaks.
+     * </p>
+     *
+     * @param baseUri - baseUri of the actual request
+     * @see Builder#location(URI)
+     * @since 2.1.1
+     */
+    public static void setBaseUri(URI baseUri) {
+        baseUriThreadLocal.set(baseUri);
+    }
+
+    /**
+     * Return request baseUri previously set by {@link #setBaseUri(java.net.URI)}.
+     *
+     * Returned {@link URI} is used for absolutization of the location header in case that only a relative
+     * {@code URI} was provided.
+     *
+     * @return baseUri of the actual request
+     * @see Builder#location(URI)
+     * @since 2.1.1
+     */
+    private static URI getBaseUri() {
+        return baseUriThreadLocal.get();
+    }
+
+    /**
+     * Remove the current thread's value for baseUri thread-local variable (set by {@link #setBaseUri(java.net.URI)}).
+     *
+     * Should be called after resource method invocation for cleanup.
+     *
+     * @see Builder#location(URI)
+     * @since 2.1.1
+     */
+    public static void clearBaseUri() {
+        baseUriThreadLocal.remove();
+    }
 
     public void setHeaders(MultivaluedMap<String, String> headers) {
         this.headers = headers;
@@ -271,7 +319,7 @@ public class MSF4JResponse extends Response {
                     headers.add(name, valueElement.toString());
                 }
             } else {
-                headers.add(name, value.toString());
+                headers.add(name, value == null ? null : value.toString());
             }
             return this;
         }
@@ -331,7 +379,15 @@ public class MSF4JResponse extends Response {
 
         @Override
         public ResponseBuilder location(URI location) {
-            throw new UnsupportedOperationException();
+            URI locationUri = location;
+            if (locationUri != null && !locationUri.isAbsolute()) {
+                URI baseUri = getBaseUri();
+                if (baseUri != null) {
+                    locationUri = baseUri.resolve(location);
+                }
+            }
+            header(HttpHeaders.LOCATION, locationUri);
+            return this;
         }
 
         @Override
