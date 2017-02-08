@@ -43,7 +43,7 @@ You can use the [msf4j-microservice](archetypes) Maven [archetype](http://maven.
 
 ```
 mvn archetype:generate -DarchetypeGroupId=org.wso2.msf4j \
--DarchetypeArtifactId=msf4j-microservice -DarchetypeVersion=2.0.0 \
+-DarchetypeArtifactId=msf4j-microservice -DarchetypeVersion=2.1.1 \
 -DgroupId=org.example -DartifactId=Hello-Service -Dversion=0.1-SNAPSHOT \
 -Dpackage=org.example.service -DserviceClass=HelloService
 ```
@@ -357,7 +357,7 @@ To enable swagger support you need to add the following dependency to your proje
 <dependency>
      <groupId>org.wso2.msf4j</groupId>
      <artifactId>msf4j-swagger</artifactId>
-     <version>2.1.0-SNAPSHOT</version>
+     <version>2.1.1</version>
 </dependency>
 ```
 In order to retrieve Swagger definitions of your microservice, go to <br/>http://&lt;host&gt;:&lt;port&gt;/swagger?path=&lt;service_base_path&gt;.
