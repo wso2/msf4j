@@ -52,11 +52,6 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
 
     private static final Logger log = LoggerFactory.getLogger(MicroservicesRegistryImpl.class);
     private final Map<String, Object> services = new HashMap<>();
-
-    private Map<Class<? extends MSF4JRequestInterceptor>, MSF4JRequestInterceptor> requestInterceptorMap =
-            new HashMap<>();
-    private Map<Class<? extends MSF4JResponseInterceptor>, MSF4JResponseInterceptor> responseInterceptorMap =
-            new HashMap<>();
     private List<MSF4JRequestInterceptor> globalRequestInterceptorList = new ArrayList<>();
     private List<MSF4JResponseInterceptor> globalResponseInterceptorList = new ArrayList<>();
     private volatile MicroserviceMetadata metadata = new MicroserviceMetadata(Collections.emptyList());
@@ -118,81 +113,37 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
     /**
      * Register MSF4J request interceptors.
      *
-     * @param isGlobal                is a global interceptor?
      * @param msf4JRequestInterceptor MSF4J interceptor instances.
      */
-    public void registerRequestInterceptor(boolean isGlobal, MSF4JRequestInterceptor... msf4JRequestInterceptor) {
-        for (MSF4JRequestInterceptor requestInterceptor : msf4JRequestInterceptor) {
-            Class<? extends MSF4JRequestInterceptor> type = requestInterceptor.getClass();
-            if (isGlobal) {
-                globalRequestInterceptorList.add(requestInterceptor);
-            }
-            if (!requestInterceptorMap.containsKey(type)) {
-                requestInterceptorMap.put(type, requestInterceptor);
-            }
-        }
+    public void addGlobalRequestInterceptor(MSF4JRequestInterceptor... msf4JRequestInterceptor) {
+        Collections.addAll(globalRequestInterceptorList, msf4JRequestInterceptor);
     }
 
     /**
      * Register MSF4J response interceptors.
      *
-     * @param isGlobal                 is a global interceptor?
      * @param msf4JResponseInterceptor MSF4J interceptor instances.
      */
-    public void registerResponseInterceptor(boolean isGlobal, MSF4JResponseInterceptor... msf4JResponseInterceptor) {
-        for (MSF4JResponseInterceptor responseInterceptor : msf4JResponseInterceptor) {
-            Class<? extends MSF4JResponseInterceptor> type = responseInterceptor.getClass();
-            if (isGlobal) {
-                globalResponseInterceptorList.add(responseInterceptor);
-            }
-            if (!responseInterceptorMap.containsKey(type)) {
-                responseInterceptorMap.put(type, responseInterceptor);
-            }
-        }
+    public void addGlobalResponseInterceptor(MSF4JResponseInterceptor... msf4JResponseInterceptor) {
+        Collections.addAll(globalResponseInterceptorList, msf4JResponseInterceptor);
     }
 
     /**
      * Remove msf4j request interceptor.
      *
-     * @param isGlobal                is a global interceptor?
      * @param requestInterceptor MSF4J interceptor instance.
      */
-    public void removeRequestInterceptor(boolean isGlobal, MSF4JRequestInterceptor requestInterceptor) {
-        if (isGlobal) {
-            globalRequestInterceptorList.remove(requestInterceptor);
-        }
-        requestInterceptorMap.remove(requestInterceptor.getClass());
+    public void removeGlobalRequestInterceptor(MSF4JRequestInterceptor requestInterceptor) {
+        globalRequestInterceptorList.remove(requestInterceptor);
     }
 
     /**
      * Remove msf4j response interceptor.
      *
-     * @param isGlobal                 is a global interceptor?
      * @param responseInterceptor MSF4J interceptor instance.
      */
-    public void removeResponseInterceptor(boolean isGlobal, MSF4JResponseInterceptor responseInterceptor) {
-        if (isGlobal) {
-            globalResponseInterceptorList.remove(responseInterceptor);
-        }
-        responseInterceptorMap.remove(responseInterceptor.getClass());
-    }
-
-    /**
-     * Map against class and msf4j interceptor instance.
-     *
-     * @return Map against class -> msf4j interceptor instance.
-     */
-    public Map<Class<? extends MSF4JRequestInterceptor>, MSF4JRequestInterceptor> getRequestInterceptorMap() {
-        return requestInterceptorMap;
-    }
-
-    /**
-     * Map against class and msf4j interceptor instance.
-     *
-     * @return Map against class -> msf4j interceptor instance.
-     */
-    public Map<Class<? extends MSF4JResponseInterceptor>, MSF4JResponseInterceptor> getResponseInterceptorMap() {
-        return responseInterceptorMap;
+    public void removeGlobalResponseInterceptor(MSF4JResponseInterceptor responseInterceptor) {
+        globalResponseInterceptorList.remove(responseInterceptor);
     }
 
     /**

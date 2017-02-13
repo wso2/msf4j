@@ -33,8 +33,8 @@ public class Runner {
         HTTPMonitoringInterceptor httpMonitoringInterceptor = new HTTPMonitoringInterceptor();
         MetricsInterceptor metricsInterceptor = new MetricsInterceptor();
         new MicroservicesRunner()
-                .registerGlobalRequestInterceptor(jwtSecurityInterceptor, httpMonitoringInterceptor, metricsInterceptor)
-                .registerGlobalResponseInterceptor(httpMonitoringInterceptor, metricsInterceptor)
+                .addGlobalRequestInterceptor(jwtSecurityInterceptor, httpMonitoringInterceptor, metricsInterceptor)
+                .addGlobalResponseInterceptor(httpMonitoringInterceptor, metricsInterceptor)
                 .deploy(new PetService())
                 .deploy(new PetCategoryService())
                 .start();

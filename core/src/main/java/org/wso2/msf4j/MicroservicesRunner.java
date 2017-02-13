@@ -118,9 +118,9 @@ public class MicroservicesRunner {
      *
      * @param msf4JRequestInterceptor MSF4J interceptor instances
      */
-    public MicroservicesRunner registerRequestInterceptor(MSF4JRequestInterceptor... msf4JRequestInterceptor) {
+    public MicroservicesRunner addGlobalRequestInterceptor(MSF4JRequestInterceptor... msf4JRequestInterceptor) {
         checkState();
-        msRegistry.registerRequestInterceptor(false, msf4JRequestInterceptor);
+        msRegistry.addGlobalRequestInterceptor(msf4JRequestInterceptor);
         return this;
     }
 
@@ -129,31 +129,9 @@ public class MicroservicesRunner {
      *
      * @param msf4JResponseInterceptor MSF4J interceptor instances
      */
-    public MicroservicesRunner registerResponseInterceptor(MSF4JResponseInterceptor... msf4JResponseInterceptor) {
+    public MicroservicesRunner addGlobalResponseInterceptor(MSF4JResponseInterceptor... msf4JResponseInterceptor) {
         checkState();
-        msRegistry.registerResponseInterceptor(false, msf4JResponseInterceptor);
-        return this;
-    }
-
-    /**
-     * Register MSF4J global request interceptors.
-     *
-     * @param msf4JRequestInterceptor MSF4J global interceptor instances
-     */
-    public MicroservicesRunner registerGlobalRequestInterceptor(MSF4JRequestInterceptor... msf4JRequestInterceptor) {
-        checkState();
-        msRegistry.registerRequestInterceptor(true, msf4JRequestInterceptor);
-        return this;
-    }
-
-    /**
-     * Register MSF4J global response interceptors.
-     *
-     * @param msf4JResponseInterceptor MSF4J global interceptor instances
-     */
-    public MicroservicesRunner registerGlobalResponseInterceptor(MSF4JResponseInterceptor... msf4JResponseInterceptor) {
-        checkState();
-        msRegistry.registerResponseInterceptor(true, msf4JResponseInterceptor);
+        msRegistry.addGlobalResponseInterceptor(msf4JResponseInterceptor);
         return this;
     }
 
@@ -167,8 +145,8 @@ public class MicroservicesRunner {
      */
     public MicroservicesRunner addInterceptor(Interceptor... interceptor) {
         checkState();
-        msRegistry.registerRequestInterceptor(true, interceptor);
-        msRegistry.registerResponseInterceptor(true, interceptor);
+        msRegistry.addGlobalRequestInterceptor(interceptor);
+        msRegistry.addGlobalResponseInterceptor(interceptor);
         return this;
     }
 

@@ -33,8 +33,8 @@ public class Runner {
         HTTPMonitoringInterceptor httpMonitoringInterceptor = new HTTPMonitoringInterceptor();
         MetricsInterceptor metricsInterceptor = new MetricsInterceptor();
         new MicroservicesRunner()
-                .registerGlobalRequestInterceptor(httpMonitoringInterceptor, metricsInterceptor)
-                .registerGlobalResponseInterceptor(httpMonitoringInterceptor, metricsInterceptor)
+                .addGlobalRequestInterceptor(httpMonitoringInterceptor, metricsInterceptor)
+                .addGlobalResponseInterceptor(httpMonitoringInterceptor, metricsInterceptor)
                 .deploy(new FileServerService())
                 .start();
     }

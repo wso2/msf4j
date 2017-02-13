@@ -13,19 +13,27 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 ################################################################################
+---
 listenerConfigurations:
- -
-  id: "jaxrs-http"
-  host: "0.0.0.0"
-  port: 8096
-  bossThreadPoolSize: 2
-  workerThreadPoolSize: 250
-  scheme: https
-  keyStoreFile: "src/test/resources/cert.jks"
-  keyStorePass: secret
-  certPass: secret
-  enableDisruptor: false
-  parameters:
-    -
-     name: "executor.workerpool.size"
-     value: 60
+  -
+    certPass: secret
+    host: "0.0.0.0"
+    id: jaxrs-http
+    keyStoreFile: src/test/resources/cert.jks
+    keyStorePass: secret
+    port: 8096
+    scheme: https
+senderConfigurations:
+  -
+    id: netty-gw
+transportProperties:
+  -
+    name: latency.metrics.enabled
+    value: true
+  -
+    name: server.bootstrap.boss.group.size
+    value: 4
+  -
+    name: server.bootstrap.worker.group.size
+    value: 8
+

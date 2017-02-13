@@ -20,24 +20,25 @@ package org.wso2.msf4j.samples.osgiinterceptorservice.config;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.wso2.msf4j.interceptor.OSGiRequestInterceptorConfig;
-import org.wso2.msf4j.samples.interceptor.common.HTTPRequestLogger;
+import org.wso2.msf4j.interceptor.OSGiInterceptorConfig;
 import org.wso2.msf4j.samples.interceptor.common.LogTextRequestInterceptor;
+import org.wso2.msf4j.samples.interceptor.common.LogTextResponseInterceptor;
 import org.wso2.msf4j.samples.interceptor.common.PropertyAddRequestInterceptor;
+import org.wso2.msf4j.samples.interceptor.common.PropertyGetResponseInterceptor;
 
 /**
  * OSGi request interceptor configuration.
  */
 @Component(
-        name = "org.wso2.msf4j.samples.osgiinterceptorservice.config.SampleRequestInterceptorConfig",
-        service = OSGiRequestInterceptorConfig.class,
+        name = "org.wso2.msf4j.samples.osgiinterceptorservice.config.SampleInterceptorConfig",
+        service = OSGiInterceptorConfig.class,
         immediate = true
 )
-public class SampleRequestInterceptorConfig extends OSGiRequestInterceptorConfig {
+public class SampleInterceptorConfig extends OSGiInterceptorConfig {
 
     @Activate
     protected void activate(BundleContext bundleContext) {
-        addRequestInterceptors(new HTTPRequestLogger(), new LogTextRequestInterceptor());
         addGlobalRequestInterceptors(new LogTextRequestInterceptor(), new PropertyAddRequestInterceptor());
+        addGlobalResponseInterceptors(new LogTextResponseInterceptor(), new PropertyGetResponseInterceptor());
     }
 }

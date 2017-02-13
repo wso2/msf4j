@@ -48,58 +48,32 @@ following dependency in the pom. This dependency will contain the interceptors t
         </dependency>
 ```
 
-###Defining the order of request interceptors
+###Defining the order of global interceptors
 
-Please do refer to the [SampleRequestInterceptorConfig](./src/main/java/org/wso2/msf4j/samples/osgiinterceptorservice/config/SampleRequestInterceptorConfig.java)
+Please do refer to the [SampleInterceptorConfig](./src/main/java/org/wso2/msf4j/samples/osgiinterceptorservice/config/SampleInterceptorConfig.java)
 class.
 
-In here you inherit from the [OSGiRequestInterceptorConfig](../../../core/src/main/java/org/wso2/msf4j/interceptor/OSGiRequestInterceptorConfig.java)
-class. All you need to do is to add a list of non-global request interceptors (optional) and global request interceptors
-(option) using "addRequestInterceptors" and "addGlobalRequestInterceptors" respectively. The order in which you define
+In here you inherit from the [OSGiInterceptorConfig](../../../core/src/main/java/org/wso2/msf4j/interceptor/OSGiInterceptorConfig.java)
+class. All you need to do is to add a list of global request interceptors (optional) and global response interceptors 
+(optional) using "addGlobalRequestInterceptors" and "addGlobalResponseInterceptors" respectively. The order in which you define
  the global interceptors are defined is the order in which they are executed.
  
 Please do make sure to add the `@component` annotation as stated below.
 
 ```java
 @Component(
-        name = "SampleRequestInterceptorConfig",
-        service = OSGiRequestInterceptorConfig.class,
+        name = "SampleInterceptorConfig",
+        service = OSGiInterceptorConfig.class,
         immediate = true
 )
-public class SampleRequestInterceptorConfig extends OSGiRequestInterceptorConfig {
+public class SampleInterceptorConfig extends OSGiInterceptorConfig {
     @Override
     public void createRequestInterceptors() {
-        addRequestInterceptors(new HTTPRequestLogger());
+        addGlobalRequestInterceptors(new LogTextRequestInterceptor(), new PropertyAddRequestInterceptor());
+        addGlobalResponseInterceptors(new LogTextResponseInterceptor(), new PropertyGetResponseInterceptor());
     }
 }
 ```
- 
-###Defining the order of response interceptors
-
-Please do refer to the [SampleResponseInterceptorConfig](./src/main/java/org/wso2/msf4j/samples/osgiinterceptorservice/config/SampleResponseInterceptorConfig.java)
-class.
-
-In here you inherit from the [OSGiResponseInterceptorConfig](../../../core/src/main/java/org/wso2/msf4j/interceptor/OSGiResponseInterceptorConfig.java)
-class. All you need to do is to add a list of non-global response interceptors (optional) and global response interceptors
-(option) using "addResponseInterceptors" and "addGlobalResponseInterceptors" respectively. The order in which you define
- the global interceptors are defined is the order in which they are executed.
- 
- Please do make sure to add the `@component` annotation as stated below.
- 
- ```java
-@Component(
-        name = "SampleResponseInterceptorConfig",
-        service = OSGiResponseInterceptorConfig.class,
-        immediate = true
-)
-public class SampleResponseInterceptorConfig extends OSGiResponseInterceptorConfig {
-
-    @Override
-    public void createResponseInterceptors() {
-        addResponseInterceptors(new HTTPResponseLogger());
-    }
-}
- ```
  
 ## How to build the sample
 
