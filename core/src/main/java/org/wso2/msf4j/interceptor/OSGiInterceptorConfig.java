@@ -22,22 +22,12 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * OSGi request interceptor registration component.
+ * OSGi interceptor registration component.
  */
-public class OSGiRequestInterceptorConfig {
+public class OSGiInterceptorConfig {
 
-    private final List<MSF4JRequestInterceptor> requestInterceptorList = new ArrayList<>();
     private final List<MSF4JRequestInterceptor> globalRequestInterceptorList = new ArrayList<>();
-
-    /**
-     * Add non global request interceptor.
-     * Order in which the interceptors are added are the execution priority order if the interceptors
-     *
-     * @param requestInterceptors {@link MSF4JRequestInterceptor}
-     */
-    protected final void addRequestInterceptors(MSF4JRequestInterceptor... requestInterceptors) {
-        requestInterceptorList.addAll(Arrays.asList(requestInterceptors));
-    }
+    private final List<MSF4JResponseInterceptor> globalResponseInterceptorList = new ArrayList<>();
 
     /**
      * Add global request interceptors.
@@ -50,22 +40,32 @@ public class OSGiRequestInterceptorConfig {
     }
 
     /**
-     * Get non-global interceptors added.
+     * Add global response interceptors.
+     * Order in which the interceptors are added are the execution priority order if the interceptors
      *
-     * @return {@link MSF4JRequestInterceptor}
+     * @param globalResponseInterceptors {@link MSF4JResponseInterceptor}
      */
-    public final MSF4JRequestInterceptor[] getRequestInterceptorArray() {
-        return requestInterceptorList
-                .toArray(new MSF4JRequestInterceptor[requestInterceptorList.size()]);
+    protected final void addGlobalResponseInterceptors(MSF4JResponseInterceptor... globalResponseInterceptors) {
+        globalResponseInterceptorList.addAll(Arrays.asList(globalResponseInterceptors));
     }
 
     /**
-     * Get global interceptors added.
+     * Get global request interceptors added.
      *
      * @return {@link MSF4JRequestInterceptor}
      */
     public final MSF4JRequestInterceptor[] getGlobalRequestInterceptorArray() {
         return globalRequestInterceptorList
                 .toArray(new MSF4JRequestInterceptor[globalRequestInterceptorList.size()]);
+    }
+
+    /**
+     * Get global response interceptors added.
+     *
+     * @return {@link MSF4JResponseInterceptor}
+     */
+    public final MSF4JResponseInterceptor[] getGlobalResponseInterceptorArray() {
+        return globalResponseInterceptorList
+                .toArray(new MSF4JResponseInterceptor[globalResponseInterceptorList.size()]);
     }
 }

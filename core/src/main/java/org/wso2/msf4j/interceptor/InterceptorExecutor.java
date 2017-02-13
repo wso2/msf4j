@@ -17,25 +17,30 @@
 */
 package org.wso2.msf4j.interceptor;
 
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.exception.InterceptorException;
 import org.wso2.msf4j.interceptor.annotation.RequestInterceptor;
 import org.wso2.msf4j.interceptor.annotation.ResponseInterceptor;
 import org.wso2.msf4j.internal.MicroservicesRegistryImpl;
+import org.wso2.msf4j.util.Reflection;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Class for executing interceptors.
  */
 public class InterceptorExecutor {
+
+    private static final String FRAMEWORK_UTIL_CLASS_NAME = "org.osgi.framework.FrameworkUtil";
 
     private InterceptorExecutor() {
     }
@@ -54,57 +59,43 @@ public class InterceptorExecutor {
             throws InterceptorException {
         List<MSF4JRequestInterceptor> globalRequestInterceptorList =
                 microServicesRegistry.getGlobalRequestInterceptorList();
-        return executeRequestInterceptors(request, response, globalRequestInterceptorList);
+        return executeGlobalRequestInterceptors(request, response, globalRequestInterceptorList);
     }
 
     /**
      * Execute request interceptors annotated in class.
      *
-     * @param microServicesRegistry current micro-service registry of {@link MicroservicesRegistryImpl}
-     * @param request               {@link Request}
-     * @param response              {@link Response}
-     * @param resourceClass         method declaring class
+     * @param request       {@link Request}
+     * @param response      {@link Response}
+     * @param resourceClass method declaring class
      * @return is request interceptors successful
      * @throws InterceptorException {@link InterceptorException} on interception exception
      */
-    public static boolean executeClassLevelRequestInterceptors(MicroservicesRegistryImpl microServicesRegistry,
-                                                               Request request, Response response,
+    public static boolean executeClassLevelRequestInterceptors(Request request, Response response,
                                                                Class<?> resourceClass) throws InterceptorException {
-        Map<Class<? extends MSF4JRequestInterceptor>, MSF4JRequestInterceptor> requestInterceptorMap =
-                microServicesRegistry.getRequestInterceptorMap();
-        List<Class<? extends MSF4JRequestInterceptor>> classRequestInterceptorClasses =
+        Collection<Class<? extends MSF4JRequestInterceptor>> classRequestInterceptorClasses =
                 resourceClass.isAnnotationPresent(RequestInterceptor.class)
                         ? Arrays.asList(resourceClass.getAnnotation(RequestInterceptor.class).value())
                         : new ArrayList<>();
-        return executeRequestInterceptors(request, response, classRequestInterceptorClasses.stream()
-                .filter(requestInterceptorMap::containsKey)
-                .map(requestInterceptorMap::get)
-                .collect(Collectors.toList()));
+        return executeNonGlobalRequestInterceptors(request, response, classRequestInterceptorClasses);
     }
 
     /**
      * Execute request interceptors annotated in method
      *
-     * @param microServicesRegistry current micro-service registry of {@link MicroservicesRegistryImpl}
-     * @param request               {@link Request}
-     * @param response              {@link Response}
-     * @param method                method to be executed
+     * @param request  {@link Request}
+     * @param response {@link Response}
+     * @param method   method to be executed
      * @return is request interceptors successful
      * @throws InterceptorException {@link InterceptorException} on interception exception
      */
-    public static boolean executeMethodLevelRequestInterceptors(MicroservicesRegistryImpl microServicesRegistry,
-                                                                Request request, Response response, Method method)
+    public static boolean executeMethodLevelRequestInterceptors(Request request, Response response, Method method)
             throws InterceptorException {
-        Map<Class<? extends MSF4JRequestInterceptor>, MSF4JRequestInterceptor> requestInterceptorMap =
-                microServicesRegistry.getRequestInterceptorMap();
-        List<Class<? extends MSF4JRequestInterceptor>> methodRequestInterceptorClasses =
+        Collection<Class<? extends MSF4JRequestInterceptor>> methodRequestInterceptorClasses =
                 method.isAnnotationPresent(RequestInterceptor.class)
                         ? Arrays.asList(method.getAnnotation(RequestInterceptor.class).value())
                         : new ArrayList<>();
-        return executeRequestInterceptors(request, response, methodRequestInterceptorClasses.stream()
-                .filter(requestInterceptorMap::containsKey)
-                .map(requestInterceptorMap::get)
-                .collect(Collectors.toList()));
+        return executeNonGlobalRequestInterceptors(request, response, methodRequestInterceptorClasses);
     }
 
     /**
@@ -121,51 +112,41 @@ public class InterceptorExecutor {
             throws InterceptorException {
         List<MSF4JResponseInterceptor> globalResponseInterceptorList =
                 microServicesRegistry.getGlobalResponseInterceptorList();
-        return executeResponseInterceptors(request, response, globalResponseInterceptorList);
+        return executeGlobalResponseInterceptors(request, response, globalResponseInterceptorList);
     }
 
     /**
      * Execute response interceptors annotated in class.
      *
-     * @param microServicesRegistry current micro-service registry of {@link MicroservicesRegistryImpl}
-     * @param request               {@link Request}
-     * @param response              {@link Response}
-     * @param resourceClass         method declaring class
+     * @param request       {@link Request}
+     * @param response      {@link Response}
+     * @param resourceClass method declaring class
      * @return is request interceptors successful
      * @throws InterceptorException {@link InterceptorException} on interception exception
      */
-    public static boolean executeClassLevelResponseInterceptors(MicroservicesRegistryImpl microServicesRegistry,
-                                                                Request request, Response response,
+    public static boolean executeClassLevelResponseInterceptors(Request request, Response response,
                                                                 Class<?> resourceClass) throws InterceptorException {
-        Map<Class<? extends MSF4JResponseInterceptor>, MSF4JResponseInterceptor> responseInterceptorMap =
-                microServicesRegistry.getResponseInterceptorMap();
         List<Class<? extends MSF4JResponseInterceptor>> classResponseInterceptorClasses =
                 resourceClass.isAnnotationPresent(ResponseInterceptor.class)
                         ? Arrays.asList(resourceClass.getAnnotation(ResponseInterceptor.class).value())
                         : new ArrayList<>();
-        return executeResponseInterceptors(request, response, classResponseInterceptorClasses.stream()
-                .filter(responseInterceptorMap::containsKey)
-                .map(responseInterceptorMap::get)
-                .collect(Collectors.toList()));
+        return executeNonGlobalResponseInterceptors(request, response, classResponseInterceptorClasses);
     }
 
     /**
      * Execute response interceptors annotated in class for a list of classes.
      *
-     * @param microServicesRegistry current micro-service registry of {@link MicroservicesRegistryImpl}
-     * @param request               {@link Request}
-     * @param response              {@link Response}
-     * @param classes               list of method declaring class
+     * @param request  {@link Request}
+     * @param response {@link Response}
+     * @param classes  list of method declaring class
      * @return is request interceptors successful
      * @throws InterceptorException {@link InterceptorException} on interception exception
      */
-    public static boolean executeClassResponseInterceptorsForClasses(MicroservicesRegistryImpl microServicesRegistry,
-                                                                     Request request, Response response,
+    public static boolean executeClassResponseInterceptorsForClasses(Request request, Response response,
                                                                      List<Class<?>> classes)
             throws InterceptorException {
         for (Class<?> aClass : classes) {
-            if (!(InterceptorExecutor.executeClassLevelResponseInterceptors(microServicesRegistry, request, response,
-                    aClass))) {
+            if (!(InterceptorExecutor.executeClassLevelResponseInterceptors(request, response, aClass))) {
                 return false;
             }
         }
@@ -175,45 +156,35 @@ public class InterceptorExecutor {
     /**
      * Execute response interceptors annotated in method
      *
-     * @param microServicesRegistry current micro-service registry of {@link MicroservicesRegistryImpl}
-     * @param request               {@link Request}
-     * @param response              {@link Response}
-     * @param method                method to be executed
+     * @param request  {@link Request}
+     * @param response {@link Response}
+     * @param method   method to be executed
      * @return is request interceptors successful
      * @throws InterceptorException {@link InterceptorException} on interception exception
      */
-    public static boolean executeMethodLevelResponseInterceptors(MicroservicesRegistryImpl microServicesRegistry,
-                                                                 Request request, Response response, Method method)
+    public static boolean executeMethodLevelResponseInterceptors(Request request, Response response, Method method)
             throws InterceptorException {
-        Map<Class<? extends MSF4JResponseInterceptor>, MSF4JResponseInterceptor> responseInterceptorMap =
-                microServicesRegistry.getResponseInterceptorMap();
         List<Class<? extends MSF4JResponseInterceptor>> methodResponseInterceptorClasses =
                 method.isAnnotationPresent(ResponseInterceptor.class)
                         ? Arrays.asList(method.getAnnotation(ResponseInterceptor.class).value())
                         : new ArrayList<>();
-        return executeResponseInterceptors(request, response, methodResponseInterceptorClasses.stream()
-                .filter(responseInterceptorMap::containsKey)
-                .map(responseInterceptorMap::get)
-                .collect(Collectors.toList()));
+        return executeNonGlobalResponseInterceptors(request, response, methodResponseInterceptorClasses);
     }
 
     /**
      * Execute response interceptors annotated in method for a list of methods.
      *
-     * @param microServicesRegistry current micro-service registry of {@link MicroservicesRegistryImpl}
-     * @param request               {@link Request}
-     * @param response              {@link Response}
-     * @param methods               list of methods to be executed
+     * @param request  {@link Request}
+     * @param response {@link Response}
+     * @param methods  list of methods to be executed
      * @return is request interceptors successful
      * @throws InterceptorException {@link InterceptorException} on interception exception
      */
-    public static boolean executeMethodResponseInterceptorsForMethods(MicroservicesRegistryImpl microServicesRegistry,
-                                                                      Request request, Response response,
+    public static boolean executeMethodResponseInterceptorsForMethods(Request request, Response response,
                                                                       List<Method> methods)
             throws InterceptorException {
         for (Method resourceMethod : methods) {
-            if (!(InterceptorExecutor.executeMethodLevelResponseInterceptors(microServicesRegistry, request,
-                    response, resourceMethod))) {
+            if (!(InterceptorExecutor.executeMethodLevelResponseInterceptors(request, response, resourceMethod))) {
                 return false;
             }
         }
@@ -223,13 +194,14 @@ public class InterceptorExecutor {
     /**
      * Execute request interceptors.
      *
-     * @param request  {@link Request}
-     * @param response {@link Response}
+     * @param request             {@link Request}
+     * @param response            {@link Response}
+     * @param requestInterceptors request interceptor instances
      * @return is interception successful
      * @throws InterceptorException {@link InterceptorException} on interception exception
      */
-    private static boolean executeRequestInterceptors(Request request, Response response,
-                                                      Collection<MSF4JRequestInterceptor> requestInterceptors)
+    private static boolean executeGlobalRequestInterceptors(Request request, Response response,
+                                                            Collection<MSF4JRequestInterceptor> requestInterceptors)
             throws InterceptorException {
         for (MSF4JRequestInterceptor interceptor : requestInterceptors) {
             try {
@@ -248,13 +220,14 @@ public class InterceptorExecutor {
     /**
      * Execute response interceptors.
      *
-     * @param request  {@link Request}
-     * @param response {@link Response}
+     * @param request              {@link Request}
+     * @param response             {@link Response}
+     * @param responseInterceptors response interceptor instances
      * @return is interception successful
      * @throws InterceptorException {@link InterceptorException} on interception exception
      */
-    private static boolean executeResponseInterceptors(Request request, Response response,
-                                                       Collection<MSF4JResponseInterceptor> responseInterceptors)
+    private static boolean executeGlobalResponseInterceptors(Request request, Response response,
+                                                             Collection<MSF4JResponseInterceptor> responseInterceptors)
             throws InterceptorException {
         for (MSF4JResponseInterceptor interceptor : responseInterceptors) {
             try {
@@ -268,5 +241,124 @@ public class InterceptorExecutor {
             }
         }
         return true;
+    }
+
+    /**
+     * Execute request interceptors.
+     *
+     * @param request  {@link Request}
+     * @param response {@link Response}
+     * @param classes  request interceptor classes
+     * @return is interception successful
+     * @throws InterceptorException {@link InterceptorException} on interception exception
+     */
+    private static boolean executeNonGlobalRequestInterceptors(
+            Request request, Response response, Collection<Class<? extends MSF4JRequestInterceptor>> classes)
+            throws InterceptorException {
+
+        Class<?>[] parameterTypes = new Class[]{};
+        Object[] arguments = new Object[]{};
+
+        for (Class<? extends MSF4JRequestInterceptor> requestInterceptorClass : classes) {
+            MSF4JRequestInterceptor interceptor;
+
+            // If in OSGi mode
+            if (Reflection.isClassAvailable(FRAMEWORK_UTIL_CLASS_NAME)) {
+                Bundle bundle = FrameworkUtil.getBundle(InterceptorExecutor.class);
+                if (bundle != null) {
+                    BundleContext bundleContext = bundle.getBundleContext();
+                    requestInterceptorClass = loadClassFromBundle(bundleContext, requestInterceptorClass);
+                }
+            }
+
+            try {
+                interceptor = requestInterceptorClass
+                        .cast(Reflection.createInstanceFromClass(requestInterceptorClass, parameterTypes, arguments));
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException |
+                    InstantiationException e) {
+                throw new InterceptorException("Error occurred when creating an instance type of the interceptor class "
+                        + requestInterceptorClass, e);
+            }
+
+            try {
+                if (!interceptor.interceptRequest(request, response)) {
+                    return false;
+                }
+            } catch (Exception e) {
+                if (!interceptor.onRequestInterceptionError(request, response, e)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Execute response interceptors.
+     *
+     * @param request  {@link Request}
+     * @param response {@link Response}
+     * @param classes  response interceptor classes
+     * @return is interception successful
+     * @throws InterceptorException {@link InterceptorException} on interception exception
+     */
+    private static boolean executeNonGlobalResponseInterceptors(
+            Request request, Response response, Collection<Class<? extends MSF4JResponseInterceptor>> classes)
+            throws InterceptorException {
+
+        Class<?>[] parameterTypes = new Class[]{};
+        Object[] arguments = new Object[]{};
+
+        for (Class<? extends MSF4JResponseInterceptor> responseInterceptorClass : classes) {
+            MSF4JResponseInterceptor interceptor;
+
+            // If in OSGi mode
+            if (Reflection.isClassAvailable(FRAMEWORK_UTIL_CLASS_NAME)) {
+                Bundle bundle = FrameworkUtil.getBundle(InterceptorExecutor.class);
+                if (bundle != null) {
+                    BundleContext bundleContext = bundle.getBundleContext();
+                    responseInterceptorClass = loadClassFromBundle(bundleContext, responseInterceptorClass);
+                }
+            }
+
+            try {
+                interceptor = responseInterceptorClass
+                        .cast(Reflection.createInstanceFromClass(responseInterceptorClass, parameterTypes, arguments));
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException |
+                    InstantiationException e) {
+                throw new InterceptorException("Error occurred when creating an instance type of the interceptor class "
+                        + responseInterceptorClass, e);
+            }
+
+            try {
+                if (!interceptor.interceptResponse(request, response)) {
+                    return false;
+                }
+            } catch (Exception e) {
+                if (!interceptor.onResponseInterceptionError(request, response, e)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Load class from bundle context.
+     *
+     * @param bundleContext bundle context
+     * @param clazz         class instance
+     * @param <T>           type of the class
+     * @return loaded class
+     * @throws InterceptorException on class not found
+     */
+    private static <T> Class<? extends T> loadClassFromBundle(BundleContext bundleContext, Class<T> clazz)
+            throws InterceptorException {
+        try {
+            return Reflection.loadClassFromBundle(bundleContext, clazz);
+        } catch (ClassNotFoundException ignore) {
+            // Deployment jar mode or class is not found at all
+            return clazz;
+        }
     }
 }

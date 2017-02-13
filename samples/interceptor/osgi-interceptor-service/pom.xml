@@ -80,8 +80,7 @@
         </export.package>
         <carbon.component>
             osgi.service; objectClass="org.wso2.msf4j.Microservice",
-            osgi.service; objectClass="org.wso2.msf4j.interceptor.OSGiRequestInterceptorConfig",
-            osgi.service; objectClass="org.wso2.msf4j.interceptor.OSGiResponseInterceptorConfig"
+            osgi.service; objectClass="org.wso2.msf4j.interceptor.OSGiInterceptorConfig"
         </carbon.component>
     </properties>
 </project>

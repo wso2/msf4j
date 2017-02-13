@@ -24,24 +24,12 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.wso2.carbon.transport.http.netty.config.YAMLTransportConfigurationBuilder;
 import org.wso2.msf4j.conf.Constants;
-import org.wso2.msf4j.interceptor.HighPriorityClassRequestInterceptor;
-import org.wso2.msf4j.interceptor.HighPriorityClassResponseInterceptor;
 import org.wso2.msf4j.interceptor.HighPriorityGlobalRequestInterceptor;
 import org.wso2.msf4j.interceptor.HighPriorityGlobalResponseInterceptor;
-import org.wso2.msf4j.interceptor.HighPriorityMethodRequestInterceptor;
-import org.wso2.msf4j.interceptor.HighPriorityMethodResponseInterceptor;
-import org.wso2.msf4j.interceptor.LowPriorityClassRequestInterceptor;
-import org.wso2.msf4j.interceptor.LowPriorityClassResponseInterceptor;
 import org.wso2.msf4j.interceptor.LowPriorityGlobalRequestInterceptor;
 import org.wso2.msf4j.interceptor.LowPriorityGlobalResponseInterceptor;
-import org.wso2.msf4j.interceptor.LowPriorityMethodRequestInterceptor;
-import org.wso2.msf4j.interceptor.LowPriorityMethodResponseInterceptor;
-import org.wso2.msf4j.interceptor.MediumPriorityClassRequestInterceptor;
-import org.wso2.msf4j.interceptor.MediumPriorityClassResponseInterceptor;
 import org.wso2.msf4j.interceptor.MediumPriorityGlobalRequestInterceptor;
 import org.wso2.msf4j.interceptor.MediumPriorityGlobalResponseInterceptor;
-import org.wso2.msf4j.interceptor.MediumPriorityMethodRequestInterceptor;
-import org.wso2.msf4j.interceptor.MediumPriorityMethodResponseInterceptor;
 import org.wso2.msf4j.interceptor.PriorityDataHolder;
 import org.wso2.msf4j.interceptor.TestBreakRequestInterceptor;
 import org.wso2.msf4j.interceptor.TestBreakResponseInterceptor;
@@ -88,19 +76,10 @@ public class InterceptorTest extends InterceptorTestBase {
         microservicesRunner
                 .deploy(interceptorTestMicroService)
                 .deploy(priorityInterceptorTestMicroService)
-                .registerRequestInterceptor(new TestRequestInterceptor(), new HighPriorityMethodRequestInterceptor(),
-                        new MediumPriorityMethodRequestInterceptor(), new LowPriorityMethodRequestInterceptor(),
-                        new HighPriorityClassRequestInterceptor(), new MediumPriorityClassRequestInterceptor(),
-                        new LowPriorityClassRequestInterceptor(), new TestExceptionBreakRequestInterceptor(),
-                        new TestBreakRequestInterceptor())
-                .registerResponseInterceptor(new TestResponseInterceptor(), new HighPriorityMethodResponseInterceptor(),
-                        new MediumPriorityMethodResponseInterceptor(), new LowPriorityMethodResponseInterceptor(),
-                        new HighPriorityClassResponseInterceptor(), new MediumPriorityClassResponseInterceptor(),
-                        new LowPriorityClassResponseInterceptor(), new TestBreakResponseInterceptor())
-                .registerGlobalRequestInterceptor(new HighPriorityGlobalRequestInterceptor(),
+                .addGlobalRequestInterceptor(new HighPriorityGlobalRequestInterceptor(),
                         new MediumPriorityGlobalRequestInterceptor(), new LowPriorityGlobalRequestInterceptor())
                 .addInterceptor(new TestInterceptorDeprecated())
-                .registerGlobalResponseInterceptor(new HighPriorityGlobalResponseInterceptor(),
+                .addGlobalResponseInterceptor(new HighPriorityGlobalResponseInterceptor(),
                         new MediumPriorityGlobalResponseInterceptor(), new LowPriorityGlobalResponseInterceptor())
                 .start();
         baseURI = URI.create("http://" + Constants.HOSTNAME + ":" + port);

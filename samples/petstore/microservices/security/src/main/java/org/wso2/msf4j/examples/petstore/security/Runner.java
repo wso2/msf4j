@@ -38,8 +38,8 @@ public class Runner {
         HTTPMonitoringInterceptor httpMonitoringInterceptor = new HTTPMonitoringInterceptor();
         MetricsInterceptor MetricsInterceptor = new MetricsInterceptor();
         new MicroservicesRunner()
-                .registerGlobalRequestInterceptor(httpMonitoringInterceptor, MetricsInterceptor)
-                .registerGlobalResponseInterceptor(httpMonitoringInterceptor, MetricsInterceptor)
+                .addGlobalRequestInterceptor(httpMonitoringInterceptor, MetricsInterceptor)
+                .addGlobalResponseInterceptor(httpMonitoringInterceptor, MetricsInterceptor)
                 .deploy(new UserAuthenticationService())
                 .start();
     }

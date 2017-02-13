@@ -78,20 +78,8 @@ public class InterceptorService implements Microservice {
      */
     private void addInterceptorsToRegistry(MicroservicesRegistryImpl microServicesRegistry) {
         microServicesRegistry
-                .registerRequestInterceptor(true,
-                        new LogTextRequestInterceptor(),
-                        new PropertyAddRequestInterceptor());
+                .addGlobalRequestInterceptor(new LogTextRequestInterceptor(), new PropertyAddRequestInterceptor());
         microServicesRegistry
-                .registerRequestInterceptor(false,
-                        new HTTPRequestLogger(),
-                        new LogTextRequestInterceptor());
-        microServicesRegistry
-                .registerResponseInterceptor(true,
-                        new LogTextResponseInterceptor(),
-                        new PropertyGetResponseInterceptor());
-        microServicesRegistry
-                .registerResponseInterceptor(false,
-                        new HTTPResponseLogger(),
-                        new LogTextResponseInterceptor());
+                .addGlobalResponseInterceptor(new LogTextResponseInterceptor(), new PropertyGetResponseInterceptor());
     }
 }

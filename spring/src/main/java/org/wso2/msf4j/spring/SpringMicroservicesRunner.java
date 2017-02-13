@@ -76,13 +76,13 @@ public class SpringMicroservicesRunner extends MicroservicesRunner implements Ap
         for (Map.Entry<String, MSF4JRequestInterceptor> entry :
                 applicationContext.getBeansOfType(MSF4JRequestInterceptor.class).entrySet()) {
             log.info("Adding " + entry.getKey() + "  MSF4JRequestInterceptor");
-            registerGlobalRequestInterceptor(entry.getValue());
+            addGlobalRequestInterceptor(entry.getValue());
         }
 
         for (Map.Entry<String, MSF4JResponseInterceptor> entry :
                 applicationContext.getBeansOfType(MSF4JResponseInterceptor.class).entrySet()) {
             log.info("Adding " + entry.getKey() + "  MSF4JResponseInterceptor");
-            registerGlobalResponseInterceptor(entry.getValue());
+            addGlobalResponseInterceptor(entry.getValue());
         }
 
         for (Map.Entry<String, ExceptionMapper> exceptionMapper :

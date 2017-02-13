@@ -144,11 +144,11 @@ public class HttpMethodInfo {
 
         // Execute method level interceptors of sub-resources and resources (first in - last out order)
         if (returnVal.getFirst()
-                && InterceptorExecutor.executeMethodResponseInterceptorsForMethods(microservicesRegistry, request,
-                httpMethodInfo.responder, (ArrayList<Method>) request.getProperty(RESOURCE_METHOD_LIST_CONSTANT))
+                && InterceptorExecutor.executeMethodResponseInterceptorsForMethods(request, httpMethodInfo.responder,
+                (ArrayList<Method>) request.getProperty(RESOURCE_METHOD_LIST_CONSTANT))
                 // Execute class level interceptors of sub-resources and resources (first in - last out order)
-                && InterceptorExecutor.executeClassResponseInterceptorsForClasses(microservicesRegistry, request,
-                httpMethodInfo.responder, (ArrayList<Class<?>>) request.getProperty(DECLARING_CLASS_LIST_CONSTANT))
+                && InterceptorExecutor.executeClassResponseInterceptorsForClasses(request, httpMethodInfo.responder,
+                (ArrayList<Class<?>>) request.getProperty(DECLARING_CLASS_LIST_CONSTANT))
                 // Execute global interceptors
                 && InterceptorExecutor.executeGlobalResponseInterceptors(microservicesRegistry, request,
                 httpMethodInfo.responder)) {
@@ -180,11 +180,10 @@ public class HttpMethodInfo {
             return ImmutablePair.of(false, new Object());
         }
         // Execute class level request interceptors
-        if (InterceptorExecutor.executeClassLevelRequestInterceptors(microservicesRegistry, request,
-                httpMethodInfo.responder, clazz)
+        if (InterceptorExecutor.executeClassLevelRequestInterceptors(request, httpMethodInfo.responder, clazz)
                 // Execute method level request interceptors
-                && InterceptorExecutor.executeMethodLevelRequestInterceptors(microservicesRegistry, request,
-                httpMethodInfo.responder, httpMethodInfo.method)) {
+                && InterceptorExecutor.executeMethodLevelRequestInterceptors(request, httpMethodInfo.responder,
+                httpMethodInfo.method)) {
             Object returnedValue = httpMethodInfo.method.invoke(httpMethodInfo.handler, httpMethodInfo.args);
 
             // Class level response interceptors - add to the top of the execution stack
@@ -386,11 +385,10 @@ public class HttpMethodInfo {
         // Execute request interceptors
         if (InterceptorExecutor.executeGlobalRequestInterceptors(registry, request, httpMethodInfo.responder)
                 // Execute class level request interceptors
-                && InterceptorExecutor.executeClassLevelRequestInterceptors(registry, request,
-                httpMethodInfo.responder, clazz)
+                && InterceptorExecutor.executeClassLevelRequestInterceptors(request, httpMethodInfo.responder, clazz)
                 // Execute method level request interceptors
-                && InterceptorExecutor.executeMethodLevelRequestInterceptors(registry, request,
-                httpMethodInfo.responder, httpMethodInfo.method)) {
+                && InterceptorExecutor.executeMethodLevelRequestInterceptors(request, httpMethodInfo.responder,
+                httpMethodInfo.method)) {
 
             try {
                 httpStreamHandler.end();
@@ -401,11 +399,11 @@ public class HttpMethodInfo {
             }
 
             // Execute method level interceptors (first in - last out order)
-            return InterceptorExecutor.executeMethodResponseInterceptorsForMethods(registry, request,
-                    httpMethodInfo.responder, (ArrayList<Method>) request.getProperty(RESOURCE_METHOD_LIST_CONSTANT))
+            return InterceptorExecutor.executeMethodResponseInterceptorsForMethods(request, httpMethodInfo.responder,
+                    (ArrayList<Method>) request.getProperty(RESOURCE_METHOD_LIST_CONSTANT))
                     // Execute class level interceptors (first in - last out order)
-                    && InterceptorExecutor.executeClassResponseInterceptorsForClasses(registry, request,
-                    httpMethodInfo.responder, (ArrayList<Class<?>>) request.getProperty(DECLARING_CLASS_LIST_CONSTANT))
+                    && InterceptorExecutor.executeClassResponseInterceptorsForClasses(request, httpMethodInfo.responder,
+                    (ArrayList<Class<?>>) request.getProperty(DECLARING_CLASS_LIST_CONSTANT))
                     // Execute global interceptors
                     && InterceptorExecutor.executeGlobalResponseInterceptors(registry, request,
                     httpMethodInfo.responder);

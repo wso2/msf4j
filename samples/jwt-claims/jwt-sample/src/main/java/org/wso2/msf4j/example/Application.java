@@ -30,7 +30,7 @@ public class Application {
     public static void main(String[] args) {
         // Port 8081 is used since the default port of tomcat is 8080
         new MicroservicesRunner(8081)
-                .registerGlobalRequestInterceptor(new JWTSecurityInterceptor(), new CustomJWTClaimsInterceptor())
+                .addGlobalRequestInterceptor(new JWTSecurityInterceptor(), new CustomJWTClaimsInterceptor())
                 .deploy(new Helloworld())
                 .start();
     }

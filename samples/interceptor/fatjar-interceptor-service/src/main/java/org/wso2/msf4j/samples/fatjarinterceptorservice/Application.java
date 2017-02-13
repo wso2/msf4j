@@ -21,8 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.transport.http.netty.config.YAMLTransportConfigurationBuilder;
 import org.wso2.msf4j.MicroservicesRunner;
-import org.wso2.msf4j.samples.interceptor.common.HTTPRequestLogger;
-import org.wso2.msf4j.samples.interceptor.common.HTTPResponseLogger;
 import org.wso2.msf4j.samples.interceptor.common.LogTextRequestInterceptor;
 import org.wso2.msf4j.samples.interceptor.common.LogTextResponseInterceptor;
 import org.wso2.msf4j.samples.interceptor.common.PropertyAddRequestInterceptor;
@@ -49,11 +47,8 @@ public class Application {
         }
         new MicroservicesRunner()
                 .deploy(new InterceptorService())
-                .registerRequestInterceptor(new HTTPRequestLogger(), new LogTextRequestInterceptor())
-                .registerGlobalRequestInterceptor(new LogTextRequestInterceptor(), new PropertyAddRequestInterceptor())
-                .registerResponseInterceptor(new HTTPResponseLogger(), new LogTextResponseInterceptor())
-                .registerGlobalResponseInterceptor(new LogTextResponseInterceptor(),
-                        new PropertyGetResponseInterceptor())
+                .addGlobalRequestInterceptor(new LogTextRequestInterceptor(), new PropertyAddRequestInterceptor())
+                .addGlobalResponseInterceptor(new LogTextResponseInterceptor(), new PropertyGetResponseInterceptor())
                 .start();
     }
 }

@@ -28,7 +28,7 @@ public class Application {
 
     public static void main(String[] args) {
         new MicroservicesRunner()
-                .registerGlobalRequestInterceptor(new UsernamePasswordSecurityInterceptor())
+                .addGlobalRequestInterceptor(new UsernamePasswordSecurityInterceptor())
                 .deploy(new Helloworld())
                 .start();
     }
