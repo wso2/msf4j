@@ -24,7 +24,7 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.kernel.startupresolver.RequiredCapabilityListener;
-import org.wso2.carbon.kernel.transports.CarbonTransport;
+import org.wso2.carbon.messaging.ServerConnector;
 import org.wso2.msf4j.DefaultSessionManager;
 import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Microservice;
@@ -143,25 +143,25 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
     }
 
     @Reference(
-            name = "carbon-transport",
-            service = CarbonTransport.class,
+            name = "http-connector-provider",
+            service = ServerConnector.class,
             cardinality = ReferenceCardinality.AT_LEAST_ONE,
             policy = ReferencePolicy.DYNAMIC,
             unbind = "removeCarbonTransport"
     )
-    protected void addCarbonTransport(CarbonTransport carbonTransport) {
+    protected void addCarbonTransport(ServerConnector serverConnector) {
         MicroservicesRegistryImpl microservicesRegistry = new MicroservicesRegistryImpl();
         Map<String, MicroservicesRegistryImpl> microservicesRegistries =
                 DataHolder.getInstance().getMicroservicesRegistries();
         Dictionary<String, String> properties = new Hashtable<>();
-        properties.put(MSF4JConstants.CHANNEL_ID, carbonTransport.getId());
-        microservicesRegistries.put(carbonTransport.getId(), microservicesRegistry);
+        properties.put(MSF4JConstants.CHANNEL_ID, serverConnector.getId());
+        microservicesRegistries.put(serverConnector.getId(), microservicesRegistry);
         DataHolder.getInstance().getBundleContext()
                   .registerService(MicroservicesRegistry.class, microservicesRegistry, properties);
     }
 
-    protected void removeCarbonTransport(CarbonTransport carbonTransport) {
-        DataHolder.getInstance().getMicroservicesRegistries().remove(carbonTransport.getId());
+    protected void removeCarbonTransport(ServerConnector serverConnector) {
+        DataHolder.getInstance().getMicroservicesRegistries().remove(serverConnector.getId());
     }
 
     @Reference(

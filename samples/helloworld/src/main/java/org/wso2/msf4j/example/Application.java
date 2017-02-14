@@ -23,8 +23,12 @@ import org.wso2.msf4j.MicroservicesRunner;
  */
 public class Application {
     public static void main(String[] args) {
+       // System.setProperty("transports.netty.conf", "/home/thusitha/Work/Git/msf4j/distribution/binary/conf/netty-transports.yml");
         new MicroservicesRunner()
                 .deploy(new HelloService())
                 .start();
+        /*new MicroservicesRunner(8084)
+                .deploy(new HelloService())
+                .start();*/
     }
 }
