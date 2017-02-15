@@ -16,7 +16,6 @@
 
 package org.wso2.msf4j;
 
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -24,8 +23,27 @@ import java.util.Set;
  * Interface that needs to be implemented for handle the registry.
  */
 public interface MicroservicesRegistry {
-    Optional<Map.Entry<String, Object>> getServiceWithBasePath(String path);
 
+    /**
+     * Get service context for a given base path
+     *
+     * @param path unique http path
+     * @return Optional micro-service context
+     */
+    Optional<MicroServiceContext> getServiceContextForBasePath(String path);
+
+    /**
+     * Get http micro-services.
+     *
+     * @return http micro-services
+     */
     Set<Object> getHttpServices();
+
+    /**
+     * Get http micro-service contexts
+     *
+     * @return http micro-service contexts
+     */
+    Set<MicroServiceContext> getHttpServiceContexts();
 
 }

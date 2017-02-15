@@ -25,33 +25,38 @@ import java.util.Map;
  */
 public class DefaultSessionManager extends AbstractSessionManager {
 
-    @Override
-    public void loadSessions(Map<String, Session> sessions) {
-        checkValidity();
-        // Nothing to do because this is an in-memory implementation
+    public DefaultSessionManager(MicroservicesRegistry microservicesRegistry) {
+        super(microservicesRegistry);
     }
 
     @Override
-    public void saveSession(Session session) {
-        checkValidity();
-        // Nothing to do because this is an in-memory implementation
-    }
-
-    @Override
-    public Session readSession(String sessionId) {
+    public Map<String, Map<String, Session>> loadSessions() {
         checkValidity();
         // Nothing to do because this is an in-memory implementation
         return null;
     }
 
     @Override
-    public void deleteSession(Session session) {
+    public void saveSession(Session session, MicroServiceContext microServiceContext) {
         checkValidity();
         // Nothing to do because this is an in-memory implementation
     }
 
     @Override
-    public void updateSession(Session session) {
+    public Session readSession(String sessionId, MicroServiceContext microServiceContext) {
+        checkValidity();
+        // Nothing to do because this is an in-memory implementation
+        return null;
+    }
+
+    @Override
+    public void deleteSession(Session session, MicroServiceContext microServiceContext) {
+        checkValidity();
+        // Nothing to do because this is an in-memory implementation
+    }
+
+    @Override
+    public void updateSession(Session session, MicroServiceContext microServiceContext) {
         checkValidity();
         // Nothing to do because this is an in-memory implementation
     }

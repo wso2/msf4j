@@ -21,7 +21,6 @@ package org.wso2.msf4j;
 import org.wso2.msf4j.internal.session.SessionIdGenerator;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -48,55 +47,70 @@ public abstract class AbstractSessionManager implements SessionManager {
      */
     private static final int SESSION_ID_LENGTH = 16;
 
-    private Map<String, Session> sessions = new ConcurrentHashMap<>();
     private SessionIdGenerator sessionIdGenerator = new SessionIdGenerator();
 
     private ScheduledExecutorService sessionExpiryChecker;
 
+    private final MicroservicesRegistry microservicesRegistry;
+
+    public AbstractSessionManager(MicroservicesRegistry microservicesRegistry) {
+        this.microservicesRegistry = microservicesRegistry;
+    }
+
+    @Override
     public final void init() {
         sessionIdGenerator.setSessionIdLength(SESSION_ID_LENGTH);
-        loadSessions(sessions);
+        Map<String, Map<String, Session>> sessions = loadSessions();
 
         // Session expiry scheduled task
         sessionExpiryChecker = Executors.newScheduledThreadPool(1);
         sessionExpiryChecker.scheduleAtFixedRate(() ->
-                        sessions.values().parallelStream()
-                                .filter(session ->
-                                        (System.currentTimeMillis() - session.getLastAccessedTime() >=
-                                                session.getMaxInactiveInterval() * 60 * 1000))
-                                .forEach(Session::invalidate),
-                30, 30, TimeUnit.SECONDS);
+                sessions.values().forEach(entry -> entry.values().parallelStream()
+                        .filter(session ->
+                                (System.currentTimeMillis() - session.getLastAccessedTime() >=
+                                        session.getMaxInactiveInterval() * 60 * 1000))
+                        .forEach(Session::invalidate)), 30, 30, TimeUnit.SECONDS);
     }
 
-    public final Session getSession(String sessionId) {
+    @Override
+    public final Session getSession(String sessionId, MicroServiceContext microServiceContext) {
         checkValidity();
-        Session session = sessions.get(sessionId);
+        Session session = microServiceContext.getSession(sessionId);
         if (session == null) {
-            session = readSession(sessionId);
+            session = readSession(sessionId, microServiceContext);
         }
         if (session != null) {
-            sessions.put(session.getId(), session);
             session.setNew(false);
+            microServiceContext.putSession(sessionId, session);
         }
         return session;
     }
 
-    public final Session createSession() {
+    @Override
+    public final Session createSession(MicroServiceContext microServiceContext) {
+        String sessionId = sessionIdGenerator.generateSessionId("");
+        return createSession(sessionId, microServiceContext);
+    }
+
+    @Override
+    public final Session createSession(String sessionId, MicroServiceContext microServiceContext) {
         checkValidity();
-        if (sessions.size() >= DEFAULT_MAX_ACTIVE_SESSIONS) {
+        if (getSessionCount() >= DEFAULT_MAX_ACTIVE_SESSIONS) {
             throw new IllegalStateException("Too many active sessions");
         }
-        Session session = new Session(sessionIdGenerator.generateSessionId(""), DEFAULT_MAX_INACTIVE_INTERVAL);
+        Session session = new Session(sessionId, DEFAULT_MAX_INACTIVE_INTERVAL);
         session.setManager(this);
-        sessions.put(session.getId(), session);
-        saveSession(session);
+        session.setMicroServiceContext(microServiceContext);
+        microServiceContext.putSession(session.getId(), session);
+        saveSession(session, microServiceContext);
         return session;
     }
 
-    public final void invalidateSession(Session session) {
+    @Override
+    public final void invalidateSession(Session session, MicroServiceContext microServiceContext) {
         checkValidity();
-        sessions.remove(session.getId());
-        deleteSession(session);
+        microServiceContext.removeSession(session.getId());
+        deleteSession(session, microServiceContext);
     }
 
     @Override
@@ -124,5 +138,22 @@ public abstract class AbstractSessionManager implements SessionManager {
         if (isStopped) {
             throw new IllegalStateException("This SessionManager has been stopped");
         }
+    }
+
+    protected MicroservicesRegistry getMicroservicesRegistry() {
+        return microservicesRegistry;
+    }
+
+    /**
+     * Get total number of sessions.
+     *
+     * @return session count
+     */
+    private int getSessionCount() {
+        int count = 0;
+        for (MicroServiceContext context : microservicesRegistry.getHttpServiceContexts()) {
+            count += context.getSessions().size();
+        }
+        return count;
     }
 }

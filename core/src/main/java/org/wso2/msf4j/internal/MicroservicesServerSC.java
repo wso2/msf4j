@@ -25,7 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.kernel.startupresolver.RequiredCapabilityListener;
 import org.wso2.carbon.kernel.transports.CarbonTransport;
-import org.wso2.msf4j.DefaultSessionManager;
 import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Microservice;
 import org.wso2.msf4j.MicroservicesRegistry;
@@ -107,7 +106,8 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
         if (channelId != null) {
             MicroservicesRegistryImpl microservicesRegistry = microservicesRegistries.get(channelId.toString());
             if (microservicesRegistry != null) {
-                microservicesRegistry.removeService(service);
+                String serviceKey = service.getClass().getAnnotation(Path.class).value();
+                microservicesRegistry.removeService(serviceKey);
             }
         }
     }
@@ -141,7 +141,8 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
         if (channelId != null) {
             MicroservicesRegistryImpl microservicesRegistry = microservicesRegistries.get(channelId.toString());
             if (microservicesRegistry != null) {
-                microservicesRegistry.removeService(service);
+                String serviceKey = service.getClass().getAnnotation(Path.class).value();
+                microservicesRegistry.removeService(serviceKey);
             }
         }
     }
@@ -302,7 +303,6 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
         Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
         Map<String, MicroservicesRegistryImpl> microservicesRegistries =
                 DataHolder.getInstance().getMicroservicesRegistries();
-        sessionManager.init();
         if (channelId != null) {
             MicroservicesRegistryImpl microservicesRegistry = microservicesRegistries.get(channelId.toString());
             if (microservicesRegistry == null) {
@@ -320,9 +320,7 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
                 DataHolder.getInstance().getMicroservicesRegistries();
         if (channelId != null) {
             sessionManager.stop();
-            DefaultSessionManager defaultSessionManager = new DefaultSessionManager();
-            defaultSessionManager.init();
-            microservicesRegistries.get(channelId.toString()).setSessionManager(defaultSessionManager);
+            microservicesRegistries.get(channelId.toString()).removeSessionManager();
         }
     }
 

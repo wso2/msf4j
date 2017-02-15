@@ -33,24 +33,36 @@ public interface SessionManager {
     /**
      * Retrieve a session with ID.
      *
-     * @param sessionId ID of the session
+     * @param sessionId           ID of the session
+     * @param microServiceContext microservice context
      * @return Session with id <code>sessionId</code> if it exists, and null otherwise.
      */
-    Session getSession(String sessionId);
+    Session getSession(String sessionId, MicroServiceContext microServiceContext);
 
     /**
      * Create a new session.
      *
+     * @param microServiceContext microservice context
      * @return the newly created session
      */
-    Session createSession();
+    Session createSession(MicroServiceContext microServiceContext);
+
+    /**
+     * Create a new session.
+     *
+     * @param sessionId           id of the session
+     * @param microServiceContext microservice context
+     * @return the newly created session
+     */
+    Session createSession(String sessionId, MicroServiceContext microServiceContext);
 
     /**
      * Invalidate a session.
      *
-     * @param session The session to be invalidated.
+     * @param session             The session to be invalidated.
+     * @param microServiceContext microservice context
      */
-    void invalidateSession(Session session);
+    void invalidateSession(Session session, MicroServiceContext microServiceContext);
 
     /**
      * The maximum time in minutes a session could be inactive before it is expired.
@@ -74,39 +86,43 @@ public interface SessionManager {
     /**
      * Load sessions from a persistent storage, for example, into memory.
      *
-     * @param sessions The map into which the sessions are to be loaded.
+     * @return sessions mapped along with service name
      */
-    void loadSessions(Map<String, Session> sessions);
+    Map<String, Map<String, Session>> loadSessions();
 
     /**
      * Read a session from a persistent storage, for example, into memory.
      *
-     * @param sessionId ID of the session to be loaded or read.
+     * @param sessionId           ID of the session to be loaded or read.
+     * @param microServiceContext microservice context
      * @return The Session object.
      */
-    Session readSession(String sessionId);
+    Session readSession(String sessionId, MicroServiceContext microServiceContext);
 
     /**
      * Persist a new session.
      *
-     * @param session the new session to be persisted.
+     * @param session             the new session to be persisted.
+     * @param microServiceContext microservice context
      */
-    void saveSession(Session session);
+    void saveSession(Session session, MicroServiceContext microServiceContext);
 
     /**
      * Delete a session which has been persisted.
      *
-     * @param session Session to be deleted
+     * @param session             Session to be deleted
+     * @param microServiceContext microservice context
      */
-    void deleteSession(Session session);
+    void deleteSession(Session session, MicroServiceContext microServiceContext);
 
 
     /**
      * Update a session in persistent storage.
      *
-     * @param session Session to to be updated
+     * @param session             Session to to be updated
+     * @param microServiceContext microservice context
      */
-    void updateSession(Session session);
+    void updateSession(Session session, MicroServiceContext microServiceContext);
 
     /**
      * Stop this SessionManager.

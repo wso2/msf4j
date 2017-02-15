@@ -18,6 +18,8 @@ package org.wso2.msf4j.internal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.DefaultSessionManager;
+import org.wso2.msf4j.Interceptor;
+import org.wso2.msf4j.MicroServiceContext;
 import org.wso2.msf4j.MicroservicesRegistry;
 import org.wso2.msf4j.SessionManager;
 import org.wso2.msf4j.SwaggerService;
@@ -54,9 +56,12 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
     private final Map<String, Object> services = new HashMap<>();
     private List<RequestInterceptor> globalRequestInterceptorList = new ArrayList<>();
     private List<ResponseInterceptor> globalResponseInterceptorList = new ArrayList<>();
+    private final Map<String, MicroServiceContext> services = new HashMap<>();
+
+    private final List<Interceptor> interceptors = new ArrayList<>();
     private volatile MicroserviceMetadata metadata = new MicroserviceMetadata(Collections.emptyList());
     private Map<Class, ExceptionMapper> exceptionMappers = new TreeMap<>(new ClassComparator());
-    private SessionManager sessionManager = new DefaultSessionManager();
+    private SessionManager sessionManager = new DefaultSessionManager(this);
 
     public MicroservicesRegistryImpl() {
         /* In non OSGi mode, if we can find the SwaggerDefinitionService, Deploy the Swagger definition service which
@@ -66,47 +71,90 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
             Iterator<SwaggerService> iterator = swaggerServices.iterator();
             if (iterator.hasNext()) {
                 SwaggerService swaggerService = iterator.next();
+                String swaggerPath = "/swagger";
                 swaggerService.init(this);
-                services.put("/swagger", swaggerService);
+                MicroServiceContext microServiceContext = new MicroServiceContext(swaggerPath, swaggerService);
+                services.put(swaggerPath, microServiceContext);
             }
         }
     }
 
+    /**
+     * Add a micro-service.
+     *
+     * @param service micro-service
+     */
     public void addService(Object... service) {
         for (Object svc : service) {
-            services.put(svc.getClass().getAnnotation(Path.class).value(), svc);
+            String microServiceKey = svc.getClass().getAnnotation(Path.class).value();
+            MicroServiceContext microServiceContext = new MicroServiceContext(microServiceKey, svc);
+            services.put(microServiceKey, microServiceContext);
         }
         updateMetadata();
         Arrays.stream(service).forEach(svc -> log.info("Added microservice: " + svc));
     }
 
+    /**
+     * Add a micro-service.
+     *
+     * @param basePath base path of the service
+     * @param service  micro-service
+     */
     public void addService(String basePath, Object service) {
-        services.put(basePath, service);
-        metadata.addMicroserviceMetadata(service, basePath);
+        MicroServiceContext microServiceContext = new MicroServiceContext(basePath, service);
+        services.put(basePath, microServiceContext);
+        metadata.addMicroserviceMetadata(service, basePath, microServiceContext);
         log.info("Added microservice: " + service);
     }
 
-    public Optional<Map.Entry<String, Object>> getServiceWithBasePath(String path) {
-        return services.entrySet().stream().filter(svc -> svc.getKey().equals(path)).findAny();
+    @Override
+    public Optional<MicroServiceContext> getServiceContextForBasePath(String path) {
+        return services.entrySet().stream()
+                .map(Map.Entry::getValue)
+                .filter(svc -> svc.getServiceKey().equals(path))
+                .findAny();
     }
 
-    public void removeService(Object service) {
-        services.remove(service);
+    public void removeService(String serviceKey) {
+        services.remove(serviceKey);
         updateMetadata();
     }
 
+    /**
+     * Set session manager for specific services using annotations.
+     *
+     * @param sessionManager session manager
+     */
     public void setSessionManager(SessionManager sessionManager) {
         if (sessionManager == null) {
-            throw new IllegalArgumentException("SessionManager cannot be null");
+            throw new IllegalArgumentException("Session manager cannot be null");
         }
+        sessionManager.init();
         this.sessionManager = sessionManager;
+    }
+
+    /**
+     * Remove session manager used in services via annotation.
+     */
+    public void removeSessionManager() {
+        SessionManager defaultSessionManager = new DefaultSessionManager(this);
+        defaultSessionManager.init();
+        this.sessionManager = defaultSessionManager;
     }
 
     public MicroserviceMetadata getMetadata() {
         return metadata;
     }
 
+    @Override
     public Set<Object> getHttpServices() {
+        return Collections.unmodifiableSet(services.values().stream()
+                .map(MicroServiceContext::getService)
+                .collect(Collectors.toSet()));
+    }
+
+    @Override
+    public Set<MicroServiceContext> getHttpServiceContexts() {
         return Collections.unmodifiableSet(services.values().stream().collect(Collectors.toSet()));
     }
 
@@ -228,6 +276,11 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
         invokeLifecycleMethod(httpService, PreDestroy.class);
     }
 
+    /**
+     * Get session manager for a specific service.
+     *
+     * @return session manager
+     */
     public SessionManager getSessionManager() {
         return sessionManager;
     }

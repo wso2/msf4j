@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.HttpStreamHandler;
 import org.wso2.msf4j.HttpStreamer;
+import org.wso2.msf4j.MicroServiceContext;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.interceptor.InterceptorExecutor;
@@ -233,7 +234,9 @@ public class HttpMethodInfo {
                         String absolutePath = relativePath.isEmpty() ? destination.getDestination().getPath() :
                                               String.format("%s/%s", destination.getDestination().getPath(),
                                                             relativePath);
-                        HttpResourceModel resourceModel = new HttpResourceModel(absolutePath, method, returnVal, false);
+                        MicroServiceContext context = destination.getDestination().getMicroServiceContext();
+                        HttpResourceModel resourceModel =
+                                new HttpResourceModel(context, absolutePath, method, returnVal, false);
                         resourceModel.setParent(destination.getDestination());
                         SubresourceKey subResKey = new SubresourceKey(absolutePath, method.getDeclaringClass(),
                                                                       resourceModel.getHttpMethod());
@@ -247,7 +250,9 @@ public class HttpMethodInfo {
                         String absolutePath = relativePath.isEmpty() ? destination.getDestination().getPath() :
                                               String.format("%s/%s", destination.getDestination().getPath(),
                                                             relativePath);
-                        HttpResourceModel resourceModel = new HttpResourceModel(absolutePath, method, returnVal, true);
+                        MicroServiceContext context = destination.getDestination().getMicroServiceContext();
+                        HttpResourceModel resourceModel =
+                                new HttpResourceModel(context, absolutePath, method, returnVal, true);
                         resourceModel.setParent(destination.getDestination());
                         SubresourceKey subResKey =
                                 new SubresourceKey(absolutePath, method.getDeclaringClass(), Collections.emptySet());

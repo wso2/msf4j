@@ -19,6 +19,7 @@ package org.wso2.msf4j.internal.router;
 import org.apache.commons.io.FileCleaningTracker;
 import org.apache.commons.io.FileDeleteStrategy;
 import org.wso2.msf4j.HttpStreamer;
+import org.wso2.msf4j.MicroServiceContext;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.beanconversion.MediaTypeConverter;
@@ -351,6 +352,8 @@ public class HttpResourceModelProcessor {
                         forEach(entry -> finalListMultivaluedMap.put(entry.getKey(), new ArrayList(entry.getValue())));
             }
             value = listMultivaluedMap;
+        } else if (((Class) paramType).isAssignableFrom(MicroServiceContext.class)) {
+            value = httpResourceModel.getMicroServiceContext();
         }
         Objects.requireNonNull(value, String.format("Could not resolve parameter %s", paramType.getTypeName()));
         return value;
