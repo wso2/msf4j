@@ -20,7 +20,6 @@ package org.wso2.msf4j;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.msf4j.util.FileUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,11 +27,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -56,16 +58,16 @@ public class PersistentSessionManager extends AbstractSessionManager {
         if (!dir.exists()) {
             return null;
         }
-        Map<String, Map<String, Session>> sessions = new HashMap<>();
+        Map<String, Map<String, Session>> sessions = new ConcurrentHashMap<>();
         getMicroservicesRegistry().getHttpServiceContexts().parallelStream().forEach(context -> {
-            String path = Paths.get(SESSION_DIR + "/" + context.getService().getClass().getName()).toString();
+            String path = Paths.get(SESSION_DIR, context.getService().getClass().getName()).toString();
             File[] fileList = new File(path).listFiles();
             if (fileList != null) {
                 Map<String, Session> sessionMap = Arrays.stream(fileList).parallel()
                         .filter(file -> !file.isDirectory())
                         .map(file -> loadSessionIfNotExpired(readSession(file.getName(), context), file, context))
-                        .filter(Objects::nonNull)
-                        .collect(Collectors.toMap(Session::getId, session -> session));
+                        .filter(Optional::isPresent)
+                        .collect(Collectors.toMap(sessionOptional -> sessionOptional.get().getId(), Optional::get));
                 sessions.put(context.getServiceKey(), sessionMap);
             }
         });
@@ -75,7 +77,7 @@ public class PersistentSessionManager extends AbstractSessionManager {
     @Override
     public Session readSession(String sessionId, MicroServiceContext microServiceContext) {
         String microServiceSessionDir = microServiceContext.getService().getClass().getName();
-        String path = Paths.get(SESSION_DIR + "/" + microServiceSessionDir, sessionId).toString();
+        String path = Paths.get(SESSION_DIR, microServiceSessionDir, sessionId).toString();
         if (!new File(path).exists()) {
             return null;
         }
@@ -94,9 +96,19 @@ public class PersistentSessionManager extends AbstractSessionManager {
     @Override
     public void saveSession(Session session, MicroServiceContext microServiceContext) {
         String microServiceSessionDir = microServiceContext.getService().getClass().getName();
-        String directory = SESSION_DIR + "/" + microServiceSessionDir;
-        FileUtil.createDirectoryIfNotExists(directory);
-        String path = Paths.get(directory, session.getId()).toString();
+        Path directory = Paths.get(SESSION_DIR, microServiceSessionDir);
+        try {
+            directory = Files.createDirectory(directory);
+        } catch (FileAlreadyExistsException e) {
+            // Error if a file (not a directory) exists with the same name
+            if (!new File(directory.toString()).isDirectory()) {
+                throw new RuntimeException("Error in saving session since a file (not directory) exists with the " +
+                        "same name " + directory.toString(), e);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot save session " + session.getId(), e);
+        }
+        String path = Paths.get(directory.toString(), session.getId()).toString();
         try (FileOutputStream fout = new FileOutputStream(path);
              ObjectOutputStream oos = new ObjectOutputStream(fout)) {
             oos.writeObject(session);
@@ -108,7 +120,7 @@ public class PersistentSessionManager extends AbstractSessionManager {
     @Override
     public void deleteSession(Session session, MicroServiceContext microServiceContext) {
         String microServiceSessionDir = microServiceContext.getService().getClass().getName();
-        String pathname = Paths.get(SESSION_DIR + "/" + microServiceSessionDir, session.getId()).toString();
+        String pathname = Paths.get(SESSION_DIR, microServiceSessionDir, session.getId()).toString();
         if (!new File(pathname).delete()) {
             throw new IllegalStateException("File " + pathname + " deletion failed");
         }
@@ -125,18 +137,19 @@ public class PersistentSessionManager extends AbstractSessionManager {
      * @param session             session instance
      * @param file                file of the session
      * @param microServiceContext micro-service context
-     * @return added session instance
+     * @return added session instance (optional)
      */
-    private Session loadSessionIfNotExpired(Session session, File file, MicroServiceContext microServiceContext) {
+    private Optional<Session> loadSessionIfNotExpired(Session session, File file,
+                                                      MicroServiceContext microServiceContext) {
         // Delete session file if expired
         if (System.currentTimeMillis() - session.getLastAccessedTime() >=
                 (long) session.getMaxInactiveInterval() * 60L * 1000L && !file.delete()) {
             log.warn("Couldn't delete expired session file " + file.getAbsolutePath());
-            return null;
+            return Optional.empty();
         } else {
             session.setManager(this);
-            session.setMicroServiceContext(microServiceContext);
-            return microServiceContext.putSession(session.getId(), session);
+            microServiceContext.putSession(session.getId(), session);
+            return Optional.of(session);
         }
     }
 }

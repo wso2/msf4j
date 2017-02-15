@@ -48,15 +48,6 @@ public interface SessionManager {
     Session createSession(MicroServiceContext microServiceContext);
 
     /**
-     * Create a new session.
-     *
-     * @param sessionId           id of the session
-     * @param microServiceContext microservice context
-     * @return the newly created session
-     */
-    Session createSession(String sessionId, MicroServiceContext microServiceContext);
-
-    /**
      * Invalidate a session.
      *
      * @param session             The session to be invalidated.

@@ -130,7 +130,7 @@ public class Session implements Serializable {
         this.sessionManager = sessionManager;
     }
 
-    public void setMicroServiceContext(MicroServiceContext microServiceContext) {
+    void setMicroServiceContext(MicroServiceContext microServiceContext) {
         this.microServiceContext = microServiceContext;
     }
 }

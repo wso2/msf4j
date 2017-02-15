@@ -25,10 +25,6 @@ import org.wso2.msf4j.PersistentSessionManager;
  * Application entry point.
  */
 public class Application {
-
-    private Application() {
-    }
-
     public static void main(String[] args) {
         new MicroservicesRunner()
                 .deploy(new CounterService())

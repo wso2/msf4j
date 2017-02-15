@@ -19,6 +19,7 @@
 package org.wso2.msf4j;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Default SessionManager to manage MSF4J transport sessions.
@@ -33,7 +34,7 @@ public class DefaultSessionManager extends AbstractSessionManager {
     public Map<String, Map<String, Session>> loadSessions() {
         checkValidity();
         // Nothing to do because this is an in-memory implementation
-        return null;
+        return new ConcurrentHashMap<>();
     }
 
     @Override

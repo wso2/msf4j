@@ -164,6 +164,9 @@ public class Request {
         if (sessionManager == null) {
             throw new IllegalStateException("SessionManager has not been set");
         }
+        if (session != null) {
+            return session.setAccessed();
+        }
         String cookieHeader = getHeader("Cookie");
         if (cookieHeader != null) {
             Optional<String> sessionId = Arrays.stream(cookieHeader.split(";"))
@@ -174,15 +177,14 @@ public class Request {
                         .map(s -> sessionManager
                                 .getSession(s.substring(MSF4JConstants.SESSION_ID.length()), serviceContext))
                         .orElseGet(() ->
-                                sessionManager.createSession(sessionId.get()
-                                        .substring(MSF4JConstants.SESSION_ID.length()), serviceContext)
+                                sessionManager.createSession(serviceContext)
                         );
+                session.setManager(sessionManager);
                 return session.setAccessed();
             }
         }
         session = sessionManager.createSession(serviceContext);
         session.setManager(sessionManager);
-        session.setMicroServiceContext(serviceContext);
         return session.setAccessed();
     }
 
@@ -206,21 +208,18 @@ public class Request {
                     .filter(cookie -> cookie.startsWith(MSF4JConstants.SESSION_ID))
                     .findFirst();
             if (sessionId.isPresent()) {
-                session = sessionId
+                Optional<Session> sessionOptional = sessionId
                         .map(s -> sessionManager
-                                .getSession(s.substring(MSF4JConstants.SESSION_ID.length()), serviceContext))
-                        .orElseGet(() -> {
-                            if (create) {
-                                return sessionManager.createSession(sessionId.get()
-                                        .substring(MSF4JConstants.SESSION_ID.length()), serviceContext);
-                            }
-                            return null;
-                        });
+                                .getSession(s.substring(MSF4JConstants.SESSION_ID.length()), serviceContext));
+                if (sessionOptional.isPresent()) {
+                    session = sessionOptional.get();
+                    session.setManager(sessionManager);
+                }
             }
-        } else if (create) {
+        }
+        if (create && session == null) {
             session = sessionManager.createSession(serviceContext);
             session.setManager(sessionManager);
-            session.setMicroServiceContext(serviceContext);
         }
         return session != null ? session.setAccessed() : null;
     }

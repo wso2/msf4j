@@ -25,7 +25,7 @@ import java.util.Set;
 public interface MicroservicesRegistry {
 
     /**
-     * Get service context for a given base path
+     * Get service context for a given base path.
      *
      * @param path unique http path
      * @return Optional micro-service context
@@ -40,7 +40,7 @@ public interface MicroservicesRegistry {
     Set<Object> getHttpServices();
 
     /**
-     * Get http micro-service contexts
+     * Get http micro-service contexts.
      *
      * @return http micro-service contexts
      */

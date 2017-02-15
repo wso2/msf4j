@@ -53,7 +53,6 @@ import javax.ws.rs.ext.ExceptionMapper;
 public class MicroservicesRegistryImpl implements MicroservicesRegistry {
 
     private static final Logger log = LoggerFactory.getLogger(MicroservicesRegistryImpl.class);
-    private final Map<String, Object> services = new HashMap<>();
     private List<RequestInterceptor> globalRequestInterceptorList = new ArrayList<>();
     private List<ResponseInterceptor> globalResponseInterceptorList = new ArrayList<>();
     private final Map<String, MicroServiceContext> services = new HashMap<>();

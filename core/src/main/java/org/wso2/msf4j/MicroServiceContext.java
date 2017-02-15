@@ -46,7 +46,7 @@ public class MicroServiceContext {
     }
 
     /**
-     * Get the service instance
+     * Get the service instance.
      *
      * @return service
      */
@@ -66,7 +66,7 @@ public class MicroServiceContext {
     /**
      * Get specific session.
      *
-     * @param sessionKey     session id
+     * @param sessionKey session id
      * @return session
      */
     Session getSession(String sessionKey) {
@@ -81,11 +81,13 @@ public class MicroServiceContext {
      * @return session
      */
     Session putSession(String sessionKey, Session session) {
+        session.setMicroServiceContext(this);
         return sessions.put(sessionKey, session);
     }
 
     /**
      * Remove session from service context.
+     *
      * @param sessionKey session key
      */
     void removeSession(String sessionKey) {

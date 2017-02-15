@@ -64,12 +64,15 @@ public abstract class AbstractSessionManager implements SessionManager {
 
         // Session expiry scheduled task
         sessionExpiryChecker = Executors.newScheduledThreadPool(1);
-        sessionExpiryChecker.scheduleAtFixedRate(() ->
-                sessions.values().forEach(entry -> entry.values().parallelStream()
-                        .filter(session ->
-                                (System.currentTimeMillis() - session.getLastAccessedTime() >=
-                                        session.getMaxInactiveInterval() * 60 * 1000))
-                        .forEach(Session::invalidate)), 30, 30, TimeUnit.SECONDS);
+
+        if (sessions != null) {
+            sessionExpiryChecker.scheduleAtFixedRate(() ->
+                    sessions.values().forEach(entry -> entry.values().parallelStream()
+                            .filter(session ->
+                                    (System.currentTimeMillis() - session.getLastAccessedTime() >=
+                                            session.getMaxInactiveInterval() * 60 * 1000))
+                            .forEach(Session::invalidate)), 30, 30, TimeUnit.SECONDS);
+        }
     }
 
     @Override
@@ -81,7 +84,7 @@ public abstract class AbstractSessionManager implements SessionManager {
         }
         if (session != null) {
             session.setNew(false);
-            microServiceContext.putSession(sessionId, session);
+            session = microServiceContext.putSession(sessionId, session);
         }
         return session;
     }
@@ -89,18 +92,12 @@ public abstract class AbstractSessionManager implements SessionManager {
     @Override
     public final Session createSession(MicroServiceContext microServiceContext) {
         String sessionId = sessionIdGenerator.generateSessionId("");
-        return createSession(sessionId, microServiceContext);
-    }
-
-    @Override
-    public final Session createSession(String sessionId, MicroServiceContext microServiceContext) {
         checkValidity();
         if (getSessionCount() >= DEFAULT_MAX_ACTIVE_SESSIONS) {
             throw new IllegalStateException("Too many active sessions");
         }
         Session session = new Session(sessionId, DEFAULT_MAX_INACTIVE_INTERVAL);
         session.setManager(this);
-        session.setMicroServiceContext(microServiceContext);
         microServiceContext.putSession(session.getId(), session);
         saveSession(session, microServiceContext);
         return session;
