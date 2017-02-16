@@ -24,14 +24,6 @@ limitations under the License.
         </classes>
     </test>
 
-    <test name="interceptor-unit-tests" preserve-order="true" parallel="false">
-        <classes>
-            <class name="org.wso2.msf4j.InterceptorTest"/>
-            <!-- TODO Fix  WMS-82-->
-            <!--class name="org.wso2.msf4j.HandlerInterceptorTest" /-->
-        </classes>
-    </test>
-
     <test name="bean-conversion-unit-tests" preserve-order="true" parallel="false">
         <classes>
             <class name="org.wso2.msf4j.beanconversion.BeanConverterTest"/>
