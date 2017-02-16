@@ -29,7 +29,6 @@ public class Runner {
     }
 
     public static void main(String[] args) {
-//        JWTSecurityInterceptor jwtSecurityInterceptor = new JWTSecurityInterceptor();
         HTTPMonitoringInterceptor httpMonitoringInterceptor = new HTTPMonitoringInterceptor();
         MetricsInterceptor metricsInterceptor = new MetricsInterceptor();
         new MicroservicesRunner()
