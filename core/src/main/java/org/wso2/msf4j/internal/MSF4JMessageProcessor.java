@@ -116,19 +116,19 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
         HttpResourceModel resourceModel = destination.getDestination();
         response.setMediaType(Util.getResponseType(request.getAcceptTypes(),
                 resourceModel.getProducesMediaTypes()));
-        InterceptorExecutor interceptorExecutor = new InterceptorExecutor(resourceModel, request, response,
+
+        HttpMethodInfoBuilder httpMethodInfoBuilder =
+                new HttpMethodInfoBuilder().
+                        httpResourceModel(resourceModel).
+                        httpRequest(request).
+                        httpResponder(response).
+                        requestInfo(destination.getGroupNameValues());
+        HttpMethodInfo httpMethodInfo = httpMethodInfoBuilder.build();
+
+        InterceptorExecutor interceptorExecutor = new InterceptorExecutor(httpMethodInfo, request, response,
                                                                           currentMicroservicesRegistry
                                                                                   .getInterceptors());
         if (interceptorExecutor.execPreCalls()) { // preCalls can throw exceptions
-
-            HttpMethodInfoBuilder httpMethodInfoBuilder =
-                    new HttpMethodInfoBuilder().
-                            httpResourceModel(resourceModel).
-                            httpRequest(request).
-                            httpResponder(response).
-                            requestInfo(destination.getGroupNameValues());
-
-            HttpMethodInfo httpMethodInfo = httpMethodInfoBuilder.build();
             if (httpMethodInfo.isStreamingSupported()) {
                 while (!(request.isEmpty() && request.isEomAdded())) {
                     httpMethodInfo.chunk(request.getMessageBody());

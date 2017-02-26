@@ -22,7 +22,7 @@ import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.ServiceMethodInfo;
-import org.wso2.msf4j.internal.router.HttpResourceModel;
+import org.wso2.msf4j.internal.router.HttpMethodInfo;
 
 import java.util.List;
 
@@ -38,15 +38,15 @@ public class InterceptorExecutor {
     private List<Interceptor> interceptors;
     private ServiceMethodInfo serviceMethodInfo;
 
-    public InterceptorExecutor(HttpResourceModel httpResourceModel,
+    public InterceptorExecutor(HttpMethodInfo methodInfo,
                                Request request,
                                Response response,
                                List<Interceptor> interceptors) {
         this.request = request;
         this.response = response;
         this.interceptors = interceptors;
-        serviceMethodInfo = new ServiceMethodInfo(httpResourceModel.getMethod().getDeclaringClass().getName(),
-                httpResourceModel.getMethod());
+        serviceMethodInfo = new ServiceMethodInfo(methodInfo.getMethod().getDeclaringClass().getName(),
+                methodInfo.getMethod(), methodInfo.getArgs());
     }
 
     /**
