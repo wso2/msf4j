@@ -323,4 +323,12 @@ public class HttpMethodInfo {
     public boolean isStreamingSupported() {
         return httpStreamHandler != null;
     }
+
+    public Object[] getArgs() {
+        return Arrays.copyOf(args, args.length);
+    }
+
+    public Method getMethod() {
+        return method;
+    }
 }

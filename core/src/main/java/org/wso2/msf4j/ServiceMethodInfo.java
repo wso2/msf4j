@@ -18,6 +18,7 @@ package org.wso2.msf4j;
 
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -28,12 +29,14 @@ public class ServiceMethodInfo {
 
     private final String methodName;
     private final Method method;
+    private Object[] args;
 
     private Map<String, Object> attributes = new ConcurrentHashMap<>();
 
-    public ServiceMethodInfo(String methodName, Method method) {
+    public ServiceMethodInfo(String methodName, Method method, Object[] args) {
         this.methodName = methodName;
         this.method = method;
+        this.args = Arrays.copyOf(args, args.length);;
     }
 
     public String getMethodName() {
@@ -42,6 +45,10 @@ public class ServiceMethodInfo {
 
     public Method getMethod() {
         return method;
+    }
+
+    public Object[] getArgs() {
+        return Arrays.copyOf(args, args.length);
     }
 
     /**
