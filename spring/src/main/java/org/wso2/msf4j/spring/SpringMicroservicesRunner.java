@@ -23,13 +23,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
-import org.wso2.carbon.messaging.handler.HandlerExecutor;
+import org.wso2.carbon.transport.http.netty.common.Constants;
 import org.wso2.carbon.transport.http.netty.config.ListenerConfiguration;
 import org.wso2.carbon.transport.http.netty.config.Parameter;
-import org.wso2.carbon.transport.http.netty.internal.HTTPTransportContextHolder;
-import org.wso2.carbon.transport.http.netty.listener.HTTPTransportListener;
+import org.wso2.carbon.transport.http.netty.config.TransportProperty;
+import org.wso2.carbon.transport.http.netty.config.TransportsConfiguration;
+import org.wso2.carbon.transport.http.netty.listener.HTTPServerConnectorProvider;
+import org.wso2.carbon.transport.http.netty.listener.ServerConnectorController;
 import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.MicroservicesRunner;
+import org.wso2.msf4j.internal.DataHolder;
 import org.wso2.msf4j.internal.MSF4JMessageProcessor;
 import org.wso2.msf4j.spring.transport.HTTPSTransportConfig;
 import org.wso2.msf4j.spring.transport.TransportConfig;
@@ -116,33 +119,50 @@ public class SpringMicroservicesRunner extends MicroservicesRunner implements Ap
 
         }
 
-        HTTPTransportContextHolder nettyTransportContextHolder = HTTPTransportContextHolder.getInstance();
-        nettyTransportContextHolder.setHandlerExecutor(new HandlerExecutor());
+        Set<TransportProperty> transportProperties = new HashSet<>();
+        TransportProperty transportProperty = new TransportProperty();
+        int bossGroupSize = Runtime.getRuntime().availableProcessors();
+        transportProperty.setName(Constants.SERVER_BOOTSTRAP_BOSS_GROUP_SIZE);
+        transportProperty.setValue(bossGroupSize);
+        TransportProperty workerGroup = new TransportProperty();
+        int workerGroupSize = Runtime.getRuntime().availableProcessors() * 2;
+        workerGroup.setName(Constants.SERVER_BOOTSTRAP_WORKER_GROUP_SIZE);
+        workerGroup.setValue(workerGroupSize);
+        transportProperties.add(transportProperty);
+        transportProperties.add(workerGroup);
+
+        TransportsConfiguration transportsConfiguration = new TransportsConfiguration();
+        ServerConnectorController serverConnectorController = new ServerConnectorController(transportsConfiguration);
+        serverConnectorController.start();
+        HTTPServerConnectorProvider httpServerConnectorProvider = new HTTPServerConnectorProvider();
+        transportsConfiguration.setTransportProperties(transportProperties);
+        Set<ListenerConfiguration> listenerConfigurations = new HashSet<>();
 
         //Add ListenerConfigurations if available on Spring Configuration
-        Set<ListenerConfiguration> listenerConfigurationSet = new HashSet<>();
-        for (ListenerConfiguration listener : listeners) {
-            listenerConfigurationSet.add(listener);
-        }
-        HTTPTransportListener transportListener = new HTTPTransportListener(null, listenerConfigurationSet);
-        registerTransport(transportListener);
+        listeners.forEach(listenerConfiguration -> {
+            listenerConfigurations.add(listenerConfiguration);
+            DataHolder.getInstance().getMicroservicesRegistries().put(listenerConfiguration.getId(), getMsRegistry());
+        });
 
         //Add NettyTransportConfig if available on Spring Configuration
         for (TransportConfig transportConfig : transportConfigs) {
             if (transportConfig.isEnabled()) {
-                HTTPTransportListener nettyListener = createListenerConfiguration(transportConfig);
-                registerTransport(nettyListener);
-                nettyTransportContextHolder
-                        .setMessageProcessor(new MSF4JMessageProcessor(transportConfig.getId(), getMsRegistry()));
+                ListenerConfiguration listenerConfiguration = createListenerConfiguration(transportConfig);
+                listenerConfigurations.add(listenerConfiguration);
+                DataHolder.getInstance().getMicroservicesRegistries().put(transportConfig.getId(), getMsRegistry());
             }
         }
+
+        transportsConfiguration.setListenerConfigurations(listenerConfigurations);
+        serverConnectors = httpServerConnectorProvider.initializeConnectors(transportsConfiguration);
+        serverConnectors.forEach(serverConnector -> serverConnector.setMessageProcessor(new MSF4JMessageProcessor()));
     }
 
-    private HTTPTransportListener createListenerConfiguration(TransportConfig transportConfig) {
+    private ListenerConfiguration createListenerConfiguration(TransportConfig transportConfig) {
 
-        ListenerConfiguration listenerConfig = new ListenerConfiguration(transportConfig.getId(),
-                                                                         transportConfig.getHost(),
-                                                                         transportConfig.getPort());
+        ListenerConfiguration listenerConfig =
+                new ListenerConfiguration(transportConfig.getId(), transportConfig.getHost(),
+                                          transportConfig.getPort());
         listenerConfig.setScheme(transportConfig.getScheme());
         List<Parameter> parameters = new ArrayList<>();
         for (Map.Entry<String, String> entry : transportConfig.getParameters().entrySet()) {
@@ -157,10 +177,7 @@ public class SpringMicroservicesRunner extends MicroservicesRunner implements Ap
             listenerConfig.setCertPass(httpsTransportConfig.getCertPass());
         }
 
-        Set<ListenerConfiguration> listenerConfigurationSet = new HashSet<>();
-        listenerConfigurationSet.add(listenerConfig);
-        HTTPTransportListener listener = new HTTPTransportListener(null, listenerConfigurationSet);
-        return listener;
+        return listenerConfig;
     }
 
     private Parameter createParameter(String key, String value) {

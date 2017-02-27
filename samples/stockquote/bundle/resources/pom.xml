@@ -9,8 +9,8 @@
     <name>New feature</name>
 
 <properties>
-    <carbon.messaging.version>1.0.12-SNAPSHOT</carbon.messaging.version>
-    <carbon.transport.http.netty.version>3.0.2-SNAPSHOT</carbon.transport.http.netty.version>
+    <carbon.messaging.version>2.0.0</carbon.messaging.version>
+    <carbon.transport.http.netty.version>4.0.0</carbon.transport.http.netty.version>
     <carbon.metrics.version>2.0.0</carbon.metrics.version>
     <msf4j.version>2.1.1-SNAPSHOT</msf4j.version>
     <carbon.feature.plugin.version>2.1.0</carbon.feature.plugin.version>
@@ -70,7 +70,7 @@
         <dependency>
             <groupId>org.wso2.carbon.transport</groupId>
             <artifactId>org.wso2.carbon.transport.http.netty.feature</artifactId>
-                <version>${carbon.transport.http.netty.version}</version>
+            <version>${carbon.transport.http.netty.version}</version>
             <type>zip</type>
         </dependency>
         <dependency>

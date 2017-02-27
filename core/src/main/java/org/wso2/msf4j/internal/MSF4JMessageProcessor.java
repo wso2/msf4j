@@ -19,14 +19,10 @@ package org.wso2.msf4j.internal;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.messaging.BinaryCarbonMessage;
 import org.wso2.carbon.messaging.CarbonCallback;
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.CarbonMessageProcessor;
-import org.wso2.carbon.messaging.CloseCarbonMessage;
-import org.wso2.carbon.messaging.TextCarbonMessage;
 import org.wso2.carbon.messaging.TransportSender;
-import org.wso2.carbon.transport.http.netty.common.Constants;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.internal.router.HandlerException;
@@ -35,25 +31,10 @@ import org.wso2.msf4j.internal.router.HttpMethodInfoBuilder;
 import org.wso2.msf4j.internal.router.HttpResourceModel;
 import org.wso2.msf4j.internal.router.PatternPathRouter;
 import org.wso2.msf4j.internal.router.Util;
-import org.wso2.msf4j.internal.websocket.CloseCodeImpl;
-import org.wso2.msf4j.internal.websocket.DispatchedEndpoint;
-import org.wso2.msf4j.internal.websocket.EndpointsRegistryImpl;
-import org.wso2.msf4j.internal.websocket.SessionManager;
 import org.wso2.msf4j.util.HttpUtil;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.URISyntaxException;
-import java.nio.ByteBuffer;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import javax.websocket.CloseReason;
-import javax.websocket.Session;
-import javax.websocket.server.PathParam;
 import javax.ws.rs.ext.ExceptionMapper;
 
 /**
@@ -80,6 +61,39 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
      * Carbon message handler.
      */
     @Override
+    public boolean receive(CarbonMessage carbonMessage, CarbonCallback carbonCallback) {
+        // If we are running on OSGi mode need to get the registry based on the channel_id.
+        executorService.execute(() -> {
+            MicroservicesRegistryImpl currentMicroservicesRegistry =
+                    DataHolder.getInstance().getMicroservicesRegistries()
+                              .get(carbonMessage.getProperty(MSF4JConstants.CHANNEL_ID));
+            Request request = new Request(carbonMessage);
+            request.setSessionManager(currentMicroservicesRegistry.getSessionManager());
+            Response response = new Response(carbonCallback, request);
+            try {
+                dispatchMethod(currentMicroservicesRegistry, request, response);
+            } catch (HandlerException e) {
+                handleHandlerException(e, carbonCallback);
+            } catch (InvocationTargetException e) {
+                Throwable targetException = e.getTargetException();
+                if (targetException instanceof HandlerException) {
+                    handleHandlerException((HandlerException) targetException, carbonCallback);
+                } else {
+                    handleThrowable(currentMicroservicesRegistry, targetException, carbonCallback, request);
+                }
+            } catch (InterceptorException e) {
+                log.warn("Interceptors threw an exception", e);
+                // TODO: improve the response
+                carbonCallback.done(HttpUtil.createTextResponse(
+                        javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), HttpUtil.EMPTY_BODY));
+            } catch (Throwable t) {
+                handleThrowable(currentMicroservicesRegistry, t, carbonCallback, request);
+            } finally {
+                // Calling the release method to make sure that there won't be any memory leaks from netty
+                carbonMessage.release();
+            }
+        });
+        return true;
     public boolean receive(CarbonMessage carbonMessage, CarbonCallback carbonCallback)
             throws InvocationTargetException, IllegalAccessException, IOException, URISyntaxException {
 
