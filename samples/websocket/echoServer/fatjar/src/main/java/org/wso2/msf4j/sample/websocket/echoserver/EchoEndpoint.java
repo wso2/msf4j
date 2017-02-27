@@ -16,7 +16,7 @@
  *  under the License.
  */
 
-package org.wso2.msf4j.sample.echoServer;
+package org.wso2.msf4j.sample.websocket.echoserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,8 +24,6 @@ import org.wso2.msf4j.WebSocketEndpoint;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
 import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;

@@ -28,7 +28,7 @@
 
     <properties>
         <carbon.messaging.version>1.0.12-SNAPSHOT</carbon.messaging.version>
-        <carbon.transport.http.netty.version>3.0.2-SNAPSHOT</carbon.transport.http.netty.version>
+        <carbon.transport.http.netty.version>3.0.4-SNAPSHOT</carbon.transport.http.netty.version>
         <carbon.metrics.version>2.0.0</carbon.metrics.version>
         <msf4j.version>2.1.1-SNAPSHOT</msf4j.version>
         <carbon.feature.plugin.version>2.1.0</carbon.feature.plugin.version>
@@ -128,14 +128,6 @@
             <version>${msf4j.version}</version>
             <type>zip</type>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/javax.websocket/javax.websocket-api -->
-        <dependency>
-            <groupId>javax.websocket</groupId>
-            <artifactId>javax.websocket-api</artifactId>
-            <version>1.1</version>
-        </dependency>
-
 
     </dependencies>
 

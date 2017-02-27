@@ -16,15 +16,28 @@
  *  under the License.
  */
 
-package org.wso2.msf4j.sample.echoServer;
+package org.wso2.msf4j.sample.websocket.echoserver.httpmonitoring;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.MicroservicesRunner;
+import org.wso2.msf4j.analytics.httpmonitoring.HTTPMonitoringInterceptor;
+import org.wso2.msf4j.analytics.metrics.MetricsInterceptor;
+import org.wso2.msf4j.sample.websocket.echoserver.httpmonitoring.service.StudentService;
 
 /**
- * This is a echo server fat jar runner class
+ * Main Application Class.
  */
 public class Application {
+
+    private static final Logger logger = LoggerFactory.getLogger(Application.class);
+
     public static void main(String[] args) {
-        new MicroservicesRunner().deployWebSocketEndpoint(new EchoEndpoint()).start();
+        logger.info("Starting the Microservice with HTTP Monitoring");
+        new MicroservicesRunner()
+                .addInterceptor(new HTTPMonitoringInterceptor())
+                .addInterceptor(new MetricsInterceptor())
+                .deploy(new StudentService())
+                .start();
     }
 }

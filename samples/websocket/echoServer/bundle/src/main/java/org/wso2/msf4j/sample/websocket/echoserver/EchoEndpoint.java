@@ -16,7 +16,7 @@
  *  under the License.
  */
 
-package org.wso2.msf4j.sample.echoServer.echoserver;
+package org.wso2.msf4j.sample.websocket.echoserver;
 
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;

@@ -16,7 +16,7 @@
  *  under the License.
  */
 
-package org.wso2.msf4j.sample.echoServer.chatapp;
+package org.wso2.msf4j.sample.websocket.echoserver.chatapp;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

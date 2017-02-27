@@ -38,7 +38,7 @@
     </dependencies>
 
     <properties>
-        <microservice.mainClass>org.wso2.msf4j.sample.echoServer.httpmonitoring.Application</microservice.mainClass>
+        <microservice.mainClass>org.wso2.msf4j.sample.websocket.echoserver.httpmonitoring.Application</microservice.mainClass>
         <baseimage.name>java:openjdk-8u66-jre</baseimage.name>
         <maven.dockerplugin.version>0.3.5</maven.dockerplugin.version>
     </properties>

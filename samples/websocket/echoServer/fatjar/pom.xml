@@ -36,7 +36,7 @@
     <name>Sample: WebSocket Chat Application (Fatjar Mode)</name>
 
     <properties>
-        <microservice.mainClass>org.wso2.msf4j.sample.echoServer.Application</microservice.mainClass>
+        <microservice.mainClass>org.wso2.msf4j.sample.websocket.echoserver.Application</microservice.mainClass>
     </properties>
 
 </project>

@@ -15,13 +15,14 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.wso2.msf4j.sample.echoServer.metrics;
+
+package org.wso2.msf4j.sample.websocket.echoserver.metrics;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.MicroservicesRunner;
 import org.wso2.msf4j.analytics.metrics.MetricsInterceptor;
-import org.wso2.msf4j.sample.echoServer.metrics.service.DemoService;
+import org.wso2.msf4j.sample.websocket.echoserver.metrics.service.DemoService;
 
 /**
  * Main Application Class.

@@ -15,28 +15,16 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.wso2.msf4j.sample.echoServer.httpmonitoring;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package org.wso2.msf4j.sample.websocket.echoserver;
+
 import org.wso2.msf4j.MicroservicesRunner;
-import org.wso2.msf4j.analytics.httpmonitoring.HTTPMonitoringInterceptor;
-import org.wso2.msf4j.analytics.metrics.MetricsInterceptor;
-import org.wso2.msf4j.sample.echoServer.httpmonitoring.service.StudentService;
 
 /**
- * Main Application Class.
+ * This is a echo server fat jar runner class
  */
 public class Application {
-
-    private static final Logger logger = LoggerFactory.getLogger(Application.class);
-
     public static void main(String[] args) {
-        logger.info("Starting the Microservice with HTTP Monitoring");
-        new MicroservicesRunner()
-                .addInterceptor(new HTTPMonitoringInterceptor())
-                .addInterceptor(new MetricsInterceptor())
-                .deploy(new StudentService())
-                .start();
+        new MicroservicesRunner().deployWebSocketEndpoint(new EchoEndpoint()).start();
     }
 }

@@ -15,7 +15,8 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.wso2.msf4j.sample.echoServer.metrics.service;
+
+package org.wso2.msf4j.sample.websocket.echoserver.metrics.service;
 
 import org.wso2.carbon.metrics.core.annotation.Counted;
 import org.wso2.carbon.metrics.core.annotation.Metered;

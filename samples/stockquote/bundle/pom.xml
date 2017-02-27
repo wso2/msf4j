@@ -55,11 +55,6 @@
             <artifactId>msf4j-swagger</artifactId>
             <version>2.1.1-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>javax.websocket</groupId>
-            <artifactId>javax.websocket-api</artifactId>
-            <version>1.1</version>
-        </dependency>
     </dependencies>
 
     <properties>

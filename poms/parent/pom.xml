@@ -263,6 +263,11 @@
                 <version>${javax.ws.rs-api.fragment.version}</version>
             </dependency>
             <dependency>
+                <groupId>javax.websocket</groupId>
+                <artifactId>javax.websocket-api</artifactId>
+                <version>${javax.websocket.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.messaging</groupId>
                 <artifactId>org.wso2.carbon.messaging</artifactId>
                 <version>${carbon.messaging.version}</version>
@@ -577,7 +582,6 @@
                 <version>${org.osgi.compendium.version}</version>
                 <scope>test</scope>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
 
@@ -601,9 +605,9 @@
         <carbon.kernel.version.range>[5.0.0,6.0.0)</carbon.kernel.version.range>
         <carbon.deployment.version>5.0.0</carbon.deployment.version>
         <carbon.deployment.version.range>[5.0.0,6.0.0)</carbon.deployment.version.range>
-        <carbon.messaging.version>2.0.0</carbon.messaging.version>
+        <carbon.messaging.version>2.2.3</carbon.messaging.version>
         <carbon.messaging.version.range>[1.0.4,2)</carbon.messaging.version.range>
-        <org.wso2.carbon.transport.http.netty.version>4.0.0</org.wso2.carbon.transport.http.netty.version>
+        <org.wso2.carbon.transport.http.netty.version>4.2.6</org.wso2.carbon.transport.http.netty.version>
         <org.wso2.carbon.transport.http.netty.version.range>[4.0,5)</org.wso2.carbon.transport.http.netty.version.range>
         <org.apache.httpcomponents.httpclient.version>4.5.2</org.apache.httpcomponents.httpclient.version>
         <msf4j.version>2.1.1-SNAPSHOT</msf4j.version>

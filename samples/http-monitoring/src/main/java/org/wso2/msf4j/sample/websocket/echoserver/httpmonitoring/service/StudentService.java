@@ -15,7 +15,8 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.wso2.msf4j.sample.echoServer.httpmonitoring.service;
+
+package org.wso2.msf4j.sample.websocket.echoserver.httpmonitoring.service;
 
 
 import org.wso2.carbon.metrics.core.annotation.Timed;
