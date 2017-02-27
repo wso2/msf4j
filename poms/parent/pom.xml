@@ -601,9 +601,9 @@
         <carbon.kernel.version.range>[5.0.0,6.0.0)</carbon.kernel.version.range>
         <carbon.deployment.version>5.0.0</carbon.deployment.version>
         <carbon.deployment.version.range>[5.0.0,6.0.0)</carbon.deployment.version.range>
-        <carbon.messaging.version>2.1.0</carbon.messaging.version>
+        <carbon.messaging.version>2.2.4-SNAPSHOT</carbon.messaging.version>
         <carbon.messaging.version.range>[2,3)</carbon.messaging.version.range>
-        <org.wso2.carbon.transport.http.netty.version>4.1.0</org.wso2.carbon.transport.http.netty.version>
+        <org.wso2.carbon.transport.http.netty.version>4.2.6-SNAPSHOT</org.wso2.carbon.transport.http.netty.version>
         <org.wso2.carbon.transport.http.netty.version.range>[4.0,5)</org.wso2.carbon.transport.http.netty.version.range>
         <org.apache.httpcomponents.httpclient.version>4.5.2</org.apache.httpcomponents.httpclient.version>
         <msf4j.version>2.1.2-SNAPSHOT</msf4j.version>

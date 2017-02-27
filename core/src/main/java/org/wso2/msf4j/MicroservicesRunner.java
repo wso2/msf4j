@@ -181,31 +181,20 @@ public class MicroservicesRunner {
      * Method to configure transports.
      */
     protected void configureTransport() {
-        //TransportsConfiguration transportsConfiguration = YAMLTransportConfigurationBuilder.build();
-        /*ServerConnectorController serverConnectorController = new ServerConnectorController(transportsConfiguration);
-        serverConnectorController.start();
-        transportsConfiguration.getListenerConfigurations()
-                               .forEach(listenerConfiguration -> {
-                                   listenerConfiguration.setBindOnStartup(false);
-                                   DataHolder.getInstance().getMicroservicesRegistries()
-                                             .put(listenerConfiguration.getId(), msRegistry);
-                               });
-        HTTPServerConnectorProvider httpServerConnectorProvider = new HTTPServerConnectorProvider();
-        serverConnectors.addAll(httpServerConnectorProvider.initializeConnectors(transportsConfiguration));
-        serverConnectors.forEach(serverConnector -> serverConnector.setMessageProcessor(new MSF4JMessageProcessor()));*/
         ServiceLoader<ServerConnectorProvider> serverConnectorProviderLoader =
                 ServiceLoader.load(ServerConnectorProvider.class);
         serverConnectorProviderLoader.
                                              forEach(serverConnectorProvider -> {
-                                                 serverConnectors
-                                                         .addAll(serverConnectorProvider.initializeConnectors());
-                                                 serverConnectors.forEach(serverConnector -> {
-                                                     serverConnector.setMessageProcessor(new MSF4JMessageProcessor());
-                                                     DataHolder.getInstance().getMicroservicesRegistries()
-                                                               .put(serverConnector.getId(), msRegistry);
-                                                    /*((HTTPServerConnector) serverConnector).getListenerConfiguration()
-                                                                                            .setBindOnStartup(false);*/
-                                                 });
+                                                 if (serverConnectorProvider instanceof HTTPServerConnectorProvider) {
+                                                     serverConnectors
+                                                             .addAll(serverConnectorProvider.initializeConnectors());
+                                                     serverConnectors.forEach(serverConnector -> {
+                                                         serverConnector
+                                                                 .setMessageProcessor(new MSF4JMessageProcessor());
+                                                         DataHolder.getInstance().getMicroservicesRegistries()
+                                                                   .put(serverConnector.getId(), msRegistry);
+                                                     });
+                                                 }
                                              });
     }
 

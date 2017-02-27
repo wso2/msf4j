@@ -1,5 +1,5 @@
 ################################################################################
-#   Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+#   Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -18,24 +18,17 @@ transportProperties:
   name: "latency.metrics.enabled"
   value: true
  -
-  name: "server.bootstrap.boss.group.size"
-  value: 4
+  name: "server.bootstrap.socket.timeout"
+  value: 60
  -
-  name: "server.bootstrap.worker.group.size"
-  value: 8
+  name: "client.bootstrap.socket.timeout"
+  value: 60
+
 listenerConfigurations:
--
-  id: "msf4j-http"
+ -
+  id: "default"
   host: "0.0.0.0"
-  port: 8080
--
-  id: "msf4j-https"
-  host: "0.0.0.0"
-  port: 8443
-  scheme: https
-  keyStoreFile: "/home/thusitha/Work/Git/msf4j/distribution/binary/conf/wso2carbon.jks"
-  keyStorePass: wso2carbon
-  certPass: wso2carbon
+  port: 9090
 senderConfigurations:
  -
-  id: "netty-gw"
+  id: "http-sender"
