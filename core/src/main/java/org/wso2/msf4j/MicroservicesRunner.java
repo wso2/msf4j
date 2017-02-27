@@ -25,7 +25,6 @@ import org.wso2.msf4j.internal.MSF4JHttpConnectorListener;
 import org.wso2.msf4j.internal.MSF4JWSConnectorListener;
 import org.wso2.msf4j.internal.MicroservicesRegistryImpl;
 import org.wso2.msf4j.internal.websocket.EndpointsRegistryImpl;
-import org.wso2.msf4j.util.RuntimeAnnotations;
 import org.wso2.transport.http.netty.common.Constants;
 import org.wso2.transport.http.netty.common.Util;
 import org.wso2.transport.http.netty.config.ConfigurationBuilder;
@@ -39,10 +38,8 @@ import org.wso2.transport.http.netty.listener.ServerBootstrapConfiguration;
 import org.wso2.transport.http.netty.message.HTTPConnectorUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.ws.rs.Path;
 import javax.ws.rs.ext.ExceptionMapper;
 
 /**
@@ -112,9 +109,6 @@ public class MicroservicesRunner {
      * @return this MicroservicesRunner object
      */
     public MicroservicesRunner deploy(String basePath, Object microservice) {
-        Map<String, Object> valuesMap = new HashMap<>();
-        valuesMap.put("value", basePath);
-        RuntimeAnnotations.putAnnotation(microservice.getClass(), Path.class, valuesMap);
         msRegistry.addService(basePath, microservice);
         return this;
     }
