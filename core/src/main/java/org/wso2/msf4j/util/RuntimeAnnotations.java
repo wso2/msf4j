@@ -31,7 +31,10 @@ import java.util.Map;
 
 /**
  * Utility class used to change the class annotation at runtime.
+ * This class will be removed in future release. Since some of the classes that being used here might cause
+ * issues in different JDKs.
  */
+@Deprecated
 public final class RuntimeAnnotations {
 
     private static final Constructor<?> annotationInvocationHandlerConstructor;
