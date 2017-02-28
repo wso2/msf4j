@@ -16,7 +16,7 @@
  *  under the License.
  */
 
-package org.wso2.msf4j;
+package org.wso2.msf4j.websocket;
 
 
 import java.util.Set;

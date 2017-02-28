@@ -20,6 +20,7 @@ package org.wso2.msf4j.internal.websocket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.msf4j.websocket.exception.WebSocketEndpointAnnotationException;
 
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
@@ -48,7 +49,7 @@ public class EndpointDispatcher {
     private Method onErrorMethod = null;
     private Object webSocketEndpoint = null;
 
-    public EndpointDispatcher(Object webSocketEndpoint) throws Exception {
+    public EndpointDispatcher(Object webSocketEndpoint) throws WebSocketEndpointAnnotationException {
         this.webSocketEndpoint = webSocketEndpoint;
         dispatch(webSocketEndpoint);
     }
@@ -59,11 +60,11 @@ public class EndpointDispatcher {
     }
 
     //Dispatch the WebSocketEndpoint
-    private void dispatch(Object webSocketEndpoint) throws Exception {
+    private void dispatch(Object webSocketEndpoint) throws WebSocketEndpointAnnotationException {
 
         ServerEndpoint serverEndpointAnnotation = webSocketEndpoint.getClass().getAnnotation(ServerEndpoint.class);
         if (serverEndpointAnnotation == null) {
-            throw new Exception("ServerEndpoint is not declared");
+            throw new WebSocketEndpointAnnotationException("ServerEndpoint is not declared");
         }
 
         uri = serverEndpointAnnotation.value();

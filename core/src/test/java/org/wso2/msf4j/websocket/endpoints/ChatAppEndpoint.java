@@ -16,15 +16,13 @@
  *  under the License.
  */
 
-package org.wso2.msf4j.chatapp;
+package org.wso2.msf4j.websocket.endpoints;
 
-import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.msf4j.websocket.WebSocketEndpoint;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
@@ -39,16 +37,11 @@ import javax.websocket.server.ServerEndpoint;
  * This is a Sample class for WebSocket.
  * This provides a chat with multiple users.
  */
-@Component(
-        name = "org.wso2.msf4j.chatApp",
-        service = WebSocketEndpoint.class,
-        immediate = true
-)
-@ServerEndpoint("/chat/{name}")
-public class ChatAppEndpoint implements WebSocketEndpoint {
+
+@ServerEndpoint(value = "/chat/{name}")
+public class ChatAppEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChatAppEndpoint.class);
-    /* Stores all the active sessions in a list */
-    private List<Session> sessions = new ArrayList<>();
+    private List<Session> sessions = new LinkedList<Session>();
 
     @OnOpen
     public void onOpen(@PathParam("name") String name, Session session) {
@@ -60,7 +53,7 @@ public class ChatAppEndpoint implements WebSocketEndpoint {
 
     @OnMessage
     public void onTextMessage(@PathParam("name") String name, String text, Session session) throws IOException {
-        String msg = name + " : " + text;
+        String msg = name + ":" + text;
         LOGGER.info("Received Text : " + text + " from  " + name + session.getId());
         sendMessageToAll(msg);
     }
@@ -75,10 +68,9 @@ public class ChatAppEndpoint implements WebSocketEndpoint {
     }
 
     @OnError
-    public void onError(Throwable throwable) {
+    public void onError(Throwable throwable, Session session) {
         LOGGER.error("Error found in method : " + throwable.toString());
     }
-
 
     private void sendMessageToAll(String message) {
         sessions.forEach(

@@ -16,12 +16,11 @@
  *  under the License.
  */
 
-package org.wso2.msf4j.websocket;
+package org.wso2.msf4j.websocket.endpoints;
 
-import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.msf4j.WebSocketEndpoint;
+import org.wso2.msf4j.websocket.WebSocketEndpoint;
 
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
@@ -29,9 +28,6 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
-@Component(
-
-)
 @ServerEndpoint("/test")
 public class TestEndpoint implements WebSocketEndpoint {
     Logger log = LoggerFactory.getLogger(TestEndpoint.class);

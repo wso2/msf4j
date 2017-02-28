@@ -21,7 +21,7 @@ package org.wso2.msf4j.sample.websocket.echoserver;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.msf4j.WebSocketEndpoint;
+import org.wso2.msf4j.websocket.WebSocketEndpoint;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;

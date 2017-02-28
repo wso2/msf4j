@@ -16,11 +16,14 @@
  *  under the License.
  */
 
-package org.wso2.msf4j;
+package org.wso2.msf4j.websocket.exception;
 
 /**
- * Maker Interface for developers who are developing endpoints in OSGi environment.
- * This should be implemented if developer are creating a WebSocket endpoint
+ * Throws when an exception occurred in WebSocket Endpoint annotations.
  */
-public interface WebSocketEndpoint {
+public class WebSocketEndpointAnnotationException extends Exception {
+
+    public WebSocketEndpointAnnotationException(String message) {
+        super(message);
+    }
 }

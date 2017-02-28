@@ -18,6 +18,7 @@
 
 package org.wso2.msf4j.internal.websocket;
 
+
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -27,8 +28,9 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.kernel.startupresolver.RequiredCapabilityListener;
-import org.wso2.msf4j.WebSocketEndpoint;
 import org.wso2.msf4j.internal.DataHolder;
+import org.wso2.msf4j.websocket.WebSocketEndpoint;
+import org.wso2.msf4j.websocket.exception.WebSocketEndpointAnnotationException;
 
 /**
  * OSGi Service component for WebSocket server. This will identify the endpoints which are trying to identify
@@ -61,7 +63,7 @@ public class WebSocketServerSC implements RequiredCapabilityListener {
         policy = ReferencePolicy.DYNAMIC,
         unbind = "removeEndpoint"
     )
-    protected void addEndpoint(WebSocketEndpoint endpoint) {
+    protected void addEndpoint(WebSocketEndpoint endpoint) throws WebSocketEndpointAnnotationException {
         endpointsRegistry.addEndpoint(endpoint);
     }
 

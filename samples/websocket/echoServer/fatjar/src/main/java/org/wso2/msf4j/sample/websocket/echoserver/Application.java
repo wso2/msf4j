@@ -19,12 +19,13 @@
 package org.wso2.msf4j.sample.websocket.echoserver;
 
 import org.wso2.msf4j.MicroservicesRunner;
+import org.wso2.msf4j.websocket.exception.WebSocketEndpointAnnotationException;
 
 /**
  * This is a echo server fat jar runner class
  */
 public class Application {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws WebSocketEndpointAnnotationException {
         new MicroservicesRunner().deployWebSocketEndpoint(new EchoEndpoint()).start();
     }
 }

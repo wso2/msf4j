@@ -16,16 +16,24 @@
  *  under the License.
  */
 
-package org.wso2.msf4j.sample.websocket.echoserver.chatapp;
+package org.wso2.msf4j.internal.websocket;
 
-import org.wso2.msf4j.MicroservicesRunner;
-import org.wso2.msf4j.websocket.exception.WebSocketEndpointAnnotationException;
+import java.nio.ByteBuffer;
+import javax.websocket.PongMessage;
 
 /**
- * This is the runner of the Fatjar. This should be configured as the main class in the pom.xml
+ * WebSocket pong message implementation of {@link PongMessage}.
  */
-public class Application {
-    public static void main(String[] args) throws WebSocketEndpointAnnotationException {
-        new MicroservicesRunner().deployWebSocketEndpoint(new ChatAppEndpoint()).start();
+public class WebSocketPongMessage implements PongMessage {
+
+    private final ByteBuffer applicationData;
+
+    public WebSocketPongMessage(ByteBuffer byteBuffer) {
+        applicationData = byteBuffer;
+    }
+
+    @Override
+    public ByteBuffer getApplicationData() {
+        return applicationData;
     }
 }

@@ -512,6 +512,12 @@
                 <version>${carbon.kernel.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-common</artifactId>
+                <version>${netty.version}</version>
+                <scope>test</scope>
+            </dependency>
 
             <!-- PAX Exam -->
             <dependency>
@@ -607,7 +613,7 @@
         <carbon.deployment.version.range>[5.0.0,6.0.0)</carbon.deployment.version.range>
         <carbon.messaging.version>2.2.3</carbon.messaging.version>
         <carbon.messaging.version.range>[1.0.4,2)</carbon.messaging.version.range>
-        <org.wso2.carbon.transport.http.netty.version>4.2.6</org.wso2.carbon.transport.http.netty.version>
+        <org.wso2.carbon.transport.http.netty.version>4.2.7-SNAPSHOT</org.wso2.carbon.transport.http.netty.version>
         <org.wso2.carbon.transport.http.netty.version.range>[4.0,5)</org.wso2.carbon.transport.http.netty.version.range>
         <org.apache.httpcomponents.httpclient.version>4.5.2</org.apache.httpcomponents.httpclient.version>
         <msf4j.version>2.1.1-SNAPSHOT</msf4j.version>
@@ -644,6 +650,7 @@
         <beanutils.version.range>[1.8,2)</beanutils.version.range>
         <beanutils.osgi.version>1.8.3.2</beanutils.osgi.version>
         <logback.version>1.0.9</logback.version>
+        <netty.version>4.1.7.Final</netty.version>
         <nimbus.jose.jwt.version>2.25</nimbus.jose.jwt.version>
         <io.swagger.version>1.5.8</io.swagger.version>
         <io.swagger.version.range>[1.5.0,1.6.0)</io.swagger.version.range>

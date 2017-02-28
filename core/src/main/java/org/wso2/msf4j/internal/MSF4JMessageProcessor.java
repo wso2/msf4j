@@ -24,6 +24,7 @@ import org.wso2.carbon.messaging.CarbonCallback;
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.CarbonMessageProcessor;
 import org.wso2.carbon.messaging.ClientConnector;
+import org.wso2.carbon.messaging.ControlCarbonMessage;
 import org.wso2.carbon.messaging.StatusCarbonMessage;
 import org.wso2.carbon.messaging.TextCarbonMessage;
 import org.wso2.carbon.messaging.TransportSender;
@@ -39,7 +40,7 @@ import org.wso2.msf4j.internal.router.Util;
 import org.wso2.msf4j.internal.websocket.CloseCodeImpl;
 import org.wso2.msf4j.internal.websocket.DispatchedEndpoint;
 import org.wso2.msf4j.internal.websocket.EndpointsRegistryImpl;
-import org.wso2.msf4j.internal.websocket.SessionManager;
+import org.wso2.msf4j.internal.websocket.WebSocketPongMessage;
 import org.wso2.msf4j.util.HttpUtil;
 
 import java.io.IOException;
@@ -54,6 +55,7 @@ import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javax.websocket.CloseReason;
+import javax.websocket.PongMessage;
 import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -147,17 +149,21 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
      */
     private void dispatchWebSocketMethod(PatternPathRouter.RoutableDestination<DispatchedEndpoint> routableEndpoint,
                                          CarbonMessage carbonMessage) {
+        Session session = (Session) carbonMessage.getProperty(Constants.WEBSOCKET_SESSION);
+        if (session == null) {
+            throw new NullPointerException("WebSocket session not found.");
+        }
 
         //Invoke correct method with correct parameters
         if (carbonMessage instanceof TextCarbonMessage) {
             TextCarbonMessage textCarbonMessage =
                     (TextCarbonMessage) carbonMessage;
-            handleTextWebSocketMessage(textCarbonMessage, routableEndpoint);
+            handleTextWebSocketMessage(textCarbonMessage, routableEndpoint, session);
 
         } else if (carbonMessage instanceof BinaryCarbonMessage) {
             BinaryCarbonMessage binaryCarbonMessage =
                     (BinaryCarbonMessage) carbonMessage;
-            handleBinaryWebSocketMessage(binaryCarbonMessage, routableEndpoint);
+            handleBinaryWebSocketMessage(binaryCarbonMessage, routableEndpoint, session);
 
         } else if (carbonMessage instanceof StatusCarbonMessage) {
             StatusCarbonMessage statusCarbonMessage = (StatusCarbonMessage) carbonMessage;
@@ -166,11 +172,15 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                 String upgrade = (String) carbonMessage.getProperty(Constants.UPGRADE);
                 if (Constants.UPGRADE.equalsIgnoreCase(connection) &&
                         Constants.WEBSOCKET_UPGRADE.equalsIgnoreCase(upgrade)) {
-                    handleWebSocketHandshake(carbonMessage);
+                    handleWebSocketHandshake(carbonMessage, session);
                 }
             } else if (statusCarbonMessage.getStatus().equals(org.wso2.carbon.messaging.Constants.STATUS_CLOSE)) {
-                handleCloseWebSocketMessage(statusCarbonMessage, routableEndpoint);
+                handleCloseWebSocketMessage(statusCarbonMessage, routableEndpoint, session);
             }
+        } else if (carbonMessage instanceof ControlCarbonMessage) {
+            ControlCarbonMessage controlCarbonMessage = (ControlCarbonMessage) carbonMessage;
+            handleControlCarbonMessage(controlCarbonMessage, routableEndpoint, session);
+
         }
     }
 
@@ -251,12 +261,10 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
     /*
     Handle WebSocket handshake
      */
-    private boolean handleWebSocketHandshake(CarbonMessage carbonMessage) {
+    private boolean handleWebSocketHandshake(CarbonMessage carbonMessage, Session session) {
         EndpointsRegistryImpl endpointsRegistry = EndpointsRegistryImpl.getInstance();
             PatternPathRouter.RoutableDestination<DispatchedEndpoint>
                     routableEndpoint = endpointsRegistry.getRoutableEndpoint(carbonMessage);
-        SessionManager sessionManager = SessionManager.getInstance();
-        Session session = sessionManager.add(carbonMessage);
         try {
             //If endpoint cannot be found close the connection
             if (routableEndpoint == null) {
@@ -287,7 +295,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
             executeMethod(method, routableEndpoint.getDestination().getWebSocketEndpoint(), parameterList, session);
             return true;
         } catch (Throwable throwable) {
-            handleError(carbonMessage, throwable, routableEndpoint);
+            handleError(carbonMessage, throwable, routableEndpoint, session);
             return false;
         }
     }
@@ -297,13 +305,11 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
      */
     private void handleTextWebSocketMessage(TextCarbonMessage textCarbonMessage,
                                            PatternPathRouter.RoutableDestination<DispatchedEndpoint>
-                                                   routableEndpoint) {
+                                                   routableEndpoint, Session session) {
         DispatchedEndpoint dispatchedEndpoint = routableEndpoint.getDestination();
         Map<String, String> paramValues = routableEndpoint.getGroupNameValues();
         Method method = dispatchedEndpoint.getOnStringMessageMethod();
         try {
-            SessionManager sessionManager = SessionManager.getInstance();
-            Session session = sessionManager.getSession(textCarbonMessage);
             List<Object> parameterList = new LinkedList<>();
             boolean isStringSatifsfied = false;
             Arrays.stream(method.getParameters()).forEach(
@@ -330,7 +336,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
             );
             executeMethod(method, dispatchedEndpoint.getWebSocketEndpoint(), parameterList, session);
         } catch (Throwable throwable) {
-            handleError(textCarbonMessage, throwable, routableEndpoint);
+            handleError(textCarbonMessage, throwable, routableEndpoint, session);
         }
     }
 
@@ -340,13 +346,11 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
 
     private void handleBinaryWebSocketMessage(BinaryCarbonMessage binaryCarbonMessage,
                                               PatternPathRouter.RoutableDestination<DispatchedEndpoint>
-                                                      routableEndpoint) {
+                                                      routableEndpoint, Session session) {
         DispatchedEndpoint dispatchedEndpoint = routableEndpoint.getDestination();
         Map<String, String> paramValues = routableEndpoint.getGroupNameValues();
         Method method = dispatchedEndpoint.getOnBinaryMessageMethod();
         try {
-            SessionManager sessionManager = SessionManager.getInstance();
-            Session session = sessionManager.getSession(binaryCarbonMessage);
             List<Object> parameterList = new LinkedList<>();
             Arrays.stream(method.getParameters()).forEach(
                     parameter -> {
@@ -379,7 +383,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
             );
             executeMethod(method, dispatchedEndpoint.getWebSocketEndpoint(), parameterList, session);
         } catch (Throwable throwable) {
-            handleError(binaryCarbonMessage, throwable, routableEndpoint);
+            handleError(binaryCarbonMessage, throwable, routableEndpoint, session);
         }
     }
 
@@ -388,12 +392,10 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
      */
     private void handleCloseWebSocketMessage(StatusCarbonMessage closeCarbonMessage,
                                              PatternPathRouter.RoutableDestination<DispatchedEndpoint>
-                                                     routableEndpoint) {
+                                                     routableEndpoint, Session session) {
         DispatchedEndpoint dispatchedEndpoint = routableEndpoint.getDestination();
         Map<String, String> paramValues = routableEndpoint.getGroupNameValues();
         Method method = dispatchedEndpoint.getOnCloseMethod();
-        SessionManager sessionManager = SessionManager.getInstance();
-        Session session = sessionManager.getSession(closeCarbonMessage);
         try {
             if (method != null) {
                 List<Object> parameterList = new LinkedList<>();
@@ -424,19 +426,49 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                 executeMethod(method, dispatchedEndpoint.getWebSocketEndpoint(), parameterList, session);
             }
         } catch (Throwable throwable) {
-            handleError(closeCarbonMessage, throwable, routableEndpoint);
+            handleError(closeCarbonMessage, throwable, routableEndpoint, session);
         }
     }
 
+    /*
+    handle Control Carbon Message.
+    This is mapped to PongMessage in javax.websocket
+     */
+    private void handleControlCarbonMessage(ControlCarbonMessage controlCarbonMessage, PatternPathRouter.
+            RoutableDestination<DispatchedEndpoint> routableEndpoint, Session session) {
+        DispatchedEndpoint dispatchedEndpoint = routableEndpoint.getDestination();
+        Map<String, String> paramValues = routableEndpoint.getGroupNameValues();
+        Method method = dispatchedEndpoint.getOnPongMessageMethod();
+        if (method != null) {
+            List<Object> parameterList = new LinkedList<>();
+            Arrays.stream(method.getParameters()).forEach(
+                    parameter -> {
+                        if (parameter.getType() == PongMessage.class) {
+                            parameterList.add(new WebSocketPongMessage(controlCarbonMessage.readBytes()));
+                        } else if (parameter.getType() == Session.class) {
+                            parameterList.add(session);
+                        } else if (parameter.getType() == String.class) {
+                            PathParam pathParam = parameter.getAnnotation(PathParam.class);
+                            if (pathParam != null) {
+                                parameterList.add(paramValues.get(pathParam.value()));
+                            } else {
+                                throw new IllegalArgumentException("String parameters " +
+                                                                           "without @PathParam annotation");
+                            }
+                        } else {
+                            parameterList.add(null);
+                        }
+                    }
+            );
+        }
+    }
 
     private void handleError(CarbonMessage carbonMessage, Throwable throwable,
-                             PatternPathRouter.RoutableDestination<DispatchedEndpoint> routableEndpoint) {
+                             PatternPathRouter.RoutableDestination<DispatchedEndpoint> routableEndpoint,
+                             Session session) {
         DispatchedEndpoint dispatchedEndpoint = routableEndpoint.getDestination();
         Map<String, String> paramValues = routableEndpoint.getGroupNameValues();
         Method method = dispatchedEndpoint.getOnErrorMethod();
-        SessionManager sessionManager = SessionManager.getInstance();
-        Session session = sessionManager.getSession(carbonMessage);
-
         if (method != null) {
             List<Object> parameterList = new LinkedList<>();
             Arrays.stream(method.getParameters()).forEach(
@@ -479,6 +511,9 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                 session.getBasicRemote().sendBinary(ByteBuffer.wrap(bytes));
             } else if (method.getReturnType() == void.class) {
                 method.invoke(webSocketEndpoint, parameterList.toArray());
+            } else if (method.getReturnType() == PongMessage.class) {
+                PongMessage pongMessage = (PongMessage) method.invoke(webSocketEndpoint, parameterList.toArray());
+                session.getBasicRemote().sendPong(pongMessage.getApplicationData());
             } else {
                 throw new IllegalArgumentException("Unknown return type");
             }

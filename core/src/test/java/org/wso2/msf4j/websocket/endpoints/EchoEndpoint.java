@@ -16,19 +16,20 @@
  *  under the License.
  */
 
-package org.wso2.msf4j.sample.websocket.echoserver;
+package org.wso2.msf4j.websocket.endpoints;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.websocket.WebSocketEndpoint;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
+import javax.websocket.PongMessage;
 import javax.websocket.Session;
+import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
 /**
@@ -47,14 +48,13 @@ public class EchoEndpoint implements WebSocketEndpoint {
      * Echo the same {@link String} to user.
      */
     @OnMessage
-    public String onTextMessage(String text, Session session) throws IOException {
+    public String onTextMessage(@PathParam("name") String name, String text, Session session) throws IOException {
         LOGGER.info("Received Text : " + text + " from  " + session.getId());
-        String msg =  "You said : " + text;
-        return msg;
+        return text;
     }
 
     /**
-     * Echo the same {@link ByteBuffer} X 2 to user.
+     * Echo the same ByteBuffer to user.
      */
     @OnMessage
     public byte[] onBinaryMessage(byte[] buffer, Session session) {
@@ -62,11 +62,16 @@ public class EchoEndpoint implements WebSocketEndpoint {
         byte[] bytes = new byte[buffer.length];
         for (int i = 0; i < buffer.length; i++) {
             byte b = buffer[i];
-            bytes[i] = (byte) (b * 2);
             values = values.concat(" " + b);
         }
         LOGGER.info("Binary message values from " + session.getId() + " : " + values);
-        return bytes;
+        return buffer;
+    }
+
+    @OnMessage
+    public PongMessage onPongMessage(PongMessage pongMessage, Session session) {
+        LOGGER.info("Received a pong message.");
+        return pongMessage;
     }
 
     @OnClose

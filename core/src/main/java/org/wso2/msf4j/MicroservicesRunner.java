@@ -34,6 +34,7 @@ import org.wso2.msf4j.internal.MSF4JMessageProcessor;
 import org.wso2.msf4j.internal.MicroservicesRegistryImpl;
 import org.wso2.msf4j.internal.websocket.EndpointsRegistryImpl;
 import org.wso2.msf4j.util.RuntimeAnnotations;
+import org.wso2.msf4j.websocket.exception.WebSocketEndpointAnnotationException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -113,7 +114,8 @@ public class MicroservicesRunner {
      * Add WebSocket endpoint to the MicroserviceRunner
      * @param webSocketEndpoint endpoint which is to be added.
      */
-    public MicroservicesRunner deployWebSocketEndpoint(Object webSocketEndpoint) {
+    public MicroservicesRunner deployWebSocketEndpoint(Object webSocketEndpoint)
+            throws WebSocketEndpointAnnotationException {
         endpointsRegistry.addEndpoint(webSocketEndpoint);
         return this;
     }

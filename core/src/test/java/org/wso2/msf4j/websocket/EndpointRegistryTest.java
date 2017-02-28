@@ -18,44 +18,51 @@
 
 package org.wso2.msf4j.websocket;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.TextCarbonMessage;
 import org.wso2.carbon.transport.http.netty.common.Constants;
-import org.wso2.msf4j.WebSocketEndpoint;
 import org.wso2.msf4j.internal.router.PatternPathRouter;
 import org.wso2.msf4j.internal.websocket.DispatchedEndpoint;
 import org.wso2.msf4j.internal.websocket.EndpointsRegistryImpl;
+import org.wso2.msf4j.websocket.endpoints.TestEndpoint;
+import org.wso2.msf4j.websocket.endpoints.TestEndpointWithError;
+import org.wso2.msf4j.websocket.exception.WebSocketEndpointAnnotationException;
 
 import java.lang.reflect.InvocationTargetException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Test for Endpoint Registry
+ * Test Class for WebSocket Endpoint Registry
  */
 public class EndpointRegistryTest {
+
+    private static final Logger logger = LoggerFactory.getLogger(EndpointRegistryTest.class);
 
     private final String testText = "test";
     private WebSocketEndpoint testEndpoint = new TestEndpoint();
     private EndpointsRegistryImpl endpointsRegistry = EndpointsRegistryImpl.getInstance();
     private CarbonMessage textCarbonMessage = new TextCarbonMessage(testText);
 
-    public EndpointRegistryTest() throws URISyntaxException {
+    public EndpointRegistryTest() {
     }
 
     @BeforeClass
     public void onRegister() throws URISyntaxException {
-        URI uri = new URI("/test");
+        logger.info("\n----------------WebSocket Registry Test----------------");
+        String uri = "/test";
         textCarbonMessage.setProperty(Constants.TO, uri);
     }
 
     @Test
-    public void registerEndpoint() throws InvocationTargetException, IllegalAccessException, URISyntaxException {
+    public void registerEndpoint() throws InvocationTargetException, IllegalAccessException, URISyntaxException,
+                                          WebSocketEndpointAnnotationException {
         endpointsRegistry.addEndpoint(testEndpoint);
         PatternPathRouter.RoutableDestination<DispatchedEndpoint> routableEndpoint =
                 endpointsRegistry.getRoutableEndpoint(textCarbonMessage);
@@ -69,9 +76,28 @@ public class EndpointRegistryTest {
     }
 
     @Test
-    public void removeEndpoint() throws Exception {
-        endpointsRegistry.removeEndpoint(testEndpoint);
-        Assert.assertTrue(endpointsRegistry.getRoutableEndpoint(textCarbonMessage) == null);
+    public void removeEndpoint() throws WebSocketEndpointAnnotationException {
+        try {
+            endpointsRegistry.removeEndpoint(testEndpoint);
+            PatternPathRouter.RoutableDestination<DispatchedEndpoint> endPoint = endpointsRegistry.
+                    getRoutableEndpoint(textCarbonMessage);
+            Assert.assertTrue(endPoint == null);
+        } catch (WebSocketEndpointAnnotationException e) {
+            logger.error("WebSocket Annotation Exception : " + e.getMessage());
+            Assert.assertTrue(false);
+        }
+    }
+
+    @Test
+    public void testException() {
+        try {
+            WebSocketEndpoint testEndpoint = new TestEndpointWithError();
+            endpointsRegistry.addEndpoint(testEndpoint);
+            Assert.assertTrue(false);
+        } catch (WebSocketEndpointAnnotationException e) {
+            logger.error("Error occurred when adding endpoint : " + e.getMessage());
+            Assert.assertTrue(true);
+        }
     }
 
 }
