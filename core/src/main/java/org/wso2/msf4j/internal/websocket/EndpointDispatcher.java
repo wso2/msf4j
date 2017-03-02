@@ -33,6 +33,7 @@ import javax.websocket.server.ServerEndpoint;
 
 /**
  * Dispatch the registered endpoints.
+ * This class will find the best matching resource of an endpoint for a given message type.
  */
 public class EndpointDispatcher {
 
@@ -40,7 +41,7 @@ public class EndpointDispatcher {
     }
 
     /**
-     * @return the URI of the Endpoint.
+     * @return the URI of the Endpoint as a String.
      * @throws WebSocketEndpointAnnotationException throws if {@link ServerEndpoint} is not found.
      */
     public String getUri(Object webSocketEndpoint) throws WebSocketEndpointAnnotationException {

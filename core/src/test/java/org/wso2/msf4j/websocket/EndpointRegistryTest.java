@@ -60,8 +60,8 @@ public class EndpointRegistryTest {
         textCarbonMessage.setProperty(Constants.TO, uri);
     }
 
-    @Test
-    public void registerEndpoint() throws InvocationTargetException, IllegalAccessException, URISyntaxException,
+    @Test(description = "Testing the adding a correct endpoint to the registry.")
+    public void addEndpoint() throws InvocationTargetException, IllegalAccessException, URISyntaxException,
                                           WebSocketEndpointAnnotationException {
         endpointsRegistry.addEndpoint(testEndpoint);
         PatternPathRouter.RoutableDestination<Object> routableEndpoint =
@@ -75,7 +75,7 @@ public class EndpointRegistryTest {
         Assert.assertEquals(returnValue, testText);
     }
 
-    @Test
+    @Test(description = "Testing the removing of an endpoint from the registry.")
     public void removeEndpoint() throws WebSocketEndpointAnnotationException {
         try {
             endpointsRegistry.removeEndpoint(testEndpoint);
@@ -88,16 +88,15 @@ public class EndpointRegistryTest {
         }
     }
 
-    @Test
+    @Test(description = "Testing the exception when server endpoint is not defined on a endpoint.")
     public void testException() {
         try {
             WebSocketEndpoint testEndpoint = new TestEndpointWithError();
             endpointsRegistry.addEndpoint(testEndpoint);
             Assert.assertTrue(false);
         } catch (WebSocketEndpointAnnotationException e) {
-            logger.error("Error occurred when adding endpoint : " + e.getMessage());
+            logger.error("Error occurred when adding endpoint : " + e.toString());
             Assert.assertTrue(true);
         }
     }
-
 }

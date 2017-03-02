@@ -53,7 +53,7 @@ public class DeploymentTest {
         microservicesRunner.start();
     }
 
-    @Test
+    @Test(description = "Testing the echoing the message sent by client for text, binary and pong messages.")
     public void testReply() throws InterruptedException, SSLException, URISyntaxException {
         WebSocketClient echoClient = new WebSocketClient(echoUrl);
         //Test handshake
@@ -86,9 +86,9 @@ public class DeploymentTest {
         echoClient.shutDown();
     }
 
-    @Test
+    @Test(description = "Testing broadcasting messages for text, binary and pong using two clients.")
     public void testBroadcast() throws InterruptedException, SSLException, URISyntaxException {
-        //Initializing local variabels
+        //Initializing local variables
         String textReceived;
         String client1Name = "abc";
         String client2Name = "xyz";
@@ -120,6 +120,4 @@ public class DeploymentTest {
     public void cleanUp() {
         microservicesRunner.stop();
     }
-
-
 }

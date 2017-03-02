@@ -18,7 +18,6 @@
 
 package org.wso2.msf4j.internal.websocket;
 
-
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -63,6 +62,7 @@ public class WebSocketServerSC implements RequiredCapabilityListener {
         policy = ReferencePolicy.DYNAMIC,
         unbind = "removeEndpoint"
     )
+
     protected void addEndpoint(WebSocketEndpoint endpoint) throws WebSocketEndpointAnnotationException {
         endpointsRegistry.addEndpoint(endpoint);
     }
@@ -71,9 +71,6 @@ public class WebSocketServerSC implements RequiredCapabilityListener {
         endpointsRegistry.removeEndpoint(endpoint);
     }
 
-    /**
-     * Receives a notification when all the required services are available in the OSGi service registry.
-     */
     @Override
     public void onAllRequiredCapabilitiesAvailable() {
         DataHolder.getInstance().getBundleContext().registerService(WebSocketServerSC.class, this, null);

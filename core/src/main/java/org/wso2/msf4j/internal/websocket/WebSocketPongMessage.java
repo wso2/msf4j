@@ -28,6 +28,9 @@ public class WebSocketPongMessage implements PongMessage {
 
     private final ByteBuffer applicationData;
 
+    /**
+     * @param byteBuffer application data of the {@link PongMessage}
+     */
     public WebSocketPongMessage(ByteBuffer byteBuffer) {
         applicationData = byteBuffer;
     }

@@ -35,6 +35,9 @@ public class CloseCodeImpl implements CloseReason.CloseCode {
 
     private final int closeCode;
 
+    /**
+     * @param closeCode close code for the reason of closure.
+     */
     public CloseCodeImpl(int closeCode) {
         this.closeCode = closeCode;
     }
