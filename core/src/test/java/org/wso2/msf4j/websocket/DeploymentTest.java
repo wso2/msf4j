@@ -38,8 +38,11 @@ import javax.net.ssl.SSLException;
  */
 public class DeploymentTest {
 
-    private String echoUrl = "ws://localhost:8080/echo";
-    private String chatUrl = "ws://localhost:8080/chat/";
+    private final String host = "localhost";
+    private final String port = "8080";
+
+    private String echoUrl = "ws://" + host + ":" + port + "/echo";
+    private String chatUrl = "ws://" + host + ":" + port + "/chat/";
 
     private MicroservicesRunner microservicesRunner = new MicroservicesRunner();
 

@@ -27,7 +27,7 @@ import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.TextCarbonMessage;
 import org.wso2.carbon.transport.http.netty.common.Constants;
 import org.wso2.msf4j.internal.router.PatternPathRouter;
-import org.wso2.msf4j.internal.websocket.DispatchedEndpoint;
+import org.wso2.msf4j.internal.websocket.EndpointDispatcher;
 import org.wso2.msf4j.internal.websocket.EndpointsRegistryImpl;
 import org.wso2.msf4j.websocket.endpoints.TestEndpoint;
 import org.wso2.msf4j.websocket.endpoints.TestEndpointWithError;
@@ -64,13 +64,13 @@ public class EndpointRegistryTest {
     public void registerEndpoint() throws InvocationTargetException, IllegalAccessException, URISyntaxException,
                                           WebSocketEndpointAnnotationException {
         endpointsRegistry.addEndpoint(testEndpoint);
-        PatternPathRouter.RoutableDestination<DispatchedEndpoint> routableEndpoint =
+        PatternPathRouter.RoutableDestination<Object> routableEndpoint =
                 endpointsRegistry.getRoutableEndpoint(textCarbonMessage);
-        DispatchedEndpoint dispatchedEndpoint = routableEndpoint.getDestination();
+        Object webSocketEndpoint = routableEndpoint.getDestination();
         List<Object> paralist = new LinkedList<>();
         paralist.add(testText);
         paralist.add(null);
-        String returnValue = (String) dispatchedEndpoint.getOnStringMessageMethod().
+        String returnValue = (String) new EndpointDispatcher().getOnStringMessageMethod(webSocketEndpoint).
                 invoke(testEndpoint, paralist.toArray());
         Assert.assertEquals(returnValue, testText);
     }
@@ -79,7 +79,7 @@ public class EndpointRegistryTest {
     public void removeEndpoint() throws WebSocketEndpointAnnotationException {
         try {
             endpointsRegistry.removeEndpoint(testEndpoint);
-            PatternPathRouter.RoutableDestination<DispatchedEndpoint> endPoint = endpointsRegistry.
+            PatternPathRouter.RoutableDestination<Object> endPoint = endpointsRegistry.
                     getRoutableEndpoint(textCarbonMessage);
             Assert.assertTrue(endPoint == null);
         } catch (WebSocketEndpointAnnotationException e) {

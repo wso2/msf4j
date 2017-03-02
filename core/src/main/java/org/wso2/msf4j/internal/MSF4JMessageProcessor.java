@@ -38,10 +38,11 @@ import org.wso2.msf4j.internal.router.HttpResourceModel;
 import org.wso2.msf4j.internal.router.PatternPathRouter;
 import org.wso2.msf4j.internal.router.Util;
 import org.wso2.msf4j.internal.websocket.CloseCodeImpl;
-import org.wso2.msf4j.internal.websocket.DispatchedEndpoint;
+import org.wso2.msf4j.internal.websocket.EndpointDispatcher;
 import org.wso2.msf4j.internal.websocket.EndpointsRegistryImpl;
 import org.wso2.msf4j.internal.websocket.WebSocketPongMessage;
 import org.wso2.msf4j.util.HttpUtil;
+import org.wso2.msf4j.websocket.exception.WebSocketEndpointAnnotationException;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -128,9 +129,14 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
             } else if (Constants.WEBSOCKET_PROTOCOL.equalsIgnoreCase(protocolName)) {
                 log.info("WebSocketMessage Received");
                 EndpointsRegistryImpl endpointsRegistry = EndpointsRegistryImpl.getInstance();
-                PatternPathRouter.RoutableDestination<DispatchedEndpoint>
-                        routableEndpoint = endpointsRegistry.getRoutableEndpoint(carbonMessage);
-                dispatchWebSocketMethod(routableEndpoint, carbonMessage);
+                PatternPathRouter.RoutableDestination<Object>
+                        routableEndpoint = null;
+                try {
+                    routableEndpoint = endpointsRegistry.getRoutableEndpoint(carbonMessage);
+                    dispatchWebSocketMethod(routableEndpoint, carbonMessage);
+                } catch (WebSocketEndpointAnnotationException e) {
+                    log.error(e.toString());
+                }
 
             } else  {
                 log.error("Cannot find the protocol to dispatch.");
@@ -147,8 +153,8 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
      * @throws InvocationTargetException problem with invocation of the given method
      * @throws IllegalAccessException Illegal access when invoking the method
      */
-    private void dispatchWebSocketMethod(PatternPathRouter.RoutableDestination<DispatchedEndpoint> routableEndpoint,
-                                         CarbonMessage carbonMessage) {
+    private void dispatchWebSocketMethod(PatternPathRouter.RoutableDestination<Object> routableEndpoint,
+                                         CarbonMessage carbonMessage) throws WebSocketEndpointAnnotationException {
         Session session = (Session) carbonMessage.getProperty(Constants.WEBSOCKET_SESSION);
         if (session == null) {
             throw new NullPointerException("WebSocket session not found.");
@@ -261,9 +267,10 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
     /*
     Handle WebSocket handshake
      */
-    private boolean handleWebSocketHandshake(CarbonMessage carbonMessage, Session session) {
+    private boolean handleWebSocketHandshake(CarbonMessage carbonMessage, Session session)
+            throws WebSocketEndpointAnnotationException {
         EndpointsRegistryImpl endpointsRegistry = EndpointsRegistryImpl.getInstance();
-            PatternPathRouter.RoutableDestination<DispatchedEndpoint>
+            PatternPathRouter.RoutableDestination<Object>
                     routableEndpoint = endpointsRegistry.getRoutableEndpoint(carbonMessage);
         try {
             //If endpoint cannot be found close the connection
@@ -271,7 +278,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                 throw new NullPointerException("Cannot find the URI for the endpoint");
             }
 
-            Method method = routableEndpoint.getDestination().getOnOpenMethod();
+            Method method = new EndpointDispatcher().getOnOpenMethod(routableEndpoint.getDestination());
             List<Object> parameterList = new LinkedList<>();
             Map<String, String> paramValues = routableEndpoint.getGroupNameValues();
             Arrays.stream(method.getParameters()).forEach(
@@ -292,7 +299,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                         }
                     }
             );
-            executeMethod(method, routableEndpoint.getDestination().getWebSocketEndpoint(), parameterList, session);
+            executeMethod(method, routableEndpoint.getDestination(), parameterList, session);
             return true;
         } catch (Throwable throwable) {
             handleError(carbonMessage, throwable, routableEndpoint, session);
@@ -304,11 +311,11 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
     Handle Text WebSocket Message
      */
     private void handleTextWebSocketMessage(TextCarbonMessage textCarbonMessage,
-                                           PatternPathRouter.RoutableDestination<DispatchedEndpoint>
+                                           PatternPathRouter.RoutableDestination<Object>
                                                    routableEndpoint, Session session) {
-        DispatchedEndpoint dispatchedEndpoint = routableEndpoint.getDestination();
+        Object endpoint = routableEndpoint.getDestination();
         Map<String, String> paramValues = routableEndpoint.getGroupNameValues();
-        Method method = dispatchedEndpoint.getOnStringMessageMethod();
+        Method method = new EndpointDispatcher().getOnStringMessageMethod(endpoint);
         try {
             List<Object> parameterList = new LinkedList<>();
             boolean isStringSatifsfied = false;
@@ -334,7 +341,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                         }
                     }
             );
-            executeMethod(method, dispatchedEndpoint.getWebSocketEndpoint(), parameterList, session);
+            executeMethod(method, endpoint, parameterList, session);
         } catch (Throwable throwable) {
             handleError(textCarbonMessage, throwable, routableEndpoint, session);
         }
@@ -345,11 +352,11 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
      */
 
     private void handleBinaryWebSocketMessage(BinaryCarbonMessage binaryCarbonMessage,
-                                              PatternPathRouter.RoutableDestination<DispatchedEndpoint>
+                                              PatternPathRouter.RoutableDestination<Object>
                                                       routableEndpoint, Session session) {
-        DispatchedEndpoint dispatchedEndpoint = routableEndpoint.getDestination();
+        Object webSocketEndpoint = routableEndpoint.getDestination();
         Map<String, String> paramValues = routableEndpoint.getGroupNameValues();
-        Method method = dispatchedEndpoint.getOnBinaryMessageMethod();
+        Method method = new EndpointDispatcher().getOnBinaryMessageMethod(webSocketEndpoint);
         try {
             List<Object> parameterList = new LinkedList<>();
             Arrays.stream(method.getParameters()).forEach(
@@ -381,7 +388,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                         }
                     }
             );
-            executeMethod(method, dispatchedEndpoint.getWebSocketEndpoint(), parameterList, session);
+            executeMethod(method, webSocketEndpoint, parameterList, session);
         } catch (Throwable throwable) {
             handleError(binaryCarbonMessage, throwable, routableEndpoint, session);
         }
@@ -391,11 +398,11 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
     Handle close WebSocket Message
      */
     private void handleCloseWebSocketMessage(StatusCarbonMessage closeCarbonMessage,
-                                             PatternPathRouter.RoutableDestination<DispatchedEndpoint>
+                                             PatternPathRouter.RoutableDestination<Object>
                                                      routableEndpoint, Session session) {
-        DispatchedEndpoint dispatchedEndpoint = routableEndpoint.getDestination();
+        Object webSocketEndpoint = routableEndpoint.getDestination();
         Map<String, String> paramValues = routableEndpoint.getGroupNameValues();
-        Method method = dispatchedEndpoint.getOnCloseMethod();
+        Method method = new EndpointDispatcher().getOnCloseMethod(webSocketEndpoint);
         try {
             if (method != null) {
                 List<Object> parameterList = new LinkedList<>();
@@ -423,7 +430,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                             }
                         }
                 );
-                executeMethod(method, dispatchedEndpoint.getWebSocketEndpoint(), parameterList, session);
+                executeMethod(method, webSocketEndpoint, parameterList, session);
             }
         } catch (Throwable throwable) {
             handleError(closeCarbonMessage, throwable, routableEndpoint, session);
@@ -435,10 +442,10 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
     This is mapped to PongMessage in javax.websocket
      */
     private void handleControlCarbonMessage(ControlCarbonMessage controlCarbonMessage, PatternPathRouter.
-            RoutableDestination<DispatchedEndpoint> routableEndpoint, Session session) {
-        DispatchedEndpoint dispatchedEndpoint = routableEndpoint.getDestination();
+            RoutableDestination<Object> routableEndpoint, Session session) {
+        Object webSocketEndpoint = routableEndpoint.getDestination();
         Map<String, String> paramValues = routableEndpoint.getGroupNameValues();
-        Method method = dispatchedEndpoint.getOnPongMessageMethod();
+        Method method = new EndpointDispatcher().getOnPongMessageMethod(webSocketEndpoint);
         if (method != null) {
             List<Object> parameterList = new LinkedList<>();
             Arrays.stream(method.getParameters()).forEach(
@@ -464,11 +471,11 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
     }
 
     private void handleError(CarbonMessage carbonMessage, Throwable throwable,
-                             PatternPathRouter.RoutableDestination<DispatchedEndpoint> routableEndpoint,
+                             PatternPathRouter.RoutableDestination<Object> routableEndpoint,
                              Session session) {
-        DispatchedEndpoint dispatchedEndpoint = routableEndpoint.getDestination();
+        Object webSocketEndpoint = routableEndpoint.getDestination();
         Map<String, String> paramValues = routableEndpoint.getGroupNameValues();
-        Method method = dispatchedEndpoint.getOnErrorMethod();
+        Method method = new EndpointDispatcher().getOnErrorMethod(webSocketEndpoint);
         if (method != null) {
             List<Object> parameterList = new LinkedList<>();
             Arrays.stream(method.getParameters()).forEach(
@@ -491,7 +498,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                     }
             );
 
-            executeMethod(method, dispatchedEndpoint.getWebSocketEndpoint(), parameterList, session);
+            executeMethod(method, webSocketEndpoint, parameterList, session);
         } else {
             log.error(throwable.toString());
         }

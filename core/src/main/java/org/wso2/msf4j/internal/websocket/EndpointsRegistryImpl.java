@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.transport.http.netty.common.Constants;
 import org.wso2.msf4j.internal.router.PatternPathRouter;
-import org.wso2.msf4j.websocket.WebSocketEndpoint;
 import org.wso2.msf4j.websocket.WebSocketEndpointsRegistry;
 import org.wso2.msf4j.websocket.exception.WebSocketEndpointAnnotationException;
 
@@ -34,7 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
- * Implementation for {@link WebSocketEndpointsRegistry}
+ * Implementation for {@link WebSocketEndpointsRegistry}.
  * Endpoints are Dispatched and Stored in a {@link PatternPathRouter}. So when new request comes it will be routed to
  * best matching URI.
  */
@@ -44,8 +43,9 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
     private static final EndpointsRegistryImpl webSocketEndpointsRegistry = new EndpointsRegistryImpl();
 
     // Map <uri, WebSocketEndpoint>
-    private final Map<String, DispatchedEndpoint> webSocketEndpointMap = new ConcurrentHashMap<>();
-    private PatternPathRouter<DispatchedEndpoint> endpointPatternPathRouter = PatternPathRouter.create();
+    private final Map<String, Object> webSocketEndpointMap = new ConcurrentHashMap<>();
+    //PatterPathRouter<WebSocketEndpoint>
+    private PatternPathRouter<Object> endpointPatternPathRouter = PatternPathRouter.create();
 
     //Makes this class singleton.
     private EndpointsRegistryImpl() {
@@ -60,28 +60,28 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
 
     /**
      * Adding endpoints to the registry.
-     * @param webSocketEndpoints {@link WebSocketEndpoint} to add.
+     * @param webSocketEndpoints to add.
      */
     public void addEndpoint(Object... webSocketEndpoints) throws WebSocketEndpointAnnotationException {
         for (Object endpoint: webSocketEndpoints) {
-            DispatchedEndpoint dispatchedEndpoint = dispatchEndpoint(endpoint);
-            webSocketEndpointMap.put(dispatchedEndpoint.getUri(), dispatchedEndpoint);
+            EndpointDispatcher dispatcher = new EndpointDispatcher();
+            webSocketEndpointMap.put(dispatcher.getUri(endpoint), endpoint);
             updatePatternPathRouter();
-            LOGGER.info("Endpoint Registered : " + dispatchedEndpoint.getUri());
+            LOGGER.info("Endpoint Registered : " + dispatcher.getUri(endpoint));
         }
     }
 
     /**
-     * Remove {@link WebSocketEndpoint} from Registry.
-     * @param webSocketEndpoint {@link WebSocketEndpoint} which should be removed.
+     * Remove WebSocket Endpoint from Registry.
+     * @param webSocketEndpoint which should be removed.
      * @throws WebSocketEndpointAnnotationException throws when WebSocket {@link javax.websocket.server.ServerEndpoint}
      * is no declared in the endpoint.
      */
-    public void removeEndpoint(WebSocketEndpoint webSocketEndpoint) throws WebSocketEndpointAnnotationException {
-        DispatchedEndpoint dispatchedEndpoint = dispatchEndpoint(webSocketEndpoint);
-        webSocketEndpointMap.remove(dispatchedEndpoint.getUri());
+    public void removeEndpoint(Object webSocketEndpoint) throws WebSocketEndpointAnnotationException {
+        EndpointDispatcher dispatcher = new EndpointDispatcher();
+        webSocketEndpointMap.remove(dispatcher.getUri(webSocketEndpoint));
         updatePatternPathRouter();
-        LOGGER.info("Removed endpoint : " + dispatchedEndpoint.getUri());
+        LOGGER.info("Removed endpoint : " + dispatcher.getUri(webSocketEndpoint));
     }
 
     /**
@@ -89,11 +89,11 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
      * @param carbonMessage {@link CarbonMessage} to find the URI.
      * @return the best possible {@link org.wso2.msf4j.internal.router.PatternPathRouter.RoutableDestination}.
      */
-    public PatternPathRouter.RoutableDestination<DispatchedEndpoint> getRoutableEndpoint(
-            CarbonMessage carbonMessage) {
+    public PatternPathRouter.RoutableDestination<Object> getRoutableEndpoint(
+            CarbonMessage carbonMessage) throws WebSocketEndpointAnnotationException {
         String uri = (String) carbonMessage.getProperty(Constants.TO);
         LOGGER.info("path : " + uri);
-        List<PatternPathRouter.RoutableDestination<DispatchedEndpoint>> routableDestinations =
+        List<PatternPathRouter.RoutableDestination<Object>> routableDestinations =
                 endpointPatternPathRouter.getDestinations(uri);
         return getBestEndpoint(routableDestinations, uri);
     }
@@ -102,30 +102,21 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
     public Set<Object> getAllEndpoints() {
         return webSocketEndpointMap.entrySet().stream()
                 .map(Map.Entry::getValue)
-                .map(DispatchedEndpoint::getWebSocketEndpoint)
                 .collect(Collectors.toSet());
-    }
-
-    /*
-    Dispatch the endpoint.
-     */
-    private DispatchedEndpoint dispatchEndpoint(Object webSocketEndpoint) throws WebSocketEndpointAnnotationException {
-        EndpointDispatcher dispatcher = new EndpointDispatcher(webSocketEndpoint);
-        return dispatcher.getDispatchedEndpoint();
     }
 
     /*
     Find the best matching RoutableDestination from the All matching RoutableDestinations
      */
-    private PatternPathRouter.RoutableDestination<DispatchedEndpoint> getBestEndpoint(
-            List<PatternPathRouter.RoutableDestination<DispatchedEndpoint>> routableDestinationList,
-            String requestUri) {
-        PatternPathRouter.RoutableDestination<DispatchedEndpoint> bestRoutableDestination = null;
+    private PatternPathRouter.RoutableDestination<Object> getBestEndpoint(
+            List<PatternPathRouter.RoutableDestination<Object>> routableDestinationList,
+            String requestUri) throws WebSocketEndpointAnnotationException {
+        PatternPathRouter.RoutableDestination<Object> bestRoutableDestination = null;
         int currentBestHitCount = 0;
-        for (PatternPathRouter.RoutableDestination<DispatchedEndpoint>
+        for (PatternPathRouter.RoutableDestination<Object>
                 currentRoutableDestination: routableDestinationList) {
-            int tempCount = getHitCount(currentRoutableDestination.getDestination().getUri().split("/"),
-                                        requestUri.split("/"));
+            int tempCount = getHitCount(new EndpointDispatcher().getUri(currentRoutableDestination.getDestination())
+                                                .split("/"), requestUri.split("/"));
 
             if (tempCount > currentBestHitCount) {
                 bestRoutableDestination = currentRoutableDestination;
@@ -138,14 +129,12 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
     /*
     Update the PatternPathRouter when adding and removing an endpoint.
      */
-    private void updatePatternPathRouter() {
+    private void updatePatternPathRouter() throws WebSocketEndpointAnnotationException {
         endpointPatternPathRouter = PatternPathRouter.create();
-        webSocketEndpointMap.entrySet().forEach(
-                entry -> {
-                    DispatchedEndpoint dispatchedEndpoint = entry.getValue();
-                    endpointPatternPathRouter.add(dispatchedEndpoint.getUri(), dispatchedEndpoint);
-                }
-        );
+        for (Map.Entry entry : webSocketEndpointMap.entrySet()) {
+            Object endpoint = entry.getValue();
+            endpointPatternPathRouter.add(new EndpointDispatcher().getUri(endpoint), endpoint);
+        }
     }
 
     /*
