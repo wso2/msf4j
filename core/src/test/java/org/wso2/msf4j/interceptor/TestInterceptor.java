@@ -50,7 +50,6 @@ public class TestInterceptor implements Interceptor {
         String header = request.getHeader("X-Request-Type");
         if (header != null && header.equals("Reject")) {
             responder.setStatus(javax.ws.rs.core.Response.Status.NOT_ACCEPTABLE.getStatusCode());
-            responder.send();
             return false;
         }
 
