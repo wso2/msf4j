@@ -24,7 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
-import org.wso2.msf4j.interceptor.MSF4JRequestInterceptor;
+import org.wso2.msf4j.interceptor.RequestInterceptor;
 import org.wso2.msf4j.util.SystemVariableUtil;
 
 import java.io.IOException;
@@ -44,7 +44,7 @@ import java.util.Date;
 /**
  * Verify the JWT header in request.
  */
-public class JWTSecurityInterceptor implements MSF4JRequestInterceptor {
+public class JWTSecurityInterceptor implements RequestInterceptor {
 
     private static final Logger log = LoggerFactory.getLogger(JWTSecurityInterceptor.class);
 

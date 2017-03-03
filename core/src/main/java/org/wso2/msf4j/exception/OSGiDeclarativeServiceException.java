@@ -15,19 +15,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.msf4j.interceptor;
-
-import org.wso2.msf4j.Request;
-import org.wso2.msf4j.Response;
+package org.wso2.msf4j.exception;
 
 /**
- * Medium priority request interceptor.
+ * Runtime exception when MicroServices Service Component fails to add or remove OSGi Declarative Services
  */
-public class MediumPriorityClassRequestInterceptor implements RequestInterceptor {
+public class OSGiDeclarativeServiceException extends RuntimeException {
 
-    @Override
-    public boolean interceptRequest(Request request, Response response) throws Exception {
-        PriorityDataHolder.setPriorityOrder(PriorityDataHolder.getPriorityOrder() + this.getClass().getSimpleName());
-        return true;
+    public OSGiDeclarativeServiceException(String message) {
+        super(message);
+    }
+
+    public OSGiDeclarativeServiceException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

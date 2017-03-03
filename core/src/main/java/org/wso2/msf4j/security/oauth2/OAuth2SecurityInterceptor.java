@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.wso2.carbon.messaging.Headers;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
-import org.wso2.msf4j.interceptor.MSF4JRequestInterceptor;
+import org.wso2.msf4j.interceptor.RequestInterceptor;
 import org.wso2.msf4j.security.MSF4JSecurityException;
 import org.wso2.msf4j.security.SecurityErrorCode;
 import org.wso2.msf4j.util.SystemVariableUtil;
@@ -43,7 +43,7 @@ import javax.ws.rs.HttpMethod;
  *
  * @since 1.0.0
  */
-public class OAuth2SecurityInterceptor implements MSF4JRequestInterceptor {
+public class OAuth2SecurityInterceptor implements RequestInterceptor {
     private static final Logger log = LoggerFactory.getLogger(OAuth2SecurityInterceptor.class);
 
     private static final String AUTHORIZATION_HTTP_HEADER = "Authorization";

@@ -21,13 +21,13 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
-import org.wso2.msf4j.interceptor.MSF4JRequestInterceptor;
+import org.wso2.msf4j.interceptor.RequestInterceptor;
 
 /**
  * Spring based MSF4J Interceptor class which print HTTP headers from incoming messages.
  */
 @Component
-public class LogHeadersInterceptor implements MSF4JRequestInterceptor {
+public class LogHeadersInterceptor implements RequestInterceptor {
 
     private final Log log = LogFactory.getLog(LogHeadersInterceptor.class);
 

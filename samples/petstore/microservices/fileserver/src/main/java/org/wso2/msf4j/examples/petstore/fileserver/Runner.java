@@ -25,9 +25,6 @@ import org.wso2.msf4j.analytics.metrics.MetricsInterceptor;
  */
 public class Runner {
 
-    private Runner() {
-    }
-
     public static void main(String[] args) {
         HTTPMonitoringInterceptor httpMonitoringInterceptor = new HTTPMonitoringInterceptor();
         MetricsInterceptor metricsInterceptor = new MetricsInterceptor();

@@ -21,8 +21,8 @@ import org.wso2.msf4j.DefaultSessionManager;
 import org.wso2.msf4j.MicroservicesRegistry;
 import org.wso2.msf4j.SessionManager;
 import org.wso2.msf4j.SwaggerService;
-import org.wso2.msf4j.interceptor.MSF4JRequestInterceptor;
-import org.wso2.msf4j.interceptor.MSF4JResponseInterceptor;
+import org.wso2.msf4j.interceptor.RequestInterceptor;
+import org.wso2.msf4j.interceptor.ResponseInterceptor;
 import org.wso2.msf4j.internal.router.MicroserviceMetadata;
 
 import java.lang.reflect.InvocationTargetException;
@@ -52,8 +52,8 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
 
     private static final Logger log = LoggerFactory.getLogger(MicroservicesRegistryImpl.class);
     private final Map<String, Object> services = new HashMap<>();
-    private List<MSF4JRequestInterceptor> globalRequestInterceptorList = new ArrayList<>();
-    private List<MSF4JResponseInterceptor> globalResponseInterceptorList = new ArrayList<>();
+    private List<RequestInterceptor> globalRequestInterceptorList = new ArrayList<>();
+    private List<ResponseInterceptor> globalResponseInterceptorList = new ArrayList<>();
     private volatile MicroserviceMetadata metadata = new MicroserviceMetadata(Collections.emptyList());
     private Map<Class, ExceptionMapper> exceptionMappers = new TreeMap<>(new ClassComparator());
     private SessionManager sessionManager = new DefaultSessionManager();
@@ -111,21 +111,21 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
     }
 
     /**
-     * Register MSF4J request interceptors.
+     * Register request interceptors.
      *
-     * @param msf4JRequestInterceptor MSF4J interceptor instances.
+     * @param requestInterceptor interceptor instances.
      */
-    public void addGlobalRequestInterceptor(MSF4JRequestInterceptor... msf4JRequestInterceptor) {
-        Collections.addAll(globalRequestInterceptorList, msf4JRequestInterceptor);
+    public void addGlobalRequestInterceptor(RequestInterceptor... requestInterceptor) {
+        Collections.addAll(globalRequestInterceptorList, requestInterceptor);
     }
 
     /**
-     * Register MSF4J response interceptors.
+     * Register response interceptors.
      *
-     * @param msf4JResponseInterceptor MSF4J interceptor instances.
+     * @param responseInterceptor interceptor instances.
      */
-    public void addGlobalResponseInterceptor(MSF4JResponseInterceptor... msf4JResponseInterceptor) {
-        Collections.addAll(globalResponseInterceptorList, msf4JResponseInterceptor);
+    public void addGlobalResponseInterceptor(ResponseInterceptor... responseInterceptor) {
+        Collections.addAll(globalResponseInterceptorList, responseInterceptor);
     }
 
     /**
@@ -133,7 +133,7 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
      *
      * @param requestInterceptor MSF4J interceptor instance.
      */
-    public void removeGlobalRequestInterceptor(MSF4JRequestInterceptor requestInterceptor) {
+    public void removeGlobalRequestInterceptor(RequestInterceptor requestInterceptor) {
         globalRequestInterceptorList.remove(requestInterceptor);
     }
 
@@ -142,7 +142,7 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
      *
      * @param responseInterceptor MSF4J interceptor instance.
      */
-    public void removeGlobalResponseInterceptor(MSF4JResponseInterceptor responseInterceptor) {
+    public void removeGlobalResponseInterceptor(ResponseInterceptor responseInterceptor) {
         globalResponseInterceptorList.remove(responseInterceptor);
     }
 
@@ -151,7 +151,7 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
      *
      * @return global request interceptor list
      */
-    public List<MSF4JRequestInterceptor> getGlobalRequestInterceptorList() {
+    public List<RequestInterceptor> getGlobalRequestInterceptorList() {
         return globalRequestInterceptorList;
     }
 
@@ -160,7 +160,7 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
      *
      * @return global response interceptor list
      */
-    public List<MSF4JResponseInterceptor> getGlobalResponseInterceptorList() {
+    public List<ResponseInterceptor> getGlobalResponseInterceptorList() {
         return globalResponseInterceptorList;
     }
 

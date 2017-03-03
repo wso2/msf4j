@@ -21,12 +21,12 @@ import com.nimbusds.jwt.SignedJWT;
 import org.wso2.carbon.messaging.Headers;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
-import org.wso2.msf4j.interceptor.MSF4JRequestInterceptor;
+import org.wso2.msf4j.interceptor.RequestInterceptor;
 
 /**
  * Interceptor for handling custom JWT claims.
  */
-public class CustomJWTClaimsInterceptor implements MSF4JRequestInterceptor {
+public class CustomJWTClaimsInterceptor implements RequestInterceptor {
 
     private static final String JWT_HEADER = "X-JWT-Assertion";
     private static final String AUTH_TYPE_JWT = "JWT";

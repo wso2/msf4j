@@ -18,7 +18,7 @@ package org.wso2.msf4j.security.basic;
 
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
-import org.wso2.msf4j.interceptor.MSF4JRequestInterceptor;
+import org.wso2.msf4j.interceptor.RequestInterceptor;
 
 import java.nio.charset.Charset;
 import java.util.Base64;
@@ -29,7 +29,7 @@ import java.util.Base64;
  *
  * @since 1.1.0
  */
-public abstract class AbstractBasicAuthSecurityInterceptor implements MSF4JRequestInterceptor {
+public abstract class AbstractBasicAuthSecurityInterceptor implements RequestInterceptor {
 
     private static final String AUTH_TYPE_BASIC = "Basic";
     public static final String CHARSET_UTF_8 = "UTF-8";

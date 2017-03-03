@@ -65,7 +65,7 @@ java -jar target/fatjar-interceptor-service-\<version>.jar
 Use following cURL command.
 
 ```
-curl http://localhost:8081/interceptor-service/service-name
+curl http://localhost:8080/interceptor-service/service-name
 ```
 
 You should get a successful response if everything worked fine.

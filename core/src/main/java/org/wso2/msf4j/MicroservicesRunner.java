@@ -26,8 +26,8 @@ import org.wso2.carbon.transport.http.netty.config.TransportsConfiguration;
 import org.wso2.carbon.transport.http.netty.config.YAMLTransportConfigurationBuilder;
 import org.wso2.carbon.transport.http.netty.internal.HTTPTransportContextHolder;
 import org.wso2.carbon.transport.http.netty.listener.HTTPTransportListener;
-import org.wso2.msf4j.interceptor.MSF4JRequestInterceptor;
-import org.wso2.msf4j.interceptor.MSF4JResponseInterceptor;
+import org.wso2.msf4j.interceptor.RequestInterceptor;
+import org.wso2.msf4j.interceptor.ResponseInterceptor;
 import org.wso2.msf4j.internal.DataHolder;
 import org.wso2.msf4j.internal.MSF4JMessageProcessor;
 import org.wso2.msf4j.internal.MicroservicesRegistryImpl;
@@ -114,24 +114,24 @@ public class MicroservicesRunner {
     }
 
     /**
-     * Register MSF4J request interceptors.
+     * Register request interceptors.
      *
-     * @param msf4JRequestInterceptor MSF4J interceptor instances
+     * @param requestInterceptor interceptor instances
      */
-    public MicroservicesRunner addGlobalRequestInterceptor(MSF4JRequestInterceptor... msf4JRequestInterceptor) {
+    public MicroservicesRunner addGlobalRequestInterceptor(RequestInterceptor... requestInterceptor) {
         checkState();
-        msRegistry.addGlobalRequestInterceptor(msf4JRequestInterceptor);
+        msRegistry.addGlobalRequestInterceptor(requestInterceptor);
         return this;
     }
 
     /**
-     * Register MSF4J response interceptors.
+     * Register response interceptors.
      *
-     * @param msf4JResponseInterceptor MSF4J interceptor instances
+     * @param responseInterceptor interceptor instances
      */
-    public MicroservicesRunner addGlobalResponseInterceptor(MSF4JResponseInterceptor... msf4JResponseInterceptor) {
+    public MicroservicesRunner addGlobalResponseInterceptor(ResponseInterceptor... responseInterceptor) {
         checkState();
-        msRegistry.addGlobalResponseInterceptor(msf4JResponseInterceptor);
+        msRegistry.addGlobalResponseInterceptor(responseInterceptor);
         return this;
     }
 
