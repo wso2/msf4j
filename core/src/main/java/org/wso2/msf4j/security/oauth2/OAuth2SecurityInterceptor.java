@@ -194,16 +194,10 @@ public class OAuth2SecurityInterceptor implements Interceptor {
                 errorCode == SecurityErrorCode.INVALID_AUTHORIZATION_HEADER) {
             responder.setStatus(javax.ws.rs.core.Response.Status.UNAUTHORIZED.getStatusCode());
             responder.setHeader(javax.ws.rs.core.HttpHeaders.WWW_AUTHENTICATE, AUTH_TYPE_OAUTH2);
-            responder.send();
         } else if (errorCode == SecurityErrorCode.AUTHORIZATION_FAILURE) {
             responder.setStatus(javax.ws.rs.core.Response.Status.FORBIDDEN.getStatusCode());
-            responder.send();
         } else {
             responder.setStatus(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            responder.send();
         }
-
     }
-
-
 }

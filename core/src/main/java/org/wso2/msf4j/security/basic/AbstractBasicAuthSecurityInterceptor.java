@@ -57,7 +57,6 @@ public abstract class AbstractBasicAuthSecurityInterceptor implements Intercepto
         }
         responder.setStatus(javax.ws.rs.core.Response.Status.UNAUTHORIZED.getStatusCode());
         responder.setHeader(javax.ws.rs.core.HttpHeaders.WWW_AUTHENTICATE, AUTH_TYPE_BASIC);
-        responder.send();
         return false;
     }
 

@@ -68,7 +68,6 @@ public class JWTSecurityInterceptor implements Interceptor {
         }
         responder.setHeader(javax.ws.rs.core.HttpHeaders.WWW_AUTHENTICATE, AUTH_TYPE_JWT);
         responder.setStatus(javax.ws.rs.core.Response.Status.UNAUTHORIZED.getStatusCode());
-        responder.send();
         return false;
     }
 
