@@ -29,17 +29,14 @@ import java.io.IOException;
  */
 public class Runner {
 
-    private Runner() {
-    }
-
     public static void main(String[] args) throws IOException, EmbeddingLDAPException {
         ApacheDirectoryServerActivator apacheDS = new ApacheDirectoryServerActivator();
         apacheDS.start();
         HTTPMonitoringInterceptor httpMonitoringInterceptor = new HTTPMonitoringInterceptor();
-        MetricsInterceptor MetricsInterceptor = new MetricsInterceptor();
+        MetricsInterceptor metricsInterceptor = new MetricsInterceptor();
         new MicroservicesRunner()
-                .addGlobalRequestInterceptor(httpMonitoringInterceptor, MetricsInterceptor)
-                .addGlobalResponseInterceptor(httpMonitoringInterceptor, MetricsInterceptor)
+                .addGlobalRequestInterceptor(httpMonitoringInterceptor, metricsInterceptor)
+                .addGlobalResponseInterceptor(httpMonitoringInterceptor, metricsInterceptor)
                 .deploy(new UserAuthenticationService())
                 .start();
     }

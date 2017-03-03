@@ -33,29 +33,16 @@ mvn clean install
 
 ## How to run the sample
 
-First you need to install the MSF4J feature in to carbon kernel. To proceed with this task you need to
-checkout the carbon kernel source code and install the below mentioned features (in distribution pom.xml). Please note that the
-corresponding version of the feature may change along with the MSF4J version.
-
-* \<groupId>org.wso2.carbon.metrics\</groupId>\<artifactId>org.wso2.carbon.metrics.core.feature\</artifactId>
-* \<groupId>org.wso2.carbon.metrics\</groupId>\<artifactId>org.wso2.carbon.metrics.jdbc.core.feature\</artifactId>
-* \<groupId>org.wso2.carbon.metrics\</groupId>\<artifactId>org.wso2.carbon.metrics.das.core.feature\</artifactId>
-* \<groupId>org.wso2.carbon.messaging\</groupId>\<artifactId>org.wso2.carbon.messaging.feature\</artifactId>
-* \<groupId>org.wso2.carbon.jndi\</groupId>\<artifactId>org.wso2.carbon.jndi.feature\</artifactId>
-* \<groupId>org.wso2.carbon.datasources\</groupId>\<artifactId>org.wso2.carbon.datasource.core.feature\</artifactId>
-* \<groupId>org.wso2.carbon.transport\</groupId>\<artifactId>org.wso2.carbon.transport.http.netty.feature\</artifactId>
-* \<groupId>org.wso2.msf4j\</groupId>\<artifactId>org.wso2.msf4j.feature\</artifactId>
-
-One the features are added execute the following command to build the carbon kernel.
+First you need to install the MSF4J feature in to carbon kernel. To proceed with this navigate to [MSF4J Kernel pom](/resources)
+and execute the command below:
 ```
 mvn clean install
 ```
 This will install the msf4j and other required features to the kernel and build up a product.
 You can find the product in the resources/target directory
 
-Extract \<CARBON_KERNEL SOURCE CODE HOME>/distribution/target/wso2carbon-kernel-\<version>.zip to a location of your choice.
-
-Run the following command to start the carbon kernel with MSF4J feature from /bin directory of the extracted zip.
+Go to the target/wso2msf4j-<version>/bin directory
+Then run the following command to start the MSF4J server.
 ```
 ./carbon.sh
 ```

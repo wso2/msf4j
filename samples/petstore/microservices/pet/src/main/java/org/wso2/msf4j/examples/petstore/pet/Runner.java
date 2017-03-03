@@ -25,9 +25,6 @@ import org.wso2.msf4j.security.JWTSecurityInterceptor;
  */
 public class Runner {
 
-    private Runner() {
-    }
-
     public static void main(String[] args) {
         JWTSecurityInterceptor jwtSecurityInterceptor = new JWTSecurityInterceptor();
         HTTPMonitoringInterceptor httpMonitoringInterceptor = new HTTPMonitoringInterceptor();

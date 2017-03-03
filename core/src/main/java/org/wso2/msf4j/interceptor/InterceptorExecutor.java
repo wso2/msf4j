@@ -18,15 +18,12 @@
 package org.wso2.msf4j.interceptor;
 
 import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.exception.InterceptorException;
-import org.wso2.msf4j.interceptor.annotation.RequestInterceptor;
-import org.wso2.msf4j.interceptor.annotation.ResponseInterceptor;
 import org.wso2.msf4j.internal.MicroservicesRegistryImpl;
-import org.wso2.msf4j.util.Reflection;
+import org.wso2.msf4j.util.ReflectionUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -34,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Class for executing interceptors.
@@ -57,7 +55,7 @@ public class InterceptorExecutor {
     public static boolean executeGlobalRequestInterceptors(MicroservicesRegistryImpl microServicesRegistry,
                                                            Request request, Response response)
             throws InterceptorException {
-        List<MSF4JRequestInterceptor> globalRequestInterceptorList =
+        List<RequestInterceptor> globalRequestInterceptorList =
                 microServicesRegistry.getGlobalRequestInterceptorList();
         return executeGlobalRequestInterceptors(request, response, globalRequestInterceptorList);
     }
@@ -73,9 +71,10 @@ public class InterceptorExecutor {
      */
     public static boolean executeClassLevelRequestInterceptors(Request request, Response response,
                                                                Class<?> resourceClass) throws InterceptorException {
-        Collection<Class<? extends MSF4JRequestInterceptor>> classRequestInterceptorClasses =
-                resourceClass.isAnnotationPresent(RequestInterceptor.class)
-                        ? Arrays.asList(resourceClass.getAnnotation(RequestInterceptor.class).value())
+        Collection<Class<? extends RequestInterceptor>> classRequestInterceptorClasses =
+                resourceClass.isAnnotationPresent(org.wso2.msf4j.interceptor.annotation.RequestInterceptor.class)
+                        ? Arrays.asList(resourceClass
+                        .getAnnotation(org.wso2.msf4j.interceptor.annotation.RequestInterceptor.class).value())
                         : new ArrayList<>();
         return executeNonGlobalRequestInterceptors(request, response, classRequestInterceptorClasses);
     }
@@ -91,9 +90,10 @@ public class InterceptorExecutor {
      */
     public static boolean executeMethodLevelRequestInterceptors(Request request, Response response, Method method)
             throws InterceptorException {
-        Collection<Class<? extends MSF4JRequestInterceptor>> methodRequestInterceptorClasses =
-                method.isAnnotationPresent(RequestInterceptor.class)
-                        ? Arrays.asList(method.getAnnotation(RequestInterceptor.class).value())
+        Collection<Class<? extends RequestInterceptor>> methodRequestInterceptorClasses =
+                method.isAnnotationPresent(org.wso2.msf4j.interceptor.annotation.RequestInterceptor.class)
+                        ? Arrays.asList(method
+                        .getAnnotation(org.wso2.msf4j.interceptor.annotation.RequestInterceptor.class).value())
                         : new ArrayList<>();
         return executeNonGlobalRequestInterceptors(request, response, methodRequestInterceptorClasses);
     }
@@ -110,7 +110,7 @@ public class InterceptorExecutor {
     public static boolean executeGlobalResponseInterceptors(MicroservicesRegistryImpl microServicesRegistry,
                                                             Request request, Response response)
             throws InterceptorException {
-        List<MSF4JResponseInterceptor> globalResponseInterceptorList =
+        List<ResponseInterceptor> globalResponseInterceptorList =
                 microServicesRegistry.getGlobalResponseInterceptorList();
         return executeGlobalResponseInterceptors(request, response, globalResponseInterceptorList);
     }
@@ -126,9 +126,10 @@ public class InterceptorExecutor {
      */
     public static boolean executeClassLevelResponseInterceptors(Request request, Response response,
                                                                 Class<?> resourceClass) throws InterceptorException {
-        List<Class<? extends MSF4JResponseInterceptor>> classResponseInterceptorClasses =
-                resourceClass.isAnnotationPresent(ResponseInterceptor.class)
-                        ? Arrays.asList(resourceClass.getAnnotation(ResponseInterceptor.class).value())
+        List<Class<? extends ResponseInterceptor>> classResponseInterceptorClasses =
+                resourceClass.isAnnotationPresent(org.wso2.msf4j.interceptor.annotation.ResponseInterceptor.class)
+                        ? Arrays.asList(resourceClass
+                        .getAnnotation(org.wso2.msf4j.interceptor.annotation.ResponseInterceptor.class).value())
                         : new ArrayList<>();
         return executeNonGlobalResponseInterceptors(request, response, classResponseInterceptorClasses);
     }
@@ -164,9 +165,10 @@ public class InterceptorExecutor {
      */
     public static boolean executeMethodLevelResponseInterceptors(Request request, Response response, Method method)
             throws InterceptorException {
-        List<Class<? extends MSF4JResponseInterceptor>> methodResponseInterceptorClasses =
-                method.isAnnotationPresent(ResponseInterceptor.class)
-                        ? Arrays.asList(method.getAnnotation(ResponseInterceptor.class).value())
+        List<Class<? extends ResponseInterceptor>> methodResponseInterceptorClasses =
+                method.isAnnotationPresent(org.wso2.msf4j.interceptor.annotation.ResponseInterceptor.class)
+                        ? Arrays.asList(method
+                        .getAnnotation(org.wso2.msf4j.interceptor.annotation.ResponseInterceptor.class).value())
                         : new ArrayList<>();
         return executeNonGlobalResponseInterceptors(request, response, methodResponseInterceptorClasses);
     }
@@ -201,9 +203,9 @@ public class InterceptorExecutor {
      * @throws InterceptorException {@link InterceptorException} on interception exception
      */
     private static boolean executeGlobalRequestInterceptors(Request request, Response response,
-                                                            Collection<MSF4JRequestInterceptor> requestInterceptors)
+                                                            Collection<RequestInterceptor> requestInterceptors)
             throws InterceptorException {
-        for (MSF4JRequestInterceptor interceptor : requestInterceptors) {
+        for (RequestInterceptor interceptor : requestInterceptors) {
             try {
                 if (!interceptor.interceptRequest(request, response)) {
                     return false;
@@ -227,9 +229,9 @@ public class InterceptorExecutor {
      * @throws InterceptorException {@link InterceptorException} on interception exception
      */
     private static boolean executeGlobalResponseInterceptors(Request request, Response response,
-                                                             Collection<MSF4JResponseInterceptor> responseInterceptors)
+                                                             Collection<ResponseInterceptor> responseInterceptors)
             throws InterceptorException {
-        for (MSF4JResponseInterceptor interceptor : responseInterceptors) {
+        for (ResponseInterceptor interceptor : responseInterceptors) {
             try {
                 if (!interceptor.interceptResponse(request, response)) {
                     return false;
@@ -253,27 +255,30 @@ public class InterceptorExecutor {
      * @throws InterceptorException {@link InterceptorException} on interception exception
      */
     private static boolean executeNonGlobalRequestInterceptors(
-            Request request, Response response, Collection<Class<? extends MSF4JRequestInterceptor>> classes)
+            Request request, Response response, Collection<Class<? extends RequestInterceptor>> classes)
             throws InterceptorException {
 
         Class<?>[] parameterTypes = new Class[]{};
         Object[] arguments = new Object[]{};
 
-        for (Class<? extends MSF4JRequestInterceptor> requestInterceptorClass : classes) {
-            MSF4JRequestInterceptor interceptor;
+        for (Class<? extends RequestInterceptor> requestInterceptorClass : classes) {
+            RequestInterceptor interceptor;
 
             // If in OSGi mode
-            if (Reflection.isClassAvailable(FRAMEWORK_UTIL_CLASS_NAME)) {
+            if (ReflectionUtils.isClassAvailable(FRAMEWORK_UTIL_CLASS_NAME)) {
                 Bundle bundle = FrameworkUtil.getBundle(InterceptorExecutor.class);
                 if (bundle != null) {
-                    BundleContext bundleContext = bundle.getBundleContext();
-                    requestInterceptorClass = loadClassFromBundle(bundleContext, requestInterceptorClass);
+                    Optional<Class<? extends RequestInterceptor>> interceptorClassOptional =
+                            ReflectionUtils.loadClassFromBundle(requestInterceptorClass);
+                    requestInterceptorClass = interceptorClassOptional.isPresent()
+                            ? interceptorClassOptional.get()
+                            : requestInterceptorClass;
                 }
             }
 
             try {
-                interceptor = requestInterceptorClass
-                        .cast(Reflection.createInstanceFromClass(requestInterceptorClass, parameterTypes, arguments));
+                interceptor = requestInterceptorClass.cast(ReflectionUtils
+                        .createInstanceFromClass(requestInterceptorClass, parameterTypes, arguments));
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException |
                     InstantiationException e) {
                 throw new InterceptorException("Error occurred when creating an instance type of the interceptor class "
@@ -303,27 +308,30 @@ public class InterceptorExecutor {
      * @throws InterceptorException {@link InterceptorException} on interception exception
      */
     private static boolean executeNonGlobalResponseInterceptors(
-            Request request, Response response, Collection<Class<? extends MSF4JResponseInterceptor>> classes)
+            Request request, Response response, Collection<Class<? extends ResponseInterceptor>> classes)
             throws InterceptorException {
 
         Class<?>[] parameterTypes = new Class[]{};
         Object[] arguments = new Object[]{};
 
-        for (Class<? extends MSF4JResponseInterceptor> responseInterceptorClass : classes) {
-            MSF4JResponseInterceptor interceptor;
+        for (Class<? extends ResponseInterceptor> responseInterceptorClass : classes) {
+            ResponseInterceptor interceptor;
 
             // If in OSGi mode
-            if (Reflection.isClassAvailable(FRAMEWORK_UTIL_CLASS_NAME)) {
+            if (ReflectionUtils.isClassAvailable(FRAMEWORK_UTIL_CLASS_NAME)) {
                 Bundle bundle = FrameworkUtil.getBundle(InterceptorExecutor.class);
                 if (bundle != null) {
-                    BundleContext bundleContext = bundle.getBundleContext();
-                    responseInterceptorClass = loadClassFromBundle(bundleContext, responseInterceptorClass);
+                    Optional<Class<? extends ResponseInterceptor>> interceptorClassOptional =
+                            ReflectionUtils.loadClassFromBundle(responseInterceptorClass);
+                    responseInterceptorClass = interceptorClassOptional.isPresent()
+                            ? interceptorClassOptional.get()
+                            : responseInterceptorClass;
                 }
             }
 
             try {
-                interceptor = responseInterceptorClass
-                        .cast(Reflection.createInstanceFromClass(responseInterceptorClass, parameterTypes, arguments));
+                interceptor = responseInterceptorClass.cast(ReflectionUtils
+                        .createInstanceFromClass(responseInterceptorClass, parameterTypes, arguments));
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException |
                     InstantiationException e) {
                 throw new InterceptorException("Error occurred when creating an instance type of the interceptor class "
@@ -341,24 +349,5 @@ public class InterceptorExecutor {
             }
         }
         return true;
-    }
-
-    /**
-     * Load class from bundle context.
-     *
-     * @param bundleContext bundle context
-     * @param clazz         class instance
-     * @param <T>           type of the class
-     * @return loaded class
-     * @throws InterceptorException on class not found
-     */
-    private static <T> Class<? extends T> loadClassFromBundle(BundleContext bundleContext, Class<T> clazz)
-            throws InterceptorException {
-        try {
-            return Reflection.loadClassFromBundle(bundleContext, clazz);
-        } catch (ClassNotFoundException ignore) {
-            // Deployment jar mode or class is not found at all
-            return clazz;
-        }
     }
 }

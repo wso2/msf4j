@@ -16,8 +16,8 @@
 
 package org.wso2.msf4j;
 
-import org.wso2.msf4j.interceptor.MSF4JRequestInterceptor;
-import org.wso2.msf4j.interceptor.MSF4JResponseInterceptor;
+import org.wso2.msf4j.interceptor.RequestInterceptor;
+import org.wso2.msf4j.interceptor.ResponseInterceptor;
 import org.wso2.msf4j.internal.MSF4JConstants;
 
 import java.lang.reflect.Method;
@@ -27,7 +27,7 @@ import java.lang.reflect.Method;
  *
  * @deprecated
  */
-public interface Interceptor extends MSF4JRequestInterceptor, MSF4JResponseInterceptor {
+public interface Interceptor extends RequestInterceptor, ResponseInterceptor {
 
     /**
      * preCall is run before a handler method call is made. If any of the preCalls throw exception or return false then

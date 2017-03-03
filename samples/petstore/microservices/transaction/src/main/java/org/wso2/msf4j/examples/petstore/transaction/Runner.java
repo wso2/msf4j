@@ -24,10 +24,6 @@ import org.wso2.msf4j.security.JWTSecurityInterceptor;
  * Microservice runner for the pet microservices.
  */
 public class Runner {
-
-    private Runner() {
-    }
-
     public static void main(String[] args) {
         JWTSecurityInterceptor jwtSecurityInterceptor = new JWTSecurityInterceptor();
         HTTPMonitoringInterceptor httpMonitoringInterceptor = new HTTPMonitoringInterceptor();

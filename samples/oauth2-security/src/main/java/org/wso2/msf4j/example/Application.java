@@ -29,9 +29,6 @@ public class Application {
 
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
-    private Application() {
-    }
-
     public static void main(String[] args) {
         logger.info("Starting the Microservice");
 

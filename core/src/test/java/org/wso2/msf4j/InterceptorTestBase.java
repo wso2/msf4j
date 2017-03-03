@@ -1,20 +1,20 @@
 /*
-*  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*  WSO2 Inc. licenses this file to you under the Apache License,
-*  Version 2.0 (the "License"); you may not use this file except
-*  in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing,
-* software distributed under the License is distributed on an
-* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-* KIND, either express or implied.  See the License for the
-* specific language governing permissions and limitations
-* under the License.
-*/
+ *  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.wso2.msf4j;
 
 import com.google.gson.Gson;
@@ -45,45 +45,41 @@ abstract class InterceptorTestBase {
     /**
      * @param path      http path
      * @param keepAlive should the connection be kept alive
-     * @param headers   request headers
+     * @param headers   createHttpUrlConnection headers
      * @return object from response
      * @throws IOException on any exception
      */
     protected int doGetAndGetStatusCode(String path, boolean keepAlive, Map<String, String> headers)
             throws IOException {
-        HttpURLConnection urlConn = request(path, HttpMethod.GET, keepAlive, headers);
-        try {
-            return urlConn.getResponseCode();
-        } finally {
-            urlConn.disconnect();
-        }
+        HttpURLConnection urlConn = createHttpUrlConnection(path, HttpMethod.GET, keepAlive, headers);
+        return urlConn.getResponseCode();
     }
 
     /**
      * @param path      http path
      * @param keepAlive should the connection be kept alive
      * @param tClass    type of the expected object
-     * @param headers   request headers
+     * @param headers   createHttpUrlConnection headers
      * @param <T>       type of the expected object
      * @return object from response
      * @throws IOException on any exception
      */
     protected <T> T doGetAndGetResponseObject(String path, boolean keepAlive, Class<T> tClass,
                                               Map<String, String> headers) throws IOException {
-        HttpURLConnection urlConn = request(path, HttpMethod.GET, keepAlive, headers);
+        HttpURLConnection urlConn = createHttpUrlConnection(path, HttpMethod.GET, keepAlive, headers);
         return getResponseObject(urlConn, tClass);
     }
 
     /**
      * @param path      http path
      * @param keepAlive should the connection be kept alive
-     * @param headers   request headers
+     * @param headers   createHttpUrlConnection headers
      * @return object from response
      * @throws IOException on any exception
      */
     protected String doGetAndGetResponseString(String path, boolean keepAlive, Map<String, String> headers)
             throws IOException {
-        HttpURLConnection urlConn = request(path, HttpMethod.GET, keepAlive, headers);
+        HttpURLConnection urlConn = createHttpUrlConnection(path, HttpMethod.GET, keepAlive, headers);
         return getResponseString(urlConn);
     }
 
@@ -92,14 +88,14 @@ abstract class InterceptorTestBase {
      * @param rawData   data to post
      * @param keepAlive should the connection be kept alive
      * @param tClass    type of the expected object
-     * @param headers   request headers
+     * @param headers   createHttpUrlConnection headers
      * @param <T>       type of the expected object
      * @return object from response
      * @throws IOException on any exception
      */
     protected <T> T doPostAndGetResponseObject(String path, String rawData, boolean keepAlive, Class<T> tClass,
                                                Map<String, String> headers) throws IOException {
-        HttpURLConnection urlConn = request(path, HttpMethod.POST, keepAlive, headers);
+        HttpURLConnection urlConn = createHttpUrlConnection(path, HttpMethod.POST, keepAlive, headers);
         ByteBuffer encodedData = Charset.defaultCharset().encode(rawData);
         urlConn.setRequestMethod("POST");
         urlConn.setRequestProperty("Content-Type", MediaType.APPLICATION_FORM_URLENCODED);
@@ -134,7 +130,6 @@ abstract class InterceptorTestBase {
         InputStream inputStream = urlConn.getInputStream();
         String response = StreamUtil.asString(inputStream);
         IOUtils.closeQuietly(inputStream);
-        urlConn.disconnect();
         return response;
     }
 
@@ -144,12 +139,12 @@ abstract class InterceptorTestBase {
      * @param path      http path
      * @param method    http method
      * @param keepAlive should the connection be kept alive
-     * @param headers   request headers
+     * @param headers   createHttpUrlConnection headers
      * @return http url connection instance
      * @throws IOException on error creating http url connection
      */
-    private HttpURLConnection request(String path, String method, boolean keepAlive, Map<String, String> headers)
-            throws IOException {
+    private HttpURLConnection createHttpUrlConnection(String path, String method, boolean keepAlive,
+                                                      Map<String, String> headers) throws IOException {
         URL url = baseURI.resolve(path).toURL();
         HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
         if (headers != null) {
