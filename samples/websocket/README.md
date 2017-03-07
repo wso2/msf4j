@@ -75,8 +75,8 @@ public class TestEndpoint {
 ####@OnMessage
 @OnMessage annotated method receives the messages to the endpoint.
 </br>
-There can be 2 types of Messages
-* Text</br>
+There can be 3 types of Messages
+#####Text
 All the text messages from clients are dispatched to this method. </br>
 method parameters : 
 
@@ -86,7 +86,7 @@ method parameters :
 |javax.websocket.Session|Indicated session details aren needed by the user|Optional|
 |0 to n String parameters annotated with a [@PathParam](#####@PathParam) annotation|Indicated user needs path parameters for the processing|Optional|
     
-* Binary</br>
+#####Binary
 All the binary messages are dispatched to this method. </br>
 method parameters : 
 
@@ -96,10 +96,12 @@ method parameters :
 |javax.websocket.Session|Indicated session details aren needed by the user|Optional|
 |0 to n String parameters annotated with a [@PathParam](#####@PathParam) annotation|Indicated user needs path parameters for the processing|Optional|
 
-*Pong Message </br>
+#####Pong
 All the pong messages are dispatched to this method. </br>
 method parameters :
+
 |parameter|Description|Mandatory/Optional|
+|---------|-----------|------------------|
 |javax.websocket.PongMessage|Indicates that this @OnMessage method is for Pong Messages|Mandatory|
 |javax.websocket.Session|Indicated session details aren needed by the user|Optional|
 
