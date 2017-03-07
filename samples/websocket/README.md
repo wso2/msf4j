@@ -78,40 +78,51 @@ public class TestEndpoint {
 There can be 2 types of Messages
 * Text</br>
 All the text messages from clients are dispatched to this method. </br>
-Text message method parameters : 
-    * String - Mandatory</br>
-    Indicates that this @OnMessage is for text messages
-    * javax.websocket.Session - Optional
-    * 0 to n String parameters annotated with a [@PathParam](#####@PathParam) annotation - Optional
+method parameters : 
 
+|parameter|Description|Mandatory/Optional|
+|---------|-----------|------------------|
+|String|Indicates that this @OnMessage is for text messages|Mandatory|
+|javax.websocket.Session|Indicated session details aren needed by the user|Optional|
+|0 to n String parameters annotated with a [@PathParam](#####@PathParam) annotation|Indicated user needs path parameters for the processing|Optional|
+    
 * Binary</br>
 All the binary messages are dispatched to this method. </br>
-Binary message method parameters : 
-    * java.nio.ByteBuffer / byte array (byte[]) - Mandatory </br>
-    Only one parameter with one the mentioned data structures. 
-    This indicates that this @OnMessage method is for binary messages.
-    * javax.websocket.Session - Optional
-    * 0 to n String parameters annotated with a @PathParam annotation - 
-    Optional
-    
+method parameters : 
+
+|parameter|Description|Mandatory/Optional|
+|---------|-----------|------------------|
+|java.nio.ByteBuffer / byte array (byte[])|Only one parameter with one the mentioned data structures. This indicates that this @OnMessage method is for binary messages.|Mandatory|
+|javax.websocket.Session|Indicated session details aren needed by the user|Optional|
+|0 to n String parameters annotated with a [@PathParam](#####@PathParam) annotation|Indicated user needs path parameters for the processing|Optional|
+
+*Pong Message </br>
+All the pong messages are dispatched to this method. </br>
+method parameters :
+|parameter|Description|Mandatory/Optional|
+|javax.websocket.PongMessage|Indicates that this @OnMessage method is for Pong Messages|Mandatory|
+|javax.websocket.Session|Indicated session details aren needed by the user|Optional|
+
 ####@OnClose
 @OnClose annotated method runs when the connection between a client and 
 the server is closed. </br>
 @OnClose method parameters : 
-* javax.websocket.CloseReason - Optional </br>
-To identify the reason and close code to the closure of the connection.
-* javax.websocket.Session - Optional 
-* 0 to n String parameters annotated with a @PathParam annotation - 
-      Optional
-          
+
+|parameter|Description|Mandatory/Optional|
+|---------|-----------|------------------|
+|javax.websocket.CloseReason|To identify the reason and close code to the closure of the connection|Optional|
+|javax.websocket.Session|Indicated session details aren needed by the user|Optional|
+|0 to n String parameters annotated with a [@PathParam](#####@PathParam) annotation|Indicated user needs path parameters for the processing|Optional|
+
 ####@OnError
 @OnError annotated method runs when an error occurs in the endpoint. </br>
 @OnError method parameters : 
-* Throwable - Mandatory </br>
-* javax.websocket.Session - Optional
-* 0 to n String parameters annotated with a @PathParam annotation - 
-      Optional
-      
+
+|parameter|Description|Mandatory/Optional|
+|---------|-----------|------------------|
+|Throwable|Indicated the user needs to know the reason for the error|Mandatory|
+|javax.websocket.Session|Indicated session details aren needed by the user|Optional|
+|0 to n String parameters annotated with a [@PathParam](#####@PathParam) annotation|Indicated user needs path parameters for the processing|Optional|
 
 ##WebSocket Server Push
 One of the main feature of WebSocket protocol is the ability to send server 
