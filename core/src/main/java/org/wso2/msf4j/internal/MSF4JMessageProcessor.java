@@ -95,7 +95,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
             //Identify the protocol name before doing the processing
             String protocolName = (String) carbonMessage.getProperty(Constants.PROTOCOL);
 
-            if (Constants.PROTOCOL_NAME.equalsIgnoreCase(protocolName)) {
+            if (Constants.HTTP_PROTOCOL_NAME.equalsIgnoreCase(protocolName)) {
                 MicroservicesRegistryImpl currentMicroservicesRegistry =
                         DataHolder.getInstance().getMicroservicesRegistries()
                                 .get(carbonMessage.getProperty(MSF4JConstants.CHANNEL_ID));
@@ -126,7 +126,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                     carbonMessage.release();
                 }
 
-            } else if (Constants.WEBSOCKET_PROTOCOL.equalsIgnoreCase(protocolName)) {
+            } else if (Constants.WEBSOCKET_PROTOCOL_NAME.equalsIgnoreCase(protocolName)) {
                 log.info("WebSocketMessage Received");
                 EndpointsRegistryImpl endpointsRegistry = EndpointsRegistryImpl.getInstance();
                 PatternPathRouter.RoutableDestination<Object>
@@ -157,6 +157,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                                          CarbonMessage carbonMessage) throws WebSocketEndpointAnnotationException {
         Session session = (Session) carbonMessage.getProperty(Constants.WEBSOCKET_SESSION);
         if (session == null) {
+            //TODO : Illegal
             throw new NullPointerException("WebSocket session not found.");
         }
 
@@ -522,7 +523,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                 PongMessage pongMessage = (PongMessage) method.invoke(webSocketEndpoint, parameterList.toArray());
                 session.getBasicRemote().sendPong(pongMessage.getApplicationData());
             } else {
-                throw new IllegalArgumentException("Unknown return type");
+                throw new IllegalArgumentException("Unknown return type.");
             }
         } catch (IllegalAccessException e) {
             log.error(e.toString());

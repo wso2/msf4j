@@ -1,12 +1,12 @@
 /*
- *   Copyright (c) ${date}, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- *   WSO2 Inc. licenses this file to you under the Apache License,
- *   Version 2.0 (the "License"); you may not use this file except
- *   in compliance with the License.
- *   You may obtain a copy of the License at
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
@@ -23,15 +23,8 @@ import javax.websocket.CloseReason;
 
 /**
  * {@link javax.websocket.CloseReason.CloseCode} implementation for WebSocket in MSF4J
- *
- * @since 1.0.0
  */
 public class CloseCodeImpl implements CloseReason.CloseCode {
-    /**
-     * Returns the code number, for example the integer '1000' for normal closure.
-     *
-     * @return the code number
-     */
 
     private final int closeCode;
 
