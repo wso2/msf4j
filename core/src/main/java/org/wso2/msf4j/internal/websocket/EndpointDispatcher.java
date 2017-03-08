@@ -24,6 +24,7 @@ import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -38,6 +39,7 @@ import javax.websocket.server.ServerEndpoint;
 public class EndpointDispatcher {
 
     /**
+     * @param webSocketEndpoint WebSocket endpoint which the URI should be extracted.
      * @return the URI of the Endpoint as a String.
      * @throws WebSocketEndpointAnnotationException throws if {@link ServerEndpoint} is not found.
      */
@@ -51,100 +53,108 @@ public class EndpointDispatcher {
 
     /**
      * @param webSocketEndpoint Endpoint to extract method.
-     * @return method to handle new connection if exists else null.
+     * @return method optional to handle new connection.
      */
-    public Method getOnOpenMethod(Object webSocketEndpoint) {
+    public Optional<Method> getOnOpenMethod(Object webSocketEndpoint) {
         Method[] methods = webSocketEndpoint.getClass().getMethods();
+        Method returnMethod = null;
         for (Method method : methods) {
             if (method.isAnnotationPresent(OnOpen.class)) {
-                return method;
+                returnMethod = method;
+                break;
             }
         }
-        return null;
+        return Optional.ofNullable(returnMethod);
     }
 
     /**
      * @param webSocketEndpoint Endpoint to extract method.
-     * @return method to handle connection closure if exists else null.
+     * @return method optional to handle new connection.
      */
-    public Method getOnCloseMethod(Object webSocketEndpoint) {
+    public Optional<Method> getOnCloseMethod(Object webSocketEndpoint) {
         Method[] methods = webSocketEndpoint.getClass().getMethods();
+        Method returnMethod = null;
         for (Method method : methods) {
             if (method.isAnnotationPresent(OnClose.class)) {
-                return method;
+                returnMethod = method;
+                break;
             }
         }
-        return null;
+        return Optional.ofNullable(returnMethod);
     }
 
     /**
      * @param webSocketEndpoint Endpoint to extract method.
-     * @return method to handle errors if exists else null.
+     * @return method optional to handle errors.
      */
-    public Method getOnErrorMethod(Object webSocketEndpoint) {
+    public Optional<Method> getOnErrorMethod(Object webSocketEndpoint) {
         Method[] methods = webSocketEndpoint.getClass().getMethods();
+        Method returnMethod = null;
         for (Method method : methods) {
             if (method.isAnnotationPresent(OnError.class)) {
-                return method;
+                returnMethod = method;
             }
         }
-        return null;
+        return Optional.ofNullable(returnMethod);
     }
 
     /**
      * @param webSocketEndpoint Endpoint to extract method.
-     * @return method to handle String messages if exists else null.
+     * @return method optional to handle String messages.
      */
-    public Method getOnStringMessageMethod(Object webSocketEndpoint) {
+    public Optional<Method> getOnStringMessageMethod(Object webSocketEndpoint) {
         Method[] methods = webSocketEndpoint.getClass().getMethods();
+        Method returnMethod = null;
         for (Method method : methods) {
             if (method.isAnnotationPresent(OnMessage.class)) {
                 //Adding OnMessage according to their types
                 Class<?>[] paraTypes = method.getParameterTypes();
                 List<Class<?>> paraList = Arrays.asList(paraTypes);
                 if (paraList.contains(String.class)) {
-                    return method;
+                    returnMethod = method;
                 }
             }
         }
-        return null;
+        return Optional.ofNullable(returnMethod);
     }
 
     /**
      * @param webSocketEndpoint Endpoint to extract method.
-     * @return method to handle binary messages if exists else null.
+     * @return method optional to handle binary messages.
      */
-    public Method getOnBinaryMessageMethod(Object webSocketEndpoint) {
+    public Optional<Method> getOnBinaryMessageMethod(Object webSocketEndpoint) {
         Method[] methods = webSocketEndpoint.getClass().getMethods();
+        Method returnMethod = null;
         for (Method method : methods) {
             if (method.isAnnotationPresent(OnMessage.class)) {
                 //Adding OnMessage according to their types
                 Class<?>[] paraTypes = method.getParameterTypes();
                 List<Class<?>> paraList = Arrays.asList(paraTypes);
                 if (paraList.contains(byte[].class) || paraList.contains(ByteBuffer.class)) {
-                    return method;
+                    returnMethod = method;
                 }
             }
         }
-        return null;
+        return Optional.ofNullable(returnMethod);
     }
 
     /**
      * @param webSocketEndpoint Endpoint to extract method.
-     * @return method to handle pong messages if exists else null.
+     * @return method optional to handle pong messages.
      */
-    public Method getOnPongMessageMethod(Object webSocketEndpoint) {
+    public Optional<Method> getOnPongMessageMethod(Object webSocketEndpoint) {
         Method[] methods = webSocketEndpoint.getClass().getMethods();
+        Method returnMethod = null;
         for (Method method : methods) {
             if (method.isAnnotationPresent(OnMessage.class)) {
                 //Adding OnMessage according to their types
                 Class<?>[] paraTypes = method.getParameterTypes();
                 List<Class<?>> paraList = Arrays.asList(paraTypes);
                 if (paraList.contains(PongMessage.class)) {
-                    return method;
+                    returnMethod = method;
                 }
             }
         }
-        return null;
+        return Optional.ofNullable(returnMethod);
     }
 }

@@ -34,29 +34,31 @@ import org.wso2.msf4j.websocket.endpoints.TestEndpointWithError;
 import org.wso2.msf4j.websocket.exception.WebSocketEndpointAnnotationException;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Test Class for WebSocket Endpoint Registry
  */
 public class EndpointRegistryTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(EndpointRegistryTest.class);
+    private static final Logger log = LoggerFactory.getLogger(EndpointRegistryTest.class);
 
     private final String testText = "test";
     private WebSocketEndpoint testEndpoint = new TestEndpoint();
     private EndpointsRegistryImpl endpointsRegistry = EndpointsRegistryImpl.getInstance();
     private CarbonMessage textCarbonMessage = new TextCarbonMessage(testText);
+    private final String uri = "/test";
 
     public EndpointRegistryTest() {
     }
 
     @BeforeClass
     public void onRegister() throws URISyntaxException {
-        logger.info("\n----------------WebSocket Registry Test----------------");
-        String uri = "/test";
+        log.info(System.lineSeparator() + "----------------WebSocket Registry Test----------------");
         textCarbonMessage.setProperty(Constants.TO, uri);
     }
 
@@ -65,14 +67,18 @@ public class EndpointRegistryTest {
                                           WebSocketEndpointAnnotationException {
         endpointsRegistry.addEndpoint(testEndpoint);
         PatternPathRouter.RoutableDestination<Object> routableEndpoint =
-                endpointsRegistry.getRoutableEndpoint(textCarbonMessage);
+                endpointsRegistry.getRoutableEndpoint(uri);
         Object webSocketEndpoint = routableEndpoint.getDestination();
         List<Object> paralist = new LinkedList<>();
         paralist.add(testText);
         paralist.add(null);
-        String returnValue = (String) new EndpointDispatcher().getOnStringMessageMethod(webSocketEndpoint).
-                invoke(testEndpoint, paralist.toArray());
-        Assert.assertEquals(returnValue, testText);
+        Optional<Method> methodOptional = new EndpointDispatcher().getOnStringMessageMethod(webSocketEndpoint);
+        if (methodOptional.isPresent()) {
+            String returnValue = (String) methodOptional.get().invoke(webSocketEndpoint, paralist.toArray());
+            Assert.assertEquals(returnValue, testText);
+        } else {
+            Assert.assertTrue(false);
+        }
     }
 
     @Test(description = "Testing the removing of an endpoint from the registry.")
@@ -80,10 +86,10 @@ public class EndpointRegistryTest {
         try {
             endpointsRegistry.removeEndpoint(testEndpoint);
             PatternPathRouter.RoutableDestination<Object> endPoint = endpointsRegistry.
-                    getRoutableEndpoint(textCarbonMessage);
+                    getRoutableEndpoint(uri);
             Assert.assertTrue(endPoint == null);
         } catch (WebSocketEndpointAnnotationException e) {
-            logger.error("WebSocket Annotation Exception : " + e.getMessage());
+            log.error("WebSocket Annotation Exception : " + e.getMessage());
             Assert.assertTrue(false);
         }
     }
@@ -95,7 +101,7 @@ public class EndpointRegistryTest {
             endpointsRegistry.addEndpoint(testEndpoint);
             Assert.assertTrue(false);
         } catch (WebSocketEndpointAnnotationException e) {
-            logger.error("Error occurred when adding endpoint : " + e.toString());
+            log.error("Error occurred when adding endpoint : " + e.toString());
             Assert.assertTrue(true);
         }
     }

@@ -41,21 +41,21 @@ import javax.websocket.server.ServerEndpoint;
 
 @ServerEndpoint(value = "/chat/{name}")
 public class ChatAppEndpoint {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ChatAppEndpoint.class);
+    private static final Logger log = LoggerFactory.getLogger(ChatAppEndpoint.class);
     private List<Session> sessions = new LinkedList<Session>();
 
     @OnOpen
     public void onOpen(@PathParam("name") String name, Session session) {
         sessions.add(session);
         String msg = name + " connected to chat";
-        LOGGER.info(msg);
+        log.info(msg);
         sendMessageToAll(msg);
     }
 
     @OnMessage
     public void onTextMessage(@PathParam("name") String name, String text, Session session) throws IOException {
         String msg = name + ":" + text;
-        LOGGER.info("Received Text : " + text + " from  " + name + session.getId());
+        log.info("Received Text : " + text + " from  " + name + session.getId());
         sendMessageToAll(msg);
     }
 
@@ -66,7 +66,7 @@ public class ChatAppEndpoint {
 
     @OnClose
     public void onClose(@PathParam("name") String name, CloseReason closeReason, Session session) {
-        LOGGER.info("Connection is closed with status code : " + closeReason.getCloseCode().getCode()
+        log.info("Connection is closed with status code : " + closeReason.getCloseCode().getCode()
                             + " On reason " + closeReason.getReasonPhrase());
         sessions.remove(session);
         String msg = name + " left the chat";
@@ -75,7 +75,7 @@ public class ChatAppEndpoint {
 
     @OnError
     public void onError(Throwable throwable, Session session) {
-        LOGGER.error("Error found in method : " + throwable.toString());
+        log.error("Error found in method : " + throwable.toString());
     }
 
     private void sendMessageToAll(String message) {
@@ -84,7 +84,7 @@ public class ChatAppEndpoint {
                     try {
                         session.getBasicRemote().sendText(message);
                     } catch (IOException e) {
-                        LOGGER.error(e.toString());
+                        log.error(e.toString());
                     }
                 }
         );

@@ -37,11 +37,11 @@ import javax.websocket.server.ServerEndpoint;
  */
 @ServerEndpoint("/echo")
 public class EchoEndpoint implements WebSocketEndpoint {
-    private static final Logger LOGGER = LoggerFactory.getLogger(EchoEndpoint.class);
+    private static final Logger log = LoggerFactory.getLogger(EchoEndpoint.class);
 
     @OnOpen
     public void onOpen(Session session) {
-        LOGGER.info(session.getId() + " connected to repeat-app");
+        log.info(session.getId() + " connected to repeat-app");
     }
 
     /**
@@ -49,7 +49,7 @@ public class EchoEndpoint implements WebSocketEndpoint {
      */
     @OnMessage
     public String onTextMessage(@PathParam("name") String name, String text, Session session) throws IOException {
-        LOGGER.info("Received Text : " + text + " from  " + session.getId());
+        log.info("Received Text : " + text + " from  " + session.getId());
         return text;
     }
 
@@ -59,24 +59,26 @@ public class EchoEndpoint implements WebSocketEndpoint {
     @OnMessage
     public byte[] onBinaryMessage(byte[] buffer, Session session) {
         String values = "";
+        int bufferLength = buffer.length;
         byte[] bytes = new byte[buffer.length];
         for (int i = 0; i < buffer.length; i++) {
             byte b = buffer[i];
             values = values.concat(" " + b);
         }
-        LOGGER.info("Binary message values from " + session.getId() + " : " + values);
+        log.info("Binary message values from " + session.getId() + System.lineSeparator() +
+                         "buffer length: " + bufferLength + System.lineSeparator() + "values : " + values);
         return buffer;
     }
 
     @OnMessage
     public PongMessage onPongMessage(PongMessage pongMessage, Session session) {
-        LOGGER.info("Received a pong message.");
+        log.info("Received a pong message.");
         return pongMessage;
     }
 
     @OnClose
     public void onClose(CloseReason closeReason, Session session) {
-        LOGGER.info("Connection is closed with status code : " + closeReason.getCloseCode().getCode()
+        log.info("Connection is closed with status code : " + closeReason.getCloseCode().getCode()
                             + " On reason " + closeReason.getReasonPhrase());
     }
 
