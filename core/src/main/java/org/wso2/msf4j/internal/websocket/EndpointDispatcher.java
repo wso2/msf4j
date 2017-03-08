@@ -69,6 +69,9 @@ public class EndpointDispatcher {
      */
     public Method getOnCloseMethod(Object webSocketEndpoint) {
         Method[] methods = webSocketEndpoint.getClass().getMethods();
+        if (methods == null) {
+            return null;
+        }
         for (Method method : methods) {
             if (method.isAnnotationPresent(OnClose.class)) {
                 return method;
@@ -83,6 +86,9 @@ public class EndpointDispatcher {
      */
     public Method getOnErrorMethod(Object webSocketEndpoint) {
         Method[] methods = webSocketEndpoint.getClass().getMethods();
+        if (methods == null) {
+            return null;
+        }
         for (Method method : methods) {
             if (method.isAnnotationPresent(OnError.class)) {
                 return method;
@@ -97,6 +103,9 @@ public class EndpointDispatcher {
      */
     public Method getOnStringMessageMethod(Object webSocketEndpoint) {
         Method[] methods = webSocketEndpoint.getClass().getMethods();
+        if (methods == null) {
+            return null;
+        }
         for (Method method : methods) {
             if (method.isAnnotationPresent(OnMessage.class)) {
                 //Adding OnMessage according to their types
@@ -116,6 +125,9 @@ public class EndpointDispatcher {
      */
     public Method getOnBinaryMessageMethod(Object webSocketEndpoint) {
         Method[] methods = webSocketEndpoint.getClass().getMethods();
+        if (methods == null) {
+            return null;
+        }
         for (Method method : methods) {
             if (method.isAnnotationPresent(OnMessage.class)) {
                 //Adding OnMessage according to their types
@@ -135,6 +147,9 @@ public class EndpointDispatcher {
      */
     public Method getOnPongMessageMethod(Object webSocketEndpoint) {
         Method[] methods = webSocketEndpoint.getClass().getMethods();
+        if (methods == null) {
+            return null;
+        }
         for (Method method : methods) {
             if (method.isAnnotationPresent(OnMessage.class)) {
                 //Adding OnMessage according to their types

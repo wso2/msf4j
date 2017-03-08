@@ -44,15 +44,15 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
 
     // Map <uri, WebSocketEndpoint>
     private final Map<String, Object> webSocketEndpointMap = new ConcurrentHashMap<>();
-    //PatterPathRouter<WebSocketEndpoint>
+    // PatterPathRouter<WebSocketEndpoint>
     private PatternPathRouter<Object> endpointPatternPathRouter = PatternPathRouter.create();
 
-    //Makes this class singleton.
+    // Makes this class singleton.
     private EndpointsRegistryImpl() {
     }
 
     /**
-     * @return the {@link EndpointsRegistryImpl} instance
+     * @return this singleton instance of {@link EndpointsRegistryImpl}.
      */
     public static EndpointsRegistryImpl getInstance() {
         return webSocketEndpointsRegistry;
@@ -104,9 +104,8 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
                 .collect(Collectors.toSet());
     }
 
-    /*
-    Find the best matching RoutableDestination from the All matching RoutableDestinations
-     */
+
+    // Find the best matching RoutableDestination from the All matching RoutableDestinations
     private PatternPathRouter.RoutableDestination<Object> getBestEndpoint(
             List<PatternPathRouter.RoutableDestination<Object>> routableDestinationList,
             String requestUri) throws WebSocketEndpointAnnotationException {
@@ -125,9 +124,7 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
         return bestRoutableDestination;
     }
 
-    /*
-    Update the PatternPathRouter when adding and removing an endpoint.
-     */
+    // Update the PatternPathRouter when adding and removing an endpoint.
     private void updatePatternPathRouter() throws WebSocketEndpointAnnotationException {
         endpointPatternPathRouter = PatternPathRouter.create();
         for (Map.Entry entry : webSocketEndpointMap.entrySet()) {
@@ -136,9 +133,7 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
         }
     }
 
-    /*
-    Compare and find number of equalities of the Endpoint URI and Requested URI
-     */
+    // Compare and find number of equalities of the Endpoint URI and Requested URI
     private int getHitCount(String[] destinationUriChunkArray, String[] requestUriChunkArray) {
         int count = 0;
         for (int i = 0; i < destinationUriChunkArray.length; i++) {

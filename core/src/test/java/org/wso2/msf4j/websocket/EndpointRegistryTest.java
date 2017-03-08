@@ -43,7 +43,7 @@ import java.util.List;
  */
 public class EndpointRegistryTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(EndpointRegistryTest.class);
+    private static final Logger log = LoggerFactory.getLogger(EndpointRegistryTest.class);
 
     private final String testText = "test";
     private WebSocketEndpoint testEndpoint = new TestEndpoint();
@@ -55,7 +55,7 @@ public class EndpointRegistryTest {
 
     @BeforeClass
     public void onRegister() throws URISyntaxException {
-        logger.info("\n----------------WebSocket Registry Test----------------");
+        log.info(System.lineSeparator() + "----------------WebSocket Registry Test----------------");
         String uri = "/test";
         textCarbonMessage.setProperty(Constants.TO, uri);
     }
@@ -83,7 +83,7 @@ public class EndpointRegistryTest {
                     getRoutableEndpoint(textCarbonMessage);
             Assert.assertTrue(endPoint == null);
         } catch (WebSocketEndpointAnnotationException e) {
-            logger.error("WebSocket Annotation Exception : " + e.getMessage());
+            log.error("WebSocket Annotation Exception : " + e.getMessage());
             Assert.assertTrue(false);
         }
     }
@@ -95,7 +95,7 @@ public class EndpointRegistryTest {
             endpointsRegistry.addEndpoint(testEndpoint);
             Assert.assertTrue(false);
         } catch (WebSocketEndpointAnnotationException e) {
-            logger.error("Error occurred when adding endpoint : " + e.toString());
+            log.error("Error occurred when adding endpoint : " + e.toString());
             Assert.assertTrue(true);
         }
     }
