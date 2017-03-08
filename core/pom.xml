@@ -78,6 +78,10 @@
             <artifactId>javax.ws.rs-api</artifactId>
         </dependency>
         <dependency>
+            <groupId>javax.websocket</groupId>
+            <artifactId>javax.websocket-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.msf4j</groupId>
             <artifactId>jaxrs-delegates</artifactId>
         </dependency>
@@ -343,6 +347,7 @@
             javax.ws.rs.*,
             javax.xml.bind;resolution:=optional,
             javax.xml.bind.annotation;resolution:=optional,
+            javax.websocket.*;version="${javax.websocket.version}"
             org.slf4j.*;version="${slf4j.version.range}",
             org.apache.commons.beanutils.*;version="${beanutils.version.range}",
             org.osgi.framework.*;version="${osgi.framework.import.version.range}",
@@ -357,7 +362,10 @@
             osgi.service;
             objectClass="org.wso2.msf4j.internal.MicroservicesServerSC";requiredByComponentName="carbon-transport-mgt",
             osgi.service; objectClass="org.wso2.carbon.messaging.CarbonMessageProcessor",
-            osgi.service; objectClass="org.wso2.carbon.deployment.engine.Deployer"
+            osgi.service; objectClass="org.wso2.carbon.deployment.engine.Deployer",
+            componentName="wso2-websocket-server";requiredService="org.wso2.msf4j.WebSocketEndpoint",
+            osgi.service;
+            objectClass="org.wso2.msf4j.internal.websocket.WebSocketServerSC"
         </carbon.component>
     </properties>
 </project>

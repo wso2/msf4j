@@ -58,6 +58,13 @@ limitations under the License.
         </classes>
     </test>-->
 
+    <test name="websocket-tests" preserve-order="true" parallel="false">
+        <classes>
+            <class name="org.wso2.msf4j.websocket.EndpointRegistryTest"/>
+            <class name="org.wso2.msf4j.websocket.DeploymentTest"/>
+        </classes>
+    </test>
+
     <test name="http-server-unit-tests" preserve-order="true" parallel="false">
         <classes>
             <class name="org.wso2.msf4j.HttpResourceModelTest"/>
