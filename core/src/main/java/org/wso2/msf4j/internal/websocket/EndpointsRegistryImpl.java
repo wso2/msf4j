@@ -26,7 +26,6 @@ import org.wso2.msf4j.internal.router.PatternPathRouter;
 import org.wso2.msf4j.websocket.WebSocketEndpointsRegistry;
 import org.wso2.msf4j.websocket.exception.WebSocketEndpointAnnotationException;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -40,7 +39,7 @@ import java.util.stream.Collectors;
  */
 public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(EndpointsRegistryImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(EndpointsRegistryImpl.class);
     private static final EndpointsRegistryImpl webSocketEndpointsRegistry = new EndpointsRegistryImpl();
 
     // Map <uri, WebSocketEndpoint>
@@ -68,7 +67,7 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
             EndpointDispatcher dispatcher = new EndpointDispatcher();
             webSocketEndpointMap.put(dispatcher.getUri(endpoint), endpoint);
             updatePatternPathRouter();
-            LOGGER.info("Endpoint Registered : " + dispatcher.getUri(endpoint));
+            log.info("Endpoint Registered : " + dispatcher.getUri(endpoint));
         }
     }
 
@@ -82,7 +81,7 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
         EndpointDispatcher dispatcher = new EndpointDispatcher();
         webSocketEndpointMap.remove(dispatcher.getUri(webSocketEndpoint));
         updatePatternPathRouter();
-        LOGGER.info("Removed endpoint : " + dispatcher.getUri(webSocketEndpoint));
+        log.info("Removed endpoint : " + dispatcher.getUri(webSocketEndpoint));
     }
 
     /**
@@ -93,7 +92,6 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
     public PatternPathRouter.RoutableDestination<Object> getRoutableEndpoint(
             CarbonMessage carbonMessage) throws WebSocketEndpointAnnotationException {
         String uri = (String) carbonMessage.getProperty(Constants.TO);
-        LOGGER.info("path : " + uri);
         List<PatternPathRouter.RoutableDestination<Object>> routableDestinations =
                 endpointPatternPathRouter.getDestinations(uri);
         return getBestEndpoint(routableDestinations, uri);

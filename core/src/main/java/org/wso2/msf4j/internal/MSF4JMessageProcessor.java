@@ -127,15 +127,15 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                 }
 
             } else if (Constants.WEBSOCKET_PROTOCOL_NAME.equalsIgnoreCase(protocolName)) {
-                log.info("WebSocketMessage Received");
                 EndpointsRegistryImpl endpointsRegistry = EndpointsRegistryImpl.getInstance();
                 PatternPathRouter.RoutableDestination<Object>
                         routableEndpoint = null;
+                Session session = (Session) carbonMessage.getProperty(Constants.WEBSOCKET_SESSION);
                 try {
                     routableEndpoint = endpointsRegistry.getRoutableEndpoint(carbonMessage);
                     dispatchWebSocketMethod(routableEndpoint, carbonMessage);
                 } catch (WebSocketEndpointAnnotationException e) {
-                    log.error(e.toString());
+                    handleError(carbonMessage, e, routableEndpoint, session);
                 }
 
             } else  {
@@ -276,7 +276,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
         try {
             //If endpoint cannot be found close the connection
             if (routableEndpoint == null) {
-                throw new NullPointerException("Cannot find the URI for the endpoint");
+                throw new IllegalStateException("Cannot find the URI for the endpoint");
             }
 
             Method method = new EndpointDispatcher().getOnOpenMethod(routableEndpoint.getDestination());
@@ -291,7 +291,6 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                             if (pathParam != null) {
                                 parameterList.add(paramValues.get(pathParam.value()));
                             } else {
-                                parameterList.add(null);
                                 throw new IllegalArgumentException("String parameters without" +
                                                                                  " @PathParam annotation");
                             }
@@ -330,7 +329,6 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                                 if (isStringSatifsfied == false) {
                                     parameterList.add(paramValues.get(pathParam.value()));
                                 } else {
-                                    parameterList.add(null);
                                     throw new IllegalArgumentException("String parameters without" +
                                                                                      " @PathParam annotation");
                                 }
@@ -380,7 +378,6 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                             if (pathParam != null) {
                                 parameterList.add(paramValues.get(pathParam.value()));
                             } else {
-                                parameterList.add(null);
                                 throw new IllegalArgumentException("String parameters without" +
                                                                                  " @PathParam annotation");
                             }
@@ -422,7 +419,6 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                                 if (pathParam != null) {
                                     parameterList.add(paramValues.get(pathParam.value()));
                                 } else {
-                                    parameterList.add(null);
                                     throw new IllegalArgumentException("String parameters without" +
                                                                                      " @PathParam annotation");
                                 }
@@ -498,10 +494,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                         }
                     }
             );
-
             executeMethod(method, webSocketEndpoint, parameterList, session);
-        } else {
-            log.error(throwable.toString());
         }
     }
 
@@ -526,11 +519,11 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                 throw new IllegalArgumentException("Unknown return type.");
             }
         } catch (IllegalAccessException e) {
-            log.error(e.toString());
+            log.error("Illegal access exception occurred: " + e.toString());
         } catch (InvocationTargetException e) {
-            log.error(e.toString());
+            log.error("Method invocation failed: " + e.toString());
         } catch (IOException e) {
-            log.error(e.toString());
+            log.error("IOException occurred: " + e.toString());
         }
     }
 

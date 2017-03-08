@@ -34,8 +34,6 @@ import org.wso2.msf4j.websocket.exception.WebSocketEndpointAnnotationException;
 /**
  * OSGi Service component for WebSocket server. This will identify the endpoints which are trying to identify
  * and register them as WebSocket Server Endpoints
- *
- * @since 1.0.0
  */
 
 @Component(
@@ -47,12 +45,14 @@ import org.wso2.msf4j.websocket.exception.WebSocketEndpointAnnotationException;
 )
 public class WebSocketServerSC implements RequiredCapabilityListener {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketServerSC.class);
+    private static final Logger log = LoggerFactory.getLogger(WebSocketServerSC.class);
     private EndpointsRegistryImpl endpointsRegistry = EndpointsRegistryImpl.getInstance();
 
     @Activate
     protected void start(final BundleContext bundleContext) {
-        LOGGER.debug("Endpoint Activated.");
+        if (log.isDebugEnabled()) {
+            log.debug("Endpoint Activated.");
+        }
     }
 
     @Reference(
@@ -74,6 +74,6 @@ public class WebSocketServerSC implements RequiredCapabilityListener {
     @Override
     public void onAllRequiredCapabilitiesAvailable() {
         DataHolder.getInstance().getBundleContext().registerService(WebSocketServerSC.class, this, null);
-        LOGGER.info("All required capabilities are available");
+        log.info("All required capabilities are available");
     }
 }
