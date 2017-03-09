@@ -35,7 +35,6 @@ import org.wso2.msf4j.websocket.exception.WebSocketEndpointAnnotationException;
  * OSGi Service component for WebSocket server. This will identify the endpoints which are trying to identify
  * and register them as WebSocket Server Endpoints
  */
-
 @Component(
         name = "org.wso2.msf4j.internal.websocket.WebSocketServerSC",
         immediate = true,
@@ -55,6 +54,12 @@ public class WebSocketServerSC implements RequiredCapabilityListener {
         }
     }
 
+    /**
+     * Add endpoint to the endpoint registry.
+     * @param endpoint endpoint which should be added to the registry.
+     * @throws WebSocketEndpointAnnotationException throws if the {@link javax.websocket.server.ServerEndpoint} is
+     * not defined in the endpoint.
+     */
     @Reference(
         name = "websocketEndpoint",
         service = WebSocketEndpoint.class,
@@ -62,12 +67,17 @@ public class WebSocketServerSC implements RequiredCapabilityListener {
         policy = ReferencePolicy.DYNAMIC,
         unbind = "removeEndpoint"
     )
-
     protected void addEndpoint(WebSocketEndpoint endpoint) throws WebSocketEndpointAnnotationException {
         endpointsRegistry.addEndpoint(endpoint);
     }
 
-    protected void removeEndpoint(WebSocketEndpoint endpoint) throws Exception {
+    /**
+     * Remove endpoint from the endpoint registry.
+     * @param endpoint endpoint which should be removed from the registry.
+     * @throws WebSocketEndpointAnnotationException throws if the {@link javax.websocket.server.ServerEndpoint} is
+     * not defined in the endpoint.
+     */
+    protected void removeEndpoint(WebSocketEndpoint endpoint) throws WebSocketEndpointAnnotationException {
         endpointsRegistry.removeEndpoint(endpoint);
     }
 
