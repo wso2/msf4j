@@ -109,6 +109,8 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
     }
 
     /**
+     * Get the text received for a given moment in the handler.
+     *
      * @return the text received from the server.
      */
     public String getTextReceived() {
@@ -116,6 +118,8 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
     }
 
     /**
+     * Get the binary date received for a give moments in the handler.
+     *
      * @return the binary data received from the server.
      */
     public ByteBuffer getBufferReceived() {
