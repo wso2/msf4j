@@ -16,7 +16,7 @@
  *  under the License.
  */
 
-package org.wso2.msf4j.chatapp;
+package org.wso2.msf4j.sample.websocket.chatapp;
 
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;

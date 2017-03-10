@@ -54,8 +54,10 @@ import javax.net.ssl.SSLException;
 public class WebSocketClient {
 
     private static final Logger log = LoggerFactory.getLogger(WebSocketClient.class);
-
     private final String url;
+    private Channel channel = null;
+    private WebSocketClientHandler handler;
+    EventLoopGroup group;
 
     /**
      * @param url the URL which the client should connect.
@@ -63,11 +65,6 @@ public class WebSocketClient {
     public WebSocketClient(String url) {
         this.url = System.getProperty("url", url);
     }
-
-    private Channel channel = null;
-    private WebSocketClientHandler handler;
-    EventLoopGroup group;
-
     /**
      * Do the handshake for the given url and return the state of the handshake.
      *
@@ -81,6 +78,7 @@ public class WebSocketClient {
         String scheme = uri.getScheme() == null ? "ws" : uri.getScheme();
         final String host = uri.getHost() == null ? "127.0.0.1" : uri.getHost();
         final int port;
+
         if (uri.getPort() == -1) {
             if ("ws".equalsIgnoreCase(scheme)) {
                 port = 80;
@@ -188,6 +186,8 @@ public class WebSocketClient {
     }
 
     /**
+     * Extract the text data received from the server.
+     *
      * @return the text received from the server.
      */
     public String getTextReceived() {
@@ -195,6 +195,8 @@ public class WebSocketClient {
     }
 
     /**
+     * Extract the binary data received from the server.
+     *
      * @return the binary data received from the server.
      */
     public ByteBuffer getBufferReceived() {

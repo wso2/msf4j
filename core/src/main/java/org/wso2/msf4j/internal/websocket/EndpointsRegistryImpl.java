@@ -116,8 +116,13 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
                 .collect(Collectors.toSet());
     }
 
-
-    // Find the best matching RoutableDestination from the All matching RoutableDestinations
+    /**
+     * Find the best matching RoutableDestination from the All matching RoutableDestinations.
+     *
+     * @param routableDestinationList routable destication list for a given uri.
+     * @param requestUri uri which the best endpoint should be found for.
+     * @return the best possible routable destination for the requested uri.
+     */
     private PatternPathRouter.RoutableDestination<Object> getBestEndpoint(
             List<PatternPathRouter.RoutableDestination<Object>> routableDestinationList, String requestUri) {
         PatternPathRouter.RoutableDestination<Object> bestRoutableDestination = null;
@@ -134,7 +139,9 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
         return bestRoutableDestination;
     }
 
-    // Update the PatternPathRouter when adding and removing an endpoint.
+    /**
+     * Update the PatternPathRouter when adding and removing an endpoint.
+     */
     private void updatePatternPathRouter() {
         endpointPatternPathRouter = PatternPathRouter.create();
         webSocketEndpointMap.entrySet().forEach(
@@ -142,7 +149,15 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
         );
     }
 
-    // Compare and find number of equalities of the Endpoint URI and Requested URI
+    //
+
+    /**
+     * Compare and find number of equalities of the Endpoint URI and Requested URI.
+     *
+     * @param destinationUriChunkArray chunk words of the endpoint uri.
+     * @param requestUriChunkArray chunk words of the requested uri.
+     * @return hit count - how many words are matched endpoint uri against requested uri.
+     */
     private int getHitCount(String[] destinationUriChunkArray, String[] requestUriChunkArray) {
         int count = 0;
         for (int i = 0; i < destinationUriChunkArray.length; i++) {

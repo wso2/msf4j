@@ -45,17 +45,16 @@
         <dependency>
             <groupId>javax.websocket</groupId>
             <artifactId>javax.websocket-api</artifactId>
-            <version>1.1</version>
         </dependency>
     </dependencies>
 
     <properties>
         <private.package>org.wso2.msf4j.chatapp.*</private.package>
-        <export.package>javax.websocket.*</export.package>
         <import.package>
             org.osgi.framework.*;version="${osgi.framework.import.version.range}",
             org.wso2.msf4j.*,
             javax.ws.rs.*,
+            javax.websocket.*,
             javax.xml.bind*,
             org.slf4j.*,
             io.swagger.annotations.*,

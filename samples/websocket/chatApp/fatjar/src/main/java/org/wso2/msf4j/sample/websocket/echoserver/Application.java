@@ -16,7 +16,7 @@
  *  under the License.
  */
 
-package org.wso2.msf4j.sample.websocket.echoserver.chatapp;
+package org.wso2.msf4j.sample.websocket.echoserver;
 
 import org.wso2.msf4j.MicroservicesRunner;
 import org.wso2.msf4j.websocket.exception.WebSocketEndpointAnnotationException;
