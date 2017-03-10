@@ -28,7 +28,7 @@
     <groupId>org.wso2.msf4j</groupId>
     <artifactId>msf4j-parent</artifactId>
     <packaging>pom</packaging>
-    <version>2.1.1-SNAPSHOT</version>
+    <version>2.1.2-SNAPSHOT</version>
     <name>WSO2 MSF4J - Parent Pom</name>
     <description>WSO2 MSF4J Parent Pom</description>
     <url>http://wso2.org</url>
@@ -261,6 +261,11 @@
                 <groupId>org.wso2.orbit.javax.ws.rs</groupId>
                 <artifactId>javax.ws.rs-api.fragment</artifactId>
                 <version>${javax.ws.rs-api.fragment.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.websocket</groupId>
+                <artifactId>javax.websocket-api</artifactId>
+                <version>${javax.websocket.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.messaging</groupId>
@@ -507,6 +512,12 @@
                 <version>${carbon.kernel.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-common</artifactId>
+                <version>${netty.version}</version>
+                <scope>test</scope>
+            </dependency>
 
             <!-- PAX Exam -->
             <dependency>
@@ -577,7 +588,6 @@
                 <version>${org.osgi.compendium.version}</version>
                 <scope>test</scope>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
 
@@ -601,12 +611,12 @@
         <carbon.kernel.version.range>[5.0.0,6.0.0)</carbon.kernel.version.range>
         <carbon.deployment.version>5.0.0</carbon.deployment.version>
         <carbon.deployment.version.range>[5.0.0,6.0.0)</carbon.deployment.version.range>
-        <carbon.messaging.version>2.0.0</carbon.messaging.version>
+        <carbon.messaging.version>2.2.3</carbon.messaging.version>
         <carbon.messaging.version.range>[1.0.4,2)</carbon.messaging.version.range>
-        <org.wso2.carbon.transport.http.netty.version>4.0.0</org.wso2.carbon.transport.http.netty.version>
+        <org.wso2.carbon.transport.http.netty.version>4.2.7-SNAPSHOT</org.wso2.carbon.transport.http.netty.version>
         <org.wso2.carbon.transport.http.netty.version.range>[4.0,5)</org.wso2.carbon.transport.http.netty.version.range>
         <org.apache.httpcomponents.httpclient.version>4.5.2</org.apache.httpcomponents.httpclient.version>
-        <msf4j.version>2.1.1-SNAPSHOT</msf4j.version>
+        <msf4j.version>2.1.2-SNAPSHOT</msf4j.version>
         <zipkin.brave.version>3.9.1</zipkin.brave.version>
         <carbon.metrics.version>2.0.0</carbon.metrics.version>
         <carbon.metrics.version.range>[2.0,3)</carbon.metrics.version.range>
@@ -622,6 +632,7 @@
         <feign.version>9.3.1</feign.version>
         <httpclient.version>4.5.2</httpclient.version>
         <httpcore.version>4.4.5</httpcore.version>
+        <javax.websocket.version>1.1</javax.websocket.version>
 
         <osgi.api.version>6.0.0</osgi.api.version>
         <equinox.osgi.version>3.10.2.v20150203-1939</equinox.osgi.version>
@@ -639,6 +650,7 @@
         <beanutils.version.range>[1.8,2)</beanutils.version.range>
         <beanutils.osgi.version>1.8.3.2</beanutils.osgi.version>
         <logback.version>1.0.9</logback.version>
+        <netty.version>4.1.7.Final</netty.version>
         <nimbus.jose.jwt.version>2.25</nimbus.jose.jwt.version>
         <io.swagger.version>1.5.8</io.swagger.version>
         <io.swagger.version.range>[1.5.0,1.6.0)</io.swagger.version.range>
