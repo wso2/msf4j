@@ -58,6 +58,7 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
 
     /**
      * Adding endpoints to the registry.
+     *
      * @param webSocketEndpoints to add.
      */
     public void addEndpoint(Object... webSocketEndpoints) throws WebSocketEndpointAnnotationException {
@@ -71,6 +72,7 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
 
     /**
      * Remove WebSocket Endpoint from Registry.
+     *
      * @param webSocketEndpoint which should be removed.
      * @throws WebSocketEndpointAnnotationException throws when WebSocket {@link javax.websocket.server.ServerEndpoint}
      * is no declared in the endpoint.
@@ -83,7 +85,8 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
     }
 
     /**
-     * Return the best possible {@link org.wso2.msf4j.internal.router.PatternPathRouter.RoutableDestination}.
+     * Extract the best possible {@link org.wso2.msf4j.internal.router.PatternPathRouter.RoutableDestination}.
+     *
      * @param uri String of the desired destination endpoint.
      * @return the best possible {@link org.wso2.msf4j.internal.router.PatternPathRouter.RoutableDestination}.
      */

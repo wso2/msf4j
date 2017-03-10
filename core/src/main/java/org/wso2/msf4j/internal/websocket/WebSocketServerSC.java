@@ -56,6 +56,7 @@ public class WebSocketServerSC implements RequiredCapabilityListener {
 
     /**
      * Add endpoint to the endpoint registry.
+     *
      * @param endpoint endpoint which should be added to the registry.
      * @throws WebSocketEndpointAnnotationException throws if the {@link javax.websocket.server.ServerEndpoint} is
      * not defined in the endpoint.
@@ -73,6 +74,7 @@ public class WebSocketServerSC implements RequiredCapabilityListener {
 
     /**
      * Remove endpoint from the endpoint registry.
+     * 
      * @param endpoint endpoint which should be removed from the registry.
      * @throws WebSocketEndpointAnnotationException throws if the {@link javax.websocket.server.ServerEndpoint} is
      * not defined in the endpoint.

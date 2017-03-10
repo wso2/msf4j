@@ -39,6 +39,8 @@ import javax.websocket.server.ServerEndpoint;
 public class EndpointDispatcher {
 
     /**
+     * Extract the URI from the endpoint.
+     *
      * @param webSocketEndpoint WebSocket endpoint which the URI should be extracted.
      * @return the URI of the Endpoint as a String.
      * @throws WebSocketEndpointAnnotationException throws if {@link ServerEndpoint} is not found.
@@ -52,6 +54,8 @@ public class EndpointDispatcher {
     }
 
     /**
+     * Extract OnOpen method from the endpoint if exists.
+     *
      * @param webSocketEndpoint Endpoint to extract method.
      * @return method optional to handle new connection.
      */
@@ -68,6 +72,8 @@ public class EndpointDispatcher {
     }
 
     /**
+     * Extract OnClose method from the endpoint if exists.
+     *
      * @param webSocketEndpoint Endpoint to extract method.
      * @return method optional to handle new connection.
      */
@@ -84,6 +90,8 @@ public class EndpointDispatcher {
     }
 
     /**
+     * Extract OnError method from the endpoint if exists
+     *
      * @param webSocketEndpoint Endpoint to extract method.
      * @return method optional to handle errors.
      */
@@ -99,6 +107,8 @@ public class EndpointDispatcher {
     }
 
     /**
+     * Extract OnMessage method for String from the endpoint if exists.
+     *
      * @param webSocketEndpoint Endpoint to extract method.
      * @return method optional to handle String messages.
      */
@@ -119,6 +129,8 @@ public class EndpointDispatcher {
     }
 
     /**
+     * Extract OnMessage method for Binary from the endpoint if exists.
+     *
      * @param webSocketEndpoint Endpoint to extract method.
      * @return method optional to handle binary messages.
      */
@@ -139,6 +151,8 @@ public class EndpointDispatcher {
     }
 
     /**
+     * Extract OnMessage method for Pong from the endpoint if exists.
+     *
      * @param webSocketEndpoint Endpoint to extract method.
      * @return method optional to handle pong messages.
      */

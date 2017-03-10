@@ -70,6 +70,7 @@ public class WebSocketClient {
 
     /**
      * Do the handshake for the given url and return the state of the handshake.
+     *
      * @return true if the handshake is done properly.
      * @throws URISyntaxException throws if there is an error in the URI syntax.
      * @throws InterruptedException throws if the connecting the server is interrupted.
@@ -149,6 +150,7 @@ public class WebSocketClient {
 
     /**
      * Send text to the server.
+     *
      * @param text text need to be sent.
      */
     public void sendText(String text) {
@@ -161,6 +163,7 @@ public class WebSocketClient {
 
     /**
      * Send binary data to server.
+     *
      * @param buf buffer containing the data need to be sent.
      */
     public void sendBinary(ByteBuffer buf) {
@@ -173,6 +176,7 @@ public class WebSocketClient {
 
     /**
      * Send a pong message to the server.
+     *
      * @param buf content of the pong message to be sent.
      */
     public void sendPong(ByteBuffer buf) {
@@ -199,6 +203,7 @@ public class WebSocketClient {
 
     /**
      * Shutdown the WebSocket Client.
+     *
      * @throws InterruptedException throws if interruption happened when closing the connection.
      */
     public void shutDown() throws InterruptedException {
