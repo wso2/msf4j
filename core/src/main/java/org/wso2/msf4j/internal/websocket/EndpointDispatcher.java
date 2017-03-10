@@ -39,17 +39,29 @@ import javax.websocket.server.ServerEndpoint;
 public class EndpointDispatcher {
 
     /**
+     * Validate the endpoint against the {@link ServerEndpoint} since without {@link ServerEndpoint} definition
+     * there can't be a WebSocket endpoint.
+     * @param websocketEndpoint endpoint which should be validated.
+     * @throws WebSocketEndpointAnnotationException if endpoint does not contain class level {@link ServerEndpoint}
+     */
+    public void validateEndpointUri(Object websocketEndpoint) throws WebSocketEndpointAnnotationException {
+        if (websocketEndpoint.getClass().isAnnotationPresent(ServerEndpoint.class)) {
+            throw new WebSocketEndpointAnnotationException("Cannot find server endpoint url in " +
+                                                                   websocketEndpoint.getClass().getName());
+        }
+    }
+
+    /**
      * Extract the URI from the endpoint.
+     * <b>Note that it is better use validateEndpointUri method to validate the endpoint uri
+     * before getting it out if needed. Otherwise it will cause issues. Use this method only and only if
+     * it is sure that endpoint contains {@link ServerEndpoint} defined.</b>
      *
      * @param webSocketEndpoint WebSocket endpoint which the URI should be extracted.
      * @return the URI of the Endpoint as a String.
-     * @throws WebSocketEndpointAnnotationException throws if {@link ServerEndpoint} is not found.
      */
-    public String getUri(Object webSocketEndpoint) throws WebSocketEndpointAnnotationException {
+    public String getUri(Object webSocketEndpoint) {
         ServerEndpoint serverEndpointAnnotation = webSocketEndpoint.getClass().getAnnotation(ServerEndpoint.class);
-        if (serverEndpointAnnotation == null) {
-            throw new WebSocketEndpointAnnotationException("ServerEndpoint is not declared");
-        }
         return serverEndpointAnnotation.value();
     }
 

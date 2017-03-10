@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
 import org.wso2.carbon.kernel.startupresolver.RequiredCapabilityListener;
 import org.wso2.msf4j.internal.DataHolder;
 import org.wso2.msf4j.websocket.WebSocketEndpoint;
-import org.wso2.msf4j.websocket.exception.WebSocketEndpointAnnotationException;
 
 /**
  * OSGi Service component for WebSocket server. This will identify the endpoints which are trying to identify
@@ -58,8 +57,6 @@ public class WebSocketServerSC implements RequiredCapabilityListener {
      * Add endpoint to the endpoint registry.
      *
      * @param endpoint endpoint which should be added to the registry.
-     * @throws WebSocketEndpointAnnotationException throws if the {@link javax.websocket.server.ServerEndpoint} is
-     * not defined in the endpoint.
      */
     @Reference(
         name = "websocketEndpoint",
@@ -68,24 +65,22 @@ public class WebSocketServerSC implements RequiredCapabilityListener {
         policy = ReferencePolicy.DYNAMIC,
         unbind = "removeEndpoint"
     )
-    protected void addEndpoint(WebSocketEndpoint endpoint) throws WebSocketEndpointAnnotationException {
+    protected void addEndpoint(WebSocketEndpoint endpoint) {
         endpointsRegistry.addEndpoint(endpoint);
     }
 
     /**
      * Remove endpoint from the endpoint registry.
-     * 
+     *
      * @param endpoint endpoint which should be removed from the registry.
-     * @throws WebSocketEndpointAnnotationException throws if the {@link javax.websocket.server.ServerEndpoint} is
-     * not defined in the endpoint.
      */
-    protected void removeEndpoint(WebSocketEndpoint endpoint) throws WebSocketEndpointAnnotationException {
+    protected void removeEndpoint(WebSocketEndpoint endpoint) {
         endpointsRegistry.removeEndpoint(endpoint);
     }
 
     @Override
     public void onAllRequiredCapabilitiesAvailable() {
         DataHolder.getInstance().getBundleContext().registerService(WebSocketServerSC.class, this, null);
-        log.info("All required capabilities are available");
+        log.info("All required capabilities are available of WebSocket service component is available.");
     }
 }

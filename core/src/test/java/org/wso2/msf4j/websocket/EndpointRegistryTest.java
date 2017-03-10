@@ -31,7 +31,6 @@ import org.wso2.msf4j.internal.websocket.EndpointDispatcher;
 import org.wso2.msf4j.internal.websocket.EndpointsRegistryImpl;
 import org.wso2.msf4j.websocket.endpoints.TestEndpoint;
 import org.wso2.msf4j.websocket.endpoints.TestEndpointWithError;
-import org.wso2.msf4j.websocket.exception.WebSocketEndpointAnnotationException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -63,8 +62,7 @@ public class EndpointRegistryTest {
     }
 
     @Test(description = "Testing the adding a correct endpoint to the registry.")
-    public void addEndpoint() throws InvocationTargetException, IllegalAccessException, URISyntaxException,
-                                          WebSocketEndpointAnnotationException {
+    public void addEndpoint() throws InvocationTargetException, IllegalAccessException, URISyntaxException {
         endpointsRegistry.addEndpoint(testEndpoint);
         PatternPathRouter.RoutableDestination<Object> routableEndpoint =
                 endpointsRegistry.getRoutableEndpoint(uri);
@@ -82,27 +80,22 @@ public class EndpointRegistryTest {
     }
 
     @Test(description = "Testing the removing of an endpoint from the registry.")
-    public void removeEndpoint() throws WebSocketEndpointAnnotationException {
-        try {
-            endpointsRegistry.removeEndpoint(testEndpoint);
-            PatternPathRouter.RoutableDestination<Object> endPoint = endpointsRegistry.
-                    getRoutableEndpoint(uri);
-            Assert.assertTrue(endPoint == null);
-        } catch (WebSocketEndpointAnnotationException e) {
-            log.error("WebSocket Annotation Exception : " + e.getMessage());
-            Assert.assertTrue(false);
-        }
+    public void removeEndpoint() {
+        endpointsRegistry.removeEndpoint(testEndpoint);
+        PatternPathRouter.RoutableDestination<Object> endPoint = endpointsRegistry.
+                getRoutableEndpoint(uri);
+        Assert.assertTrue(endPoint == null);
+
     }
 
     @Test(description = "Testing the exception when server endpoint is not defined on a endpoint.")
-    public void testException() {
-        try {
-            WebSocketEndpoint testEndpoint = new TestEndpointWithError();
-            endpointsRegistry.addEndpoint(testEndpoint);
-            Assert.assertTrue(false);
-        } catch (WebSocketEndpointAnnotationException e) {
-            log.error("Error occurred when adding endpoint : " + e.toString());
+    public void testEndpointError() {
+        WebSocketEndpoint testEndpoint = new TestEndpointWithError();
+        List<Object> errorEndpoints = endpointsRegistry.addEndpoint(testEndpoint);
+        if (errorEndpoints.size() > 0) {
             Assert.assertTrue(true);
+        } else {
+            Assert.assertTrue(false);
         }
     }
 }

@@ -147,10 +147,9 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
 
     /**
      * Dispatch the message to correct WebSocket endpoint method.
+     *
      * @param carbonMessage incoming carbonMessage.
      * @param routableEndpoint dispatched endpoint for a given endpoint.
-     * @throws WebSocketEndpointAnnotationException throws if {@link javax.websocket.server.ServerEndpoint} is
-     * not found in the endpoint.
      */
     private void dispatchWebSocketMethod(PatternPathRouter.RoutableDestination<Object> routableEndpoint,
                                          CarbonMessage carbonMessage) throws WebSocketEndpointAnnotationException {
@@ -180,7 +179,6 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
         } else if (carbonMessage instanceof ControlCarbonMessage) {
             ControlCarbonMessage controlCarbonMessage = (ControlCarbonMessage) carbonMessage;
             handleControlCarbonMessage(controlCarbonMessage, routableEndpoint, session);
-
         }
     }
 
@@ -257,8 +255,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
         return MSF4J_MSG_PROC_ID;
     }
 
-    private boolean handleWebSocketHandshake(CarbonMessage carbonMessage, Session session)
-            throws WebSocketEndpointAnnotationException {
+    private boolean handleWebSocketHandshake(CarbonMessage carbonMessage, Session session) {
         EndpointsRegistryImpl endpointsRegistry = EndpointsRegistryImpl.getInstance();
         String requestUri = (String) carbonMessage.getProperty(Constants.TO);
             PatternPathRouter.RoutableDestination<Object>
@@ -297,8 +294,8 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
     }
 
     private void handleTextWebSocketMessage(TextCarbonMessage textCarbonMessage,
-                                           PatternPathRouter.RoutableDestination<Object>
-                                                   routableEndpoint, Session session) {
+                                            PatternPathRouter.RoutableDestination<Object> routableEndpoint,
+                                            Session session) {
         Object endpoint = routableEndpoint.getDestination();
         Map<String, String> paramValues = routableEndpoint.getGroupNameValues();
         Optional<Method> methodOptional = new EndpointDispatcher().getOnStringMessageMethod(endpoint);
