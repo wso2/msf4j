@@ -110,14 +110,9 @@
             <artifactId>snakeyaml</artifactId>
         </dependency>
 
-
         <dependency>
             <groupId>commons-io.wso2</groupId>
             <artifactId>commons-io</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.websocket</groupId>
-            <artifactId>javax.websocket-api</artifactId>
         </dependency>
 
         <!-- Test dependencies -->
@@ -361,11 +356,11 @@
             startup.listener;componentName="wso2-microservices-server";requiredService="org.wso2.msf4j.Microservice,org.wso2.msf4j.Interceptor",
             osgi.service;
             objectClass="org.wso2.msf4j.internal.MicroservicesServerSC";requiredByComponentName="carbon-transport-mgt",
-            osgi.service; objectClass="org.wso2.carbon.messaging.CarbonMessageProcessor",
-            osgi.service; objectClass="org.wso2.carbon.deployment.engine.Deployer",
             componentName="wso2-websocket-server";requiredService="org.wso2.msf4j.WebSocketEndpoint",
             osgi.service;
-            objectClass="org.wso2.msf4j.internal.websocket.WebSocketServerSC"
+            objectClass="org.wso2.msf4j.internal.websocket.WebSocketServerSC,
+            osgi.service; objectClass="org.wso2.carbon.messaging.CarbonMessageProcessor",
+            osgi.service; objectClass="org.wso2.carbon.deployment.engine.Deployer"
         </carbon.component>
     </properties>
 </project>
