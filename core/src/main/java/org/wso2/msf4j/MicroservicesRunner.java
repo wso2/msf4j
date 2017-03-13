@@ -34,7 +34,6 @@ import org.wso2.msf4j.internal.MSF4JMessageProcessor;
 import org.wso2.msf4j.internal.MicroservicesRegistryImpl;
 import org.wso2.msf4j.internal.websocket.EndpointsRegistryImpl;
 import org.wso2.msf4j.util.RuntimeAnnotations;
-import org.wso2.msf4j.websocket.exception.WebSocketEndpointAnnotationException;
 
 import java.util.ArrayList;
 import java.util.Collections;
