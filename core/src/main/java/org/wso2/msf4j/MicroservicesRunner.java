@@ -115,8 +115,7 @@ public class MicroservicesRunner {
      * @param webSocketEndpoint webSocketEndpoint endpoint which is to be added.
      * @return this MicroservicesRunner object.
      */
-    public MicroservicesRunner deployWebSocketEndpoint(Object webSocketEndpoint)
-            throws WebSocketEndpointAnnotationException {
+    public MicroservicesRunner deployWebSocketEndpoint(Object webSocketEndpoint) {
         endpointsRegistry.addEndpoint(webSocketEndpoint);
         return this;
     }
