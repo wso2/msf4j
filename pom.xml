@@ -146,7 +146,7 @@
         <module>samples/spring-profile</module>
 
         <module>perf-benchmark/Samples/wso2msf4j</module>
-        <module>features/feature-test</module>
+        <module>tests</module>
     </modules>
 
     <properties>

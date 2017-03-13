@@ -207,6 +207,36 @@
                 <version>${carbon.deployment.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.pax.exam.feature</artifactId>
+                <version>${carbon.kernel.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.kernel.feature</artifactId>
+                <version>${carbon.kernel.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.runtime.feature</artifactId>
+                <version>${carbon.kernel.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.container</artifactId>
+                <version>${carbon.kernel.version}</version>
+            </dependency>
+            <!--Test Distribution-->
+            <dependency>
+                <groupId>org.wso2.msf4j</groupId>
+                <artifactId>wso2-msf4j-test</artifactId>
+                <version>${msf4j.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.msf4j</groupId>
                 <artifactId>msf4j-all</artifactId>
                 <version>${msf4j.version}</version>
@@ -597,13 +627,13 @@
         <maven.archetype.version>2.4</maven.archetype.version>
 
         <!-- Dependencies -->
-        <carbon.kernel.version>5.1.0</carbon.kernel.version>
+        <carbon.kernel.version>5.2.0-m3</carbon.kernel.version>
         <carbon.kernel.version.range>[5.0.0,6.0.0)</carbon.kernel.version.range>
-        <carbon.deployment.version>5.0.0</carbon.deployment.version>
+        <carbon.deployment.version>5.1.0</carbon.deployment.version>
         <carbon.deployment.version.range>[5.0.0,6.0.0)</carbon.deployment.version.range>
-        <carbon.messaging.version>2.2.4-SNAPSHOT</carbon.messaging.version>
+        <carbon.messaging.version>2.4.0-SNAPSHOT</carbon.messaging.version>
         <carbon.messaging.version.range>[2,3)</carbon.messaging.version.range>
-        <org.wso2.carbon.transport.http.netty.version>4.2.6-SNAPSHOT</org.wso2.carbon.transport.http.netty.version>
+        <org.wso2.carbon.transport.http.netty.version>4.4.0-SNAPSHOT</org.wso2.carbon.transport.http.netty.version>
         <org.wso2.carbon.transport.http.netty.version.range>[4.0,5)</org.wso2.carbon.transport.http.netty.version.range>
         <org.apache.httpcomponents.httpclient.version>4.5.2</org.apache.httpcomponents.httpclient.version>
         <msf4j.version>2.1.2-SNAPSHOT</msf4j.version>

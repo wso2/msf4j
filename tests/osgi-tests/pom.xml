@@ -20,14 +20,12 @@
 
     <parent>
         <groupId>org.wso2.msf4j</groupId>
-        <artifactId>msf4j-parent</artifactId>
+        <artifactId>msf4j-tests</artifactId>
         <version>2.1.2-SNAPSHOT</version>
-        <relativePath>../../poms/parent/pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>msf4j-osgi-test</artifactId>
-    <packaging>jar</packaging>
-
+    <artifactId>wso2-msf4j-osgi-test</artifactId>
     <name>WSO2 MSF4J OSGi tests</name>
     <description>WSO2 MSF4J core</description>
     <url>https://github.com/wso2/msf4j</url>
@@ -187,6 +185,60 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.wso2.msf4j</groupId>
+            <artifactId>wso2-msf4j-test</artifactId>
+            <type>zip</type>
+        </dependency>
+
+        <!-- Pax Exam Dependencies-->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.exam</groupId>
+            <artifactId>pax-exam</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.exam</groupId>
+            <artifactId>pax-exam-container-native</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.exam</groupId>
+            <artifactId>pax-exam-testng</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.exam</groupId>
+            <artifactId>pax-exam-link-mvn</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.url</groupId>
+            <artifactId>pax-url-aether</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.ow2.spec.ee</groupId>
+            <artifactId>ow2-jta-1.1-spec</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>org.jacoco.ant</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.container</artifactId>
+            <version>${carbon.kernel.version}</version>
+        </dependency>
+
         <!-- Test dependencies -->
         <!--<dependency>
             <groupId>commons-io</groupId>
@@ -303,17 +355,17 @@
                                 <org.ops4j.pax.url.mvn.localRepository>${settings.localRepository}
                                 </org.ops4j.pax.url.mvn.localRepository>
                                 <jacoco-agent.destfile>${project.build.directory}/jacoco.exec</jacoco-agent.destfile>
-                                <pax.exam.system>default</pax.exam.system>
+                                <org.wso2.carbon.test.default.distribution>
+                                    org.wso2.msf4j:wso2-msf4j-test
+                                </org.wso2.carbon.test.default.distribution>
+                                <org.ops4j.pax.logging.DefaultServiceLog.level>ERROR</org.ops4j.pax.logging.DefaultServiceLog.level>
                             </systemPropertyVariables>
-                            <systemProperties>
-                                <property>
-                                    <name>carbon.home</name>
-                                    <value>${basedir}/target/carbon-home</value>
-                                </property>
-                            </systemProperties>
                             <suiteXmlFiles>
                                 <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
                             </suiteXmlFiles>
+                            <environmentVariables>
+                                <JAVA_OPTS>${jcoverage.command}</JAVA_OPTS>
+                            </environmentVariables>
                         </configuration>
                     </plugin>
                     <plugin>
@@ -327,9 +379,11 @@
                                     <goal>prepare-agent</goal>
                                 </goals>
                                 <configuration>
+                                    <propertyName>jcoverage.command</propertyName>
                                     <includes>
                                         <include>org.wso2.carbon*</include>
                                     </includes>
+                                    <append>true</append>
                                 </configuration>
                             </execution>
                             <execution>
@@ -346,7 +400,6 @@
                             </execution>
                         </executions>
                     </plugin>
-
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-antrun-plugin</artifactId>
@@ -365,10 +418,10 @@
                                             </executiondata>
                                             <structure name="MSF4J OSGi Tests">
                                                 <classfiles>
-                                                    <fileset dir="../../core/target/classes" />
+                                                    <fileset dir="../../components/org.wso2.msf4j/target/classes" />
                                                 </classfiles>
                                                 <sourcefiles encoding="UTF-8">
-                                                    <fileset dir="../../core/src" />
+                                                    <fileset dir="../../components/org.wso2.msf4j/src" />
                                                 </sourcefiles>
                                             </structure>
                                             <html destdir="${project.build.directory}/site/jacoco" />
@@ -388,7 +441,6 @@
                             </dependency>
                         </dependencies>
                     </plugin>
-
                     <plugin>
                         <groupId>org.ops4j.pax.exam</groupId>
                         <artifactId>maven-paxexam-plugin</artifactId>
@@ -406,38 +458,4 @@
             </build>
         </profile>
     </profiles>
-
-    <properties>
-        <!--<bundle.activator>org.wso2.msf4j.internal.MicroservicesServerActivator</bundle.activator>
-        <private.package>org.wso2.msf4j.internal.*,</private.package>
-        <export.package>
-            !org.wso2.msf4j.internal.*,
-            !org.wso2.msf4j.delegates.*,
-            org.wso2.msf4j.*;version="1.1.0",
-        </export.package>
-        <import.package>
-            com.google.gson.*;version="${gson.version.range}",
-            com.google.common.*;version="${guava.version.range}",
-            javax.annotation.*,
-            javax.ws.rs.*,
-            javax.xml.bind;resolution:=optional,
-            javax.xml.bind.annotation;resolution:=optional,
-            org.slf4j.*;version="${slf4j.version.range}",
-            javax.net.ssl.*,
-            org.apache.commons.beanutils.*;version="${beanutils.version.range}",
-            org.osgi.framework.*;version="${osgi.framework.import.version.range}",
-            org.osgi.util.tracker; version="${osgi.service.tracker.import.version.range}",
-            org.wso2.carbon.kernel.transports.*;version="${carbon.kernel.version.range}",
-            org.wso2.carbon.kernel.startupresolver.*;version="${carbon.kernel.version.range}",
-            org.wso2.carbon.kernel.utils.*;version="${carbon.kernel.version.range}",
-            org.wso2.carbon.messaging.*
-        </import.package>
-        <provide.capability>
-            osgi.service;effective:=active;objectClass="org.wso2.msf4j.internal.MicroservicesServerSC";
-            dependent-component-key="carbon-transport-mgt"
-        </provide.capability>
-        <startup.component>
-            wso2-microservices-server;required-service="org.wso2.msf4j.Microservice,org.wso2.msf4j.Interceptor"
-        </startup.component>-->
-    </properties>
 </project>
