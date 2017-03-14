@@ -16,34 +16,20 @@
  *  under the License.
  */
 
-package org.wso2.msf4j.websocket.endpoint;
+package org.wso2.msf4j.websocket.endpoint.error;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.websocket.CloseReason;
-import javax.websocket.OnClose;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
+import javax.websocket.OnError;
 import javax.websocket.server.ServerEndpoint;
 
-@ServerEndpoint("/test")
-public class TestEndpoint {
-    Logger log = LoggerFactory.getLogger(TestEndpoint.class);
+/**
+ * Test class with mandatory parameters for a given javax.websocket annotation is missing according to JSR-356
+ * specification.
+ */
+@ServerEndpoint("/test-mandatory-parameters-missing")
+public class TestEndpointWithMandatoryParametersMissing {
 
-    @OnOpen
-    public void onOpen(Session session) {
-        log.info(session.getId());
-    }
-
-    @OnMessage
-    public String onStringMessage(String str, Session session) {
-        log.info("Test str is : " + str);
-        return str;
-    }
-
-    @OnClose
-    public void onClose(CloseReason closeReason, Session session) {
+    @OnError
+    public void onError() {
     }
 }

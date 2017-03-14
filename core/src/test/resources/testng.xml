@@ -18,67 +18,68 @@ limitations under the License.
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
 <suite name="MSF4J_Test-Suite">
-    <test name="session-unit-tests" preserve-order="true" parallel="false">
-        <classes>
-            <class name="org.wso2.msf4j.session.SessionIdGeneratorTest"/>
-        </classes>
-    </test>
+    <!--<test name="session-unit-tests" preserve-order="true" parallel="false">-->
+        <!--<classes>-->
+            <!--<class name="org.wso2.msf4j.session.SessionIdGeneratorTest"/>-->
+        <!--</classes>-->
+    <!--</test>-->
 
 
-    <test name="interceptor-unit-tests" preserve-order="true" parallel="false">
-        <classes>
-            <class name="org.wso2.msf4j.InterceptorTest"/>
-            <!-- TODO Fix  WMS-82-->
-            <!--class name="org.wso2.msf4j.HandlerInterceptorTest" /-->
-        </classes>
-    </test>
+    <!--<test name="interceptor-unit-tests" preserve-order="true" parallel="false">-->
+        <!--<classes>-->
+            <!--<class name="org.wso2.msf4j.InterceptorTest"/>-->
+            <!--&lt;!&ndash; TODO Fix  WMS-82&ndash;&gt;-->
+            <!--&lt;!&ndash;class name="org.wso2.msf4j.HandlerInterceptorTest" /&ndash;&gt;-->
+        <!--</classes>-->
+    <!--</test>-->
 
-    <test name="bean-conversion-unit-tests" preserve-order="true" parallel="false">
-        <classes>
-            <class name="org.wso2.msf4j.beanconversion.BeanConverterTest"/>
-        </classes>
-    </test>
+    <!--<test name="bean-conversion-unit-tests" preserve-order="true" parallel="false">-->
+        <!--<classes>-->
+            <!--<class name="org.wso2.msf4j.beanconversion.BeanConverterTest"/>-->
+        <!--</classes>-->
+    <!--</test>-->
 
-    <test name="query-string-decoder-unit-tests" preserve-order="true" parallel="false">
-        <classes>
-            <class name="org.wso2.msf4j.util.QueryStringDecoderUtilTest"/>
-        </classes>
-    </test>
+    <!--<test name="query-string-decoder-unit-tests" preserve-order="true" parallel="false">-->
+        <!--<classes>-->
+            <!--<class name="org.wso2.msf4j.util.QueryStringDecoderUtilTest"/>-->
+        <!--</classes>-->
+    <!--</test>-->
 
-    <test name="mime-mapper-unit-tests" preserve-order="true" parallel="false">
-        <classes>
-            <class name="org.wso2.msf4j.MimeMapperTest"/>
-        </classes>
-    </test>
+    <!--<test name="mime-mapper-unit-tests" preserve-order="true" parallel="false">-->
+        <!--<classes>-->
+            <!--<class name="org.wso2.msf4j.MimeMapperTest"/>-->
+        <!--</classes>-->
+    <!--</test>-->
 
-    <test name="deployer-unit-tests" preserve-order="true" parallel="false">
-        <classes>
-            <class name="org.wso2.msf4j.MSF4JDeployerTest"/>
-        </classes>
-    </test>
+    <!--<test name="deployer-unit-tests" preserve-order="true" parallel="false">-->
+        <!--<classes>-->
+            <!--<class name="org.wso2.msf4j.MSF4JDeployerTest"/>-->
+        <!--</classes>-->
+    <!--</test>-->
 
     <test name="websocket-tests" preserve-order="true" parallel="false">
         <classes>
+            <class name="org.wso2.msf4j.websocket.ValidatorTesting"/>
             <class name="org.wso2.msf4j.websocket.EndpointRegistryTest"/>
             <class name="org.wso2.msf4j.websocket.DeploymentTest"/>
         </classes>
     </test>
 
-    <test name="http-server-unit-tests" preserve-order="true" parallel="false">
-        <classes>
-            <class name="org.wso2.msf4j.HttpResourceModelTest"/>
-            <class name="org.wso2.msf4j.HttpServerTest"/>
-            <class name="org.wso2.msf4j.HttpsServerTest"/>
-            <class name="org.wso2.msf4j.MSF4JResponseTest"/>
-            <class name="org.wso2.msf4j.MutualAuthServerTest"/>
-            <class name="org.wso2.msf4j.PathRouterTest"/>
-            <class name="org.wso2.msf4j.SSLKeyStoreTest"/>
-        </classes>
-    </test>
+    <!--<test name="http-server-unit-tests" preserve-order="true" parallel="false">-->
+        <!--<classes>-->
+            <!--<class name="org.wso2.msf4j.HttpResourceModelTest"/>-->
+            <!--<class name="org.wso2.msf4j.HttpServerTest"/>-->
+            <!--<class name="org.wso2.msf4j.HttpsServerTest"/>-->
+            <!--<class name="org.wso2.msf4j.MSF4JResponseTest"/>-->
+            <!--<class name="org.wso2.msf4j.MutualAuthServerTest"/>-->
+            <!--<class name="org.wso2.msf4j.PathRouterTest"/>-->
+            <!--<class name="org.wso2.msf4j.SSLKeyStoreTest"/>-->
+        <!--</classes>-->
+    <!--</test>-->
 
-    <test name="extended-microservice-tests" preserve-order="true" parallel="false">
-        <classes>
-            <class name="org.wso2.msf4j.ExtendedServiceTest"/>
-        </classes>
-    </test>
+    <!--<test name="extended-microservice-tests" preserve-order="true" parallel="false">-->
+        <!--<classes>-->
+            <!--<class name="org.wso2.msf4j.ExtendedServiceTest"/>-->
+        <!--</classes>-->
+    <!--</test>-->
 </suite>

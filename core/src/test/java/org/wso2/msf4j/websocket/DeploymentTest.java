@@ -18,6 +18,8 @@
 
 package org.wso2.msf4j.websocket;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -38,6 +40,7 @@ import javax.net.ssl.SSLException;
  */
 public class DeploymentTest {
 
+    private static final Logger log = LoggerFactory.getLogger(DeploymentTest.class);
     private final String host = "localhost";
     private final String port = "8080";
     private final int sleepTime = 100;
@@ -49,6 +52,8 @@ public class DeploymentTest {
 
     @BeforeClass
     public void setup() throws WebSocketEndpointAnnotationException {
+        log.info(System.lineSeparator() +
+                         "--------------------------------WebSocket Deployment Test--------------------------------");
         microservicesRunner.deployWebSocketEndpoint(new EchoEndpoint());
         microservicesRunner.deployWebSocketEndpoint(new ChatAppEndpoint());
         microservicesRunner.start();

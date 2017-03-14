@@ -22,6 +22,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.internal.router.PatternPathRouter;
 import org.wso2.msf4j.websocket.WebSocketEndpointsRegistry;
+import org.wso2.msf4j.websocket.exception.WebSocketEndpointAnnotationException;
+import org.wso2.msf4j.websocket.exception.WebSocketEndpointMethodReturnTypeException;
+import org.wso2.msf4j.websocket.exception.WebSocketMethodParameterException;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -40,6 +43,7 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
 
     private static final Logger log = LoggerFactory.getLogger(EndpointsRegistryImpl.class);
     private static final EndpointsRegistryImpl webSocketEndpointsRegistry = new EndpointsRegistryImpl();
+    private final EndpointValidator validator = new EndpointValidator();
 
     // Map <uri, WebSocketEndpoint>
     private final Map<String, Object> webSocketEndpointMap = new ConcurrentHashMap<>();
@@ -68,13 +72,23 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
         Arrays.stream(webSocketEndpoints).forEach(
                 endpoint -> {
                     EndpointDispatcher dispatcher = new EndpointDispatcher();
-                    if (dispatcher.validateEndpointUri(endpoint)) {
-                        webSocketEndpointMap.put(dispatcher.getUri(endpoint), endpoint);
-                        log.info("Endpoint Registered : " + dispatcher.getUri(endpoint));
-                    } else {
+                    try {
+                        if (validator.validate(endpoint)) {
+                            webSocketEndpointMap.put(dispatcher.getUri(endpoint), endpoint);
+                            log.info("Endpoint Registered : " + dispatcher.getUri(endpoint));
+                        }
+                    } catch (WebSocketEndpointAnnotationException e) {
+                        endpointsWithError.add(endpoint);
+                        log.error("Cannot deploy endpoint" +
+                                          ": server endpoint not defined." + System.lineSeparator() + e.toString());
+                    } catch (WebSocketMethodParameterException e) {
                         endpointsWithError.add(endpoint);
                         log.error("Cannot deploy endpoint " + webSocketEndpoints.getClass().getName() +
-                                          ": server endpoint not defined.");
+                                          ": error method definition." + System.lineSeparator() + e.toString());
+                    } catch (WebSocketEndpointMethodReturnTypeException e) {
+                        endpointsWithError.add(endpoint);
+                        log.error("Cannot deploy endpoint " + webSocketEndpoints.getClass().getName() +
+                                          ": invalid method return type." + System.lineSeparator() + e.toString());
                     }
 
                 }

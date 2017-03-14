@@ -18,32 +18,45 @@
 
 package org.wso2.msf4j.websocket.endpoint;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
+import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
-import javax.websocket.Session;
+import javax.websocket.PongMessage;
 import javax.websocket.server.ServerEndpoint;
 
-@ServerEndpoint("/test")
-public class TestEndpoint {
-    Logger log = LoggerFactory.getLogger(TestEndpoint.class);
+/**
+ *This test class include all the methods of WebSocket with only mandatory parameters according to JSR-356
+ * specification
+ */
+@ServerEndpoint("/test-with-mandatory-params")
+public class TestEndpointWithMandatoryParameters {
 
     @OnOpen
-    public void onOpen(Session session) {
-        log.info(session.getId());
+    public void onOpen() {
     }
 
     @OnMessage
-    public String onStringMessage(String str, Session session) {
-        log.info("Test str is : " + str);
-        return str;
+    public byte[] onString(String text) {
+        return new byte[4];
+    }
+
+    @OnMessage
+    public String onBinary(byte[] bytes) {
+        return "test";
+    }
+
+    @OnMessage
+    public PongMessage onPong(PongMessage pongMessage) {
+        return pongMessage;
     }
 
     @OnClose
-    public void onClose(CloseReason closeReason, Session session) {
+    public void onClose() {
+
+    }
+
+    @OnError
+    public void onError(Throwable throwable) {
     }
 }

@@ -16,34 +16,20 @@
  *  under the License.
  */
 
-package org.wso2.msf4j.websocket.endpoint;
+package org.wso2.msf4j.websocket.endpoint.error;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.websocket.CloseReason;
-import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
-@ServerEndpoint("/test")
-public class TestEndpoint {
-    Logger log = LoggerFactory.getLogger(TestEndpoint.class);
-
-    @OnOpen
-    public void onOpen(Session session) {
-        log.info(session.getId());
-    }
+/**
+ * Test class which include method with wrong return type.
+ */
+@ServerEndpoint("/test-with-false-return")
+public class TestEndpointWithReturnTypeError {
 
     @OnMessage
-    public String onStringMessage(String str, Session session) {
-        log.info("Test str is : " + str);
-        return str;
-    }
-
-    @OnClose
-    public void onClose(CloseReason closeReason, Session session) {
+    public int onText(String text, Session session) {
+        return 0;
     }
 }

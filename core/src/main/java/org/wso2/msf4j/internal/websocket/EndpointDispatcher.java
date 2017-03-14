@@ -19,6 +19,7 @@
 package org.wso2.msf4j.internal.websocket;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
@@ -28,6 +29,7 @@ import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.PongMessage;
+import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
 /**
@@ -125,11 +127,13 @@ public class EndpointDispatcher {
         Method returnMethod = null;
         for (Method method : methods) {
             if (method.isAnnotationPresent(OnMessage.class)) {
-                //Adding OnMessage according to their types
-                Class<?>[] paraTypes = method.getParameterTypes();
-                List<Class<?>> paraList = Arrays.asList(paraTypes);
-                if (paraList.contains(String.class)) {
-                    returnMethod = method;
+                Parameter[] parameters = method.getParameters();
+                for (Parameter parameter: parameters) {
+                    if (!parameter.isAnnotationPresent(PathParam.class) &&
+                            parameter.getType() == String.class) {
+                        returnMethod = method;
+                    }
+
                 }
             }
         }
@@ -169,7 +173,6 @@ public class EndpointDispatcher {
         Method returnMethod = null;
         for (Method method : methods) {
             if (method.isAnnotationPresent(OnMessage.class)) {
-                //Adding OnMessage according to their types
                 Class<?>[] paraTypes = method.getParameterTypes();
                 List<Class<?>> paraList = Arrays.asList(paraTypes);
                 if (paraList.contains(PongMessage.class)) {

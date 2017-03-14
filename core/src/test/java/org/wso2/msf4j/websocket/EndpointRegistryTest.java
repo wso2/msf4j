@@ -30,7 +30,6 @@ import org.wso2.msf4j.internal.router.PatternPathRouter;
 import org.wso2.msf4j.internal.websocket.EndpointDispatcher;
 import org.wso2.msf4j.internal.websocket.EndpointsRegistryImpl;
 import org.wso2.msf4j.websocket.endpoint.TestEndpoint;
-import org.wso2.msf4j.websocket.endpoint.TestEndpointWithError;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -48,7 +47,6 @@ public class EndpointRegistryTest {
 
     private final String testText = "test";
     private TestEndpoint testEndpoint = new TestEndpoint();
-    private TestEndpointWithError testEndpointWithError = new TestEndpointWithError();
     private EndpointsRegistryImpl endpointsRegistry = EndpointsRegistryImpl.getInstance();
     private CarbonMessage textCarbonMessage = new TextCarbonMessage(testText);
     private final String uri = "/test";
@@ -58,7 +56,8 @@ public class EndpointRegistryTest {
 
     @BeforeClass
     public void onRegister() throws URISyntaxException {
-        log.info(System.lineSeparator() + "----------------WebSocket Registry Test----------------");
+        log.info(System.lineSeparator() +
+                         "--------------------------------WebSocket Registry Test--------------------------------");
         textCarbonMessage.setProperty(Constants.TO, uri);
     }
 
@@ -89,16 +88,5 @@ public class EndpointRegistryTest {
                 getRoutableEndpoint(uri);
         Assert.assertTrue(endPoint == null);
 
-    }
-
-    @Test(description = "Testing the exception when server endpoint is not defined on a endpoint.")
-    public void testEndpointError() {
-        log.info("Testing the exception when server endpoint is not defined on a endpoint.");
-        List<Object> errorEndpoints = endpointsRegistry.addEndpoint(testEndpointWithError);
-        if (errorEndpoints.size() > 0) {
-            Assert.assertTrue(true);
-        } else {
-            Assert.assertTrue(false);
-        }
     }
 }

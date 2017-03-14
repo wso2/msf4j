@@ -16,32 +16,17 @@
  *  under the License.
  */
 
-package org.wso2.msf4j.websocket.endpoint;
+package org.wso2.msf4j.websocket.exception;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+/**
+ * This is thrown when an invalid return type is defined in method.
+ */
+public class WebSocketEndpointMethodReturnTypeException extends Exception {
 
-import javax.websocket.OnClose;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
-
-
-public class TestEndpointWithError {
-    Logger log = LoggerFactory.getLogger(TestEndpointWithError.class);
-
-    @OnOpen
-    public void onOpen(Session session) {
-        log.info(session.getId());
-    }
-
-    @OnMessage
-    public String onStringMessage(String str, Session session) {
-        log.info("Test str is : " + str);
-        return str;
-    }
-
-    @OnClose
-    public void onClose(String reasonText, int statusCode) {
+    /**
+     * @param message The message which should be shown when the exception is thrown.
+     */
+    public WebSocketEndpointMethodReturnTypeException(String message) {
+        super(message);
     }
 }

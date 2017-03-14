@@ -78,7 +78,7 @@ public class EchoEndpoint implements WebSocketEndpoint {
 
     @OnClose
     public void onClose(CloseReason closeReason, Session session) {
-        log.info("Connection is closed with status code : " + closeReason.getCloseCode().getCode()
+        log.info("Connection is closed with status code: " + closeReason.getCloseCode().getCode()
                             + " On reason " + closeReason.getReasonPhrase());
     }
 

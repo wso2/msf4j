@@ -16,21 +16,19 @@
  *  under the License.
  */
 
-package org.wso2.msf4j.websocket.endpoint;
+package org.wso2.msf4j.websocket.endpoint.error;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.msf4j.websocket.WebSocketEndpoint;
 
-import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
-import javax.websocket.server.ServerEndpoint;
 
-@ServerEndpoint("/test")
-public class TestEndpoint {
-    Logger log = LoggerFactory.getLogger(TestEndpoint.class);
+public class TestEndpointWithServerEndpointError implements WebSocketEndpoint {
+    Logger log = LoggerFactory.getLogger(TestEndpointWithServerEndpointError.class);
 
     @OnOpen
     public void onOpen(Session session) {
@@ -39,11 +37,11 @@ public class TestEndpoint {
 
     @OnMessage
     public String onStringMessage(String str, Session session) {
-        log.info("Test str is : " + str);
+        log.info("Test str is: " + str);
         return str;
     }
 
     @OnClose
-    public void onClose(CloseReason closeReason, Session session) {
+    public void onClose(String reasonText, int statusCode) {
     }
 }
