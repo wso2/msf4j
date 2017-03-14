@@ -228,7 +228,7 @@
                         <configuration>
                             <productConfigurationFile>${basedir}/carbon.product</productConfigurationFile>
                             <repositoryURL>file:${basedir}/target/p2-repo</repositoryURL>
-                            <targetPath>file:${basedir}/target/msf4j-${msf4j.version}/wso2
+                            <targetPath>file:${basedir}/target/wso2-msf4j-${msf4j.version}/wso2
                             </targetPath>
                             <runtime>default</runtime>
                         </configuration>
@@ -243,7 +243,7 @@
                             <runtime>default</runtime>
                             <repositoryURL>file:${basedir}/target/p2-repo</repositoryURL>
                             <destination>
-                                ${basedir}/target/msf4j-${msf4j.version}/wso2
+                                ${basedir}/target/wso2-msf4j-${msf4j.version}/wso2
                             </destination>
                             <deleteOldRuntimeFiles>true</deleteOldRuntimeFiles>
                             <features>
@@ -280,7 +280,7 @@
                         <phase>package</phase>
                         <configuration>
                             <tasks>
-                                <replace dir="target/msf4j-${msf4j.version}/wso2" token="false" value="true">
+                                <replace dir="target/wso2-msf4j-${msf4j.version}/wso2" token="false" value="true">
                                     <include name="**/bundles.info" />
                                 </replace>
                             </tasks>
@@ -299,7 +299,7 @@
                                 <delete dir="target/org.eclipse.equinox.executable-3.5.0.v20110530-7P7NFUFFLWUl76mart" />
                                 <delete dir="target/p2-repo" />
                                 <delete file="target/tmp" />
-                                <delete dir="target/msf4j-${msf4j.version}" />
+                                <delete dir="target/wso2-msf4j-${msf4j.version}" />
                                 <delete dir="target/antrun" />
                             </target>
                         </configuration>
@@ -316,7 +316,7 @@
                     <descriptors>
                         <descriptor>${basedir}/src/assembly/bin.xml</descriptor>
                     </descriptors>
-                    <finalName>msf4j-test-${msf4j.version}</finalName>
+                    <finalName>wso2-msf4j-${msf4j.version}</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                 </configuration>
                 <executions>

@@ -456,11 +456,6 @@
                 <artifactId>org.wso2.carbon.metrics.das.core</artifactId>
                 <version>${carbon.metrics.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.metrics</groupId>
-                <artifactId>org.wso2.carbon.metrics.config</artifactId>
-                <version>${carbon.metrics.version}</version>
-            </dependency>
             <!-- Metrics Dependencies - End -->
             <!-- Zipkin tracing dependencies - Start -->
             <dependency>

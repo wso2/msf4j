@@ -418,10 +418,10 @@
                                             </executiondata>
                                             <structure name="MSF4J OSGi Tests">
                                                 <classfiles>
-                                                    <fileset dir="../../components/org.wso2.msf4j/target/classes" />
+                                                    <fileset dir="../../core/target/classes" />
                                                 </classfiles>
                                                 <sourcefiles encoding="UTF-8">
-                                                    <fileset dir="../../components/org.wso2.msf4j/src" />
+                                                    <fileset dir="../../core/src" />
                                                 </sourcefiles>
                                             </structure>
                                             <html destdir="${project.build.directory}/site/jacoco" />
