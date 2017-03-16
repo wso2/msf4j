@@ -43,6 +43,7 @@ import org.wso2.msf4j.internal.websocket.EndpointsRegistryImpl;
 import org.wso2.msf4j.internal.websocket.WebSocketPongMessage;
 import org.wso2.msf4j.util.HttpUtil;
 import org.wso2.msf4j.websocket.exception.WebSocketEndpointAnnotationException;
+import org.wso2.msf4j.websocket.exception.WebSocketEndpointMethodReturnTypeException;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -95,7 +96,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
             //Identify the protocol name before doing the processing
             String protocolName = (String) carbonMessage.getProperty(Constants.PROTOCOL);
 
-            if (Constants.HTTP_PROTOCOL_NAME.equalsIgnoreCase(protocolName)) {
+            if (Constants.PROTOCOL_NAME.equalsIgnoreCase(protocolName)) {
                 MicroservicesRegistryImpl currentMicroservicesRegistry =
                         DataHolder.getInstance().getMicroservicesRegistries()
                                 .get(carbonMessage.getProperty(MSF4JConstants.CHANNEL_ID));
@@ -259,9 +260,6 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                                         PathParam pathParam = parameter.getAnnotation(PathParam.class);
                                         if (pathParam != null) {
                                             parameterList.add(paramValues.get(pathParam.value()));
-                                        } else {
-                                            throw new IllegalArgumentException("String parameters without" +
-                                                                                       " @PathParam annotation");
                                         }
                                     } else {
                                         parameterList.add(null);
@@ -288,7 +286,6 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
             methodOptional.ifPresent(
                     method -> {
                         List<Object> parameterList = new LinkedList<>();
-                        boolean isStringSatifsfied = false;
                         Arrays.stream(method.getParameters()).forEach(
                                 parameter -> {
                                     if (parameter.getType() == String.class) {
@@ -296,12 +293,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                                         if (pathParam == null) {
                                             parameterList.add(textCarbonMessage.getText());
                                         } else {
-                                            if (!isStringSatifsfied) {
-                                                parameterList.add(paramValues.get(pathParam.value()));
-                                            } else {
-                                                throw new IllegalArgumentException("String parameters without" +
-                                                                                           " @PathParam annotation");
-                                            }
+                                            parameterList.add(paramValues.get(pathParam.value()));
                                         }
                                     } else if (parameter.getType() == Session.class) {
                                         parameterList.add(session);
@@ -347,9 +339,6 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                                         PathParam pathParam = parameter.getAnnotation(PathParam.class);
                                         if (pathParam != null) {
                                             parameterList.add(paramValues.get(pathParam.value()));
-                                        } else {
-                                            throw new IllegalArgumentException("String parameters without" +
-                                                                                       " @PathParam annotation");
                                         }
                                     } else {
                                         parameterList.add(null);
@@ -388,9 +377,6 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                                         PathParam pathParam = parameter.getAnnotation(PathParam.class);
                                         if (pathParam != null) {
                                             parameterList.add(paramValues.get(pathParam.value()));
-                                        } else {
-                                            throw new IllegalArgumentException("String parameters without" +
-                                                                                       " @PathParam annotation");
                                         }
                                     } else {
                                         parameterList.add(null);
@@ -424,9 +410,6 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                                         PathParam pathParam = parameter.getAnnotation(PathParam.class);
                                         if (pathParam != null) {
                                             parameterList.add(paramValues.get(pathParam.value()));
-                                        } else {
-                                            throw new IllegalArgumentException("String parameters " +
-                                                                                       "without @PathParam annotation");
                                         }
                                     } else {
                                         parameterList.add(null);
@@ -459,9 +442,6 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                                     PathParam pathParam = parameter.getAnnotation(PathParam.class);
                                     if (pathParam != null) {
                                         parameterList.add(paramValues.get(pathParam.value()));
-                                    } else {
-                                        throw new IllegalArgumentException("String parameters " +
-                                                                                   "without @PathParam annotation");
                                     }
                                 } else {
                                     parameterList.add(null);
@@ -491,7 +471,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                 PongMessage pongMessage = (PongMessage) method.invoke(webSocketEndpoint, parameterList.toArray());
                 session.getBasicRemote().sendPong(pongMessage.getApplicationData());
             } else {
-                throw new IllegalArgumentException("Unknown return type.");
+                throw new WebSocketEndpointMethodReturnTypeException("Unknown return type.");
             }
         } catch (IllegalAccessException e) {
             log.error("Illegal access exception occurred: " + e.toString());
@@ -499,6 +479,8 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
             log.error("Method invocation failed: " + e.toString());
         } catch (IOException e) {
             log.error("IOException occurred: " + e.toString());
+        } catch (WebSocketEndpointMethodReturnTypeException e) {
+            log.error("WebSocket method return type exception occurred: " + e.toString());
         }
     }
 
