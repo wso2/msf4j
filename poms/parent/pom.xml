@@ -620,14 +620,14 @@
         <carbon.kernel.version.range>[5.0.0,6.0.0)</carbon.kernel.version.range>
         <carbon.deployment.version>5.1.0</carbon.deployment.version>
         <carbon.deployment.version.range>[5.0.0,6.0.0)</carbon.deployment.version.range>
-        <carbon.messaging.version>2.4.0-SNAPSHOT</carbon.messaging.version>
+        <carbon.messaging.version>2.3.0</carbon.messaging.version>
         <carbon.messaging.version.range>[2,3)</carbon.messaging.version.range>
-        <org.wso2.carbon.transport.http.netty.version>4.4.0-SNAPSHOT</org.wso2.carbon.transport.http.netty.version>
+        <org.wso2.carbon.transport.http.netty.version>4.3.0-m1</org.wso2.carbon.transport.http.netty.version>
         <org.wso2.carbon.transport.http.netty.version.range>[4.0,5)</org.wso2.carbon.transport.http.netty.version.range>
         <org.apache.httpcomponents.httpclient.version>4.5.2</org.apache.httpcomponents.httpclient.version>
         <msf4j.version>2.3.0-SNAPSHOT</msf4j.version>
         <zipkin.brave.version>3.9.1</zipkin.brave.version>
-        <carbon.metrics.version>2.0.0</carbon.metrics.version>
+        <carbon.metrics.version>2.0.1</carbon.metrics.version>
         <carbon.metrics.version.range>[2.0,3)</carbon.metrics.version.range>
         <carbon.analytics.common.version>5.0.6</carbon.analytics.common.version>
         <carbon.analytics.common.version.range>[5.0,6)</carbon.analytics.common.version.range>
