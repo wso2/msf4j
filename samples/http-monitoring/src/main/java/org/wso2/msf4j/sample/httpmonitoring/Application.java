@@ -32,8 +32,7 @@ public class Application {
     public static void main(String[] args) {
         logger.info("Starting the Microservice with HTTP Monitoring");
         new MicroservicesRunner()
-                .addInterceptor(new HTTPMonitoringInterceptor())
-                .addInterceptor(new MetricsInterceptor())
+                .addInterceptor(new HTTPMonitoringInterceptor(), new MetricsInterceptor())
                 .deploy(new StudentService())
                 .start();
     }
