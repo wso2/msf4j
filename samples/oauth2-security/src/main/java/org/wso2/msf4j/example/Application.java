@@ -38,7 +38,7 @@ public class Application {
         }
 
         new MicroservicesRunner()
-                .addInterceptor(new OAuth2SecurityInterceptor())
+                .addGlobalRequestInterceptor(new OAuth2SecurityInterceptor())
                 .deploy(new Helloworld())
                 .start();
     }

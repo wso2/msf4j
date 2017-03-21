@@ -25,6 +25,7 @@ import org.wso2.carbon.messaging.CarbonMessageProcessor;
 import org.wso2.carbon.messaging.TransportSender;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
+import org.wso2.msf4j.exception.InterceptorException;
 import org.wso2.msf4j.internal.router.HandlerException;
 import org.wso2.msf4j.internal.router.HttpMethodInfo;
 import org.wso2.msf4j.internal.router.HttpMethodInfoBuilder;
@@ -116,28 +117,20 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
         HttpResourceModel resourceModel = destination.getDestination();
         response.setMediaType(Util.getResponseType(request.getAcceptTypes(),
                 resourceModel.getProducesMediaTypes()));
-        InterceptorExecutor interceptorExecutor = new InterceptorExecutor(resourceModel, request, response,
-                                                                          currentMicroservicesRegistry
-                                                                                  .getInterceptors());
-        if (interceptorExecutor.execPreCalls()) { // preCalls can throw exceptions
-
-            HttpMethodInfoBuilder httpMethodInfoBuilder =
-                    new HttpMethodInfoBuilder().
-                            httpResourceModel(resourceModel).
-                            httpRequest(request).
-                            httpResponder(response).
-                            requestInfo(destination.getGroupNameValues());
-
-            HttpMethodInfo httpMethodInfo = httpMethodInfoBuilder.build();
-            if (httpMethodInfo.isStreamingSupported()) {
-                while (!(request.isEmpty() && request.isEomAdded())) {
-                    httpMethodInfo.chunk(request.getMessageBody());
-                }
-                httpMethodInfo.end();
-            } else {
-                httpMethodInfo.invoke(request, destination);
+        HttpMethodInfoBuilder httpMethodInfoBuilder =
+                new HttpMethodInfoBuilder().
+                        httpResourceModel(resourceModel).
+                        httpRequest(request).
+                        httpResponder(response).
+                        requestInfo(destination.getGroupNameValues());
+        HttpMethodInfo httpMethodInfo = httpMethodInfoBuilder.build();
+        if (httpMethodInfo.isStreamingSupported()) {
+            while (!(request.isEmpty() && request.isEomAdded())) {
+                httpMethodInfo.chunk(request.getMessageBody());
             }
-            interceptorExecutor.execPostCalls(response.getStatusCode()); // postCalls can throw exceptions
+            httpMethodInfo.end(request, httpMethodInfo, currentMicroservicesRegistry);
+        } else {
+            httpMethodInfo.invoke(destination, request, httpMethodInfo, currentMicroservicesRegistry);
         }
     }
 
