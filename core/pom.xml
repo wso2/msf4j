@@ -354,7 +354,7 @@
         </import.package>
         <carbon.component>
             startup.listener;componentName="wso2-microservices-server";
-            requiredService="org.wso2.msf4j.Microservice,org.wso2.msf4j.Interceptor,
+            requiredService="org.wso2.carbon.kernel.transports.CarbonTransport,org.wso2.msf4j.Microservice,org.wso2.msf4j.Interceptor,
             org.wso2.msf4j.interceptor.OSGiInterceptorConfig",
             osgi.service;
             objectClass="org.wso2.msf4j.internal.MicroservicesServerSC";requiredByComponentName="carbon-transport-mgt",
