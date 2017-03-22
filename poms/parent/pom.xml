@@ -603,8 +603,8 @@
         <carbon.deployment.version.range>[5.0.0,6.0.0)</carbon.deployment.version.range>
         <carbon.messaging.version>1.0.11</carbon.messaging.version>
         <carbon.messaging.version.range>[1.0.4,2)</carbon.messaging.version.range>
-        <org.wso2.carbon.transport.http.netty.version>3.0.4</org.wso2.carbon.transport.http.netty.version>
-        <org.wso2.carbon.transport.http.netty.version.range>[2.0,3)</org.wso2.carbon.transport.http.netty.version.range>
+        <org.wso2.carbon.transport.http.netty.version>3.0.5</org.wso2.carbon.transport.http.netty.version>
+        <org.wso2.carbon.transport.http.netty.version.range>[3.0,4)</org.wso2.carbon.transport.http.netty.version.range>
         <org.apache.httpcomponents.httpclient.version>4.5.2</org.apache.httpcomponents.httpclient.version>
         <msf4j.version>2.2.0-SNAPSHOT</msf4j.version>
         <zipkin.brave.version>3.9.1</zipkin.brave.version>
