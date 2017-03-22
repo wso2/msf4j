@@ -58,7 +58,7 @@
         </plugins>
     </build>
     <properties>
-        <interceptor-common.version>${project.version}</interceptor-common.version>
+        <interceptor-common.version>2.2.0-SNAPSHOT</interceptor-common.version>
         <microservice.mainClass>org.wso2.msf4j.samples.fatjarinterceptorservice.Application</microservice.mainClass>
     </properties>
 </project>
