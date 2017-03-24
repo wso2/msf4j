@@ -37,7 +37,7 @@ listenerConfigurations:
   host: "0.0.0.0"
   port: 8443
   scheme: https
-  keyStoreFile: "/home/thusitha/Work/Git/msf4j/distribution/binary/conf/wso2carbon.jks"
+  keyStoreFile: "wso2carbon.jks"
   keyStorePass: wso2carbon
   certPass: wso2carbon
 senderConfigurations:

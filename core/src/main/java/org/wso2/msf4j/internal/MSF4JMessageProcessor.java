@@ -22,9 +22,11 @@ import org.slf4j.LoggerFactory;
 import org.wso2.carbon.messaging.CarbonCallback;
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.CarbonMessageProcessor;
+import org.wso2.carbon.messaging.Constants;
 import org.wso2.carbon.messaging.TransportSender;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
+import org.wso2.msf4j.delegates.MSF4JResponse;
 import org.wso2.msf4j.internal.router.HandlerException;
 import org.wso2.msf4j.internal.router.HttpMethodInfo;
 import org.wso2.msf4j.internal.router.HttpMethodInfoBuilder;
@@ -34,6 +36,9 @@ import org.wso2.msf4j.internal.router.Util;
 import org.wso2.msf4j.util.HttpUtil;
 
 import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -75,6 +80,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                               .get(carbonMessage.getProperty(MSF4JConstants.CHANNEL_ID));
             Request request = new Request(carbonMessage);
             request.setSessionManager(currentMicroservicesRegistry.getSessionManager());
+            setBaseUri(request);
             Response response = new Response(carbonCallback, request);
             try {
                 dispatchMethod(currentMicroservicesRegistry, request, response);
@@ -95,11 +101,26 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
             } catch (Throwable t) {
                 handleThrowable(currentMicroservicesRegistry, t, carbonCallback, request);
             } finally {
+                MSF4JResponse.clearBaseUri();
                 // Calling the release method to make sure that there won't be any memory leaks from netty
                 carbonMessage.release();
             }
         });
         return true;
+    }
+
+    private void setBaseUri(Request request) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(request.getProperty(Constants.PROTOCOL).toString().toLowerCase(Locale.US)).append("://")
+               .append(request.getHeader(Constants.HOST));
+        if (builder.charAt(builder.length() - 1) != '/') {
+            builder.append("/");
+        }
+        try {
+            MSF4JResponse.setBaseUri(new URI(builder.toString()));
+        } catch (URISyntaxException e) {
+            log.error("Error while setting the Base URI. " + e.getMessage(), e);
+        }
     }
 
     /**
