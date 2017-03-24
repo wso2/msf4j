@@ -36,7 +36,6 @@ import org.wso2.msf4j.internal.websocket.EndpointsRegistryImpl;
 import org.wso2.msf4j.util.RuntimeAnnotations;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -233,7 +232,7 @@ public class MicroservicesRunner {
         handleServiceLifecycleMethods();
         serverConnectors.forEach(serverConnector -> {
             try {
-                serverConnector.start(Collections.emptyMap());
+                serverConnector.start();
                 isStarted = true;
                 log.info("Microservices server started in " + (System.currentTimeMillis() - startTime) + "ms");
             } catch (ServerConnectorException e) {
