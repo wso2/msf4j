@@ -32,11 +32,9 @@ public class Runner {
     public static void main(String[] args) throws IOException, EmbeddingLDAPException {
         ApacheDirectoryServerActivator apacheDS = new ApacheDirectoryServerActivator();
         apacheDS.start();
-        HTTPMonitoringInterceptor httpMonitoringInterceptor = new HTTPMonitoringInterceptor();
-        MetricsInterceptor metricsInterceptor = new MetricsInterceptor();
         new MicroservicesRunner()
-                .addGlobalRequestInterceptor(httpMonitoringInterceptor, metricsInterceptor)
-                .addGlobalResponseInterceptor(httpMonitoringInterceptor, metricsInterceptor)
+                .addInterceptor(new HTTPMonitoringInterceptor())
+                .addInterceptor(new MetricsInterceptor())
                 .deploy(new UserAuthenticationService())
                 .start();
     }
