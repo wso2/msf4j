@@ -146,6 +146,11 @@ public class InterceptorExecutor {
     public static boolean executeClassResponseInterceptorsForClasses(Request request, Response response,
                                                                      List<Class<?>> classes)
             throws InterceptorException {
+
+        if (classes == null) {
+            return true;
+        }
+
         for (Class<?> aClass : classes) {
             if (!(InterceptorExecutor.executeClassLevelResponseInterceptors(request, response, aClass))) {
                 return false;
@@ -185,6 +190,11 @@ public class InterceptorExecutor {
     public static boolean executeMethodResponseInterceptorsForMethods(Request request, Response response,
                                                                       List<Method> methods)
             throws InterceptorException {
+
+        if (methods == null) {
+            return true;
+        }
+
         for (Method resourceMethod : methods) {
             if (!(InterceptorExecutor.executeMethodLevelResponseInterceptors(request, response, resourceMethod))) {
                 return false;
@@ -231,6 +241,11 @@ public class InterceptorExecutor {
     private static boolean executeGlobalResponseInterceptors(Request request, Response response,
                                                              Collection<ResponseInterceptor> responseInterceptors)
             throws InterceptorException {
+
+        if (responseInterceptors == null) {
+            return true;
+        }
+
         for (ResponseInterceptor interceptor : responseInterceptors) {
             try {
                 if (!interceptor.interceptResponse(request, response)) {
