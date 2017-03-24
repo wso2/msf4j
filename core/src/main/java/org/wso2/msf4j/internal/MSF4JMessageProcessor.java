@@ -27,7 +27,6 @@ import org.wso2.carbon.messaging.TransportSender;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.delegates.MSF4JResponse;
-import org.wso2.msf4j.exception.InterceptorException;
 import org.wso2.msf4j.internal.router.HandlerException;
 import org.wso2.msf4j.internal.router.HttpMethodInfo;
 import org.wso2.msf4j.internal.router.HttpMethodInfoBuilder;

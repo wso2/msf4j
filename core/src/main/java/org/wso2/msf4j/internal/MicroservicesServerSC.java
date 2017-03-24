@@ -303,11 +303,9 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             if (microservicesRegistry == null) {
                 throw new RuntimeException("Couldn't found the registry for channel ID " + channelId);
             }
-            microservicesRegistry.addGlobalRequestInterceptor(interceptor);
-            microservicesRegistry.addGlobalResponseInterceptor(interceptor);
+            microservicesRegistry.addInterceptor(interceptor);
         } else {
-            microservicesRegistries.values().forEach(registry -> registry.addGlobalRequestInterceptor(interceptor));
-            microservicesRegistries.values().forEach(registry -> registry.addGlobalResponseInterceptor(interceptor));
+            microservicesRegistries.values().forEach(registry -> registry.addInterceptor(interceptor));
         }
     }
 
