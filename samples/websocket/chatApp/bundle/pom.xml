@@ -57,11 +57,9 @@
             javax.websocket.*,
             javax.xml.bind*,
             org.slf4j.*,
-            io.swagger.annotations.*,
-            org.wso2.carbon.messaging.*
         </import.package>
         <carbon.component>
-            osgi.service;objectClass="org.wso2.msf4j.WebSocketEndpoint"
+            osgi.service;objectClass="org.wso2.msf4j.websocket.WebSocketEndpoint"
         </carbon.component>
     </properties>
 
