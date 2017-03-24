@@ -81,6 +81,6 @@ public class WebSocketServerSC implements RequiredCapabilityListener {
     @Override
     public void onAllRequiredCapabilitiesAvailable() {
         DataHolder.getInstance().getBundleContext().registerService(WebSocketServerSC.class, this, null);
-        log.info("All required capabilities are available of WebSocket service component is available.");
+        log.info("All WebSocketEndpoints are available.");
     }
 }

@@ -56,8 +56,6 @@ public class EndpointRegistryTest {
 
     @BeforeClass
     public void onRegister() throws URISyntaxException {
-        log.info(System.lineSeparator() +
-                         "--------------------------------WebSocket Registry Test--------------------------------");
         textCarbonMessage.setProperty(Constants.TO, uri);
     }
 
@@ -65,8 +63,7 @@ public class EndpointRegistryTest {
     public void addEndpoint() throws InvocationTargetException, IllegalAccessException, URISyntaxException {
         log.info("Testing the adding a correct endpoint to the registry.");
         endpointsRegistry.addEndpoint(testEndpoint);
-        PatternPathRouter.RoutableDestination<Object> routableEndpoint =
-                endpointsRegistry.getRoutableEndpoint(uri);
+        PatternPathRouter.RoutableDestination<Object> routableEndpoint = endpointsRegistry.getRoutableEndpoint(uri);
         Object webSocketEndpoint = routableEndpoint.getDestination();
         List<Object> paralist = new LinkedList<>();
         paralist.add(testText);
@@ -85,7 +82,7 @@ public class EndpointRegistryTest {
         log.info("Testing the removing of an endpoint from the registry.");
         endpointsRegistry.removeEndpoint(testEndpoint);
         PatternPathRouter.RoutableDestination<Object> endPoint = endpointsRegistry.
-                getRoutableEndpoint(uri);
+                                                                                          getRoutableEndpoint(uri);
         Assert.assertTrue(endPoint == null);
 
     }

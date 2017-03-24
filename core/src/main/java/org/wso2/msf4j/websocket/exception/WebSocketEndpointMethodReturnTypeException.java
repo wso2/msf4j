@@ -24,7 +24,9 @@ package org.wso2.msf4j.websocket.exception;
 public class WebSocketEndpointMethodReturnTypeException extends Exception {
 
     /**
-     * @param message The message which should be shown when the exception is thrown.
+     * Constructor of the WebSocketEndpointMethodReturnTypeException
+     *
+     * @param message should be shown when the exception is thrown.
      */
     public WebSocketEndpointMethodReturnTypeException(String message) {
         super(message);

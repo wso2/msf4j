@@ -49,7 +49,7 @@ public class EchoEndpoint implements WebSocketEndpoint {
      */
     @OnMessage
     public String onTextMessage(@PathParam("name") String name, String text, Session session) throws IOException {
-        log.info("Received Text : " + text + " from  " + session.getId());
+        log.info("Received Text: " + text + " from  " + session.getId());
         return text;
     }
 
@@ -65,8 +65,8 @@ public class EchoEndpoint implements WebSocketEndpoint {
             byte b = buffer[i];
             values = values.concat(" " + b);
         }
-        log.info("Binary message values from " + session.getId() + System.lineSeparator() +
-                         "buffer length: " + bufferLength + System.lineSeparator() + "values : " + values);
+        log.info("Binary message values from " + session.getId() + System.lineSeparator() + "buffer length: " +
+                 bufferLength + System.lineSeparator() + "values : " + values);
         return buffer;
     }
 
@@ -78,8 +78,8 @@ public class EchoEndpoint implements WebSocketEndpoint {
 
     @OnClose
     public void onClose(CloseReason closeReason, Session session) {
-        log.info("Connection is closed with status code: " + closeReason.getCloseCode().getCode()
-                            + " On reason " + closeReason.getReasonPhrase());
+        log.info("Connection is closed with status code: " + closeReason.getCloseCode().getCode() + " On reason " +
+                 closeReason.getReasonPhrase());
     }
 
 }

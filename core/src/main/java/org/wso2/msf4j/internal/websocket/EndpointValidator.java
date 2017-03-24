@@ -41,19 +41,19 @@ public class EndpointValidator {
      *
      * @return true if validation is completed without any error.
      * @throws WebSocketEndpointAnnotationException if error on an annotation declaration occurred.
-     * @throws WebSocketMethodParameterException if the method parameters are invalid for a given method according
-     * to JSR-356 specification.
+     * @throws WebSocketMethodParameterException    if the method parameters are invalid for a given method according
+     *                                              to JSR-356 specification.
      */
-    public boolean validate(Object webSocketEndpoint) throws WebSocketEndpointAnnotationException,
-                                                             WebSocketMethodParameterException,
-                                                             WebSocketEndpointMethodReturnTypeException {
+    public boolean validate(Object webSocketEndpoint)
+            throws WebSocketEndpointAnnotationException, WebSocketMethodParameterException,
+                   WebSocketEndpointMethodReturnTypeException {
         if (webSocketEndpoint == null) {
             return false;
         }
         return validateURI(webSocketEndpoint) && validateOnStringMethod(webSocketEndpoint) &&
-                validateOnBinaryMethod(webSocketEndpoint) && validateOnPongMethod(webSocketEndpoint) &&
-                validateOnOpenMethod(webSocketEndpoint) && validateOnCloseMethod(webSocketEndpoint) &&
-                validateOnErrorMethod(webSocketEndpoint);
+               validateOnBinaryMethod(webSocketEndpoint) && validateOnPongMethod(webSocketEndpoint) &&
+               validateOnOpenMethod(webSocketEndpoint) && validateOnCloseMethod(webSocketEndpoint) &&
+               validateOnErrorMethod(webSocketEndpoint);
     }
 
     private boolean validateURI(Object webSocketEndpoint) throws WebSocketEndpointAnnotationException {
@@ -74,20 +74,20 @@ public class EndpointValidator {
         }
         validateReturnType(method);
         boolean foundPrimaryString = false;
-        for (Parameter parameter: method.getParameters()) {
+        for (Parameter parameter : method.getParameters()) {
             Class<?> paraType = parameter.getType();
             if (paraType == String.class) {
                 if (parameter.getAnnotation(PathParam.class) == null) {
                     if (foundPrimaryString) {
                         throw new WebSocketMethodParameterException("Invalid parameter found on text message method: " +
-                                                                            "More than one string parameter without " +
-                                                                            "@PathParam annotation.");
+                                                                    "More than one string parameter without " +
+                                                                    "@PathParam annotation.");
                     }
                     foundPrimaryString = true;
                 }
             } else if (paraType != Session.class) {
-                throw new WebSocketMethodParameterException("Invalid parameter found on text message method: " +
-                                                                    paraType);
+                throw new WebSocketMethodParameterException(
+                        "Invalid parameter found on text message method: " + paraType);
             }
         }
         return foundPrimaryString;
@@ -105,32 +105,32 @@ public class EndpointValidator {
         validateReturnType(method);
         boolean foundPrimaryBuffer = false;
         boolean foundIsFinal = false;
-        for (Parameter parameter: method.getParameters()) {
+        for (Parameter parameter : method.getParameters()) {
             Class<?> paraType = parameter.getType();
             if (paraType == String.class) {
                 if (parameter.getAnnotation(PathParam.class) == null) {
-                    throw new WebSocketMethodParameterException("Invalid parameter found on binary message method: " +
-                                                                        "string parameter without " +
-                                                                        "@PathParam annotation.");
+                    throw new WebSocketMethodParameterException(
+                            "Invalid parameter found on binary message method: " + "string parameter without " +
+                            "@PathParam annotation.");
                 }
             } else if (paraType == ByteBuffer.class || paraType == byte[].class) {
                 if (foundPrimaryBuffer) {
-                    throw new WebSocketMethodParameterException("Invalid parameter found on binary message method: " +
-                                                                        "only one ByteBuffer/byte[] " +
-                                                                        "should be declared.");
+                    throw new WebSocketMethodParameterException(
+                            "Invalid parameter found on binary message method: " + "only one ByteBuffer/byte[] " +
+                            "should be declared.");
                 }
                 foundPrimaryBuffer = true;
 
             } else if (paraType == boolean.class) {
                 if (foundIsFinal) {
                     throw new WebSocketMethodParameterException("Invalid parameter found on binary message method: " +
-                                                                        "only one boolean should be declared and " +
-                                                                        "found more than one.");
+                                                                "only one boolean should be declared and " +
+                                                                "found more than one.");
                 }
                 foundIsFinal = true;
             } else if (paraType != Session.class) {
-                throw new WebSocketMethodParameterException("Invalid parameter found on binary message method: " +
-                                                                    paraType);
+                throw new WebSocketMethodParameterException(
+                        "Invalid parameter found on binary message method: " + paraType);
             }
         }
         return foundPrimaryBuffer;
@@ -147,23 +147,23 @@ public class EndpointValidator {
         }
         validateReturnType(method);
         boolean foundPrimaryPong = false;
-        for (Parameter parameter: method.getParameters()) {
+        for (Parameter parameter : method.getParameters()) {
             Class<?> paraType = parameter.getType();
             if (paraType == String.class) {
                 if (parameter.getAnnotation(PathParam.class) == null) {
-                    throw new WebSocketMethodParameterException("Invalid parameter found on pong message method: " +
-                                                                        "string parameter without " +
-                                                                        "@PathParam annotation.");
+                    throw new WebSocketMethodParameterException(
+                            "Invalid parameter found on pong message method: " + "string parameter without " +
+                            "@PathParam annotation.");
                 }
             } else if (paraType == PongMessage.class) {
                 if (foundPrimaryPong) {
                     throw new WebSocketMethodParameterException("Invalid parameter found on pong message method: " +
-                                                                        "only one PongMessage should be declared.");
+                                                                "only one PongMessage should be declared.");
                 }
                 foundPrimaryPong = true;
             } else if (paraType != Session.class) {
-                throw new WebSocketMethodParameterException("Invalid parameter found on pong message method: " +
-                                                                    paraType);
+                throw new WebSocketMethodParameterException(
+                        "Invalid parameter found on pong message method: " + paraType);
             }
         }
         return foundPrimaryPong;
@@ -179,17 +179,17 @@ public class EndpointValidator {
             return true;
         }
         validateReturnType(method);
-        for (Parameter parameter: method.getParameters()) {
+        for (Parameter parameter : method.getParameters()) {
             Class<?> paraType = parameter.getType();
             if (paraType == String.class) {
                 if (parameter.getAnnotation(PathParam.class) == null) {
-                    throw new WebSocketMethodParameterException("Invalid parameter found on open message method: " +
-                                                                        "string parameter without " +
-                                                                        "@PathParam annotation.");
+                    throw new WebSocketMethodParameterException(
+                            "Invalid parameter found on open message method: " + "string parameter without " +
+                            "@PathParam annotation.");
                 }
             } else if (paraType != Session.class) {
-                throw new WebSocketMethodParameterException("Invalid parameter found on open message method: " +
-                                                                    paraType);
+                throw new WebSocketMethodParameterException(
+                        "Invalid parameter found on open message method: " + paraType);
             }
         }
         return true;
@@ -205,17 +205,17 @@ public class EndpointValidator {
             return true;
         }
         validateReturnType(method);
-        for (Parameter parameter: method.getParameters()) {
+        for (Parameter parameter : method.getParameters()) {
             Class<?> paraType = parameter.getType();
             if (paraType == String.class) {
                 if (parameter.getAnnotation(PathParam.class) == null) {
-                    throw new WebSocketMethodParameterException("Invalid parameter found on close message method: " +
-                                                                        "string parameter without " +
-                                                                        "@PathParam annotation.");
+                    throw new WebSocketMethodParameterException(
+                            "Invalid parameter found on close message method: " + "string parameter without " +
+                            "@PathParam annotation.");
                 }
             } else if (paraType != CloseReason.class && paraType != Session.class) {
-                throw new WebSocketMethodParameterException("Invalid parameter found on close message method: " +
-                                                                    paraType);
+                throw new WebSocketMethodParameterException(
+                        "Invalid parameter found on close message method: " + paraType);
             }
         }
         return true;
@@ -232,37 +232,38 @@ public class EndpointValidator {
         }
         validateReturnType(method);
         boolean foundPrimaryThrowable = false;
-        for (Parameter parameter: method.getParameters()) {
+        for (Parameter parameter : method.getParameters()) {
             Class<?> paraType = parameter.getType();
             if (paraType == String.class) {
                 if (parameter.getAnnotation(PathParam.class) == null) {
-                    throw new WebSocketMethodParameterException("Invalid parameter found on error message method: " +
-                                                                        "string parameter without " +
-                                                                        "@PathParam annotation.");
+                    throw new WebSocketMethodParameterException(
+                            "Invalid parameter found on error message method: " + "string parameter without " +
+                            "@PathParam annotation.");
                 }
             } else if (paraType == Throwable.class) {
                 if (foundPrimaryThrowable) {
                     throw new WebSocketMethodParameterException("Invalid parameter found on pong message method: " +
-                                                                        "only one Throwable should be declared.");
+                                                                "only one Throwable should be declared.");
                 }
                 foundPrimaryThrowable = true;
             } else if (paraType != Session.class) {
-                throw new WebSocketMethodParameterException("Invalid parameter found on error message method: " +
-                                                                    paraType);
+                throw new WebSocketMethodParameterException(
+                        "Invalid parameter found on error message method: " + paraType);
             }
         }
 
         if (!foundPrimaryThrowable) {
-            throw new WebSocketMethodParameterException("Mandatory parameter for on error method " + Throwable.class +
-                                                                " not found.");
+            throw new WebSocketMethodParameterException(
+                    "Mandatory parameter for on error method " + Throwable.class + " not found.");
         }
         return foundPrimaryThrowable;
     }
 
     private boolean validateReturnType(Method method) throws WebSocketEndpointMethodReturnTypeException {
         Class<?> returnType = method.getReturnType();
-        boolean foundCorrectReturnType = returnType == String.class || returnType == ByteBuffer.class ||
-                returnType == byte[].class || returnType == PongMessage.class || returnType == void.class;
+        boolean foundCorrectReturnType =
+                returnType == String.class || returnType == ByteBuffer.class || returnType == byte[].class ||
+                returnType == PongMessage.class || returnType == void.class;
         if (!foundCorrectReturnType) {
             throw new WebSocketEndpointMethodReturnTypeException("Unexpected method return type: " + returnType);
         }

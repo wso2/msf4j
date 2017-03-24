@@ -41,6 +41,7 @@ public class EndpointDispatcher {
     /**
      * Validate the endpoint against the {@link ServerEndpoint} since without {@link ServerEndpoint} definition
      * there can't be a WebSocket endpoint.
+     *
      * @param websocketEndpoint endpoint which should be validated.
      */
     public boolean validateEndpointUri(Object websocketEndpoint) {
@@ -128,12 +129,10 @@ public class EndpointDispatcher {
         for (Method method : methods) {
             if (method.isAnnotationPresent(OnMessage.class)) {
                 Parameter[] parameters = method.getParameters();
-                for (Parameter parameter: parameters) {
-                    if (!parameter.isAnnotationPresent(PathParam.class) &&
-                            parameter.getType() == String.class) {
+                for (Parameter parameter : parameters) {
+                    if (!parameter.isAnnotationPresent(PathParam.class) && parameter.getType() == String.class) {
                         returnMethod = method;
                     }
-
                 }
             }
         }

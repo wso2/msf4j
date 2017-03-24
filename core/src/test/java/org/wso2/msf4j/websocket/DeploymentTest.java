@@ -52,8 +52,6 @@ public class DeploymentTest {
 
     @BeforeClass
     public void setup() throws WebSocketEndpointAnnotationException {
-        log.info(System.lineSeparator() +
-                         "--------------------------------WebSocket Deployment Test--------------------------------");
         microservicesRunner.deployWebSocketEndpoint(new EchoEndpoint());
         microservicesRunner.deployWebSocketEndpoint(new ChatAppEndpoint());
         microservicesRunner.start();
@@ -73,7 +71,7 @@ public class DeploymentTest {
         Assert.assertEquals(textReceived, textSent);
 
         //Test echo binaryMessage
-        byte[] bytes = {1, 2, 3, 4, 5};
+        byte[] bytes = { 1, 2, 3, 4, 5 };
         ByteBuffer bufferSent = ByteBuffer.wrap(bytes);
         echoClient.sendBinary(bufferSent);
         Thread.sleep(sleepTime);
@@ -81,7 +79,7 @@ public class DeploymentTest {
         Assert.assertEquals(bufferReceived, bufferSent);
 
         //Test the Pong Message
-        byte[] pongBytes = {6, 7, 8, 9, 10};
+        byte[] pongBytes = { 6, 7, 8, 9, 10 };
         ByteBuffer pongBufferSent = ByteBuffer.wrap(pongBytes);
         echoClient.sendPong(pongBufferSent);
         Thread.sleep(sleepTime);

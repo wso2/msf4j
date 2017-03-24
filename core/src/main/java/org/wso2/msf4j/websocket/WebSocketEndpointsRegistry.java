@@ -18,7 +18,6 @@
 
 package org.wso2.msf4j.websocket;
 
-
 import java.util.Set;
 
 /**

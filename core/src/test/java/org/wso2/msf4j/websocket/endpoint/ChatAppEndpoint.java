@@ -66,8 +66,8 @@ public class ChatAppEndpoint {
 
     @OnClose
     public void onClose(@PathParam("name") String name, CloseReason closeReason, Session session) {
-        log.info("Connection is closed with status code: " + closeReason.getCloseCode().getCode()
-                            + " On reason " + closeReason.getReasonPhrase());
+        log.info("Connection is closed with status code: " + closeReason.getCloseCode().getCode() + " On reason " +
+                 closeReason.getReasonPhrase());
         sessions.remove(session);
         String msg = name + " left the chat";
         sendMessageToAll(msg);
@@ -79,14 +79,12 @@ public class ChatAppEndpoint {
     }
 
     private void sendMessageToAll(String message) {
-        sessions.forEach(
-                session -> {
-                    try {
-                        session.getBasicRemote().sendText(message);
-                    } catch (IOException e) {
-                        log.error(e.toString());
-                    }
-                }
-        );
+        sessions.forEach(session -> {
+            try {
+                session.getBasicRemote().sendText(message);
+            } catch (IOException e) {
+                log.error(e.toString());
+            }
+        });
     }
 }

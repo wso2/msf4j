@@ -69,30 +69,28 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
      */
     public List<Object> addEndpoint(Object... webSocketEndpoints) {
         List<Object> endpointsWithError = new LinkedList<>();
-        Arrays.stream(webSocketEndpoints).forEach(
-                endpoint -> {
-                    EndpointDispatcher dispatcher = new EndpointDispatcher();
-                    try {
-                        if (validator.validate(endpoint)) {
-                            webSocketEndpointMap.put(dispatcher.getUri(endpoint), endpoint);
-                            log.info("Endpoint Registered : " + dispatcher.getUri(endpoint));
-                        }
-                    } catch (WebSocketEndpointAnnotationException e) {
-                        endpointsWithError.add(endpoint);
-                        log.error("Cannot deploy endpoint" +
-                                          ": server endpoint not defined." + System.lineSeparator() + e.toString());
-                    } catch (WebSocketMethodParameterException e) {
-                        endpointsWithError.add(endpoint);
-                        log.error("Cannot deploy endpoint " + webSocketEndpoints.getClass().getName() +
-                                          ": error method definition." + System.lineSeparator() + e.toString());
-                    } catch (WebSocketEndpointMethodReturnTypeException e) {
-                        endpointsWithError.add(endpoint);
-                        log.error("Cannot deploy endpoint " + webSocketEndpoints.getClass().getName() +
-                                          ": invalid method return type." + System.lineSeparator() + e.toString());
-                    }
-
+        Arrays.stream(webSocketEndpoints).forEach(endpoint -> {
+            EndpointDispatcher dispatcher = new EndpointDispatcher();
+            try {
+                if (validator.validate(endpoint)) {
+                    webSocketEndpointMap.put(dispatcher.getUri(endpoint), endpoint);
+                    log.info("Endpoint Registered : " + dispatcher.getUri(endpoint));
                 }
-        );
+            } catch (WebSocketEndpointAnnotationException e) {
+                endpointsWithError.add(endpoint);
+                log.error("Cannot deploy endpoint" + ": server endpoint not defined." + System.lineSeparator() +
+                          e.toString());
+            } catch (WebSocketMethodParameterException e) {
+                endpointsWithError.add(endpoint);
+                log.error("Cannot deploy endpoint " + webSocketEndpoints.getClass().getName() +
+                          ": error method definition." + System.lineSeparator() + e.toString());
+            } catch (WebSocketEndpointMethodReturnTypeException e) {
+                endpointsWithError.add(endpoint);
+                log.error("Cannot deploy endpoint " + webSocketEndpoints.getClass().getName() +
+                          ": invalid method return type." + System.lineSeparator() + e.toString());
+            }
+
+        });
         updatePatternPathRouter();
         return endpointsWithError;
     }
@@ -123,26 +121,24 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
 
     @Override
     public Set<Object> getAllEndpoints() {
-        return webSocketEndpointMap.entrySet().stream()
-                .map(Map.Entry::getValue)
-                .collect(Collectors.toSet());
+        return webSocketEndpointMap.entrySet().stream().map(Map.Entry::getValue).collect(Collectors.toSet());
     }
 
     /**
      * Find the best matching RoutableDestination from the All matching RoutableDestinations.
      *
      * @param routableDestinationList routable destication list for a given uri.
-     * @param requestUri uri which the best endpoint should be found for.
+     * @param requestUri              uri which the best endpoint should be found for.
      * @return the best possible routable destination for the requested uri.
      */
     private PatternPathRouter.RoutableDestination<Object> getBestEndpoint(
             List<PatternPathRouter.RoutableDestination<Object>> routableDestinationList, String requestUri) {
         PatternPathRouter.RoutableDestination<Object> bestRoutableDestination = null;
         int currentBestHitCount = 0;
-        for (PatternPathRouter.RoutableDestination<Object>
-                currentRoutableDestination: routableDestinationList) {
-            int tempCount = getHitCount(new EndpointDispatcher().getUri(currentRoutableDestination.getDestination())
-                                                .split("/"), requestUri.split("/"));
+        for (PatternPathRouter.RoutableDestination<Object> currentRoutableDestination : routableDestinationList) {
+            int tempCount =
+                    getHitCount(new EndpointDispatcher().getUri(currentRoutableDestination.getDestination()).split("/"),
+                                requestUri.split("/"));
             if (tempCount > currentBestHitCount) {
                 bestRoutableDestination = currentRoutableDestination;
                 currentBestHitCount = tempCount;
@@ -156,18 +152,15 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
      */
     private void updatePatternPathRouter() {
         endpointPatternPathRouter = PatternPathRouter.create();
-        webSocketEndpointMap.entrySet().forEach(
-                entry -> endpointPatternPathRouter.add(entry.getKey(), entry.getValue())
-        );
+        webSocketEndpointMap.entrySet()
+                            .forEach(entry -> endpointPatternPathRouter.add(entry.getKey(), entry.getValue()));
     }
-
-    //
 
     /**
      * Compare and find number of equalities of the Endpoint URI and Requested URI.
      *
      * @param destinationUriChunkArray chunk words of the endpoint uri.
-     * @param requestUriChunkArray chunk words of the requested uri.
+     * @param requestUriChunkArray     chunk words of the requested uri.
      * @return hit count - how many words are matched endpoint uri against requested uri.
      */
     private int getHitCount(String[] destinationUriChunkArray, String[] requestUriChunkArray) {

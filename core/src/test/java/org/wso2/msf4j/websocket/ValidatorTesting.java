@@ -49,8 +49,6 @@ public class ValidatorTesting {
 
     @BeforeClass
     public void setup() {
-        log.info(System.lineSeparator() +
-                         "--------------------------------WebSocket Validator Test--------------------------------");
     }
 
     @Test(description = "Test endpoint with all necessary methods and all correct parameters")

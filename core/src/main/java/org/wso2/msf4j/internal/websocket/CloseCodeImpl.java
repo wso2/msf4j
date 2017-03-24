@@ -18,7 +18,6 @@
 
 package org.wso2.msf4j.internal.websocket;
 
-
 import javax.websocket.CloseReason;
 
 /**

@@ -70,7 +70,7 @@ If you are using a secured connection change ws -> wss.
         var ws = null; // WebSocketConnector
         var name = "";
         
-        $('#connectBtn').click(function(){
+        $('#connectBtn').click(function() {
             connectUrl = $('#connectUrlTxt').val();
             ws = new WebSocket(connectUrl);
             ws.onmessage = onMessage;
@@ -103,7 +103,7 @@ If you are using a secured connection change ws -> wss.
             $('#connectionStatus').text("connection closed.").css("color", "red");
         });
 
-        $('#sendTextClrBtn').click(function(){
+        $('#sendTextClrBtn').click(function() {
             $('#responseBox').empty();
         });
 

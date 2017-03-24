@@ -19,8 +19,7 @@
 package org.wso2.msf4j.websocket;
 
 /**
- * Maker Interface for developers who are developing endpoints in OSGi environment.
- * This should be implemented if developer are creating a WebSocket endpoint
+ * Interface that needs to be implemented when using WebSocket endpoint in OSGi mode.
  */
 public interface WebSocketEndpoint {
 }
