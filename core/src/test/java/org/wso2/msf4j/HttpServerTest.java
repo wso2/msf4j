@@ -42,6 +42,7 @@ import org.wso2.msf4j.pojo.XmlBean;
 import org.wso2.msf4j.service.SecondService;
 import org.wso2.msf4j.service.TestMicroServiceWithDynamicPath;
 import org.wso2.msf4j.service.TestMicroservice;
+import org.wso2.msf4j.service.TestMicroservice2;
 import org.wso2.msf4j.service.sub.Player;
 import org.wso2.msf4j.service.sub.Team;
 
@@ -102,7 +103,9 @@ public class HttpServerTest {
             throw new RuntimeException("Error while creating tenp directory", e);
         }
     }
+
     private final TestMicroservice testMicroservice = new TestMicroservice();
+    private final TestMicroservice2 testMicroservice2 = new TestMicroservice2();
     private final SecondService secondService = new SecondService();
 
     private static final int port = Constants.PORT + 1;
@@ -117,7 +120,7 @@ public class HttpServerTest {
         microservicesRunner = new MicroservicesRunner(port);
         microservicesRunner
                 .addExceptionMapper(new TestExceptionMapper(), new TestExceptionMapper2())
-                .deploy(testMicroservice)
+                .deploy(testMicroservice, testMicroservice2)
                 .start();
         microservicesRunner.deploy("/DynamicPath", new TestMicroServiceWithDynamicPath());
         microservicesRunner.deploy("/DynamicPath2", new TestMicroServiceWithDynamicPath());
@@ -1178,6 +1181,27 @@ public class HttpServerTest {
         assertNull(setCookieHeader);
         String content = getContent(urlConn); // content retrieved & returned from session
         assertEquals(String.valueOf(value), content);
+        urlConn.disconnect();
+    }
+
+    @Test
+    public void testSessionEncapsulation() throws IOException {
+        long value = System.currentTimeMillis();
+        // Set session in one micro-service
+        HttpURLConnection urlConn = request("/test/v1/set-session/" + value, HttpMethod.GET);
+        assertEquals(204, urlConn.getResponseCode());
+        String setCookieHeader = urlConn.getHeaderField("Set-Cookie");
+        assertNotNull(setCookieHeader);
+        urlConn.disconnect();
+
+        // Try to get the session attribute from the second micro-service
+        urlConn = request("/test2/v1/get-session/", HttpMethod.GET);
+        urlConn.setRequestProperty("Cookie", setCookieHeader);
+        assertEquals(204, urlConn.getResponseCode()); // Http method should return null
+        setCookieHeader = urlConn.getHeaderField("Set-Cookie");
+        assertNotNull(setCookieHeader);
+        String content = getContent(urlConn); // content retrieved & returned from session
+        assertEquals("", content);
         urlConn.disconnect();
     }
 

@@ -19,39 +19,45 @@
 package org.wso2.msf4j;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Default SessionManager to manage MSF4J transport sessions.
  */
 public class DefaultSessionManager extends AbstractSessionManager {
 
+    public DefaultSessionManager(MicroservicesRegistry microservicesRegistry) {
+        super(microservicesRegistry);
+    }
+
     @Override
-    public void loadSessions(Map<String, Session> sessions) {
+    public Map<String, Map<String, Session>> loadSessions() {
+        checkValidity();
+        // Nothing to do because this is an in-memory implementation
+        return new ConcurrentHashMap<>();
+    }
+
+    @Override
+    public void saveSession(Session session, MicroServiceContext microServiceContext) {
         checkValidity();
         // Nothing to do because this is an in-memory implementation
     }
 
     @Override
-    public void saveSession(Session session) {
-        checkValidity();
-        // Nothing to do because this is an in-memory implementation
-    }
-
-    @Override
-    public Session readSession(String sessionId) {
+    public Session readSession(String sessionId, MicroServiceContext microServiceContext) {
         checkValidity();
         // Nothing to do because this is an in-memory implementation
         return null;
     }
 
     @Override
-    public void deleteSession(Session session) {
+    public void deleteSession(Session session, MicroServiceContext microServiceContext) {
         checkValidity();
         // Nothing to do because this is an in-memory implementation
     }
 
     @Override
-    public void updateSession(Session session) {
+    public void updateSession(Session session, MicroServiceContext microServiceContext) {
         checkValidity();
         // Nothing to do because this is an in-memory implementation
     }

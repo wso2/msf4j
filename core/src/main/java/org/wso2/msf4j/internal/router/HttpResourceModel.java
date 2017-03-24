@@ -17,6 +17,7 @@
 package org.wso2.msf4j.internal.router;
 
 import org.wso2.msf4j.HttpStreamer;
+import org.wso2.msf4j.MicroServiceContext;
 import org.wso2.msf4j.formparam.FormDataParam;
 import org.wso2.msf4j.util.Utils;
 
@@ -80,6 +81,7 @@ public final class HttpResourceModel {
     private final Method method;
     private final Object handler;
     private final List<ParameterInfo<?>> paramInfoList;
+    private final MicroServiceContext microServiceContext;
     private List<String> consumesMediaTypes;
     private List<String> producesMediaTypes;
     private int isStreamingReqSupported = STREAMING_REQ_UNKNOWN;
@@ -87,6 +89,28 @@ public final class HttpResourceModel {
     private boolean isSubResourceLocator;
     private boolean isSubResourceScanned;
     private HttpResourceModel parent;
+
+    /**
+     * Construct a resource model with HttpMethod, method that handles httprequest, Object that contains the method.
+     *
+     * @param microServiceContext  context of the micro-service
+     * @param path                 path associated with this model.
+     * @param method               handler that handles the http request.
+     * @param handler              instance {@code HttpHandler}.
+     * @param isSubResourceLocator indicate if this is a subresource locator method
+     */
+    public HttpResourceModel(MicroServiceContext microServiceContext, String path, Method method, Object handler,
+                             boolean isSubResourceLocator) {
+        this.httpMethods = getHttpMethods(method);
+        this.path = path;
+        this.method = method;
+        this.handler = handler;
+        this.isSubResourceLocator = isSubResourceLocator;
+        this.paramInfoList = makeParamInfoList(method);
+        this.microServiceContext = microServiceContext;
+        consumesMediaTypes = parseConsumesMediaTypes();
+        producesMediaTypes = parseProducesMediaTypes();
+    }
 
     /**
      * If this is a subresource locator, get the parent of this Model.
@@ -104,6 +128,15 @@ public final class HttpResourceModel {
         this.parent = parent;
         consumesMediaTypes = parseConsumesMediaTypes();
         producesMediaTypes = parseProducesMediaTypes();
+    }
+
+    /**
+     * Get micro-service context.
+     *
+     * @return micro-service context
+     */
+    public MicroServiceContext getMicroServiceContext() {
+        return microServiceContext;
     }
 
     /**
@@ -140,25 +173,6 @@ public final class HttpResourceModel {
      */
     public boolean isSubResourceScanned() {
         return isSubResourceScanned;
-    }
-
-    /**
-     * Construct a resource model with HttpMethod, method that handles httprequest, Object that contains the method.
-     *
-     * @param path             path associated with this model.
-     * @param method           handler that handles the http request.
-     * @param handler          instance {@code HttpHandler}.
-     * @param isSubResourceLocator indicate if this is a subresource locator method
-     */
-    public HttpResourceModel(String path, Method method, Object handler, boolean isSubResourceLocator) {
-        this.httpMethods = getHttpMethods(method);
-        this.path = path;
-        this.method = method;
-        this.handler = handler;
-        this.isSubResourceLocator = isSubResourceLocator;
-        this.paramInfoList = makeParamInfoList(method);
-        consumesMediaTypes = parseConsumesMediaTypes();
-        producesMediaTypes = parseProducesMediaTypes();
     }
 
     private List<String> parseConsumesMediaTypes() {

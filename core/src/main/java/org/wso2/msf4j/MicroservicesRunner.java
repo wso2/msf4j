@@ -31,8 +31,10 @@ import org.wso2.msf4j.interceptor.ResponseInterceptor;
 import org.wso2.msf4j.internal.DataHolder;
 import org.wso2.msf4j.internal.MSF4JMessageProcessor;
 import org.wso2.msf4j.internal.MicroservicesRegistryImpl;
+import org.wso2.msf4j.util.Reflection;
 import org.wso2.msf4j.util.RuntimeAnnotations;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -105,12 +107,21 @@ public class MicroservicesRunner {
     /**
      * Register a custom {@link SessionManager}.
      *
-     * @param sessionManager The SessionManager instance to be registered.
+     * @param sessionManagerType The SessionManager type to be registered.
+     * @param <T>                type of the session manager
      * @return this MicroservicesRunner object
      */
-    public MicroservicesRunner setSessionManager(SessionManager sessionManager) {
-        msRegistry.setSessionManager(sessionManager);
-        return this;
+    public <T extends SessionManager> MicroservicesRunner setSessionManager(Class<T> sessionManagerType) {
+        try {
+            Class[] paramTypes = new Class[]{MicroservicesRegistry.class};
+            SessionManager sessionManager = Reflection
+                    .createInstanceFromClass(sessionManagerType, paramTypes, msRegistry);
+            msRegistry.setSessionManager(sessionManager);
+            return this;
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException |
+                InstantiationException e) {
+            throw new RuntimeException("Error in creating session manager", e);
+        }
     }
 
     /**

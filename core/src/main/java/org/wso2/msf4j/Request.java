@@ -9,6 +9,7 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.HttpHeaders;
 
@@ -21,6 +22,7 @@ public class Request {
     private List<String> acceptTypes = null;
     private String contentType = null;
     private SessionManager sessionManager;
+    private MicroServiceContext serviceContext;
     private Session session;
 
     public Request(CarbonMessage carbonMessage) {
@@ -167,14 +169,23 @@ public class Request {
         }
         String cookieHeader = getHeader("Cookie");
         if (cookieHeader != null) {
-            session = Arrays.stream(cookieHeader.split(";"))
+            Optional<String> sessionId = Arrays.stream(cookieHeader.split(";"))
                     .filter(cookie -> cookie.startsWith(MSF4JConstants.SESSION_ID))
-                    .findFirst()
-                    .map(jsession -> sessionManager.getSession(jsession.substring(MSF4JConstants.SESSION_ID.length())))
-                    .orElseGet(sessionManager::createSession);
-            return session.setAccessed();
+                    .findFirst();
+            if (sessionId.isPresent()) {
+                session = sessionId
+                        .map(s -> sessionManager
+                                .getSession(s.substring(MSF4JConstants.SESSION_ID.length()), serviceContext))
+                        .orElseGet(() ->
+                                sessionManager.createSession(serviceContext)
+                        );
+                session.setManager(sessionManager);
+                return session.setAccessed();
+            }
         }
-        return session = sessionManager.createSession();
+        session = sessionManager.createSession(serviceContext);
+        session.setManager(sessionManager);
+        return session.setAccessed();
     }
 
     /**
@@ -193,21 +204,42 @@ public class Request {
         }
         String cookieHeader = getHeader("Cookie");
         if (cookieHeader != null) {
-            session = Arrays.stream(cookieHeader.split(";"))
+            Optional<String> sessionId = Arrays.stream(cookieHeader.split(";"))
                     .filter(cookie -> cookie.startsWith(MSF4JConstants.SESSION_ID))
-                    .findFirst()
-                    .map(jsession -> sessionManager.getSession(jsession.substring(MSF4JConstants.SESSION_ID.length())))
-                    .orElseGet(() -> {
-                        if (create) {
-                            return sessionManager.createSession();
-                        }
-                        return null;
-                    });
-            return session.setAccessed();
-        } else if (create) {
-            return session = sessionManager.createSession();
+                    .findFirst();
+            if (sessionId.isPresent()) {
+                Optional<Session> sessionOptional = sessionId
+                        .map(s -> sessionManager
+                                .getSession(s.substring(MSF4JConstants.SESSION_ID.length()), serviceContext));
+                if (sessionOptional.isPresent()) {
+                    session = sessionOptional.get();
+                    session.setManager(sessionManager);
+                }
+            }
         }
-        return null;
+        if (create && session == null) {
+            session = sessionManager.createSession(serviceContext);
+            session.setManager(sessionManager);
+        }
+        return session != null ? session.setAccessed() : null;
+    }
+
+    /**
+     * Get micro-service context for the request.
+     *
+     * @return micro-service context
+     */
+    public MicroServiceContext getServiceContext() {
+        return serviceContext;
+    }
+
+    /**
+     * Set micro-service context for the request.
+     *
+     * @param serviceContext micro-service context
+     */
+    public void setServiceContext(MicroServiceContext serviceContext) {
+        this.serviceContext = serviceContext;
     }
 
     Session getSessionInternal() {

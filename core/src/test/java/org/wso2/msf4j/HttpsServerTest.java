@@ -26,6 +26,7 @@ import org.wso2.msf4j.exception.TestExceptionMapper2;
 import org.wso2.msf4j.service.SecondService;
 import org.wso2.msf4j.service.TestMicroServiceWithDynamicPath;
 import org.wso2.msf4j.service.TestMicroservice;
+import org.wso2.msf4j.service.TestMicroservice2;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -44,6 +45,7 @@ public class HttpsServerTest extends HttpServerTest {
     private static SSLClientContext sslClientContext;
 
     private final TestMicroservice testMicroservice = new TestMicroservice();
+    private final TestMicroservice2 testMicroservice2 = new TestMicroservice2();
     private final SecondService secondService = new SecondService();
     private MicroservicesRunner microservicesRunner;
     private MicroservicesRunner secondMicroservicesRunner;
@@ -61,7 +63,7 @@ public class HttpsServerTest extends HttpServerTest {
         sslClientContext = new SSLClientContext();
         microservicesRunner
                 .addExceptionMapper(new TestExceptionMapper(), new TestExceptionMapper2())
-                .deploy(testMicroservice)
+                .deploy(testMicroservice, testMicroservice2)
                 .start();
         secondMicroservicesRunner = new MicroservicesRunner(port + 1);
         secondMicroservicesRunner.deploy(secondService).start();

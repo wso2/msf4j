@@ -28,7 +28,7 @@ public class Application {
     public static void main(String[] args) {
         new MicroservicesRunner()
                 .deploy(new CounterService())
-                .setSessionManager(new PersistentSessionManager())  // this is optional
+                .setSessionManager(PersistentSessionManager.class)  // this is optional
                 .start();
     }
 }

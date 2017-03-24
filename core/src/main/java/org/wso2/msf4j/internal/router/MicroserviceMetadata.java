@@ -18,6 +18,7 @@ package org.wso2.msf4j.internal.router;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.msf4j.MicroServiceContext;
 import org.wso2.msf4j.util.Utils;
 
 import java.lang.reflect.Method;
@@ -53,12 +54,13 @@ public final class MicroserviceMetadata {
      * Construct HttpResourceHandler. Reads all annotations from all the handler classes and methods passed in,
      * constructs patternPathRouter which is routable by path to {@code HttpResourceModel} as destination of the route.
      *
-     * @param services Iterable of HttpHandler
+     * @param serviceContexts Iterable of HttpHandler
      */
-    public MicroserviceMetadata(Iterable<? extends Object> services) {
+    public MicroserviceMetadata(Iterable<? extends MicroServiceContext> serviceContexts) {
         //Store the services to call init and destroy on all services.
 
-        for (Object service : services) {
+        for (MicroServiceContext context : serviceContexts) {
+            Object service = context.getService();
             String basePath = "";
             if (service.getClass().isAnnotationPresent(Path.class)) {
                 basePath = service.getClass().getAnnotation(Path.class).value();
@@ -75,7 +77,8 @@ public final class MicroserviceMetadata {
                         relativePath = method.getAnnotation(Path.class).value();
                     }
                     String absolutePath = String.format("%s/%s", basePath, relativePath);
-                    patternRouter.add(absolutePath, new HttpResourceModel(absolutePath, method, service, false));
+                    patternRouter.add(absolutePath,
+                            new HttpResourceModel(context, absolutePath, method, service, false));
                 } else if (Modifier.isPublic(method.getModifiers()) && method.getAnnotation(Path.class) != null) {
                     // Sub resource locator method
                     String relativePath = method.getAnnotation(Path.class).value();
@@ -83,7 +86,8 @@ public final class MicroserviceMetadata {
                         relativePath = relativePath.substring(1);
                     }
                     String absolutePath = String.format("%s/%s", basePath, relativePath);
-                    patternRouter.add(absolutePath, new HttpResourceModel(absolutePath, method, service, true));
+                    patternRouter.add(absolutePath,
+                            new HttpResourceModel(context, absolutePath, method, service, true));
                 } else {
                     log.trace("Not adding method {}({}) to path routing like. " +
                                     "HTTP calls will not be routed to this method",
@@ -94,13 +98,14 @@ public final class MicroserviceMetadata {
     }
 
     /**
-     * Register given service object with the given base path. Path annotion of the service class will be ignore,
+     * Register given service object with the given base path. Path annotation of the service class will be ignore,
      * instead use the provided base path.
      *
-     * @param service HttpHandler object
+     * @param context  micro-service context
+     * @param service  HttpHandler object
      * @param basePath Path the handler should be registered
      */
-    public void addMicroserviceMetadata(final Object service, String basePath) {
+    public void addMicroserviceMetadata(final Object service, String basePath, MicroServiceContext context) {
         //Store the services to call init and destroy on all services.
         for (Method method : service.getClass().getMethods()) {
             if (method.isAnnotationPresent(PostConstruct.class) || method.isAnnotationPresent(PreDestroy.class)) {
@@ -113,7 +118,8 @@ public final class MicroserviceMetadata {
                     relativePath = method.getAnnotation(Path.class).value();
                 }
                 String absolutePath = String.format("%s/%s", basePath, relativePath);
-                patternRouter.add(absolutePath, new HttpResourceModel(absolutePath, method, service, false));
+                patternRouter.add(absolutePath,
+                        new HttpResourceModel(context, absolutePath, method, service, false));
             } else {
                 log.trace("Not adding method {}({}) to path routing like. " +
                           "HTTP calls will not be routed to this method", method.getName(), method.getParameterTypes());

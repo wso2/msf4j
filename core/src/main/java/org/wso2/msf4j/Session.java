@@ -30,6 +30,7 @@ public class Session implements Serializable {
 
     private static final long serialVersionUID = -3945729418329160933L;
     private transient SessionManager sessionManager;
+    private transient MicroServiceContext microServiceContext;
 
     private String id;
     private long creationTime;
@@ -78,12 +79,12 @@ public class Session implements Serializable {
     public void setAttribute(String name, Object value) {
         checkValidity();
         attributes.put(name, value);
-        sessionManager.updateSession(this);
+        sessionManager.updateSession(this, microServiceContext);
     }
 
     public void removeAttribute(String name) {
         checkValidity();
-        sessionManager.updateSession(this);
+        sessionManager.updateSession(this, microServiceContext);
         attributes.remove(name);
     }
 
@@ -94,7 +95,7 @@ public class Session implements Serializable {
     }
 
     public void invalidate() {
-        sessionManager.invalidateSession(this);
+        sessionManager.invalidateSession(this, microServiceContext);
         attributes.clear();
         isValid = false;
     }
@@ -127,6 +128,10 @@ public class Session implements Serializable {
 
     public void setManager(SessionManager sessionManager) {
         this.sessionManager = sessionManager;
+    }
+
+    void setMicroServiceContext(MicroServiceContext microServiceContext) {
+        this.microServiceContext = microServiceContext;
     }
 }
 
