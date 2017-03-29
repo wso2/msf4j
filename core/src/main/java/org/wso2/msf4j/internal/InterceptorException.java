@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, WSO2 Inc. (http://wso2.com) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,16 @@
  * limitations under the License.
  */
 
-package org.wso2.msf4j.example;
-
-import org.wso2.msf4j.MicroservicesRunner;
-import org.wso2.msf4j.security.JWTSecurityInterceptor;
+package org.wso2.msf4j.internal;
 
 /**
- * Main Application Class.
+ * Exception that will be thrown when executing interceptors
+ * by the InterceptorExecutor.
  */
-public class Application {
+public class InterceptorException extends Exception {
 
-    public static void main(String[] args) {
-        // Port 8081 is used since the default port of tomcat is 8080
-        new MicroservicesRunner(8081).addInterceptor(new JWTSecurityInterceptor())
-                .addInterceptor(new CustomJWTClaimsInterceptor()).deploy(new Helloworld()).start();
+    public InterceptorException(String msg, Throwable cause) {
+        super(msg, cause);
     }
+
 }

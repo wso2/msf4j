@@ -25,13 +25,10 @@ import org.wso2.msf4j.security.JWTSecurityInterceptor;
  */
 public class Runner {
     public static void main(String[] args) {
-        JWTSecurityInterceptor jwtSecurityInterceptor = new JWTSecurityInterceptor();
-        HTTPMonitoringInterceptor httpMonitoringInterceptor = new HTTPMonitoringInterceptor();
-        MetricsInterceptor metricsInterceptor = new MetricsInterceptor();
-
         new MicroservicesRunner()
-                .addGlobalRequestInterceptor(jwtSecurityInterceptor, httpMonitoringInterceptor, metricsInterceptor)
-                .addGlobalResponseInterceptor(httpMonitoringInterceptor, metricsInterceptor)
+                .addInterceptor(new JWTSecurityInterceptor())
+                .addInterceptor(new HTTPMonitoringInterceptor())
+                .addInterceptor(new MetricsInterceptor())
                 .deploy(new TxnService())
                 .start();
     }

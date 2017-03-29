@@ -32,25 +32,25 @@ import javax.ws.rs.core.Response;
 import static org.testng.AssertJUnit.assertEquals;
 
 /**
- * Tests handler interceptors.
+ * Tests handler interceptor.
  */
-public class InterceptorTest extends InterceptorTestBase {
+public class HandlerInterceptorTest extends InterceptorTestBase {
     private final TestInterceptor interceptor1 = new TestInterceptor();
     private final TestInterceptor interceptor2 = new TestInterceptor();
 
     private final TestMicroservice testMicroservice = new TestMicroservice();
 
-    private static final int port = Constants.PORT + 2;
+    private static final int port = Constants.PORT;
 
     private MicroservicesRunner microservicesRunner;
 
     @BeforeClass
     public void setup() throws Exception {
         microservicesRunner = new MicroservicesRunner(port);
-        microservicesRunner.
-                deploy(testMicroservice).
-                addInterceptor(interceptor1).
-                addInterceptor(interceptor2)
+        microservicesRunner
+                .deploy(testMicroservice)
+                .addInterceptor(interceptor1)
+                .addInterceptor(interceptor2)
                 .start();
         microservicesRunner.deploy("/DynamicPath", new TestMicroServiceWithDynamicPath());
         microservicesRunner.deploy("/DynamicPath2", new TestMicroServiceWithDynamicPath());
@@ -69,17 +69,43 @@ public class InterceptorTest extends InterceptorTestBase {
     }
 
     @Test
-    public void testPreInterceptorReject() throws Exception {
-        int status = doGet("/test/v1/resource", "X-Request-Type", "Reject");
-        assertEquals(Response.Status.NOT_ACCEPTABLE.getStatusCode(), status);
+    public void testPreException() throws Exception {
+        int status = doGet("/test/v1/resource", "X-Request-Type", "PreException");
+        assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), status);
 
         // Wait for any post handlers to be called
         TimeUnit.MILLISECONDS.sleep(100);
         assertEquals(1, interceptor1.getNumPreCalls());
 
-        // The second pre-call should not have happened due to rejection by the first pre-call
+        // The second pre-call should not have happened due to exception in the first pre-call
         // None of the post calls should have happened.
         assertEquals(0, interceptor1.getNumPostCalls());
+        assertEquals(0, interceptor2.getNumPreCalls());
+        assertEquals(0, interceptor2.getNumPostCalls());
+    }
+
+    @Test
+    public void testPostException() throws Exception {
+        int status = doGet("/test/v1/resource", "X-Request-Type", "PostException");
+        assertEquals(Response.Status.OK.getStatusCode(), status);
+
+        assertEquals(1, interceptor1.getNumPreCalls());
+        assertEquals(1, interceptor1.getNumPostCalls());
+
+        assertEquals(1, interceptor2.getNumPreCalls());
+        assertEquals(1, interceptor2.getNumPostCalls());
+    }
+
+    @Test
+    public void testUnknownPath() throws Exception {
+        int status = doGet("/unknown/path/test/v1/resource");
+        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), status);
+
+        // Wait for any post handlers to be called
+        TimeUnit.MILLISECONDS.sleep(100);
+        assertEquals(0, interceptor1.getNumPreCalls());
+        assertEquals(0, interceptor1.getNumPostCalls());
+
         assertEquals(0, interceptor2.getNumPreCalls());
         assertEquals(0, interceptor2.getNumPostCalls());
     }

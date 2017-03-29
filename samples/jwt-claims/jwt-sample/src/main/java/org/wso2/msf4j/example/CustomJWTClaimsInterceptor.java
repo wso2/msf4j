@@ -18,21 +18,27 @@ package org.wso2.msf4j.example;
 
 import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.messaging.Headers;
+import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
-import org.wso2.msf4j.interceptor.RequestInterceptor;
+import org.wso2.msf4j.ServiceMethodInfo;
+
+import java.util.Map;
 
 /**
  * Interceptor for handling custom JWT claims.
  */
-public class CustomJWTClaimsInterceptor implements RequestInterceptor {
+public class CustomJWTClaimsInterceptor implements Interceptor {
 
     private static final String JWT_HEADER = "X-JWT-Assertion";
     private static final String AUTH_TYPE_JWT = "JWT";
+    private final Log log = LogFactory.getLog(CustomJWTClaimsInterceptor.class);
 
     @Override
-    public boolean interceptRequest(Request request, Response response) throws Exception {
+    public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) throws Exception {
         Headers headers = request.getHeaders();
         if (headers != null) {
             String jwtHeader = headers.get(JWT_HEADER);
@@ -45,8 +51,13 @@ public class CustomJWTClaimsInterceptor implements RequestInterceptor {
                 }
             }
         }
-        response.setHeader(javax.ws.rs.core.HttpHeaders.WWW_AUTHENTICATE, AUTH_TYPE_JWT);
-        response.setStatus(javax.ws.rs.core.Response.Status.UNAUTHORIZED.getStatusCode());
+        responder.setHeader(javax.ws.rs.core.HttpHeaders.WWW_AUTHENTICATE, AUTH_TYPE_JWT);
+        responder.setStatus(javax.ws.rs.core.Response.Status.UNAUTHORIZED.getStatusCode());
+        responder.send();
         return false;
+    }
+
+    public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) {
+        // Nothing to do
     }
 }

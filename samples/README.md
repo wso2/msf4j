@@ -21,11 +21,7 @@ In increasing order of complexity;
 * [File Server](fileserver) - Handling Files including streaming input & output
 * [FormParam](formparam) - Shows usage of the FormParam annotation
 * [Circuit Breaker](circuitbreaker) - Using the circuit breaker pattern
-* [Interceptor (Fat jar)](interceptor/fatjar-interceptor-service) - Creating an Interceptor as a single jar which packs 
-all the dependencies
-* [Interceptor (Deployable jar)](interceptor/deployable-jar-interceptor-service) - Creating an Interceptor as a 
-deployable jar
-* [Interceptor (OSGi bundle)](interceptor/osgi-interceptor-service) - Creating an Interceptor as an OSGi Bundle
+* [Log-interceptor](log-interceptor-bundle) - Creating an Interceptor as an OSGi Bundle
 * [Hello World JPA](jpa) - Simple JPA Hibernate based sample
 * [BasicAuth Security](basicauth-security) - Securing Microservice using BasicAuth
 * [OAuth2 Security](oauth2-security) - Securing Microservice using OAuth2

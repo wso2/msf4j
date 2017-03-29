@@ -22,9 +22,10 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.messaging.Headers;
+import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
-import org.wso2.msf4j.interceptor.RequestInterceptor;
+import org.wso2.msf4j.ServiceMethodInfo;
 import org.wso2.msf4j.security.MSF4JSecurityException;
 import org.wso2.msf4j.security.SecurityErrorCode;
 import org.wso2.msf4j.util.SystemVariableUtil;
@@ -43,7 +44,7 @@ import javax.ws.rs.HttpMethod;
  *
  * @since 1.0.0
  */
-public class OAuth2SecurityInterceptor implements RequestInterceptor {
+public class OAuth2SecurityInterceptor implements Interceptor {
     private static final Logger log = LoggerFactory.getLogger(OAuth2SecurityInterceptor.class);
 
     private static final String AUTHORIZATION_HTTP_HEADER = "Authorization";
@@ -69,7 +70,8 @@ public class OAuth2SecurityInterceptor implements RequestInterceptor {
     }
 
     @Override
-    public boolean interceptRequest(Request request, Response response) throws Exception {
+    public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo)
+            throws Exception {
         SecurityErrorCode errorCode;
 
         try {
@@ -86,8 +88,13 @@ public class OAuth2SecurityInterceptor implements RequestInterceptor {
             log.error(e.getMessage() + " Requested Path: " + request.getUri());
         }
 
-        handleSecurityError(errorCode, response);
+        handleSecurityError(errorCode, responder);
         return false;
+    }
+
+    @Override
+    public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) {
+
     }
 
     /**
@@ -187,10 +194,16 @@ public class OAuth2SecurityInterceptor implements RequestInterceptor {
                 errorCode == SecurityErrorCode.INVALID_AUTHORIZATION_HEADER) {
             responder.setStatus(javax.ws.rs.core.Response.Status.UNAUTHORIZED.getStatusCode());
             responder.setHeader(javax.ws.rs.core.HttpHeaders.WWW_AUTHENTICATE, AUTH_TYPE_OAUTH2);
+            responder.send();
         } else if (errorCode == SecurityErrorCode.AUTHORIZATION_FAILURE) {
             responder.setStatus(javax.ws.rs.core.Response.Status.FORBIDDEN.getStatusCode());
+            responder.send();
         } else {
             responder.setStatus(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+            responder.send();
         }
+
     }
+
+
 }

@@ -16,9 +16,10 @@
 
 package org.wso2.msf4j.security.basic;
 
+import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
-import org.wso2.msf4j.interceptor.RequestInterceptor;
+import org.wso2.msf4j.ServiceMethodInfo;
 
 import java.nio.charset.Charset;
 import java.util.Base64;
@@ -29,14 +30,14 @@ import java.util.Base64;
  *
  * @since 1.1.0
  */
-public abstract class AbstractBasicAuthSecurityInterceptor implements RequestInterceptor {
+public abstract class AbstractBasicAuthSecurityInterceptor implements Interceptor {
 
     private static final String AUTH_TYPE_BASIC = "Basic";
     public static final String CHARSET_UTF_8 = "UTF-8";
     private static final int AUTH_TYPE_BASIC_LENGTH = AUTH_TYPE_BASIC.length();
 
     @Override
-    public boolean interceptRequest(Request request, Response response) throws Exception {
+    public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) throws Exception {
         String authHeader = request.getHeader(javax.ws.rs.core.HttpHeaders.AUTHORIZATION);
         if (authHeader != null) {
             String authType = authHeader.substring(0, AUTH_TYPE_BASIC_LENGTH);
@@ -54,10 +55,17 @@ public abstract class AbstractBasicAuthSecurityInterceptor implements RequestInt
             }
 
         }
-        response.setStatus(javax.ws.rs.core.Response.Status.UNAUTHORIZED.getStatusCode());
-        response.setHeader(javax.ws.rs.core.HttpHeaders.WWW_AUTHENTICATE, AUTH_TYPE_BASIC);
+        responder.setStatus(javax.ws.rs.core.Response.Status.UNAUTHORIZED.getStatusCode());
+        responder.setHeader(javax.ws.rs.core.HttpHeaders.WWW_AUTHENTICATE, AUTH_TYPE_BASIC);
+        responder.send();
         return false;
     }
 
+    @Override
+    public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) {
+
+    }
+
     protected abstract boolean authenticate(String username, String password);
+
 }
