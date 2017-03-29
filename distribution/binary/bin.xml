@@ -79,7 +79,7 @@
         </file>
 
         <file>
-            <source>README.txt</source>
+            <source>README.md</source>
             <outputDirectory>.</outputDirectory>
             <fileMode>644</fileMode>
             <filtered>false</filtered>
