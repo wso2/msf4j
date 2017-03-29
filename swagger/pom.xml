@@ -273,6 +273,7 @@
             org.slf4j.*;version="${slf4j.version.range}",
             io.swagger.jaxrs.config.*;version="${io.swagger.version.range}",
             io.swagger.util.*;version="${io.swagger.version.range}",
+            io.swagger.jaxrs;version="${io.swagger.version.range}",
             com.fasterxml.jackson.*;version="${com.fasterxml.jackson.version.range}",
             javax.xml.bind;resolution:=optional,
         </import.package>

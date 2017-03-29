@@ -18,10 +18,10 @@
  */
 package org.wso2.msf4j.swagger;
 
+import io.swagger.models.Swagger;
 import io.swagger.util.Json;
 import org.wso2.msf4j.MicroservicesRegistry;
 import org.wso2.msf4j.SwaggerService;
-import org.wso2.msf4j.util.RuntimeAnnotations;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,16 +55,16 @@ public class SwaggerDefinitionService implements SwaggerService {
     }
 
     @GET
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({ MediaType.APPLICATION_JSON })
     public Response getSwaggerDefinition(@QueryParam("path") String path) throws Exception {
         MSF4JBeanConfig msf4JBeanConfig;
         if (path == null) {
             msf4JBeanConfig = swaggerBeans.get(GLOBAL);
             if (msf4JBeanConfig == null) {
-                MSF4JBeanConfig beanConfig = new MSF4JBeanConfig();
+                MSF4JBeanConfig beanConfig = new MSF4JBeanConfig(new ExtendedSwaggerReader("", new Swagger()));
                 serviceRegistry.getHttpServices().stream().
                         filter(service -> !service.getClass().equals(SwaggerDefinitionService.class)).
-                        forEach(service -> beanConfig.addServiceClass(service.getClass()));
+                                       forEach(service -> beanConfig.addServiceClass(service.getClass()));
                 beanConfig.setScan(true);
                 msf4JBeanConfig = beanConfig;
                 swaggerBeans.put(GLOBAL, msf4JBeanConfig);
@@ -74,10 +74,7 @@ public class SwaggerDefinitionService implements SwaggerService {
             if (msf4JBeanConfig == null) {
                 Optional<Map.Entry<String, Object>> service = serviceRegistry.getServiceWithBasePath(path);
                 if (service.isPresent()) {
-                    MSF4JBeanConfig beanConfig = new MSF4JBeanConfig();
-                    Map<String, Object> valuesMap = new HashMap<>();
-                    valuesMap.put("value", path);
-                    RuntimeAnnotations.putAnnotation(service.get().getValue().getClass(), Path.class, valuesMap);
+                    MSF4JBeanConfig beanConfig = new MSF4JBeanConfig(new ExtendedSwaggerReader(path, new Swagger()));
                     beanConfig.addServiceClass(service.get().getValue().getClass());
                     beanConfig.setBasePath(service.get().getKey());
                     beanConfig.setScan(true);
@@ -86,12 +83,11 @@ public class SwaggerDefinitionService implements SwaggerService {
                 }
             }
         }
-        return (msf4JBeanConfig == null) ?
-                Response.status(Response.Status.NOT_FOUND).
-                        entity("{\"error\": \"Swagger definition not found for path " + path + "\"}").build() :
-                Response.status(Response.Status.OK).
-                        entity(Json.mapper().
-                                writerWithDefaultPrettyPrinter().writeValueAsString(msf4JBeanConfig.getSwagger())).
-                        build();
+        return (msf4JBeanConfig == null) ? Response.status(Response.Status.NOT_FOUND).
+                entity("{\"error\": \"Swagger definition not found for path " + path + "\"}").build() :
+               Response.status(Response.Status.OK).
+                       entity(Json.mapper().
+                               writerWithDefaultPrettyPrinter().writeValueAsString(msf4JBeanConfig.getSwagger())).
+                               build();
     }
 }
