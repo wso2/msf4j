@@ -79,19 +79,4 @@ public class ReflectionUtils {
         }
         return Optional.empty();
     }
-
-    /**
-     * Checks if the class is available.
-     *
-     * @param className String class name
-     * @return true if the class exists
-     */
-    public static boolean isClassAvailable(String className) {
-        try {
-            Class.forName(className);
-        } catch (ClassNotFoundException ignore) {
-            return false;
-        }
-        return true;
-    }
 }

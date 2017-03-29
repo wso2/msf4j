@@ -21,7 +21,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
-import org.wso2.msf4j.internal.MSF4JConstants;
+
+import javax.ws.rs.core.MediaType;
 
 /**
  * Interface that needs to be implemented to intercept request method calls
@@ -65,7 +66,7 @@ public interface RequestInterceptor {
         Logger log = LoggerFactory.getLogger(this.getClass());
         log.error(message, e);
         response.setEntity(e.getMessage() + " - " + message + this.getClass())
-                .setMediaType(MSF4JConstants.MEDIA_TYPE_TEXT_PLAIN)
+                .setMediaType(MediaType.TEXT_PLAIN)
                 .setStatus(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
         return false;
     }

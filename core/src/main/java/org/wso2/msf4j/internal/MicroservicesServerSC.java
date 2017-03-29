@@ -160,8 +160,8 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
         Dictionary<String, String> properties = new Hashtable<>();
         properties.put(MSF4JConstants.CHANNEL_ID, carbonTransport.getId());
         microservicesRegistries.put(carbonTransport.getId(), microservicesRegistry);
-        DataHolder.getInstance().getBundleContext()
-                .registerService(MicroservicesRegistry.class, microservicesRegistry, properties);
+        DataHolder.getInstance().getBundleContext().ifPresent(bundleContext ->
+                bundleContext.registerService(MicroservicesRegistry.class, microservicesRegistry, properties));
     }
 
     protected void removeCarbonTransport(CarbonTransport carbonTransport) {
@@ -328,7 +328,9 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
 
     @Override
     public void onAllRequiredCapabilitiesAvailable() {
-        DataHolder.getInstance().getBundleContext().registerService(MicroservicesServerSC.class, this, null);
-        log.info("All microservices are available");
+        DataHolder.getInstance().getBundleContext().ifPresent(bundleContext -> {
+            bundleContext.registerService(MicroservicesServerSC.class, this, null);
+            log.info("All microservices are available");
+        });
     }
 }

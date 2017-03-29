@@ -252,10 +252,10 @@ public class MicroservicesDeployer implements Deployer, RequiredCapabilityListen
 
     @Override
     public void onAllRequiredCapabilitiesAvailable() {
-        DataHolder.getInstance().getBundleContext().registerService(MicroservicesDeployer.class, this, null);
-        if (log.isDebugEnabled()) {
+        DataHolder.getInstance().getBundleContext().ifPresent(bundleContext -> {
+            bundleContext.registerService(MicroservicesDeployer.class, this, null);
             log.debug("MicroservicesDeployer service is available");
-        }
+        });
     }
 
     /**

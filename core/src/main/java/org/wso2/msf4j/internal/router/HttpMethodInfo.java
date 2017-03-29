@@ -373,42 +373,18 @@ public class HttpMethodInfo {
     /**
      * If chunk handling is supported end streaming chunks.
      *
-     * @param request        msf4j request
-     * @param httpMethodInfo http method information
-     * @param registry       micro-services registry
-     * @return if execution was fully completed
+     * @param isResponseInterceptorsSuccessful have the response interceptors successfully executed
      * @throws Exception if error occurs while stopping streaming handlers
      */
-    public boolean end(Request request, HttpMethodInfo httpMethodInfo, MicroservicesRegistryImpl registry)
-            throws Exception {
-        Class<?> clazz = httpMethodInfo.method.getDeclaringClass();
-        // Execute request interceptors
-        if (InterceptorExecutor.executeGlobalRequestInterceptors(registry, request, httpMethodInfo.responder)
-                // Execute class level request interceptors
-                && InterceptorExecutor.executeClassLevelRequestInterceptors(request, httpMethodInfo.responder, clazz)
-                // Execute method level request interceptors
-                && InterceptorExecutor.executeMethodLevelRequestInterceptors(request, httpMethodInfo.responder,
-                httpMethodInfo.method)) {
-
-            try {
-                httpStreamHandler.end();
-            } catch (Throwable e) {
-                log.error("Exception while invoking streaming handlers", e);
-                httpStreamHandler.error(e);
-                throw e;
-            }
-
-            // Execute method level interceptors (first in - last out order)
-            return InterceptorExecutor.executeMethodResponseInterceptorsForMethods(request, httpMethodInfo.responder,
-                    (ArrayList<Method>) request.getProperty(RESOURCE_METHOD_LIST_CONSTANT))
-                    // Execute class level interceptors (first in - last out order)
-                    && InterceptorExecutor.executeClassResponseInterceptorsForClasses(request, httpMethodInfo.responder,
-                    (ArrayList<Class<?>>) request.getProperty(DECLARING_CLASS_LIST_CONSTANT))
-                    // Execute global interceptors
-                    && InterceptorExecutor.executeGlobalResponseInterceptors(registry, request,
-                    httpMethodInfo.responder);
+    public void end(boolean isResponseInterceptorsSuccessful) throws Exception {
+        try {
+            httpStreamHandler.end();
+        } catch (Throwable e) {
+            log.error("Exception while invoking streaming handlers", e);
+            log.error("Response interceptor execute is successful : " + isResponseInterceptorsSuccessful, e);
+            httpStreamHandler.error(e);
+            throw e;
         }
-        return false;
     }
 
     /**

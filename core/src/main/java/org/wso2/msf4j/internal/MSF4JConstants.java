@@ -25,7 +25,4 @@ public class MSF4JConstants {
 
     // Property constants
     public static final String METHOD_PROPERTY_NAME = "method";
-
-    // Media types
-    public static final String MEDIA_TYPE_TEXT_PLAIN = "text/plain";
 }

@@ -25,7 +25,7 @@ import org.wso2.carbon.messaging.CarbonMessageProcessor;
 import org.wso2.carbon.messaging.TransportSender;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
-import org.wso2.msf4j.exception.InterceptorException;
+import org.wso2.msf4j.interceptor.InterceptorExecutor;
 import org.wso2.msf4j.internal.router.HandlerException;
 import org.wso2.msf4j.internal.router.HttpMethodInfo;
 import org.wso2.msf4j.internal.router.HttpMethodInfoBuilder;
@@ -35,6 +35,7 @@ import org.wso2.msf4j.internal.router.Util;
 import org.wso2.msf4j.util.HttpUtil;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -88,11 +89,6 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                 } else {
                     handleThrowable(currentMicroservicesRegistry, targetException, carbonCallback, request);
                 }
-            } catch (InterceptorException e) {
-                log.warn("Interceptors threw an exception", e);
-                // TODO: improve the response
-                carbonCallback.done(HttpUtil.createTextResponse(
-                        javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), HttpUtil.EMPTY_BODY));
             } catch (Throwable t) {
                 handleThrowable(currentMicroservicesRegistry, t, carbonCallback, request);
             } finally {
@@ -106,31 +102,42 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
     /**
      * Dispatch appropriate resource method.
      */
-    private void dispatchMethod(MicroservicesRegistryImpl currentMicroservicesRegistry, Request request,
+    private void dispatchMethod(MicroservicesRegistryImpl registry, Request request,
                                 Response response) throws Exception {
         HttpUtil.setConnectionHeader(request, response);
-        PatternPathRouter.RoutableDestination<HttpResourceModel> destination =
-                currentMicroservicesRegistry.
-                        getMetadata().
-                        getDestinationMethod(request.getUri(), request.getHttpMethod(), request.getContentType(),
-                                request.getAcceptTypes());
+        PatternPathRouter.RoutableDestination<HttpResourceModel> destination = registry.getMetadata()
+                .getDestinationMethod(request.getUri(), request.getHttpMethod(), request.getContentType(),
+                        request.getAcceptTypes());
         HttpResourceModel resourceModel = destination.getDestination();
-        response.setMediaType(Util.getResponseType(request.getAcceptTypes(),
-                resourceModel.getProducesMediaTypes()));
-        HttpMethodInfoBuilder httpMethodInfoBuilder =
-                new HttpMethodInfoBuilder().
-                        httpResourceModel(resourceModel).
-                        httpRequest(request).
-                        httpResponder(response).
-                        requestInfo(destination.getGroupNameValues());
+        response.setMediaType(Util.getResponseType(request.getAcceptTypes(), resourceModel.getProducesMediaTypes()));
+        HttpMethodInfoBuilder httpMethodInfoBuilder = new HttpMethodInfoBuilder()
+                .httpResourceModel(resourceModel)
+                .httpRequest(request)
+                .httpResponder(response)
+                .requestInfo(destination.getGroupNameValues());
         HttpMethodInfo httpMethodInfo = httpMethodInfoBuilder.build();
         if (httpMethodInfo.isStreamingSupported()) {
-            while (!(request.isEmpty() && request.isEomAdded())) {
-                httpMethodInfo.chunk(request.getMessageBody());
+            Method method = resourceModel.getMethod();
+            Class<?> clazz = method.getDeclaringClass();
+            // Execute request interceptors
+            if (InterceptorExecutor.executeGlobalRequestInterceptors(registry, request, response)
+                    // Execute class level request interceptors
+                    && InterceptorExecutor.executeClassLevelRequestInterceptors(request, response, clazz)
+                    // Execute method level request interceptors
+                    && InterceptorExecutor.executeMethodLevelRequestInterceptors(request, response, method)) {
+                while (!(request.isEmpty() && request.isEomAdded())) {
+                    httpMethodInfo.chunk(request.getMessageBody());
+                }
+                boolean isResponseInterceptorsSuccessful = InterceptorExecutor
+                        .executeMethodLevelResponseInterceptors(request, response, method)
+                        // Execute class level interceptors (first in - last out order)
+                        && InterceptorExecutor.executeClassLevelResponseInterceptors(request, response, clazz)
+                        // Execute global interceptors
+                        && InterceptorExecutor.executeGlobalResponseInterceptors(registry, request, response);
+                httpMethodInfo.end(isResponseInterceptorsSuccessful);
             }
-            httpMethodInfo.end(request, httpMethodInfo, currentMicroservicesRegistry);
         } else {
-            httpMethodInfo.invoke(destination, request, httpMethodInfo, currentMicroservicesRegistry);
+            httpMethodInfo.invoke(destination, request, httpMethodInfo, registry);
         }
     }
 

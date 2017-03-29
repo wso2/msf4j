@@ -22,6 +22,7 @@ import org.osgi.framework.FrameworkUtil;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.exception.InterceptorException;
+import org.wso2.msf4j.internal.DataHolder;
 import org.wso2.msf4j.internal.MicroservicesRegistryImpl;
 import org.wso2.msf4j.util.ReflectionUtils;
 
@@ -38,8 +39,6 @@ import java.util.Optional;
  */
 public class InterceptorExecutor {
 
-    private static final String FRAMEWORK_UTIL_CLASS_NAME = "org.osgi.framework.FrameworkUtil";
-
     private InterceptorExecutor() {
     }
 
@@ -50,13 +49,10 @@ public class InterceptorExecutor {
      * @param request               {@link Request}
      * @param response              {@link Response}
      * @return is request interceptors successful
-     * @throws InterceptorException {@link InterceptorException} on interception exception
      */
     public static boolean executeGlobalRequestInterceptors(MicroservicesRegistryImpl microServicesRegistry,
-                                                           Request request, Response response)
-            throws InterceptorException {
-        List<RequestInterceptor> globalRequestInterceptorList =
-                microServicesRegistry.getGlobalRequestInterceptorList();
+                                                           Request request, Response response) {
+        List<RequestInterceptor> globalRequestInterceptorList = microServicesRegistry.getGlobalRequestInterceptorList();
         return executeGlobalRequestInterceptors(request, response, globalRequestInterceptorList);
     }
 
@@ -105,11 +101,9 @@ public class InterceptorExecutor {
      * @param request               {@link Request}
      * @param response              {@link Response}
      * @return is request interceptors successful
-     * @throws InterceptorException {@link InterceptorException} on interception exception
      */
     public static boolean executeGlobalResponseInterceptors(MicroservicesRegistryImpl microServicesRegistry,
-                                                            Request request, Response response)
-            throws InterceptorException {
+                                                            Request request, Response response) {
         List<ResponseInterceptor> globalResponseInterceptorList =
                 microServicesRegistry.getGlobalResponseInterceptorList();
         return executeGlobalResponseInterceptors(request, response, globalResponseInterceptorList);
@@ -146,6 +140,9 @@ public class InterceptorExecutor {
     public static boolean executeClassResponseInterceptorsForClasses(Request request, Response response,
                                                                      List<Class<?>> classes)
             throws InterceptorException {
+        if (classes == null) {
+            return true;
+        }
         for (Class<?> aClass : classes) {
             if (!(InterceptorExecutor.executeClassLevelResponseInterceptors(request, response, aClass))) {
                 return false;
@@ -185,6 +182,9 @@ public class InterceptorExecutor {
     public static boolean executeMethodResponseInterceptorsForMethods(Request request, Response response,
                                                                       List<Method> methods)
             throws InterceptorException {
+        if (methods == null) {
+            return true;
+        }
         for (Method resourceMethod : methods) {
             if (!(InterceptorExecutor.executeMethodLevelResponseInterceptors(request, response, resourceMethod))) {
                 return false;
@@ -200,20 +200,15 @@ public class InterceptorExecutor {
      * @param response            {@link Response}
      * @param requestInterceptors request interceptor instances
      * @return is interception successful
-     * @throws InterceptorException {@link InterceptorException} on interception exception
      */
     private static boolean executeGlobalRequestInterceptors(Request request, Response response,
-                                                            Collection<RequestInterceptor> requestInterceptors)
-            throws InterceptorException {
+                                                            Collection<RequestInterceptor> requestInterceptors) {
+        if (requestInterceptors == null) {
+            return true;
+        }
         for (RequestInterceptor interceptor : requestInterceptors) {
-            try {
-                if (!interceptor.interceptRequest(request, response)) {
-                    return false;
-                }
-            } catch (Exception e) {
-                if (!interceptor.onRequestInterceptionError(request, response, e)) {
-                    return false;
-                }
+            if (!executeRequestInterceptor(interceptor, request, response)) {
+                return false;
             }
         }
         return true;
@@ -226,20 +221,15 @@ public class InterceptorExecutor {
      * @param response             {@link Response}
      * @param responseInterceptors response interceptor instances
      * @return is interception successful
-     * @throws InterceptorException {@link InterceptorException} on interception exception
      */
     private static boolean executeGlobalResponseInterceptors(Request request, Response response,
-                                                             Collection<ResponseInterceptor> responseInterceptors)
-            throws InterceptorException {
+                                                             Collection<ResponseInterceptor> responseInterceptors) {
+        if (responseInterceptors == null) {
+            return true;
+        }
         for (ResponseInterceptor interceptor : responseInterceptors) {
-            try {
-                if (!interceptor.interceptResponse(request, response)) {
-                    return false;
-                }
-            } catch (Exception e) {
-                if (!interceptor.onResponseInterceptionError(request, response, e)) {
-                    return false;
-                }
+            if (!executeResponseInterceptor(interceptor, request, response)) {
+                return false;
             }
         }
         return true;
@@ -261,18 +251,20 @@ public class InterceptorExecutor {
         Class<?>[] parameterTypes = new Class[]{};
         Object[] arguments = new Object[]{};
 
+        if (classes == null) {
+            return true;
+        }
+
         for (Class<? extends RequestInterceptor> requestInterceptorClass : classes) {
             RequestInterceptor interceptor;
 
             // If in OSGi mode
-            if (ReflectionUtils.isClassAvailable(FRAMEWORK_UTIL_CLASS_NAME)) {
+            if (DataHolder.getInstance().getBundleContext().isPresent()) {
                 Bundle bundle = FrameworkUtil.getBundle(InterceptorExecutor.class);
                 if (bundle != null) {
                     Optional<Class<? extends RequestInterceptor>> interceptorClassOptional =
                             ReflectionUtils.loadClassFromBundle(requestInterceptorClass);
-                    requestInterceptorClass = interceptorClassOptional.isPresent()
-                            ? interceptorClassOptional.get()
-                            : requestInterceptorClass;
+                    requestInterceptorClass = interceptorClassOptional.orElse(requestInterceptorClass);
                 }
             }
 
@@ -285,14 +277,8 @@ public class InterceptorExecutor {
                         + requestInterceptorClass, e);
             }
 
-            try {
-                if (!interceptor.interceptRequest(request, response)) {
-                    return false;
-                }
-            } catch (Exception e) {
-                if (!interceptor.onRequestInterceptionError(request, response, e)) {
-                    return false;
-                }
+            if (!executeRequestInterceptor(interceptor, request, response)) {
+                return false;
             }
         }
         return true;
@@ -314,18 +300,20 @@ public class InterceptorExecutor {
         Class<?>[] parameterTypes = new Class[]{};
         Object[] arguments = new Object[]{};
 
+        if (classes == null) {
+            return true;
+        }
+
         for (Class<? extends ResponseInterceptor> responseInterceptorClass : classes) {
             ResponseInterceptor interceptor;
 
             // If in OSGi mode
-            if (ReflectionUtils.isClassAvailable(FRAMEWORK_UTIL_CLASS_NAME)) {
+            if (DataHolder.getInstance().getBundleContext().isPresent()) {
                 Bundle bundle = FrameworkUtil.getBundle(InterceptorExecutor.class);
                 if (bundle != null) {
                     Optional<Class<? extends ResponseInterceptor>> interceptorClassOptional =
                             ReflectionUtils.loadClassFromBundle(responseInterceptorClass);
-                    responseInterceptorClass = interceptorClassOptional.isPresent()
-                            ? interceptorClassOptional.get()
-                            : responseInterceptorClass;
+                    responseInterceptorClass = interceptorClassOptional.orElse(responseInterceptorClass);
                 }
             }
 
@@ -338,16 +326,44 @@ public class InterceptorExecutor {
                         + responseInterceptorClass, e);
             }
 
-            try {
-                if (!interceptor.interceptResponse(request, response)) {
-                    return false;
-                }
-            } catch (Exception e) {
-                if (!interceptor.onResponseInterceptionError(request, response, e)) {
-                    return false;
-                }
+            if (!executeResponseInterceptor(interceptor, request, response)) {
+                return false;
             }
         }
         return true;
+    }
+
+    /**
+     * Execute a single request interceptor.
+     *
+     * @param interceptor request interceptor
+     * @param request     request instance
+     * @param response    response instance
+     * @return interceptor result
+     */
+    private static boolean executeRequestInterceptor(RequestInterceptor interceptor, Request request,
+                                                     Response response) {
+        try {
+            return interceptor.interceptRequest(request, response);
+        } catch (Exception e) {
+            return interceptor.onRequestInterceptionError(request, response, e);
+        }
+    }
+
+    /**
+     * Execute a single response interceptor.
+     *
+     * @param interceptor response interceptor
+     * @param request     request instance
+     * @param response    response instance
+     * @return interceptor result
+     */
+    private static boolean executeResponseInterceptor(ResponseInterceptor interceptor, Request request,
+                                                      Response response) {
+        try {
+            return interceptor.interceptResponse(request, response);
+        } catch (Exception e) {
+            return interceptor.onResponseInterceptionError(request, response, e);
+        }
     }
 }

@@ -61,7 +61,7 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
     public MicroservicesRegistryImpl() {
         /* In non OSGi mode, if we can find the SwaggerDefinitionService, Deploy the Swagger definition service which
         will return the Swagger definition.*/
-        if (DataHolder.getInstance().getBundleContext() == null) {
+        if (!DataHolder.getInstance().getBundleContext().isPresent()) {
             ServiceLoader<SwaggerService> swaggerServices = ServiceLoader.load(SwaggerService.class);
             Iterator<SwaggerService> iterator = swaggerServices.iterator();
             if (iterator.hasNext()) {
