@@ -16,7 +16,6 @@
 
 package org.wso2.msf4j.util;
 
-
 import org.testng.annotations.Test;
 
 import java.net.URI;
@@ -147,23 +146,13 @@ public class QueryStringDecoderUtilTest {
                 // "Caffé" but instead of putting the literal E-acute in the
                 // source file, we directly use the UTF-8 encoding so as to
                 // not rely on the platform's default encoding (not portable).
-                new byte[]{'C', 'a', 'f', 'f', (byte) 0xC3, (byte) 0xA9},
-                "UTF-8");
+                new byte[] { 'C', 'a', 'f', 'f', (byte) 0xC3, (byte) 0xA9 }, "UTF-8");
         final String[] tests = {
                 // Encoded   ->   Decoded or error message substring
-                "", "",
-                "foo", "foo",
-                "f%%b", "f%b",
-                "f+o", "f o",
-                "f++", "f  ",
-                "fo%", "unterminated escape sequence",
-                "%42", "B",
-                "%5f", "_",
-                "f%4", "partial escape sequence",
-                "%x2", "invalid escape sequence `%x2' at index 0 of: %x2",
-                "%4x", "invalid escape sequence `%4x' at index 0 of: %4x",
-                "Caff%C3%A9", caffe,
-        };
+                "", "", "foo", "foo", "f%%b", "f%b", "f+o", "f o", "f++", "f  ", "fo%", "unterminated escape sequence",
+                "%42", "B", "%5f", "_", "f%4", "partial escape sequence", "%x2",
+                "invalid escape sequence `%x2' at index 0 of: %x2", "%4x",
+                "invalid escape sequence `%4x' at index 0 of: %4x", "Caff%C3%A9", caffe, };
         for (int i = 0; i < tests.length; i += 2) {
             final String encoded = tests[i];
             final String expected = tests[i + 1];
@@ -172,7 +161,7 @@ public class QueryStringDecoderUtilTest {
                 assertEquals(expected, decoded);
             } catch (IllegalArgumentException e) {
                 assertTrue("String " + e.getMessage() + "\" does not contain \"" + expected + '"',
-                        e.getMessage().contains(expected));
+                           e.getMessage().contains(expected));
             }
         }
     }

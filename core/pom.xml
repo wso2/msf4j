@@ -341,6 +341,7 @@
             com.google.gson.*;version="${gson.version.range}",
             javax.annotation.*,
             javax.ws.rs.*,
+            javax.websocket.*;version="${javax.websocket.version}",
             javax.xml.bind;resolution:=optional,
             javax.xml.bind.annotation;resolution:=optional,
             org.slf4j.*;version="${slf4j.version.range}",
@@ -354,10 +355,11 @@
         </import.package>
         <carbon.component>
             startup.listener;componentName="wso2-microservices-server";requiredService="org.wso2.msf4j.Microservice,org.wso2.msf4j.Interceptor",
-            osgi.service;
-            objectClass="org.wso2.msf4j.internal.MicroservicesServerSC";requiredByComponentName="wso2-server-connector-sc",
-            osgi.service; objectClass="org.wso2.carbon.messaging.CarbonMessageProcessor",
-            osgi.service; objectClass="org.wso2.carbon.deployment.engine.Deployer"
+            startup.listener;componentName="wso2-websocket-server";requiredService="org.wso2.msf4j.WebSocketEndpoint",
+            osgi.service;objectClass="org.wso2.msf4j.internal.MicroservicesServerSC";requiredByComponentName="wso2-server-connector-sc",
+            osgi.service;objectClass="org.wso2.msf4j.internal.websocket.WebSocketServerSC";requiredByComponentName="wso2-server-connector-sc",
+            osgi.service;objectClass="org.wso2.carbon.messaging.CarbonMessageProcessor",
+            osgi.service;objectClass="org.wso2.carbon.deployment.engine.Deployer"
         </carbon.component>
     </properties>
 </project>

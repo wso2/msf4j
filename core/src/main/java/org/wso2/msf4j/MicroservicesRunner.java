@@ -32,6 +32,7 @@ import org.wso2.carbon.transport.http.netty.listener.ServerConnectorController;
 import org.wso2.msf4j.internal.DataHolder;
 import org.wso2.msf4j.internal.MSF4JMessageProcessor;
 import org.wso2.msf4j.internal.MicroservicesRegistryImpl;
+import org.wso2.msf4j.internal.websocket.EndpointsRegistryImpl;
 import org.wso2.msf4j.util.RuntimeAnnotations;
 
 import java.util.ArrayList;
@@ -56,6 +57,7 @@ public class MicroservicesRunner {
     private long startTime = System.currentTimeMillis();
     private boolean isStarted;
     private MicroservicesRegistryImpl msRegistry = new MicroservicesRegistryImpl();
+    private EndpointsRegistryImpl endpointsRegistry = EndpointsRegistryImpl.getInstance();
 
     /**
      * Creates a MicroservicesRunner instance which will be used for deploying microservices. Allows specifying
@@ -103,6 +105,16 @@ public class MicroservicesRunner {
         valuesMap.put("value", basePath);
         RuntimeAnnotations.putAnnotation(microservice.getClass(), Path.class, valuesMap);
         msRegistry.addService(basePath, microservice);
+        return this;
+    }
+
+    /**
+     * Add WebSocket endpoint to the MicroserviceRunner
+     * @param webSocketEndpoint webSocketEndpoint endpoint which is to be added.
+     * @return this MicroservicesRunner object.
+     */
+    public MicroservicesRunner deployWebSocketEndpoint(Object webSocketEndpoint) {
+        endpointsRegistry.addEndpoint(webSocketEndpoint);
         return this;
     }
 
