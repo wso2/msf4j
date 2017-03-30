@@ -65,7 +65,7 @@ public interface RequestInterceptor {
         String message = "Exception while executing request interceptor " + this.getClass();
         Logger log = LoggerFactory.getLogger(this.getClass());
         log.error(message, e);
-        response.setEntity(e.getMessage() + " - " + message + this.getClass())
+        response.setEntity(message)
                 .setMediaType(MediaType.TEXT_PLAIN)
                 .setStatus(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
         return false;
