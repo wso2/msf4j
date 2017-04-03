@@ -26,5 +26,12 @@ public class Application {
         new MicroservicesRunner()
                 .deploy(new HelloService())
                 .start();
+        new MicroservicesRunner(8081)
+                .deploy(new HelloService())
+                .start();
+
+        /*new MicroservicesRunner(8084)
+                .deploy(new HelloService())
+                .start();*/
     }
 }

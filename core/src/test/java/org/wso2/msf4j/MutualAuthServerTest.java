@@ -17,7 +17,6 @@ package org.wso2.msf4j;
 
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.wso2.carbon.transport.http.netty.config.YAMLTransportConfigurationBuilder;
 import org.wso2.msf4j.conf.Constants;
 import org.wso2.msf4j.conf.SSLClientContext;
 import org.wso2.msf4j.exception.TestExceptionMapper;
@@ -55,7 +54,7 @@ public class MutualAuthServerTest extends HttpsServerTest {
         String trustKeyStorePassword = "password";
         setSslClientContext(new SSLClientContext(trustKeyStore, trustKeyStorePassword));
 
-        System.setProperty(YAMLTransportConfigurationBuilder.NETTY_TRANSPORT_CONF,
+        System.setProperty("transports.netty.conf",
                            Thread.currentThread().getContextClassLoader().getResource("netty-transports-2.yml")
                                  .getPath());
         microservicesRunner = new MicroservicesRunner();
