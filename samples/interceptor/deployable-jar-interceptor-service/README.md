@@ -33,8 +33,8 @@ mvn clean install
 
 ## How to run the sample
 
-First you need to install the MSF4J feature in to carbon kernel. To proceed with this navigate to [MSF4J Kernel pom](/resources)
-and execute the command below:
+First you need to install the MSF4J feature in to carbon kernel. To proceed with this navigate to [MSF4J Kernel pom](../../../tests/test-distribution/)
+(test distribution pom) and execute the command below:
 ```
 mvn clean install
 ```
@@ -54,5 +54,5 @@ This will trigger the jar to be automatically deployed during the server runtime
 
 Use following cURL commands.
 ```
-curl http://localhost:9090/interceptor-service/service-name
+curl http://localhost:8080/interceptor-service/service-name
 ```

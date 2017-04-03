@@ -17,12 +17,9 @@
 */
 package org.wso2.msf4j.interceptor;
 
-import org.osgi.framework.Bundle;
-import org.osgi.framework.FrameworkUtil;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.exception.InterceptorException;
-import org.wso2.msf4j.internal.DataHolder;
 import org.wso2.msf4j.internal.MicroservicesRegistryImpl;
 import org.wso2.msf4j.util.ReflectionUtils;
 
@@ -32,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Class for executing interceptors.
@@ -257,17 +253,6 @@ public class InterceptorExecutor {
 
         for (Class<? extends RequestInterceptor> requestInterceptorClass : classes) {
             RequestInterceptor interceptor;
-
-            // If in OSGi mode
-            if (DataHolder.getInstance().getBundleContext().isPresent()) {
-                Bundle bundle = FrameworkUtil.getBundle(InterceptorExecutor.class);
-                if (bundle != null) {
-                    Optional<Class<? extends RequestInterceptor>> interceptorClassOptional =
-                            ReflectionUtils.loadClassFromBundle(requestInterceptorClass);
-                    requestInterceptorClass = interceptorClassOptional.orElse(requestInterceptorClass);
-                }
-            }
-
             try {
                 interceptor = requestInterceptorClass.cast(ReflectionUtils
                         .createInstanceFromClass(requestInterceptorClass, parameterTypes, arguments));
@@ -306,17 +291,6 @@ public class InterceptorExecutor {
 
         for (Class<? extends ResponseInterceptor> responseInterceptorClass : classes) {
             ResponseInterceptor interceptor;
-
-            // If in OSGi mode
-            if (DataHolder.getInstance().getBundleContext().isPresent()) {
-                Bundle bundle = FrameworkUtil.getBundle(InterceptorExecutor.class);
-                if (bundle != null) {
-                    Optional<Class<? extends ResponseInterceptor>> interceptorClassOptional =
-                            ReflectionUtils.loadClassFromBundle(responseInterceptorClass);
-                    responseInterceptorClass = interceptorClassOptional.orElse(responseInterceptorClass);
-                }
-            }
-
             try {
                 interceptor = responseInterceptorClass.cast(ReflectionUtils
                         .createInstanceFromClass(responseInterceptorClass, parameterTypes, arguments));

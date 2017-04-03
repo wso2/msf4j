@@ -87,8 +87,8 @@ mvn clean install
 
 ### <a name="osgiconsole"></a>Using OSGi Console
 
-First you need to install the MSF4J feature in to carbon kernel. To proceed with this navigate to [MSF4J Kernel pom](/resources)
-and execute the command below:
+First you need to install the MSF4J feature in to carbon kernel. To proceed with this navigate to [MSF4J Kernel pom](../../../tests/test-distribution/)
+(test distribution pom) and execute the command below:
 ```
 mvn clean install
 ```
@@ -124,7 +124,7 @@ will be exposed as a REST service.
 Install MSF4J feature to the carbon kernel as described in section [Using OSGi Console](#osgiconsole)
 
 Copy the target/osgi-interceptor-service-\<version>.jar and ../../interceptor-common/target/
-interceptor-common-\<version>.jar to [SERVER-HOME]/osgi/dropins" directory.
+interceptor-common-\<version>.jar to [SERVER-HOME]/lib" directory.
 
 Then navigate to the bin directory and run the following command to start WSO2 carbon kernel.
 ```
@@ -138,5 +138,5 @@ loaded and it's microservices that are there as OSGi services will be exposed as
 
 Use following cURL commands.
 ```
-curl http://localhost:9090/interceptor-service/service-name
+curl http://localhost:8080/interceptor-service/service-name
 ```

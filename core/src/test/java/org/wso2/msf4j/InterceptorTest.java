@@ -22,7 +22,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.wso2.carbon.transport.http.netty.config.YAMLTransportConfigurationBuilder;
 import org.wso2.msf4j.conf.Constants;
 import org.wso2.msf4j.interceptor.HighPriorityGlobalRequestInterceptor;
 import org.wso2.msf4j.interceptor.HighPriorityGlobalResponseInterceptor;
@@ -68,7 +67,7 @@ public class InterceptorTest extends InterceptorTestBase {
         if (resource == null) {
             Assert.fail("netty-transports-3.yml not found");
         }
-        System.setProperty(YAMLTransportConfigurationBuilder.NETTY_TRANSPORT_CONF, resource.getPath());
+        System.setProperty("transports.netty.conf", resource.getPath());
         microservicesRunner = new MicroservicesRunner(port);
 
         // Global request interceptors are registered in the priority order of new interceptors -> old interceptors

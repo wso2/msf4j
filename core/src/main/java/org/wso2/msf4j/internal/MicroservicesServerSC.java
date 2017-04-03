@@ -16,6 +16,8 @@
 package org.wso2.msf4j.internal;
 
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -37,6 +39,7 @@ import org.wso2.msf4j.interceptor.RequestInterceptor;
 import org.wso2.msf4j.interceptor.ResponseInterceptor;
 import org.wso2.msf4j.util.RuntimeAnnotations;
 
+import java.util.Arrays;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -57,10 +60,10 @@ import javax.ws.rs.ext.ExceptionMapper;
 @SuppressWarnings("unused")
 public class MicroservicesServerSC implements RequiredCapabilityListener {
     private static final Logger log = LoggerFactory.getLogger(MicroservicesServerSC.class);
+    private boolean isAllRequiredCapabilitiesAvailable;
 
     @Activate
     protected void start(final BundleContext bundleContext) {
-
     }
 
     @Reference(
@@ -71,32 +74,15 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             unbind = "removeService"
     )
     protected void addService(Microservice service, Map properties) {
-        Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
-        Object contextPath = properties.get("contextPath");
-        if (contextPath != null) {
-            Map<String, Object> valuesMap = new HashMap<>();
-            valuesMap.put("value", contextPath);
-            RuntimeAnnotations.putAnnotation(service.getClass(), Path.class, valuesMap);
-        }
-        Map<String, MicroservicesRegistryImpl> microservicesRegistries =
-                DataHolder.getInstance().getMicroservicesRegistries();
-        if (channelId != null) {
-            MicroservicesRegistryImpl microservicesRegistry = microservicesRegistries.get(channelId.toString());
-            if (microservicesRegistry == null) {
-                throw new RuntimeException("Couldn't found the registry for channel ID " + channelId);
-            }
-            if (contextPath == null) {
-                microservicesRegistry.addService(service);
-            } else {
-                microservicesRegistry.addService(contextPath.toString(), service);
-            }
-        } else {
-            if (contextPath == null) {
-                microservicesRegistries.values().forEach(registry -> registry.addService(service));
-            } else {
-                microservicesRegistries.values()
-                                       .forEach(registry -> registry.addService(contextPath.toString(), service));
-            }
+        /*
+        Some Microservices might get register even after #onAllRequiredCapabilitiesAvailable
+        That is due to the UUF doesn't know the actual service count before hand.
+        Therefore we need to handle those services separately.
+         */
+        if (isAllRequiredCapabilitiesAvailable) {
+            Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
+            Object contextPath = properties.get("contextPath");
+            addMicroserviceToRegistry(service, channelId, contextPath);
         }
     }
 
@@ -160,8 +146,8 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
         Dictionary<String, String> properties = new Hashtable<>();
         properties.put(MSF4JConstants.CHANNEL_ID, serverConnector.getId());
         microservicesRegistries.put(serverConnector.getId(), microservicesRegistry);
-        DataHolder.getInstance().getBundleContext()
-                  .registerService(MicroservicesRegistry.class, microservicesRegistry, properties);
+        DataHolder.getInstance().getBundleContext().ifPresent(bundleContext ->
+                bundleContext.registerService(MicroservicesRegistry.class, microservicesRegistry, properties));
     }
 
     protected void removeCarbonTransport(ServerConnector serverConnector) {
@@ -176,30 +162,13 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             unbind = "removeInterceptorConfig"
     )
     protected void addInterceptorConfig(OSGiInterceptorConfig interceptorConfig, Map properties) {
-        Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
-        Map<String, MicroservicesRegistryImpl> microservicesRegistries =
-                DataHolder.getInstance().getMicroservicesRegistries();
-        if (channelId != null) {
-            MicroservicesRegistryImpl microServicesRegistry = microservicesRegistries.get(channelId.toString());
-            if (microServicesRegistry == null) {
-                throw new OSGiDeclarativeServiceException("Couldn't found the registry for channel ID " +
-                        channelId);
-            }
-            microServicesRegistry.addGlobalRequestInterceptor(interceptorConfig.getGlobalRequestInterceptorArray());
-            microServicesRegistry.addGlobalResponseInterceptor(interceptorConfig.getGlobalResponseInterceptorArray());
-        } else {
-            microservicesRegistries.values().forEach(registry -> {
-                registry.addGlobalRequestInterceptor(interceptorConfig.getGlobalRequestInterceptorArray());
-                registry.addGlobalResponseInterceptor(interceptorConfig.getGlobalResponseInterceptorArray());
-            });
-        }
     }
 
     protected void removeInterceptorConfig(OSGiInterceptorConfig interceptorConfig, Map properties) {
         Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
         if (channelId != null) {
-            MicroservicesRegistryImpl microServicesRegistry = DataHolder.getInstance().getMicroservicesRegistries()
-                    .get(channelId.toString());
+            MicroservicesRegistryImpl microServicesRegistry =
+                    DataHolder.getInstance().getMicroservicesRegistries().get(channelId.toString());
             for (RequestInterceptor requestInterceptor : interceptorConfig.getGlobalRequestInterceptorArray()) {
                 microServicesRegistry.removeGlobalRequestInterceptor(requestInterceptor);
             }
@@ -209,14 +178,6 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
         }
     }
 
-    /**
-     * Add interceptor.
-     * Please note that the order of this interceptor execution is unpredictable
-     *
-     * @param interceptor interceptor to be added
-     * @param properties  map of properties of the interceptor to be added
-     * @deprecated
-     */
     @Reference(
             name = "interceptor",
             service = Interceptor.class,
@@ -225,22 +186,6 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             unbind = "removeInterceptor"
     )
     protected void addInterceptor(Interceptor interceptor, Map properties) {
-        Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
-        Map<String, MicroservicesRegistryImpl> microservicesRegistries =
-                DataHolder.getInstance().getMicroservicesRegistries();
-        if (channelId != null) {
-            MicroservicesRegistryImpl microservicesRegistry = microservicesRegistries.get(channelId.toString());
-            if (microservicesRegistry == null) {
-                throw new RuntimeException("Couldn't found the registry for channel ID " + channelId);
-            }
-            microservicesRegistry.addGlobalRequestInterceptor(interceptor);
-            microservicesRegistry.addGlobalResponseInterceptor(interceptor);
-        } else {
-            microservicesRegistries.values().forEach(registry -> {
-                registry.removeGlobalRequestInterceptor(interceptor);
-                registry.removeGlobalResponseInterceptor(interceptor);
-            });
-        }
     }
 
     /**
@@ -268,18 +213,6 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             unbind = "removeExceptionMapper"
     )
     protected void addExceptionMapper(ExceptionMapper exceptionMapper, Map properties) {
-        Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
-        Map<String, MicroservicesRegistryImpl> microservicesRegistries =
-                DataHolder.getInstance().getMicroservicesRegistries();
-        if (channelId != null) {
-            MicroservicesRegistryImpl microservicesRegistry = microservicesRegistries.get(channelId.toString());
-            if (microservicesRegistry == null) {
-                throw new RuntimeException("Couldn't found the registry for channel ID " + channelId);
-            }
-            microservicesRegistry.addExceptionMapper(exceptionMapper);
-        } else {
-            microservicesRegistries.values().forEach(registry -> registry.addExceptionMapper(exceptionMapper));
-        }
     }
 
     protected void removeExceptionMapper(ExceptionMapper exceptionMapper, Map properties) {
@@ -299,19 +232,6 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             unbind = "removeSessionManager"
     )
     protected void addSessionManager(SessionManager sessionManager, Map properties) {
-        Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
-        Map<String, MicroservicesRegistryImpl> microservicesRegistries =
-                DataHolder.getInstance().getMicroservicesRegistries();
-        sessionManager.init();
-        if (channelId != null) {
-            MicroservicesRegistryImpl microservicesRegistry = microservicesRegistries.get(channelId.toString());
-            if (microservicesRegistry == null) {
-                throw new RuntimeException("Couldn't found the registry for channel ID " + channelId);
-            }
-            microservicesRegistry.setSessionManager(sessionManager);
-        } else {
-            microservicesRegistries.values().forEach(registry -> registry.setSessionManager(sessionManager));
-        }
     }
 
     protected void removeSessionManager(SessionManager sessionManager, Map properties) {
@@ -328,9 +248,172 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
 
     @Override
     public void onAllRequiredCapabilitiesAvailable() {
-        DataHolder.getInstance().getBundleContext().ifPresent(bundleContext -> {
-            bundleContext.registerService(MicroservicesServerSC.class, this, null);
-            log.info("All microservices are available");
-        });
+        BundleContext bundleContext = DataHolder.getInstance().getBundleContext()
+                .orElseThrow(() -> new OSGiDeclarativeServiceException("Bundle context not found"));
+        try {
+            ServiceReference[] serviceReferences = bundleContext
+                    .getServiceReferences(Microservice.class.getName(), null);
+            if (serviceReferences != null && serviceReferences.length > 0) {
+                Arrays.stream(serviceReferences).forEach(serviceReference -> {
+                    Microservice service = (Microservice) bundleContext.getService(serviceReference);
+                    Object channelId = serviceReference.getProperty(MSF4JConstants.CHANNEL_ID);
+                    Object contextPath = serviceReference.getProperty("contextPath");
+                    addMicroserviceToRegistry(service, channelId, contextPath);
+                });
+            }
+
+            // Add request and response interceptors
+            serviceReferences = bundleContext.getServiceReferences(OSGiInterceptorConfig.class.getName(), null);
+            if (serviceReferences != null && serviceReferences.length > 0) {
+                Arrays.stream(serviceReferences).forEach(serviceReference -> {
+                    OSGiInterceptorConfig interceptorConfig =
+                            (OSGiInterceptorConfig) bundleContext.getService(serviceReference);
+                    Object channelId = serviceReference.getProperty(MSF4JConstants.CHANNEL_ID);
+                    addRequestResponseInterceptorsToRegistry(interceptorConfig, channelId);
+                });
+            }
+
+            // Add deprecated interceptors
+            serviceReferences = bundleContext.getServiceReferences(Interceptor.class.getName(), null);
+            if (serviceReferences != null && serviceReferences.length > 0) {
+                Arrays.stream(serviceReferences).forEach(serviceReference -> {
+                    Interceptor interceptor = (Interceptor) bundleContext.getService(serviceReference);
+                    Object channelId = serviceReference.getProperty(MSF4JConstants.CHANNEL_ID);
+                    addInterceptorToRegistry(interceptor, channelId);
+                });
+            }
+
+            serviceReferences = bundleContext.getServiceReferences(ExceptionMapper.class.getName(), null);
+            if (serviceReferences != null && serviceReferences.length > 0) {
+                Arrays.stream(serviceReferences).forEach(serviceReference -> {
+                    ExceptionMapper exceptionMapper = (ExceptionMapper) bundleContext.getService(serviceReference);
+                    Object channelId = serviceReference.getProperty(MSF4JConstants.CHANNEL_ID);
+                    addExceptionMapperToRegistry(exceptionMapper, channelId);
+                });
+            }
+
+            serviceReferences = bundleContext.getServiceReferences(SessionManager.class.getName(), null);
+            if (serviceReferences != null && serviceReferences.length > 0) {
+                Arrays.stream(serviceReferences).forEach(serviceReference -> {
+                    SessionManager sessionManager = (SessionManager) bundleContext.getService(serviceReference);
+                    Object channelId = serviceReference.getProperty(MSF4JConstants.CHANNEL_ID);
+                    addSessionManagerToRegistry(sessionManager, channelId);
+                });
+            }
+        } catch (InvalidSyntaxException e) {
+            log.error("Error while registering required capabilities. " + e.getMessage());
+        } finally {
+            isAllRequiredCapabilitiesAvailable = true;
+        }
+
+        bundleContext.registerService(MicroservicesServerSC.class, this, null);
+        log.info("All microservices are available");
+    }
+
+    private void addMicroserviceToRegistry(Microservice service, Object channelId, Object contextPath) {
+        if (contextPath != null) {
+            Map<String, Object> valuesMap = new HashMap<>();
+            valuesMap.put("value", contextPath);
+            RuntimeAnnotations.putAnnotation(service.getClass(), Path.class, valuesMap);
+        }
+        Map<String, MicroservicesRegistryImpl> microservicesRegistries =
+                DataHolder.getInstance().getMicroservicesRegistries();
+        if (channelId != null) {
+            MicroservicesRegistryImpl microservicesRegistry = microservicesRegistries.get(channelId.toString());
+            if (microservicesRegistry == null) {
+                throw new RuntimeException("Couldn't found the registry for channel ID " + channelId);
+            }
+            if (contextPath == null) {
+                microservicesRegistry.addService(service);
+            } else {
+                microservicesRegistry.addService(contextPath.toString(), service);
+            }
+        } else {
+            if (contextPath == null) {
+                microservicesRegistries.values().forEach(registry -> registry.addService(service));
+            } else {
+                microservicesRegistries.values()
+                        .forEach(registry -> registry.addService(contextPath.toString(), service));
+            }
+        }
+    }
+
+    /**
+     * Add request and response interceptors to registry.
+     *
+     * @param interceptorConfig interceptor configuration
+     * @param channelId         micro-service channel id
+     */
+    private void addRequestResponseInterceptorsToRegistry(OSGiInterceptorConfig interceptorConfig, Object channelId) {
+        Map<String, MicroservicesRegistryImpl> microservicesRegistries =
+                DataHolder.getInstance().getMicroservicesRegistries();
+        if (channelId != null) {
+            MicroservicesRegistryImpl microservicesRegistry = microservicesRegistries.get(channelId.toString());
+            if (microservicesRegistry == null) {
+                throw new OSGiDeclarativeServiceException("Couldn't find the registry for channel ID " +
+                        channelId);
+            }
+            microservicesRegistry.addGlobalRequestInterceptor(interceptorConfig.getGlobalRequestInterceptorArray());
+            microservicesRegistry.addGlobalResponseInterceptor(interceptorConfig.getGlobalResponseInterceptorArray());
+        } else {
+            microservicesRegistries.values().forEach(registry -> {
+                registry.addGlobalRequestInterceptor(interceptorConfig.getGlobalRequestInterceptorArray());
+                registry.addGlobalResponseInterceptor(interceptorConfig.getGlobalResponseInterceptorArray());
+            });
+        }
+    }
+
+    /**
+     * Add interceptor to registry.
+     *
+     * @param interceptor interceptor
+     * @param channelId   micro-service channel it
+     */
+    @Deprecated
+    private void addInterceptorToRegistry(Interceptor interceptor, Object channelId) {
+        Map<String, MicroservicesRegistryImpl> microservicesRegistries =
+                DataHolder.getInstance().getMicroservicesRegistries();
+        if (channelId != null) {
+            MicroservicesRegistryImpl microservicesRegistry = microservicesRegistries.get(channelId.toString());
+            if (microservicesRegistry == null) {
+                throw new OSGiDeclarativeServiceException("Couldn't find the registry for channel ID " + channelId);
+            }
+            microservicesRegistry.addGlobalRequestInterceptor(interceptor);
+            microservicesRegistry.addGlobalResponseInterceptor(interceptor);
+        } else {
+            microservicesRegistries.values().forEach(registry -> {
+                registry.addGlobalRequestInterceptor(interceptor);
+                registry.addGlobalResponseInterceptor(interceptor);
+            });
+        }
+    }
+
+    private void addExceptionMapperToRegistry(ExceptionMapper exceptionMapper, Object channelId) {
+        Map<String, MicroservicesRegistryImpl> microservicesRegistries =
+                DataHolder.getInstance().getMicroservicesRegistries();
+        if (channelId != null) {
+            MicroservicesRegistryImpl microservicesRegistry = microservicesRegistries.get(channelId.toString());
+            if (microservicesRegistry == null) {
+                throw new RuntimeException("Couldn't found the registry for channel ID " + channelId);
+            }
+            microservicesRegistry.addExceptionMapper(exceptionMapper);
+        } else {
+            microservicesRegistries.values().forEach(registry -> registry.addExceptionMapper(exceptionMapper));
+        }
+    }
+
+    private void addSessionManagerToRegistry(SessionManager sessionManager, Object channelId) {
+        Map<String, MicroservicesRegistryImpl> microservicesRegistries =
+                DataHolder.getInstance().getMicroservicesRegistries();
+        sessionManager.init();
+        if (channelId != null) {
+            MicroservicesRegistryImpl microservicesRegistry = microservicesRegistries.get(channelId.toString());
+            if (microservicesRegistry == null) {
+                throw new RuntimeException("Couldn't found the registry for channel ID " + channelId);
+            }
+            microservicesRegistry.setSessionManager(sessionManager);
+        } else {
+            microservicesRegistries.values().forEach(registry -> registry.setSessionManager(sessionManager));
+        }
     }
 }
