@@ -14,12 +14,14 @@
     <packaging>jar</packaging>
     <name>Sample: Deployable Jar Interceptor Service</name>
     <url>http://maven.apache.org</url>
+
     <dependencies>
         <dependency>
             <groupId>org.wso2.msf4j</groupId>
             <artifactId>msf4j-core</artifactId>
         </dependency>
     </dependencies>
+
     <properties>
         <microservice.resourceClasses>org.wso2.msf4j.samples.deployablejarinterceptorservice.InterceptorService
         </microservice.resourceClasses>

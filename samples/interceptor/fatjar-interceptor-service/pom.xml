@@ -30,6 +30,7 @@
     <artifactId>fatjar-interceptor-service</artifactId>
     <packaging>jar</packaging>
     <name>Sample: Fat Jar Interceptor Service</name>
+
     <dependencies>
         <dependency>
             <groupId>org.wso2.msf4j.samples</groupId>
@@ -37,6 +38,7 @@
             <version>${interceptor-common.version}</version>
         </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>
@@ -57,8 +59,9 @@
             </plugin>
         </plugins>
     </build>
+
     <properties>
-        <interceptor-common.version>${project.version}</interceptor-common.version>
+        <interceptor-common.version>2.3.0-SNAPSHOT</interceptor-common.version>
         <microservice.mainClass>org.wso2.msf4j.samples.fatjarinterceptorservice.Application</microservice.mainClass>
     </properties>
 </project>
