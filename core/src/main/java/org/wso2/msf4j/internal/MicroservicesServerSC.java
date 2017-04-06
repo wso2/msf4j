@@ -35,8 +35,6 @@ import org.wso2.msf4j.SessionManager;
 import org.wso2.msf4j.SwaggerService;
 import org.wso2.msf4j.exception.OSGiDeclarativeServiceException;
 import org.wso2.msf4j.interceptor.OSGiInterceptorConfig;
-import org.wso2.msf4j.interceptor.RequestInterceptor;
-import org.wso2.msf4j.interceptor.ResponseInterceptor;
 import org.wso2.msf4j.util.RuntimeAnnotations;
 
 import java.util.Arrays;
@@ -95,6 +93,8 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             if (microservicesRegistry != null) {
                 microservicesRegistry.removeService(service);
             }
+        } else {
+            microservicesRegistries.values().forEach(registry -> registry.removeService(service));
         }
     }
 
@@ -166,15 +166,21 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
 
     protected void removeInterceptorConfig(OSGiInterceptorConfig interceptorConfig, Map properties) {
         Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
+        Map<String, MicroservicesRegistryImpl> microservicesRegistries =
+                DataHolder.getInstance().getMicroservicesRegistries();
         if (channelId != null) {
-            MicroservicesRegistryImpl microServicesRegistry =
-                    DataHolder.getInstance().getMicroservicesRegistries().get(channelId.toString());
-            for (RequestInterceptor requestInterceptor : interceptorConfig.getGlobalRequestInterceptorArray()) {
-                microServicesRegistry.removeGlobalRequestInterceptor(requestInterceptor);
-            }
-            for (ResponseInterceptor responseInterceptor : interceptorConfig.getGlobalResponseInterceptorArray()) {
-                microServicesRegistry.removeGlobalResponseInterceptor(responseInterceptor);
-            }
+            MicroservicesRegistryImpl microServicesRegistry = microservicesRegistries.get(channelId.toString());
+            Arrays.stream(interceptorConfig.getGlobalRequestInterceptorArray()).forEach(
+                    microServicesRegistry::removeGlobalRequestInterceptor);
+            Arrays.stream(interceptorConfig.getGlobalResponseInterceptorArray()).forEach(
+                    microServicesRegistry::removeGlobalResponseInterceptor);
+        } else {
+            microservicesRegistries.values().forEach(registry -> {
+                Arrays.stream(interceptorConfig.getGlobalRequestInterceptorArray()).forEach(
+                        registry::removeGlobalRequestInterceptor);
+                Arrays.stream(interceptorConfig.getGlobalResponseInterceptorArray()).forEach(
+                        registry::removeGlobalResponseInterceptor);
+            });
         }
     }
 
@@ -202,6 +208,11 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
         if (channelId != null) {
             microservicesRegistries.get(channelId.toString()).removeGlobalRequestInterceptor(interceptor);
             microservicesRegistries.get(channelId.toString()).removeGlobalResponseInterceptor(interceptor);
+        } else {
+            microservicesRegistries.values().forEach(registry -> {
+                registry.removeGlobalRequestInterceptor(interceptor);
+                registry.removeGlobalResponseInterceptor(interceptor);
+            });
         }
     }
 
@@ -221,6 +232,8 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
                 DataHolder.getInstance().getMicroservicesRegistries();
         if (channelId != null) {
             microservicesRegistries.get(channelId.toString()).removeExceptionMapper(exceptionMapper);
+        } else {
+            microservicesRegistries.values().forEach(registry -> registry.removeExceptionMapper(exceptionMapper));
         }
     }
 
@@ -238,11 +251,13 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
         Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
         Map<String, MicroservicesRegistryImpl> microservicesRegistries =
                 DataHolder.getInstance().getMicroservicesRegistries();
+        sessionManager.stop();
+        DefaultSessionManager defaultSessionManager = new DefaultSessionManager();
+        defaultSessionManager.init();
         if (channelId != null) {
-            sessionManager.stop();
-            DefaultSessionManager defaultSessionManager = new DefaultSessionManager();
-            defaultSessionManager.init();
             microservicesRegistries.get(channelId.toString()).setSessionManager(defaultSessionManager);
+        } else {
+            microservicesRegistries.values().forEach(registry -> registry.setSessionManager(defaultSessionManager));
         }
     }
 
