@@ -77,4 +77,11 @@ limitations under the License.
             <class name="org.wso2.msf4j.websocket.DeploymentTest"/>
         </classes>
     </test>
+
+    <test name="deprecated-interceptor-unit-tests" preserve-order="true" parallel="false">
+        <classes>
+            <class name="org.wso2.msf4j.DeprecatedInterceptorTest"/>
+        </classes>
+    </test>
+
 </suite>

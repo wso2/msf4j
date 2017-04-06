@@ -133,7 +133,6 @@
         <module>samples/petstore</module>
         <module>samples/fileserver</module>
         <module>samples/template</module>
-        <module>samples/log-interceptor-bundle</module>
         <module>samples/lifecycle</module>
         <module>samples/jwt-claims</module>
         <module>samples/spring-helloworld</module>
@@ -144,6 +143,10 @@
         <module>samples/message-tracing/zipkin/</module>
         <module>samples/subresource</module>
         <module>samples/spring-profile</module>
+        <module>samples/interceptor/interceptor-common</module>
+        <module>samples/interceptor/fatjar-interceptor-service</module>
+        <module>samples/interceptor/deployable-jar-interceptor-service</module>
+        <module>samples/interceptor/osgi-interceptor-service</module>
         <module>samples/websocket/chatApp/bundle</module>
         <module>samples/websocket/chatApp/deployable-jar</module>
         <module>samples/websocket/chatApp/fatjar</module>

@@ -22,10 +22,9 @@ import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jwt.SignedJWT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
-import org.wso2.msf4j.ServiceMethodInfo;
+import org.wso2.msf4j.interceptor.RequestInterceptor;
 import org.wso2.msf4j.util.SystemVariableUtil;
 
 import java.io.IOException;
@@ -45,7 +44,7 @@ import java.util.Date;
 /**
  * Verify the JWT header in request.
  */
-public class JWTSecurityInterceptor implements Interceptor {
+public class JWTSecurityInterceptor implements RequestInterceptor {
 
     private static final Logger log = LoggerFactory.getLogger(JWTSecurityInterceptor.class);
 
@@ -55,8 +54,8 @@ public class JWTSecurityInterceptor implements Interceptor {
     private static final String ALIAS = SystemVariableUtil.getValue("PETSTORE_KEY_ALIAS", "wso2carbon");
     private static final String KEYSTORE_PASSWORD = SystemVariableUtil.getValue("PETSTORE_KEYSTORE_PASS", "wso2carbon");
 
-    public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo)
-            throws Exception {
+    @Override
+    public boolean interceptRequest(Request request, Response response) throws Exception {
         log.info("Authentication precall");
         boolean isValidSignature;
         String jwtHeader = request.getHeader(JWT_HEADER);
@@ -66,14 +65,9 @@ public class JWTSecurityInterceptor implements Interceptor {
                 return true;
             }
         }
-        responder.setHeader(javax.ws.rs.core.HttpHeaders.WWW_AUTHENTICATE, AUTH_TYPE_JWT);
-        responder.setStatus(javax.ws.rs.core.Response.Status.UNAUTHORIZED.getStatusCode());
-        responder.send();
+        response.setHeader(javax.ws.rs.core.HttpHeaders.WWW_AUTHENTICATE, AUTH_TYPE_JWT);
+        response.setStatus(javax.ws.rs.core.Response.Status.UNAUTHORIZED.getStatusCode());
         return false;
-    }
-
-    public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) {
-        // Nothing to do
     }
 
     private boolean verifySignature(String jwt) {

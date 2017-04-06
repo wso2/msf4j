@@ -24,9 +24,14 @@ import org.wso2.msf4j.security.JWTSecurityInterceptor;
  */
 public class Application {
 
+    private Application() {
+    }
+
     public static void main(String[] args) {
         // Port 8081 is used since the default port of tomcat is 8080
-        new MicroservicesRunner(8081).addInterceptor(new JWTSecurityInterceptor())
-                .addInterceptor(new CustomJWTClaimsInterceptor()).deploy(new Helloworld()).start();
+        new MicroservicesRunner(8081)
+                .addGlobalRequestInterceptor(new JWTSecurityInterceptor(), new CustomJWTClaimsInterceptor())
+                .deploy(new Helloworld())
+                .start();
     }
 }

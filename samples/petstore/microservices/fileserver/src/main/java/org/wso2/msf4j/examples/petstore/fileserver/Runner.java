@@ -26,10 +26,11 @@ import org.wso2.msf4j.analytics.metrics.MetricsInterceptor;
 public class Runner {
 
     public static void main(String[] args) {
+        HTTPMonitoringInterceptor httpMonitoringInterceptor = new HTTPMonitoringInterceptor();
+        MetricsInterceptor metricsInterceptor = new MetricsInterceptor();
         new MicroservicesRunner()
-                //.addInterceptor(new JWTSecurityInterceptor())
-                .addInterceptor(new HTTPMonitoringInterceptor())
-                .addInterceptor(new MetricsInterceptor())
+                .addGlobalRequestInterceptor(httpMonitoringInterceptor, metricsInterceptor)
+                .addGlobalResponseInterceptor(httpMonitoringInterceptor, metricsInterceptor)
                 .deploy(new FileServerService())
                 .start();
     }

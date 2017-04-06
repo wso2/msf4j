@@ -19,28 +19,22 @@ package org.wso2.msf4j.example;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
-import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
-import org.wso2.msf4j.ServiceMethodInfo;
+import org.wso2.msf4j.interceptor.RequestInterceptor;
 
 /**
  * Spring based MSF4J Interceptor class which print HTTP headers from incoming messages.
  */
 @Component
-public class LogHeadersInterceptor implements Interceptor {
+public class LogHeadersInterceptor implements RequestInterceptor {
 
     private final Log log = LogFactory.getLog(LogHeadersInterceptor.class);
 
     @Override
-    public boolean preCall(Request request, Response responder, ServiceMethodInfo serviceMethodInfo) throws Exception {
+    public boolean interceptRequest(Request request, Response response) throws Exception {
         request.getHeaders().getAll()
-               .forEach(header -> log.info("Header - " + header.getName() + " : " + header.getValue()));
+                .forEach(header -> log.info("Header - " + header.getName() + " : " + header.getValue()));
         return true;
-    }
-
-    @Override
-    public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo) throws Exception {
-
     }
 }
