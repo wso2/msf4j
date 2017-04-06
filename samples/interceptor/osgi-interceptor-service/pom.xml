@@ -25,12 +25,14 @@
         <version>2.3.0-SNAPSHOT</version>
         <relativePath>../../../poms/parent/pom.xml</relativePath>
     </parent>
+
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wso2.msf4j.samples</groupId>
     <artifactId>osgi-interceptor-service</artifactId>
     <packaging>bundle</packaging>
     <name>Sample: OSGI Interceptor Service</name>
     <url>http://maven.apache.org</url>
+
     <dependencies>
         <dependency>
             <groupId>org.wso2.msf4j.samples</groupId>
@@ -62,8 +64,9 @@
             <artifactId>msf4j-swagger</artifactId>
         </dependency>
     </dependencies>
+
     <properties>
-        <interceptor-common.version>${project.version}</interceptor-common.version>
+        <interceptor-common.version>2.3.0-SNAPSHOT</interceptor-common.version>
         <maven-bundle-plugin.version>3.2.0</maven-bundle-plugin.version>
         <import.package>
             org.osgi.framework.*;version="${osgi.framework.import.version.range}",
