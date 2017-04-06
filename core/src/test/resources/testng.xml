@@ -18,12 +18,6 @@ limitations under the License.
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
 <suite name="MSF4J_Test-Suite">
-    <test name="session-unit-tests" preserve-order="true" parallel="false">
-        <classes>
-            <class name="org.wso2.msf4j.session.SessionIdGeneratorTest"/>
-        </classes>
-    </test>
-
 
     <test name="interceptor-unit-tests" preserve-order="true" parallel="false">
         <classes>
@@ -75,4 +69,19 @@ limitations under the License.
             <class name="org.wso2.msf4j.ExtendedServiceTest"/>
         </classes>
     </test>
+
+    <test name="session-unit-tests" preserve-order="true" parallel="false">
+        <classes>
+            <class name="org.wso2.msf4j.websocket.ValidatorTesting"/>
+            <class name="org.wso2.msf4j.websocket.EndpointRegistryTest"/>
+            <class name="org.wso2.msf4j.websocket.DeploymentTest"/>
+        </classes>
+    </test>
+
+    <test name="deprecated-interceptor-unit-tests" preserve-order="true" parallel="false">
+        <classes>
+            <class name="org.wso2.msf4j.DeprecatedInterceptorTest"/>
+        </classes>
+    </test>
+
 </suite>

@@ -29,9 +29,12 @@ import org.wso2.carbon.transport.http.netty.listener.HTTPServerConnector;
 import org.wso2.carbon.transport.http.netty.listener.HTTPServerConnectorProvider;
 import org.wso2.carbon.transport.http.netty.listener.HTTPTransportListener;
 import org.wso2.carbon.transport.http.netty.listener.ServerConnectorController;
+import org.wso2.msf4j.interceptor.RequestInterceptor;
+import org.wso2.msf4j.interceptor.ResponseInterceptor;
 import org.wso2.msf4j.internal.DataHolder;
 import org.wso2.msf4j.internal.MSF4JMessageProcessor;
 import org.wso2.msf4j.internal.MicroservicesRegistryImpl;
+import org.wso2.msf4j.internal.websocket.EndpointsRegistryImpl;
 import org.wso2.msf4j.util.RuntimeAnnotations;
 
 import java.util.ArrayList;
@@ -56,6 +59,7 @@ public class MicroservicesRunner {
     private long startTime = System.currentTimeMillis();
     private boolean isStarted;
     private MicroservicesRegistryImpl msRegistry = new MicroservicesRegistryImpl();
+    private EndpointsRegistryImpl endpointsRegistry = EndpointsRegistryImpl.getInstance();
 
     /**
      * Creates a MicroservicesRunner instance which will be used for deploying microservices. Allows specifying
@@ -107,6 +111,16 @@ public class MicroservicesRunner {
     }
 
     /**
+     * Add WebSocket endpoint to the MicroserviceRunner
+     * @param webSocketEndpoint webSocketEndpoint endpoint which is to be added.
+     * @return this MicroservicesRunner object.
+     */
+    public MicroservicesRunner deployWebSocketEndpoint(Object webSocketEndpoint) {
+        endpointsRegistry.addEndpoint(webSocketEndpoint);
+        return this;
+    }
+
+    /**
      * Register a custom {@link SessionManager}.
      *
      * @param sessionManager The SessionManager instance to be registered.
@@ -118,15 +132,39 @@ public class MicroservicesRunner {
     }
 
     /**
-     * Add an interceptor which will get called before &amp; after the deployed microservices are invoked. Multiple
-     * interceptors can be added.
+     * Register request interceptors.
      *
-     * @param interceptor The interceptor to be added.
+     * @param requestInterceptor interceptor instances
+     */
+    public MicroservicesRunner addGlobalRequestInterceptor(RequestInterceptor... requestInterceptor) {
+        checkState();
+        msRegistry.addGlobalRequestInterceptor(requestInterceptor);
+        return this;
+    }
+
+    /**
+     * Register response interceptors.
+     *
+     * @param responseInterceptor interceptor instances
+     */
+    public MicroservicesRunner addGlobalResponseInterceptor(ResponseInterceptor... responseInterceptor) {
+        checkState();
+        msRegistry.addGlobalResponseInterceptor(responseInterceptor);
+        return this;
+    }
+
+    /**
+     * Add an interceptor which will get called before &amp; after the deployed microservices are invoked.
+     * Multiple interceptors can be added
+     *
+     * @param interceptor interceptor The interceptor to be added.
      * @return this MicroservicesRunner object
+     * @deprecated
      */
     public MicroservicesRunner addInterceptor(Interceptor... interceptor) {
         checkState();
-        msRegistry.addInterceptor(interceptor);
+        msRegistry.addGlobalRequestInterceptor(interceptor);
+        msRegistry.addGlobalResponseInterceptor(interceptor);
         return this;
     }
 

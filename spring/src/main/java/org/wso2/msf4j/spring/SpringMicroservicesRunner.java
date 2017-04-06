@@ -30,8 +30,9 @@ import org.wso2.carbon.transport.http.netty.config.TransportProperty;
 import org.wso2.carbon.transport.http.netty.config.TransportsConfiguration;
 import org.wso2.carbon.transport.http.netty.listener.HTTPServerConnectorProvider;
 import org.wso2.carbon.transport.http.netty.listener.ServerConnectorController;
-import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.MicroservicesRunner;
+import org.wso2.msf4j.interceptor.RequestInterceptor;
+import org.wso2.msf4j.interceptor.ResponseInterceptor;
 import org.wso2.msf4j.internal.DataHolder;
 import org.wso2.msf4j.internal.MSF4JMessageProcessor;
 import org.wso2.msf4j.spring.transport.HTTPSTransportConfig;
@@ -75,9 +76,16 @@ public class SpringMicroservicesRunner extends MicroservicesRunner implements Ap
             deploy(entry.getValue());
         }
 
-        for (Map.Entry<String, Interceptor> entry : applicationContext.getBeansOfType(Interceptor.class).entrySet()) {
-            log.info("Adding " + entry.getKey() + "  Interceptor");
-            addInterceptor(entry.getValue());
+        for (Map.Entry<String, RequestInterceptor> entry :
+                applicationContext.getBeansOfType(RequestInterceptor.class).entrySet()) {
+            log.info("Adding " + entry.getKey() + "  RequestInterceptor");
+            addGlobalRequestInterceptor(entry.getValue());
+        }
+
+        for (Map.Entry<String, ResponseInterceptor> entry :
+                applicationContext.getBeansOfType(ResponseInterceptor.class).entrySet()) {
+            log.info("Adding " + entry.getKey() + "  ResponseInterceptor");
+            addGlobalResponseInterceptor(entry.getValue());
         }
 
         for (Map.Entry<String, ExceptionMapper> exceptionMapper :

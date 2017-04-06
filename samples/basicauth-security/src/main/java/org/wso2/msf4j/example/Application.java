@@ -23,9 +23,12 @@ import org.wso2.msf4j.MicroservicesRunner;
  */
 public class Application {
 
+    private Application() {
+    }
+
     public static void main(String[] args) {
         new MicroservicesRunner()
-                .addInterceptor(new UsernamePasswordSecurityInterceptor())
+                .addGlobalRequestInterceptor(new UsernamePasswordSecurityInterceptor())
                 .deploy(new Helloworld())
                 .start();
     }
