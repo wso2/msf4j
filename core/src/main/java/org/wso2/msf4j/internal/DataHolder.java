@@ -19,7 +19,6 @@ import org.osgi.framework.BundleContext;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * DataHolder for MSF4J.
@@ -37,8 +36,8 @@ public class DataHolder {
         return instance;
     }
 
-    public Optional<BundleContext> getBundleContext() {
-        return Optional.ofNullable(bundleContext);
+    public BundleContext getBundleContext() {
+        return bundleContext;
     }
 
     public void setBundleContext(BundleContext bundleContext) {

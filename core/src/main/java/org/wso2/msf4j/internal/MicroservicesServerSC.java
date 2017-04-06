@@ -146,8 +146,8 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
         Dictionary<String, String> properties = new Hashtable<>();
         properties.put(MSF4JConstants.CHANNEL_ID, serverConnector.getId());
         microservicesRegistries.put(serverConnector.getId(), microservicesRegistry);
-        DataHolder.getInstance().getBundleContext().ifPresent(bundleContext ->
-                bundleContext.registerService(MicroservicesRegistry.class, microservicesRegistry, properties));
+        DataHolder.getInstance().getBundleContext()
+                  .registerService(MicroservicesRegistry.class, microservicesRegistry, properties);
     }
 
     protected void removeCarbonTransport(ServerConnector serverConnector) {
@@ -248,14 +248,13 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
 
     @Override
     public void onAllRequiredCapabilitiesAvailable() {
-        BundleContext bundleContext = DataHolder.getInstance().getBundleContext()
-                .orElseThrow(() -> new OSGiDeclarativeServiceException("Bundle context not found"));
         try {
-            ServiceReference[] serviceReferences = bundleContext
-                    .getServiceReferences(Microservice.class.getName(), null);
+            ServiceReference[] serviceReferences = DataHolder.getInstance().getBundleContext()
+                                                             .getServiceReferences(Microservice.class.getName(), null);
             if (serviceReferences != null && serviceReferences.length > 0) {
                 Arrays.stream(serviceReferences).forEach(serviceReference -> {
-                    Microservice service = (Microservice) bundleContext.getService(serviceReference);
+                    Microservice service =
+                            (Microservice) DataHolder.getInstance().getBundleContext().getService(serviceReference);
                     Object channelId = serviceReference.getProperty(MSF4JConstants.CHANNEL_ID);
                     Object contextPath = serviceReference.getProperty("contextPath");
                     addMicroserviceToRegistry(service, channelId, contextPath);
@@ -263,39 +262,46 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             }
 
             // Add request and response interceptors
-            serviceReferences = bundleContext.getServiceReferences(OSGiInterceptorConfig.class.getName(), null);
+            serviceReferences = DataHolder.getInstance().getBundleContext()
+                                          .getServiceReferences(OSGiInterceptorConfig.class.getName(), null);
             if (serviceReferences != null && serviceReferences.length > 0) {
                 Arrays.stream(serviceReferences).forEach(serviceReference -> {
                     OSGiInterceptorConfig interceptorConfig =
-                            (OSGiInterceptorConfig) bundleContext.getService(serviceReference);
+                            (OSGiInterceptorConfig) DataHolder.getInstance().getBundleContext()
+                                                              .getService(serviceReference);
                     Object channelId = serviceReference.getProperty(MSF4JConstants.CHANNEL_ID);
                     addRequestResponseInterceptorsToRegistry(interceptorConfig, channelId);
                 });
             }
 
-            // Add deprecated interceptors
-            serviceReferences = bundleContext.getServiceReferences(Interceptor.class.getName(), null);
+            serviceReferences =
+                    DataHolder.getInstance().getBundleContext().getServiceReferences(Interceptor.class.getName(), null);
             if (serviceReferences != null && serviceReferences.length > 0) {
                 Arrays.stream(serviceReferences).forEach(serviceReference -> {
-                    Interceptor interceptor = (Interceptor) bundleContext.getService(serviceReference);
+                    Interceptor interceptor =
+                            (Interceptor) DataHolder.getInstance().getBundleContext().getService(serviceReference);
                     Object channelId = serviceReference.getProperty(MSF4JConstants.CHANNEL_ID);
                     addInterceptorToRegistry(interceptor, channelId);
                 });
             }
 
-            serviceReferences = bundleContext.getServiceReferences(ExceptionMapper.class.getName(), null);
+            serviceReferences = DataHolder.getInstance().getBundleContext()
+                                          .getServiceReferences(ExceptionMapper.class.getName(), null);
             if (serviceReferences != null && serviceReferences.length > 0) {
                 Arrays.stream(serviceReferences).forEach(serviceReference -> {
-                    ExceptionMapper exceptionMapper = (ExceptionMapper) bundleContext.getService(serviceReference);
+                    ExceptionMapper exceptionMapper =
+                            (ExceptionMapper) DataHolder.getInstance().getBundleContext().getService(serviceReference);
                     Object channelId = serviceReference.getProperty(MSF4JConstants.CHANNEL_ID);
                     addExceptionMapperToRegistry(exceptionMapper, channelId);
                 });
             }
 
-            serviceReferences = bundleContext.getServiceReferences(SessionManager.class.getName(), null);
+            serviceReferences = DataHolder.getInstance().getBundleContext()
+                                          .getServiceReferences(SessionManager.class.getName(), null);
             if (serviceReferences != null && serviceReferences.length > 0) {
                 Arrays.stream(serviceReferences).forEach(serviceReference -> {
-                    SessionManager sessionManager = (SessionManager) bundleContext.getService(serviceReference);
+                    SessionManager sessionManager =
+                            (SessionManager) DataHolder.getInstance().getBundleContext().getService(serviceReference);
                     Object channelId = serviceReference.getProperty(MSF4JConstants.CHANNEL_ID);
                     addSessionManagerToRegistry(sessionManager, channelId);
                 });
@@ -306,7 +312,7 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             isAllRequiredCapabilitiesAvailable = true;
         }
 
-        bundleContext.registerService(MicroservicesServerSC.class, this, null);
+        DataHolder.getInstance().getBundleContext().registerService(MicroservicesServerSC.class, this, null);
         log.info("All microservices are available");
     }
 
@@ -333,7 +339,7 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
                 microservicesRegistries.values().forEach(registry -> registry.addService(service));
             } else {
                 microservicesRegistries.values()
-                        .forEach(registry -> registry.addService(contextPath.toString(), service));
+                                       .forEach(registry -> registry.addService(contextPath.toString(), service));
             }
         }
     }
@@ -351,7 +357,7 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             MicroservicesRegistryImpl microservicesRegistry = microservicesRegistries.get(channelId.toString());
             if (microservicesRegistry == null) {
                 throw new OSGiDeclarativeServiceException("Couldn't find the registry for channel ID " +
-                        channelId);
+                                                          channelId);
             }
             microservicesRegistry.addGlobalRequestInterceptor(interceptorConfig.getGlobalRequestInterceptorArray());
             microservicesRegistry.addGlobalResponseInterceptor(interceptorConfig.getGlobalResponseInterceptorArray());
@@ -376,7 +382,7 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
         if (channelId != null) {
             MicroservicesRegistryImpl microservicesRegistry = microservicesRegistries.get(channelId.toString());
             if (microservicesRegistry == null) {
-                throw new OSGiDeclarativeServiceException("Couldn't find the registry for channel ID " + channelId);
+                throw new OSGiDeclarativeServiceException("Couldn't found the registry for channel ID " + channelId);
             }
             microservicesRegistry.addGlobalRequestInterceptor(interceptor);
             microservicesRegistry.addGlobalResponseInterceptor(interceptor);

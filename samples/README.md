@@ -33,4 +33,5 @@ deployable jar
 * [WSO2 DAS Tracing](message-tracing/das) - Using WSO2 DAS for tracing messages
 * [Zipkin Tracing](message-tracing/zipkin) - Using Zipkin for tracing messages
 * [Pet-store](petstore) - Running as an MSA Application
+* [WebSocket Chat App](websocket/chatApp) - How to use MSF4J WebSocket capabilities to create a simple chat app
 
