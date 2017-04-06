@@ -28,7 +28,6 @@
         <relativePath>../../../../poms/msf4j-service/pom.xml</relativePath>
     </parent>
 
-    <groupId>chat-app</groupId>
     <artifactId>websocket-chatApp-sample</artifactId>
 
     <name>Sample: WebSocket Chat Application (Fatjar Mode)</name>
