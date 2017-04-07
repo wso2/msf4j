@@ -13,7 +13,7 @@ MSF4J project using archtypes.
     <parent>
         <groupId>org.wso2.msf4j</groupId>
         <artifactId>msf4j-service</artifactId>
-        <version>2.2.1</version>
+        <version>2.2.2</version>
         <relativePath>../../msf4j-service/pom.xml</relativePath>
     </parent>
 
