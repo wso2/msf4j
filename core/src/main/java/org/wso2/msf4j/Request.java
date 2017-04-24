@@ -21,6 +21,7 @@ public class Request {
     private List<String> acceptTypes = null;
     private String contentType = null;
     private SessionManager sessionManager;
+    private String serviceKey;
     private Session session;
 
     public Request(CarbonMessage carbonMessage) {
@@ -37,6 +38,24 @@ public class Request {
         String contentTypeHeaderStr = carbonMessage.getHeader(HttpHeaders.CONTENT_TYPE);
         //Trim specified charset since UTF-8 is assumed
         contentType = (contentTypeHeaderStr != null) ? contentTypeHeaderStr.split("\\s*;\\s*")[0] : null;
+    }
+
+    /**
+     * Set the service key of the associated micro-service.
+     *
+     * @param serviceKey service key of the associated micro-service
+     */
+    public void setServiceKey(String serviceKey) {
+        this.serviceKey = serviceKey;
+    }
+
+    /**
+     * Get the service key of the associated micro-service.
+     *
+     * @return the service key of the associated micro-service
+     */
+    public String getServiceKey() {
+        return serviceKey;
     }
 
     public void setSessionManager(SessionManager sessionManager) {
@@ -170,11 +189,12 @@ public class Request {
             session = Arrays.stream(cookieHeader.split(";"))
                     .filter(cookie -> cookie.startsWith(MSF4JConstants.SESSION_ID))
                     .findFirst()
-                    .map(jsession -> sessionManager.getSession(jsession.substring(MSF4JConstants.SESSION_ID.length())))
-                    .orElseGet(sessionManager::createSession);
+                    .map(jsession -> sessionManager
+                            .getSession(new SessionKey(jsession.substring(MSF4JConstants.SESSION_ID.length()))))
+                    .orElseGet(() -> sessionManager.createSession(serviceKey));
             return session.setAccessed();
         }
-        return session = sessionManager.createSession();
+        return session = sessionManager.createSession(serviceKey);
     }
 
     /**
@@ -196,16 +216,17 @@ public class Request {
             session = Arrays.stream(cookieHeader.split(";"))
                     .filter(cookie -> cookie.startsWith(MSF4JConstants.SESSION_ID))
                     .findFirst()
-                    .map(jsession -> sessionManager.getSession(jsession.substring(MSF4JConstants.SESSION_ID.length())))
+                    .map(jsession -> sessionManager
+                            .getSession(new SessionKey(jsession.substring(MSF4JConstants.SESSION_ID.length()))))
                     .orElseGet(() -> {
                         if (create) {
-                            return sessionManager.createSession();
+                            return sessionManager.createSession(serviceKey);
                         }
                         return null;
                     });
             return session.setAccessed();
         } else if (create) {
-            return session = sessionManager.createSession();
+            return session = sessionManager.createSession(serviceKey);
         }
         return null;
     }

@@ -33,17 +33,18 @@ public interface SessionManager {
     /**
      * Retrieve a session with ID.
      *
-     * @param sessionId ID of the session
+     * @param sessionKey key of the session
      * @return Session with id <code>sessionId</code> if it exists, and null otherwise.
      */
-    Session getSession(String sessionId);
+    Session getSession(SessionKey sessionKey);
 
     /**
      * Create a new session.
      *
+     * @param serviceKey key of the micro-service
      * @return the newly created session
      */
-    Session createSession();
+    Session createSession(String serviceKey);
 
     /**
      * Invalidate a session.
@@ -76,15 +77,15 @@ public interface SessionManager {
      *
      * @param sessions The map into which the sessions are to be loaded.
      */
-    void loadSessions(Map<String, Session> sessions);
+    void loadSessions(Map<SessionKey, Session> sessions);
 
     /**
      * Read a session from a persistent storage, for example, into memory.
      *
-     * @param sessionId ID of the session to be loaded or read.
+     * @param sessionKey key of the session to be loaded or read.
      * @return The Session object.
      */
-    Session readSession(String sessionId);
+    Session readSession(SessionKey sessionKey);
 
     /**
      * Persist a new session.

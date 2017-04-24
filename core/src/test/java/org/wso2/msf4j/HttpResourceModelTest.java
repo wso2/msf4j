@@ -29,7 +29,7 @@ public class HttpResourceModelTest {
     @Test
     public void testStreamingReqSupportedCheckWhenStreamingSupported() throws NoSuchMethodException {
         TestClass testObj = new TestClass();
-        HttpResourceModel httpResourceModel = new HttpResourceModel("", testObj.getClass()
+        HttpResourceModel httpResourceModel = new HttpResourceModel("", "", testObj.getClass()
                 .getMethod("methodWithHttpStreaming", HttpStreamer.class),
                 testObj, false);
         assertTrue(httpResourceModel.isStreamingReqSupported());
@@ -39,7 +39,7 @@ public class HttpResourceModelTest {
     @Test
     public void testStreamingReqSupportedCheckWhenStreamingUnsupported() throws NoSuchMethodException {
         TestClass testObj = new TestClass();
-        HttpResourceModel httpResourceModel = new HttpResourceModel("", testObj.getClass()
+        HttpResourceModel httpResourceModel = new HttpResourceModel("", "", testObj.getClass()
                 .getMethod("methodWithNoHttpStreaming", Object.class),
                 testObj, false);
         assertTrue(!httpResourceModel.isStreamingReqSupported());

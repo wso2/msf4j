@@ -162,7 +162,8 @@ public class HttpMethodInfo {
                         String absolutePath = relativePath.isEmpty() ? destination.getDestination().getPath() :
                                               String.format("%s/%s", destination.getDestination().getPath(),
                                                             relativePath);
-                        HttpResourceModel resourceModel = new HttpResourceModel(absolutePath, method, returnVal, false);
+                        HttpResourceModel resourceModel = new HttpResourceModel(request.getServiceKey(), absolutePath,
+                                method, returnVal, false);
                         resourceModel.setParent(destination.getDestination());
                         SubresourceKey subResKey = new SubresourceKey(absolutePath, method.getDeclaringClass(),
                                                                       resourceModel.getHttpMethod());
@@ -176,7 +177,8 @@ public class HttpMethodInfo {
                         String absolutePath = relativePath.isEmpty() ? destination.getDestination().getPath() :
                                               String.format("%s/%s", destination.getDestination().getPath(),
                                                             relativePath);
-                        HttpResourceModel resourceModel = new HttpResourceModel(absolutePath, method, returnVal, true);
+                        HttpResourceModel resourceModel = new HttpResourceModel(request.getServiceKey(), absolutePath,
+                                method, returnVal, true);
                         resourceModel.setParent(destination.getDestination());
                         SubresourceKey subResKey =
                                 new SubresourceKey(absolutePath, method.getDeclaringClass(), Collections.emptySet());

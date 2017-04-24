@@ -76,6 +76,7 @@ public final class HttpResourceModel {
     private static final int STREAMING_REQ_UNKNOWN = 0, STREAMING_REQ_SUPPORTED = 1, STREAMING_REQ_UNSUPPORTED = 2;
 
     private final Set<String> httpMethods;
+    private final String serviceKey;
     private final String path;
     private final Method method;
     private final Object handler;
@@ -145,13 +146,16 @@ public final class HttpResourceModel {
     /**
      * Construct a resource model with HttpMethod, method that handles httprequest, Object that contains the method.
      *
-     * @param path             path associated with this model.
-     * @param method           handler that handles the http request.
-     * @param handler          instance {@code HttpHandler}.
+     * @param serviceKey           service key of the associated micro-service
+     * @param path                 path associated with this model.
+     * @param method               handler that handles the http request.
+     * @param handler              instance {@code HttpHandler}.
      * @param isSubResourceLocator indicate if this is a subresource locator method
      */
-    public HttpResourceModel(String path, Method method, Object handler, boolean isSubResourceLocator) {
+    public HttpResourceModel(String serviceKey, String path, Method method, Object handler,
+                             boolean isSubResourceLocator) {
         this.httpMethods = getHttpMethods(method);
+        this.serviceKey = serviceKey;
         this.path = path;
         this.method = method;
         this.handler = handler;
@@ -221,6 +225,15 @@ public final class HttpResourceModel {
      */
     public Set<String> getHttpMethod() {
         return httpMethods;
+    }
+
+    /**
+     * Get the service key of the associated micro-service.
+     *
+     * @return service key of the associated micro-service
+     */
+    public String getServiceKey() {
+        return serviceKey;
     }
 
     /**

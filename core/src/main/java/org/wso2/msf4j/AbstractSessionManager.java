@@ -48,7 +48,7 @@ public abstract class AbstractSessionManager implements SessionManager {
      */
     private static final int SESSION_ID_LENGTH = 16;
 
-    private Map<String, Session> sessions = new ConcurrentHashMap<>();
+    private Map<SessionKey, Session> sessions = new ConcurrentHashMap<>();
     private SessionIdGenerator sessionIdGenerator = new SessionIdGenerator();
 
     private ScheduledExecutorService sessionExpiryChecker;
@@ -68,34 +68,35 @@ public abstract class AbstractSessionManager implements SessionManager {
                 30, 30, TimeUnit.SECONDS);
     }
 
-    public final Session getSession(String sessionId) {
+    public final Session getSession(SessionKey sessionKey) {
         checkValidity();
-        Session session = sessions.get(sessionId);
+        Session session = sessions.get(sessionKey);
         if (session == null) {
-            session = readSession(sessionId);
+            session = readSession(sessionKey);
         }
         if (session != null) {
-            sessions.put(session.getId(), session);
+            sessions.put(sessionKey, session);
             session.setNew(false);
         }
         return session;
     }
 
-    public final Session createSession() {
+    public final Session createSession(String serviceKey) {
         checkValidity();
         if (sessions.size() >= DEFAULT_MAX_ACTIVE_SESSIONS) {
             throw new IllegalStateException("Too many active sessions");
         }
-        Session session = new Session(sessionIdGenerator.generateSessionId(""), DEFAULT_MAX_INACTIVE_INTERVAL);
+        SessionKey sessionKey = new SessionKey(serviceKey, sessionIdGenerator.generateSessionId(""));
+        Session session = new Session(sessionKey, DEFAULT_MAX_INACTIVE_INTERVAL);
         session.setManager(this);
-        sessions.put(session.getId(), session);
+        sessions.put(sessionKey, session);
         saveSession(session);
         return session;
     }
 
     public final void invalidateSession(Session session) {
         checkValidity();
-        sessions.remove(session.getId());
+        sessions.remove(session.getSessionKey());
         deleteSession(session);
     }
 
