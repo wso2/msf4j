@@ -171,17 +171,17 @@ public class JWTAccessTokenBuilder extends OauthTokenIssuerImpl {
                 getApplicationAccessTokenValidityPeriodInSeconds() * 1000;
         long curTimeInMillis = Calendar.getInstance().getTimeInMillis();
         // setting subject
-        String subject = request.getAuthorizationReqDTO().getUser().getAuthenticatedSubjectIdentifier();
+        String subject = request.getAuthorizationReqDTO().getUser().getUserName();
 
         if (!StringUtils.isNotBlank(subject)) {
-            subject = request.getAuthorizationReqDTO().getUser().getUserName();
+            subject = request.getAuthorizationReqDTO().getUser().getAuthenticatedSubjectIdentifier();
         }
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet();
         jwtClaimsSet.setIssuer(issuer);
         jwtClaimsSet.setSubject(subject);
         jwtClaimsSet.setAudience(Arrays.asList(request.getAuthorizationReqDTO().getConsumerKey()));
-        jwtClaimsSet.setClaim(Constants.AUTHORIZATION_PARTY, request.getAuthorizationReqDTO().getConsumerKey());
+        jwtClaimsSet.setClaim("grupos", Arrays.asList("ENTREGADOR", "ADMIN"));
         jwtClaimsSet.setExpirationTime(new Date(curTimeInMillis + lifetimeInMillis));
         jwtClaimsSet.setIssueTime(new Date(curTimeInMillis));
         addUserClaims(jwtClaimsSet, request.getAuthorizationReqDTO().getUser());
