@@ -18,20 +18,20 @@
 
 package com.wso2.jwt.token.builder;
 
-import com.nimbusds.jose.Algorithm;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.JWSSigner;
-import com.nimbusds.jose.crypto.RSASSASigner;
-import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.PlainJWT;
-import com.nimbusds.jwt.SignedJWT;
+import java.security.Key;
+import java.security.interfaces.RSAPrivateKey;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.wso2.carbon.base.MultitenantConstants;
+import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.core.util.KeyStoreManager;
 import org.wso2.carbon.identity.application.authentication.framework.model.AuthenticatedUser;
 import org.wso2.carbon.identity.application.common.model.Claim;
@@ -43,14 +43,18 @@ import org.wso2.carbon.identity.oauth2.authz.OAuthAuthzReqMessageContext;
 import org.wso2.carbon.identity.oauth2.token.OAuthTokenReqMessageContext;
 import org.wso2.carbon.identity.oauth2.token.OauthTokenIssuerImpl;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
+import org.wso2.carbon.user.api.UserStoreException;
+import org.wso2.carbon.user.api.UserStoreManager;
 
-import java.security.Key;
-import java.security.interfaces.RSAPrivateKey;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import com.nimbusds.jose.Algorithm;
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.JWSSigner;
+import com.nimbusds.jose.crypto.RSASSASigner;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.PlainJWT;
+import com.nimbusds.jwt.SignedJWT;
 
 /**
  * JWTAccessTokenBuilder.
@@ -78,11 +82,18 @@ public class JWTAccessTokenBuilder extends OauthTokenIssuerImpl {
     private static Map<Integer, Key> privateKeys = new ConcurrentHashMap<Integer, Key>();
     private OAuthServerConfiguration config = null;
     private Algorithm signatureAlgorithm = null;
-
+    
+    private UserStoreManager userStoreManager;
+    
     public JWTAccessTokenBuilder() throws IdentityOAuth2Exception {
         if (log.isDebugEnabled()) {
             log.debug("JWT Access token builder is initiated");
         }
+        try {
+			userStoreManager = CarbonContext.getThreadLocalCarbonContext().getUserRealm().getUserStoreManager();
+		} catch (UserStoreException e) {
+			log.error(e.getMessage(), e);
+		}
         config = OAuthServerConfiguration.getInstance();
         //map signature algorithm from identity.xml to nimbus format, this is a one time configuration
         signatureAlgorithm = mapSignatureAlgorithm(config.getSignatureAlgorithm());
@@ -101,7 +112,13 @@ public class JWTAccessTokenBuilder extends OauthTokenIssuerImpl {
             }
             // Return default access token if it fails to build jwt
             return super.accessToken(oAuthTokenReqMessageContext);
-        }
+        } catch (UserStoreException e) {
+        	if (log.isDebugEnabled()) {
+                log.debug("Error occurred while access user store", e);
+            }
+            // Return default access token if it fails to build jwt
+            return super.accessToken(oAuthTokenReqMessageContext);
+		}
     }
 
 
@@ -127,25 +144,27 @@ public class JWTAccessTokenBuilder extends OauthTokenIssuerImpl {
      * @param request Token request message context
      * @return Signed jwt string.
      * @throws IdentityOAuth2Exception
+     * @throws UserStoreException 
      */
     protected String buildIDToken(OAuthTokenReqMessageContext request)
-            throws IdentityOAuth2Exception {
+            throws IdentityOAuth2Exception, UserStoreException {
 
         String issuer = OAuth2Util.getIDTokenIssuer();
         long lifetimeInMillis = OAuthServerConfiguration.getInstance().
                 getApplicationAccessTokenValidityPeriodInSeconds() * 1000;
         long curTimeInMillis = Calendar.getInstance().getTimeInMillis();
         // setting subject
-        String subject = request.getAuthorizedUser().getAuthenticatedSubjectIdentifier();
+        String subject = request.getAuthorizedUser().getUserName();
         if (!StringUtils.isNotBlank(subject)) {
-            subject = request.getAuthorizedUser().getUserName();
+            subject = request.getAuthorizedUser().getAuthenticatedSubjectIdentifier();
         }
+        String[] roles = userStoreManager.getRoleListOfUser(subject);
         // Set claims to jwt token.
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet();
         jwtClaimsSet.setIssuer(issuer);
         jwtClaimsSet.setSubject(subject);
         jwtClaimsSet.setAudience(Arrays.asList(request.getOauth2AccessTokenReqDTO().getClientId()));
-        jwtClaimsSet.setClaim(Constants.AUTHORIZATION_PARTY, request.getOauth2AccessTokenReqDTO().getClientId());
+        jwtClaimsSet.setClaim("grupos", roles);
         jwtClaimsSet.setExpirationTime(new Date(curTimeInMillis + lifetimeInMillis));
         jwtClaimsSet.setIssueTime(new Date(curTimeInMillis));
         addUserClaims(jwtClaimsSet, request.getAuthorizedUser());
@@ -176,7 +195,7 @@ public class JWTAccessTokenBuilder extends OauthTokenIssuerImpl {
         if (!StringUtils.isNotBlank(subject)) {
             subject = request.getAuthorizationReqDTO().getUser().getAuthenticatedSubjectIdentifier();
         }
-
+        
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet();
         jwtClaimsSet.setIssuer(issuer);
         jwtClaimsSet.setSubject(subject);
@@ -185,7 +204,7 @@ public class JWTAccessTokenBuilder extends OauthTokenIssuerImpl {
         jwtClaimsSet.setExpirationTime(new Date(curTimeInMillis + lifetimeInMillis));
         jwtClaimsSet.setIssueTime(new Date(curTimeInMillis));
         addUserClaims(jwtClaimsSet, request.getAuthorizationReqDTO().getUser());
-
+        
         if (JWSAlgorithm.NONE.getName().equals(signatureAlgorithm.getName())) {
             return new PlainJWT(jwtClaimsSet).serialize();
         }
