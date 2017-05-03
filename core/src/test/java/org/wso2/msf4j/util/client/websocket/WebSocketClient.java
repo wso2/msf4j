@@ -32,7 +32,7 @@ import io.netty.handler.codec.http.HttpClientCodec;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
-import io.netty.handler.codec.http.websocketx.PongWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.PingWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
 import io.netty.handler.codec.http.websocketx.WebSocketVersion;
@@ -177,12 +177,12 @@ public class WebSocketClient {
      *
      * @param buf content of the pong message to be sent.
      */
-    public void sendPong(ByteBuffer buf) {
+    public void sendPing(ByteBuffer buf) {
         if (channel == null) {
             log.error("Channel is null, cannot write data.");
             throw new NullPointerException("Cannot find the channel to write");
         }
-        channel.writeAndFlush(new PongWebSocketFrame(Unpooled.wrappedBuffer(buf)));
+        channel.writeAndFlush(new PingWebSocketFrame(Unpooled.wrappedBuffer(buf)));
     }
 
     /**
