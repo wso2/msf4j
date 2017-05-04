@@ -81,12 +81,12 @@ public class DeploymentTest {
         Assert.assertEquals(bufferReceived, bufferSent);
 
         //Test the Pong Message
-        byte[] pongBytes = {6, 7, 8, 9, 10};
-        ByteBuffer pongBufferSent = ByteBuffer.wrap(pongBytes);
-        echoClient.sendPong(pongBufferSent);
+        byte[] pingBytes = {6, 7, 8, 9, 10};
+        ByteBuffer pingBufferSent = ByteBuffer.wrap(pingBytes);
+        echoClient.sendPing(pingBufferSent);
         Thread.sleep(sleepTime);
         ByteBuffer pongBufferReceived = echoClient.getBufferReceived();
-        Assert.assertEquals(pongBufferReceived, pongBufferSent);
+        Assert.assertEquals(pongBufferReceived, pingBufferSent);
 
         //Closing the connection
         echoClient.shutDown();

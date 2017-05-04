@@ -42,9 +42,9 @@ import org.wso2.msf4j.websocket.exception.WebSocketMethodParameterException;
 /**
  * Test the Exceptions which can be occurred when deploying and running WebSocket.
  */
-public class ValidatorTesting {
+public class ValidatorTest {
 
-    private static final Logger log = LoggerFactory.getLogger(ValidatorTesting.class);
+    private static final Logger log = LoggerFactory.getLogger(ValidatorTest.class);
     private EndpointValidator validator = new EndpointValidator();
 
     @BeforeClass

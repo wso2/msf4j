@@ -72,7 +72,7 @@ limitations under the License.
 
     <test name="session-unit-tests" preserve-order="true" parallel="false">
         <classes>
-            <class name="org.wso2.msf4j.websocket.ValidatorTesting"/>
+            <class name="org.wso2.msf4j.websocket.ValidatorTest"/>
             <class name="org.wso2.msf4j.websocket.EndpointRegistryTest"/>
             <class name="org.wso2.msf4j.websocket.DeploymentTest"/>
         </classes>
