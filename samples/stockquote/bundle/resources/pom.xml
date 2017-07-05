@@ -10,11 +10,11 @@
 
 <properties>
     <carbon.messaging.version>1.0.11</carbon.messaging.version>
-    <carbon.transport.http.netty.version>3.0.4</carbon.transport.http.netty.version>
+    <carbon.transport.http.netty.version>3.0.5</carbon.transport.http.netty.version>
     <carbon.metrics.version>2.0.0</carbon.metrics.version>
-    <msf4j.version>2.1.1-SNAPSHOT</msf4j.version>
+    <msf4j.version>2.2.2</msf4j.version>
     <carbon.feature.plugin.version>2.1.0</carbon.feature.plugin.version>
-    <carbon.kernel.version>5.1.0</carbon.kernel.version>
+    <carbon.kernel.version>5.1.2</carbon.kernel.version>
     <osgi.api.version>6.0.0</osgi.api.version>
     <carbon.jndi.version>1.0.0</carbon.jndi.version>
     <carbon.cache.version>1.0.0</carbon.cache.version>

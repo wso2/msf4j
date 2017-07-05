@@ -20,7 +20,7 @@
     <groupId>org.wso2.msf4j</groupId>
     <artifactId>msf4j-service</artifactId>
     <packaging>pom</packaging>
-    <version>2.1.2-SNAPSHOT</version>
+    <version>2.2.3-SNAPSHOT</version>
 
     <name>MSF4J-Parent</name>
 
@@ -574,7 +574,7 @@
         <!-- Other dependency versions -->
         <maven.wagon.ssh.version>2.10</maven.wagon.ssh.version>
 
-        <msf4j.version>2.1.2-SNAPSHOT</msf4j.version>
+        <msf4j.version>2.2.3-SNAPSHOT</msf4j.version>
 
         <wso2.maven.compiler.source>1.8</wso2.maven.compiler.source>
         <wso2.maven.compiler.target>1.8</wso2.maven.compiler.target>
