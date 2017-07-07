@@ -105,6 +105,7 @@
         <module>core</module>
         <module>swagger</module>
         <module>spring</module>
+        <module>deployer</module>
         <module>poms/msf4j-service</module>
         <module>analytics/msf4j-analytics</module>
         <module>analytics/msf4j-analytics-common</module>
@@ -119,6 +120,7 @@
         <module>distribution/msf4j-all</module>
         <module>distribution/binary</module>
         <module>features/org.wso2.msf4j.feature</module>
+        <module>features/org.wso2.msf4j.deployer.feature</module>
         <!-- MSF4J Samples -->
         <module>samples/helloworld</module>
         <module>samples/formparam</module>

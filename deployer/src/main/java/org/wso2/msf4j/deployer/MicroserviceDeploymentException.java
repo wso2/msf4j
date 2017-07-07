@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.msf4j.internal.deployer;
+package org.wso2.msf4j.deployer;
 
 /**
  * Exception that is thrown when processing jar files
