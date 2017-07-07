@@ -43,7 +43,7 @@ You can use the [msf4j-microservice](archetypes) Maven [archetype](http://maven.
 
 ```
 mvn archetype:generate -DarchetypeGroupId=org.wso2.msf4j \
--DarchetypeArtifactId=msf4j-microservice -DarchetypeVersion=2.3.0-m2 \
+-DarchetypeArtifactId=msf4j-microservice -DarchetypeVersion=2.4.0-SNAPSHOT \
 -DgroupId=org.example -DartifactId=Hello-Service -Dversion=0.1-SNAPSHOT \
 -Dpackage=org.example.service -DserviceClass=HelloService
 ```
@@ -64,7 +64,7 @@ configuration. Click [here](poms/msf4j-service) for more information.
     <parent>
         <groupId>org.wso2.msf4j</groupId>
         <artifactId>msf4j-service</artifactId>
-        <version>2.3.0-m2</version>
+        <version>2.4.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
