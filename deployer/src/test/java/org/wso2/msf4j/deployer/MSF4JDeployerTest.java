@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, WSO2 Inc. (http://wso2.com) All Rights Reserved.
+ * Copyright (c) 2017, WSO2 Inc. (http://wso2.com) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.msf4j;
+package org.wso2.msf4j.deployer;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -29,9 +29,11 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.deployment.engine.Artifact;
 import org.wso2.carbon.deployment.engine.exception.CarbonDeploymentException;
-import org.wso2.msf4j.conf.Constants;
+import org.wso2.msf4j.MicroservicesRegistry;
+import org.wso2.msf4j.MicroservicesRunner;
+import org.wso2.msf4j.deployer.internal.DataHolder;
+import org.wso2.msf4j.deployer.internal.MicroservicesDeployer;
 import org.wso2.msf4j.internal.MicroservicesRegistryImpl;
-import org.wso2.msf4j.internal.deployer.MicroservicesDeployer;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,6 +58,8 @@ import static org.testng.AssertJUnit.assertTrue;
  */
 public class MSF4JDeployerTest {
 
+    private static final String HOSTNAME = "localhost";
+    private static final int PORT = 8090;
     private MicroservicesDeployer deployer;
     private static final String HEADER_KEY_CONNECTION = "CONNECTION";
     private static final String HEADER_VAL_CLOSE = "CLOSE";
@@ -67,13 +71,13 @@ public class MSF4JDeployerTest {
 
     @BeforeClass
     public void setup() throws Exception {
-        MicroservicesRunner microservicesRunner = new MicroservicesRunner(Constants.PORT);
+        MicroservicesRunner microservicesRunner = new MicroservicesRunner(PORT);
         microservicesRunner.start();
-        Map<String, MicroservicesRegistryImpl> microservicesRegistries =
-                org.wso2.msf4j.internal.DataHolder.getInstance().getMicroservicesRegistries();
+        Map<String, MicroservicesRegistry> microservicesRegistries =
+                DataHolder.getInstance().getMicroservicesRegistries();
         microservicesRegistries.put("test", microservicesRunner.getMsRegistry());
         deployer = new MicroservicesDeployer();
-        baseURI = URI.create(String.format("http://%s:%d", Constants.HOSTNAME, 8090));
+        baseURI = URI.create(String.format("http://%s:%d", HOSTNAME, 8090));
         // get the stockquote sample project path. sample.filepath property is added to surefire plugins configuration
         String rootDirectory = Paths.get(System.getProperty("project.filepath")).getParent().toString();
         stockqoutesSamplesFile = Paths.get(rootDirectory, "samples", "stockquote").toString();

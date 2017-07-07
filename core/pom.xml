@@ -62,10 +62,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.deployment</groupId>
-            <artifactId>org.wso2.carbon.deployment.engine</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.wso2.eclipse.osgi</groupId>
             <artifactId>org.eclipse.osgi</artifactId>
         </dependency>
@@ -358,7 +354,6 @@
             org.osgi.framework.*;version="${osgi.framework.import.version.range}",
             org.osgi.util.tracker; version="${osgi.service.tracker.import.version.range}",
             org.wso2.carbon.kernel.startupresolver.*;version="${carbon.kernel.version.range}",
-            org.wso2.carbon.deployment.engine.*;version="${carbon.deployment.version.range}",
             org.wso2.carbon.messaging.*;version="${carbon.messaging.version.range}",
             org.wso2.carbon.config.*;version="${carbon.config.package.import.version.range}"
         </import.package>
@@ -368,8 +363,7 @@
             startup.listener;componentName="wso2-websocket-server";requiredService="org.wso2.msf4j.WebSocketEndpoint",
             osgi.service;objectClass="org.wso2.msf4j.internal.MicroservicesServerSC";requiredByComponentName="wso2-server-connector-sc",
             osgi.service;objectClass="org.wso2.msf4j.internal.websocket.WebSocketServerSC";requiredByComponentName="wso2-server-connector-sc",
-            osgi.service;objectClass="org.wso2.carbon.messaging.CarbonMessageProcessor",
-            osgi.service;objectClass="org.wso2.carbon.deployment.engine.Deployer"
+            osgi.service;objectClass="org.wso2.carbon.messaging.CarbonMessageProcessor"
         </carbon.component>
     </properties>
 </project>

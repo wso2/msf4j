@@ -128,6 +128,12 @@
             <version>${msf4j.version}</version>
             <type>zip</type>
         </dependency>
+       <dependency>
+           <groupId>org.wso2.msf4j</groupId>
+           <artifactId>org.wso2.msf4j.deployer.feature</artifactId>
+           <version>${msf4j.version}</version>
+           <type>zip</type>
+       </dependency>
 
     </dependencies>
 
@@ -187,6 +193,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.msf4j.feature</id>
+                                    <version>${msf4j.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.msf4j.deployer.feature</id>
                                     <version>${msf4j.version}</version>
                                 </feature>
                                 <feature>
@@ -279,6 +289,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.msf4j.feature.group</id>
+                                    <version>${msf4j.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.msf4j.deployer.feature.group</id>
                                     <version>${msf4j.version}</version>
                                 </feature>
                                 <feature>

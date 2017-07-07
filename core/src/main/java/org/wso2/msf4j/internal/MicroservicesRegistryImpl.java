@@ -18,6 +18,7 @@ package org.wso2.msf4j.internal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.DefaultSessionManager;
+import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.MicroservicesRegistry;
 import org.wso2.msf4j.SessionManager;
 import org.wso2.msf4j.SwaggerService;
@@ -100,6 +101,16 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
             throw new IllegalArgumentException("SessionManager cannot be null");
         }
         this.sessionManager = sessionManager;
+    }
+
+    public void addInterceptor(Interceptor... interceptor) {
+        Collections.addAll(globalRequestInterceptorList, interceptor);
+        Collections.addAll(globalResponseInterceptorList, interceptor);
+    }
+
+    public void removeInterceptor(Interceptor interceptor) {
+        globalRequestInterceptorList.remove(interceptor);
+        globalResponseInterceptorList.remove(interceptor);
     }
 
     public MicroserviceMetadata getMetadata() {

@@ -296,6 +296,16 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.msf4j</groupId>
+                <artifactId>msf4j-spring</artifactId>
+                <version>${msf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.msf4j</groupId>
+                <artifactId>msf4j-deployer</artifactId>
+                <version>${msf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.msf4j</groupId>
                 <artifactId>msf4j-swagger</artifactId>
                 <version>${msf4j.version}</version>
             </dependency>
@@ -307,6 +317,12 @@
             <dependency>
                 <groupId>org.wso2.msf4j</groupId>
                 <artifactId>org.wso2.msf4j.feature</artifactId>
+                <version>${msf4j.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.msf4j</groupId>
+                <artifactId>org.wso2.msf4j.deployer.feature</artifactId>
                 <version>${msf4j.version}</version>
                 <type>zip</type>
             </dependency>

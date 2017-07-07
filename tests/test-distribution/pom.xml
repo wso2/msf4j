@@ -34,6 +34,11 @@
             <type>zip</type>
         </dependency>
         <dependency>
+            <groupId>org.wso2.msf4j</groupId>
+            <artifactId>org.wso2.msf4j.deployer.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.server.feature</artifactId>
             <type>zip</type>
@@ -213,6 +218,10 @@
                                     <version>${msf4j.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.msf4j.deployer.feature</id>
+                                    <version>${msf4j.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.pax.exam.feature</id>
                                     <version>${carbon.kernel.version}</version>
                                 </feature>
@@ -321,6 +330,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.msf4j.feature</id>
+                                    <version>${msf4j.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.msf4j.deployer.feature</id>
                                     <version>${msf4j.version}</version>
                                 </feature>
                                 <feature>

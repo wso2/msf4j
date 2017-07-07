@@ -13,26 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.msf4j.internal.deployer;
+package org.wso2.msf4j.deployer.internal;
 
-import org.osgi.framework.BundleContext;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ReferenceCardinality;
-import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.deployment.engine.Artifact;
 import org.wso2.carbon.deployment.engine.ArtifactType;
 import org.wso2.carbon.deployment.engine.Deployer;
 import org.wso2.carbon.deployment.engine.exception.CarbonDeploymentException;
-import org.wso2.carbon.kernel.startupresolver.RequiredCapabilityListener;
 import org.wso2.msf4j.Microservice;
-import org.wso2.msf4j.internal.DataHolder;
-import org.wso2.msf4j.internal.MicroservicesRegistryImpl;
-import org.wso2.msf4j.internal.MicroservicesServerSC;
+import org.wso2.msf4j.MicroservicesRegistry;
+import org.wso2.msf4j.deployer.MicroserviceDeploymentException;
+import org.wso2.msf4j.deployer.MicroserviceDeploymentUtils;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -48,12 +40,7 @@ import javax.ws.rs.Path;
  * This will be picked by the DeploymentEngine service according to the whiteboard pattern to deploy
  * micro service POJO artifacts.
  */
-@Component(
-        name = "org.wso2.carbon.mss.internal.deployer.MicroservicesDeployer",
-        service = Deployer.class,
-        immediate = true
-)
-public class MicroservicesDeployer implements Deployer, RequiredCapabilityListener {
+public class MicroservicesDeployer implements Deployer {
 
     private static final Logger log = LoggerFactory.getLogger(MicroservicesDeployer.class);
     private static final String DEPLOYMENT_PATH = "file:microservices";
@@ -166,18 +153,6 @@ public class MicroservicesDeployer implements Deployer, RequiredCapabilityListen
         return artifactType;
     }
 
-    /**
-     * Activator is required to write the startup
-     * resolver related headers correctly.
-     */
-    @Activate
-    protected void start(BundleContext bundleContext) {
-
-    }
-
-    @Deactivate
-    protected void stop() {
-    }
 
     /**
      * Checks whether the artifact file type is supported in Microservices Deployer.
@@ -218,8 +193,8 @@ public class MicroservicesDeployer implements Deployer, RequiredCapabilityListen
      * @param service object to be added to registry
      */
     private boolean addService(Microservice service) {
-        Map<String, MicroservicesRegistryImpl> microservicesRegistries =
-                org.wso2.msf4j.internal.DataHolder.getInstance().getMicroservicesRegistries();
+        Map<String, MicroservicesRegistry> microservicesRegistries =
+                DataHolder.getInstance().getMicroserviceRegistries();
         if (microservicesRegistries.isEmpty()) {
             log.error("Microservice deployment failed. Microservices Registry doesn't exist to register microservice.");
             return false;
@@ -234,51 +209,18 @@ public class MicroservicesDeployer implements Deployer, RequiredCapabilityListen
      * @param service object to be removed from registry,
      */
     private boolean removeService(Microservice service) {
-        Map<String, MicroservicesRegistryImpl> microservicesRegistries =
-                org.wso2.msf4j.internal.DataHolder.getInstance().getMicroservicesRegistries();
+        Map<String, MicroservicesRegistry> microservicesRegistries =
+                DataHolder.getInstance().getMicroserviceRegistries();
         if (microservicesRegistries.isEmpty()) {
             log.error("Microservice removal failed. Microservices Registry doesn't exist to register microservice.");
             return false;
         }
 
         microservicesRegistries.values().forEach(registry -> {
-            registry.removeService(service.getClass()
-                    .getAnnotation(Path.class).value());
+            registry.removeService(service.getClass().getAnnotation(Path.class).value());
             registry.preDestroyService(service);
         });
         log.info("Microservice {} undeployed successfully", service.getClass().getName());
         return true;
-    }
-
-    @Override
-    public void onAllRequiredCapabilitiesAvailable() {
-        DataHolder.getInstance().getBundleContext().registerService(MicroservicesDeployer.class, this, null);
-        log.debug("MicroservicesDeployer service is available");
-    }
-
-    /**
-     * To deploy micro services, we need to have at least one micro service registry in the system.
-     * Since microservice registry is added when microservice server is active, added the reference to wait till
-     * microservices server is active.
-     * Otherwise if deployer registered before at least one registry is added, Deployer will start to deploy services
-     * and will fail deployment.
-     */
-    @Reference(
-            name = "microservices-server",
-            service = MicroservicesServerSC.class,
-            cardinality = ReferenceCardinality.MANDATORY,
-            policy = ReferencePolicy.DYNAMIC,
-            unbind = "removeMicroservicesServer"
-    )
-    protected void addMicroservicesServer(MicroservicesServerSC microservicesServerSC) {
-        if (log.isDebugEnabled()) {
-            log.debug("Microservices server binded successfully.");
-        }
-    }
-
-    protected void removeMicroservicesServer(MicroservicesServerSC microservicesServerSC) {
-        if (log.isDebugEnabled()) {
-            log.debug("Microservices server unbinded successfully.");
-        }
     }
 }
