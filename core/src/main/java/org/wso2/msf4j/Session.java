@@ -31,7 +31,7 @@ public class Session implements Serializable {
     private static final long serialVersionUID = -3945729418329160933L;
     private transient SessionManager sessionManager;
 
-    private String id;
+    private SessionKey sessionKey;
     private long creationTime;
     private long lastAccessedTime;
     private int maxInactiveInterval;
@@ -42,8 +42,8 @@ public class Session implements Serializable {
     public Session() {
     }
 
-    public Session(String id, int maxInactiveInterval) {
-        this.id = id;
+    public Session(SessionKey sessionKey, int maxInactiveInterval) {
+        this.sessionKey = sessionKey;
         this.maxInactiveInterval = maxInactiveInterval;
         creationTime = System.currentTimeMillis();
         lastAccessedTime = creationTime;
@@ -53,8 +53,8 @@ public class Session implements Serializable {
         return creationTime;
     }
 
-    String getId() {
-        return id;
+    SessionKey getSessionKey() {
+        return sessionKey;
     }
 
     void setMaxInactiveInterval(int interval) {

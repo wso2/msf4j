@@ -26,7 +26,7 @@ import java.util.Map;
 public class DefaultSessionManager extends AbstractSessionManager {
 
     @Override
-    public void loadSessions(Map<String, Session> sessions) {
+    public void loadSessions(Map<SessionKey, Session> sessions) {
         checkValidity();
         // Nothing to do because this is an in-memory implementation
     }
@@ -38,7 +38,7 @@ public class DefaultSessionManager extends AbstractSessionManager {
     }
 
     @Override
-    public Session readSession(String sessionId) {
+    public Session readSession(SessionKey sessionKey) {
         checkValidity();
         // Nothing to do because this is an in-memory implementation
         return null;

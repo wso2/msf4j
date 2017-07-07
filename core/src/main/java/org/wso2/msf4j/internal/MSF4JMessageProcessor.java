@@ -135,6 +135,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                         getDestinationMethod(request.getUri(), request.getHttpMethod(), request.getContentType(),
                                 request.getAcceptTypes());
         HttpResourceModel resourceModel = destination.getDestination();
+        request.setServiceKey(resourceModel.getServiceKey());
         response.setMediaType(Util.getResponseType(request.getAcceptTypes(),
                 resourceModel.getProducesMediaTypes()));
         InterceptorExecutor interceptorExecutor = new InterceptorExecutor(resourceModel, request, response,

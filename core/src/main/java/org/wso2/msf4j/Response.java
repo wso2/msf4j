@@ -279,7 +279,7 @@ public class Response {
         //Set-Cookie: session
         Session session = request.getSessionInternal();
         if (session != null && session.isValid() && session.isNew()) {
-            cookiesHeader.add(new Header("Set-Cookie", MSF4JConstants.SESSION_ID + session.getId()));
+            cookiesHeader.add(new Header("Set-Cookie", MSF4JConstants.SESSION_ID + session.getSessionKey()));
         }
         carbonMessage.getHeaders().set(cookiesHeader);
         processEntity();

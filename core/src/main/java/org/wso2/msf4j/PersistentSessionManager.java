@@ -46,7 +46,7 @@ public class PersistentSessionManager extends AbstractSessionManager {
     }
 
     @Override
-    public void loadSessions(Map<String, Session> sessions) {
+    public void loadSessions(Map<SessionKey, Session> sessions) {
         File dir = new File(SESSION_DIR);
         if (!dir.exists()) {
             return;
@@ -54,21 +54,22 @@ public class PersistentSessionManager extends AbstractSessionManager {
         String path = Paths.get(SESSION_DIR).toString();
 
         Arrays.stream(new File(path).listFiles()).parallel().forEach(file -> {
-            Session session = readSession(file.getName());
+            SessionKey sessionKey = new SessionKey(file.getName());
+            Session session = readSession(sessionKey);
 
             // Delete expired session files
             if (System.currentTimeMillis() - session.getLastAccessedTime() >=
                     session.getMaxInactiveInterval() * 60 * 1000 && !file.delete()) {
                 log.warn("Couldn't delete expired session file " + file.getAbsolutePath());
             } else {
-                sessions.put(session.getId(), session);
+                sessions.put(session.getSessionKey(), session);
             }
         });
     }
 
     @Override
-    public Session readSession(String sessionId) {
-        String path = Paths.get(SESSION_DIR, sessionId).toString();
+    public Session readSession(SessionKey sessionKey) {
+        String path = Paths.get(SESSION_DIR, sessionKey.toString()).toString();
         if (!new File(path).exists()) {
             return null;
         }
@@ -79,23 +80,24 @@ public class PersistentSessionManager extends AbstractSessionManager {
             session.setManager(this);
             return session;
         } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException("Cannot read session " + sessionId, e);
+            throw new RuntimeException("Cannot read session " + sessionKey, e);
         }
     }
 
     @Override
     public void saveSession(Session session) {
-        try (FileOutputStream fout = new FileOutputStream(Paths.get(SESSION_DIR, session.getId()).toString());
+        try (FileOutputStream fout = new FileOutputStream(Paths.get(SESSION_DIR, session.getSessionKey().toString())
+                .toString());
              ObjectOutputStream oos = new ObjectOutputStream(fout)) {
             oos.writeObject(session);
         } catch (IOException e) {
-            throw new RuntimeException("Cannot save session " + session.getId(), e);
+            throw new RuntimeException("Cannot save session " + session.getSessionKey(), e);
         }
     }
 
     @Override
     public void deleteSession(Session session) {
-        String pathname = Paths.get(SESSION_DIR, session.getId()).toString();
+        String pathname = Paths.get(SESSION_DIR, session.getSessionKey().toString()).toString();
         if (!new File(pathname).delete()) {
             throw new IllegalStateException("File " + pathname + " deletion failed");
         }
