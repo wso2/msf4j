@@ -121,7 +121,7 @@ public class TransportConfiguration {
 
     @Bean
     public HTTPTransportConfig http(){
-         return new HTTPTransportConfig(6060);
+         return new HTTPTransportConfig(9090);
      }
 
 }
@@ -139,7 +139,7 @@ Alternatively it’s possible to use one of the following approach to change the
 3. Provide port number through application.properties file 
     *  Example: create a application.properties in the classpath and  include http.port=9090 property. 
  
-Following are the list of configuration options supported by HTTPS transport.  
+Following are the list of configuration options supported by HTTP transport.  
  
 Option | Description 
 --- | --- |
@@ -174,7 +174,7 @@ Option | Description
 enabled | Enable or disable the transport 
 port  | HTTP port 
 host | Host to be bind with HTTP transport 
-keyStoreFile | Key store file to be used with HTTPS transport 
+keyStore | Key store file to be used with HTTPS transport 
 keyStorePass | Key store password 
 certPass | Certificate password 
 
