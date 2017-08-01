@@ -31,7 +31,7 @@ public class MSF4JConstants {
     where to move them*/
     public static final String CONNECTION = "Connection";
     public static final String UPGRADE = "Upgrade";
-    public static final String WEBSOCKET_SESSION = "WEBSOCKET_SESSION";
+    public static final String WEBSOCKET_SERVER_SESSION = "WEBSOCKET_SERVER_SESSION";
     public static final String WEBSOCKET_PROTOCOL_NAME = "ws";
     public static final String WEBSOCKET_UPGRADE = "websocket";
 
