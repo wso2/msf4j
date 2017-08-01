@@ -26,6 +26,7 @@ import org.wso2.carbon.messaging.CarbonMessageProcessor;
 import org.wso2.carbon.messaging.ClientConnector;
 import org.wso2.carbon.messaging.Constants;
 import org.wso2.carbon.messaging.ControlCarbonMessage;
+import org.wso2.carbon.messaging.DefaultCarbonMessage;
 import org.wso2.carbon.messaging.StatusCarbonMessage;
 import org.wso2.carbon.messaging.TextCarbonMessage;
 import org.wso2.carbon.messaging.TransportSender;
@@ -71,7 +72,7 @@ import static org.wso2.msf4j.internal.MSF4JConstants.CONNECTION;
 import static org.wso2.msf4j.internal.MSF4JConstants.PROTOCOL_NAME;
 import static org.wso2.msf4j.internal.MSF4JConstants.UPGRADE;
 import static org.wso2.msf4j.internal.MSF4JConstants.WEBSOCKET_PROTOCOL_NAME;
-import static org.wso2.msf4j.internal.MSF4JConstants.WEBSOCKET_SESSION;
+import static org.wso2.msf4j.internal.MSF4JConstants.WEBSOCKET_SERVER_SESSION;
 import static org.wso2.msf4j.internal.MSF4JConstants.WEBSOCKET_UPGRADE;
 
 /**
@@ -137,11 +138,11 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
             } else if (WEBSOCKET_PROTOCOL_NAME.equalsIgnoreCase(protocolName)) {
                 EndpointsRegistryImpl endpointsRegistry = EndpointsRegistryImpl.getInstance();
                 PatternPathRouter.RoutableDestination<Object> routableEndpoint = null;
-                Session session = (Session) carbonMessage.getProperty(WEBSOCKET_SESSION);
+                Session session = (Session) carbonMessage.getProperty(WEBSOCKET_SERVER_SESSION);
                 String uri = (String) carbonMessage.getProperty(Constants.TO);
                 try {
                     routableEndpoint = endpointsRegistry.getRoutableEndpoint(uri);
-                    dispatchWebSocketMethod(routableEndpoint, carbonMessage);
+                    dispatchWebSocketMethod(routableEndpoint, carbonMessage, carbonCallback);
                 } catch (WebSocketEndpointAnnotationException e) {
                     handleError(e, routableEndpoint, session);
                 }
@@ -234,10 +235,12 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
      *
      * @param carbonMessage incoming carbonMessage.
      * @param routableEndpoint dispatched endpoint for a given endpoint.
+     * @param callback for the incoming call
      */
     private void dispatchWebSocketMethod(PatternPathRouter.RoutableDestination<Object> routableEndpoint,
-                                         CarbonMessage carbonMessage) throws WebSocketEndpointAnnotationException {
-        Session session = (Session) carbonMessage.getProperty(WEBSOCKET_SESSION);
+                                         CarbonMessage carbonMessage, CarbonCallback callback)
+            throws WebSocketEndpointAnnotationException {
+        Session session = (Session) carbonMessage.getProperty(WEBSOCKET_SERVER_SESSION);
         if (session == null) {
             throw new IllegalStateException("WebSocket session not found.");
         }
@@ -254,6 +257,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                 String connection = (String) carbonMessage.getProperty(CONNECTION);
                 String upgrade = (String) carbonMessage.getProperty(UPGRADE);
                 if (UPGRADE.equalsIgnoreCase(connection) && WEBSOCKET_UPGRADE.equalsIgnoreCase(upgrade)) {
+                    callback.done(new DefaultCarbonMessage());
                     handleWebSocketHandshake(carbonMessage, session);
                 }
             } else if (org.wso2.carbon.messaging.Constants.STATUS_CLOSE.equals(statusCarbonMessage.getStatus())) {
