@@ -1,0 +1,14 @@
+  # MSF4J Analytics configuration
+org.wso2.msf4j.analytics.configuration:
+    # Whether HTTP Monitoring is enables or not
+  enabled: true
+    # DAS configuration
+  das:
+      # The type used with Data Publisher
+    type: thrift
+      # Data Receiver URL used by the Data Publisher
+    receiverURL: tcp://localhost:7611
+    username: admin
+    password: admin
+      # The path for Data Bridge Agent configuration
+    dataAgentConfigPath: data-agent-config.xml

@@ -355,7 +355,7 @@
             org.wso2.carbon.messaging.*,
         </import.package>
         <carbon.component>
-            startup.listener;componentName="wso2-microservices-server";requiredService="org.wso2.carbon.messaging.ServerConnectorProvider,org.wso2.msf4j.Microservice,org.wso2.msf4j.Interceptor,
+            startup.listener;componentName="wso2-microservices-server";requiredService="org.wso2.carbon.messaging.ServerConnector,org.wso2.msf4j.Microservice,org.wso2.msf4j.Interceptor,
             org.wso2.msf4j.interceptor.OSGiInterceptorConfig",
             startup.listener;componentName="wso2-websocket-server";requiredService="org.wso2.msf4j.WebSocketEndpoint",
             osgi.service;objectClass="org.wso2.msf4j.internal.MicroservicesServerSC";requiredByComponentName="wso2-server-connector-sc",

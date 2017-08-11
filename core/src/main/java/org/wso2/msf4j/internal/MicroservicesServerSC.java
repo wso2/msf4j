@@ -26,6 +26,7 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.kernel.startupresolver.RequiredCapabilityListener;
+import org.wso2.carbon.kernel.startupresolver.StartupServiceUtils;
 import org.wso2.carbon.messaging.ServerConnector;
 import org.wso2.msf4j.DefaultSessionManager;
 import org.wso2.msf4j.Interceptor;
@@ -82,6 +83,7 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             Object contextPath = properties.get("contextPath");
             addMicroserviceToRegistry(service, channelId, contextPath);
         }
+        StartupServiceUtils.updateServiceCache("wso2-microservices-server", Microservice.class);
     }
 
     protected void removeService(Microservice service, Map properties) {
@@ -148,6 +150,7 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
         microservicesRegistries.put(serverConnector.getId(), microservicesRegistry);
         DataHolder.getInstance().getBundleContext()
                   .registerService(MicroservicesRegistry.class, microservicesRegistry, properties);
+        StartupServiceUtils.updateServiceCache("wso2-microservices-server", ServerConnector.class);
     }
 
     protected void removeCarbonTransport(ServerConnector serverConnector) {
@@ -162,6 +165,7 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             unbind = "removeInterceptorConfig"
     )
     protected void addInterceptorConfig(OSGiInterceptorConfig interceptorConfig, Map properties) {
+        StartupServiceUtils.updateServiceCache("wso2-microservices-server", OSGiInterceptorConfig.class);
     }
 
     protected void removeInterceptorConfig(OSGiInterceptorConfig interceptorConfig, Map properties) {
@@ -192,6 +196,7 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             unbind = "removeInterceptor"
     )
     protected void addInterceptor(Interceptor interceptor, Map properties) {
+        StartupServiceUtils.updateServiceCache("wso2-microservices-server", Interceptor.class);
     }
 
     /**

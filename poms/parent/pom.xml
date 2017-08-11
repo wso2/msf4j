@@ -190,6 +190,19 @@
                     <artifactId>maven-archetype-plugin</artifactId>
                     <version>${maven.archetype.version}</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.wso2.carbon.config</groupId>
+                    <artifactId>org.wso2.carbon.config.maven.plugin</artifactId>
+                    <version>${carbon.config.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>create-doc</goal>
+                            </goals>
+                            <phase>compile</phase>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
@@ -200,6 +213,16 @@
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.launcher</artifactId>
                 <version>${carbon.kernel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.core</artifactId>
+                <version>5.2.0-m4</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.utils</groupId>
+                <artifactId>org.wso2.carbon.utils</artifactId>
+                <version>${carbon.utils.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.deployment</groupId>
@@ -214,7 +237,13 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.kernel.feature</artifactId>
+                <artifactId>org.wso2.carbon.server.feature</artifactId>
+                <version>${carbon.kernel.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.osgi.feature</artifactId>
                 <version>${carbon.kernel.version}</version>
                 <type>zip</type>
             </dependency>
@@ -621,18 +650,25 @@
         <maven.archetype.version>2.4</maven.archetype.version>
 
         <!-- Dependencies -->
-        <carbon.kernel.version>5.2.0-m3</carbon.kernel.version>
+        <carbon.kernel.version>5.2.0-alpha</carbon.kernel.version>
+        <carbon.touchpoint.version>1.1.0</carbon.touchpoint.version>
+        <carbon.utils.version>2.0.2</carbon.utils.version>
+        <carbon.utils.package.import.version.range>[2.0.0, 3.0.0)</carbon.utils.package.import.version.range>
         <carbon.kernel.version.range>[5.0.0,6.0.0)</carbon.kernel.version.range>
-        <carbon.deployment.version>5.1.0</carbon.deployment.version>
+        <carbon.config.version>2.0.3</carbon.config.version>
+        <carbon.config.package.import.version.range>[2.0.0, 3.0.0)</carbon.config.package.import.version.range>
+        <carbon.secvault.version>5.0.8</carbon.secvault.version>
+        <carbon.secvault.version.range>[5.0.0, 6.0.0)</carbon.secvault.version.range>
+        <carbon.deployment.version>5.1.2-SNAPSHOT</carbon.deployment.version>
         <carbon.deployment.version.range>[5.0.0,6.0.0)</carbon.deployment.version.range>
-        <carbon.messaging.version>2.3.7</carbon.messaging.version>
+        <carbon.messaging.version>2.3.8-SNAPSHOT</carbon.messaging.version>
         <carbon.messaging.version.range>[2,3)</carbon.messaging.version.range>
-        <org.wso2.carbon.transport.http.netty.version>4.4.26</org.wso2.carbon.transport.http.netty.version>
+        <org.wso2.carbon.transport.http.netty.version>4.4.27-SNAPSHOT</org.wso2.carbon.transport.http.netty.version>
         <org.wso2.carbon.transport.http.netty.version.range>[4.0,5)</org.wso2.carbon.transport.http.netty.version.range>
         <org.apache.httpcomponents.httpclient.version>4.5.2</org.apache.httpcomponents.httpclient.version>
         <msf4j.version>2.4.0-SNAPSHOT</msf4j.version>
         <zipkin.brave.version>3.9.1</zipkin.brave.version>
-        <carbon.metrics.version>2.0.1</carbon.metrics.version>
+        <carbon.metrics.version>2.2.1-SNAPSHOT</carbon.metrics.version>
         <carbon.metrics.version.range>[2.0,3)</carbon.metrics.version.range>
         <carbon.analytics.common.version>5.0.6</carbon.analytics.common.version>
         <carbon.analytics.common.version.range>[5.0,6)</carbon.analytics.common.version.range>

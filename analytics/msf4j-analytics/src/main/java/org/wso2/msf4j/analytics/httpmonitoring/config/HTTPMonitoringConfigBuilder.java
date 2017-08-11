@@ -15,29 +15,58 @@
  */
 package org.wso2.msf4j.analytics.httpmonitoring.config;
 
-import org.wso2.carbon.metrics.core.utils.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.wso2.carbon.config.ConfigProviderFactory;
+import org.wso2.carbon.config.ConfigurationException;
+import org.wso2.carbon.config.provider.ConfigProvider;
 import org.wso2.msf4j.analytics.httpmonitoring.config.model.HTTPMonitoringConfig;
-import org.yaml.snakeyaml.Yaml;
+import org.wso2.msf4j.analytics.internal.DataHolder;
+import org.wso2.msf4j.internal.MSF4JConstants;
 
-import java.util.Optional;
+import java.nio.file.Paths;
 
 /**
  * Build {@link HTTPMonitoringConfig} from the YAML file
  */
 public final class HTTPMonitoringConfigBuilder {
 
+    private static final Logger logger = LoggerFactory.getLogger(HTTPMonitoringConfigBuilder.class);
+
     public static HTTPMonitoringConfig build() {
-        Optional<String> metricsConfigFileContent = Utils.readFile("http-monitoring.conf", "http-monitoring.yml");
-        if (metricsConfigFileContent.isPresent()) {
-            try {
-                Yaml yaml = new Yaml();
-                return yaml.loadAs(metricsConfigFileContent.get(), HTTPMonitoringConfig.class);
-            } catch (RuntimeException e) {
-                throw new RuntimeException("Failed to populate HTTP Monitoring Configuration", e);
+        HTTPMonitoringConfig configurationObject;
+        ConfigProvider configProvider;
+        if (DataHolder.getInstance().getBundleContext() != null) {
+            //OSGi mode
+            configProvider = DataHolder.getInstance().getConfigProvider();
+            if (configProvider != null) {
+                try {
+                    configurationObject = configProvider.getConfigurationObject(HTTPMonitoringConfig.class);
+                } catch (ConfigurationException e) {
+                    logger.error("Error loading HTTPMonitoringConfig Configuration", e);
+                    configurationObject = new HTTPMonitoringConfig();
+                }
+            } else {
+                // Ideally this shouldn't happen
+                logger.error("Failed to populate HTTP Monitoring Configuration. Config Provider is Null.");
+                configurationObject = new HTTPMonitoringConfig();
             }
         } else {
-            return new HTTPMonitoringConfig();
+            //Non OSGi mode
+            String deploymentYamlPath = System.getProperty(MSF4JConstants.DEPLOYMENT_YAML_SYS_PROPERTY);
+            if (deploymentYamlPath == null || deploymentYamlPath.isEmpty()) {
+                throw new RuntimeException(
+                        "Failed to populate HTTP Monitoring Configuration. msf4j.conf is not set.");
+            }
+            try {
+                configProvider = ConfigProviderFactory.getConfigProvider(Paths.get(deploymentYamlPath));
+                configurationObject = configProvider.getConfigurationObject(HTTPMonitoringConfig.class);
+            } catch (ConfigurationException e) {
+                logger.error("Error loading deployment.yaml Configuration", e);
+                configurationObject = new HTTPMonitoringConfig();
+            }
         }
+        return configurationObject;
     }
 
 }

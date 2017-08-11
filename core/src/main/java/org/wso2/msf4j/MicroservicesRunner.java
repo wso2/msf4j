@@ -17,7 +17,6 @@ package org.wso2.msf4j;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.kernel.transports.TransportManager;
 import org.wso2.carbon.messaging.ServerConnector;
 import org.wso2.carbon.messaging.ServerConnectorProvider;
 import org.wso2.carbon.messaging.exceptions.ServerConnectorException;
@@ -27,7 +26,6 @@ import org.wso2.carbon.transport.http.netty.config.TransportProperty;
 import org.wso2.carbon.transport.http.netty.config.TransportsConfiguration;
 import org.wso2.carbon.transport.http.netty.listener.HTTPServerConnector;
 import org.wso2.carbon.transport.http.netty.listener.HTTPServerConnectorProvider;
-import org.wso2.carbon.transport.http.netty.listener.HTTPTransportListener;
 import org.wso2.carbon.transport.http.netty.listener.ServerConnectorController;
 import org.wso2.msf4j.interceptor.RequestInterceptor;
 import org.wso2.msf4j.interceptor.ResponseInterceptor;
@@ -54,7 +52,6 @@ import javax.ws.rs.ext.ExceptionMapper;
 public class MicroservicesRunner {
 
     private static final Logger log = LoggerFactory.getLogger(MicroservicesRunner.class);
-    private TransportManager transportManager = new TransportManager();
     protected List<ServerConnector> serverConnectors = new ArrayList<>();
     private long startTime = System.currentTimeMillis();
     private boolean isStarted;
@@ -233,15 +230,6 @@ public class MicroservicesRunner {
                                                      });
                                                  }
                                              });
-    }
-
-    /**
-     * Method to register HTTPTransportListeners.
-     *
-     * @param listener The HTTPTransportListener to be added
-     */
-    protected void registerTransport(HTTPTransportListener listener) {
-        transportManager.registerTransport(listener);
     }
 
     private void checkState() {
