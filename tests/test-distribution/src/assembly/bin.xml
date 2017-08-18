@@ -34,12 +34,13 @@
                 <exclude>**/*.eclipse</exclude>
             </excludes>
         </fileSet>
-        <fileSet>
-            <outputDirectory>/deployment</outputDirectory>
-            <directory>${project.basedir}/target</directory>
-            <excludes>
-                <exclude>*</exclude>
-            </excludes>
-        </fileSet>
     </fileSets>
+    <files>
+        <file>
+            <source>carbon-home/conf/deployment.yaml</source>
+            <outputDirectory>conf/default/</outputDirectory>
+            <fileMode>644</fileMode>
+            <filtered>true</filtered>
+        </file>
+    </files>
 </assembly>

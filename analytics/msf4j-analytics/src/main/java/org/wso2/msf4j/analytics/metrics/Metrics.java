@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.metrics.core.MetricManagementService;
 import org.wso2.carbon.metrics.core.MetricService;
+import org.wso2.msf4j.analytics.internal.DataHolder;
 
 /**
  * A utility class to keep Metric Services.
@@ -57,7 +58,8 @@ public final class Metrics {
         if (logger.isInfoEnabled()) {
             logger.info("Initializing Metrics Services");
         }
-        org.wso2.carbon.metrics.core.Metrics metrics = new org.wso2.carbon.metrics.core.Metrics();
+        org.wso2.carbon.metrics.core.Metrics metrics =
+                new org.wso2.carbon.metrics.core.Metrics(DataHolder.getInstance().getConfigProvider());
         // Activate metrics
         metrics.activate();
 

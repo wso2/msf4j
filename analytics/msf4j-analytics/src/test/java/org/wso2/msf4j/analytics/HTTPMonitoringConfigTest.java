@@ -36,7 +36,7 @@ public class HTTPMonitoringConfigTest {
 
     @Test
     public void testEnabled() {
-        Assert.assertTrue(httpMonitoringConfig.isEnabled());
+        Assert.assertFalse(httpMonitoringConfig.isEnabled());
     }
 
     @Test

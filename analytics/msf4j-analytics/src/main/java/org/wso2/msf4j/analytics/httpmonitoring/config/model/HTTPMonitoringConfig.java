@@ -15,13 +15,19 @@
  */
 package org.wso2.msf4j.analytics.httpmonitoring.config.model;
 
+import org.wso2.carbon.config.annotation.Configuration;
+import org.wso2.carbon.config.annotation.Element;
+
 /**
  * Configuration for HTTP Monitoring
  */
+@Configuration(namespace = "wso2.msf4j.analytics.configuration", description = "MSF4J Analytics configuration")
 public class HTTPMonitoringConfig {
 
-    private boolean enabled;
+    @Element(description = "Whether HTTP Monitoring is enables or not")
+    private boolean enabled = false;
 
+    @Element(description = "Configuration for DAS")
     private DasConfig das = new DasConfig();
 
     public boolean isEnabled() {

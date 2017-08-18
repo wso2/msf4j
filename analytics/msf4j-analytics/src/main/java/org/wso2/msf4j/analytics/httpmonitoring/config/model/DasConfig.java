@@ -15,22 +15,31 @@
  */
 package org.wso2.msf4j.analytics.httpmonitoring.config.model;
 
+import org.wso2.carbon.config.annotation.Configuration;
+import org.wso2.carbon.config.annotation.Element;
+import org.wso2.carbon.config.annotation.Ignore;
+
 /**
  * Configuration for connecting with Data Analytics Server (DAS)
  */
+@Configuration(description = "DAS configuration")
 public class DasConfig {
 
+    @Element(description = "The type used with Data Publisher")
     private String type = "thrift";
 
+    @Element(description = "Data Receiver URL used by the Data Publisher")
     private String receiverURL = "tcp://localhost:7611";
 
+    @Ignore
     private String authURL;
 
     private String username = "admin";
 
     private String password = "admin";
 
-    private String dataAgentConfigPath = null;
+    @Element(description = "The path for Data Bridge Agent configuration")
+    private String dataAgentConfigPath = "data-agent-config.xml";
 
     public String getType() {
         return type;
