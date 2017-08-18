@@ -44,21 +44,14 @@ mvn clean install
 
 ### Using OSGi Console
 
-First you need to install the MSF4J feature in to carbon kernel. To do go to the resource directory at the bundle level
-and execute the following command
-```
-mvn clean install
-```
-This will install the msf4j and other required features to the kernel and build up a product.
-You can find the product in the resources/target directory
-
-Go to the target/wso2msf4j-<version>/bin directory
+Copy and extract the wso2-msf4j-*.zip file in tests/test-distribution to some location.
+Go to the wso2-msf4j-*/wso2/default/bin directory
 Then run the following command to start the MSF4J server.
 ```
 ./carbon.sh
 ```
 
-Install the target/stockquote-msf4j-bundle-2.0.0.jar as an OSGi bundle to WSO2 MSF4J product using it's 
+Install the target/stockquote-bundle-*.jar as an OSGi bundle to WSO2 MSF4J product using it's 
 OSGi console with the following command.
 
 ```
@@ -76,8 +69,8 @@ When the bundle is started, the microservice that is exposed as an OSGi service 
 will be exposed as a REST service.
 
 ### Using dropins directory
-Unzip wso2 MSF4J product and copy target/stockquote-msf4j-bundle-2.0.0.jar bundle to the 
-"[SERVER-HOME]/osgi/dropins" directory.
+Unzip wso2 MSF4J product and copy target/stockquote-bundle-*.jar bundle to the 
+"[SERVER-HOME]/lib" directory.
 
 Then navigate to the bin directory and run the following command to start WSO2 MSF4J server.
 ```
