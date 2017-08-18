@@ -39,5 +39,5 @@ public class MSF4JConstants {
     public static final String PROTOCOL_NAME = "http";
 
     public static final String DEPLOYMENT_YAML_SYS_PROPERTY = "msf4j.conf";
-    public static final String DEPLOYMENT_YAML_FILE_NAME = "deployment.yaml";
+    public static final String DEPLOYMENT_YAML_FILE = "deployment.yaml";
 }

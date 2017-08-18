@@ -33,10 +33,11 @@ public final class HTTPMonitoringConfigBuilder {
 
     private static final Logger logger = LoggerFactory.getLogger(HTTPMonitoringConfigBuilder.class);
     private static final String DEPLOYMENT_YAML_SYS_PROPERTY = "msf4j.conf";
+    private static final String DEPLOYMENT_YAML_FILE = "deployment.yaml";
 
     public static HTTPMonitoringConfig build() {
         ConfigProvider configProvider = DataHolder.getInstance().getConfigProvider();
-        HTTPMonitoringConfig configurationObject = null;
+        HTTPMonitoringConfig configurationObject;
         if (configProvider == null) {
             if (DataHolder.getInstance().getBundleContext() != null) {
                 throw new RuntimeException(
@@ -47,10 +48,9 @@ public final class HTTPMonitoringConfigBuilder {
             if (deploymentYamlPath == null || deploymentYamlPath.isEmpty()) {
                 logger.info("System property '" + DEPLOYMENT_YAML_SYS_PROPERTY +
                             "' is not set. Default deployment.yaml file will be used.");
-                deploymentYamlPath = HTTPMonitoringConfig.class.getResource("/deployment.yaml").getPath();
+                deploymentYamlPath = HTTPMonitoringConfig.class.getResource("/" + DEPLOYMENT_YAML_FILE).getPath();
             } else if (!Files.exists(Paths.get(deploymentYamlPath))) {
-                String msg = "Couldn't find " + deploymentYamlPath;
-                throw new RuntimeException(msg);
+                throw new RuntimeException("Couldn't find " + deploymentYamlPath);
             }
 
             try {
@@ -65,8 +65,8 @@ public final class HTTPMonitoringConfigBuilder {
             configurationObject =
                     DataHolder.getInstance().getConfigProvider().getConfigurationObject(HTTPMonitoringConfig.class);
         } catch (ConfigurationException e) {
-            logger.error("Error loading configurations from deployment.yaml", e);
-            configurationObject = new HTTPMonitoringConfig();
+            throw new RuntimeException(
+                    "Error while loading " + HTTPMonitoringConfig.class.getName() + " from config provider", e);
         }
 
         return configurationObject;

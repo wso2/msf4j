@@ -99,7 +99,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
 
     public MSF4JMessageProcessor() {
         ConfigProvider configProvider = DataHolder.getInstance().getConfigProvider();
-        MSF4JConfig msf4JConfig = null;
+        MSF4JConfig msf4JConfig;
         if (configProvider == null) {
             if (DataHolder.getInstance().getBundleContext() != null) {
                 throw new RuntimeException("Failed to populate MSF4J Configuration. Config Provider is Null.");
@@ -109,17 +109,16 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
             if (deploymentYamlPath == null || deploymentYamlPath.isEmpty()) {
                 log.info("System property '" + MSF4JConstants.DEPLOYMENT_YAML_SYS_PROPERTY +
                          "' is not set. Default deployment.yaml file will be used.");
-                URL deploymentYamlUrl = MSF4JMessageProcessor.class.getResource("/deployment.yaml");
+                URL deploymentYamlUrl =
+                        MSF4JMessageProcessor.class.getResource("/" + MSF4JConstants.DEPLOYMENT_YAML_FILE);
                 try {
-                    FileUtils.copyURLToFile(deploymentYamlUrl,
-                                            Paths.get(MSF4JConstants.DEPLOYMENT_YAML_FILE_NAME).toFile());
-                    deploymentYamlPath = Paths.get(MSF4JConstants.DEPLOYMENT_YAML_FILE_NAME).toString();
+                    FileUtils.copyURLToFile(deploymentYamlUrl, Paths.get(MSF4JConstants.DEPLOYMENT_YAML_FILE).toFile());
+                    deploymentYamlPath = Paths.get(MSF4JConstants.DEPLOYMENT_YAML_FILE).toString();
                 } catch (IOException e) {
-                    throw new RuntimeException(e.getMessage());
+                    throw new RuntimeException("Error while getting default deployment.yaml", e);
                 }
             } else if (!Files.exists(Paths.get(deploymentYamlPath))) {
-                String msg = "Couldn't find " + deploymentYamlPath;
-                throw new RuntimeException(msg);
+                throw new RuntimeException("Couldn't find " + deploymentYamlPath);
             }
 
             try {
@@ -133,8 +132,8 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
         try {
             msf4JConfig = DataHolder.getInstance().getConfigProvider().getConfigurationObject(MSF4JConfig.class);
         } catch (ConfigurationException e) {
-            log.error("Error loading configurations from deployment.yaml", e);
-            msf4JConfig = new MSF4JConfig();
+            throw new RuntimeException("Error while loading " + MSF4JConfig.class.getName() + " from config provider",
+                                       e);
         }
 
         executorService = Executors.newFixedThreadPool(msf4JConfig.getThreadCount(), new MSF4JThreadFactory(

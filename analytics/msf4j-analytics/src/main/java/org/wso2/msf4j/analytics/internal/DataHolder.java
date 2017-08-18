@@ -46,5 +46,4 @@ public class DataHolder {
     public static DataHolder getInstance() {
         return instance;
     }
-
 }
