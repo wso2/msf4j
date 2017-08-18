@@ -22,8 +22,8 @@ import org.wso2.carbon.config.ConfigurationException;
 import org.wso2.carbon.config.provider.ConfigProvider;
 import org.wso2.msf4j.analytics.httpmonitoring.config.model.HTTPMonitoringConfig;
 import org.wso2.msf4j.analytics.internal.DataHolder;
-import org.wso2.msf4j.internal.MSF4JConstants;
 
+import java.nio.file.Files;
 import java.nio.file.Paths;
 
 /**
@@ -32,40 +32,43 @@ import java.nio.file.Paths;
 public final class HTTPMonitoringConfigBuilder {
 
     private static final Logger logger = LoggerFactory.getLogger(HTTPMonitoringConfigBuilder.class);
+    private static final String DEPLOYMENT_YAML_SYS_PROPERTY = "msf4j.conf";
 
     public static HTTPMonitoringConfig build() {
-        HTTPMonitoringConfig configurationObject;
-        ConfigProvider configProvider;
-        if (DataHolder.getInstance().getBundleContext() != null) {
-            //OSGi mode
-            configProvider = DataHolder.getInstance().getConfigProvider();
-            if (configProvider != null) {
-                try {
-                    configurationObject = configProvider.getConfigurationObject(HTTPMonitoringConfig.class);
-                } catch (ConfigurationException e) {
-                    logger.error("Error loading HTTPMonitoringConfig Configuration", e);
-                    configurationObject = new HTTPMonitoringConfig();
-                }
-            } else {
-                // Ideally this shouldn't happen
-                logger.error("Failed to populate HTTP Monitoring Configuration. Config Provider is Null.");
-                configurationObject = new HTTPMonitoringConfig();
-            }
-        } else {
-            //Non OSGi mode
-            String deploymentYamlPath = System.getProperty(MSF4JConstants.DEPLOYMENT_YAML_SYS_PROPERTY);
-            if (deploymentYamlPath == null || deploymentYamlPath.isEmpty()) {
+        ConfigProvider configProvider = DataHolder.getInstance().getConfigProvider();
+        HTTPMonitoringConfig configurationObject = null;
+        if (configProvider == null) {
+            if (DataHolder.getInstance().getBundleContext() != null) {
                 throw new RuntimeException(
-                        "Failed to populate HTTP Monitoring Configuration. msf4j.conf is not set.");
+                        "Failed to populate HTTPMonitoringConfig Configuration. Config Provider is Null.");
             }
+            //Standalone mode
+            String deploymentYamlPath = System.getProperty(DEPLOYMENT_YAML_SYS_PROPERTY);
+            if (deploymentYamlPath == null || deploymentYamlPath.isEmpty()) {
+                logger.info("System property '" + DEPLOYMENT_YAML_SYS_PROPERTY +
+                            "' is not set. Default deployment.yaml file will be used.");
+                deploymentYamlPath = HTTPMonitoringConfig.class.getResource("/deployment.yaml").getPath();
+            } else if (!Files.exists(Paths.get(deploymentYamlPath))) {
+                String msg = "Couldn't find " + deploymentYamlPath;
+                throw new RuntimeException(msg);
+            }
+
             try {
-                configProvider = ConfigProviderFactory.getConfigProvider(Paths.get(deploymentYamlPath));
-                configurationObject = configProvider.getConfigurationObject(HTTPMonitoringConfig.class);
+                configProvider = ConfigProviderFactory.getConfigProvider(Paths.get(deploymentYamlPath), null);
+                DataHolder.getInstance().setConfigProvider(configProvider);
             } catch (ConfigurationException e) {
-                logger.error("Error loading deployment.yaml Configuration", e);
-                configurationObject = new HTTPMonitoringConfig();
+                throw new RuntimeException("Error loading deployment.yaml Configuration", e);
             }
         }
+
+        try {
+            configurationObject =
+                    DataHolder.getInstance().getConfigProvider().getConfigurationObject(HTTPMonitoringConfig.class);
+        } catch (ConfigurationException e) {
+            logger.error("Error loading configurations from deployment.yaml", e);
+            configurationObject = new HTTPMonitoringConfig();
+        }
+
         return configurationObject;
     }
 

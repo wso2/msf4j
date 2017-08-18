@@ -25,6 +25,7 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.config.provider.ConfigProvider;
 import org.wso2.carbon.kernel.startupresolver.RequiredCapabilityListener;
 import org.wso2.carbon.kernel.startupresolver.StartupServiceUtils;
 import org.wso2.carbon.messaging.ServerConnector;
@@ -155,6 +156,22 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
 
     protected void removeCarbonTransport(ServerConnector serverConnector) {
         DataHolder.getInstance().getMicroservicesRegistries().remove(serverConnector.getId());
+    }
+
+    @Reference(
+            name = "carbon.config.provider",
+            service = ConfigProvider.class,
+            cardinality = ReferenceCardinality.MANDATORY,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "unregisterConfigProvider"
+    )
+    protected void registerConfigProvider(ConfigProvider configProvider) {
+        DataHolder.getInstance().setConfigProvider(configProvider);
+        StartupServiceUtils.updateServiceCache("wso2-microservices-server", ConfigProvider.class);
+    }
+
+    protected void unregisterConfigProvider(ConfigProvider configProvider) {
+        DataHolder.getInstance().setConfigProvider(null);
     }
 
     @Reference(

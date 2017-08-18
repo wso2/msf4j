@@ -16,9 +16,13 @@
 
 package org.wso2.msf4j.internal;
 
+import org.apache.commons.io.FileUtils;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.config.ConfigProviderFactory;
+import org.wso2.carbon.config.ConfigurationException;
+import org.wso2.carbon.config.provider.ConfigProvider;
 import org.wso2.carbon.messaging.BinaryCarbonMessage;
 import org.wso2.carbon.messaging.CarbonCallback;
 import org.wso2.carbon.messaging.CarbonMessage;
@@ -32,6 +36,7 @@ import org.wso2.carbon.messaging.TextCarbonMessage;
 import org.wso2.carbon.messaging.TransportSender;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
+import org.wso2.msf4j.config.MSF4JConfig;
 import org.wso2.msf4j.delegates.MSF4JResponse;
 import org.wso2.msf4j.interceptor.InterceptorExecutor;
 import org.wso2.msf4j.internal.router.HandlerException;
@@ -53,7 +58,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -87,12 +95,50 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
 
     private static final Logger log = LoggerFactory.getLogger(MSF4JMessageProcessor.class);
     private static final String MSF4J_MSG_PROC_ID = "MSF4J-CM-PROCESSOR";
-
-    //TODO need to way to configure the pool size
-    private ExecutorService executorService =
-            Executors.newFixedThreadPool(60, new MSF4JThreadFactory(new ThreadGroup("msf4j.executor.workerpool")));
+    private ExecutorService executorService;
 
     public MSF4JMessageProcessor() {
+        ConfigProvider configProvider = DataHolder.getInstance().getConfigProvider();
+        MSF4JConfig msf4JConfig = null;
+        if (configProvider == null) {
+            if (DataHolder.getInstance().getBundleContext() != null) {
+                throw new RuntimeException("Failed to populate MSF4J Configuration. Config Provider is Null.");
+            }
+            //Standalone mode
+            String deploymentYamlPath = System.getProperty(MSF4JConstants.DEPLOYMENT_YAML_SYS_PROPERTY);
+            if (deploymentYamlPath == null || deploymentYamlPath.isEmpty()) {
+                log.info("System property '" + MSF4JConstants.DEPLOYMENT_YAML_SYS_PROPERTY +
+                         "' is not set. Default deployment.yaml file will be used.");
+                URL deploymentYamlUrl = MSF4JMessageProcessor.class.getResource("/deployment.yaml");
+                try {
+                    FileUtils.copyURLToFile(deploymentYamlUrl,
+                                            Paths.get(MSF4JConstants.DEPLOYMENT_YAML_FILE_NAME).toFile());
+                    deploymentYamlPath = Paths.get(MSF4JConstants.DEPLOYMENT_YAML_FILE_NAME).toString();
+                } catch (IOException e) {
+                    throw new RuntimeException(e.getMessage());
+                }
+            } else if (!Files.exists(Paths.get(deploymentYamlPath))) {
+                String msg = "Couldn't find " + deploymentYamlPath;
+                throw new RuntimeException(msg);
+            }
+
+            try {
+                configProvider = ConfigProviderFactory.getConfigProvider(Paths.get(deploymentYamlPath), null);
+                DataHolder.getInstance().setConfigProvider(configProvider);
+            } catch (ConfigurationException e) {
+                throw new RuntimeException("Error loading deployment.yaml Configuration", e);
+            }
+        }
+
+        try {
+            msf4JConfig = DataHolder.getInstance().getConfigProvider().getConfigurationObject(MSF4JConfig.class);
+        } catch (ConfigurationException e) {
+            log.error("Error loading configurations from deployment.yaml", e);
+            msf4JConfig = new MSF4JConfig();
+        }
+
+        executorService = Executors.newFixedThreadPool(msf4JConfig.getThreadCount(), new MSF4JThreadFactory(
+                new ThreadGroup(msf4JConfig.getThreadPoolName())));
     }
 
     public MSF4JMessageProcessor(String channelId, MicroservicesRegistryImpl microservicesRegistry) {

@@ -31,7 +31,6 @@ public class HTTPMonitoringConfigTest {
 
     @BeforeClass
     private void load() {
-        System.setProperty("msf4j.conf", "deployment.yaml");
         httpMonitoringConfig = HTTPMonitoringConfigBuilder.build();
     }
 

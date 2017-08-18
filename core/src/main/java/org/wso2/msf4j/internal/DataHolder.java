@@ -16,6 +16,7 @@
 package org.wso2.msf4j.internal;
 
 import org.osgi.framework.BundleContext;
+import org.wso2.carbon.config.provider.ConfigProvider;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +29,7 @@ public class DataHolder {
     private static final DataHolder instance = new DataHolder();
     private BundleContext bundleContext;
     private Map<String, MicroservicesRegistryImpl> microservicesRegistries = new HashMap<>();
+    private ConfigProvider configProvider;
 
     private DataHolder() {
     }
@@ -48,4 +50,11 @@ public class DataHolder {
         return microservicesRegistries;
     }
 
+    public void setConfigProvider(ConfigProvider configProvider) {
+        this.configProvider = configProvider;
+    }
+
+    public ConfigProvider getConfigProvider() {
+        return configProvider;
+    }
 }

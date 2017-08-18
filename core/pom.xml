@@ -43,11 +43,11 @@
                 </exclusion>
                 <exclusion>
                     <groupId>org.wso2.carbon</groupId>
-                    <artifactId>org.wso2.carbon.kernel.feature</artifactId>
+                    <artifactId>org.wso2.carbon.server.feature</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.wso2.carbon</groupId>
-                    <artifactId>org.wso2.carbon.runtime.feature</artifactId>
+                    <artifactId>org.wso2.carbon.osgi.feature</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -108,6 +108,10 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.config</groupId>
+            <artifactId>org.wso2.carbon.config</artifactId>
         </dependency>
 
 
@@ -193,6 +197,10 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.wso2.carbon.config</groupId>
+                <artifactId>org.wso2.carbon.config.maven.plugin</artifactId>
             </plugin>
         </plugins>
     </build>
@@ -352,11 +360,12 @@
             org.wso2.carbon.kernel.transports.*;version="${carbon.kernel.version.range}",
             org.wso2.carbon.kernel.startupresolver.*;version="${carbon.kernel.version.range}",
             org.wso2.carbon.deployment.engine.*;version="${carbon.deployment.version.range}",
-            org.wso2.carbon.messaging.*,
+            org.wso2.carbon.messaging.*;version="${carbon.messaging.version.range}",
+            org.wso2.carbon.config.*;version="${carbon.config.package.import.version.range}"
         </import.package>
         <carbon.component>
             startup.listener;componentName="wso2-microservices-server";requiredService="org.wso2.carbon.messaging.ServerConnector,org.wso2.msf4j.Microservice,org.wso2.msf4j.Interceptor,
-            org.wso2.msf4j.interceptor.OSGiInterceptorConfig",
+            org.wso2.msf4j.interceptor.OSGiInterceptorConfig,org.wso2.carbon.config.provider.ConfigProvider",
             startup.listener;componentName="wso2-websocket-server";requiredService="org.wso2.msf4j.WebSocketEndpoint",
             osgi.service;objectClass="org.wso2.msf4j.internal.MicroservicesServerSC";requiredByComponentName="wso2-server-connector-sc",
             osgi.service;objectClass="org.wso2.msf4j.internal.websocket.WebSocketServerSC";requiredByComponentName="wso2-server-connector-sc",

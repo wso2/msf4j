@@ -134,8 +134,8 @@
     </dependencies>
 
     <properties>
-        <carbon.jndi.version>1.0.2</carbon.jndi.version>
-        <carbon.datasources.version>1.1.1</carbon.datasources.version>
+        <carbon.jndi.version>1.0.3</carbon.jndi.version>
+        <carbon.datasources.version>1.1.2</carbon.datasources.version>
     </properties>
 
     <build>
