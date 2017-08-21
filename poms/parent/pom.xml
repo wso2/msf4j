@@ -28,7 +28,7 @@
     <groupId>org.wso2.msf4j</groupId>
     <artifactId>msf4j-parent</artifactId>
     <packaging>pom</packaging>
-    <version>2.4.0-SNAPSHOT</version>
+    <version>2.4.0-m1</version>
     <name>WSO2 MSF4J - Parent Pom</name>
     <description>WSO2 MSF4J Parent Pom</description>
     <url>http://wso2.org</url>
@@ -671,7 +671,7 @@
         <org.wso2.carbon.transport.http.netty.version>5.0.0-m1</org.wso2.carbon.transport.http.netty.version>
         <org.wso2.carbon.transport.http.netty.version.range>[5.0,6)</org.wso2.carbon.transport.http.netty.version.range>
         <org.apache.httpcomponents.httpclient.version>4.5.2</org.apache.httpcomponents.httpclient.version>
-        <msf4j.version>2.4.0-SNAPSHOT</msf4j.version>
+        <msf4j.version>2.4.0-m1</msf4j.version>
         <zipkin.brave.version>3.9.1</zipkin.brave.version>
         <carbon.metrics.version>2.3.0</carbon.metrics.version>
         <carbon.metrics.version.range>[2.0,3)</carbon.metrics.version.range>
@@ -770,4 +770,8 @@
         <org.jacoco.ant.version>0.7.5.201505241946</org.jacoco.ant.version>
         <org.osgi.compendium.version>4.3.1</org.osgi.compendium.version>
     </properties>
+
+  <scm>
+    <tag>v2.4.0-m1</tag>
+  </scm>
 </project>
