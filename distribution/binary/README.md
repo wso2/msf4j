@@ -8,7 +8,7 @@ distribution contains the [msf4j-all.jar](../msf4j-all) file and the samples.
 
 Prerequisites: JDK 1.8 and Maven 3.1.x.
 
-You can simply add the msf4j-all-2.3.0*.jar file in this distribution to your classpath and start writing your
+You can simply add the msf4j-all-*.jar file in this distribution to your classpath and start writing your
 microservice. If you have Maven installed, you could navigate to the relevant samples in this distribution and
 run 'mvn clean package' to build the samples. Please follow the instructions in the README files for detailed
 instructions about the samples.
