@@ -16,14 +16,14 @@ Name                                                                            
 guava_18.0.jar                                                                  bundle         apache2
 commons-io_2.4.0.wso2v1.jar                                                     bundle         apache2
 commons-pool_1.5.6.wso2v1.jar                                                   bundle         apache2
-metrics-core_3.1.2.jar                                                          bundle         apache2
-metrics-jvm_3.1.2.jar                                                           bundle         apache2
+metrics-core_3.2.4.jar                                                          bundle         apache2
+metrics-jvm_3.2.4.jar                                                           bundle         apache2
 swagger-annotations_1.5.8.jar                                                   bundle         apache2
 swagger-core_1.5.8.jar                                                          bundle         apache2
 swagger-jaxrs_1.5.8.jar                                                         bundle         apache2
 swagger-models_1.5.8.jar                                                        bundle         apache2
 validation-api_1.1.0.Final.jar                                                  jar            apache2
-libthrift_0.8.0.wso2v1.jar                                                      bundle         apache2
+libthrift_0.9.2.wso2v1.jar                                                      bundle         apache2
 javassist_3.19.0-GA.jar                                                         bundle         mpl+lgpl+apache2
 json_20140107.jar                                                               jar            apache2
 json_3.0.0.wso2v1.jar                                                           bundle         apache2
@@ -31,7 +31,7 @@ reflections_0.9.10.jar                                                          
 disruptor_3.3.2.wso2v2.jar                                                      bundle
 httpclient_4.3.1.wso2v2.jar                                                     bundle         apache2
 snakeyaml_1.17.jar                                                              bundle         apache2
-log4j_1.2.14.jar                                                                jar            apache2
+log4j_1.2.17.wso2v1.jar                                                         jar            apache2
 jackson-annotations_2.7.4.jar                                                   bundle         apache2
 jackson-core_2.7.4.jar                                                          bundle         apache2
 jackson-databind_2.7.4.jar                                                      bundle         apache2
@@ -60,26 +60,29 @@ netty-common_4.1.7.Final.jar                                                    
 netty-handler_4.1.7.Final.jar                                                   jar            apache2
 netty-resolver_4.1.7.Final.jar                                                  jar            apache2
 netty-transport_4.1.7.Final.jar                                                 jar            apache2
-org.wso2.carbon.core_5.2.0-m3.jar                                               bundle         apache2
-org.wso2.carbon.launcher_5.2.0-m3.jar                                           jar            apache2
-org.wso2.carbon.databridge.agent_5.0.11.jar                                     bundle         apache2
-org.wso2.carbon.databridge.commons_5.0.11.jar                                   bundle         apache2
-org.wso2.carbon.databridge.commons.binary_5.0.11.jar                            bundle         apache2
-org.wso2.carbon.databridge.commons.thrift_5.0.11.jar                            bundle         apache2
-org.wso2.carbon.deployment.engine_5.1.0.jar                                     bundle         apache2
-org.wso2.carbon.messaging_2.3.0.jar                                             bundle         apache2
-org.wso2.carbon.metrics.core_2.0.1.jar                                          bundle         apache2
-org.wso2.carbon.metrics.das.core_2.0.1.jar                                      bundle         apache2
-org.wso2.carbon.metrics.das.reporter_2.0.1.jar                                  bundle         apache2
-org.wso2.carbon.metrics.jdbc.core_2.0.1.jar                                     bundle         apache2
-org.wso2.carbon.metrics.jdbc.reporter_2.0.1.jar                                 bundle         apache2
-org.wso2.carbon.transport.http.netty_4.3.0-m2.jar                               bundle         apache2
-jaxrs-delegates_2.3.0_m2.jar                                                    bundle         apache2
-msf4j-analytics_2.3.0_m2.jar                                                    bundle         apache2
-msf4j-analytics-common_2.3.0_m2.jar                                             bundle         apache2
-msf4j-core_2.3.0_m2.jar                                                         bundle         apache2
-msf4j-swagger_2.3.0_m2.jar                                                      bundle         apache2
-HikariCP_2.4.6.jar                                                              bundle         apache2
+org.wso2.carbon.config_2.0.5.jar                                                bundle         apache2
+org.wso2.carbon.core_5.2.0-alpha.jar                                            bundle         apache2
+org.wso2.carbon.launcher_5.2.0-alpha.jar                                        jar            apache2
+org.wso2.carbon.databridge.agent_6.0.0.jar                                      bundle         apache2
+org.wso2.carbon.databridge.commons_6.0.0.jar                                    bundle         apache2
+org.wso2.carbon.databridge.commons.binary_6.0.0.jar                             bundle         apache2
+org.wso2.carbon.databridge.commons.thrift_6.0.0.jar                             bundle         apache2
+org.wso2.carbon.deployment.engine_5.1.3.jar                                     bundle         apache2
+org.wso2.carbon.messaging_3.0.0.jar                                             bundle         apache2
+org.wso2.carbon.metrics.core_2.3.0.jar                                          bundle         apache2
+org.wso2.carbon.metrics.das.core_2.3.0.jar                                      bundle         apache2
+org.wso2.carbon.metrics.das.reporter_2.3.0.jar                                  bundle         apache2
+org.wso2.carbon.metrics.jdbc.core_2.3.0.jar                                     bundle         apache2
+org.wso2.carbon.metrics.jdbc.reporter_2.3.0.jar                                 bundle         apache2
+org.wso2.carbon.secvault_5.0.8.jar                                              bundle         apache2
+org.wso2.carbon.transport.http.netty_5.0.0-m1.jar                               bundle         apache2
+org.wso2.carbon.utils_2.0.2.jar                                                 bundle         apache2
+jaxrs-delegates_2.4.0_m1.jar                                                    bundle         apache2
+msf4j-analytics_2.4.0_m1.jar                                                    bundle         apache2
+msf4j-analytics-common_2.4.0_m1.jar                                             bundle         apache2
+msf4j-core_2.4.0_m1.jar                                                         bundle         apache2
+msf4j-swagger_2.4.0_m1.jar                                                      bundle         apache2
+HikariCP_2.6.3.jar                                                              bundle         apache2
 
 The license types used by the above libraries and their information is given below:
 
