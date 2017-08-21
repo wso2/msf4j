@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import org.wso2.carbon.config.provider.ConfigProvider;
 import org.wso2.carbon.kernel.startupresolver.RequiredCapabilityListener;
 import org.wso2.carbon.kernel.startupresolver.StartupServiceUtils;
+import org.wso2.carbon.messaging.CarbonMessageProcessor;
 import org.wso2.carbon.messaging.ServerConnector;
 import org.wso2.msf4j.DefaultSessionManager;
 import org.wso2.msf4j.Interceptor;
@@ -349,6 +350,8 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             isAllRequiredCapabilitiesAvailable = true;
         }
 
+        DataHolder.getInstance().getBundleContext()
+                  .registerService(CarbonMessageProcessor.class, new MSF4JMessageProcessor(), null);
         DataHolder.getInstance().getBundleContext().registerService(MicroservicesServerSC.class, this, null);
         log.info("All microservices are available");
     }
