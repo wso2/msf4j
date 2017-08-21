@@ -262,7 +262,6 @@
                             <goal>publish-product</goal>
                         </goals>
                         <configuration>
-                            <!--<productConfigurationFile>${basedir}/carbon.product</productConfigurationFile>-->
                             <executable>
                                 ${basedir}/target/org.eclipse.equinox.executable_3.5.0.v20110530-7P7NFUFFLWUl76mart
                             </executable>
@@ -276,7 +275,6 @@
                             <goal>generate-runtime</goal>
                         </goals>
                         <configuration>
-                            <!--<productConfigurationFile>${basedir}/carbon.product</productConfigurationFile>-->
                             <repositoryURL>file:${basedir}/target/p2-repo</repositoryURL>
                             <targetPath>file:${basedir}/target/wso2-msf4j-${msf4j.version}/wso2
                             </targetPath>
