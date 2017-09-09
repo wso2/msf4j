@@ -203,7 +203,7 @@ public class Request {
                         }
                         return null;
                     });
-            return session.setAccessed();
+            return (session == null)? null : session.setAccessed();
         } else if (create) {
             return session = sessionManager.createSession();
         }
