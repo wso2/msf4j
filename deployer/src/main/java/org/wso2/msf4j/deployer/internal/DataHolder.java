@@ -32,22 +32,49 @@ public class DataHolder {
     private DataHolder() {
     }
 
+    /**
+     * Get DataHolder object.
+     *
+     * @return DataHolder instance.
+     */
     public static DataHolder getInstance() {
         return instance;
     }
 
+    /**
+     * Get available MicroservicesRegistries.
+     *
+     * @return Map of available MicroservicesRegistries.
+     */
     public Map<String, MicroservicesRegistry> getMicroservicesRegistries() {
         return microserviceRegistries;
     }
 
+    /**
+     * Get available MicroservicesRegistry for the gievn registry Id.
+     *
+     * @param registryId of the registry need to be pick
+     * @return MicroservicesRegistry object if the given Id.
+     */
     public MicroservicesRegistry getMicroserviceRegistry(String registryId) {
         return microserviceRegistries.get(registryId);
     }
 
+    /**
+     * Add MicroservicesRegistry with the given registry Id.
+     *
+     * @param registryId id of the registry.
+     * @param microservicesRegistry instance.
+     */
     public void addMicroserviceRegistry(String registryId, MicroservicesRegistry microservicesRegistry) {
         microserviceRegistries.put(registryId, microservicesRegistry);
     }
 
+    /**
+     * Get all the MicroservicesRegistries
+     * @return Map of MicroservicesRegistries and there IDs
+     *
+     */
     public Map<String, MicroservicesRegistry> getMicroserviceRegistries() {
         return microserviceRegistries;
     }
