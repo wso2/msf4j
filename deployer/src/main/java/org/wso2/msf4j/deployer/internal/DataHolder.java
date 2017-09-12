@@ -22,6 +22,8 @@ import java.util.Map;
 
 /**
  * DataHolder for Swagger component.
+ *
+ * @since 2.4.0
  */
 public class DataHolder {
 

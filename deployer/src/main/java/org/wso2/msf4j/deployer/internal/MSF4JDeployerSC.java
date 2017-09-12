@@ -34,6 +34,8 @@ import java.util.Map;
 
 /**
  * Service component for Microservices Deployer.
+ *
+ * @since 2.4.0
  */
 @Component(
         name = "org.wso2.msf4j.deployer.internal.MSF4JDeployerSC",
@@ -59,9 +61,7 @@ public class MSF4JDeployerSC implements RequiredCapabilityListener {
     public void onAllRequiredCapabilitiesAvailable() {
         FrameworkUtil.getBundle(MSF4JDeployerSC.class).getBundleContext()
                      .registerService(Deployer.class, new MicroservicesDeployer(), null);
-        if (log.isDebugEnabled()) {
-            log.debug("MicroservicesDeployer service is available");
-        }
+        log.debug("MicroservicesDeployer service is available");
     }
 
     /**
@@ -79,17 +79,13 @@ public class MSF4JDeployerSC implements RequiredCapabilityListener {
             unbind = "removeMicroservicesRegistry"
     )
     protected void addMicroservicesRegitry(MicroservicesRegistry registry, Map properties) {
-        if (log.isDebugEnabled()) {
-            log.debug("MicroservicesRegistry get registered successfully.");
-        }
+        log.debug("MicroservicesRegistry get registered successfully.");
         DataHolder.getInstance().addMicroserviceRegistry(properties.get(CHANNEL_ID).toString(), registry);
         StartupServiceUtils.updateServiceCache("wso2-microservices-deployer", MicroservicesRegistry.class);
     }
 
     protected void removeMicroservicesRegistry(MicroservicesRegistry microservicesRegistry, Map properties) {
-        if (log.isDebugEnabled()) {
-            log.debug("MicroservicesRegistry get unregistered successfully.");
-        }
+        log.debug("MicroservicesRegistry get unregistered successfully.");
         DataHolder.getInstance().getMicroserviceRegistries().remove(properties.get(CHANNEL_ID).toString());
     }
 }

@@ -126,6 +126,7 @@
             startup.listener;componentName="wso2-microservices-deployer";requiredService="org.wso2.msf4j.MicroservicesRegistry",
             osgi.service; objectClass="org.wso2.carbon.deployment.engine.Deployer"
         </carbon.component>
+        <!-- This require DynamicImports in order to support swagger annotations-->
         <dynamic.import.package>*</dynamic.import.package>
     </properties>
 </project>
