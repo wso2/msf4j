@@ -4,8 +4,7 @@ import com.github.kristofa.brave.http.HttpResponse;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.messaging.CarbonMessage;
-import org.wso2.carbon.messaging.DefaultCarbonMessage;
+import org.wso2.carbon.transport.http.netty.message.HTTPCarbonMessage;
 import org.wso2.msf4j.Response;
 
 import java.io.IOException;
@@ -20,9 +19,8 @@ public class TraceableHttpServerResponseTest extends Assert {
 
     @BeforeClass
     public void setUp() throws IOException {
-        CarbonMessage carbonMessage = new DefaultCarbonMessage();
-        response = new Response(carbonMessage1 -> {
-        });
+        HTTPCarbonMessage httpCarbonMessage = new HTTPCarbonMessage();
+        response = new Response(httpCarbonMessage);
         response.setStatus(200);
         httpResponse = new TraceableHttpServerResponse(response);
     }

@@ -16,11 +16,12 @@
 
 package org.wso2.msf4j.internal.entitywriter;
 
-import org.wso2.carbon.messaging.CarbonCallback;
-import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.transport.http.netty.common.Constants;
+import org.wso2.carbon.transport.http.netty.contract.ServerConnectorException;
+import org.wso2.carbon.transport.http.netty.message.HTTPCarbonMessage;
 
 import java.io.IOException;
+import java.util.concurrent.Executors;
 import javax.ws.rs.core.StreamingOutput;
 
 /**
@@ -40,13 +41,18 @@ public class StreamingOutputEntityWriter implements EntityWriter<StreamingOutput
      * Write the entity to the carbon message.
      */
     @Override
-    public void writeData(CarbonMessage carbonMessage, StreamingOutput output,
-                          String mediaType, int chunkSize, CarbonCallback cb) {
+    public void writeData(HTTPCarbonMessage carbonMessage, StreamingOutput output,
+                          String mediaType, int chunkSize, HTTPCarbonMessage responder) {
         try {
             carbonMessage.setHeader(Constants.HTTP_CONTENT_TYPE, mediaType);
             carbonMessage.setHeader(Constants.HTTP_TRANSFER_ENCODING, CHUNKED);
-            carbonMessage.setBufferContent(false);
-            cb.done(carbonMessage);
+            Executors.newSingleThreadExecutor().execute(() -> {
+                try {
+                    responder.respond(carbonMessage);
+                } catch (ServerConnectorException e) {
+                    throw new RuntimeException("Error while sending the response.", e);
+                }
+            });
             output.write(carbonMessage.getOutputStream());
             carbonMessage.setEndOfMsgAdded(true);
         } catch (IOException e) {

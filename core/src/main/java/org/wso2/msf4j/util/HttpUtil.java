@@ -16,12 +16,12 @@
 
 package org.wso2.msf4j.util;
 
-import org.wso2.carbon.messaging.CarbonMessage;
-import org.wso2.carbon.messaging.DefaultCarbonMessage;
 import org.wso2.carbon.transport.http.netty.common.Constants;
+import org.wso2.carbon.transport.http.netty.message.HTTPCarbonMessage;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
 
+import java.nio.charset.Charset;
 import javax.ws.rs.core.HttpHeaders;
 
 /**
@@ -40,12 +40,12 @@ public class HttpUtil {
      * @param msg message text
      * @return CarbonMessage representing the status
      */
-    public static CarbonMessage createTextResponse(int status, String msg) {
-        DefaultCarbonMessage response = new DefaultCarbonMessage();
+    public static HTTPCarbonMessage createTextResponse(int status, String msg) {
+        HTTPCarbonMessage response = new HTTPCarbonMessage();
         response.setProperty(Constants.HTTP_STATUS_CODE, status);
         if (msg != null) {
             response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(msg.length()));
-            response.setStringMessageBody(msg);
+            response.addMessageBody(Charset.defaultCharset().encode(msg));
         } else {
             response.setHeader(HttpHeaders.CONTENT_LENGTH, "0");
         }
