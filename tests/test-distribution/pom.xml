@@ -138,11 +138,6 @@
         </dependency>
     </dependencies>
 
-    <properties>
-        <carbon.jndi.version>1.0.3</carbon.jndi.version>
-        <carbon.datasources.version>1.1.2</carbon.datasources.version>
-    </properties>
-
     <build>
         <plugins>
             <plugin>
