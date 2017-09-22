@@ -183,6 +183,10 @@ public class MSF4JDeployerTest {
         request.setGoals(Collections.singletonList("install"));
 
         Invoker invoker = new DefaultInvoker();
+        String mavenLocalRepo = System.getProperty("maven.repo.local");
+        if (mavenLocalRepo != null && !mavenLocalRepo.isEmpty()) {
+            invoker.setLocalRepositoryDirectory(new File(mavenLocalRepo));
+        }
         invoker.execute(request);
     }
 
