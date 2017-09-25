@@ -20,7 +20,7 @@ limitations under the License.
 <suite name="Carbon-Kernel-Core_OSGI-Test-Suite">
     <test name="carbon-core-osgi-tests" preserve-order="true" parallel="false">
         <classes>
-            <class name="org.wso2.msf4j.osgi.test.MSF4JStartupTest"/>
+            <class name="org.wso2.msf4j.osgi.test.MSF4JOSGiTest"/>
         </classes>
     </test>
 </suite>

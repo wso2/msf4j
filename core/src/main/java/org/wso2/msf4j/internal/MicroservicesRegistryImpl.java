@@ -55,7 +55,7 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
     private final Map<String, Object> services = new HashMap<>();
     private List<RequestInterceptor> globalRequestInterceptorList = new ArrayList<>();
     private List<ResponseInterceptor> globalResponseInterceptorList = new ArrayList<>();
-    private volatile MicroserviceMetadata metadata = new MicroserviceMetadata(Collections.emptyList());
+    private volatile MicroserviceMetadata metadata = new MicroserviceMetadata(Collections.emptyMap());
     private Map<Class, ExceptionMapper> exceptionMappers = new TreeMap<>(new ClassComparator());
     private SessionManager sessionManager = new DefaultSessionManager();
 
@@ -220,7 +220,7 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
     }
 
     private void updateMetadata() {
-        metadata = new MicroserviceMetadata(Collections.unmodifiableCollection(services.values()));
+        metadata = new MicroserviceMetadata(Collections.unmodifiableMap(services));
     }
 
     public void initServices() {
