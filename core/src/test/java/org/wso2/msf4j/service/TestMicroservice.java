@@ -53,6 +53,7 @@ import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
@@ -758,7 +759,17 @@ public class TestMicroservice implements Microservice {
     @GET
     @Path("/cookie")
     public Response echoCookieValue(@CookieParam("name") String name) {
-        return Response.ok().entity(name).cookie(new NewCookie("test-cookie", name)).build();
+        NewCookie newCookie;
+        if ("wso2".equalsIgnoreCase(name)) {
+            Calendar instance = Calendar.getInstance();
+            instance.set(2017, 0, 1, 0, 0, 0);
+            newCookie =
+                    new NewCookie("test-cookie", name, "/cookie", "wso2.com", 1, "Cookie Test", 10, instance.getTime(),
+                                  true, true);
+        } else {
+            newCookie = new NewCookie("test-cookie", name);
+        }
+        return Response.ok().entity(name).cookie(newCookie).build();
     }
 
 
