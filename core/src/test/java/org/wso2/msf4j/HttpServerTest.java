@@ -1258,6 +1258,18 @@ public class HttpServerTest {
         assertEquals(value, content);
         String cookie = urlConn.getHeaderField("Set-Cookie");
         assertNotNull(cookie);
+        assertEquals("test-cookie=" + value +
+                     ";Path=/cookie;Domain=wso2.com;Expires=Sun Jan 01 00:00:00 IST 2017;Secure;HttpOnly", cookie);
+        urlConn.disconnect();
+
+        value = "Apache";
+        urlConn = request("/test/v1/cookie/", HttpMethod.GET);
+        urlConn.setRequestProperty("Cookie", "name=" + value);
+        assertEquals(200, urlConn.getResponseCode());
+        content = getContent(urlConn);
+        assertEquals(value, content);
+        cookie = urlConn.getHeaderField("Set-Cookie");
+        assertNotNull(cookie);
         assertEquals("test-cookie=" + value, cookie);
         urlConn.disconnect();
     }
