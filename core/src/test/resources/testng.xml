@@ -86,6 +86,19 @@ limitations under the License.
 
     <test name="new unit tests" preserve-order="true" parallel="false">
         <classes>
+            <class name="org.wso2.msf4j.PersistentSessionManagerTest"/>
+            <class name="org.wso2.msf4j.formparam.FormParamIteratorTest"/>
+            <class name="org.wso2.msf4j.formparam.util.FormItemHeaderTest"/>
+            <class name="org.wso2.msf4j.formparam.util.mime.Base64DecoderTest"/>
+            <class name="org.wso2.msf4j.formparam.util.mime.MimeUtilityTest"/>
+            <class name="org.wso2.msf4j.formparam.util.mime.QuotedPrintableDecoderTest"/>
+            <class name="org.wso2.msf4j.interceptor.OSGiInterceptorConfigTest"/>
+            <class name="org.wso2.msf4j.security.JWTSecurityInterceptorTest"/>
+            <class name="org.wso2.msf4j.security.OAuth2SecurityInterceptorTest"/>
+            <class name="org.wso2.msf4j.security.AbstractBasicAuthSecurityInterceptorTest"/>
+            <class name="org.wso2.msf4j.ResponseTest"/>
+            <class name="org.wso2.msf4j.util.UtilsTest"/>
+            <class name="org.wso2.msf4j.config.MSF4JConfigTest"/>
             <class name="org.wso2.msf4j.internal.MicroservicesRegistryTest"/>
         </classes>
     </test>

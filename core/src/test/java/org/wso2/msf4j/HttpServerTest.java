@@ -45,7 +45,6 @@ import org.wso2.msf4j.service.TestMicroservice;
 import org.wso2.msf4j.service.sub.Player;
 import org.wso2.msf4j.service.sub.Team;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -135,7 +134,7 @@ public class HttpServerTest {
     @Test
     public void testMultipleMicroServiceRunners() throws IOException {
         HttpURLConnection urlConn =
-                request("/SecondService/addNumbers/9/25", HttpMethod.GET, false, baseURI.getPort() + 1);
+                TestUtil.request("/SecondService/addNumbers/9/25", HttpMethod.GET, false, baseURI.getPort() + 1);
         assertEquals(200, urlConn.getResponseCode());
         String content = getContent(urlConn);
 
@@ -666,7 +665,7 @@ public class HttpServerTest {
         assertTrue("image/png".equalsIgnoreCase(contentType));
         InputStream downStream = urlConn.getInputStream();
         File file = new File(Thread.currentThread().getContextClassLoader().getResource("testPngFile.png").toURI());
-        assertTrue(isStreamEqual(downStream, new FileInputStream(file)));
+        assertTrue(TestUtil.isStreamEqual(downStream, new FileInputStream(file)));
     }
 
     @Test
@@ -677,7 +676,7 @@ public class HttpServerTest {
         assertTrue("image/png".equalsIgnoreCase(contentType));
         InputStream downStream = urlConn.getInputStream();
         File file = new File(Thread.currentThread().getContextClassLoader().getResource("testPngFile.png").toURI());
-        assertTrue(isStreamEqual(downStream, new FileInputStream(file)));
+        assertTrue(TestUtil.isStreamEqual(downStream, new FileInputStream(file)));
     }
 
 
@@ -690,7 +689,7 @@ public class HttpServerTest {
         assertTrue("image/jpeg".equalsIgnoreCase(contentType));
         InputStream downStream = urlConn.getInputStream();
         File file = new File(Thread.currentThread().getContextClassLoader().getResource("testJpgFile.jpg").toURI());
-        assertTrue(isStreamEqual(downStream, new FileInputStream(file)));
+        assertTrue(TestUtil.isStreamEqual(downStream, new FileInputStream(file)));
     }
 
     @Test
@@ -702,7 +701,7 @@ public class HttpServerTest {
         assertTrue("image/jpeg".equalsIgnoreCase(contentType));
         InputStream downStream = urlConn.getInputStream();
         File file = new File(Thread.currentThread().getContextClassLoader().getResource("testJpgFile.jpg").toURI());
-        assertTrue(isStreamEqual(downStream, new FileInputStream(file)));
+        assertTrue(TestUtil.isStreamEqual(downStream, new FileInputStream(file)));
     }
 
     @Test
@@ -713,7 +712,7 @@ public class HttpServerTest {
         assertTrue("text/plain".equalsIgnoreCase(contentType));
         InputStream downStream = urlConn.getInputStream();
         File file = new File(Thread.currentThread().getContextClassLoader().getResource("testTxtFile.txt").toURI());
-        assertTrue(isStreamEqual(downStream, new FileInputStream(file)));
+        assertTrue(TestUtil.isStreamEqual(downStream, new FileInputStream(file)));
     }
 
     @Test
@@ -724,7 +723,7 @@ public class HttpServerTest {
         assertTrue("text/plain".equalsIgnoreCase(contentType));
         InputStream downStream = urlConn.getInputStream();
         File file = new File(Thread.currentThread().getContextClassLoader().getResource("testTxtFile.txt").toURI());
-        assertTrue(isStreamEqual(downStream, new FileInputStream(file)));
+        assertTrue(TestUtil.isStreamEqual(downStream, new FileInputStream(file)));
     }
 
     @Test
@@ -1391,45 +1390,12 @@ public class HttpServerTest {
         return urlConn;
     }
 
-    protected HttpURLConnection request(String path, String method, boolean keepAlive, int port) throws IOException {
-        URL url = URI.create(String.format("http://%s:%d", Constants.HOSTNAME, port)).resolve(path).toURL();
-        HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
-        if (method.equals(HttpMethod.POST) || method.equals(HttpMethod.PUT)) {
-            urlConn.setDoOutput(true);
-        }
-        urlConn.setRequestMethod(method);
-        if (!keepAlive) {
-            urlConn.setRequestProperty(HEADER_KEY_CONNECTION, HEADER_VAL_CLOSE);
-        }
-
-        return urlConn;
-    }
-
     protected String getContent(HttpURLConnection urlConn) throws IOException {
         return new String(IOUtils.toByteArray(urlConn.getInputStream()), Charsets.UTF_8);
     }
 
     protected void writeContent(HttpURLConnection urlConn, String content) throws IOException {
         urlConn.getOutputStream().write(content.getBytes(Charsets.UTF_8));
-    }
-
-    protected boolean isStreamEqual(InputStream input1, InputStream input2) throws IOException {
-        if (!(input1 instanceof BufferedInputStream)) {
-            input1 = new BufferedInputStream(input1);
-        }
-        if (!(input2 instanceof BufferedInputStream)) {
-            input2 = new BufferedInputStream(input2);
-        }
-        int ch = input1.read();
-        while (-1 != ch) {
-            int ch2 = input2.read();
-            if (ch != ch2) {
-                return false;
-            }
-            ch = input1.read();
-        }
-        int ch2 = input2.read();
-        return (ch2 == -1);
     }
 
     protected Pet petInstance() {
