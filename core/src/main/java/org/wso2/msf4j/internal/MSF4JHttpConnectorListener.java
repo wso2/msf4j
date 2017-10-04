@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.wso2.carbon.config.ConfigProviderFactory;
 import org.wso2.carbon.config.ConfigurationException;
 import org.wso2.carbon.config.provider.ConfigProvider;
-import org.wso2.carbon.messaging.Constants;
+import org.wso2.carbon.transport.http.netty.common.Constants;
 import org.wso2.carbon.transport.http.netty.contract.HttpConnectorListener;
 import org.wso2.carbon.transport.http.netty.contract.ServerConnectorException;
 import org.wso2.carbon.transport.http.netty.message.HTTPCarbonMessage;
@@ -187,7 +187,7 @@ public class MSF4JHttpConnectorListener implements HttpConnectorListener {
                 // Execute method level request interceptors
                 && InterceptorExecutor.executeMethodLevelRequestInterceptors(request, response, method)) {
                 while (!(request.isEmpty() && request.isEomAdded())) {
-                    httpMethodInfo.chunk(request.getMessageBody());
+                    httpMethodInfo.chunk(request.getMessageBody().nioBuffer());
                 }
                 boolean isResponseInterceptorsSuccessful =
                         InterceptorExecutor.executeMethodLevelResponseInterceptors(request, response, method)

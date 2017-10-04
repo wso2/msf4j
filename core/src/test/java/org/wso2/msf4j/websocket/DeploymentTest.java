@@ -31,6 +31,7 @@ import org.wso2.msf4j.websocket.endpoint.EchoEndpoint;
 import org.wso2.msf4j.websocket.exception.WebSocketEndpointAnnotationException;
 
 import java.io.IOException;
+import java.net.ProtocolException;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import javax.net.ssl.SSLException;
@@ -94,7 +95,7 @@ public class DeploymentTest {
     }
 
     @Test(description = "Testing broadcasting messages for text, binary and pong using two clients.")
-    public void testBroadcast() throws InterruptedException, SSLException, URISyntaxException {
+    public void testBroadcast() throws InterruptedException, SSLException, URISyntaxException, ProtocolException {
         //Initializing local variables
         String textReceived;
         String client1Name = "abc";

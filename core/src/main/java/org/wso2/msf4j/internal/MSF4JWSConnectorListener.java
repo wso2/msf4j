@@ -15,8 +15,11 @@
 */
 package org.wso2.msf4j.internal;
 
+import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.transport.http.netty.contract.websocket.HandshakeFuture;
+import org.wso2.carbon.transport.http.netty.contract.websocket.HandshakeListener;
 import org.wso2.carbon.transport.http.netty.contract.websocket.WebSocketBinaryMessage;
 import org.wso2.carbon.transport.http.netty.contract.websocket.WebSocketCloseMessage;
 import org.wso2.carbon.transport.http.netty.contract.websocket.WebSocketConnectorListener;
@@ -33,7 +36,6 @@ import org.wso2.msf4j.websocket.exception.WebSocketEndpointMethodReturnTypeExcep
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.ProtocolException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -50,24 +52,29 @@ import javax.websocket.server.PathParam;
  *
  * This will process all the websocket messages which are coming to MSF4J.
  */
+@Component(
+        name = "org.wso2.msf4j.internal.MSF4JWSConnectorListener",
+        immediate = true,
+        service = WebSocketConnectorListener.class
+)
 public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
 
     private static final Logger log = LoggerFactory.getLogger(MSF4JWSConnectorListener.class);
 
     @Override
     public void onMessage(WebSocketInitMessage webSocketInitMessage) {
-        try {
-            Session handshake = webSocketInitMessage.handshake();
-            handleWebSocketHandshake(webSocketInitMessage, handshake);
-        } catch (ProtocolException e) {
-            log.error("Error while sending the response.", e);
-        }
-        /*String connection = webSocketInitMessage.getProperty(CONNECTION);
-        String upgrade = (String) carbonMessage.getProperty(UPGRADE);
-        if (UPGRADE.equalsIgnoreCase(connection) && WEBSOCKET_UPGRADE.equalsIgnoreCase(upgrade)) {
-            callback.done(new DefaultCarbonMessage());
-            handleWebSocketHandshake(carbonMessage, session);
-        }*/
+        HandshakeFuture handshakeFuture = webSocketInitMessage.handshake();
+        handshakeFuture.setHandshakeListener(new HandshakeListener() {
+            @Override
+            public void onSuccess(Session session) {
+                handleWebSocketHandshake(webSocketInitMessage, session);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                log.error("Unexpected error occur while handshake.", throwable);
+            }
+        });
     }
 
     @Override
@@ -75,7 +82,7 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
         EndpointsRegistryImpl endpointsRegistry = EndpointsRegistryImpl.getInstance();
         String uri = webSocketTextMessage.getTarget();
         PatternPathRouter.RoutableDestination<Object> routableEndpoint = endpointsRegistry.getRoutableEndpoint(uri);
-        handleTextWebSocketMessage(webSocketTextMessage, routableEndpoint, webSocketTextMessage.getServerSession());
+        handleTextWebSocketMessage(webSocketTextMessage, routableEndpoint, webSocketTextMessage.getChannelSession());
     }
 
     @Override
@@ -84,7 +91,7 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
         String uri = webSocketBinaryMessage.getTarget();
         PatternPathRouter.RoutableDestination<Object> routableEndpoint = endpointsRegistry.getRoutableEndpoint(uri);
         handleBinaryWebSocketMessage(webSocketBinaryMessage, routableEndpoint,
-                                     webSocketBinaryMessage.getServerSession());
+                                     webSocketBinaryMessage.getChannelSession());
     }
 
     @Override
@@ -93,7 +100,7 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
         String uri = webSocketControlMessage.getTarget();
         PatternPathRouter.RoutableDestination<Object> routableEndpoint = endpointsRegistry.getRoutableEndpoint(uri);
         handleControlCarbonMessage(webSocketControlMessage, routableEndpoint,
-                                   webSocketControlMessage.getServerSession());
+                                   webSocketControlMessage.getChannelSession());
     }
 
     @Override
@@ -101,12 +108,17 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
         EndpointsRegistryImpl endpointsRegistry = EndpointsRegistryImpl.getInstance();
         String uri = webSocketCloseMessage.getTarget();
         PatternPathRouter.RoutableDestination<Object> routableEndpoint = endpointsRegistry.getRoutableEndpoint(uri);
-        handleCloseWebSocketMessage(webSocketCloseMessage, routableEndpoint, webSocketCloseMessage.getServerSession());
+        handleCloseWebSocketMessage(webSocketCloseMessage, routableEndpoint, webSocketCloseMessage.getChannelSession());
     }
 
     @Override
     public void onError(Throwable throwable) {
-        //handleError(throwable, routableEndpoint, session);
+        log.error("Unexpected error occur.", throwable);
+    }
+
+    @Override
+    public void onIdleTimeout(WebSocketControlMessage webSocketControlMessage) {
+
     }
 
     private boolean handleWebSocketHandshake(WebSocketInitMessage carbonMessage, Session session) {

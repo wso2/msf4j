@@ -1,7 +1,8 @@
 package org.wso2.msf4j;
 
-import org.wso2.carbon.messaging.Constants;
-import org.wso2.carbon.messaging.Headers;
+import io.netty.buffer.ByteBuf;
+import io.netty.handler.codec.http.HttpHeaders;
+import org.wso2.carbon.transport.http.netty.common.Constants;
 import org.wso2.carbon.transport.http.netty.message.HTTPCarbonMessage;
 import org.wso2.msf4j.internal.MSF4JConstants;
 
@@ -10,7 +11,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javax.ws.rs.core.HttpHeaders;
 
 /**
  * Class that represents an HTTP request in MSF4J level.
@@ -26,7 +26,7 @@ public class Request {
     public Request(HTTPCarbonMessage httpCarbonMessage) {
         this.httpCarbonMessage = httpCarbonMessage;
         // find accept types
-        String acceptHeaderStr = httpCarbonMessage.getHeader(HttpHeaders.ACCEPT);
+        String acceptHeaderStr = httpCarbonMessage.getHeader(javax.ws.rs.core.HttpHeaders.ACCEPT);
         acceptTypes = (acceptHeaderStr != null) ?
                 Arrays.asList(acceptHeaderStr.split("\\s*,\\s*"))
                         .stream()
@@ -34,7 +34,7 @@ public class Request {
                         .collect(Collectors.toList()) :
                 null;
         //find content type
-        String contentTypeHeaderStr = httpCarbonMessage.getHeader(HttpHeaders.CONTENT_TYPE);
+        String contentTypeHeaderStr = httpCarbonMessage.getHeader(javax.ws.rs.core.HttpHeaders.CONTENT_TYPE);
         //Trim specified charset since UTF-8 is assumed
         contentType = (contentTypeHeaderStr != null) ? contentTypeHeaderStr.split("\\s*;\\s*")[0] : null;
     }
@@ -60,7 +60,7 @@ public class Request {
     /**
      * @return next available message body chunk
      */
-    public ByteBuffer getMessageBody() {
+    public ByteBuf getMessageBody() {
         return httpCarbonMessage.getMessageBody();
     }
 
@@ -74,7 +74,7 @@ public class Request {
     /**
      * @return map of headers of the HTTP request
      */
-    public Headers getHeaders() {
+    public HttpHeaders getHeaders() {
         return httpCarbonMessage.getHeaders();
     }
 
