@@ -84,4 +84,10 @@ limitations under the License.
         </classes>
     </test>
 
+    <test name="new unit tests" preserve-order="true" parallel="false">
+        <classes>
+            <class name="org.wso2.msf4j.internal.MicroservicesRegistryTest"/>
+        </classes>
+    </test>
+
 </suite>
