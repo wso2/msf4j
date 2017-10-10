@@ -665,7 +665,7 @@
         <maven.javadocplugin.version>2.10.3</maven.javadocplugin.version>
         <maven.shadeplugin.version>2.4.1</maven.shadeplugin.version>
         <maven.surefireplugin.version>2.14.1</maven.surefireplugin.version>
-        <maven.jacocoplugin.version>0.7.1.201405082137</maven.jacocoplugin.version>
+        <maven.jacocoplugin.version>0.7.9</maven.jacocoplugin.version>
         <maven.sourceplugin.version>2.2.1</maven.sourceplugin.version>
         <maven.gpgplugin.version>1.5</maven.gpgplugin.version>
         <maven.archetype.version>2.4</maven.archetype.version>
@@ -723,7 +723,7 @@
         <beanutils.version.range>[1.8,2)</beanutils.version.range>
         <beanutils.osgi.version>1.8.3.2</beanutils.osgi.version>
         <logback.version>1.0.9</logback.version>
-        <nimbus.jose.jwt.version>2.25</nimbus.jose.jwt.version>
+        <nimbus.jose.jwt.version>4.2</nimbus.jose.jwt.version>
         <io.swagger.version>1.5.8</io.swagger.version>
         <io.swagger.version.range>[1.5.0,1.6.0)</io.swagger.version.range>
         <com.fasterxml.jackson.version>2.7.4</com.fasterxml.jackson.version>
