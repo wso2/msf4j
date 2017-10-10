@@ -96,7 +96,10 @@ limitations under the License.
             <class name="org.wso2.msf4j.security.JWTSecurityInterceptorTest"/>
             <class name="org.wso2.msf4j.security.OAuth2SecurityInterceptorTest"/>
             <class name="org.wso2.msf4j.security.AbstractBasicAuthSecurityInterceptorTest"/>
-
+            <class name="org.wso2.msf4j.ResponseTest"/>
+            <class name="org.wso2.msf4j.util.UtilsTest"/>
+            <class name="org.wso2.msf4j.config.MSF4JConfigTest"/>
+            <class name="org.wso2.msf4j.internal.MicroservicesRegistryTest"/>
         </classes>
     </test>
 

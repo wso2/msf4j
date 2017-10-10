@@ -33,6 +33,7 @@ import java.security.KeyStore;
 import java.security.interfaces.RSAPrivateKey;
 import java.util.Date;
 
+import static org.testng.AssertJUnit.assertFalse;
 import static org.testng.AssertJUnit.assertTrue;
 
 public class JWTSecurityInterceptorTest {
@@ -53,7 +54,7 @@ public class JWTSecurityInterceptorTest {
         JWSSigner signer = new RSASSASigner((RSAPrivateKey) wso2carbon);
 
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder().subject("wso2").issuer("https://wso2.com")
-                                                           .expirationTime(new Date(new Date().getTime() + 60 * 1000))
+                                                           .expirationTime(new Date(new Date().getTime() + 5 * 1000))
                                                            .build();
 
         SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.RS256), claimsSet);
@@ -72,5 +73,29 @@ public class JWTSecurityInterceptorTest {
         JWTSecurityInterceptor jwtSecurityInterceptor = new JWTSecurityInterceptor();
         assertTrue(jwtSecurityInterceptor.interceptRequest(request, response));
 
+        // Check validity period
+        Thread.sleep(5000);
+        assertFalse(jwtSecurityInterceptor.interceptRequest(request, response));
+
+        // Change signature
+        claimsSet = new JWTClaimsSet.Builder().subject("wso2").issuer("https://wso2.com")
+                                              .expirationTime(new Date(new Date().getTime() + 5 * 1000)).build();
+
+        signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.RS256), claimsSet);
+        signedJWT.sign(signer);
+        s = signedJWT.serialize();
+        carbonMessage = new DefaultCarbonMessage();
+        carbonMessage.setHeader("X-JWT-Assertion", s.replace('a', 'e'));
+        request = new Request(carbonMessage);
+        response = new Response(carbonMessage1 -> {
+        });
+        assertFalse(jwtSecurityInterceptor.interceptRequest(request, response));
+
+        // Without JWT Header
+        carbonMessage = new DefaultCarbonMessage();
+        request = new Request(carbonMessage);
+        response = new Response(carbonMessage1 -> {
+        });
+        assertFalse(jwtSecurityInterceptor.interceptRequest(request, response));
     }
 }

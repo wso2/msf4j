@@ -92,8 +92,13 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
     }
 
     public void removeService(Object service) {
-        services.remove(service);
-        updateMetadata();
+        Path path = service.getClass().getAnnotation(Path.class);
+        if (path != null) {
+            services.remove(path.value());
+            updateMetadata();
+        } else {
+            log.warn("Service removal fail, class '" + service.getClass().getName() + "' doesn't contain a root Path");
+        }
     }
 
     public void setSessionManager(SessionManager sessionManager) {
@@ -179,40 +184,40 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
         Arrays.stream(mapper).forEach(em -> {
             Arrays.stream(em.getClass().getMethods()).
                     filter(method -> "toResponse".equals(method.getName()) && method.getParameterCount() == 1 &&
-                            !Throwable.class.getName().equals(method.getParameterTypes()[0].getTypeName())).
-                    findAny().
-                    ifPresent(method -> {
-                        try {
-                            exceptionMappers.put(Class.forName(method.getParameterTypes()[0].getTypeName(), false,
-                                    em.getClass().getClassLoader()), em);
-                        } catch (ClassNotFoundException e) {
-                            log.error("Could not load class", e);
-                        }
-                    });
+                                     !Throwable.class.getName().equals(method.getParameterTypes()[0].getTypeName())).
+                          findAny().
+                          ifPresent(method -> {
+                              try {
+                                  exceptionMappers.put(Class.forName(method.getParameterTypes()[0].getTypeName(), false,
+                                                                     em.getClass().getClassLoader()), em);
+                              } catch (ClassNotFoundException e) {
+                                  log.error("Could not load class", e);
+                              }
+                          });
         });
     }
 
     Optional<ExceptionMapper> getExceptionMapper(Throwable throwable) {
         return exceptionMappers.entrySet().
                 stream().
-                filter(entry -> entry.getKey().isAssignableFrom(throwable.getClass())).
-                findFirst().
-                flatMap(entry -> Optional.ofNullable(entry.getValue()));
+                                       filter(entry -> entry.getKey().isAssignableFrom(throwable.getClass())).
+                                       findFirst().
+                                       flatMap(entry -> Optional.ofNullable(entry.getValue()));
     }
-
 
     public void removeExceptionMapper(ExceptionMapper em) {
         Arrays.stream(em.getClass().getMethods()).
                 filter(method -> method.getName().equals("toResponse") && method.getParameterCount() == 1).
-                findAny().
-                ifPresent(method -> {
-                    try {
-                        exceptionMappers.remove(Class.forName(method.getGenericParameterTypes()[0].getTypeName(),
-                                false, em.getClass().getClassLoader()));
-                    } catch (ClassNotFoundException e) {
-                        log.error("Could not load class", e);
-                    }
-                });
+                      findAny().
+                      ifPresent(method -> {
+                          try {
+                              exceptionMappers
+                                      .remove(Class.forName(method.getGenericParameterTypes()[0].getTypeName(), false,
+                                                            em.getClass().getClassLoader()));
+                          } catch (ClassNotFoundException e) {
+                              log.error("Could not load class", e);
+                          }
+                      });
     }
 
     public int getServiceCount() {
@@ -259,12 +264,12 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
     }
 
     private Method getLifecycleMethod(Object httpService, Class lcAnnotation) {
-        return Arrays.stream(httpService.getClass().getDeclaredMethods()).filter(m -> isValidLifecycleMethod
-                (Optional.of(m), lcAnnotation)).findFirst().orElse(null);
+        return Arrays.stream(httpService.getClass().getDeclaredMethods())
+                     .filter(m -> isValidLifecycleMethod(Optional.of(m), lcAnnotation)).findFirst().orElse(null);
     }
 
     private boolean isValidLifecycleMethod(Optional<Method> method, Class lcAnnotation) {
-        return method.filter(m -> Modifier.isPublic(m.getModifiers())
-                && m.getAnnotation(lcAnnotation) != null).isPresent();
+        return method.filter(m -> Modifier.isPublic(m.getModifiers()) && m.getAnnotation(lcAnnotation) != null)
+                     .isPresent();
     }
 }
