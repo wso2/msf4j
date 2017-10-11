@@ -92,7 +92,17 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
     }
 
     public void removeService(Object service) {
-        services.remove(service);
+        if (service == null) {
+            log.error("Service cannot be null.");
+            return;
+        }
+        Path path = service.getClass().getAnnotation(Path.class);
+        if (path == null) {
+            log.warn("Service removal failed. Microservice class '" + service.getClass().getName() +
+                     "' doesn't contain a root Path.");
+            return;
+        }
+        services.remove(path.value());
         updateMetadata();
     }
 
@@ -199,7 +209,6 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
                 findFirst().
                 flatMap(entry -> Optional.ofNullable(entry.getValue()));
     }
-
 
     public void removeExceptionMapper(ExceptionMapper em) {
         Arrays.stream(em.getClass().getMethods()).

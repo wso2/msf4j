@@ -33,7 +33,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.ws.rs.Path;
 
 /**
  * Implementation of the micro service deployer.
@@ -217,7 +216,7 @@ public class MicroservicesDeployer implements Deployer {
         }
 
         microservicesRegistries.values().forEach(registry -> {
-            registry.removeService(service.getClass().getAnnotation(Path.class).value());
+            registry.removeService(service);
             registry.preDestroyService(service);
         });
         log.info("Microservice {} undeployed successfully", service.getClass().getName());
