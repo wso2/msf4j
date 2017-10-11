@@ -36,6 +36,9 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
+/**
+ * Test class to validate the MicroservicesRegistry.
+ */
 public class MicroservicesRegistryTest {
 
     private MicroservicesRunner microservicesRunner = new MicroservicesRunner();
@@ -52,6 +55,9 @@ public class MicroservicesRegistryTest {
         microservicesRunner.getMsRegistry().addExceptionMapper(exceptionMapper1, exceptionMapper2);
     }
 
+    /**
+     * Test the basic functionality of MicroservicesRegistry.
+     */
     @Test
     public void testMicroservicesRegistry() {
         MicroservicesRegistryImpl msRegistry = microservicesRunner.getMsRegistry();

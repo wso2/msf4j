@@ -92,14 +92,18 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
     }
 
     public void removeService(Object service) {
+        if (service == null) {
+            log.error("Service cannot be null.");
+            return;
+        }
         Path path = service.getClass().getAnnotation(Path.class);
-        if (path != null) {
-            services.remove(path.value());
-            updateMetadata();
-        } else {
+        if (path == null) {
             log.warn("Service removal failed. Microservice class '" + service.getClass().getName() +
                      "' doesn't contain a root Path.");
+            return;
         }
+        services.remove(path.value());
+        updateMetadata();
     }
 
     public void setSessionManager(SessionManager sessionManager) {
