@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.Set;
@@ -92,13 +93,13 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
     }
 
     public void removeService(Object service) {
-        Path path = service.getClass().getAnnotation(Path.class);
-        if (path != null) {
-            services.remove(path.value());
-            updateMetadata();
-        } else {
-            log.warn("Service removal fail, class '" + service.getClass().getName() + "' doesn't contain a root Path");
+        Path path = Objects.requireNonNull(service).getClass().getAnnotation(Path.class);
+        if (path == null) {
+            log.warn("Service removal failed. Microservice class '" + service.getClass().getName() +
+                     "' doesn't contain a root Path.");
+            return;
         }
+        services.remove(path.value());
     }
 
     public void setSessionManager(SessionManager sessionManager) {

@@ -34,8 +34,11 @@ public class FormParamIteratorTest {
         CarbonMessage carbonMessage = new DefaultCarbonMessage();
         carbonMessage.setHeader("Content-Type", "multipart/form-data; boundary=----abc");
         carbonMessage.addMessageBody(Charset.defaultCharset()
-                                            .encode("------abc\r\nContent-Disposition: form-data; " +
-                                                    "name=\"name\"\r\n\r\nWSO2\r\n------abc--"));
+                                            .encode("------abc\r\n" +
+                                                    "Content-Disposition: form-data; name=\"name\"\r\n\r\nWSO2\r\n" +
+                                                    "------abc\r\n" +
+                                                    "Content-Disposition: form-data; name=\"type\"\r\n\r\nCompany\r\n" +
+                                                    "------abc--"));
         carbonMessage.setEndOfMsgAdded(true);
         Request request = new Request(carbonMessage);
         FormParamIterator formParamIterator = new FormParamIterator(request);
@@ -46,6 +49,9 @@ public class FormParamIteratorTest {
         assertEquals(formItem.getFieldName(), "name");
         assertEquals(formItem.getContentType(), null);
         assertEquals(StreamUtil.asString(formItem.openStream()), "WSO2");
+        formItem = formParamIterator.next();
+        assertEquals(formItem.getFieldName(), "type");
+        assertEquals(StreamUtil.asString(formItem.openStream(), "utf-8"), "Company");
 
     }
 }
