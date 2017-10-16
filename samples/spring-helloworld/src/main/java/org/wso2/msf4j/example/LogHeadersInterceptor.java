@@ -33,8 +33,7 @@ public class LogHeadersInterceptor implements RequestInterceptor {
 
     @Override
     public boolean interceptRequest(Request request, Response response) throws Exception {
-        request.getHeaders().getAll()
-                .forEach(header -> log.info("Header - " + header.getName() + " : " + header.getValue()));
+        request.getHeaders().forEach(header -> log.info("Header - " + header.getKey() + " : " + header.getValue()));
         return true;
     }
 }

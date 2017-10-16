@@ -16,8 +16,11 @@
 
 package org.wso2.msf4j;
 
-import org.wso2.carbon.messaging.Header;
-import org.wso2.carbon.messaging.Headers;
+import io.netty.buffer.ByteBuf;
+import io.netty.handler.codec.http.DefaultHttpResponse;
+import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.handler.codec.http.HttpVersion;
 import org.wso2.carbon.transport.http.netty.common.Constants;
 import org.wso2.carbon.transport.http.netty.contract.ServerConnectorException;
 import org.wso2.carbon.transport.http.netty.message.HTTPCarbonMessage;
@@ -53,7 +56,7 @@ public class Response {
     private final HTTPCarbonMessage responder;
 
     public Response(HTTPCarbonMessage responder) {
-        httpCarbonMessage = new HTTPCarbonMessage();
+        httpCarbonMessage = new HTTPCarbonMessage(new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK));
         this.responder = responder;
     }
 
@@ -79,7 +82,7 @@ public class Response {
     /**
      * @return next available message body chunk
      */
-    public ByteBuffer getMessageBody() {
+    public ByteBuf getMessageBody() {
         return httpCarbonMessage.getMessageBody();
     }
 
@@ -93,7 +96,7 @@ public class Response {
     /**
      * @return map of headers in the response object
      */
-    public Headers getHeaders() {
+    public HttpHeaders getHeaders() {
         return httpCarbonMessage.getHeaders();
     }
 
@@ -125,7 +128,7 @@ public class Response {
      * @param headerMap headers to be added to the response
      */
     public void setHeaders(Map<String, String> headerMap) {
-        httpCarbonMessage.setHeaders(headerMap);
+        headerMap.forEach(httpCarbonMessage::setHeader);
     }
 
     /**
@@ -261,7 +264,7 @@ public class Response {
     public void send() {
         httpCarbonMessage.setProperty(Constants.HTTP_STATUS_CODE, getStatusCode());
 
-        List<Header> cookiesHeader = new ArrayList<>();
+        List<String> cookiesHeaderValue = new ArrayList<>();
 
         if (jaxrsResponse != null) {
             MultivaluedMap<String, String> multivaluedMap = jaxrsResponse.getStringHeaders();
@@ -294,7 +297,7 @@ public class Response {
                 if (httpOnly) {
                     cookieValue.append(";HttpOnly");
                 }
-                cookiesHeader.add(new Header("Set-Cookie", cookieValue.toString()));
+                cookiesHeaderValue.add(cookieValue.toString());
             });
         }
 
@@ -302,9 +305,9 @@ public class Response {
         //Set-Cookie: session
         Session session = request.getSessionInternal();
         if (session != null && session.isValid() && session.isNew()) {
-            cookiesHeader.add(new Header("Set-Cookie", MSF4JConstants.SESSION_ID + session.getId()));
+            cookiesHeaderValue.add(MSF4JConstants.SESSION_ID + session.getId());
         }
-        httpCarbonMessage.getHeaders().set(cookiesHeader);
+        httpCarbonMessage.getHeaders().set("Set-Cookie", cookiesHeaderValue);
         processEntity();
     }
 

@@ -23,9 +23,6 @@ import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.messaging.CarbonMessage;
-import org.wso2.carbon.messaging.TextCarbonMessage;
-import org.wso2.carbon.transport.http.netty.common.Constants;
 import org.wso2.msf4j.internal.router.PatternPathRouter;
 import org.wso2.msf4j.internal.websocket.EndpointDispatcher;
 import org.wso2.msf4j.internal.websocket.EndpointsRegistryImpl;
@@ -48,7 +45,6 @@ public class EndpointRegistryTest {
     private final String testText = "test";
     private TestEndpoint testEndpoint = new TestEndpoint();
     private EndpointsRegistryImpl endpointsRegistry = EndpointsRegistryImpl.getInstance();
-    private CarbonMessage textCarbonMessage = new TextCarbonMessage(testText);
     private final String uri = "/test";
 
     public EndpointRegistryTest() {
@@ -57,16 +53,14 @@ public class EndpointRegistryTest {
     @BeforeClass
     public void onRegister() throws URISyntaxException {
         log.info(System.lineSeparator() +
-                         "--------------------------------WebSocket Registry Test--------------------------------");
-        textCarbonMessage.setProperty(Constants.TO, uri);
+                 "--------------------------------WebSocket Registry Test--------------------------------");
     }
 
     @Test(description = "Testing the adding a correct endpoint to the registry.")
     public void addEndpoint() throws InvocationTargetException, IllegalAccessException, URISyntaxException {
         log.info("Testing the adding a correct endpoint to the registry.");
         endpointsRegistry.addEndpoint(testEndpoint);
-        PatternPathRouter.RoutableDestination<Object> routableEndpoint =
-                endpointsRegistry.getRoutableEndpoint(uri);
+        PatternPathRouter.RoutableDestination<Object> routableEndpoint = endpointsRegistry.getRoutableEndpoint(uri);
         Object webSocketEndpoint = routableEndpoint.getDestination();
         List<Object> paralist = new LinkedList<>();
         paralist.add(testText);
@@ -85,7 +79,7 @@ public class EndpointRegistryTest {
         log.info("Testing the removing of an endpoint from the registry.");
         endpointsRegistry.removeEndpoint(testEndpoint);
         PatternPathRouter.RoutableDestination<Object> endPoint = endpointsRegistry.
-                getRoutableEndpoint(uri);
+                                                                                          getRoutableEndpoint(uri);
         Assert.assertTrue(endPoint == null);
 
     }

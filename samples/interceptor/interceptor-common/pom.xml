@@ -45,7 +45,7 @@
             javax.xml.bind*,
             org.slf4j.*,
             io.swagger.annotations.*,
-            org.wso2.carbon.messaging.*
+            org.wso2.carbon.transport.*
         </import.package>
         <export.package>org.wso2.msf4j.samples.interceptor.common.*</export.package>
     </properties>

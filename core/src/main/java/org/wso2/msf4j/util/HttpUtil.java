@@ -16,6 +16,9 @@
 
 package org.wso2.msf4j.util;
 
+import io.netty.handler.codec.http.DefaultHttpResponse;
+import io.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.handler.codec.http.HttpVersion;
 import org.wso2.carbon.transport.http.netty.common.Constants;
 import org.wso2.carbon.transport.http.netty.message.HTTPCarbonMessage;
 import org.wso2.msf4j.Request;
@@ -41,7 +44,8 @@ public class HttpUtil {
      * @return CarbonMessage representing the status
      */
     public static HTTPCarbonMessage createTextResponse(int status, String msg) {
-        HTTPCarbonMessage response = new HTTPCarbonMessage();
+        HTTPCarbonMessage response = new HTTPCarbonMessage(
+                new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.valueOf(status)));
         response.setProperty(Constants.HTTP_STATUS_CODE, status);
         if (msg != null) {
             response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(msg.length()));

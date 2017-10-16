@@ -33,5 +33,5 @@ listenerConfigurations:
   workerThreadPoolSize: 250
   scheme: https
   keyStoreFile: "conf/wso2carbon.jks"
-  keyStorePass: wso2carbon
+  keyStorePassword: wso2carbon
   certPass: wso2carbon

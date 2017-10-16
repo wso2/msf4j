@@ -30,7 +30,7 @@ public class MSF4JRequestInputStream extends InputStream {
 
     public MSF4JRequestInputStream(Request request) {
         this.request = request;
-        buffer = request.getMessageBody();
+        buffer = request.getMessageBody().nioBuffer();
     }
 
     @Override
@@ -38,7 +38,7 @@ public class MSF4JRequestInputStream extends InputStream {
         if (request.isEomAdded() && request.isEmpty() && !buffer.hasRemaining()) {
             return -1;
         } else if (!buffer.hasRemaining()) {
-            buffer = request.getMessageBody();
+            buffer = request.getMessageBody().nioBuffer();
         }
         return buffer.get() & 0xFF;
     }

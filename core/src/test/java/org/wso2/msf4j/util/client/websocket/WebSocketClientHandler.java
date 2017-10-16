@@ -35,13 +35,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.ByteBuffer;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * WebSocket Client Handler for Testing.
  */
 public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> {
 
-    private static final Logger logger = LoggerFactory.getLogger(WebSocketClient.class);
+    private static final Logger logger = LoggerFactory.getLogger(WebSocketClientHandler.class);
 
     private final WebSocketClientHandshaker handshaker;
     private ChannelPromise handshakeFuture;
@@ -49,10 +50,13 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
 
     private String textReceived = "";
     private ByteBuffer bufferReceived = null;
-    private boolean isOpen = false;
+    private boolean isOpen;
+    private CountDownLatch latch;
 
-    public WebSocketClientHandler(WebSocketClientHandshaker handshaker) {
+    public WebSocketClientHandler(WebSocketClientHandshaker handshaker, CountDownLatch latch) {
         this.handshaker = handshaker;
+        this.latch = latch;
+        this.isOpen = true;
     }
 
     public ChannelFuture handshakeFuture() {
@@ -68,7 +72,6 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
         handshaker.handshake(ctx.channel());
-        isOpen = true;
     }
 
     @Override
@@ -110,8 +113,9 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
             bufferReceived = pongFrame.content().nioBuffer();
         } else if (frame instanceof CloseWebSocketFrame) {
             logger.debug("WebSocket Client received closing");
-            ch.close();
+            isOpen = false;
         }
+        countDownLatch();
     }
 
     /**
@@ -128,10 +132,18 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
         return bufferReceived;
     }
 
+    /**
+     * Check whether the connection is still open or not.
+     *
+     * @return true if connection is still open.
+     */
+    public boolean isOpen() {
+        return isOpen;
+    }
+
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         if (!handshakeFuture.isDone()) {
-            logger.error("Handshake failed : " + cause.getMessage(), cause);
             handshakeFuture.setFailure(cause);
         }
         ctx.close();
@@ -142,7 +154,12 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
         ctx.channel().closeFuture().sync();
     }
 
-    public boolean isOpen() {
-        return isOpen;
+    private void countDownLatch() {
+        if (this.latch == null) {
+            return;
+        }
+        latch.countDown();
     }
+
+
 }

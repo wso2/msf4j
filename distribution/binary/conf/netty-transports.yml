@@ -34,7 +34,7 @@ listenerConfigurations:
   port: 8443
   scheme: https
   keyStoreFile: "conf/wso2carbon.jks"
-  keyStorePass: wso2carbon
+  keyStorePassword: wso2carbon
   certPass: wso2carbon
 senderConfigurations:
  -

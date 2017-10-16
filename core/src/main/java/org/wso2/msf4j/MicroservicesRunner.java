@@ -220,8 +220,6 @@ public class MicroservicesRunner {
             ServerBootstrapConfiguration serverBootstrapConfiguration =
                     HTTPConnectorUtil.getServerBootstrapConfiguration(transportsConfiguration.getTransportProperties());
             for (ListenerConfiguration listenerConfiguration : transportsConfiguration.getListenerConfigurations()) {
-                listenerConfiguration.setId(listenerConfiguration.getHost() == null ? "0.0.0.0" :
-                                            listenerConfiguration.getHost() + ":" + listenerConfiguration.getPort());
                 ServerConnector serverConnector =
                         connectorFactory.createServerConnector(serverBootstrapConfiguration, listenerConfiguration);
                 DataHolder.getInstance().getMicroservicesRegistries()
