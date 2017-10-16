@@ -57,6 +57,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
@@ -761,6 +762,7 @@ public class TestMicroservice implements Microservice {
     public Response echoCookieValue(@CookieParam("name") String name) {
         NewCookie newCookie;
         if ("wso2".equalsIgnoreCase(name)) {
+            TimeZone.setDefault(TimeZone.getTimeZone("IST"));
             Calendar instance = Calendar.getInstance();
             instance.set(2017, 0, 1, 0, 0, 0);
             newCookie =
