@@ -134,7 +134,6 @@ public class MicroservicesRunner {
      * @param requestInterceptor interceptor instances
      */
     public MicroservicesRunner addGlobalRequestInterceptor(RequestInterceptor... requestInterceptor) {
-        checkState();
         msRegistry.addGlobalRequestInterceptor(requestInterceptor);
         return this;
     }
@@ -145,7 +144,6 @@ public class MicroservicesRunner {
      * @param responseInterceptor interceptor instances
      */
     public MicroservicesRunner addGlobalResponseInterceptor(ResponseInterceptor... responseInterceptor) {
-        checkState();
         msRegistry.addGlobalResponseInterceptor(responseInterceptor);
         return this;
     }
@@ -159,7 +157,6 @@ public class MicroservicesRunner {
      * @deprecated
      */
     public MicroservicesRunner addInterceptor(Interceptor... interceptor) {
-        checkState();
         msRegistry.addGlobalRequestInterceptor(interceptor);
         msRegistry.addGlobalResponseInterceptor(interceptor);
         return this;
