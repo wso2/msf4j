@@ -178,7 +178,7 @@ public final class MicroserviceMetadata {
                 throw new HandlerException(Response.Status.METHOD_NOT_ALLOWED, uri);
             } else {
                 throw new HandlerException(Response.Status.NOT_FOUND,
-                        String.format("Problem accessing: %s. Reason2: Not Found", uri));
+                        String.format("Problem accessing: %s. Reason: Not Found", uri));
             }
         } catch (NoSuchElementException ex) {
             throw new HandlerException(Response.Status.UNSUPPORTED_MEDIA_TYPE,
