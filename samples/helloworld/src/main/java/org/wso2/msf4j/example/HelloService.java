@@ -23,11 +23,11 @@ import javax.ws.rs.PathParam;
 /**
  * Hello service resource class.
  */
-@Path("/hello")
+@Path("hello")
 public class HelloService {
 
     @GET
-    @Path("/{name}")
+    @Path("{name}")
     public String hello(@PathParam("name") String name) {
         System.out.println("Hello");
         return "Hello " + name;

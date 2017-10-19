@@ -66,12 +66,7 @@ public final class PatternPathRouter<T> {
      */
     public void add(final String source, final T destination) {
 
-        // replace multiple slashes with a single slash.
-        String path = source.replaceAll("/+", PATH_SLASH);
-
-        path = (path.endsWith(PATH_SLASH) && path.length() > 1)
-                ? path.substring(0, path.length() - 1) : path;
-
+        String path = Utils.normalizePath(source);
 
         String[] parts = path.split(PATH_SLASH);
         StringBuilder sb = new StringBuilder();
@@ -159,8 +154,7 @@ public final class PatternPathRouter<T> {
      */
     public List<RoutableDestination<T>> getDestinations(String path) {
 
-        String cleanPath = (path.endsWith(PATH_SLASH) && path.length() > 0)
-                ? path.substring(0, path.length() - 1) : path;
+        String cleanPath = Utils.normalizePath(path);
 
         List<RoutableDestination<T>> result = new ArrayList<>();
 

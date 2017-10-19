@@ -114,4 +114,38 @@ public class Utils {
         cloneSet2.retainAll(cloneSet1);
         return cloneSet2.size();
     }
+
+    /**
+     * Get the path without leading or trailing / and with multiple / reduced to one /
+     *
+     * @param path The path
+     * @return normalized path
+     */
+    public static final String normalizePath(String path) {
+        char[] chars = path.toCharArray();
+        int p = 0;
+        boolean needSlash = false;
+
+        for (int i = 0; i < chars.length; ++i) {
+            char c = chars[i];
+            if (c != '/') {
+                needSlash = true;
+            } else if (needSlash) {
+                needSlash = false;
+            } else {
+                continue;
+            }
+
+            if (p != i) {
+                chars[p] = c;
+            }
+            ++p;
+        }
+
+        while (p > 0 && chars[p - 1] == '/') {
+            --p;
+        }
+
+        return (p == chars.length) ? path : new String(chars, 0, p);
+    }
 }

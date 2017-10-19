@@ -73,10 +73,7 @@ public final class MicroserviceMetadata {
                     patternRouter.add(absolutePath, new HttpResourceModel(absolutePath, method, service, false));
                 } else if (Modifier.isPublic(method.getModifiers()) && method.getAnnotation(Path.class) != null) {
                     // Sub resource locator method
-                    String relativePath = method.getAnnotation(Path.class).value();
-                    if (relativePath.startsWith("/")) {
-                        relativePath = relativePath.substring(1);
-                    }
+                    String relativePath = Utils.normalizePath(method.getAnnotation(Path.class).value());
                     String absolutePath = String.format("%s/%s", basePath, relativePath);
                     patternRouter.add(absolutePath, new HttpResourceModel(absolutePath, method, service, true));
                 } else {
@@ -105,7 +102,7 @@ public final class MicroserviceMetadata {
             if (Modifier.isPublic(method.getModifiers()) && isHttpMethodAvailable(method)) {
                 String relativePath = "";
                 if (method.getAnnotation(Path.class) != null) {
-                    relativePath = method.getAnnotation(Path.class).value();
+                    relativePath = Utils.normalizePath(method.getAnnotation(Path.class).value());
                 }
                 String absolutePath = String.format("%s/%s", basePath, relativePath);
                 patternRouter.add(absolutePath, new HttpResourceModel(absolutePath, method, service, false));
@@ -145,7 +142,7 @@ public final class MicroserviceMetadata {
                                                                          List<String> acceptHeader)
             throws HandlerException {
         try {
-            String path = URI.create(uri).normalize().getPath();
+            String path = Utils.normalizePath(URI.create(uri).normalize().getPath());
 
             List<PatternPathRouter.RoutableDestination<HttpResourceModel>>
                     routableDestinations = patternRouter.getDestinations(path);
@@ -181,7 +178,7 @@ public final class MicroserviceMetadata {
                 throw new HandlerException(Response.Status.METHOD_NOT_ALLOWED, uri);
             } else {
                 throw new HandlerException(Response.Status.NOT_FOUND,
-                        String.format("Problem accessing: %s. Reason: Not Found", uri));
+                        String.format("Problem accessing: %s. Reason2: Not Found", uri));
             }
         } catch (NoSuchElementException ex) {
             throw new HandlerException(Response.Status.UNSUPPORTED_MEDIA_TYPE,

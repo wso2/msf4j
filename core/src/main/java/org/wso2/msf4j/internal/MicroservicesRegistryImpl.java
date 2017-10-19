@@ -68,7 +68,7 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
             if (iterator.hasNext()) {
                 SwaggerService swaggerService = iterator.next();
                 swaggerService.init(this);
-                services.put("/swagger", swaggerService);
+                services.put("swagger", swaggerService);
             }
         }
     }
