@@ -35,13 +35,10 @@ import org.wso2.msf4j.interceptor.PriorityDataHolder;
 import org.wso2.msf4j.interceptor.TestInterceptorDeprecated;
 import org.wso2.msf4j.interceptor.TestRequestInterceptor;
 import org.wso2.msf4j.interceptor.TestResponseInterceptor;
-import org.wso2.msf4j.service.SecondService;
 import org.wso2.msf4j.spring.service.second.TestMicroServiceWithDynamicPath;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 
 import static org.testng.Assert.assertEquals;
@@ -54,15 +51,15 @@ import static org.testng.Assert.assertEquals;
 public class SpringInterceptorTest extends InterceptorTestBase {
 
     private static final int port = Constants.PORT;
-    private List<ConfigurableApplicationContext> configurableApplicationContexts = new ArrayList<>();
+    private ConfigurableApplicationContext configurableApplicationContext;
 
     @BeforeClass
     public void setup() throws Exception {
         baseURI = URI.create(String.format(Locale.ENGLISH, "http://%s:%d", Constants.HOSTNAME, port));
-        MSF4JSpringApplication msf4JSpringApplication = new MSF4JSpringApplication(SpringHttpServerTest.class);
-        configurableApplicationContexts.add(msf4JSpringApplication.run(true, "--http.port=8090"));
-        configurableApplicationContexts.add(MSF4JSpringApplication.run(SecondService.class, "--http.port=8091"));
-        msf4JSpringApplication.addService(configurableApplicationContexts.get(1), TestMicroServiceWithDynamicPath.class,
+        configurableApplicationContext = MSF4JSpringApplication
+                .run(SpringInterceptorTest.class, "--http.port=8090");
+        MSF4JSpringApplication msf4JSpringApplication = new MSF4JSpringApplication(SpringInterceptorTest.class);
+        msf4JSpringApplication.addService(configurableApplicationContext, TestMicroServiceWithDynamicPath.class,
                 "/DynamicPath")
                 .addGlobalRequestInterceptor(new HighPriorityGlobalRequestInterceptor(),
                         new MediumPriorityGlobalRequestInterceptor(), new LowPriorityGlobalRequestInterceptor())
@@ -73,7 +70,7 @@ public class SpringInterceptorTest extends InterceptorTestBase {
 
     @AfterClass
     public void tearDown() throws Exception {
-        configurableApplicationContexts.forEach(ConfigurableApplicationContext::close);
+        configurableApplicationContext.close();
     }
 
     /**

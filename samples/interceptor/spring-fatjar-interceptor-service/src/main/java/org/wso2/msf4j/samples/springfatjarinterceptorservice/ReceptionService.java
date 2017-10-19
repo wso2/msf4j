@@ -46,7 +46,6 @@ public class ReceptionService {
 
     /**
      * Method for saying hello to a customer.
-     * curl http://localhost:8080/reception-service/say-hello/John
      *
      * @return hello message for the customer
      */
