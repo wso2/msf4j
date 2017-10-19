@@ -1,9 +1,10 @@
-#Applying interceptors
+# Applying interceptors
 
 * Please refer [MSF4J Interceptors - Common](../interceptor/interceptor-common) for writing request and response interceptors
 * Please refer [MSF4J Interceptor Service - Fat Jar mode](../interceptor/fatjar-interceptor-service) for using interceptors in fat jar mode
 * Please refer [MSF4J Interceptor Service - Deployable Jar mode](../interceptor/deployable-jar-interceptor-service) for using interceptors in deployable jar mode
 * Please refer [MSF4J Interceptor Service - OSGi mode](../interceptor/osgi-interceptor-service) for using interceptors in OSGi mode
+* Please refer [MSF4J Interceptors with MSF4J Spring - Fat Jar mode](../spring-fatjar-interceptor-service) for using interceptors with MSF4J Spring in fat jar mode
 
 # Priority order of Interceptors
 

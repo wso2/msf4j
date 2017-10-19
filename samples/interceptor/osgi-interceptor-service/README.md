@@ -4,6 +4,7 @@ This sample demonstrates how to create MSF4J interceptors as an OSGi bundle.
 
 * See also; [MSF4J Interceptor Service - Fat Jar mode](../fatjar-interceptor-service)
 * See also; [MSF4J Interceptor Service - Deployable Jar mode](../deployable-jar-interceptor-service)
+* See also; [MSF4J Interceptors with MSF4J Spring - Fat Jar mode](../spring-fatjar-interceptor-service)
 
 In this sample we have exposed the InterceptorService as an OSGi service that implements 
 org.wso2.msf4j.Microservice interface as shown in the following code.

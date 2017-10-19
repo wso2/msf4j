@@ -5,6 +5,7 @@ and running it in a Java process is also referred to as server-less execution.
 
 * See also; [MSF4J Interceptor Service - Deployable Jar mode](../deployable-jar-interceptor-service)
 * See also; [MSF4J Interceptor Service - OSGi mode](../osgi-interceptor-service)
+* See also; [MSF4J Interceptors with MSF4J Spring - Fat Jar mode](../spring-fatjar-interceptor-service)
 
 ## Writing the pom.xml 
 
