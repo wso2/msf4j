@@ -142,7 +142,7 @@ public class Utils {
             ++p;
         }
 
-        while (p > 0 && chars[p - 1] == '/') {
+        if (p > 0 && !needSlash) {
             --p;
         }
 
