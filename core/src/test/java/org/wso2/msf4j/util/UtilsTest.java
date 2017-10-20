@@ -15,6 +15,7 @@
  */
 package org.wso2.msf4j.util;
 
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import static org.testng.AssertJUnit.assertEquals;
@@ -24,32 +25,45 @@ import static org.testng.AssertJUnit.assertEquals;
  */
 public class UtilsTest {
 
-    @Test
-    public void testNormalizePath() {
-        assertEquals("hello", Utils.normalizePath("hello"));
-        assertEquals("hello", Utils.normalizePath("/hello"));
-        assertEquals("hello", Utils.normalizePath("hello/"));
-        assertEquals("hello", Utils.normalizePath("/hello/"));
-        assertEquals("hello", Utils.normalizePath("//hello"));
-        assertEquals("hello", Utils.normalizePath("///hello"));
-        assertEquals("hello", Utils.normalizePath("///hello///"));
+    @DataProvider(name = "paths")
+    public String[][] paths() {
+        return new String[][] {
+            // simple paths with or without '/'
+            {"path", "path"},
+            {"/path", "path"},
+            {"path/", "path"},
+            {"/path/", "path"},
+            {"//path", "path"},
+            {"///path", "path"},
+            {"///path///", "path"},
 
-        assertEquals("hel/lo", Utils.normalizePath("hel/lo"));
-        assertEquals("hel/lo", Utils.normalizePath("hel//lo"));
-        assertEquals("hel/lo", Utils.normalizePath("hel///lo"));
-        assertEquals("hel/lo", Utils.normalizePath("//hel//lo//"));
+            // paths with multiple components
+            {"path1/path2", "path1/path2"},
+            {"path1//path2", "path1/path2"},
+            {"path1///path2", "path1/path2"},
+            {"//path1//path2//", "path1/path2"},
+            {"path1/path2/path3/path4", "path1/path2/path3/path4"},
+            {"path1//path2//path3//path4", "path1/path2/path3/path4"},
+            {"//path1//path2//path3//path4//", "path1/path2/path3/path4"},
 
-        assertEquals("h/e/ll/o", Utils.normalizePath("h/e/ll/o"));
-        assertEquals("h/e/ll/o", Utils.normalizePath("h//e//ll//o"));
-        assertEquals("h/e/ll/o", Utils.normalizePath("//h//e//ll//o//"));
+            // edge cases: empty path
+            {"", ""},
 
-        assertEquals("", Utils.normalizePath(""));
-        assertEquals("", Utils.normalizePath("/"));
-        assertEquals("", Utils.normalizePath("//"));
-        assertEquals("", Utils.normalizePath("///"));
-        assertEquals("h", Utils.normalizePath("h"));
-        assertEquals("h", Utils.normalizePath("/h"));
-        assertEquals("h", Utils.normalizePath("h/"));
+            // edge cases: paths consisting only of '/'
+            {"/", ""},
+            {"//", ""},
+            {"///", ""},
+
+            // edge cases: paths consisting only of a single character
+            {"p", "p"},
+            {"/p", "p"},
+            {"p/", "p"}
+        };
+    }
+
+    @Test(dataProvider = "paths")
+    public void testNormalizePath(String path, String expectedPath) {
+        assertEquals(expectedPath, Utils.normalizePath(path));
     }
 }
 
