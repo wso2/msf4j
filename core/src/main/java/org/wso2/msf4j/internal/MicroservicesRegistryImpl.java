@@ -68,21 +68,21 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
             if (iterator.hasNext()) {
                 SwaggerService swaggerService = iterator.next();
                 swaggerService.init(this);
-                services.put("swagger", swaggerService);
+                services.put(Utils.normalizePath("swagger"), swaggerService);
             }
         }
     }
 
     public void addService(Object... service) {
         for (Object svc : service) {
-            services.put(svc.getClass().getAnnotation(Path.class).value(), svc);
+            services.put(Utils.normalizePath(svc.getClass().getAnnotation(Path.class).value()), svc);
         }
         updateMetadata();
         Arrays.stream(service).forEach(svc -> log.info("Added microservice: " + svc));
     }
 
     public void addService(String basePath, Object service) {
-        services.put(basePath, service);
+        services.put(Utils.normalizePath(basePath), service);
         metadata.addMicroserviceMetadata(service, basePath);
         log.info("Added microservice: " + service);
     }
@@ -102,7 +102,7 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
                      "' doesn't contain a root Path.");
             return;
         }
-        services.remove(path.value());
+        services.remove(Utils.normalizePath(path.value()));
         updateMetadata();
     }
 
