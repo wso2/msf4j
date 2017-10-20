@@ -155,7 +155,6 @@ public final class PatternPathRouter<T> {
     public List<RoutableDestination<T>> getDestinations(String path) {
 
         String cleanPath = Utils.normalizePath(path);
-
         List<RoutableDestination<T>> result = new ArrayList<>();
 
         for (ImmutablePair<Pattern, RouteDestinationWithGroups> patternRoute : patternRouteList) {
