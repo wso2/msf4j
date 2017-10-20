@@ -217,6 +217,7 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
                 .getDestinationMethod(request.getUri(), request.getHttpMethod(), request.getContentType(),
                         request.getAcceptTypes());
         HttpResourceModel resourceModel = destination.getDestination();
+        request.setProperty(MSF4JConstants.METHOD_PROPERTY_NAME, resourceModel.getMethod()); // Required for analytics
         response.setMediaType(Util.getResponseType(request.getAcceptTypes(), resourceModel.getProducesMediaTypes()));
         HttpMethodInfoBuilder httpMethodInfoBuilder = new HttpMethodInfoBuilder()
                 .httpResourceModel(resourceModel)

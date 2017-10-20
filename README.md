@@ -253,6 +253,7 @@ Please do refer the following for complete instructions.
 * [MSF4J Interceptors - Stand alone mode instructions](/samples/interceptor/fatjar-interceptor-service/README.md)
 * [MSF4J Interceptors - Deployable Jar mode instructions ](/samples/interceptor/deployable-jar-interceptor-service/README.md)
 * [MSF4J Interceptors - OSGi mode instructions](/samples/interceptor/osgi-interceptor-service/README.md)
+* [MSF4J Interceptors with MSF4J Spring - Fat Jar mode](/samples/interceptor/spring-fatjar-interceptor-service/README.md)
 
 ## Develop and configure MSF4J services using Spring framework
 

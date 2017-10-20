@@ -1,11 +1,11 @@
-# Request and response interceptors MSF4J fat jar Sample
+# Request and response interceptors MSF4J Spring fat jar Sample
 
 A fat jar is a jar file which includes all the dependencies in one fat (uber) jar. This mode of creating a fat jar
 and running it in a Java process is also referred to as server-less execution.
 
+* See also; [MSF4J Interceptor Service - Fat Jar mode](../fatjar-interceptor-service)
 * See also; [MSF4J Interceptor Service - Deployable Jar mode](../deployable-jar-interceptor-service)
 * See also; [MSF4J Interceptor Service - OSGi mode](../osgi-interceptor-service)
-* See also; [MSF4J Interceptors with MSF4J Spring - Fat Jar mode](../spring-fatjar-interceptor-service)
 
 ## Writing the pom.xml 
 
@@ -41,7 +41,9 @@ The pom should include the following properties
 
 ```xml
     <properties>
-        <microservice.mainClass>org.wso2.msf4j.samples.fatjarinterceptorservice.Application</microservice.mainClass>
+        <microservice.mainClass>
+            org.wso2.msf4j.samples.springfatjarinterceptorservice.Application
+        </microservice.mainClass>
     </properties>
 ```
 
@@ -58,7 +60,7 @@ mvn clean install
 
 Use following command to run the application
 ```
-java -jar target/fatjar-interceptor-service-\<version>.jar
+java -jar target/spring-fatjar-interceptor-service-\<version>.jar
 ```
 
 ## How to test the sample
@@ -66,17 +68,7 @@ java -jar target/fatjar-interceptor-service-\<version>.jar
 Use following cURL command.
 
 ```
-curl http://localhost:8080/interceptor-service/service-name
+curl http://localhost:8090/reception-service/say-hello/John
 ```
 
-You should get a successful response if everything worked fine.
-
-## Invoking the service via HTTPS
-
-Use following cURL command.
-
-```
-curl --insecure https://localhost:8444/interceptor-service/service-name
-```
-
-You should get a successful response if everything worked fine.
+You should get a hello response if everything worked fine (Hello John in this case).
