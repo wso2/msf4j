@@ -67,7 +67,6 @@ public final class PatternPathRouter<T> {
     public void add(final String source, final T destination) {
 
         String path = Utils.normalizePath(source);
-
         String[] parts = path.split(PATH_SLASH);
         StringBuilder sb = new StringBuilder();
         List<String> groupNames = new ArrayList<>();
