@@ -90,4 +90,10 @@ limitations under the License.
         </classes>
     </test>
 
+    <test name="host-binding-tests" preserve-order="true" parallel="false">
+        <classes>
+            <class name="org.wso2.msf4j.HostBindingTest"/>
+        </classes>
+    </test>
+
 </suite>

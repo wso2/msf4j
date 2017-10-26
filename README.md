@@ -117,6 +117,9 @@ public class Application {
 }
 ```
 
+You can also pass in the port(s) as an argument to the MicroservicesRunner class constructor. When passing the port(s) 
+as an argument, by default it binds to 0.0.0.0 host. Use "msf4j.host" environment variable to override the host value. 
+
 
 ### Build the Service
 Run the following Maven command. This will create the fat jar **Hello-Service-0.1-SNAPSHOT.jar** in the **target** directory.
