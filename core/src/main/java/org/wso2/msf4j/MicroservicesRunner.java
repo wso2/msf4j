@@ -52,6 +52,16 @@ import javax.ws.rs.ext.ExceptionMapper;
 public class MicroservicesRunner {
 
     private static final Logger log = LoggerFactory.getLogger(MicroservicesRunner.class);
+    
+    /**
+     * Default host used when using microservice runner starts with {@link #MicroservicesRunner(int...)}.
+     */
+    private static final String DEFAULT_HOST = "0.0.0.0";
+    
+    /**
+     * The environment variable which overrides the {@link #DEFAULT_HOST}.
+     */
+    private static final String MSF4J_HOST = "msf4j.host";
     protected List<ServerConnector> serverConnectors = new ArrayList<>();
     private long startTime = System.currentTimeMillis();
     private boolean isStarted;
@@ -199,7 +209,8 @@ public class MicroservicesRunner {
         transportsConfiguration.setTransportProperties(transportProperties);
         Set<ListenerConfiguration> listenerConfigurations = new HashSet<>();
         for (int port : ports) {
-            ListenerConfiguration listenerConfiguration = new ListenerConfiguration("netty-" + port, "0.0.0.0", port);
+            ListenerConfiguration listenerConfiguration = new ListenerConfiguration("netty-" + port,
+                    System.getProperty(MSF4J_HOST, DEFAULT_HOST), port);
             DataHolder.getInstance().getMicroservicesRegistries().put(listenerConfiguration.getId(), msRegistry);
             listenerConfigurations.add(listenerConfiguration);
         }
