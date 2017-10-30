@@ -80,7 +80,7 @@ mvn clean install
 Run the JAR file in target directory.
 
 ```
-java -jar target/metrics*.jar
+java -Dmetrics.config=<Metrics YAML configuration file path> -jar target/metrics*.jar
 ```
 
 ## How to test the sample
@@ -96,6 +96,6 @@ curl -v http://localhost:8080/demo/echo/test
 
 **Metrics Reporters**
 
-See the [metrics.yml](src/main/resources/metrics.yml) configuration.
+See the [metrics.yaml](src/main/resources/metrics.yaml) configuration.
 
 The JMX, Console, CSV and SLF4J reporters are configured in this sample.

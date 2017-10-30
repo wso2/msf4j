@@ -17,9 +17,15 @@ package org.wso2.msf4j.analytics.metrics;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.config.ConfigProviderFactory;
+import org.wso2.carbon.config.ConfigurationException;
+import org.wso2.carbon.config.provider.ConfigProvider;
 import org.wso2.carbon.metrics.core.MetricManagementService;
 import org.wso2.carbon.metrics.core.MetricService;
 import org.wso2.msf4j.analytics.internal.DataHolder;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * A utility class to keep Metric Services.
@@ -27,9 +33,7 @@ import org.wso2.msf4j.analytics.internal.DataHolder;
 public final class Metrics {
 
     private static final Logger logger = LoggerFactory.getLogger(Metrics.class);
-
     private volatile MetricService metricService;
-
     private volatile MetricManagementService metricManagementService;
 
     private Metrics() {
@@ -58,8 +62,22 @@ public final class Metrics {
         if (logger.isInfoEnabled()) {
             logger.info("Initializing Metrics Services");
         }
-        org.wso2.carbon.metrics.core.Metrics metrics =
-                new org.wso2.carbon.metrics.core.Metrics(DataHolder.getInstance().getConfigProvider());
+
+        ConfigProvider configProvider = DataHolder.getInstance().getConfigProvider();
+
+        // Initialise config provider if null
+        // TODO: In carbon metrics, if the config provider is null return the default configuration
+        if (configProvider == null) {
+            Path metricsConfigYamlPath = Paths.get(System.getProperty("metrics.config"));
+            try {
+                configProvider = ConfigProviderFactory.getConfigProvider(metricsConfigYamlPath, null);
+                org.wso2.msf4j.analytics.internal.DataHolder.getInstance().setConfigProvider(configProvider);
+            } catch (ConfigurationException e) {
+                logger.error("Error in setting config provider", e);
+            }
+        }
+
+        org.wso2.carbon.metrics.core.Metrics metrics = new org.wso2.carbon.metrics.core.Metrics(configProvider);
         // Activate metrics
         metrics.activate();
 

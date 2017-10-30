@@ -14,31 +14,32 @@
 
 # This is the main configuration file for metrics
 
-enabled: true
+wso2.metrics:
+  enabled: true
 
-jmx:
-  registerMBean: true
-  name: org.wso2.msf4j:type=Metrics
-
-reporting:
   jmx:
-    - name: JMX
-      enabled: true
+    registerMBean: true
+    name: org.wso2.msf4j:type=Metrics
 
-  console:
-    - name: Console
-      enabled: true
-      pollingPeriod: 30
+  reporting:
+    jmx:
+      - name: JMX
+        enabled: true
 
-  csv:
-    - name: CSV
-      enabled: true
-      location: metrics
-      pollingPeriod: 30
+    console:
+      - name: Console
+        enabled: true
+        pollingPeriod: 30
 
-  slf4j:
-    - name: SLF4J
-      enabled: true
-      loggerName: metrics
-      pollingPeriod: 120
+    csv:
+      - name: CSV
+        enabled: true
+        location: metrics
+        pollingPeriod: 30
+
+    slf4j:
+      - name: SLF4J
+        enabled: true
+        loggerName: metrics
+        pollingPeriod: 120
 
