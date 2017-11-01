@@ -152,8 +152,10 @@
         <module>samples/websocket/chatApp/bundle</module>
         <module>samples/websocket/chatApp/deployable-jar</module>
         <module>samples/websocket/chatApp/fatjar</module>
-        <module>samples/grpc-services/grpc-helloworld</module>
-        <module>samples/grpc-services/grpc-stockqoute</module>
+        <module>samples/grpc-helloworld/helloworld-service</module>
+        <module>samples/grpc-helloworld/helloworld-client</module>
+        <module>samples/grpc-stockquote/stockquote-service</module>
+        <module>samples/grpc-stockquote/stockquote-client</module>
         <module>perf-benchmark/Samples/wso2msf4j</module>
         <module>tests</module>
     </modules>
