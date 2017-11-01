@@ -77,6 +77,7 @@ public class MicroservicesRunner {
      */
     private boolean isGrpcService = false;
     private ServerBuilder grpcBuilder = null;
+    private static final String HTTP_SCHEMA_KEY = "http";
 
     /**
      * Creates a MicroservicesRunner instance which will be used for deploying microservices. Allows specifying
@@ -116,8 +117,8 @@ public class MicroservicesRunner {
             TransportsConfiguration transportsConfiguration = ConfigurationBuilder.getInstance().getConfiguration();
             if (transportsConfiguration != null) {
                 Optional<ListenerConfiguration> configuration = transportsConfiguration.getListenerConfigurations()
-                        .stream().filter(listenerConfiguration -> "http".equals(listenerConfiguration.getScheme()))
-                        .findFirst();
+                        .stream().filter(listenerConfiguration -> HTTP_SCHEMA_KEY.equals(listenerConfiguration
+                                .getScheme())).findFirst();
                 port = configuration.isPresent() ? configuration.get().getPort() : port;
             }
             grpcBuilder = new ServerBuilder(port);

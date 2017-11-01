@@ -28,9 +28,9 @@ import org.wso2.msf4j.grpc.exception.GrpcServerException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * gRPC service Implementation.
@@ -41,8 +41,7 @@ public class ServerBuilder {
     public static final int DEFAULT_PORT = 8080;
     public static final String PROTO_SERVICE_METHOD = "getProtoService";
     private io.grpc.ServerBuilder serverBuilder = null;
-    private final List<Object> serviceList = new ArrayList<Object>();;
-    private Class protoType;
+    private final Map<Class, Object> serviceMap = new HashMap<Class, Object>();;
     private Server server = null;
     private static final Logger log = LoggerFactory.getLogger(ServerBuilder.class);
 
@@ -53,8 +52,7 @@ public class ServerBuilder {
     public ServerBuilder addService(Object... microservice) {
         Arrays.asList(microservice).forEach(service -> {
             try {
-                this.serviceList.add(service);
-                this.addProtoType(service);
+                serviceMap.put(getProtoType(service), service);
             } catch (GrpcServerException e) {
                 log.error("Error while registering migRPC proto service class is not set in microservice: " +
                         microservice.getClass().getName());
@@ -63,36 +61,44 @@ public class ServerBuilder {
         return this;
     }
 
-    private ServerBuilder addProtoType(Object service) throws GrpcServerException {
+    private Class getProtoType(Object service) throws GrpcServerException {
         try {
             Method method = service.getClass().getDeclaredMethod(PROTO_SERVICE_METHOD, null);
             method.setAccessible(true);
-            this.protoType = (Class<?>) method.invoke(service);
-            return this;
+            Class protoType = (Class<?>) method.invoke(service);
+            method.setAccessible(false);
+            return protoType;
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             throw new GrpcServerException("Error while initializing Grpc service.", e);
         }
     }
 
     public ServerBuilder register() throws GrpcServerException {
-        if (protoType == null) {
-            throw new GrpcServerException("gRPC service proto file definition is undefined. You need to set proto " +
-                    "class to setup gRPC service");
-        }
 
-        Descriptors.FileDescriptor fileDescriptor = null;
-        try {
-            Method paramMethod = protoType.getMethod(FILE_DESCRIPTOR_METHOD);
-            fileDescriptor = (Descriptors.FileDescriptor) paramMethod.invoke(null);
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            throw new GrpcServerException("Error while retrieving gRPC file descriptor." + e);
-        }
-        if (fileDescriptor == null) {
-            throw new GrpcServerException("Proto file descriptor cannot be null You need to set proto class to " +
-                    "setup gRPC service");
-        }
+        for (Map.Entry<Class, Object> entry : serviceMap.entrySet()) {
+            Class protoType = entry.getKey();
+            Object serviceToInvoke = entry.getValue();
+            String serviceName = serviceToInvoke.getClass().getSimpleName();
+            if (protoType == null) {
+                log.error("gRPC service proto file definition is not exist in service: " + serviceName + ". You need " +
+                        "to set proto class to setup gRPC service");
+                continue;
+            }
 
-        for (Object serviceToInvoke : serviceList) {
+            Descriptors.FileDescriptor fileDescriptor = null;
+            try {
+                Method paramMethod = protoType.getMethod(FILE_DESCRIPTOR_METHOD);
+                fileDescriptor = (Descriptors.FileDescriptor) paramMethod.invoke(null);
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                log.error("Error while retrieving gRPC file descriptor for the service: " + serviceName, e);
+                continue;
+            }
+            if (fileDescriptor == null) {
+                log.error("Proto file descriptor is null for the service " + serviceName + " You need to set proto " +
+                        "class to setup gRPC service");
+                continue;
+            }
+
             Descriptors.ServiceDescriptor serviceDescriptor = fileDescriptor.findServiceByName(serviceToInvoke.getClass
                     ().getSimpleName());
             if (serviceDescriptor == null) {
@@ -112,8 +118,9 @@ public class ServerBuilder {
 
                 Class<?> [] paramTypes = exposedMethod.getParameterTypes();
                 if (paramTypes.length > 1) {
-                    throw new GrpcServerException("cannot handle multiple input parameters. parameter size: " +
-                            paramTypes.length);
+                    log.error("cannot handle multiple input parameters. parameter size: " +
+                            paramTypes.length + " method name: " + exposedMethod.getName());
+                    continue;
                 }
 
                 Descriptors.MethodDescriptor methodDescriptor = serviceDescriptor.findMethodByName(exposedMethod
@@ -138,13 +145,16 @@ public class ServerBuilder {
                             returnMethod.invoke(null));
                 } catch (NoSuchMethodException | ClassNotFoundException |
                         IllegalAccessException | InvocationTargetException e) {
-                    throw new GrpcServerException("Error while retrieving default instance of input and return " +
-                            "message." + e);
+                    log.error("Error while retrieving default instance of input and return " +
+                            "message for the method" + methodName , e);
+                    continue;
                 }
 
                 if (methodDescriptor.toProto().hasServerStreaming()
                         || methodDescriptor.toProto().hasClientStreaming()) {
-                    throw new UnsupportedOperationException("gRPC Streaming services are currently not supported");
+                    log.error("gRPC Streaming services are currently not supported. Hence method " + methodName + " " +
+                            "is not registered");
+                    continue;
                 }
 
                 MethodDescriptor grpcMethodDescriptor = MethodDescriptor.newBuilder().setType(MethodDescriptor

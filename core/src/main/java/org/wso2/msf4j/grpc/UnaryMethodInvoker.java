@@ -115,7 +115,7 @@ public class UnaryMethodInvoker implements UnaryMethod<Object, Object> {
         }
 
         @Override
-        public Object run() throws Exception {
+        public Object run() throws GrpcServerException {
             try {
                 Object paramObject = paramType.newInstance();
                 for (Descriptors.FieldDescriptor fieldDescriptor : fieldDescriptors) {
@@ -150,7 +150,7 @@ public class UnaryMethodInvoker implements UnaryMethod<Object, Object> {
         }
 
         @Override
-        public Object run() throws Exception {
+        public Object run() throws GrpcServerException {
             try {
                 String fieldName = fieldDescriptors.get(0).getName();
                 Field field = request.getClass().getDeclaredField(fieldName + FIELD_SUFFIX);
@@ -175,7 +175,7 @@ public class UnaryMethodInvoker implements UnaryMethod<Object, Object> {
         }
 
         @Override
-        public Object run() throws Exception {
+        public Object run() throws GrpcServerException {
             try {
                 Field[] responseFields = returnType.getDeclaredFields();
                 for (Field field : responseFields) {
@@ -203,7 +203,7 @@ public class UnaryMethodInvoker implements UnaryMethod<Object, Object> {
         }
 
         @Override
-        public Object run() throws Exception {
+        public Object run() throws GrpcServerException {
             try {
                 Field[] returnFields = builderObject.getClass().getDeclaredFields();
                 for (Field field : returnFields) {
