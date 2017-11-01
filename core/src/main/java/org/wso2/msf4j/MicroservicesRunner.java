@@ -101,6 +101,13 @@ public class MicroservicesRunner {
         configureTransport();
     }
 
+    /**
+     * Creates a MicroservicesRunner instance which will be used for deploying microservices as gRPC or REST.
+     * Allows specifying ports on which the microservices in this MicroservicesRunner are deployed.
+     *
+     * @param port The port on which the microservices are exposed
+     * @param isGrpcService flag to determine whether service is deployed as gRPC or REST
+     */
     public MicroservicesRunner(int port, boolean isGrpcService) {
         this.isGrpcService = isGrpcService;
         if (isGrpcService) {
@@ -110,6 +117,14 @@ public class MicroservicesRunner {
         }
     }
 
+    /**
+     * Creates a MicroservicesRunner instance which will take care of initializing Netty transports in the file
+     * pointed to by the System property <code>transports.netty.conf</code>.
+     * <p>
+     * If that System property is not specified, it will start a single Netty transport on port 8080.
+     * <p>
+     * @param isGrpcService flag to determine whether service is deployed as gRPC or REST
+     */
     public MicroservicesRunner(boolean isGrpcService) {
         this.isGrpcService = isGrpcService;
         int port = ServerBuilder.DEFAULT_PORT;

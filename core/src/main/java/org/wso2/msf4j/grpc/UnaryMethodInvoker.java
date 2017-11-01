@@ -40,6 +40,14 @@ public class UnaryMethodInvoker implements UnaryMethod<Object, Object> {
     private final Class returnType;
     private final Descriptors.MethodDescriptor methodDescriptor;
 
+    /**
+     * Creates UnaryMethodInvoker instance.
+     *
+     * @param serviceToInvoke   deployed microservice.
+     * @param method            registered service method
+     * @param methodDescriptor  mapping gRPC method descriptor
+     * @throws GrpcServerException exception when there are multiple input parameters in registered method.
+     */
     public UnaryMethodInvoker(Object serviceToInvoke, Method method, Descriptors.MethodDescriptor methodDescriptor)
             throws GrpcServerException {
         this.serviceToInvoke = serviceToInvoke;

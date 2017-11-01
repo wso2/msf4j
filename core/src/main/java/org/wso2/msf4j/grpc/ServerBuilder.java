@@ -33,22 +33,35 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * gRPC service Implementation.
+ * gRPC service builder initializes the gRPC server. deploys the microservices and starts the relevant transports.
+ *
  */
 public class ServerBuilder {
     private static final String FILE_DESCRIPTOR_METHOD = "getDescriptor";
     private static final String DEFAULT_INSTANCE_METHOD = "getDefaultInstance";
     public static final int DEFAULT_PORT = 8080;
-    public static final String PROTO_SERVICE_METHOD = "getProtoService";
+    private static final String PROTO_SERVICE_METHOD = "getProtoService";
     private io.grpc.ServerBuilder serverBuilder = null;
     private final Map<Class, Object> serviceMap = new HashMap<Class, Object>();;
     private Server server = null;
     private static final Logger log = LoggerFactory.getLogger(ServerBuilder.class);
 
+    /**
+     * Creates a Server Builder instance which will be used for deploying gRPC services. Allows specifying
+     * ports on which the microservices in this Builder are deployed.
+     *
+     * @param port The port on which the microservices are exposed
+     */
     public ServerBuilder(int port) {
         serverBuilder = io.grpc.ServerBuilder.forPort(port);
     }
 
+    /**
+     * Deploy a microservice.
+     *
+     * @param microservice The microservice which is to be deployed
+     * @return this Server Builder object
+     */
     public ServerBuilder addService(Object... microservice) {
         Arrays.asList(microservice).forEach(service -> {
             try {
@@ -73,6 +86,11 @@ public class ServerBuilder {
         }
     }
 
+    /**
+     * Register all microservices in Server.
+     * @return  this Server Builder object
+     * @throws GrpcServerException exception when there is an error in registering microservices.
+     */
     public ServerBuilder register() throws GrpcServerException {
 
         for (Map.Entry<Class, Object> entry : serviceMap.entrySet()) {
@@ -174,6 +192,10 @@ public class ServerBuilder {
     }
 
 
+    /**
+     * Start this gRPC server. This will startup all the gRPC services.
+     * @throws GrpcServerException exception when there is an error in starting the server.
+     */
     public void start() throws GrpcServerException {
         if (server != null) {
             try {
