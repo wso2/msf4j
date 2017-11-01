@@ -21,12 +21,15 @@ import org.wso2.carbon.messaging.ServerConnector;
 import org.wso2.carbon.messaging.ServerConnectorProvider;
 import org.wso2.carbon.messaging.exceptions.ServerConnectorException;
 import org.wso2.carbon.transport.http.netty.common.Constants;
+import org.wso2.carbon.transport.http.netty.config.ConfigurationBuilder;
 import org.wso2.carbon.transport.http.netty.config.ListenerConfiguration;
 import org.wso2.carbon.transport.http.netty.config.TransportProperty;
 import org.wso2.carbon.transport.http.netty.config.TransportsConfiguration;
 import org.wso2.carbon.transport.http.netty.listener.HTTPServerConnector;
 import org.wso2.carbon.transport.http.netty.listener.HTTPServerConnectorProvider;
 import org.wso2.carbon.transport.http.netty.listener.ServerConnectorController;
+import org.wso2.msf4j.grpc.ServerBuilder;
+import org.wso2.msf4j.grpc.exception.GrpcServerException;
 import org.wso2.msf4j.interceptor.RequestInterceptor;
 import org.wso2.msf4j.interceptor.ResponseInterceptor;
 import org.wso2.msf4j.internal.DataHolder;
@@ -40,6 +43,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.Set;
 import javax.ws.rs.Path;
@@ -69,6 +73,12 @@ public class MicroservicesRunner {
     private EndpointsRegistryImpl endpointsRegistry = EndpointsRegistryImpl.getInstance();
 
     /**
+     * gRPC Implementation.
+     */
+    private boolean isGrpcService = false;
+    private ServerBuilder grpcBuilder = null;
+
+    /**
      * Creates a MicroservicesRunner instance which will be used for deploying microservices. Allows specifying
      * ports on which the microservices in this MicroservicesRunner are deployed.
      *
@@ -90,6 +100,32 @@ public class MicroservicesRunner {
         configureTransport();
     }
 
+    public MicroservicesRunner(int port, boolean isGrpcService) {
+        this.isGrpcService = isGrpcService;
+        if (isGrpcService) {
+            grpcBuilder = new ServerBuilder(port);
+        } else {
+            configureTransport(port);
+        }
+    }
+
+    public MicroservicesRunner(boolean isGrpcService) {
+        this.isGrpcService = isGrpcService;
+        int port = ServerBuilder.DEFAULT_PORT;
+        if (isGrpcService) {
+            TransportsConfiguration transportsConfiguration = ConfigurationBuilder.getInstance().getConfiguration();
+            if (transportsConfiguration != null) {
+                Optional<ListenerConfiguration> configuration = transportsConfiguration.getListenerConfigurations()
+                        .stream().filter(listenerConfiguration -> "http".equals(listenerConfiguration.getScheme()))
+                        .findFirst();
+                port = configuration.isPresent() ? configuration.get().getPort() : port;
+            }
+            grpcBuilder = new ServerBuilder(port);
+        } else {
+            configureTransport();
+        }
+    }
+
     /**
      * Deploy a microservice.
      *
@@ -98,7 +134,11 @@ public class MicroservicesRunner {
      */
     public MicroservicesRunner deploy(Object... microservice) {
         checkState();
-        msRegistry.addService(microservice);
+        if (isGrpcService) {
+            grpcBuilder.addService(microservice);
+        } else {
+            msRegistry.addService(microservice);
+        }
         return this;
     }
 
@@ -110,6 +150,10 @@ public class MicroservicesRunner {
      * @return this MicroservicesRunner object
      */
     public MicroservicesRunner deploy(String basePath, Object microservice) {
+        if (isGrpcService) {
+            throw new UnsupportedOperationException("gRPC services cannot register with the base path. only support " +
+                    "in REST microservices");
+        }
         Map<String, Object> valuesMap = new HashMap<>();
         valuesMap.put("value", basePath);
         RuntimeAnnotations.putAnnotation(microservice.getClass(), Path.class, valuesMap);
@@ -123,6 +167,9 @@ public class MicroservicesRunner {
      * @return this MicroservicesRunner object.
      */
     public MicroservicesRunner deployWebSocketEndpoint(Object webSocketEndpoint) {
+        if (isGrpcService) {
+            throw new UnsupportedOperationException("gRPC streaming services is currently not supported");
+        }
         endpointsRegistry.addEndpoint(webSocketEndpoint);
         return this;
     }
@@ -144,6 +191,10 @@ public class MicroservicesRunner {
      * @param requestInterceptor interceptor instances
      */
     public MicroservicesRunner addGlobalRequestInterceptor(RequestInterceptor... requestInterceptor) {
+        if (isGrpcService) {
+            throw new UnsupportedOperationException("gRPC service request interceptor is currently not " +
+                    "supported");
+        }
         msRegistry.addGlobalRequestInterceptor(requestInterceptor);
         return this;
     }
@@ -154,6 +205,10 @@ public class MicroservicesRunner {
      * @param responseInterceptor interceptor instances
      */
     public MicroservicesRunner addGlobalResponseInterceptor(ResponseInterceptor... responseInterceptor) {
+        if (isGrpcService) {
+            throw new UnsupportedOperationException("gRPC service response interceptor is currently not " +
+                    "supported");
+        }
         msRegistry.addGlobalResponseInterceptor(responseInterceptor);
         return this;
     }
@@ -167,6 +222,10 @@ public class MicroservicesRunner {
      * @deprecated
      */
     public MicroservicesRunner addInterceptor(Interceptor... interceptor) {
+        if (isGrpcService) {
+            throw new UnsupportedOperationException("gRPC service interceptor is currently not " +
+                    "supported");
+        }
         msRegistry.addGlobalRequestInterceptor(interceptor);
         msRegistry.addGlobalResponseInterceptor(interceptor);
         return this;
@@ -179,6 +238,10 @@ public class MicroservicesRunner {
      * @return this MicroservicesRunner object
      */
     public MicroservicesRunner addExceptionMapper(ExceptionMapper... exceptionMapper) {
+        if (isGrpcService) {
+            throw new UnsupportedOperationException("gRPC service exception mapping is currently not " +
+                    "supported");
+        }
         checkState();
         msRegistry.addExceptionMapper(exceptionMapper);
         return this;
@@ -226,18 +289,18 @@ public class MicroservicesRunner {
         ServiceLoader<ServerConnectorProvider> serverConnectorProviderLoader =
                 ServiceLoader.load(ServerConnectorProvider.class);
         serverConnectorProviderLoader.
-                                             forEach(serverConnectorProvider -> {
-                                                 if (serverConnectorProvider instanceof HTTPServerConnectorProvider) {
-                                                     serverConnectors
-                                                             .addAll(serverConnectorProvider.initializeConnectors());
-                                                     serverConnectors.forEach(serverConnector -> {
-                                                         serverConnector
-                                                                 .setMessageProcessor(new MSF4JMessageProcessor());
-                                                         DataHolder.getInstance().getMicroservicesRegistries()
-                                                                   .put(serverConnector.getId(), msRegistry);
-                                                     });
-                                                 }
-                                             });
+                forEach(serverConnectorProvider -> {
+                    if (serverConnectorProvider instanceof HTTPServerConnectorProvider) {
+                        serverConnectors
+                                .addAll(serverConnectorProvider.initializeConnectors());
+                        serverConnectors.forEach(serverConnector -> {
+                            serverConnector
+                                    .setMessageProcessor(new MSF4JMessageProcessor());
+                            DataHolder.getInstance().getMicroservicesRegistries()
+                                    .put(serverConnector.getId(), msRegistry);
+                        });
+                    }
+                });
     }
 
     private void checkState() {
@@ -250,26 +313,41 @@ public class MicroservicesRunner {
      * Start this Microservices runner. This will startup all the HTTP transports.
      */
     public void start() {
-        msRegistry.getSessionManager().init();
-        handleServiceLifecycleMethods();
-        serverConnectors.forEach(serverConnector -> {
+        if (isGrpcService) {
             try {
-                serverConnector.start();
-                isStarted = true;
-                log.info("Microservices server started in " + (System.currentTimeMillis() - startTime) + "ms");
-            } catch (ServerConnectorException e) {
-                log.error("Error while starting the Microservices server. " + e.getMessage(), e);
-                throw new RuntimeException("Error while starting the Microservices server.", e);
+                grpcBuilder.register().start();
+                log.info("gRPC server server started in " + (System.currentTimeMillis() - startTime) + "ms");
+                grpcBuilder.blockUntilShutdown();
+            } catch (GrpcServerException | InterruptedException e) {
+                throw new RuntimeException("Error while starting the gRPC server.", e);
             }
-        });
+        } else {
+            msRegistry.getSessionManager().init();
+            handleServiceLifecycleMethods();
+            serverConnectors.forEach(serverConnector -> {
+                try {
+                    serverConnector.start();
+                    isStarted = true;
+                    log.info("Microservices server started in " + (System.currentTimeMillis() - startTime) + "ms");
+                } catch (ServerConnectorException e) {
+                    log.error("Error while starting the Microservices server. " + e.getMessage(), e);
+                    throw new RuntimeException("Error while starting the Microservices server.", e);
+                }
+            });
+        }
     }
 
     /**
      * Stop this Microservices runner. This will stop all the HTTP Transports.
      */
     public void stop() {
-        serverConnectors.forEach(serverConnector -> ((HTTPServerConnector) serverConnector).stop());
-        log.info("Microservices server stopped");
+        if (isGrpcService) {
+            grpcBuilder.stop();
+            log.info("gRPC server stopped");
+        } else {
+            serverConnectors.forEach(serverConnector -> ((HTTPServerConnector) serverConnector).stop());
+            log.info("Microservices server stopped");
+        }
     }
 
     /**
