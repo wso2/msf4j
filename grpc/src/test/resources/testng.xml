@@ -20,6 +20,5 @@ limitations under the License.
 <suite name="gRPC_MSF4J_Test-Suite">
 
     <test name="grpc-server-unit-tests" preserve-order="true" parallel="false">
-
     </test>
 </suite>

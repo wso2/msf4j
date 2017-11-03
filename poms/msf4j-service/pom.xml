@@ -161,11 +161,6 @@
                 <artifactId>wagon-ssh</artifactId>
                 <version>${maven.wagon.ssh.version}</version>
             </extension>
-            <extension>
-                <groupId>kr.motd.maven</groupId>
-                <artifactId>os-maven-plugin</artifactId>
-                <version>${os.maven.plugin.version}</version>
-            </extension>
         </extensions>
         <pluginManagement>
             <plugins>
