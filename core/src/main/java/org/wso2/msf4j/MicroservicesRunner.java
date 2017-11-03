@@ -41,6 +41,7 @@ import org.wso2.msf4j.util.RuntimeAnnotations;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -78,6 +79,7 @@ public class MicroservicesRunner {
     private boolean isGrpcService = false;
     private ServerBuilder grpcBuilder = null;
     private static final String HTTP_SCHEMA_KEY = "http";
+    private static final int DEFAULT_GRPC_PORT = 8080;
 
     /**
      * Creates a MicroservicesRunner instance which will be used for deploying microservices. Allows specifying
@@ -111,7 +113,14 @@ public class MicroservicesRunner {
     public MicroservicesRunner(int port, boolean isGrpcService) {
         this.isGrpcService = isGrpcService;
         if (isGrpcService) {
-            grpcBuilder = new ServerBuilder(port);
+            ServiceLoader<ServerBuilder> serverBuilders = ServiceLoader.load(ServerBuilder.class);
+            Iterator<ServerBuilder> iterator = serverBuilders.iterator();
+            grpcBuilder = iterator.next();
+            if (grpcBuilder == null) {
+                throw new RuntimeException("Error while registering gRPC server. Server builder service is not " +
+                        "registered");
+            }
+            grpcBuilder.init(port);
         } else {
             configureTransport(port);
         }
@@ -127,7 +136,7 @@ public class MicroservicesRunner {
      */
     public MicroservicesRunner(boolean isGrpcService) {
         this.isGrpcService = isGrpcService;
-        int port = ServerBuilder.DEFAULT_PORT;
+        int port = DEFAULT_GRPC_PORT;
         if (isGrpcService) {
             TransportsConfiguration transportsConfiguration = ConfigurationBuilder.getInstance().getConfiguration();
             if (transportsConfiguration != null) {
@@ -136,7 +145,15 @@ public class MicroservicesRunner {
                                 .getScheme())).findFirst();
                 port = configuration.isPresent() ? configuration.get().getPort() : port;
             }
-            grpcBuilder = new ServerBuilder(port);
+
+            ServiceLoader<ServerBuilder> serverBuilders = ServiceLoader.load(ServerBuilder.class);
+            Iterator<ServerBuilder> iterator = serverBuilders.iterator();
+            grpcBuilder = iterator.next();
+            if (grpcBuilder == null) {
+                throw new RuntimeException("Error while registering gRPC server. Server builder service is not " +
+                        "registered");
+            }
+            grpcBuilder.init(port);
         } else {
             configureTransport();
         }
@@ -331,7 +348,8 @@ public class MicroservicesRunner {
     public void start() {
         if (isGrpcService) {
             try {
-                grpcBuilder.register().start();
+                grpcBuilder.register();
+                grpcBuilder.start();
                 log.info("gRPC server server started in " + (System.currentTimeMillis() - startTime) + "ms");
                 grpcBuilder.blockUntilShutdown();
             } catch (GrpcServerException | InterruptedException e) {
