@@ -71,7 +71,7 @@ and reporting to WSO2 DAS. The HTTP Monitoring Interceptor sends events for each
 Run the JAR file in target directory.
 
 ```
-java -jar target/http-monitoring*.jar
+java -Dmsf4j.conf=<MSF4J Deployment YAML configuration path> -jar target/http-monitoring*.jar
 ```
 
 ## How to test the sample
