@@ -14,12 +14,13 @@
 
 # This is the main configuration file for HTTP Monitoring
 
-enabled: true
+wso2.http.monitoring:
+  enabled: true
 
-das:
-  receiverURL: tcp://localhost:7611
-  # authURL: ssl://localhost:7711
-  type: thrift
-  username: admin
-  password: admin
-  dataAgentConfigPath: data-agent-config.xml
+  das:
+    receiverURL: tcp://localhost:7611
+    # authURL: ssl://localhost:7711
+    type: thrift
+    username: admin
+    password: admin
+    dataAgentConfigPath: data-agent-config.xml

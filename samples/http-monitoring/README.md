@@ -4,12 +4,12 @@ This sample shows the use of HTTP Monitoring Interceptor.
 
 HTTP Monitoring events are published to WSO2 Data Analytics Server (DAS).
 
-The HTTP Monitoring Interceptor is configured using a YAML file. The default "http-monitoring.yml" is included in final the JAR.
+The HTTP Monitoring Interceptor is configured using a YAML file. The default "http-monitoring.yaml" is included in final the JAR.
 
-The HTTP Monitoring is disabled by default. In this sample, there is a custom http-monitoring.yml file is added to enable the 
+The HTTP Monitoring is disabled by default. In this sample, there is a custom http-monitoring.yaml file is added to enable the 
 Data Publisher to publish HTTP events to WSO2 DAS.
 
-This samples also uses Metrics Interceptor and the Metrics is configured to publish events to WSO2 DAS. There is a metrics.yml 
+This samples also uses Metrics Interceptor and the Metrics is configured to publish events to WSO2 DAS. There is a metrics.yaml 
 file added to configure the Metrics DAS Reporter.
 
 See also the [Metrics sample](../metrics).
