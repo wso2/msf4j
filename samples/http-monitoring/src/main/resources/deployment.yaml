@@ -1,4 +1,4 @@
-# Copyright 2016 WSO2 Inc. (http://wso2.org)
+# Copyright 2017 WSO2 Inc. (http://wso2.org)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,33 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This is the main configuration file for metrics
-
-enabled: true
-
-jmx:
-  registerMBean: true
-  name: org.wso2.msf4j:type=Metrics
-
-reporting:
-  jmx:
-    - name: JMX
-      enabled: true
-
-  console:
-    - name: Console
-      enabled: true
-      pollingPeriod: 30
-
-  csv:
-    - name: CSV
-      enabled: true
-      location: metrics
-      pollingPeriod: 30
-
-  slf4j:
-    - name: SLF4J
-      enabled: true
-      loggerName: metrics
-      pollingPeriod: 120
-
+  # MSF4J Analytics configuration
+wso2.msf4j.analytics.configuration:
+    # Whether HTTP Monitoring is enables or not
+  enabled: false
+    # DAS configuration
+  das:
+      # The type used with Data Publisher
+    type: thrift
+      # Data Receiver URL used by the Data Publisher
+    receiverURL: tcp://localhost:7611
+    username: admin
+    password: admin
+      # The path for Data Bridge Agent configuration
+    dataAgentConfigPath: data-agent-config.xml
