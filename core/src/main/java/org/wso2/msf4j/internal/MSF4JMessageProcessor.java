@@ -16,7 +16,6 @@
 
 package org.wso2.msf4j.internal;
 
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.config.ConfigProviderFactory;
@@ -57,7 +56,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -100,34 +98,32 @@ public class MSF4JMessageProcessor implements CarbonMessageProcessor {
             }
             //Standalone mode
             String deploymentYamlPath = System.getProperty(MSF4JConstants.DEPLOYMENT_YAML_SYS_PROPERTY);
-            if (deploymentYamlPath == null || deploymentYamlPath.isEmpty()) {
-                log.info("System property '" + MSF4JConstants.DEPLOYMENT_YAML_SYS_PROPERTY +
-                         "' is not set. Default deployment.yaml file will be used.");
-                URL deploymentYamlUrl =
-                        MSF4JMessageProcessor.class.getResource("/" + MSF4JConstants.DEPLOYMENT_YAML_FILE);
-                try {
-                    FileUtils.copyURLToFile(deploymentYamlUrl, Paths.get(MSF4JConstants.DEPLOYMENT_YAML_FILE).toFile());
-                    deploymentYamlPath = Paths.get(MSF4JConstants.DEPLOYMENT_YAML_FILE).toString();
-                } catch (IOException e) {
-                    throw new RuntimeException("Error while getting default deployment.yaml", e);
-                }
-            } else if (!Files.exists(Paths.get(deploymentYamlPath))) {
-                throw new RuntimeException("Couldn't find " + deploymentYamlPath);
-            }
 
             try {
-                configProvider = ConfigProviderFactory.getConfigProvider(Paths.get(deploymentYamlPath), null);
-                DataHolder.getInstance().setConfigProvider(configProvider);
+                if (deploymentYamlPath != null && Files.exists(Paths.get(deploymentYamlPath))) {
+                    configProvider = ConfigProviderFactory.getConfigProvider(Paths.get(deploymentYamlPath), null);
+                    DataHolder.getInstance().setConfigProvider(configProvider);
+                } else {
+                    log.warn("MSF4J Configuration file is not provided. either system property '" + MSF4JConstants
+                            .DEPLOYMENT_YAML_SYS_PROPERTY + "' is not set or provided file path not exist. Hence " +
+                            "using default configuration.");
+                }
             } catch (ConfigurationException e) {
                 throw new RuntimeException("Error loading deployment.yaml Configuration", e);
             }
         }
 
         try {
-            msf4JConfig = DataHolder.getInstance().getConfigProvider().getConfigurationObject(MSF4JConfig.class);
+            if (configProvider != null) {
+                msf4JConfig = DataHolder.getInstance().getConfigProvider().getConfigurationObject(MSF4JConfig.class);
+            } else {
+                msf4JConfig = MSF4JConfig.class.newInstance();
+            }
         } catch (ConfigurationException e) {
             throw new RuntimeException("Error while loading " + MSF4JConfig.class.getName() + " from config provider",
                                        e);
+        } catch (IllegalAccessException | InstantiationException e) {
+            throw new RuntimeException("Error while creating instance of the class " + MSF4JConfig.class.getName(), e);
         }
 
         executorService = Executors.newFixedThreadPool(msf4JConfig.getThreadCount(), new MSF4JThreadFactory(
