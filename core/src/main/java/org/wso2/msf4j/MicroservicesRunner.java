@@ -63,10 +63,10 @@ public class MicroservicesRunner {
      */
     private static final String MSF4J_HOST = "msf4j.host";
     protected List<ServerConnector> serverConnectors = new ArrayList<>();
+    private EndpointsRegistryImpl endpointsRegistry = EndpointsRegistryImpl.getInstance();
+    private MicroservicesRegistryImpl msRegistry = new MicroservicesRegistryImpl();
     private long startTime = System.currentTimeMillis();
     private boolean isStarted;
-    private MicroservicesRegistryImpl msRegistry = new MicroservicesRegistryImpl();
-    private EndpointsRegistryImpl endpointsRegistry = EndpointsRegistryImpl.getInstance();
 
     /**
      * Creates a MicroservicesRunner instance which will be used for deploying microservices. Allows specifying
@@ -225,19 +225,20 @@ public class MicroservicesRunner {
     protected void configureTransport() {
         ServiceLoader<ServerConnectorProvider> serverConnectorProviderLoader =
                 ServiceLoader.load(ServerConnectorProvider.class);
+        MSF4JMessageProcessor messageProcessor = new MSF4JMessageProcessor();
         serverConnectorProviderLoader.
-                                             forEach(serverConnectorProvider -> {
-                                                 if (serverConnectorProvider instanceof HTTPServerConnectorProvider) {
-                                                     serverConnectors
-                                                             .addAll(serverConnectorProvider.initializeConnectors());
-                                                     serverConnectors.forEach(serverConnector -> {
-                                                         serverConnector
-                                                                 .setMessageProcessor(new MSF4JMessageProcessor());
-                                                         DataHolder.getInstance().getMicroservicesRegistries()
-                                                                   .put(serverConnector.getId(), msRegistry);
-                                                     });
-                                                 }
-                                             });
+                forEach(serverConnectorProvider -> {
+                    if (serverConnectorProvider instanceof HTTPServerConnectorProvider) {
+                        serverConnectors
+                                .addAll(serverConnectorProvider.initializeConnectors());
+                        serverConnectors.forEach(serverConnector -> {
+                            serverConnector
+                                    .setMessageProcessor(messageProcessor);
+                            DataHolder.getInstance().getMicroservicesRegistries()
+                                    .put(serverConnector.getId(), msRegistry);
+                        });
+                    }
+                });
     }
 
     private void checkState() {
