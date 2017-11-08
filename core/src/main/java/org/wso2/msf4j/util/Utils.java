@@ -114,4 +114,14 @@ public class Utils {
         cloneSet2.retainAll(cloneSet1);
         return cloneSet2.size();
     }
+
+    /**
+     * Get the resource path without leading or trailing '/' and with multiple '/' reduced to one '/'
+     *
+     * @param resourcePath The resource path
+     * @return The normalized resource path
+     */
+    public static final String normalizePath(String resourcePath) {
+        return resourcePath.replaceAll("/+", "/").replaceAll("^/|/$", "");
+    }
 }

@@ -223,10 +223,7 @@ public class HttpMethodInfo {
                     if (Modifier.isPublic(method.getModifiers()) && Util.isHttpMethodAvailable(method)) {
                         String relativePath = "";
                         if (method.getAnnotation(Path.class) != null) {
-                            relativePath = method.getAnnotation(Path.class).value();
-                        }
-                        if (relativePath.startsWith("/")) {
-                            relativePath = relativePath.substring(1);
+                            relativePath = Utils.normalizePath(method.getAnnotation(Path.class).value());
                         }
                         String absolutePath = relativePath.isEmpty() ? destination.getDestination().getPath() :
                                               String.format("%s/%s", destination.getDestination().getPath(),
@@ -238,10 +235,7 @@ public class HttpMethodInfo {
                         destination.getDestination().addSubResources(subResKey, resourceModel);
                     } else if (Modifier.isPublic(method.getModifiers()) && method.getAnnotation(Path.class) != null) {
                         // Sub resource locator method
-                        String relativePath = method.getAnnotation(Path.class).value();
-                        if (relativePath.startsWith("/")) {
-                            relativePath = relativePath.substring(1);
-                        }
+                        String relativePath = Utils.normalizePath(method.getAnnotation(Path.class).value());
                         String absolutePath = relativePath.isEmpty() ? destination.getDestination().getPath() :
                                               String.format("%s/%s", destination.getDestination().getPath(),
                                                             relativePath);

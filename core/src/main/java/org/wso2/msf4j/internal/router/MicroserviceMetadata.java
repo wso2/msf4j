@@ -74,9 +74,6 @@ public final class MicroserviceMetadata {
                 } else if (Modifier.isPublic(method.getModifiers()) && method.getAnnotation(Path.class) != null) {
                     // Sub resource locator method
                     String relativePath = method.getAnnotation(Path.class).value();
-                    if (relativePath.startsWith("/")) {
-                        relativePath = relativePath.substring(1);
-                    }
                     String absolutePath = String.format("%s/%s", basePath, relativePath);
                     patternRouter.add(absolutePath, new HttpResourceModel(absolutePath, method, service, true));
                 } else {
@@ -145,7 +142,7 @@ public final class MicroserviceMetadata {
                                                                          List<String> acceptHeader)
             throws HandlerException {
         try {
-            String path = URI.create(uri).normalize().getPath();
+            String path = Utils.normalizePath(URI.create(uri).normalize().getPath());
 
             List<PatternPathRouter.RoutableDestination<HttpResourceModel>>
                     routableDestinations = patternRouter.getDestinations(path);
