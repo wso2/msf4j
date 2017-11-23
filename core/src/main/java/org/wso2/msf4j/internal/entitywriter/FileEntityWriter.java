@@ -20,8 +20,6 @@ import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.DefaultHttpContent;
 import io.netty.handler.codec.http.DefaultLastHttpContent;
 import org.apache.commons.io.FilenameUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.internal.mime.MimeMapper;
 import org.wso2.msf4j.internal.mime.MimeMappingException;

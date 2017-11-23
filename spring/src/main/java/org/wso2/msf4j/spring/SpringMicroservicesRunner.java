@@ -23,11 +23,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
+import org.wso2.msf4j.MicroservicesRunner;
 import org.wso2.msf4j.internal.DataHolder;
 import org.wso2.msf4j.spring.transport.HTTPSTransportConfig;
-import org.wso2.transport.http.netty.config.ListenerConfiguration;
-import org.wso2.msf4j.MicroservicesRunner;
 import org.wso2.msf4j.spring.transport.TransportConfig;
+import org.wso2.transport.http.netty.common.Util;
+import org.wso2.transport.http.netty.config.ListenerConfiguration;
 import org.wso2.transport.http.netty.config.Parameter;
 import org.wso2.transport.http.netty.contract.HttpWsConnectorFactory;
 import org.wso2.transport.http.netty.contract.ServerConnector;
@@ -113,7 +114,8 @@ public class SpringMicroservicesRunner extends MicroservicesRunner implements Ap
 
         //Add ListenerConfigurations if available on Spring Configuration
         listeners.forEach(listenerConfiguration -> {
-            DataHolder.getInstance().getMicroservicesRegistries().put(listenerConfiguration.getId(), getMsRegistry());
+            DataHolder.getInstance().getMicroservicesRegistries().put(Util.createServerConnectorID
+                    (listenerConfiguration.getHost(), listenerConfiguration.getPort()), getMsRegistry());
             ServerConnector serverConnector =
                     connectorFactory.createServerConnector(bootstrapConfiguration, listenerConfiguration);
             serverConnectors.add(serverConnector);
@@ -123,7 +125,8 @@ public class SpringMicroservicesRunner extends MicroservicesRunner implements Ap
         for (TransportConfig transportConfig : transportConfigs) {
             if (transportConfig.isEnabled()) {
                 ListenerConfiguration listenerConfiguration = createListenerConfiguration(transportConfig);
-                DataHolder.getInstance().getMicroservicesRegistries().put(transportConfig.getId(), getMsRegistry());
+                DataHolder.getInstance().getMicroservicesRegistries().put(Util.createServerConnectorID
+                        (listenerConfiguration.getHost(), listenerConfiguration.getPort()), getMsRegistry());
                 ServerConnector serverConnector =
                         connectorFactory.createServerConnector(bootstrapConfiguration, listenerConfiguration);
                 serverConnectors.add(serverConnector);
