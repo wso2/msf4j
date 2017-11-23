@@ -23,7 +23,7 @@ import org.wso2.transport.http.netty.contract.PortBindingEventListener;
 /**
  * An implementation of the LifeCycleEventListener. This can be used to listen to the HTTP connector life cycle events.
  *
- * @since 0.94
+ * @since 2.5.0
  */
 public class HttpConnectorPortBindingListener implements PortBindingEventListener {
 
