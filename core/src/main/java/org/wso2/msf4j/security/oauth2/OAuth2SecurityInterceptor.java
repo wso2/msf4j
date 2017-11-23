@@ -17,11 +17,11 @@ package org.wso2.msf4j.security.oauth2;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import io.netty.handler.codec.http.HttpHeaders;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.messaging.Headers;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.interceptor.RequestInterceptor;
@@ -73,7 +73,7 @@ public class OAuth2SecurityInterceptor implements RequestInterceptor {
         SecurityErrorCode errorCode;
 
         try {
-            Headers headers = request.getHeaders();
+            HttpHeaders headers = request.getHeaders();
             if (headers != null && headers.contains(AUTHORIZATION_HTTP_HEADER)) {
                 String authHeader = headers.get(AUTHORIZATION_HTTP_HEADER);
                 return validateToken(authHeader);

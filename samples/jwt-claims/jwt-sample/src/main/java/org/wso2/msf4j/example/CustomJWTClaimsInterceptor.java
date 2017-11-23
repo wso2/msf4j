@@ -18,6 +18,7 @@ package org.wso2.msf4j.example;
 
 import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import io.netty.handler.codec.http.HttpHeaders;
 import org.wso2.carbon.messaging.Headers;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
@@ -33,7 +34,7 @@ public class CustomJWTClaimsInterceptor implements RequestInterceptor {
 
     @Override
     public boolean interceptRequest(Request request, Response response) throws Exception {
-        Headers headers = request.getHeaders();
+        HttpHeaders headers = request.getHeaders();
         if (headers != null) {
             String jwtHeader = headers.get(JWT_HEADER);
             if (jwtHeader != null) {

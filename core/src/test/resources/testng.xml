@@ -74,7 +74,7 @@ limitations under the License.
         <classes>
             <class name="org.wso2.msf4j.websocket.ValidatorTest"/>
             <class name="org.wso2.msf4j.websocket.EndpointRegistryTest"/>
-            <class name="org.wso2.msf4j.websocket.DeploymentTest"/>
+<!--            <class name="org.wso2.msf4j.websocket.DeploymentTest"/>-->
         </classes>
     </test>
 

@@ -38,10 +38,11 @@ public class HostBindingTest {
      * Testing happy path.
      */
     @Test
-    public void testHostForMicroserviceRunner() {
+    public void testHostForMicroserviceRunner() throws InterruptedException {
         MicroservicesRunner microservicesRunner = new MicroservicesRunner(3333);
         microservicesRunner.deploy(testMicroservice);
         microservicesRunner.start();
+        Thread.sleep(100);
         Assert.assertTrue(this.isHostPortAvailable("127.0.0.1", 3333),
                                                                 "Unable to connect to service started on 127.0.0.1");
         Assert.assertTrue(this.isHostPortAvailable("localhost", 3333),
@@ -54,11 +55,12 @@ public class HostBindingTest {
      * accessed through any other network ip.
      */
     @Test
-    public void testDifferentHostForMicroserviceRunner() throws SocketException {
+    public void testDifferentHostForMicroserviceRunner() throws SocketException, InterruptedException {
         System.setProperty("msf4j.host", "127.0.0.1");
         MicroservicesRunner microservicesRunner = new MicroservicesRunner(4444);
         microservicesRunner.deploy(testMicroservice);
         microservicesRunner.start();
+        Thread.sleep(100);
         Assert.assertTrue(this.isHostPortAvailable("127.0.0.1", 4444),
                                                                 "Unable to connect to service started on 127.0.0.1");
         Assert.assertTrue(this.isHostPortAvailable("localhost", 4444),

@@ -16,6 +16,7 @@
 
 package org.wso2.msf4j.internal.router;
 
+import io.netty.handler.codec.http.HttpContent;
 import org.apache.commons.io.FileCleaningTracker;
 import org.apache.commons.io.FileDeleteStrategy;
 import org.wso2.msf4j.HttpStreamer;
@@ -74,6 +75,7 @@ public class HttpResourceModelProcessor {
     private Map<String, String> formParamContentType = new HashMap<>();
     private static Path tempRepoPath = Paths.get(System.getProperty("java.io.tmpdir"), "msf4jtemp");
     private Path tmpPathForRequest;
+    private HttpContent httpContent = null;
     // Temp File cleaning thread
     private static FileCleaningTracker fileCleaningTracker = new FileCleaningTracker();
     private static final String FILEINFO_POSTFIX = "file.info";
@@ -152,11 +154,16 @@ public class HttpResourceModelProcessor {
             throw new HandlerException(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR,
                     String.format("Error in executing request: %s %s", request.getHttpMethod(),
                             request.getUri()), e);
+        } finally {
+            if (httpContent != null) {
+                httpContent.release();
+            }
         }
     }
 
     private void createObject(Request request, Object[] args, int idx, HttpResourceModel.ParameterInfo<?> paramInfo) {
-        ByteBuffer fullContent = BufferUtil.merge(request.getFullMessageBody());
+        httpContent = request.getHttpCarbonMessage().getHttpContent();
+        ByteBuffer fullContent = BufferUtil.merge(Arrays.asList(httpContent.content().nioBuffers()));
         Type paramType = paramInfo.getParameterType();
         args[idx] =
                 BeanConverter.getConverter((request.getContentType() != null) ? request.getContentType() :
@@ -246,7 +253,8 @@ public class HttpResourceModelProcessor {
                 }
             }
         } else if (MediaType.APPLICATION_FORM_URLENCODED.equals(request.getContentType())) {
-            ByteBuffer fullContent = BufferUtil.merge(request.getFullMessageBody());
+            httpContent = request.getHttpCarbonMessage().getHttpContent();
+            ByteBuffer fullContent = BufferUtil.merge(Arrays.asList(httpContent.content().nioBuffers()));
             String bodyStr = BeanConverter
                     .getConverter((request.getContentType() != null) ? request.getContentType() : MediaType.WILDCARD)
                     .convertToObject(fullContent, paramInfo.getParameterType()).toString();
@@ -299,7 +307,8 @@ public class HttpResourceModelProcessor {
                     }
                 }
             } else if (MediaType.APPLICATION_FORM_URLENCODED.equals(request.getContentType())) {
-                ByteBuffer fullContent = BufferUtil.merge(request.getFullMessageBody());
+                httpContent = request.getHttpCarbonMessage().getHttpContent();
+                ByteBuffer fullContent = BufferUtil.merge(Arrays.asList(httpContent.content().nioBuffers()));
                 String bodyStr = BeanConverter.getConverter(
                         (request.getContentType() != null) ? request.getContentType() : MediaType.WILDCARD)
                         .convertToObject(fullContent, paramInfo.getParameterType()).toString();
@@ -341,7 +350,8 @@ public class HttpResourceModelProcessor {
             if (MediaType.MULTIPART_FORM_DATA.equals(request.getContentType())) {
                 listMultivaluedMap = extractRequestFormParams(request, paramInfo, false);
             } else if (MediaType.APPLICATION_FORM_URLENCODED.equals(request.getContentType())) {
-                ByteBuffer fullContent = BufferUtil.merge(request.getFullMessageBody());
+                httpContent = request.getHttpCarbonMessage().getHttpContent();
+                ByteBuffer fullContent = BufferUtil.merge(Arrays.asList(httpContent.content().nioBuffers()));
                 String bodyStr = BeanConverter.getConverter(
                         (request.getContentType() != null) ? request.getContentType() : MediaType.WILDCARD)
                         .convertToObject(fullContent, paramInfo.getParameterType()).toString();

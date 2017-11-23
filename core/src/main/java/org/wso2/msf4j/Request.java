@@ -1,32 +1,32 @@
 package org.wso2.msf4j;
 
-import org.wso2.carbon.messaging.CarbonMessage;
-import org.wso2.carbon.messaging.Constants;
-import org.wso2.carbon.messaging.Headers;
+import io.netty.buffer.ByteBuf;
+import io.netty.handler.codec.http.HttpHeaders;
 import org.wso2.msf4j.internal.MSF4JConstants;
+import org.wso2.transport.http.netty.common.Constants;
+import org.wso2.transport.http.netty.message.HTTPCarbonMessage;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javax.ws.rs.core.HttpHeaders;
 
 /**
  * Class that represents an HTTP request in MSF4J level.
  */
 public class Request {
 
-    private final CarbonMessage carbonMessage;
+    private final HTTPCarbonMessage httpCarbonMessage;
     private List<String> acceptTypes = null;
     private String contentType = null;
     private SessionManager sessionManager;
     private Session session;
 
-    public Request(CarbonMessage carbonMessage) {
-        this.carbonMessage = carbonMessage;
+    public Request(HTTPCarbonMessage httpCarbonMessage) {
+        this.httpCarbonMessage = httpCarbonMessage;
         // find accept types
-        String acceptHeaderStr = carbonMessage.getHeader(HttpHeaders.ACCEPT);
+        String acceptHeaderStr = httpCarbonMessage.getHeader(javax.ws.rs.core.HttpHeaders.ACCEPT);
         acceptTypes = (acceptHeaderStr != null) ?
                 Arrays.asList(acceptHeaderStr.split("\\s*,\\s*"))
                         .stream()
@@ -34,7 +34,7 @@ public class Request {
                         .collect(Collectors.toList()) :
                 null;
         //find content type
-        String contentTypeHeaderStr = carbonMessage.getHeader(HttpHeaders.CONTENT_TYPE);
+        String contentTypeHeaderStr = httpCarbonMessage.getHeader(javax.ws.rs.core.HttpHeaders.CONTENT_TYPE);
         //Trim specified charset since UTF-8 is assumed
         contentType = (contentTypeHeaderStr != null) ? contentTypeHeaderStr.split("\\s*;\\s*")[0] : null;
     }
@@ -46,36 +46,38 @@ public class Request {
     /**
      * @return returns true if the object contains the complete request body
      */
+    @Deprecated
     public boolean isEomAdded() {
-        return carbonMessage.isEndOfMsgAdded();
+        return httpCarbonMessage.isEndOfMsgAdded();
     }
 
     /**
      * @return true if the request does not have body content
      */
     public boolean isEmpty() {
-        return carbonMessage.isEmpty();
+        return httpCarbonMessage.isEmpty();
     }
 
     /**
      * @return next available message body chunk
      */
-    public ByteBuffer getMessageBody() {
-        return carbonMessage.getMessageBody();
+    @Deprecated
+    public ByteBuf getMessageBody() {
+        return httpCarbonMessage.getMessageBody();
     }
 
     /**
      * @return full message body of the Request
      */
     public List<ByteBuffer> getFullMessageBody() {
-        return carbonMessage.getFullMessageBody();
+        return httpCarbonMessage.getFullMessageBody();
     }
 
     /**
      * @return map of headers of the HTTP request
      */
-    public Headers getHeaders() {
-        return carbonMessage.getHeaders();
+    public HttpHeaders getHeaders() {
+        return httpCarbonMessage.getHeaders();
     }
 
     /**
@@ -85,7 +87,7 @@ public class Request {
      * @return value of the header
      */
     public String getHeader(String key) {
-        return carbonMessage.getHeader(key);
+        return httpCarbonMessage.getHeader(key);
     }
 
     /**
@@ -95,14 +97,14 @@ public class Request {
      * @return value of the property key
      */
     public Object getProperty(String key) {
-        return carbonMessage.getProperty(key);
+        return httpCarbonMessage.getProperty(key);
     }
 
     /**
      * @return property map of the underlining CarbonMessage
      */
     public Map<String, Object> getProperties() {
-        return carbonMessage.getProperties();
+        return httpCarbonMessage.getProperties();
     }
 
     /**
@@ -112,7 +114,7 @@ public class Request {
      * @param value property value
      */
     public void setProperty(String key, Object value) {
-        carbonMessage.setProperty(key, value);
+        httpCarbonMessage.setProperty(key, value);
     }
 
     /**
@@ -121,21 +123,22 @@ public class Request {
      * @param key property key
      */
     public void removeProperty(String key) {
-        carbonMessage.removeProperty(key);
+        httpCarbonMessage.removeProperty(key);
     }
 
     /**
      * @return URL of the request.
      */
     public String getUri() {
-        return (String) carbonMessage.getProperty(Constants.TO);
+        return (String) httpCarbonMessage.getProperty(Constants.TO);
     }
 
     /**
      * @return HTTP method of the request.
      */
     public String getHttpMethod() {
-        return (String) carbonMessage.getProperty(org.wso2.carbon.transport.http.netty.common.Constants.HTTP_METHOD);
+        return (String) httpCarbonMessage
+                .getProperty(org.wso2.transport.http.netty.common.Constants.HTTP_METHOD);
     }
 
     /**
@@ -212,5 +215,14 @@ public class Request {
 
     Session getSessionInternal() {
         return session;
+    }
+
+    /**
+     * Get underlying HTTPCarbonMessage.
+     *
+     * @return HTTPCarbonMessage instance of the Request
+     */
+    public HTTPCarbonMessage getHttpCarbonMessage() {
+        return httpCarbonMessage;
     }
 }
