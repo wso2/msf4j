@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,13 @@
 
 package org.wso2.msf4j.internal;
 
-import org.apache.commons.io.FileUtils;
+import io.netty.handler.codec.http.DefaultLastHttpContent;
+import io.netty.handler.codec.http.HttpContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.config.ConfigProviderFactory;
 import org.wso2.carbon.config.ConfigurationException;
 import org.wso2.carbon.config.provider.ConfigProvider;
-import org.wso2.carbon.messaging.Constants;
-import org.wso2.carbon.transport.http.netty.contract.HttpConnectorListener;
-import org.wso2.carbon.transport.http.netty.contract.ServerConnectorException;
-import org.wso2.carbon.transport.http.netty.message.HTTPCarbonMessage;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.config.MSF4JConfig;
@@ -38,13 +35,16 @@ import org.wso2.msf4j.internal.router.HttpResourceModel;
 import org.wso2.msf4j.internal.router.PatternPathRouter;
 import org.wso2.msf4j.internal.router.Util;
 import org.wso2.msf4j.util.HttpUtil;
+import org.wso2.transport.http.netty.common.Constants;
+import org.wso2.transport.http.netty.contract.HttpConnectorListener;
+import org.wso2.transport.http.netty.contract.ServerConnectorException;
+import org.wso2.transport.http.netty.message.HTTPCarbonMessage;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
+import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Locale;
@@ -71,34 +71,32 @@ public class MSF4JHttpConnectorListener implements HttpConnectorListener {
             }
             //Standalone mode
             String deploymentYamlPath = System.getProperty(MSF4JConstants.DEPLOYMENT_YAML_SYS_PROPERTY);
-            if (deploymentYamlPath == null || deploymentYamlPath.isEmpty()) {
-                log.info("System property '" + MSF4JConstants.DEPLOYMENT_YAML_SYS_PROPERTY +
-                         "' is not set. Default deployment.yaml file will be used.");
-                URL deploymentYamlUrl =
-                        MSF4JHttpConnectorListener.class.getResource("/" + MSF4JConstants.DEPLOYMENT_YAML_FILE);
-                try {
-                    FileUtils.copyURLToFile(deploymentYamlUrl, Paths.get(MSF4JConstants.DEPLOYMENT_YAML_FILE).toFile());
-                    deploymentYamlPath = Paths.get(MSF4JConstants.DEPLOYMENT_YAML_FILE).toString();
-                } catch (IOException e) {
-                    throw new RuntimeException("Error while getting default deployment.yaml", e);
-                }
-            } else if (!Files.exists(Paths.get(deploymentYamlPath))) {
-                throw new RuntimeException("Couldn't find " + deploymentYamlPath);
-            }
 
             try {
-                configProvider = ConfigProviderFactory.getConfigProvider(Paths.get(deploymentYamlPath), null);
-                DataHolder.getInstance().setConfigProvider(configProvider);
+                if (deploymentYamlPath != null && Files.exists(Paths.get(deploymentYamlPath))) {
+                    configProvider = ConfigProviderFactory.getConfigProvider(Paths.get(deploymentYamlPath), null);
+                    DataHolder.getInstance().setConfigProvider(configProvider);
+                } else {
+                    log.warn("MSF4J Configuration file is not provided. either system property '" + MSF4JConstants
+                            .DEPLOYMENT_YAML_SYS_PROPERTY + "' is not set or provided file path not exist. Hence " +
+                            "using default configuration.");
+                }
             } catch (ConfigurationException e) {
                 throw new RuntimeException("Error loading deployment.yaml Configuration", e);
             }
         }
 
         try {
-            msf4JConfig = DataHolder.getInstance().getConfigProvider().getConfigurationObject(MSF4JConfig.class);
+            if (configProvider != null) {
+                msf4JConfig = DataHolder.getInstance().getConfigProvider().getConfigurationObject(MSF4JConfig.class);
+            } else {
+                msf4JConfig = MSF4JConfig.class.newInstance();
+            }
         } catch (ConfigurationException e) {
             throw new RuntimeException("Error while loading " + MSF4JConfig.class.getName() + " from config provider",
-                                       e);
+                    e);
+        } catch (IllegalAccessException | InstantiationException e) {
+            throw new RuntimeException("Error while creating instance of the class " + MSF4JConfig.class.getName(), e);
         }
 
         executorService = Executors.newFixedThreadPool(msf4JConfig.getThreadCount(), new MSF4JThreadFactory(
@@ -120,6 +118,7 @@ public class MSF4JHttpConnectorListener implements HttpConnectorListener {
             MicroservicesRegistryImpl currentMicroservicesRegistry =
                     DataHolder.getInstance().getMicroservicesRegistries()
                               .get(httpCarbonMessage.getProperty(MSF4JConstants.CHANNEL_ID));
+
             Request request = new Request(httpCarbonMessage);
             request.setSessionManager(currentMicroservicesRegistry.getSessionManager());
             setBaseUri(request);
@@ -140,7 +139,9 @@ public class MSF4JHttpConnectorListener implements HttpConnectorListener {
             } finally {
                 MSF4JResponse.clearBaseUri();
                 // Calling the release method to make sure that there won't be any memory leaks from netty
-                httpCarbonMessage.release();
+                if (!httpCarbonMessage.isEmpty()) {
+                    httpCarbonMessage.getHttpContent().release();
+                }
             }
         });
     }
@@ -166,35 +167,51 @@ public class MSF4JHttpConnectorListener implements HttpConnectorListener {
             throws Exception {
         HttpUtil.setConnectionHeader(request, response);
         PatternPathRouter.RoutableDestination<HttpResourceModel> destination = registry.getMetadata()
-                                                                                       .getDestinationMethod(
-                                                                                              request.getUri(),
-                                                                                              request.getHttpMethod(),
-                                                                                              request.getContentType(),
-                                                                                              request.getAcceptTypes());
+                .getDestinationMethod(
+                        request.getUri(),
+                        request.getHttpMethod(),
+                        request.getContentType(),
+                        request.getAcceptTypes());
         HttpResourceModel resourceModel = destination.getDestination();
         response.setMediaType(Util.getResponseType(request.getAcceptTypes(), resourceModel.getProducesMediaTypes()));
         HttpMethodInfoBuilder httpMethodInfoBuilder =
                 new HttpMethodInfoBuilder().httpResourceModel(resourceModel).httpRequest(request)
-                                           .httpResponder(response).requestInfo(destination.getGroupNameValues());
+                        .httpResponder(response).requestInfo(destination.getGroupNameValues());
         HttpMethodInfo httpMethodInfo = httpMethodInfoBuilder.build();
         if (httpMethodInfo.isStreamingSupported()) {
             Method method = resourceModel.getMethod();
             Class<?> clazz = method.getDeclaringClass();
             // Execute request interceptors
             if (InterceptorExecutor.executeGlobalRequestInterceptors(registry, request, response)
-                // Execute class level request interceptors
-                && InterceptorExecutor.executeClassLevelRequestInterceptors(request, response, clazz)
-                // Execute method level request interceptors
-                && InterceptorExecutor.executeMethodLevelRequestInterceptors(request, response, method)) {
-                while (!(request.isEmpty() && request.isEomAdded())) {
-                    httpMethodInfo.chunk(request.getMessageBody());
+                    // Execute class level request interceptors
+                    && InterceptorExecutor.executeClassLevelRequestInterceptors(request, response, clazz)
+                    // Execute method level request interceptors
+                    && InterceptorExecutor.executeMethodLevelRequestInterceptors(request, response, method)) {
+
+                HttpContent httpContent = request.getHttpCarbonMessage().getHttpContent();
+                while (true) {
+                    if (httpContent == null) {
+                        break;
+                    }
+                    ByteBuffer[] byteBuffers = httpContent.content().nioBuffers();
+                    for (ByteBuffer byteBuffer : byteBuffers) {
+                        httpMethodInfo.chunk(byteBuffer);
+                    }
+                    if (request.isEmpty() && request.getHttpCarbonMessage().isEmpty()) {
+                        httpContent.release();
+                        break;
+                    }
+                    httpContent.release();
+                    httpContent = request.getHttpCarbonMessage().getHttpContent();
                 }
                 boolean isResponseInterceptorsSuccessful =
                         InterceptorExecutor.executeMethodLevelResponseInterceptors(request, response, method)
-                        // Execute class level interceptors (first in - last out order)
-                        && InterceptorExecutor.executeClassLevelResponseInterceptors(request, response, clazz)
-                        // Execute global interceptors
-                        && InterceptorExecutor.executeGlobalResponseInterceptors(registry, request, response);
+                                // Execute class level interceptors (first in - last out order)
+                                && InterceptorExecutor.executeClassLevelResponseInterceptors(request, response,
+                                clazz)
+                                // Execute global interceptors
+                                && InterceptorExecutor.executeGlobalResponseInterceptors(registry, request,
+                                response);
                 httpMethodInfo.end(isResponseInterceptorsSuccessful);
             }
         } else {
@@ -215,7 +232,7 @@ public class MSF4JHttpConnectorListener implements HttpConnectorListener {
                 HTTPCarbonMessage response = HttpUtil.createTextResponse(
                         javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
                         "Exception occurred :" + throwable.getMessage());
-                response.setEndOfMsgAdded(true);
+                response.addHttpContent(new DefaultLastHttpContent());
                 request.getHttpCarbonMessage().respond(response);
             } catch (ServerConnectorException e) {
                 log.error("Error while sending the response.", e);
@@ -226,7 +243,7 @@ public class MSF4JHttpConnectorListener implements HttpConnectorListener {
     private void handleHandlerException(HandlerException e, Request request) {
         try {
             HTTPCarbonMessage failureResponse = e.getFailureResponse();
-            failureResponse.setEndOfMsgAdded(true);
+            failureResponse.addHttpContent(new DefaultLastHttpContent());
             request.getHttpCarbonMessage().respond(failureResponse);
         } catch (ServerConnectorException e1) {
             log.error("Error while sending the response.", e);

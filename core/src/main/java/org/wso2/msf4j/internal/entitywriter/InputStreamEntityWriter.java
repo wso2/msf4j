@@ -16,10 +16,13 @@
 
 package org.wso2.msf4j.internal.entitywriter;
 
-import org.wso2.carbon.transport.http.netty.common.Constants;
-import org.wso2.carbon.transport.http.netty.contract.ServerConnectorException;
-import org.wso2.carbon.transport.http.netty.message.HTTPCarbonMessage;
+import io.netty.buffer.Unpooled;
+import io.netty.handler.codec.http.DefaultHttpContent;
+import io.netty.handler.codec.http.DefaultLastHttpContent;
 import org.wso2.msf4j.Response;
+import org.wso2.transport.http.netty.common.Constants;
+import org.wso2.transport.http.netty.contract.ServerConnectorException;
+import org.wso2.transport.http.netty.message.HTTPCarbonMessage;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -60,17 +63,25 @@ public class InputStreamEntityWriter implements EntityWriter<InputStream> {
                     throw new RuntimeException("Error while sending the response.", e);
                 }
             });
-
             byte[] data = new byte[chunkSize];
             int len;
             while ((len = ipStream.read(data)) != -1) {
-                carbonMessage.addMessageBody(ByteBuffer.wrap(data, 0, len));
+                carbonMessage.addHttpContent(new DefaultHttpContent(Unpooled.wrappedBuffer(ByteBuffer.wrap(data, 0,
+                        len))));
+                data = new byte[chunkSize];
             }
+            carbonMessage.addHttpContent(new DefaultLastHttpContent());
 
-            ipStream.close();
-            carbonMessage.setEndOfMsgAdded(true);
         } catch (IOException e) {
             throw new RuntimeException("Error occurred while reading from InputStream", e);
+        } finally {
+            if (ipStream != null) {
+                try {
+                    ipStream.close();
+                } catch (IOException ignore) {
+
+                }
+            }
         }
     }
 }

@@ -16,14 +16,16 @@
 
 package org.wso2.msf4j;
 
-import org.wso2.carbon.messaging.Header;
-import org.wso2.carbon.messaging.Headers;
-import org.wso2.carbon.transport.http.netty.common.Constants;
-import org.wso2.carbon.transport.http.netty.contract.ServerConnectorException;
-import org.wso2.carbon.transport.http.netty.message.HTTPCarbonMessage;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.handler.codec.http.DefaultLastHttpContent;
+import io.netty.handler.codec.http.HttpHeaders;
 import org.wso2.msf4j.internal.MSF4JConstants;
 import org.wso2.msf4j.internal.entitywriter.EntityWriter;
 import org.wso2.msf4j.internal.entitywriter.EntityWriterRegistry;
+import org.wso2.transport.http.netty.common.Constants;
+import org.wso2.transport.http.netty.contract.ServerConnectorException;
+import org.wso2.transport.http.netty.message.HTTPCarbonMessage;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -50,21 +52,20 @@ public class Response {
     private int chunkSize = NO_CHUNK;
     private Request request;
     private javax.ws.rs.core.Response jaxrsResponse;
-    private final HTTPCarbonMessage responder;
 
     public Response(HTTPCarbonMessage responder) {
-        httpCarbonMessage = new HTTPCarbonMessage();
-        this.responder = responder;
+        this.httpCarbonMessage = responder;
     }
 
     public Response(Request request) {
-        this(request.getHttpCarbonMessage());
+        this(request.getHttpCarbonMessage().cloneCarbonMessageWithOutData());
         this.request = request;
     }
 
     /**
      * @return true if message is fully available in the response object
      */
+    @Deprecated
     public boolean isEomAdded() {
         return httpCarbonMessage.isEndOfMsgAdded();
     }
@@ -79,7 +80,8 @@ public class Response {
     /**
      * @return next available message body chunk
      */
-    public ByteBuffer getMessageBody() {
+    @Deprecated
+    public ByteBuf getMessageBody() {
         return httpCarbonMessage.getMessageBody();
     }
 
@@ -93,7 +95,7 @@ public class Response {
     /**
      * @return map of headers in the response object
      */
-    public Headers getHeaders() {
+    public HttpHeaders getHeaders() {
         return httpCarbonMessage.getHeaders();
     }
 
@@ -125,7 +127,7 @@ public class Response {
      * @param headerMap headers to be added to the response
      */
     public void setHeaders(Map<String, String> headerMap) {
-        httpCarbonMessage.setHeaders(headerMap);
+        headerMap.forEach(httpCarbonMessage::setHeader);
     }
 
     /**
@@ -261,7 +263,7 @@ public class Response {
     public void send() {
         httpCarbonMessage.setProperty(Constants.HTTP_STATUS_CODE, getStatusCode());
 
-        List<Header> cookiesHeader = new ArrayList<>();
+        List<String> cookiesHeaderValue = new ArrayList<>();
 
         if (jaxrsResponse != null) {
             MultivaluedMap<String, String> multivaluedMap = jaxrsResponse.getStringHeaders();
@@ -294,7 +296,7 @@ public class Response {
                 if (httpOnly) {
                     cookieValue.append(";HttpOnly");
                 }
-                cookiesHeader.add(new Header("Set-Cookie", cookieValue.toString()));
+                cookiesHeaderValue.add(cookieValue.toString());
             });
         }
 
@@ -302,9 +304,9 @@ public class Response {
         //Set-Cookie: session
         Session session = request.getSessionInternal();
         if (session != null && session.isValid() && session.isNew()) {
-            cookiesHeader.add(new Header("Set-Cookie", MSF4JConstants.SESSION_ID + session.getId()));
+            cookiesHeaderValue.add(MSF4JConstants.SESSION_ID + session.getId());
         }
-        httpCarbonMessage.getHeaders().set(cookiesHeader);
+        httpCarbonMessage.getHeaders().set("Set-Cookie", cookiesHeaderValue);
         processEntity();
     }
 
@@ -312,10 +314,10 @@ public class Response {
     private void processEntity() {
         if (entity != null) {
             EntityWriter entityWriter = EntityWriterRegistry.getEntityWriter(entity.getClass());
-            entityWriter.writeData(httpCarbonMessage, entity, mediaType, chunkSize, responder);
+            entityWriter.writeData(httpCarbonMessage, entity, mediaType, chunkSize, request.getHttpCarbonMessage());
         } else {
-            httpCarbonMessage.addMessageBody(ByteBuffer.allocate(0));
-            httpCarbonMessage.setEndOfMsgAdded(true);
+            ByteBuffer byteBuffer = ByteBuffer.allocate(0);
+            httpCarbonMessage.addHttpContent(new DefaultLastHttpContent(Unpooled.wrappedBuffer(byteBuffer)));
             try {
                 request.getHttpCarbonMessage().respond(httpCarbonMessage);
             } catch (ServerConnectorException e) {

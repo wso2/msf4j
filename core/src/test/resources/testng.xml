@@ -74,13 +74,25 @@ limitations under the License.
         <classes>
             <class name="org.wso2.msf4j.websocket.ValidatorTest"/>
             <class name="org.wso2.msf4j.websocket.EndpointRegistryTest"/>
-            <class name="org.wso2.msf4j.websocket.DeploymentTest"/>
+<!--            <class name="org.wso2.msf4j.websocket.DeploymentTest"/>-->
         </classes>
     </test>
 
     <test name="deprecated-interceptor-unit-tests" preserve-order="true" parallel="false">
         <classes>
             <class name="org.wso2.msf4j.DeprecatedInterceptorTest"/>
+        </classes>
+    </test>
+
+    <test name="new unit tests" preserve-order="true" parallel="false">
+        <classes>
+            <class name="org.wso2.msf4j.internal.MicroservicesRegistryTest"/>
+        </classes>
+    </test>
+
+    <test name="host-binding-tests" preserve-order="true" parallel="false">
+        <classes>
+            <class name="org.wso2.msf4j.HostBindingTest"/>
         </classes>
     </test>
 

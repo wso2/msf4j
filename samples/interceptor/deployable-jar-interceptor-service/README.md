@@ -4,6 +4,7 @@ This sample demonstrates how to create deployable interceptors for hot deploymen
 
 * See also; [MSF4J Interceptor Service - Fat Jar mode](../fatjar-interceptor-service)
 * See also; [MSF4J Interceptor Service - OSGi mode](../osgi-interceptor-service)
+* See also; [MSF4J Interceptors with MSF4J Spring - Fat Jar mode](../spring-fatjar-interceptor-service)
 
 ```java
 @Path("/interceptor-service")

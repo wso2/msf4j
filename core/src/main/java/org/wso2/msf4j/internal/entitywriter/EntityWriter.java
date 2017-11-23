@@ -16,7 +16,7 @@
 
 package org.wso2.msf4j.internal.entitywriter;
 
-import org.wso2.carbon.transport.http.netty.message.HTTPCarbonMessage;
+import org.wso2.transport.http.netty.message.HTTPCarbonMessage;
 
 /**
  * Interface that provides the capability of writing an entity type to

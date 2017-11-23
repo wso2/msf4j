@@ -216,20 +216,21 @@ public class MSF4JSpringApplication {
     }
 
     /**
-     * This will add a given service class to the running instnace with given base path.
+     * This will add a given service class to the running instance with given base path.
      *
      * @param configurableApplicationContext ConfigurableApplicationContext of running app
-     * @param serviceClass Service class
-     * @param basePath Base path teh servuce get registered
+     * @param serviceClass                   Service class
+     * @param basePath                       Base path to which the service get registered
      */
-    public void addService(ConfigurableApplicationContext configurableApplicationContext, Class serviceClass,
-                           String basePath) {
+    public SpringMicroservicesRunner addService(ConfigurableApplicationContext configurableApplicationContext,
+                                                Class<?> serviceClass, String basePath) {
         ClassPathBeanDefinitionScanner classPathBeanDefinitionScanner =
                 new ClassPathBeanDefinitionScanner((BeanDefinitionRegistry) configurableApplicationContext);
         classPathBeanDefinitionScanner.scan(serviceClass.getPackage().getName());
         SpringMicroservicesRunner springMicroservicesRunner =
                 configurableApplicationContext.getBean(SpringMicroservicesRunner.class);
         springMicroservicesRunner.deploy(basePath, configurableApplicationContext.getBean(serviceClass));
+        return springMicroservicesRunner;
     }
 }
 

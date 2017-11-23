@@ -30,7 +30,7 @@ listenerConfigurations:
   port: 8095
   scheme: https
   keyStoreFile: "src/test/resources/cert.jks"
-  keyStorePass: secret
+  keyStorePassword: secret
   certPass: secret
 senderConfigurations:
  -

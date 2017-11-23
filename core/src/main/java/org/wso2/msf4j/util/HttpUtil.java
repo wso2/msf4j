@@ -16,12 +16,18 @@
 
 package org.wso2.msf4j.util;
 
-import org.wso2.carbon.transport.http.netty.common.Constants;
-import org.wso2.carbon.transport.http.netty.message.HTTPCarbonMessage;
+import io.netty.buffer.Unpooled;
+import io.netty.handler.codec.http.DefaultHttpResponse;
+import io.netty.handler.codec.http.DefaultLastHttpContent;
+import io.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.handler.codec.http.HttpVersion;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
+import org.wso2.transport.http.netty.common.Constants;
+import org.wso2.transport.http.netty.message.HTTPCarbonMessage;
 
-import java.nio.charset.Charset;
+import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
 import javax.ws.rs.core.HttpHeaders;
 
 /**
@@ -41,11 +47,21 @@ public class HttpUtil {
      * @return CarbonMessage representing the status
      */
     public static HTTPCarbonMessage createTextResponse(int status, String msg) {
-        HTTPCarbonMessage response = new HTTPCarbonMessage();
+        HTTPCarbonMessage response = new HTTPCarbonMessage(
+                new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.valueOf(status)));
         response.setProperty(Constants.HTTP_STATUS_CODE, status);
         if (msg != null) {
             response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(msg.length()));
-            response.addMessageBody(Charset.defaultCharset().encode(msg));
+            byte[] msgArray = null;
+            try {
+                msgArray = msg.getBytes("UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException("Failed to get the byte array from responseValue", e);
+            }
+            ByteBuffer byteBuffer = ByteBuffer.allocate(msgArray.length);
+            byteBuffer.put(msgArray);
+            byteBuffer.flip();
+            response.addHttpContent(new DefaultLastHttpContent(Unpooled.wrappedBuffer(byteBuffer)));
         } else {
             response.setHeader(HttpHeaders.CONTENT_LENGTH, "0");
         }

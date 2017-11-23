@@ -16,8 +16,8 @@
 
 package org.wso2.msf4j.internal.router;
 
-import org.wso2.carbon.transport.http.netty.message.HTTPCarbonMessage;
 import org.wso2.msf4j.util.HttpUtil;
+import org.wso2.transport.http.netty.message.HTTPCarbonMessage;
 
 import javax.ws.rs.core.Response;
 

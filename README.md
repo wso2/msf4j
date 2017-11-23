@@ -43,7 +43,7 @@ You can use the [msf4j-microservice](archetypes) Maven [archetype](http://maven.
 
 ```
 mvn archetype:generate -DarchetypeGroupId=org.wso2.msf4j \
--DarchetypeArtifactId=msf4j-microservice -DarchetypeVersion=2.4.0 \
+-DarchetypeArtifactId=msf4j-microservice -DarchetypeVersion=2.4.2 \
 -DgroupId=org.example -DartifactId=Hello-Service -Dversion=0.1-SNAPSHOT \
 -Dpackage=org.example.service -DserviceClass=HelloService
 ```
@@ -64,7 +64,7 @@ configuration. Click [here](poms/msf4j-service) for more information.
     <parent>
         <groupId>org.wso2.msf4j</groupId>
         <artifactId>msf4j-service</artifactId>
-        <version>2.4.0</version>
+        <version>2.4.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -116,6 +116,9 @@ public class Application {
     }
 }
 ```
+
+You can also pass in the port(s) as an argument to the MicroservicesRunner class constructor. When passing the port(s) 
+as an argument, by default it binds to 0.0.0.0 host. Use "msf4j.host" environment variable to override the host value. 
 
 
 ### Build the Service
@@ -253,6 +256,7 @@ Please do refer the following for complete instructions.
 * [MSF4J Interceptors - Stand alone mode instructions](/samples/interceptor/fatjar-interceptor-service/README.md)
 * [MSF4J Interceptors - Deployable Jar mode instructions ](/samples/interceptor/deployable-jar-interceptor-service/README.md)
 * [MSF4J Interceptors - OSGi mode instructions](/samples/interceptor/osgi-interceptor-service/README.md)
+* [MSF4J Interceptors with MSF4J Spring - Fat Jar mode](/samples/interceptor/spring-fatjar-interceptor-service/README.md)
 
 ## Develop and configure MSF4J services using Spring framework
 
@@ -366,7 +370,7 @@ To enable swagger support you need to add the following dependency to your proje
 <dependency>
      <groupId>org.wso2.msf4j</groupId>
      <artifactId>msf4j-swagger</artifactId>
-     <version>2.4.0</version>
+     <version>2.4.2</version>
 </dependency>
 ```
 In order to retrieve Swagger definitions of your microservice, go to <br/>http://&lt;host&gt;:&lt;port&gt;/swagger?path=&lt;service_base_path&gt;.

@@ -17,6 +17,21 @@ package org.wso2.msf4j.spring.service.second;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.wso2.msf4j.interceptor.HighPriorityClassRequestInterceptor;
+import org.wso2.msf4j.interceptor.HighPriorityClassResponseInterceptor;
+import org.wso2.msf4j.interceptor.HighPriorityMethodRequestInterceptor;
+import org.wso2.msf4j.interceptor.HighPriorityMethodResponseInterceptor;
+import org.wso2.msf4j.interceptor.LowPriorityClassRequestInterceptor;
+import org.wso2.msf4j.interceptor.LowPriorityClassResponseInterceptor;
+import org.wso2.msf4j.interceptor.LowPriorityMethodRequestInterceptor;
+import org.wso2.msf4j.interceptor.LowPriorityMethodResponseInterceptor;
+import org.wso2.msf4j.interceptor.MediumPriorityClassRequestInterceptor;
+import org.wso2.msf4j.interceptor.MediumPriorityClassResponseInterceptor;
+import org.wso2.msf4j.interceptor.MediumPriorityMethodRequestInterceptor;
+import org.wso2.msf4j.interceptor.MediumPriorityMethodResponseInterceptor;
+import org.wso2.msf4j.interceptor.PriorityDataHolder;
+import org.wso2.msf4j.interceptor.annotation.RequestInterceptor;
+import org.wso2.msf4j.interceptor.annotation.ResponseInterceptor;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -24,6 +39,10 @@ import javax.ws.rs.PathParam;
 
 @SuppressWarnings("UnusedParameters")
 @Component
+@RequestInterceptor({HighPriorityClassRequestInterceptor.class, MediumPriorityClassRequestInterceptor.class,
+                     LowPriorityClassRequestInterceptor.class})
+@ResponseInterceptor({HighPriorityClassResponseInterceptor.class, MediumPriorityClassResponseInterceptor.class,
+                      LowPriorityClassResponseInterceptor.class})
 public class TestMicroServiceWithDynamicPath {
 
     @Autowired
@@ -31,7 +50,12 @@ public class TestMicroServiceWithDynamicPath {
 
     @GET
     @Path("/hello/{name}")
+    @RequestInterceptor({HighPriorityMethodRequestInterceptor.class, MediumPriorityMethodRequestInterceptor.class,
+                         LowPriorityMethodRequestInterceptor.class})
+    @ResponseInterceptor({HighPriorityMethodResponseInterceptor.class, MediumPriorityMethodResponseInterceptor.class,
+                          LowPriorityMethodResponseInterceptor.class})
     public String sayHello(@PathParam("name") String name) {
+        PriorityDataHolder.setPriorityOrder(PriorityDataHolder.getPriorityOrder() + "[SPRING HTTP METHOD]");
         return customService.sayHello(name);
     }
 }

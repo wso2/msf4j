@@ -18,7 +18,7 @@
     <parent>
         <groupId>org.wso2.msf4j</groupId>
         <artifactId>msf4j-tests</artifactId>
-        <version>2.4.1-SNAPSHOT</version>
+        <version>2.4.3-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -56,12 +56,6 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.pax.exam.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.transport</groupId>
-            <artifactId>org.wso2.carbon.transport.http.netty.feature</artifactId>
-            <version>${org.wso2.carbon.transport.http.netty.version}</version>
             <type>zip</type>
         </dependency>
         <dependency>
@@ -217,10 +211,6 @@
                                 <feature>
                                     <id>org.wso2.carbon.deployment.engine.feature</id>
                                     <version>${carbon.deployment.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.transport.http.netty.feature</id>
-                                    <version>${org.wso2.carbon.transport.http.netty.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.connector.framework.feature</id>

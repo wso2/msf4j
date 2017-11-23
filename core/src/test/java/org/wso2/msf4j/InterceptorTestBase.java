@@ -37,7 +37,7 @@ import javax.ws.rs.core.MediaType;
 /**
  * Base class for testing interceptors.
  */
-abstract class InterceptorTestBase {
+public abstract class InterceptorTestBase {
 
     private final Gson gson = new Gson();
     protected static URI baseURI;
@@ -143,7 +143,7 @@ abstract class InterceptorTestBase {
      * @return http url connection instance
      * @throws IOException on error creating http url connection
      */
-    private HttpURLConnection createHttpUrlConnection(String path, String method, boolean keepAlive,
+    protected HttpURLConnection createHttpUrlConnection(String path, String method, boolean keepAlive,
                                                       Map<String, String> headers) throws IOException {
         URL url = baseURI.resolve(path).toURL();
         HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();

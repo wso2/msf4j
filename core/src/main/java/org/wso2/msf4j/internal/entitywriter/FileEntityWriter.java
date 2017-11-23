@@ -16,20 +16,22 @@
 
 package org.wso2.msf4j.internal.entitywriter;
 
+import io.netty.buffer.Unpooled;
+import io.netty.handler.codec.http.DefaultHttpContent;
+import io.netty.handler.codec.http.DefaultLastHttpContent;
 import org.apache.commons.io.FilenameUtils;
-import org.wso2.carbon.transport.http.netty.common.Constants;
-import org.wso2.carbon.transport.http.netty.contract.ServerConnectorException;
-import org.wso2.carbon.transport.http.netty.message.HTTPCarbonMessage;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.internal.mime.MimeMapper;
 import org.wso2.msf4j.internal.mime.MimeMappingException;
+import org.wso2.transport.http.netty.common.Constants;
+import org.wso2.transport.http.netty.contract.ServerConnectorException;
+import org.wso2.transport.http.netty.message.HTTPCarbonMessage;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.util.concurrent.Executors;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -67,21 +69,21 @@ public class FileEntityWriter implements EntityWriter<File> {
             }
             httpCarbonMessage.setHeader(Constants.HTTP_TRANSFER_ENCODING, CHUNKED);
             httpCarbonMessage.setHeader(Constants.HTTP_CONTENT_TYPE, mediaType);
-            Executors.newSingleThreadExecutor().execute(() -> {
-                try {
-                    responder.respond(httpCarbonMessage);
-                } catch (ServerConnectorException e) {
-                    throw new RuntimeException("Error while sending the response.", e);
-                }
-            });
+
+            try {
+                responder.respond(httpCarbonMessage);
+            } catch (ServerConnectorException e) {
+                throw new RuntimeException("Error while sending the response.", e);
+            }
 
             ByteBuffer buffer = ByteBuffer.allocate(chunkSize);
             while (fileChannel.read(buffer) != -1) {
                 buffer.flip();
-                httpCarbonMessage.addMessageBody(buffer);
+                httpCarbonMessage.addHttpContent(new DefaultHttpContent(Unpooled.wrappedBuffer(buffer)));
+                buffer = ByteBuffer.allocate(chunkSize);
             }
             fileChannel.close();
-            httpCarbonMessage.setEndOfMsgAdded(true);
+            httpCarbonMessage.addHttpContent(new DefaultLastHttpContent());
         } catch (IOException e) {
             throw new RuntimeException("Error occurred while reading from file", e);
         }

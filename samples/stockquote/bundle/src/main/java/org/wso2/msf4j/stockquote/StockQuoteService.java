@@ -155,7 +155,7 @@ public class StockQuoteService implements Microservice {
             response = Stocks.class,
             responseContainer = "List")
     public Stocks getAllStocks(@Context Request request) {
-        request.getHeaders().getAll().forEach(entry -> log.info(entry.getName() + "=" + entry.getValue()));
+        request.getHeaders().forEach(entry -> log.info(entry.getKey() + "=" + entry.getValue()));
         return new Stocks(stockQuotes.values());
     }
 
