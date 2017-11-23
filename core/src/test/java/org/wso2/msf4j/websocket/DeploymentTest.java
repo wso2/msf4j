@@ -30,6 +30,7 @@ import org.wso2.msf4j.websocket.endpoint.ChatAppEndpoint;
 import org.wso2.msf4j.websocket.endpoint.EchoEndpoint;
 import org.wso2.msf4j.websocket.exception.WebSocketEndpointAnnotationException;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import javax.net.ssl.SSLException;
@@ -60,7 +61,7 @@ public class DeploymentTest {
     }
 
     @Test(description = "Testing the echoing the message sent by client for text, binary and pong messages.")
-    public void testReply() throws InterruptedException, SSLException, URISyntaxException {
+    public void testReply() throws InterruptedException, IOException, URISyntaxException {
         WebSocketClient echoClient = new WebSocketClient(echoUrl);
         //Test handshake
         Assert.assertTrue(echoClient.handhshake());

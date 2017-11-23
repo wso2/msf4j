@@ -50,12 +50,12 @@ import javax.ws.rs.ext.ExceptionMapper;
 public class MicroservicesRunner {
 
     private static final Logger log = LoggerFactory.getLogger(MicroservicesRunner.class);
-    
+
     /**
      * Default host used when using microservice runner starts with {@link #MicroservicesRunner(int...)}.
      */
     private static final String DEFAULT_HOST = "0.0.0.0";
-    
+
     /**
      * The environment variable which overrides the {@link #DEFAULT_HOST}.
      */
