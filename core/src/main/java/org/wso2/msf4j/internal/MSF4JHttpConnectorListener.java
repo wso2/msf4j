@@ -59,7 +59,6 @@ import javax.ws.rs.ext.ExceptionMapper;
 public class MSF4JHttpConnectorListener implements HttpConnectorListener {
 
     private static final Logger log = LoggerFactory.getLogger(MSF4JHttpConnectorListener.class);
-    private static final String MSF4J_MSG_PROC_ID = "MSF4J-CM-PROCESSOR";
     private ExecutorService executorService;
 
     public MSF4JHttpConnectorListener() {
