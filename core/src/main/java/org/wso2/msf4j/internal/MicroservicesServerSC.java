@@ -33,6 +33,8 @@ import org.wso2.msf4j.DefaultSessionManager;
 import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Microservice;
 import org.wso2.msf4j.MicroservicesRegistry;
+import org.wso2.msf4j.MicroservicesServer;
+import org.wso2.msf4j.MicroservicesServerImpl;
 import org.wso2.msf4j.SessionManager;
 import org.wso2.msf4j.SwaggerService;
 import org.wso2.msf4j.exception.OSGiDeclarativeServiceException;
@@ -76,6 +78,7 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
     private boolean isAllRequiredCapabilitiesAvailable;
     private List<ServerConnector> serverConnectors = new ArrayList<>();
     private MSF4JHttpConnectorListener msf4JHttpConnectorListener;
+    private Map<String, ListenerConfiguration> listenerConfigurationMap = new HashMap<>();
 
     @Activate
     protected void start(final BundleContext bundleContext) {
@@ -96,7 +99,7 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
          */
         if (isAllRequiredCapabilitiesAvailable) {
             Object channelId = properties.get(MSF4JConstants.CHANNEL_ID);
-            Object contextPath = properties.get("contextPath");
+            Object contextPath = properties.get(MSF4JConstants.CONTEXT_PATH);
             addMicroserviceToRegistry(service, channelId, contextPath);
         }
         StartupServiceUtils.updateServiceCache("wso2-microservices-server", Microservice.class);
@@ -164,8 +167,8 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
     protected void registerConfigProvider(ConfigProvider configProvider) {
         DataHolder.getInstance().setConfigProvider(configProvider);
         try {
-            final TransportsConfiguration transportsConfiguration =
-                    configProvider.getConfigurationObject(TransportsConfiguration.class);
+            final TransportsConfiguration transportsConfiguration = configProvider.getConfigurationObject
+                    (MSF4JConstants.WSO2_TRANSPORT_HTTP_CONFIG_NAMESPACE, TransportsConfiguration.class);
             Set<ListenerConfiguration> listenerConfigurations =
                     transportsConfiguration.getListenerConfigurations();
             if (listenerConfigurations.isEmpty()) {
@@ -187,6 +190,7 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
                 microservicesRegistries.put(serverConnector.getConnectorID(), microservicesRegistry);
                 DataHolder.getInstance().getBundleContext()
                           .registerService(MicroservicesRegistry.class, microservicesRegistry, properties);
+                listenerConfigurationMap.put(serverConnector.getConnectorID(), listenerConfiguration);
                 serverConnectors.add(serverConnector);
             });
         } catch (ConfigurationException e) {
@@ -378,6 +382,8 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
         }
 
         DataHolder.getInstance().getBundleContext().registerService(MicroservicesServerSC.class, this, null);
+        DataHolder.getInstance().getBundleContext().registerService(MicroservicesServer.class, new
+                MicroservicesServerImpl(listenerConfigurationMap), null);
         log.info("All microservices are available");
         msf4JHttpConnectorListener = new MSF4JHttpConnectorListener();
         serverConnectors.forEach(serverConnector -> {

@@ -22,6 +22,8 @@ public class MSF4JConstants {
 
     public static final String SESSION_ID = "JSESSIONID=";
     public static final String CHANNEL_ID = "LISTENER_INTERFACE_ID";
+    public static final String CONTEXT_PATH = "contextPath";
+    public static final String WSO2_TRANSPORT_HTTP_CONFIG_NAMESPACE = "wso2.transport.http";
 
     // Property constants
     public static final String METHOD_PROPERTY_NAME = "method";
