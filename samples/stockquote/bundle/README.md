@@ -79,6 +79,29 @@ Then navigate to the bin directory and run the following command to start WSO2 M
 When the server is being started, the bundle in the dropins directory will be automatically 
 loaded and it's microservices that are there as OSGi services will be exposed as REST services.
 
+## Changing transport configuration
+By default microservices server starts with all IPv4 addresses on the local machine and port 8080. If you need to 
+change properties, you can do it using deployment.yaml. You need to copy below configuration to deployment.yaml in 
+server conf directory and change the configuration.
+
+````yaml
+wso2.transport.http:
+  transportProperties:
+   - name: "latency.metrics.enabled"
+     value: true
+   - name: "server.bootstrap.socket.timeout"
+     value: 60
+   - name: "client.bootstrap.socket.timeout"
+     value: 60
+
+  listenerConfigurations:
+   - id: "default"
+     host: "0.0.0.0"
+     port: 8080
+
+  senderConfigurations:
+   - id: "http-sender"
+````
 
 ## How to test the sample
 
