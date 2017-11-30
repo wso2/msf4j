@@ -16,10 +16,12 @@
  *  under the License.
  *
  */
-package org.wso2.msf4j;
+package org.wso2.msf4j.internal;
 
+import org.wso2.msf4j.MicroservicesServer;
 import org.wso2.transport.http.netty.config.ListenerConfiguration;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -30,7 +32,7 @@ public class MicroservicesServerImpl implements MicroservicesServer {
     private final Map<String, ListenerConfiguration> listenerConfigurationMap;
 
     public MicroservicesServerImpl(Map<String, ListenerConfiguration> configurationMap) {
-        listenerConfigurationMap = configurationMap;
+        listenerConfigurationMap = Collections.unmodifiableMap(configurationMap);
     }
 
 
