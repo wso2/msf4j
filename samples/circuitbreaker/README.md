@@ -33,7 +33,7 @@ If database calls fail, the circuit trips and stock quotes are served from cache
 NOTE: To keep things simple and focus on the implementation of the circuit breaker pattern, 
 rather than making actual database calls, we have a class called org.example.service.StockQuoteDatabase and calls 
 to its getStock method could result in timeouts or failures. To see an MSF4J example on how to make actual database 
-calls, see the [JPA sample](../helloworld-jpa).
+calls, see the [JPA sample](../jpa).
 
 The complete call sequence is shown below. StockQuoteService is an MSF4J microservice.
 

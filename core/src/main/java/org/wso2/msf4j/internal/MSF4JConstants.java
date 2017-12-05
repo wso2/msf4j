@@ -22,4 +22,22 @@ public class MSF4JConstants {
 
     public static final String SESSION_ID = "JSESSIONID=";
     public static final String CHANNEL_ID = "CHANNEL_ID";
+
+    // Property constants
+    public static final String METHOD_PROPERTY_NAME = "method";
+
+    //WebSocket related parameters
+    /*TODO: These constants are copied from carbon-transport since msf4j doesn't import transport. Need to figure out
+    where to move them*/
+    public static final String CONNECTION = "Connection";
+    public static final String UPGRADE = "Upgrade";
+    public static final String WEBSOCKET_SERVER_SESSION = "WEBSOCKET_SERVER_SESSION";
+    public static final String WEBSOCKET_PROTOCOL_NAME = "ws";
+    public static final String WEBSOCKET_UPGRADE = "websocket";
+
+    @Deprecated
+    public static final String PROTOCOL_NAME = "http";
+
+    public static final String DEPLOYMENT_YAML_SYS_PROPERTY = "msf4j.conf";
+    public static final String DEPLOYMENT_YAML_FILE = "deployment.yaml";
 }

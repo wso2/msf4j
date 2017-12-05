@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.wso2.msf4j</groupId>
         <artifactId>msf4j-parent</artifactId>
-        <version>2.1.2-SNAPSHOT</version>
+        <version>2.4.3-SNAPSHOT</version>
         <relativePath>../../poms/parent/pom.xml</relativePath>
     </parent>
 
@@ -50,12 +50,13 @@
             <artifactId>org.wso2.carbon.metrics.das.core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.metrics</groupId>
-            <artifactId>org.wso2.carbon.metrics.config</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.wso2.msf4j</groupId>
             <artifactId>msf4j-analytics-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.config</groupId>
+            <artifactId>org.wso2.carbon.config</artifactId>
+            <version>${carbon.config.version}</version>
         </dependency>
         <dependency>
             <groupId>org.testng</groupId>
@@ -89,6 +90,10 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.wso2.carbon.config</groupId>
+                <artifactId>org.wso2.carbon.config.maven.plugin</artifactId>
             </plugin>
         </plugins>
     </build>
@@ -234,8 +239,10 @@
             org.apache.commons.beanutils.*;version="${beanutils.version.range}",
             org.osgi.framework.*;version="${osgi.framework.import.version.range}",
             org.osgi.util.tracker; version="${osgi.service.tracker.import.version.range}",
-            org.wso2.carbon.kernel.utils.*;version="${carbon.kernel.version.range}",
+            org.wso2.carbon.utils.*;version="${carbon.utils.package.import.version.range}",
+            org.wso2.carbon.config.*;version="${carbon.config.package.import.version.range}",
             org.wso2.carbon.metrics.core.*;version="${carbon.metrics.version.range}",
+            <!--org.wso2.carbon.databridge.*,-->
             org.wso2.carbon.kernel.startupresolver.*;version="${carbon.kernel.version.range}",
             org.wso2.msf4j.*,
             org.wso2.msf4j.util.*,

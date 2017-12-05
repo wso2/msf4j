@@ -22,6 +22,8 @@ import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.MicroservicesRegistry;
 import org.wso2.msf4j.SessionManager;
 import org.wso2.msf4j.SwaggerService;
+import org.wso2.msf4j.interceptor.RequestInterceptor;
+import org.wso2.msf4j.interceptor.ResponseInterceptor;
 import org.wso2.msf4j.internal.router.MicroserviceMetadata;
 
 import java.lang.reflect.InvocationTargetException;
@@ -51,9 +53,9 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
 
     private static final Logger log = LoggerFactory.getLogger(MicroservicesRegistryImpl.class);
     private final Map<String, Object> services = new HashMap<>();
-
-    private final List<Interceptor> interceptors = new ArrayList<>();
-    private volatile MicroserviceMetadata metadata = new MicroserviceMetadata(Collections.emptyList());
+    private List<RequestInterceptor> globalRequestInterceptorList = new ArrayList<>();
+    private List<ResponseInterceptor> globalResponseInterceptorList = new ArrayList<>();
+    private volatile MicroserviceMetadata metadata = new MicroserviceMetadata(Collections.emptyMap());
     private Map<Class, ExceptionMapper> exceptionMappers = new TreeMap<>(new ClassComparator());
     private SessionManager sessionManager = new DefaultSessionManager();
 
@@ -90,7 +92,17 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
     }
 
     public void removeService(Object service) {
-        services.remove(service);
+        if (service == null) {
+            log.error("Service cannot be null.");
+            return;
+        }
+        Path path = service.getClass().getAnnotation(Path.class);
+        if (path == null) {
+            log.warn("Service removal failed. Microservice class '" + service.getClass().getName() +
+                     "' doesn't contain a root Path.");
+            return;
+        }
+        services.remove(path.value());
         updateMetadata();
     }
 
@@ -101,6 +113,16 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
         this.sessionManager = sessionManager;
     }
 
+    public void addInterceptor(Interceptor... interceptor) {
+        Collections.addAll(globalRequestInterceptorList, interceptor);
+        Collections.addAll(globalResponseInterceptorList, interceptor);
+    }
+
+    public void removeInterceptor(Interceptor interceptor) {
+        globalRequestInterceptorList.remove(interceptor);
+        globalResponseInterceptorList.remove(interceptor);
+    }
+
     public MicroserviceMetadata getMetadata() {
         return metadata;
     }
@@ -109,9 +131,58 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
         return Collections.unmodifiableSet(services.values().stream().collect(Collectors.toSet()));
     }
 
-    public void addInterceptor(Interceptor... interceptor) {
-        Collections.addAll(interceptors, interceptor);
-        updateMetadata();
+    /**
+     * Register request interceptors.
+     *
+     * @param requestInterceptor interceptor instances.
+     */
+    public void addGlobalRequestInterceptor(RequestInterceptor... requestInterceptor) {
+        Collections.addAll(globalRequestInterceptorList, requestInterceptor);
+    }
+
+    /**
+     * Register response interceptors.
+     *
+     * @param responseInterceptor interceptor instances.
+     */
+    public void addGlobalResponseInterceptor(ResponseInterceptor... responseInterceptor) {
+        Collections.addAll(globalResponseInterceptorList, responseInterceptor);
+    }
+
+    /**
+     * Remove msf4j request interceptor.
+     *
+     * @param requestInterceptor MSF4J interceptor instance.
+     */
+    public void removeGlobalRequestInterceptor(RequestInterceptor requestInterceptor) {
+        globalRequestInterceptorList.remove(requestInterceptor);
+    }
+
+    /**
+     * Remove msf4j response interceptor.
+     *
+     * @param responseInterceptor MSF4J interceptor instance.
+     */
+    public void removeGlobalResponseInterceptor(ResponseInterceptor responseInterceptor) {
+        globalResponseInterceptorList.remove(responseInterceptor);
+    }
+
+    /**
+     * Get global request interceptor list.
+     *
+     * @return global request interceptor list
+     */
+    public List<RequestInterceptor> getGlobalRequestInterceptorList() {
+        return globalRequestInterceptorList;
+    }
+
+    /**
+     * Get global response interceptor list.
+     *
+     * @return global response interceptor list
+     */
+    public List<ResponseInterceptor> getGlobalResponseInterceptorList() {
+        return globalResponseInterceptorList;
     }
 
     public void addExceptionMapper(ExceptionMapper... mapper) {
@@ -139,7 +210,6 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
                 flatMap(entry -> Optional.ofNullable(entry.getValue()));
     }
 
-
     public void removeExceptionMapper(ExceptionMapper em) {
         Arrays.stream(em.getClass().getMethods()).
                 filter(method -> method.getName().equals("toResponse") && method.getParameterCount() == 1).
@@ -154,21 +224,12 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
                 });
     }
 
-    public List<Interceptor> getInterceptors() {
-        return interceptors;
-    }
-
-    public void removeInterceptor(Interceptor interceptor) {
-        interceptors.remove(interceptor);
-        updateMetadata();
-    }
-
     public int getServiceCount() {
         return services.size();
     }
 
     private void updateMetadata() {
-        metadata = new MicroserviceMetadata(Collections.unmodifiableCollection(services.values()));
+        metadata = new MicroserviceMetadata(Collections.unmodifiableMap(services));
     }
 
     public void initServices() {

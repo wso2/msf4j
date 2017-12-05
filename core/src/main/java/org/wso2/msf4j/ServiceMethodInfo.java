@@ -18,22 +18,21 @@ package org.wso2.msf4j;
 
 
 import java.lang.reflect.Method;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Contains information about service method details.
+ * @deprecated
  */
 public class ServiceMethodInfo {
 
     private final String methodName;
     private final Method method;
+    private final Request request;
 
-    private Map<String, Object> attributes = new ConcurrentHashMap<>();
-
-    public ServiceMethodInfo(String methodName, Method method) {
+    public ServiceMethodInfo(String methodName, Method method, Request request) {
         this.methodName = methodName;
         this.method = method;
+        this.request = request;
     }
 
     public String getMethodName() {
@@ -51,7 +50,7 @@ public class ServiceMethodInfo {
      * @return an {@link Object} containing the value of the attribute, or null if the attribute does not exist
      */
     public Object getAttribute(String name) {
-        return attributes.get(name);
+        return request.getProperty(name);
     }
 
     /**
@@ -61,6 +60,6 @@ public class ServiceMethodInfo {
      * @param obj  the {@link Object} to be stored
      */
     public void setAttribute(String name, Object obj) {
-        attributes.put(name, obj);
+        request.setProperty(name, obj);
     }
 }

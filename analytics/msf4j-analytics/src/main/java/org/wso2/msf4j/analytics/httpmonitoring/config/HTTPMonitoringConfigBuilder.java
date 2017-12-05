@@ -15,11 +15,11 @@
  */
 package org.wso2.msf4j.analytics.httpmonitoring.config;
 
-import org.wso2.carbon.metrics.core.utils.Utils;
+import org.wso2.carbon.config.ConfigurationException;
+import org.wso2.carbon.config.provider.ConfigProvider;
+import org.wso2.msf4j.analytics.AnalyticUtils;
 import org.wso2.msf4j.analytics.httpmonitoring.config.model.HTTPMonitoringConfig;
-import org.yaml.snakeyaml.Yaml;
 
-import java.util.Optional;
 
 /**
  * Build {@link HTTPMonitoringConfig} from the YAML file
@@ -27,17 +27,18 @@ import java.util.Optional;
 public final class HTTPMonitoringConfigBuilder {
 
     public static HTTPMonitoringConfig build() {
-        Optional<String> metricsConfigFileContent = Utils.readFile("http-monitoring.conf", "http-monitoring.yml");
-        if (metricsConfigFileContent.isPresent()) {
-            try {
-                Yaml yaml = new Yaml();
-                return yaml.loadAs(metricsConfigFileContent.get(), HTTPMonitoringConfig.class);
-            } catch (RuntimeException e) {
-                throw new RuntimeException("Failed to populate HTTP Monitoring Configuration", e);
-            }
-        } else {
-            return new HTTPMonitoringConfig();
+        HTTPMonitoringConfig configurationObject;
+        ConfigProvider configProvider = AnalyticUtils.getConfigurationProvider();
+
+        try {
+            configurationObject =
+                    configProvider.getConfigurationObject(HTTPMonitoringConfig.class);
+        } catch (ConfigurationException e) {
+            throw new RuntimeException(
+                    "Error while loading " + HTTPMonitoringConfig.class.getName() + " from config provider", e);
         }
+
+        return configurationObject;
     }
 
 }

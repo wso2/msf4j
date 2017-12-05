@@ -48,13 +48,16 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
@@ -757,7 +760,18 @@ public class TestMicroservice implements Microservice {
     @GET
     @Path("/cookie")
     public Response echoCookieValue(@CookieParam("name") String name) {
-        return Response.ok().entity(name).cookie(new NewCookie("test-cookie", name)).build();
+        NewCookie newCookie;
+        if ("wso2".equalsIgnoreCase(name)) {
+            TimeZone.setDefault(TimeZone.getTimeZone("IST"));
+            Calendar instance = Calendar.getInstance();
+            instance.set(2017, 0, 1, 0, 0, 0);
+            newCookie =
+                    new NewCookie("test-cookie", name, "/cookie", "wso2.com", 1, "Cookie Test", 10, instance.getTime(),
+                                  true, true);
+        } else {
+            newCookie = new NewCookie("test-cookie", name);
+        }
+        return Response.ok().entity(name).cookie(newCookie).build();
     }
 
 
@@ -767,6 +781,18 @@ public class TestMicroservice implements Microservice {
         return new Team(countryId);
     }
 
+    @GET
+    @Path("/locationRealtiveUriTest")
+    public Response locationRealtiveUriTest() {
+        return Response.status(Response.Status.CREATED).location(URI.create("/entity/1")).build();
+    }
+
+    @GET
+    @Path("/locationAbsoluteUriTest")
+    public Response locationAbsoluteUriTest() {
+        return Response.status(Response.Status.CREATED).location(URI.create("http://localhost:8080/products/entity/2"))
+                       .build();
+    }
 
     /**
      * Custom exception class for testing exception handler.

@@ -21,7 +21,11 @@ In increasing order of complexity;
 * [File Server](fileserver) - Handling Files including streaming input & output
 * [FormParam](formparam) - Shows usage of the FormParam annotation
 * [Circuit Breaker](circuitbreaker) - Using the circuit breaker pattern
-* [Log-interceptor](log-interceptor-bundle) - Creating an Interceptor as an OSGi Bundle
+* [Interceptor (Fat jar)](interceptor/fatjar-interceptor-service) - Creating an Interceptor as a single jar which packs 
+all the dependencies
+* [Interceptor (Deployable jar)](interceptor/deployable-jar-interceptor-service) - Creating an Interceptor as a 
+deployable jar
+* [Interceptor (OSGi bundle)](interceptor/osgi-interceptor-service) - Creating an Interceptor as an OSGi Bundle
 * [Hello World JPA](jpa) - Simple JPA Hibernate based sample
 * [BasicAuth Security](basicauth-security) - Securing Microservice using BasicAuth
 * [OAuth2 Security](oauth2-security) - Securing Microservice using OAuth2
@@ -29,4 +33,5 @@ In increasing order of complexity;
 * [WSO2 DAS Tracing](message-tracing/das) - Using WSO2 DAS for tracing messages
 * [Zipkin Tracing](message-tracing/zipkin) - Using Zipkin for tracing messages
 * [Pet-store](petstore) - Running as an MSA Application
+* [WebSocket Chat App](websocket/chatApp) - How to use MSF4J WebSocket capabilities to create a simple chat app
 

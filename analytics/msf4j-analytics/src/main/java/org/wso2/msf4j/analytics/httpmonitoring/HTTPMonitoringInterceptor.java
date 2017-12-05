@@ -15,7 +15,6 @@
  */
 package org.wso2.msf4j.analytics.httpmonitoring;
 
-import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.messaging.Headers;
@@ -37,10 +36,6 @@ import javax.ws.rs.core.HttpHeaders;
 /**
  * Monitor HTTP Requests for methods with {@link HTTPMonitored} annotations.
  */
-@Component(
-        name = "org.wso2.msf4j.analytics.httpmonitoring.HTTPMonitoringInterceptor",
-        service = Interceptor.class,
-        immediate = true)
 public class HTTPMonitoringInterceptor implements Interceptor {
 
     private static final Logger logger = LoggerFactory.getLogger(HTTPMonitoringInterceptor.class);

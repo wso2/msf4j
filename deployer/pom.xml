@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2017, WSO2 Inc. (http://wso2.com) All Rights Reserved.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>org.wso2.msf4j</groupId>
+        <artifactId>msf4j-parent</artifactId>
+        <version>2.4.3-SNAPSHOT</version>
+        <relativePath>../poms/parent/pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>msf4j-deployer</artifactId>
+    <packaging>bundle</packaging>
+
+    <name>WSO2 MSF4J Deployer</name>
+    <description>WSO2 MSF4J Deployer</description>
+    <url>https://github.com/wso2/msf4j</url>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.wso2.eclipse.osgi</groupId>
+            <artifactId>org.eclipse.osgi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.eclipse.osgi</groupId>
+            <artifactId>org.eclipse.osgi.services</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.deployment</groupId>
+            <artifactId>org.wso2.carbon.deployment.engine</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.msf4j</groupId>
+            <artifactId>msf4j-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.msf4j</groupId>
+            <artifactId>msf4j-spring</artifactId>
+        </dependency>
+
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.shared</groupId>
+            <artifactId>maven-invoker</artifactId>
+            <version>2.2</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.rat</groupId>
+                <artifactId>apache-rat-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>-Dmsf4jTestRunning</argLine>
+                    <suiteXmlFiles>
+                        <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
+                    </suiteXmlFiles>
+                    <systemPropertyVariables>
+                        <maven.home>${maven.home}</maven.home>
+                        <project.filepath>${project.basedir}</project.filepath>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+    <properties>
+        <private.package>org.wso2.msf4j.deployer.internal</private.package>
+        <export.package>
+            !org.wso2.msf4j.deployer.internal,
+            org.wso2.msf4j.deployer;version="${msf4j.version}"
+        </export.package>
+        <import.package>
+            org.wso2.msf4j.*;version="${msf4j.version}",
+            javax.annotation.*,
+            javax.ws.rs.*,
+            org.slf4j.*;version="${slf4j.version.range}",
+            org.osgi.framework.*;version="${osgi.framework.import.version.range}",
+            org.wso2.carbon.kernel.startupresolver.*;version="${carbon.kernel.version.range}",
+            org.wso2.carbon.deployment.engine.*;version="${carbon.deployment.version.range}",
+        </import.package>
+        <carbon.component>
+            startup.listener;componentName="wso2-microservices-deployer";requiredService="org.wso2.msf4j.MicroservicesRegistry",
+            osgi.service; objectClass="org.wso2.carbon.deployment.engine.Deployer"
+        </carbon.component>
+        <!-- This require DynamicImports in order to support swagger annotations-->
+        <dynamic.import.package>*</dynamic.import.package>
+    </properties>
+</project>

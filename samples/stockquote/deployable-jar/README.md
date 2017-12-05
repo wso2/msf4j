@@ -34,19 +34,9 @@ mvn clean install
 
 ## How to run the sample
 
-First you need to install the MSF4J feature and Deployment feature in to carbon kernel. To do go to the resource
-directory at [msf4j bundle](../bundle) and execute the following command
-
-```
-mvn clean install
-```
-
-This will install the msf4j and other required features to the kernel and build up a product.
-You can find the product in the resources/target directory
-
-Go to the target/wso2msf4j-<-version->/bin directory
+Copy and extract the wso2-msf4j-*.zip file in tests/test-distribution to some location.
+Go to the wso2-msf4j-*/wso2/default/bin directory
 Then run the following command to start the MSF4J server.
-
 ```
 ./carbon.sh
 ```

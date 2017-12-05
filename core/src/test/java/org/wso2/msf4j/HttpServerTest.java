@@ -1258,6 +1258,18 @@ public class HttpServerTest {
         assertEquals(value, content);
         String cookie = urlConn.getHeaderField("Set-Cookie");
         assertNotNull(cookie);
+        assertEquals("test-cookie=" + value +
+                     ";Path=/cookie;Domain=wso2.com;Expires=Sun Jan 01 00:00:00 IST 2017;Secure;HttpOnly", cookie);
+        urlConn.disconnect();
+
+        value = "Apache";
+        urlConn = request("/test/v1/cookie/", HttpMethod.GET);
+        urlConn.setRequestProperty("Cookie", "name=" + value);
+        assertEquals(200, urlConn.getResponseCode());
+        content = getContent(urlConn);
+        assertEquals(value, content);
+        cookie = urlConn.getHeaderField("Set-Cookie");
+        assertNotNull(cookie);
         assertEquals("test-cookie=" + value, cookie);
         urlConn.disconnect();
     }
@@ -1329,6 +1341,21 @@ public class HttpServerTest {
         IOUtils.closeQuietly(inputStream);
         urlConn.disconnect();
         assertEquals("SL_123_name_Batsman_SriLanka", response);
+    }
+
+    @Test
+    public void testLocation() throws Exception {
+        HttpURLConnection urlConn = request("/test/v1/locationRealtiveUriTest", HttpMethod.GET);
+        assertEquals(201, urlConn.getResponseCode());
+        String location = urlConn.getHeaderField("Location");
+        assertEquals("http://" + baseURI.getHost() + ":" + baseURI.getPort() + "/entity/1", location);
+        urlConn.disconnect();
+
+        urlConn = request("/test/v1/locationAbsoluteUriTest", HttpMethod.GET);
+        assertEquals(201, urlConn.getResponseCode());
+        location = urlConn.getHeaderField("Location");
+        assertEquals("http://localhost:8080/products/entity/2", location);
+        urlConn.disconnect();
     }
 
     protected Socket createRawSocket(URL url) throws IOException {

@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -53,17 +54,11 @@ public final class MicroserviceMetadata {
      * Construct HttpResourceHandler. Reads all annotations from all the handler classes and methods passed in,
      * constructs patternPathRouter which is routable by path to {@code HttpResourceModel} as destination of the route.
      *
-     * @param services Iterable of HttpHandler
+     * @param services Map of base paths and services.
      */
-    public MicroserviceMetadata(Iterable<? extends Object> services) {
+    public MicroserviceMetadata(Map<String, Object> services) {
         //Store the services to call init and destroy on all services.
-
-        for (Object service : services) {
-            String basePath = "";
-            if (service.getClass().isAnnotationPresent(Path.class)) {
-                basePath = service.getClass().getAnnotation(Path.class).value();
-            }
-
+        services.forEach((basePath, service) -> {
             for (Method method : service.getClass().getMethods()) {
                 if (method.isAnnotationPresent(PostConstruct.class) || method.isAnnotationPresent(PreDestroy.class)) {
                     continue;
@@ -90,7 +85,7 @@ public final class MicroserviceMetadata {
                             method.getName(), method.getParameterTypes());
                 }
             }
-        }
+        });
     }
 
     /**

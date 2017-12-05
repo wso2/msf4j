@@ -33,7 +33,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.kernel.utils.StringUtils;
+import org.wso2.carbon.utils.StringUtils;
 import org.wso2.msf4j.analytics.common.tracing.TracingConstants;
 import org.wso2.msf4j.client.codec.DefaultErrorDecoder;
 import org.wso2.msf4j.client.codec.RestErrorResponseMapper;

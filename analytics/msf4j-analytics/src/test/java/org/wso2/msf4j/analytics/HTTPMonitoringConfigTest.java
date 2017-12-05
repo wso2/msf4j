@@ -16,17 +16,24 @@
 package org.wso2.msf4j.analytics;
 
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.msf4j.analytics.httpmonitoring.config.HTTPMonitoringConfigBuilder;
 import org.wso2.msf4j.analytics.httpmonitoring.config.model.DasConfig;
 import org.wso2.msf4j.analytics.httpmonitoring.config.model.HTTPMonitoringConfig;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 /**
  * Test Cases for {@link HTTPMonitoringConfig}
  */
 public class HTTPMonitoringConfigTest {
 
+    private static final String DEFAULT_CONFIG_PATH = "deployment.yaml";
     private static HTTPMonitoringConfig httpMonitoringConfig;
 
     @BeforeClass
@@ -34,9 +41,17 @@ public class HTTPMonitoringConfigTest {
         httpMonitoringConfig = HTTPMonitoringConfigBuilder.build();
     }
 
+    @AfterClass
+    private void clear() throws IOException {
+        Path configPath = Paths.get(DEFAULT_CONFIG_PATH);
+        if (Files.exists(configPath)) {
+            Files.delete(configPath);
+        }
+    }
+
     @Test
     public void testEnabled() {
-        Assert.assertTrue(httpMonitoringConfig.isEnabled());
+        Assert.assertFalse(httpMonitoringConfig.isEnabled());
     }
 
     @Test
