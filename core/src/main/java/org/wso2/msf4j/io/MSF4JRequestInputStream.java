@@ -1,4 +1,3 @@
-package org.wso2.msf4j.io;
 /*
 * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
@@ -14,6 +13,7 @@ package org.wso2.msf4j.io;
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
+package org.wso2.msf4j.io;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.HttpContent;
@@ -25,6 +25,7 @@ import java.io.InputStream;
 /**
  * Wrapper {@link InputStream} for {@link Request}.
  */
+@Deprecated
 public class MSF4JRequestInputStream extends InputStream {
     private Request request;
     private ByteBuf byteBuf = null;

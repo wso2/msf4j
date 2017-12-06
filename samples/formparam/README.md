@@ -189,10 +189,10 @@ You can also use a simple html form like below or a rest client e.g. Postman, Ad
 
 4. For multipleFiles operation in the FormService
 ```
-curl -X POST -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW" -F "files=@file1.txt" -F "files=file2.jpg" "http://localhost:8080/formService/multipleFiles"
+curl -X POST -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW" -F "files=@file1.txt" -F "files=@file2.jpg" "http://localhost:8080/formService/multipleFiles"
 ```
 5. For streamFile operation in the FormService
 ```
-curl -X POST -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW" -F "file=file1.txt" "http://localhost:8080/formService/streamFile"
+curl -X POST -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW" -F "file=@file1.txt" "http://localhost:8080/formService/streamFile"
 ```
 Please refer to the SampleClient code to invoke the complexForm operation

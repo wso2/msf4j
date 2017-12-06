@@ -19,7 +19,6 @@ package org.wso2.msf4j;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.DefaultLastHttpContent;
-import io.netty.handler.codec.http.HttpHeaders;
 import org.wso2.msf4j.internal.MSF4JConstants;
 import org.wso2.msf4j.internal.entitywriter.EntityWriter;
 import org.wso2.msf4j.internal.entitywriter.EntityWriterRegistry;
@@ -95,8 +94,8 @@ public class Response {
     /**
      * @return map of headers in the response object
      */
-    public HttpHeaders getHeaders() {
-        return httpCarbonMessage.getHeaders();
+    public HttpHeadersImpl getHeaders() {
+        return new HttpHeadersImpl(httpCarbonMessage.getHeaders());
     }
 
     /**
@@ -176,7 +175,7 @@ public class Response {
     /**
      * @return the underlining CarbonMessage object
      */
-    public HTTPCarbonMessage getHttpCarbonMessage() {
+    HTTPCarbonMessage getHttpCarbonMessage() {
         return httpCarbonMessage;
     }
 
@@ -319,7 +318,7 @@ public class Response {
             ByteBuffer byteBuffer = ByteBuffer.allocate(0);
             httpCarbonMessage.addHttpContent(new DefaultLastHttpContent(Unpooled.wrappedBuffer(byteBuffer)));
             try {
-                request.getHttpCarbonMessage().respond(httpCarbonMessage);
+                request.respond(httpCarbonMessage);
             } catch (ServerConnectorException e) {
                 throw new RuntimeException("Error while sending the response.", e);
             }

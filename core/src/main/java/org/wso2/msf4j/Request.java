@@ -1,9 +1,10 @@
 package org.wso2.msf4j;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.handler.codec.http.HttpHeaders;
 import org.wso2.msf4j.internal.MSF4JConstants;
 import org.wso2.transport.http.netty.common.Constants;
+import org.wso2.transport.http.netty.contract.ServerConnectorException;
+import org.wso2.transport.http.netty.contractimpl.HttpResponseStatusFuture;
 import org.wso2.transport.http.netty.message.HTTPCarbonMessage;
 
 import java.nio.ByteBuffer;
@@ -76,8 +77,8 @@ public class Request {
     /**
      * @return map of headers of the HTTP request
      */
-    public HttpHeaders getHeaders() {
-        return httpCarbonMessage.getHeaders();
+    public HttpHeadersImpl getHeaders() {
+        return new HttpHeadersImpl(httpCarbonMessage.getHeaders());
     }
 
     /**
@@ -224,5 +225,10 @@ public class Request {
      */
     public HTTPCarbonMessage getHttpCarbonMessage() {
         return httpCarbonMessage;
+    }
+
+    public boolean respond(HTTPCarbonMessage carbonMessage) throws ServerConnectorException {
+        HttpResponseStatusFuture statusFuture = httpCarbonMessage.respond(carbonMessage);
+        return statusFuture.getStatus().getCause() == null;
     }
 }

@@ -16,7 +16,6 @@
 
 package org.wso2.msf4j.internal.router;
 
-import io.netty.handler.codec.http.HttpContent;
 import org.apache.commons.io.FileCleaningTracker;
 import org.apache.commons.io.FileDeleteStrategy;
 import org.wso2.msf4j.HttpStreamer;
@@ -30,8 +29,8 @@ import org.wso2.msf4j.formparam.FormParamIterator;
 import org.wso2.msf4j.formparam.exception.FormUploadException;
 import org.wso2.msf4j.formparam.util.StreamUtil;
 import org.wso2.msf4j.internal.beanconversion.BeanConverter;
-import org.wso2.msf4j.util.BufferUtil;
 import org.wso2.msf4j.util.QueryStringDecoderUtil;
+import org.wso2.transport.http.netty.message.HttpMessageDataStreamer;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -75,7 +74,6 @@ public class HttpResourceModelProcessor {
     private Map<String, String> formParamContentType = new HashMap<>();
     private static Path tempRepoPath = Paths.get(System.getProperty("java.io.tmpdir"), "msf4jtemp");
     private Path tmpPathForRequest;
-    private HttpContent httpContent = null;
     // Temp File cleaning thread
     private static FileCleaningTracker fileCleaningTracker = new FileCleaningTracker();
     private static final String FILEINFO_POSTFIX = "file.info";
@@ -154,20 +152,18 @@ public class HttpResourceModelProcessor {
             throw new HandlerException(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR,
                     String.format("Error in executing request: %s %s", request.getHttpMethod(),
                             request.getUri()), e);
-        } finally {
-            if (httpContent != null) {
-                httpContent.release();
-            }
         }
     }
 
-    private void createObject(Request request, Object[] args, int idx, HttpResourceModel.ParameterInfo<?> paramInfo) {
-        httpContent = request.getHttpCarbonMessage().getHttpContent();
-        ByteBuffer fullContent = BufferUtil.merge(Arrays.asList(httpContent.content().nioBuffers()));
-        Type paramType = paramInfo.getParameterType();
-        args[idx] =
-                BeanConverter.getConverter((request.getContentType() != null) ? request.getContentType() :
-                        MediaType.WILDCARD).convertToObject(fullContent, paramType);
+    private void createObject(Request request, Object[] args, int idx, HttpResourceModel.ParameterInfo<?> paramInfo)
+            throws IOException {
+        HttpMessageDataStreamer dataStreamer = new HttpMessageDataStreamer(request.getHttpCarbonMessage());
+        try (InputStream inputStream = dataStreamer.getInputStream()) {
+            Type paramType = paramInfo.getParameterType();
+            args[idx] =
+                    BeanConverter.getConverter((request.getContentType() != null) ? request.getContentType() :
+                            MediaType.WILDCARD).convertToObject(inputStream, paramType);
+        }
     }
 
     private Object getFormDataParamValue(HttpResourceModel.ParameterInfo<List<Object>> paramInfo, Request request)
@@ -253,14 +249,15 @@ public class HttpResourceModelProcessor {
                 }
             }
         } else if (MediaType.APPLICATION_FORM_URLENCODED.equals(request.getContentType())) {
-            httpContent = request.getHttpCarbonMessage().getHttpContent();
-            ByteBuffer fullContent = BufferUtil.merge(Arrays.asList(httpContent.content().nioBuffers()));
-            String bodyStr = BeanConverter
-                    .getConverter((request.getContentType() != null) ? request.getContentType() : MediaType.WILDCARD)
-                    .convertToObject(fullContent, paramInfo.getParameterType()).toString();
-            QueryStringDecoderUtil queryStringDecoderUtil = new QueryStringDecoderUtil(bodyStr, false);
-            queryStringDecoderUtil.parameters().entrySet().
-                    forEach(entry -> parameters.put(entry.getKey(), new ArrayList<>(entry.getValue())));
+            HttpMessageDataStreamer dataStreamer = new HttpMessageDataStreamer(request.getHttpCarbonMessage());
+            try (InputStream inputStream = dataStreamer.getInputStream()) {
+                String bodyStr = BeanConverter
+                        .getConverter((request.getContentType() != null) ? request.getContentType() : MediaType
+                                .WILDCARD).convertToObject(inputStream, paramInfo.getParameterType()).toString();
+                QueryStringDecoderUtil queryStringDecoderUtil = new QueryStringDecoderUtil(bodyStr, false);
+                queryStringDecoderUtil.parameters().entrySet().
+                        forEach(entry -> parameters.put(entry.getKey(), new ArrayList<>(entry.getValue())));
+            }
         }
         return parameters;
     }
@@ -307,14 +304,15 @@ public class HttpResourceModelProcessor {
                     }
                 }
             } else if (MediaType.APPLICATION_FORM_URLENCODED.equals(request.getContentType())) {
-                httpContent = request.getHttpCarbonMessage().getHttpContent();
-                ByteBuffer fullContent = BufferUtil.merge(Arrays.asList(httpContent.content().nioBuffers()));
-                String bodyStr = BeanConverter.getConverter(
-                        (request.getContentType() != null) ? request.getContentType() : MediaType.WILDCARD)
-                        .convertToObject(fullContent, paramInfo.getParameterType()).toString();
-                QueryStringDecoderUtil queryStringDecoderUtil = new QueryStringDecoderUtil(bodyStr, false);
-                queryStringDecoderUtil.parameters().entrySet().
-                        forEach(entry -> parameters.put(entry.getKey(), new ArrayList<>(entry.getValue())));
+                HttpMessageDataStreamer dataStreamer = new HttpMessageDataStreamer(request.getHttpCarbonMessage());
+                try (InputStream inputStream = dataStreamer.getInputStream()) {
+                    String bodyStr = BeanConverter.getConverter(
+                            (request.getContentType() != null) ? request.getContentType() : MediaType.WILDCARD)
+                            .convertToObject(inputStream, paramInfo.getParameterType()).toString();
+                    QueryStringDecoderUtil queryStringDecoderUtil = new QueryStringDecoderUtil(bodyStr, false);
+                    queryStringDecoderUtil.parameters().entrySet().
+                            forEach(entry -> parameters.put(entry.getKey(), new ArrayList<>(entry.getValue())));
+                }
             }
             setFormParameters(parameters);
         }
@@ -350,15 +348,16 @@ public class HttpResourceModelProcessor {
             if (MediaType.MULTIPART_FORM_DATA.equals(request.getContentType())) {
                 listMultivaluedMap = extractRequestFormParams(request, paramInfo, false);
             } else if (MediaType.APPLICATION_FORM_URLENCODED.equals(request.getContentType())) {
-                httpContent = request.getHttpCarbonMessage().getHttpContent();
-                ByteBuffer fullContent = BufferUtil.merge(Arrays.asList(httpContent.content().nioBuffers()));
-                String bodyStr = BeanConverter.getConverter(
-                        (request.getContentType() != null) ? request.getContentType() : MediaType.WILDCARD)
-                        .convertToObject(fullContent, paramInfo.getParameterType()).toString();
-                QueryStringDecoderUtil queryStringDecoderUtil = new QueryStringDecoderUtil(bodyStr, false);
-                MultivaluedMap<String, Object> finalListMultivaluedMap = listMultivaluedMap;
-                queryStringDecoderUtil.parameters().entrySet().
-                        forEach(entry -> finalListMultivaluedMap.put(entry.getKey(), new ArrayList(entry.getValue())));
+                HttpMessageDataStreamer dataStreamer = new HttpMessageDataStreamer(request.getHttpCarbonMessage());
+                try (InputStream inputStream = dataStreamer.getInputStream()) {
+                    String bodyStr = BeanConverter.getConverter(
+                            (request.getContentType() != null) ? request.getContentType() : MediaType.WILDCARD)
+                            .convertToObject(inputStream, paramInfo.getParameterType()).toString();
+                    QueryStringDecoderUtil queryStringDecoderUtil = new QueryStringDecoderUtil(bodyStr, false);
+                    MultivaluedMap<String, Object> finalListMultivaluedMap = listMultivaluedMap;
+                    queryStringDecoderUtil.parameters().entrySet().forEach(entry -> finalListMultivaluedMap.put(entry
+                            .getKey(), new ArrayList(entry.getValue())));
+                }
             }
             value = listMultivaluedMap;
         }

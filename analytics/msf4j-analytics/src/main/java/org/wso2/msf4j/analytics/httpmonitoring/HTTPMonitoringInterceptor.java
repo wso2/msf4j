@@ -201,15 +201,15 @@ public class HTTPMonitoringInterceptor implements Interceptor {
             httpMonitoringEvent.setRequestUri(request.getUri());
             httpMonitoringEvent.setServiceContext(servicePath);
 
-            io.netty.handler.codec.http.HttpHeaders httpHeaders = request.getHeaders();
+            HttpHeaders httpHeaders = request.getHeaders();
 
             httpMonitoringEvent.setHttpMethod(request.getHttpMethod());
-            httpMonitoringEvent.setContentType(httpHeaders.get(HttpHeaders.CONTENT_TYPE));
-            String contentLength = httpHeaders.get(HttpHeaders.CONTENT_LENGTH);
+            httpMonitoringEvent.setContentType(httpHeaders.getHeaderString(HttpHeaders.CONTENT_TYPE));
+            String contentLength = httpHeaders.getHeaderString(HttpHeaders.CONTENT_LENGTH);
             if (contentLength != null) {
                 httpMonitoringEvent.setRequestSizeBytes(Long.parseLong(contentLength));
             }
-            httpMonitoringEvent.setReferrer(httpHeaders.get(REFERER));
+            httpMonitoringEvent.setReferrer(httpHeaders.getHeaderString(REFERER));
 
             this.handleTracing(request, httpMonitoringEvent);
 
