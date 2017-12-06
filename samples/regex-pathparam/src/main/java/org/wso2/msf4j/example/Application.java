@@ -1,4 +1,3 @@
-package org.wso2.msf4j.example;
 /*
  * Copyright (c) 2016, WSO2 Inc. (http://wso2.com) All Rights Reserved.
  *
@@ -15,6 +14,7 @@ package org.wso2.msf4j.example;
  * limitations under the License.
  */
 
+package org.wso2.msf4j.example;
 
 import org.wso2.msf4j.MicroservicesRunner;
 

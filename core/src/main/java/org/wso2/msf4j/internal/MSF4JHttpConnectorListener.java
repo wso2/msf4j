@@ -18,6 +18,7 @@ package org.wso2.msf4j.internal;
 
 import io.netty.handler.codec.http.DefaultLastHttpContent;
 import io.netty.handler.codec.http.HttpContent;
+import io.netty.handler.codec.http.LastHttpContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.config.ConfigProviderFactory;
@@ -44,7 +45,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Locale;
@@ -192,15 +192,12 @@ public class MSF4JHttpConnectorListener implements HttpConnectorListener {
                     if (httpContent == null) {
                         break;
                     }
-                    ByteBuffer[] byteBuffers = httpContent.content().nioBuffers();
-                    for (ByteBuffer byteBuffer : byteBuffers) {
-                        httpMethodInfo.chunk(byteBuffer);
-                    }
-                    if (request.isEmpty() && request.getHttpCarbonMessage().isEmpty()) {
-                        httpContent.release();
+                    httpMethodInfo.chunk(httpContent.content().nioBuffer());
+                    httpContent.release();
+
+                    if (httpContent instanceof LastHttpContent) {
                         break;
                     }
-                    httpContent.release();
                     httpContent = request.getHttpCarbonMessage().getHttpContent();
                 }
                 boolean isResponseInterceptorsSuccessful =
@@ -232,7 +229,7 @@ public class MSF4JHttpConnectorListener implements HttpConnectorListener {
                         javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
                         "Exception occurred :" + throwable.getMessage());
                 response.addHttpContent(new DefaultLastHttpContent());
-                request.getHttpCarbonMessage().respond(response);
+                request.respond(response);
             } catch (ServerConnectorException e) {
                 log.error("Error while sending the response.", e);
             }
@@ -243,7 +240,7 @@ public class MSF4JHttpConnectorListener implements HttpConnectorListener {
         try {
             HTTPCarbonMessage failureResponse = e.getFailureResponse();
             failureResponse.addHttpContent(new DefaultLastHttpContent());
-            request.getHttpCarbonMessage().respond(failureResponse);
+            request.respond(failureResponse);
         } catch (ServerConnectorException e1) {
             log.error("Error while sending the response.", e);
         }

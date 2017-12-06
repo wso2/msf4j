@@ -19,6 +19,7 @@ package org.wso2.msf4j.delegates;
 import java.util.HashMap;
 import java.util.Map;
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.ResponseBuilder;
@@ -39,6 +40,7 @@ public class MSF4JRuntimeDelegate extends RuntimeDelegate {
 
     public MSF4JRuntimeDelegate() {
         headerProviders.put(MediaType.class, new MediaTypeHeaderProvider());
+        headerProviders.put(Cookie.class, new CookieHeaderProvider());
     }
 
     @Override

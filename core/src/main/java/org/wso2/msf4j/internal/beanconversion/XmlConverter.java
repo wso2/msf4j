@@ -19,8 +19,12 @@ package org.wso2.msf4j.internal.beanconversion;
 import org.wso2.msf4j.beanconversion.BeanConversionException;
 import org.wso2.msf4j.beanconversion.MediaTypeConverter;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -82,6 +86,21 @@ public class XmlConverter extends MediaTypeConverter {
                 return jaxbContext.createUnmarshaller().unmarshal(new StringReader(str));
             }
         } catch (JAXBException e) {
+            throw new BeanConversionException("Unable to perform xml to object conversion", e);
+        }
+        return null;
+    }
+
+    @Override
+    protected Object toObject(InputStream inputStream, Type targetType) throws BeanConversionException {
+        try {
+            JAXBContext jaxbContext;
+            Reader reader = new InputStreamReader(inputStream, UTF_8_CHARSET);
+            if (targetType instanceof Class) {
+                jaxbContext = JAXBContext.newInstance((Class) targetType);
+                return jaxbContext.createUnmarshaller().unmarshal(reader);
+            }
+        } catch (JAXBException | UnsupportedEncodingException e) {
             throw new BeanConversionException("Unable to perform xml to object conversion", e);
         }
         return null;
