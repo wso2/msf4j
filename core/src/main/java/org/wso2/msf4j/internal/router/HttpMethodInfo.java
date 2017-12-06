@@ -16,7 +16,6 @@
 
 package org.wso2.msf4j.internal.router;
 
-import io.netty.handler.codec.http.HttpContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.HttpStreamHandler;
@@ -64,7 +63,6 @@ public class HttpMethodInfo {
     private static final Logger log = LoggerFactory.getLogger(HttpMethodInfo.class);
     private static final String DECLARING_CLASS_LIST_CONSTANT = "declaringClassList";
     private static final String RESOURCE_METHOD_LIST_CONSTANT = "resourceMethodList";
-    private HttpContent httpContent;
 
     /**
      * Construct HttpMethodInfo object for a handler

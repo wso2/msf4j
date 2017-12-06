@@ -98,6 +98,7 @@ public abstract class MediaTypeConverter {
 
     /**
      * Create an object from input stream.
+     *
      * @param inputStream input stream that needs to be converted to an object
      * @param targetType target object type
      * @return created object

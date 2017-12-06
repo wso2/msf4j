@@ -17,9 +17,12 @@ package org.wso2.msf4j.delegates;
 
 import org.testng.annotations.Test;
 
+import java.util.Date;
 import javax.ws.rs.core.Cookie;
+import javax.ws.rs.core.NewCookie;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 public class CookieHeaderProviderTest {
 
@@ -32,18 +35,25 @@ public class CookieHeaderProviderTest {
 
     @Test
     public void testFromStringWithExtendedParameters() {
-        String cookieString = "$Version=1; Application=msf4j; $Path=/carbon; $Domain=wso2";
+        String cookieString = "Version=1; Application=msf4j; Path=/carbon; Domain=wso2; Expires=Sun, 06 Nov 1994 " +
+                "08:49:37 GMT; Secure; HttpOnly; MaxAge=50; Comment=TestOnly";
         String name = "Application";
         String value = "msf4j";
         String path = "/carbon";
         String domain = "wso2";
+        long dateTime = 784111777000L;
 
-        Cookie cookie = Cookie.valueOf(cookieString);
+        NewCookie cookie = (NewCookie) Cookie.valueOf(cookieString);
         assertEquals(cookie.getName(), name);
         assertEquals(cookie.getValue(), value);
         assertEquals(cookie.getPath(), path);
         assertEquals(cookie.getVersion(), 1);
         assertEquals(cookie.getDomain(), domain);
+        assertEquals(cookie.getComment(), "TestOnly");
+        assertEquals(cookie.getExpiry().getTime(), dateTime);
+        assertEquals(cookie.getMaxAge(), 50);
+        assertEquals(cookie.isSecure(), true);
+        assertEquals(cookie.isHttpOnly(), true);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "Cookie value can " +
@@ -54,24 +64,25 @@ public class CookieHeaderProviderTest {
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testFromStringWithoutName() {
-        String cookieString = "$Version=1; $Path=/carbon; $Domain=wso2";
+        String cookieString = "Version=1; Path=/carbon; Domain=wso2";
         Cookie.valueOf(cookieString);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testFromStringWithoutValue() {
-        String cookieString = "$Version=1; Application;  $Path=/carbon; $Domain=wso2";
+        String cookieString = "Version=1; Application;  Path=/carbon; Domain=wso2";
         Cookie.valueOf(cookieString);
     }
 
     @Test
     public void testToString() throws Exception {
-        String expectedString = "$Version=2;Application=msf4j;$Path=/carbon;$Domain=wso2";
-        Cookie cookie = new Cookie("Application", "msf4j", "/carbon", "wso2", 2);
+        String expectedString = "Version=2;Application=msf4j;Path=/carbon;Domain=wso2;MaxAge=50;Comment=TestOnly;" +
+                "Expires=Sun, 06 Nov 1994 08:49:37 GMT;Secure;HttpOnly";
+        Cookie cookie = new NewCookie("Application", "msf4j", "/carbon", "wso2", 2, "TestOnly", 50, new Date
+                (784111777000L), true, true);
         CookieHeaderProvider cookieHeaderProvider = new CookieHeaderProvider();
         String cookieString = cookieHeaderProvider.toString(cookie);
         assertNotNull(cookieString);
         assertEquals(cookieString, expectedString);
     }
-
 }

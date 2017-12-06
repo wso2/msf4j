@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.wso2.msf4j;
-
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +45,8 @@ import javax.ws.rs.core.MultivaluedMap;
  */
 public class HttpHeadersImpl implements HttpHeaders {
 
+    private static final String DATE_FORMAT_PATTERN = "EEE, dd MMM yyyy HH:mm:ss zzz";
+    private static final String GMT_TIMEZONE = "GMT";
     private final io.netty.handler.codec.http.HttpHeaders nettyHttpHeaders;
     private static final Logger log = LoggerFactory.getLogger(HttpHeadersImpl.class);
 
@@ -106,7 +106,8 @@ public class HttpHeadersImpl implements HttpHeaders {
 
     @Override
     public List<Locale> getAcceptableLanguages() {
-        // Accept-Language: da, en-gb;q=0.8, en;q=0.7
+        // Accept-Language: da
+        // Accept-Language: en-gb;q=0.8
         List<String> values = nettyHttpHeaders.getAll(HttpHeaders.ACCEPT_LANGUAGE);
         if (values.isEmpty()) {
             return Collections.singletonList(new Locale("*"));
@@ -117,13 +118,10 @@ public class HttpHeadersImpl implements HttpHeaders {
         // derive preferences from Accept-Language and sort languages according to the preferences.
         for (String value : values) {
             String[] pair = value != null ? value.split(";") : new String[0];
-
             Locale locale = new Locale(pair[0].trim());
-
             localeValues.add(locale);
             if (pair.length > 1) {
                 String[] pair2 = pair[1] != null ? pair[1].split("=") : new String[0];
-
                 if (pair2.length > 1) {
                     prefs.put(locale, getLanguageQualityFactor(pair2[1].trim()));
                 } else {
@@ -133,6 +131,7 @@ public class HttpHeadersImpl implements HttpHeaders {
                 prefs.put(locale, 1F);
             }
         }
+
         if (localeValues.size() <= 1) {
             return localeValues;
         }
@@ -207,9 +206,9 @@ public class HttpHeadersImpl implements HttpHeaders {
             return null;
         }
         // Preferred date format in internet standard is Sun, 06 Nov 1994 08:49:37 GMT
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_PATTERN, Locale.ENGLISH);
         //All HTTP date/time stamps MUST be represented in Greenwich Mean Time (GMT)
-        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        dateFormat.setTimeZone(TimeZone.getTimeZone(GMT_TIMEZONE));
         try {
             return dateFormat.parse(value);
         } catch (ParseException e) {

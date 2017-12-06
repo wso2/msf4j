@@ -36,5 +36,5 @@ public interface MicroservicesServer {
      *
      * @return ListenerConfigurationMap
      */
-    public Map<String, ListenerConfiguration> getListenerConfigurations();
+    Map<String, ListenerConfiguration> getListenerConfigurations();
 }
