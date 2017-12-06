@@ -1258,8 +1258,8 @@ public class HttpServerTest {
         assertEquals(value, content);
         String cookie = urlConn.getHeaderField("Set-Cookie");
         assertNotNull(cookie);
-        assertEquals("test-cookie=" + value +
-                     ";Path=/cookie;Domain=wso2.com;Expires=Sun Jan 01 00:00:00 IST 2017;Secure;HttpOnly", cookie);
+        assertEquals("test-cookie=" + value + ";Path=/cookie;Domain=wso2.com;MaxAge=10;Comment=Cookie Test;" +
+                "Expires=Sat, 31 Dec 2016 18:30:00 GMT;Secure;HttpOnly", cookie);
         urlConn.disconnect();
 
         value = "Apache";

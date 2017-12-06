@@ -19,6 +19,7 @@ package org.wso2.msf4j;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.DefaultLastHttpContent;
+import org.wso2.msf4j.delegates.CookieHeaderProvider;
 import org.wso2.msf4j.internal.MSF4JConstants;
 import org.wso2.msf4j.internal.entitywriter.EntityWriter;
 import org.wso2.msf4j.internal.entitywriter.EntityWriterRegistry;
@@ -28,7 +29,6 @@ import org.wso2.transport.http.netty.message.HTTPCarbonMessage;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import javax.ws.rs.core.HttpHeaders;
@@ -274,30 +274,9 @@ public class Response {
 
             // String - cookie name
             Map<String, NewCookie> cookies = jaxrsResponse.getCookies();
+            CookieHeaderProvider cookieProvider = new CookieHeaderProvider();
             cookies.forEach((name, cookie) -> {
-                StringBuilder cookieValue = new StringBuilder();
-                cookieValue.append(cookie.getName()).append("=").append(cookie.getValue());
-                String path = cookie.getPath();
-                if (path != null && !path.isEmpty()) {
-                    cookieValue.append(";Path=").append(path);
-                }
-                String domain = cookie.getDomain();
-                if (domain != null && !domain.isEmpty()) {
-                    cookieValue.append(";Domain=").append(domain);
-                }
-                Date expiry = cookie.getExpiry();
-                if (expiry != null) {
-                    cookieValue.append(";Expires=").append(expiry);
-                }
-                boolean secure = cookie.isSecure();
-                if (secure) {
-                    cookieValue.append(";Secure");
-                }
-                boolean httpOnly = cookie.isHttpOnly();
-                if (httpOnly) {
-                    cookieValue.append(";HttpOnly");
-                }
-                cookiesHeaderValue.add(cookieValue.toString());
+                cookiesHeaderValue.add(cookieProvider.toString(cookie));
             });
         }
 
