@@ -18,6 +18,9 @@ package org.wso2.msf4j.delegates;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.ext.RuntimeDelegate;
 
+/**
+ * Provides conversions from Cookie to String and String to Cookie.
+ */
 public class CookieHeaderProvider implements RuntimeDelegate.HeaderDelegate<Cookie> {
 
     private static final String VERSION = "$Version";

@@ -35,7 +35,6 @@ public class MicroservicesServerImpl implements MicroservicesServer {
         listenerConfigurationMap = Collections.unmodifiableMap(configurationMap);
     }
 
-
     @Override
     public Map<String, ListenerConfiguration> getListenerConfigurations() {
         return listenerConfigurationMap;

@@ -55,6 +55,8 @@ import javax.ws.rs.ext.ExceptionMapper;
 
 /**
  * Process carbon messages for MSF4J.
+ *
+ * @since 2.5.0
  */
 public class MSF4JHttpConnectorListener implements HttpConnectorListener {
 
@@ -194,7 +196,7 @@ public class MSF4JHttpConnectorListener implements HttpConnectorListener {
                     }
                     httpMethodInfo.chunk(httpContent.content().nioBuffer());
                     httpContent.release();
-
+                    // Exit the loop at the end of the content
                     if (httpContent instanceof LastHttpContent) {
                         break;
                     }
@@ -229,7 +231,7 @@ public class MSF4JHttpConnectorListener implements HttpConnectorListener {
                         javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
                         "Exception occurred :" + throwable.getMessage());
                 response.addHttpContent(new DefaultLastHttpContent());
-                request.respond(response);
+                request.getHttpCarbonMessage().respond(response);
             } catch (ServerConnectorException e) {
                 log.error("Error while sending the response.", e);
             }
@@ -240,7 +242,7 @@ public class MSF4JHttpConnectorListener implements HttpConnectorListener {
         try {
             HTTPCarbonMessage failureResponse = e.getFailureResponse();
             failureResponse.addHttpContent(new DefaultLastHttpContent());
-            request.respond(failureResponse);
+            request.getHttpCarbonMessage().respond(failureResponse);
         } catch (ServerConnectorException e1) {
             log.error("Error while sending the response.", e);
         }
@@ -248,6 +250,6 @@ public class MSF4JHttpConnectorListener implements HttpConnectorListener {
 
     @Override
     public void onError(Throwable throwable) {
-
+        log.error("Error in http connector listener", throwable);
     }
 }

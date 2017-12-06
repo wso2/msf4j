@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.NewCookie;
 
@@ -87,6 +88,7 @@ public class Response {
     /**
      * @return complete content of the response object
      */
+    @Deprecated
     public List<ByteBuffer> getFullMessageBody() {
         return httpCarbonMessage.getFullMessageBody();
     }
@@ -94,7 +96,7 @@ public class Response {
     /**
      * @return map of headers in the response object
      */
-    public HttpHeadersImpl getHeaders() {
+    public HttpHeaders getHeaders() {
         return new HttpHeadersImpl(httpCarbonMessage.getHeaders());
     }
 
@@ -318,7 +320,7 @@ public class Response {
             ByteBuffer byteBuffer = ByteBuffer.allocate(0);
             httpCarbonMessage.addHttpContent(new DefaultLastHttpContent(Unpooled.wrappedBuffer(byteBuffer)));
             try {
-                request.respond(httpCarbonMessage);
+                request.getHttpCarbonMessage().respond(httpCarbonMessage);
             } catch (ServerConnectorException e) {
                 throw new RuntimeException("Error while sending the response.", e);
             }

@@ -50,12 +50,10 @@ import javax.ws.rs.ext.ExceptionMapper;
 public class MicroservicesRunner {
 
     private static final Logger log = LoggerFactory.getLogger(MicroservicesRunner.class);
-
     /**
      * Default host used when using microservice runner starts with {@link #MicroservicesRunner(int...)}.
      */
     private static final String DEFAULT_HOST = "0.0.0.0";
-
     /**
      * The environment variable which overrides the {@link #DEFAULT_HOST}.
      */
@@ -105,7 +103,7 @@ public class MicroservicesRunner {
      * Deploy a microservice with dynamic path.
      *
      * @param microservice The microservice which is to be deployed
-     * @param basePath     The context path for the service
+     * @param basePath The context path for the service
      * @return this MicroservicesRunner object
      */
     public MicroservicesRunner deploy(String basePath, Object microservice) {

@@ -19,8 +19,6 @@ package org.wso2.msf4j;
 import io.netty.buffer.ByteBuf;
 import org.wso2.msf4j.internal.MSF4JConstants;
 import org.wso2.transport.http.netty.common.Constants;
-import org.wso2.transport.http.netty.contract.ServerConnectorException;
-import org.wso2.transport.http.netty.contractimpl.HttpResponseStatusFuture;
 import org.wso2.transport.http.netty.message.HTTPCarbonMessage;
 
 import java.nio.ByteBuffer;
@@ -28,6 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javax.ws.rs.core.HttpHeaders;
 
 /**
  * Class that represents an HTTP request in MSF4J level.
@@ -86,6 +85,7 @@ public class Request {
     /**
      * @return full message body of the Request
      */
+    @Deprecated
     public List<ByteBuffer> getFullMessageBody() {
         return httpCarbonMessage.getFullMessageBody();
     }
@@ -93,7 +93,7 @@ public class Request {
     /**
      * @return map of headers of the HTTP request
      */
-    public HttpHeadersImpl getHeaders() {
+    public HttpHeaders getHeaders() {
         return new HttpHeadersImpl(httpCarbonMessage.getHeaders());
     }
 
@@ -241,10 +241,5 @@ public class Request {
      */
     public HTTPCarbonMessage getHttpCarbonMessage() {
         return httpCarbonMessage;
-    }
-
-    public boolean respond(HTTPCarbonMessage carbonMessage) throws ServerConnectorException {
-        HttpResponseStatusFuture statusFuture = httpCarbonMessage.respond(carbonMessage);
-        return statusFuture.getStatus().getCause() == null;
     }
 }

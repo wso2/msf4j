@@ -314,8 +314,6 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
 
     @Override
     public void onAllRequiredCapabilitiesAvailable() {
-        DataHolder.getInstance().getBundleContext()
-                  .registerService(HttpConnectorListener.class, new MSF4JHttpConnectorListener(), null);
         try {
             ServiceReference[] serviceReferences = DataHolder.getInstance().getBundleContext()
                                                              .getServiceReferences(Microservice.class.getName(), null);
@@ -380,11 +378,13 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             isAllRequiredCapabilitiesAvailable = true;
         }
 
+        msf4JHttpConnectorListener = new MSF4JHttpConnectorListener();
+        DataHolder.getInstance().getBundleContext()
+                .registerService(HttpConnectorListener.class, msf4JHttpConnectorListener, null);
         DataHolder.getInstance().getBundleContext().registerService(MicroservicesServerSC.class, this, null);
         DataHolder.getInstance().getBundleContext().registerService(MicroservicesServer.class, new
                 MicroservicesServerImpl(listenerConfigurationMap), null);
         log.info("All microservices are available");
-        msf4JHttpConnectorListener = new MSF4JHttpConnectorListener();
         serverConnectors.forEach(serverConnector -> {
             final ServerConnectorFuture serverConnectorFuture = serverConnector.start();
             serverConnectorFuture.setHttpConnectorListener(msf4JHttpConnectorListener);
@@ -498,3 +498,4 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
         }
     }
 }
+

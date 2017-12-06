@@ -19,7 +19,8 @@ import org.testng.annotations.Test;
 
 import javax.ws.rs.core.Cookie;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 public class CookieHeaderProviderTest {
 
@@ -73,5 +74,4 @@ public class CookieHeaderProviderTest {
         assertNotNull(cookieString);
         assertEquals(cookieString, expectedString);
     }
-
 }
