@@ -13,29 +13,29 @@ below is and where the actual text of the license can be found.
 
 Name                                                                            Type           License
 ---------------------------------------------------------------------------------------------------------
-guava_18.0.jar                                                                  bundle         apache2
+guava_20.0.jar                                                                  bundle         apache2
 commons-io_2.4.0.wso2v1.jar                                                     bundle         apache2
 commons-pool_1.5.6.wso2v1.jar                                                   bundle         apache2
 metrics-core_3.2.4.jar                                                          bundle         apache2
 metrics-jvm_3.2.4.jar                                                           bundle         apache2
-swagger-annotations_1.5.8.jar                                                   bundle         apache2
-swagger-core_1.5.8.jar                                                          bundle         apache2
-swagger-jaxrs_1.5.8.jar                                                         bundle         apache2
-swagger-models_1.5.8.jar                                                        bundle         apache2
+swagger-annotations_1.5.16.jar                                                   bundle         apache2
+swagger-core_1.5.16.jar                                                          bundle         apache2
+swagger-jaxrs_1.5.16.jar                                                         bundle         apache2
+swagger-models_1.5.16.jar                                                        bundle         apache2
 validation-api_1.1.0.Final.jar                                                  jar            apache2
 libthrift_0.9.2.wso2v1.jar                                                      bundle         apache2
 javassist_3.19.0-GA.jar                                                         bundle         mpl+lgpl+apache2
 json_20140107.jar                                                               jar            apache2
 json_3.0.0.wso2v1.jar                                                           bundle         apache2
-reflections_0.9.10.jar                                                          jar            wtfpl+bsd
+reflections_0.9.11.jar                                                          jar            wtfpl+bsd
 disruptor_3.3.2.wso2v2.jar                                                      bundle
 httpclient_4.3.1.wso2v2.jar                                                     bundle         apache2
 snakeyaml_1.17.jar                                                              bundle         apache2
 log4j_1.2.17.wso2v1.jar                                                         jar            apache2
-jackson-annotations_2.7.4.jar                                                   bundle         apache2
-jackson-core_2.7.4.jar                                                          bundle         apache2
-jackson-databind_2.7.4.jar                                                      bundle         apache2
-jackson-dataformat-yaml_2.7.4.jar                                               bundle         apache2
+jackson-annotations_2.8.9.jar                                                   bundle         apache2
+jackson-core_2.8.9.jar                                                          bundle         apache2
+jackson-databind_2.8.9.jar                                                      bundle         apache2
+jackson-dataformat-yaml_2.8.9.jar                                               bundle         apache2
 jackson-jaxrs-base_2.4.5.jar                                                    bundle         apache2
 jackson-jaxrs-json-provider_2.4.5.jar                                           bundle         apache2
 jackson-module-jaxb-annotations_2.4.5.jar                                       bundle         apache2
