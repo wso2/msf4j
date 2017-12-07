@@ -30,7 +30,6 @@ import org.wso2.msf4j.formparam.exception.FormUploadException;
 import org.wso2.msf4j.formparam.util.StreamUtil;
 import org.wso2.msf4j.internal.beanconversion.BeanConverter;
 import org.wso2.msf4j.util.QueryStringDecoderUtil;
-import org.wso2.transport.http.netty.message.HttpMessageDataStreamer;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -157,8 +156,7 @@ public class HttpResourceModelProcessor {
 
     private void createObject(Request request, Object[] args, int idx, HttpResourceModel.ParameterInfo<?> paramInfo)
             throws IOException {
-        HttpMessageDataStreamer dataStreamer = new HttpMessageDataStreamer(request.getHttpCarbonMessage());
-        try (InputStream inputStream = dataStreamer.getInputStream()) {
+        try (InputStream inputStream = request.getMessageContentStream()) {
             Type paramType = paramInfo.getParameterType();
             args[idx] =
                     BeanConverter.getConverter((request.getContentType() != null) ? request.getContentType() :
@@ -249,8 +247,7 @@ public class HttpResourceModelProcessor {
                 }
             }
         } else if (MediaType.APPLICATION_FORM_URLENCODED.equals(request.getContentType())) {
-            HttpMessageDataStreamer dataStreamer = new HttpMessageDataStreamer(request.getHttpCarbonMessage());
-            try (InputStream inputStream = dataStreamer.getInputStream()) {
+            try (InputStream inputStream = request.getMessageContentStream()) {
                 String bodyStr = BeanConverter
                         .getConverter((request.getContentType() != null) ? request.getContentType() : MediaType
                                 .WILDCARD).convertToObject(inputStream, paramInfo.getParameterType()).toString();
@@ -304,8 +301,7 @@ public class HttpResourceModelProcessor {
                     }
                 }
             } else if (MediaType.APPLICATION_FORM_URLENCODED.equals(request.getContentType())) {
-                HttpMessageDataStreamer dataStreamer = new HttpMessageDataStreamer(request.getHttpCarbonMessage());
-                try (InputStream inputStream = dataStreamer.getInputStream()) {
+                try (InputStream inputStream = request.getMessageContentStream()) {
                     String bodyStr = BeanConverter.getConverter(
                             (request.getContentType() != null) ? request.getContentType() : MediaType.WILDCARD)
                             .convertToObject(inputStream, paramInfo.getParameterType()).toString();
@@ -348,8 +344,7 @@ public class HttpResourceModelProcessor {
             if (MediaType.MULTIPART_FORM_DATA.equals(request.getContentType())) {
                 listMultivaluedMap = extractRequestFormParams(request, paramInfo, false);
             } else if (MediaType.APPLICATION_FORM_URLENCODED.equals(request.getContentType())) {
-                HttpMessageDataStreamer dataStreamer = new HttpMessageDataStreamer(request.getHttpCarbonMessage());
-                try (InputStream inputStream = dataStreamer.getInputStream()) {
+                try (InputStream inputStream = request.getMessageContentStream()) {
                     String bodyStr = BeanConverter.getConverter(
                             (request.getContentType() != null) ? request.getContentType() : MediaType.WILDCARD)
                             .convertToObject(inputStream, paramInfo.getParameterType()).toString();

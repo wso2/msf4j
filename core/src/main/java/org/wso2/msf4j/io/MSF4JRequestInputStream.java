@@ -15,12 +15,11 @@
 */
 package org.wso2.msf4j.io;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.handler.codec.http.HttpContent;
 import org.wso2.msf4j.Request;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 
 /**
  * Wrapper {@link InputStream} for {@link Request}.
@@ -28,30 +27,25 @@ import java.io.InputStream;
 @Deprecated
 public class MSF4JRequestInputStream extends InputStream {
     private Request request;
-    private ByteBuf byteBuf = null;
-    private HttpContent httpContent = null;
+    private ByteBuffer buffer;
 
     public MSF4JRequestInputStream(Request request) {
         this.request = request;
-        httpContent = request.getHttpCarbonMessage().getHttpContent();
-        byteBuf = httpContent.content();
+        buffer = request.getMessageBody().nioBuffer();
     }
 
     @Override
     public int read() throws IOException {
-        if (request.isEmpty() && request.getHttpCarbonMessage().isEmpty() && !byteBuf.isReadable()) {
-            httpContent.release();
+        if (request.isEomAdded() && request.isEmpty() && !buffer.hasRemaining()) {
             return -1;
-        } else if (!byteBuf.isReadable()) {
-            httpContent.release();
-            httpContent = request.getHttpCarbonMessage().getHttpContent();
-            byteBuf = httpContent.content();
+        } else if (!buffer.hasRemaining()) {
+            buffer = request.getMessageBody().nioBuffer();
         }
-        return byteBuf.readByte();
+        return buffer.get() & 0xFF;
     }
 
     @Override
     public int available() throws IOException {
-        return byteBuf.writerIndex() - byteBuf.readerIndex();
+        return buffer.remaining();
     }
 }
