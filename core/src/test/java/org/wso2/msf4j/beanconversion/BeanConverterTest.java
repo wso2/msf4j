@@ -85,6 +85,25 @@ public class BeanConverterTest {
         assertEquals(original.getValue(), result.getValue());
     }
 
+    @Test(expectedExceptions = BeanConversionException.class, expectedExceptionsMessageRegExp = "Object cannot be null")
+    public void testBeansConversionConvertToMediaException() {
+        BeanConverter.getConverter("text/xml").convertToMedia(null);
+    }
+
+    @Test(expectedExceptions = BeanConversionException.class,
+            expectedExceptionsMessageRegExp = "Content or target type cannot be null")
+    public void testBeansConversionConvertToObjectExceptionWithNullContent() {
+        BeanConverter.getConverter("text/xml").convertToObject(null, Pet.class);
+    }
+
+    @Test(expectedExceptions = BeanConversionException.class,
+            expectedExceptionsMessageRegExp = "Content or target type cannot be null")
+    public void testBeansConversionConvertToObjectExceptionWithNullTarget() {
+        XmlBean original = makeXmlBan();
+        ByteBuffer xml = BeanConverter.getConverter("text/xml").toMedia(original);
+        BeanConverter.getConverter("text/xml").convertToObject(xml, null);
+    }
+
     private XmlBean makeXmlBan() {
         XmlBean xmlBean = new XmlBean();
         xmlBean.setId(12);
