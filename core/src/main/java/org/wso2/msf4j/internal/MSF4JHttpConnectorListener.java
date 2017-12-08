@@ -78,9 +78,11 @@ public class MSF4JHttpConnectorListener implements HttpConnectorListener {
                     configProvider = ConfigProviderFactory.getConfigProvider(Paths.get(deploymentYamlPath), null);
                     DataHolder.getInstance().setConfigProvider(configProvider);
                 } else {
-                    log.warn("MSF4J Configuration file is not provided. either system property '" + MSF4JConstants
-                            .DEPLOYMENT_YAML_SYS_PROPERTY + "' is not set or provided file path not exist. Hence " +
-                            "using default configuration.");
+                    if (log.isDebugEnabled()) {
+                        log.debug("MSF4J Configuration file is not provided. either system property '" + MSF4JConstants
+                                .DEPLOYMENT_YAML_SYS_PROPERTY + "' is not set or provided file path not exist. Hence " +
+                                "using default configuration.");
+                    }
                 }
             } catch (ConfigurationException e) {
                 throw new RuntimeException("Error loading deployment.yaml Configuration", e);
@@ -189,7 +191,8 @@ public class MSF4JHttpConnectorListener implements HttpConnectorListener {
                     // Execute method level request interceptors
                     && InterceptorExecutor.executeMethodLevelRequestInterceptors(request, response, method)) {
 
-                HttpContent httpContent = request.getHttpCarbonMessage().getHttpContent();
+                HTTPCarbonMessage carbonMessage = getHttpCarbonMessage(request);
+                HttpContent httpContent = carbonMessage.getHttpContent();
                 while (true) {
                     if (httpContent == null) {
                         break;
@@ -200,7 +203,7 @@ public class MSF4JHttpConnectorListener implements HttpConnectorListener {
                     if (httpContent instanceof LastHttpContent) {
                         break;
                     }
-                    httpContent = request.getHttpCarbonMessage().getHttpContent();
+                    httpContent = carbonMessage.getHttpContent();
                 }
                 boolean isResponseInterceptorsSuccessful =
                         InterceptorExecutor.executeMethodLevelResponseInterceptors(request, response, method)
@@ -214,6 +217,19 @@ public class MSF4JHttpConnectorListener implements HttpConnectorListener {
             }
         } else {
             httpMethodInfo.invoke(destination, request, httpMethodInfo, registry);
+        }
+    }
+
+    private HTTPCarbonMessage getHttpCarbonMessage(Request request) throws HandlerException {
+        Class<?> clazz = request.getClass();
+        try {
+            Method retrieveCarbonMsg = clazz.getDeclaredMethod("getHttpCarbonMessage");
+            retrieveCarbonMsg.setAccessible(true);
+            return (HTTPCarbonMessage) retrieveCarbonMsg.invoke(request);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            throw new HandlerException(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR,
+                    String.format("Error in executing request: %s %s", request.getHttpMethod(),
+                            request.getUri()), e);
         }
     }
 
@@ -231,7 +247,7 @@ public class MSF4JHttpConnectorListener implements HttpConnectorListener {
                         javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
                         "Exception occurred :" + throwable.getMessage());
                 response.addHttpContent(new DefaultLastHttpContent());
-                request.getHttpCarbonMessage().respond(response);
+                request.respond(response);
             } catch (ServerConnectorException e) {
                 log.error("Error while sending the response.", e);
             }
@@ -242,7 +258,7 @@ public class MSF4JHttpConnectorListener implements HttpConnectorListener {
         try {
             HTTPCarbonMessage failureResponse = e.getFailureResponse();
             failureResponse.addHttpContent(new DefaultLastHttpContent());
-            request.getHttpCarbonMessage().respond(failureResponse);
+            request.respond(failureResponse);
         } catch (ServerConnectorException e1) {
             log.error("Error while sending the response.", e);
         }

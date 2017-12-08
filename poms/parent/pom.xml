@@ -745,7 +745,7 @@
         <carbon.messaging.version.range>[3,4)</carbon.messaging.version.range>
         <carbon.jndi.version>1.0.4</carbon.jndi.version>
         <carbon.datasources.version>1.1.3</carbon.datasources.version>
-        <org.wso2.transport.http.version>6.0.51</org.wso2.transport.http.version>
+        <org.wso2.transport.http.version>6.0.56</org.wso2.transport.http.version>
         <org.wso2.transport.http.version.range>[6.0,7)</org.wso2.transport.http.version.range>
         <org.wso2.carbon.transport.http.netty.version>5.0.1</org.wso2.carbon.transport.http.netty.version>
         <org.apache.httpcomponents.httpclient.version>4.5.2</org.apache.httpcomponents.httpclient.version>

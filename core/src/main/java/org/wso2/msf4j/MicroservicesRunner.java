@@ -22,6 +22,7 @@ import org.wso2.msf4j.interceptor.ResponseInterceptor;
 import org.wso2.msf4j.internal.DataHolder;
 import org.wso2.msf4j.internal.HttpConnectorPortBindingListener;
 import org.wso2.msf4j.internal.MSF4JHttpConnectorListener;
+import org.wso2.msf4j.internal.MSF4JWSConnectorListener;
 import org.wso2.msf4j.internal.MicroservicesRegistryImpl;
 import org.wso2.msf4j.internal.websocket.EndpointsRegistryImpl;
 import org.wso2.msf4j.util.RuntimeAnnotations;
@@ -247,9 +248,11 @@ public class MicroservicesRunner {
         msRegistry.getSessionManager().init();
         handleServiceLifecycleMethods();
         MSF4JHttpConnectorListener msf4JHttpConnectorListener = new MSF4JHttpConnectorListener();
+        MSF4JWSConnectorListener msf4JWSConnectorListener = new MSF4JWSConnectorListener();
         serverConnectors.forEach(serverConnector -> {
             ServerConnectorFuture serverConnectorFuture = serverConnector.start();
             serverConnectorFuture.setHttpConnectorListener(msf4JHttpConnectorListener);
+            serverConnectorFuture.setWSConnectorListener(msf4JWSConnectorListener);
             serverConnectorFuture.setPortBindingEventListener(new HttpConnectorPortBindingListener());
             isStarted = true;
             log.info("Microservices server started in " + (System.currentTimeMillis() - startTime) + "ms");
