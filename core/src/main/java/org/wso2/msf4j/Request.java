@@ -17,6 +17,7 @@
 package org.wso2.msf4j;
 
 import io.netty.buffer.ByteBuf;
+import org.wso2.msf4j.internal.HttpHeadersImpl;
 import org.wso2.msf4j.internal.MSF4JConstants;
 import org.wso2.transport.http.netty.common.Constants;
 import org.wso2.transport.http.netty.contract.ServerConnectorException;

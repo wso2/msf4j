@@ -126,6 +126,10 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
         String requestUri = carbonMessage.getTarget();
         PatternPathRouter.RoutableDestination<Object> routableEndpoint =
                 endpointsRegistry.getRoutableEndpoint(requestUri);
+        if (routableEndpoint == null) {
+            throw new RuntimeException("Error while connecting to server. Routable endpoint is not registered for the" +
+                    " request uri:" + requestUri);
+        }
         Optional<Method> methodOptional = new EndpointDispatcher().getOnOpenMethod(routableEndpoint.getDestination());
         Map<String, String> paramValues = routableEndpoint.getGroupNameValues();
         try {
@@ -155,6 +159,10 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
     private void handleTextWebSocketMessage(WebSocketTextMessage textCarbonMessage,
                                             PatternPathRouter.RoutableDestination<Object> routableEndpoint,
                                             Session session) {
+        if (routableEndpoint == null) {
+            throw new RuntimeException("Error while handling the message. Routable endpoint is not registered for the" +
+                    " request uri:" + textCarbonMessage.getTarget());
+        }
         Object endpoint = routableEndpoint.getDestination();
         Map<String, String> paramValues = routableEndpoint.getGroupNameValues();
         Optional<Method> methodOptional = new EndpointDispatcher().getOnStringMessageMethod(endpoint);
@@ -189,6 +197,10 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
     private void handleBinaryWebSocketMessage(WebSocketBinaryMessage binaryCarbonMessage,
                                               PatternPathRouter.RoutableDestination<Object> routableEndpoint,
                                               Session session) {
+        if (routableEndpoint == null) {
+            throw new RuntimeException("Error while handling the message. Routable endpoint is not registered for the" +
+                    " request uri:" + binaryCarbonMessage.getTarget());
+        }
         Object webSocketEndpoint = routableEndpoint.getDestination();
         Map<String, String> paramValues = routableEndpoint.getGroupNameValues();
         Optional<Method> methodOptional = new EndpointDispatcher().getOnBinaryMessageMethod(webSocketEndpoint);
@@ -228,6 +240,10 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
     private void handleCloseWebSocketMessage(WebSocketCloseMessage closeCarbonMessage,
                                              PatternPathRouter.RoutableDestination<Object> routableEndpoint,
                                              Session session) {
+        if (routableEndpoint == null) {
+            throw new RuntimeException("Error while handling the message. Routable endpoint is not registered for the" +
+                    " request uri:" + closeCarbonMessage.getTarget());
+        }
         Object webSocketEndpoint = routableEndpoint.getDestination();
         Map<String, String> paramValues = routableEndpoint.getGroupNameValues();
         Optional<Method> methodOptional = new EndpointDispatcher().getOnCloseMethod(webSocketEndpoint);
@@ -259,6 +275,10 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
 
     private void handleControlCarbonMessage(WebSocketControlMessage controlCarbonMessage, PatternPathRouter.
             RoutableDestination<Object> routableEndpoint, Session session) {
+        if (routableEndpoint == null) {
+            throw new RuntimeException("Error while handling the message. Routable endpoint is not registered for the" +
+                    " request uri:" + controlCarbonMessage.getTarget());
+        }
         Object webSocketEndpoint = routableEndpoint.getDestination();
         Map<String, String> paramValues = routableEndpoint.getGroupNameValues();
         Optional<Method> methodOptional = new EndpointDispatcher().getOnPongMessageMethod(webSocketEndpoint);
