@@ -36,7 +36,7 @@ import java.util.Map;
         service = SwaggerDefinitionSC.class,
         immediate = true)
 public class SwaggerDefinitionSC {
-    private static final String CHANNEL_ID = "CHANNEL_ID";
+    private static final String CHANNEL_ID = "LISTENER_INTERFACE_ID";
 
     @Reference(
             name = "microserviceregsitry",

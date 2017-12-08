@@ -18,10 +18,11 @@ package org.wso2.msf4j.example;
 
 import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import org.wso2.carbon.messaging.Headers;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.interceptor.RequestInterceptor;
+
+import javax.ws.rs.core.HttpHeaders;
 
 /**
  * Interceptor for handling custom JWT claims.
@@ -33,9 +34,9 @@ public class CustomJWTClaimsInterceptor implements RequestInterceptor {
 
     @Override
     public boolean interceptRequest(Request request, Response response) throws Exception {
-        Headers headers = request.getHeaders();
+        HttpHeaders headers = request.getHeaders();
         if (headers != null) {
-            String jwtHeader = headers.get(JWT_HEADER);
+            String jwtHeader = headers.getHeaderString(JWT_HEADER);
             if (jwtHeader != null) {
                 SignedJWT signedJWT = SignedJWT.parse(jwtHeader);
                 ReadOnlyJWTClaimsSet readOnlyJWTClaimsSet = signedJWT.getJWTClaimsSet();

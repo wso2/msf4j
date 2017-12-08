@@ -17,7 +17,6 @@
 package org.wso2.msf4j.formparam;
 
 import org.wso2.msf4j.Request;
-import org.wso2.msf4j.io.MSF4JRequestInputStream;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -57,7 +56,7 @@ public class RequestContext {
      * @return InputStream request's inputstream
      */
     public InputStream getInputStream() {
-        return new MSF4JRequestInputStream(request);
+        return request.getMessageContentStream();
     }
 
 }

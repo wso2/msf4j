@@ -7,7 +7,7 @@ Here is an example;
 
 ```
 mvn archetype:generate -DarchetypeGroupId=org.wso2.msf4j -DarchetypeArtifactId=msf4j-microservice 
--DarchetypeVersion=2.4.3 -DgroupId=org.example -DartifactId=myservice -Dversion=1.0.0-SNAPSHOT
+-DarchetypeVersion=2.5.0 -DgroupId=org.example -DartifactId=myservice -Dversion=1.0.0-SNAPSHOT 
 -Dpackage=org.example.service
 
 ```

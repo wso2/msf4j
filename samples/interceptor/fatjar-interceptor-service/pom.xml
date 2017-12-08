@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.wso2.msf4j</groupId>
         <artifactId>msf4j-service</artifactId>
-        <version>2.4.4-SNAPSHOT</version>
+        <version>2.5.0-SNAPSHOT</version>
         <relativePath>../../../poms/msf4j-service/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -59,7 +59,7 @@
     </build>
 
     <properties>
-        <interceptor-common.version>2.4.4-SNAPSHOT</interceptor-common.version>
+        <interceptor-common.version>2.5.0-SNAPSHOT</interceptor-common.version>
         <microservice.mainClass>org.wso2.msf4j.samples.fatjarinterceptorservice.Application</microservice.mainClass>
     </properties>
 </project>

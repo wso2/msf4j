@@ -16,11 +16,15 @@
 
 package org.wso2.msf4j.internal.entitywriter;
 
-import org.wso2.carbon.messaging.CarbonCallback;
-import org.wso2.carbon.messaging.CarbonMessage;
-import org.wso2.carbon.transport.http.netty.common.Constants;
+import io.netty.handler.codec.http.DefaultLastHttpContent;
+import org.wso2.transport.http.netty.common.Constants;
+import org.wso2.transport.http.netty.contract.ServerConnectorException;
+import org.wso2.transport.http.netty.message.HTTPCarbonMessage;
+import org.wso2.transport.http.netty.message.HttpMessageDataStreamer;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.util.concurrent.Executors;
 import javax.ws.rs.core.StreamingOutput;
 
 /**
@@ -40,15 +44,21 @@ public class StreamingOutputEntityWriter implements EntityWriter<StreamingOutput
      * Write the entity to the carbon message.
      */
     @Override
-    public void writeData(CarbonMessage carbonMessage, StreamingOutput output,
-                          String mediaType, int chunkSize, CarbonCallback cb) {
+    public void writeData(HTTPCarbonMessage carbonMessage, StreamingOutput output,
+                          String mediaType, int chunkSize, HTTPCarbonMessage responder) {
         try {
             carbonMessage.setHeader(Constants.HTTP_CONTENT_TYPE, mediaType);
             carbonMessage.setHeader(Constants.HTTP_TRANSFER_ENCODING, CHUNKED);
-            carbonMessage.setBufferContent(false);
-            cb.done(carbonMessage);
-            output.write(carbonMessage.getOutputStream());
-            carbonMessage.setEndOfMsgAdded(true);
+            Executors.newSingleThreadExecutor().execute(() -> {
+                try {
+                    responder.respond(carbonMessage);
+                } catch (ServerConnectorException e) {
+                    throw new RuntimeException("Error while sending the response.", e);
+                }
+            });
+            OutputStream outputStream = new HttpMessageDataStreamer(carbonMessage).getOutputStream();
+            output.write(outputStream);
+            carbonMessage.addHttpContent(new DefaultLastHttpContent());
         } catch (IOException e) {
             throw new RuntimeException("Error occurred while streaming output", e);
         }

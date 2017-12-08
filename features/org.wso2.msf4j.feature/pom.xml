@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.msf4j</groupId>
         <artifactId>msf4j-parent</artifactId>
-        <version>2.4.4-SNAPSHOT</version>
+        <version>2.5.0-SNAPSHOT</version>
         <relativePath>../../poms/parent/pom.xml</relativePath>
     </parent>
 
@@ -125,6 +125,58 @@
         <dependency>
             <groupId>javax.websocket</groupId>
             <artifactId>javax.websocket-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.transport.http</groupId>
+            <artifactId>org.wso2.transport.http.netty</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-buffer</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-transport</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-handler</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-codec</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-codec-http</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-codec-http2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-resolver</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-pool.wso2</groupId>
+            <artifactId>commons-pool</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-handler-proxy</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-codec-socks</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.messaging</groupId>
+            <artifactId>org.wso2.carbon.messaging</artifactId>
         </dependency>
     </dependencies>
 
@@ -252,20 +304,61 @@
                                     <symbolicName>javax.websocket-api</symbolicName>
                                     <version>${javax.websocket.version}</version>
                                 </bundle>
+                                <bundle>
+                                    <symbolicName>io.netty.common</symbolicName>
+                                    <version>${netty.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>io.netty.transport</symbolicName>
+                                    <version>${netty.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>io.netty.codec</symbolicName>
+                                    <version>${netty.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>io.netty.codec-http</symbolicName>
+                                    <version>${netty.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>io.netty.handler</symbolicName>
+                                    <version>${netty.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>io.netty.buffer</symbolicName>
+                                    <version>${netty.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>io.netty.codec-http2</symbolicName>
+                                    <version>${netty.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>io.netty.resolver</symbolicName>
+                                    <version>${netty.version}</version>
+                                </bundle>
+
+                                <bundle>
+                                    <symbolicName>commons-pool</symbolicName>
+                                    <version>${commons.pool.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>org.wso2.transport.http.netty</symbolicName>
+                                    <version>${org.wso2.transport.http.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>io.netty.handler-proxy</symbolicName>
+                                    <version>${netty.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>io.netty.codec-socks</symbolicName>
+                                    <version>${netty.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>org.wso2.carbon.messaging</symbolicName>
+                                    <version>${carbon.messaging.version}</version>
+                                </bundle>
                             </bundles>
                             <importFeatures>
-                                <feature>
-                                    <id>org.wso2.carbon.transport.http.netty.feature</id>
-                                    <version>${org.wso2.carbon.transport.http.netty.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.connector.framework.feature</id>
-                                    <version>${org.wso2.carbon.transport.http.netty.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.messaging.feature</id>
-                                    <version>${carbon.messaging.version}</version>
-                                </feature>
                                 <feature>
                                     <id>org.wso2.carbon.metrics.jdbc.core.feature</id>
                                     <version>${carbon.metrics.version}</version>

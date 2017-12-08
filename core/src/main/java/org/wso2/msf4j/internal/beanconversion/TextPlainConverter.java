@@ -16,8 +16,12 @@
 
 package org.wso2.msf4j.internal.beanconversion;
 
+import org.apache.commons.io.IOUtils;
+import org.wso2.msf4j.beanconversion.BeanConversionException;
 import org.wso2.msf4j.beanconversion.MediaTypeConverter;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -57,5 +61,14 @@ public class TextPlainConverter extends MediaTypeConverter {
     @Override
     public Object toObject(ByteBuffer content, Type targetType) {
         return Charset.defaultCharset().decode(content).toString();
+    }
+
+    @Override
+    protected Object toObject(InputStream inputStream, Type targetType) throws BeanConversionException {
+        try {
+            return IOUtils.toString(inputStream, UTF_8_CHARSET);
+        } catch (IOException e) {
+            throw new BeanConversionException("Unable to perform string conversion", e);
+        }
     }
 }

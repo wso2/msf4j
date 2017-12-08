@@ -17,12 +17,14 @@
 package org.wso2.msf4j.analytics.zipkintracing;
 
 import com.github.kristofa.brave.http.HttpResponse;
+import io.netty.handler.codec.http.DefaultHttpResponse;
+import io.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.handler.codec.http.HttpVersion;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.messaging.CarbonMessage;
-import org.wso2.carbon.messaging.DefaultCarbonMessage;
 import org.wso2.msf4j.Response;
+import org.wso2.transport.http.netty.message.HTTPCarbonMessage;
 
 import java.io.IOException;
 
@@ -36,9 +38,9 @@ public class TraceableHttpServerResponseTest extends Assert {
 
     @BeforeClass
     public void setUp() throws IOException {
-        CarbonMessage carbonMessage = new DefaultCarbonMessage();
-        response = new Response(carbonMessage1 -> {
-        });
+        HTTPCarbonMessage httpCarbonMessage =
+                new HTTPCarbonMessage(new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK));
+        response = new Response(httpCarbonMessage);
         response.setStatus(200);
         httpResponse = new TraceableHttpServerResponse(response);
     }

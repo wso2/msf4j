@@ -16,11 +16,13 @@
 
 package org.wso2.msf4j.internal.entitywriter;
 
-import org.wso2.carbon.messaging.CarbonCallback;
-import org.wso2.carbon.messaging.CarbonMessage;
-import org.wso2.carbon.transport.http.netty.common.Constants;
+import io.netty.buffer.Unpooled;
+import io.netty.handler.codec.http.DefaultLastHttpContent;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.internal.beanconversion.BeanConverter;
+import org.wso2.transport.http.netty.common.Constants;
+import org.wso2.transport.http.netty.contract.ServerConnectorException;
+import org.wso2.transport.http.netty.message.HTTPCarbonMessage;
 
 import java.nio.ByteBuffer;
 import javax.ws.rs.core.MediaType;
@@ -42,18 +44,21 @@ public class ObjectEntityWriter implements EntityWriter<Object> {
      * Write the entity to the carbon message.
      */
     @Override
-    public void writeData(CarbonMessage carbonMessage, Object entity, String mediaType, int chunkSize,
-                          CarbonCallback cb) {
+    public void writeData(HTTPCarbonMessage carbonMessage, Object entity, String mediaType, int chunkSize,
+                          HTTPCarbonMessage responder) {
         mediaType = (mediaType != null) ? mediaType : MediaType.WILDCARD;
         ByteBuffer byteBuffer = BeanConverter.getConverter(mediaType).convertToMedia(entity);
-        carbonMessage.addMessageBody(byteBuffer);
-        carbonMessage.setEndOfMsgAdded(true);
+        carbonMessage.addHttpContent(new DefaultLastHttpContent(Unpooled.wrappedBuffer(byteBuffer)));
         if (chunkSize == Response.NO_CHUNK) {
             carbonMessage.setHeader(Constants.HTTP_CONTENT_LENGTH, String.valueOf(byteBuffer.remaining()));
         } else {
             carbonMessage.setHeader(Constants.HTTP_TRANSFER_ENCODING, CHUNKED);
         }
         carbonMessage.setHeader(Constants.HTTP_CONTENT_TYPE, mediaType);
-        cb.done(carbonMessage);
+        try {
+            responder.respond(carbonMessage);
+        } catch (ServerConnectorException e) {
+            throw new RuntimeException("Error while sending the response.", e);
+        }
     }
 }

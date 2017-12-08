@@ -16,6 +16,7 @@
 
 package org.wso2.msf4j.beanconversion;
 
+import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 
@@ -23,6 +24,8 @@ import java.nio.ByteBuffer;
  * Interface of media type conversion classes.
  */
 public abstract class MediaTypeConverter {
+
+    protected static final String UTF_8_CHARSET = "UTF-8";
 
     /**
      * Convert an object to a specific media type.
@@ -53,6 +56,21 @@ public abstract class MediaTypeConverter {
     }
 
     /**
+     * Create an object from input stream..
+     *
+     * @param inputStream  stream that needs to be converted to an object
+     * @param targetType media type of the content
+     * @return created object
+     * @throws BeanConversionException throws if object creation is failed
+     */
+    public Object convertToObject(InputStream inputStream, Type targetType) throws BeanConversionException {
+        if (inputStream == null || targetType == null) {
+            throw new BeanConversionException("Content or target type cannot be null");
+        }
+        return toObject(inputStream, targetType);
+    }
+
+    /**
      * Return an array of supported media types.
      *
      * @return String array of media types
@@ -77,5 +95,15 @@ public abstract class MediaTypeConverter {
      * @throws BeanConversionException throws if object creation is failed
      */
     protected abstract Object toObject(ByteBuffer content, Type targetType) throws BeanConversionException;
+
+    /**
+     * Create an object from input stream.
+     *
+     * @param inputStream input stream that needs to be converted to an object
+     * @param targetType target object type
+     * @return created object
+     * @throws BeanConversionException throws if object creation is failed
+     */
+    protected abstract Object toObject(InputStream inputStream, Type targetType) throws BeanConversionException;
 
 }

@@ -47,7 +47,7 @@ import java.util.Map;
 public class MSF4JDeployerSC implements RequiredCapabilityListener {
 
     private static final Logger log = LoggerFactory.getLogger(MSF4JDeployerSC.class);
-    private static final String CHANNEL_ID = "CHANNEL_ID";
+    private static final String CHANNEL_ID = "LISTENER_INTERFACE_ID";
 
     @Activate
     protected void start(BundleContext bundleContext) {
