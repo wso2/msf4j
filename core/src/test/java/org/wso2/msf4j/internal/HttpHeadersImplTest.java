@@ -19,7 +19,6 @@ import io.netty.handler.codec.http.DefaultHttpRequest;
 import io.netty.handler.codec.http.HttpVersion;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.wso2.msf4j.internal.HttpHeadersImpl;
 import org.wso2.transport.http.netty.message.HTTPCarbonMessage;
 
 import java.util.Date;
