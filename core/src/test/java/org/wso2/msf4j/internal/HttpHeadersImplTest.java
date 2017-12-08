@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.msf4j;
+package org.wso2.msf4j.internal;
 
 import io.netty.handler.codec.http.DefaultHttpRequest;
 import io.netty.handler.codec.http.HttpVersion;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.wso2.msf4j.internal.HttpHeadersImpl;
 import org.wso2.transport.http.netty.message.HTTPCarbonMessage;
 
 import java.util.Date;
