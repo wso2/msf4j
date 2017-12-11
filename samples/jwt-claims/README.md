@@ -21,7 +21,7 @@ java -jar jwt-sample/target/jwt-sample-2.0.0.jar
 ## Setting up the Authorization Server with web app.
 
 Here we use WSO2 Identity server as the authorization server.
-*This sample is compatible only with the Identity Server versions from 5.2.0*
+*This sample is compatible with Identity Server version 5.2.0 and above*
 
 1) Download and unzip the latest version of the WSO2 Identity Server from http://wso2.com/products/identity-server.
 
