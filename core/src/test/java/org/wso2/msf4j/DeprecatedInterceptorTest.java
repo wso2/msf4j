@@ -54,6 +54,7 @@ public class DeprecatedInterceptorTest extends InterceptorTestBase {
         microservicesRunner.deploy("/DynamicPath", new TestMicroServiceWithDynamicPath());
         microservicesRunner.deploy("/DynamicPath2", new TestMicroServiceWithDynamicPath());
         baseURI = URI.create("http://" + Constants.HOSTNAME + ":" + port);
+        Thread.sleep(100);
     }
 
     @AfterClass

@@ -34,3 +34,20 @@ wso2.securevault:
     type: org.wso2.carbon.secvault.reader.DefaultMasterKeyReader
     parameters:
       masterKeyReaderFile: ${sys:carbon.home}/conf/${sys:wso2.runtime}/master-keys.yaml
+
+wso2.transport.http:
+  transportProperties:
+   - name: "latency.metrics.enabled"
+     value: true
+   - name: "server.bootstrap.socket.timeout"
+     value: 60
+   - name: "client.bootstrap.socket.timeout"
+     value: 60
+
+  listenerConfigurations:
+   - id: "default"
+     host: "0.0.0.0"
+     port: 8080
+
+  senderConfigurations:
+   - id: "http-sender"

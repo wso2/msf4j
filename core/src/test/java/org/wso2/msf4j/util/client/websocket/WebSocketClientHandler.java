@@ -41,13 +41,15 @@ import java.nio.ByteBuffer;
  */
 public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> {
 
-    private static final Logger log = LoggerFactory.getLogger(WebSocketClient.class);
+    private static final Logger logger = LoggerFactory.getLogger(WebSocketClient.class);
 
     private final WebSocketClientHandshaker handshaker;
     private ChannelPromise handshakeFuture;
+    private ChannelHandlerContext ctx;
 
     private String textReceived = "";
     private ByteBuffer bufferReceived = null;
+    private boolean isOpen = false;
 
     public WebSocketClientHandler(WebSocketClientHandshaker handshaker) {
         this.handshaker = handshaker;
@@ -60,16 +62,20 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) {
         handshakeFuture = ctx.newPromise();
+        this.ctx = ctx;
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
         handshaker.handshake(ctx.channel());
+        isOpen = true;
     }
 
     @Override
-    public void channelInactive(ChannelHandlerContext ctx) {
-        log.info("WebSocket Client disconnected!");
+    public void channelInactive(ChannelHandlerContext ctx) throws InterruptedException {
+        logger.debug("WebSocket Client disconnected!");
+        ctx.channel().close().sync();
+        isOpen = false;
     }
 
     @Override
@@ -77,7 +83,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
         Channel ch = ctx.channel();
         if (!handshaker.isHandshakeComplete()) {
             handshaker.finishHandshake(ch, (FullHttpResponse) msg);
-            log.info("WebSocket Client connected!");
+            logger.debug("WebSocket Client connected!");
             handshakeFuture.setSuccess();
             return;
         }
@@ -86,31 +92,29 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
             FullHttpResponse response = (FullHttpResponse) msg;
             throw new IllegalStateException(
                     "Unexpected FullHttpResponse (getStatus=" + response.status() +
-                            ", content=" + response.content().toString(CharsetUtil.UTF_8) + ')');
+                    ", content=" + response.content().toString(CharsetUtil.UTF_8) + ')');
         }
 
         WebSocketFrame frame = (WebSocketFrame) msg;
         if (frame instanceof TextWebSocketFrame) {
             TextWebSocketFrame textFrame = (TextWebSocketFrame) frame;
-            log.info("WebSocket Client received text message: " + textFrame.text());
+            logger.debug("WebSocket Client received text message: " + textFrame.text());
             textReceived = textFrame.text();
         } else if (frame instanceof BinaryWebSocketFrame) {
             BinaryWebSocketFrame binaryFrame = (BinaryWebSocketFrame) frame;
             bufferReceived = binaryFrame.content().nioBuffer();
-            log.info("WebSocket Client received  binary message: " + bufferReceived.toString());
+            logger.debug("WebSocket Client received  binary message: " + bufferReceived.toString());
         } else if (frame instanceof PongWebSocketFrame) {
-            log.info("WebSocket Client received pong");
+            logger.debug("WebSocket Client received pong");
             PongWebSocketFrame pongFrame = (PongWebSocketFrame) frame;
             bufferReceived = pongFrame.content().nioBuffer();
         } else if (frame instanceof CloseWebSocketFrame) {
-            log.info("WebSocket Client received closing");
+            logger.debug("WebSocket Client received closing");
             ch.close();
         }
     }
 
     /**
-     * Get the text received for a given moment in the handler.
-     *
      * @return the text received from the server.
      */
     public String getTextReceived() {
@@ -118,8 +122,6 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
     }
 
     /**
-     * Get the binary date received for a give moments in the handler.
-     *
      * @return the binary data received from the server.
      */
     public ByteBuffer getBufferReceived() {
@@ -129,9 +131,18 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         if (!handshakeFuture.isDone()) {
-            log.error("Handshake failed : " + cause.getMessage(), cause);
+            logger.error("Handshake failed : " + cause.getMessage(), cause);
             handshakeFuture.setFailure(cause);
         }
         ctx.close();
+    }
+
+    public void shutDown() throws InterruptedException {
+        ctx.channel().writeAndFlush(new CloseWebSocketFrame());
+        ctx.channel().closeFuture().sync();
+    }
+
+    public boolean isOpen() {
+        return isOpen;
     }
 }

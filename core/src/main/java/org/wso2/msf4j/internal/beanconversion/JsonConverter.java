@@ -23,6 +23,10 @@ import com.google.gson.JsonSyntaxException;
 import org.wso2.msf4j.beanconversion.BeanConversionException;
 import org.wso2.msf4j.beanconversion.MediaTypeConverter;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -79,4 +83,19 @@ public class JsonConverter extends MediaTypeConverter {
             throw new BeanConversionException("Unable to perform json to object conversion", ex);
         }
     }
+
+    @Override
+    protected Object toObject(InputStream inputStream, Type targetType) throws BeanConversionException {
+        try {
+            Reader reader = new InputStreamReader(inputStream, UTF_8_CHARSET);
+            Object object = gson.fromJson(reader, targetType);
+            if (object == null) {
+                throw new BeanConversionException("Unable to perform json to object conversion");
+            }
+            return object;
+        } catch (UnsupportedEncodingException ex) {
+            throw new BeanConversionException("Unable to perform json to object conversion", ex);
+        }
+    }
+
 }

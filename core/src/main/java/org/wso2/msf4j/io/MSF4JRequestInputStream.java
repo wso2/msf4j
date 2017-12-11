@@ -1,4 +1,3 @@
-package org.wso2.msf4j.io;
 /*
 * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
@@ -14,6 +13,7 @@ package org.wso2.msf4j.io;
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
+package org.wso2.msf4j.io;
 
 import org.wso2.msf4j.Request;
 
@@ -24,13 +24,14 @@ import java.nio.ByteBuffer;
 /**
  * Wrapper {@link InputStream} for {@link Request}.
  */
+@Deprecated
 public class MSF4JRequestInputStream extends InputStream {
     private Request request;
     private ByteBuffer buffer;
 
     public MSF4JRequestInputStream(Request request) {
         this.request = request;
-        buffer = request.getMessageBody();
+        buffer = request.getMessageBody().nioBuffer();
     }
 
     @Override
@@ -38,7 +39,7 @@ public class MSF4JRequestInputStream extends InputStream {
         if (request.isEomAdded() && request.isEmpty() && !buffer.hasRemaining()) {
             return -1;
         } else if (!buffer.hasRemaining()) {
-            buffer = request.getMessageBody();
+            buffer = request.getMessageBody().nioBuffer();
         }
         return buffer.get() & 0xFF;
     }

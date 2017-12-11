@@ -12,47 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This is the main configuration file for metrics
+# This is the main configuration file for HTTP Monitoring
 
-enabled: true
+wso2.http.monitoring:
+  enabled: true
 
-jmx:
-  registerMBean: true
-  name: org.wso2.msf4j:type=Metrics
-
-das:
-  - &DAS01
+  das:
     receiverURL: tcp://localhost:7611
     # authURL: ssl://localhost:7711
     type: thrift
     username: admin
     password: admin
     dataAgentConfigPath: data-agent-config.xml
-
-reporting:
-  jmx:
-    - name: JMX
-      enabled: true
-
-  console:
-    - name: Console
-      enabled: false
-      pollingPeriod: 30
-
-  csv:
-    - name: CSV
-      enabled: false
-      location: metrics
-      pollingPeriod: 30
-
-  slf4j:
-    - name: SLF4J
-      enabled: true
-      loggerName: metrics
-      pollingPeriod: 30
-
-  das:
-    - name: DAS
-      enabled: true
-      das: *DAS01
-      pollingPeriod: 30

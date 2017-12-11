@@ -1,4 +1,3 @@
-package org.wso2.msf4j.internal.router;
 /*
  * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -14,6 +13,8 @@ package org.wso2.msf4j.internal.router;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package org.wso2.msf4j.internal.router;
 
 import java.lang.reflect.Method;
 import java.util.List;

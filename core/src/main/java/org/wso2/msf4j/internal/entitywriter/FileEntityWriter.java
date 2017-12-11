@@ -16,13 +16,16 @@
 
 package org.wso2.msf4j.internal.entitywriter;
 
+import io.netty.buffer.Unpooled;
+import io.netty.handler.codec.http.DefaultHttpContent;
+import io.netty.handler.codec.http.DefaultLastHttpContent;
 import org.apache.commons.io.FilenameUtils;
-import org.wso2.carbon.messaging.CarbonCallback;
-import org.wso2.carbon.messaging.CarbonMessage;
-import org.wso2.carbon.transport.http.netty.common.Constants;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.internal.mime.MimeMapper;
 import org.wso2.msf4j.internal.mime.MimeMappingException;
+import org.wso2.transport.http.netty.common.Constants;
+import org.wso2.transport.http.netty.contract.ServerConnectorException;
+import org.wso2.transport.http.netty.message.HTTPCarbonMessage;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -50,7 +53,8 @@ public class FileEntityWriter implements EntityWriter<File> {
      * Write the entity to the carbon message.
      */
     @Override
-    public void writeData(CarbonMessage carbonMessage, File file, String mediaType, int chunkSize, CarbonCallback cb) {
+    public void writeData(HTTPCarbonMessage httpCarbonMessage, File file, String mediaType, int chunkSize,
+                          HTTPCarbonMessage responder) {
         if (mediaType == null || mediaType.equals(MediaType.WILDCARD)) {
             try {
                 mediaType = MimeMapper.getMimeType(FilenameUtils.getExtension(file.getName()));
@@ -63,18 +67,23 @@ public class FileEntityWriter implements EntityWriter<File> {
             if (chunkSize == Response.NO_CHUNK || chunkSize == Response.DEFAULT_CHUNK_SIZE) {
                 chunkSize = DEFAULT_CHUNK_SIZE;
             }
-            carbonMessage.setHeader(Constants.HTTP_TRANSFER_ENCODING, CHUNKED);
-            carbonMessage.setHeader(Constants.HTTP_CONTENT_TYPE, mediaType);
-            carbonMessage.setBufferContent(false);
-            cb.done(carbonMessage);
+            httpCarbonMessage.setHeader(Constants.HTTP_TRANSFER_ENCODING, CHUNKED);
+            httpCarbonMessage.setHeader(Constants.HTTP_CONTENT_TYPE, mediaType);
+
+            try {
+                responder.respond(httpCarbonMessage);
+            } catch (ServerConnectorException e) {
+                throw new RuntimeException("Error while sending the response.", e);
+            }
 
             ByteBuffer buffer = ByteBuffer.allocate(chunkSize);
             while (fileChannel.read(buffer) != -1) {
                 buffer.flip();
-                carbonMessage.addMessageBody(buffer);
+                httpCarbonMessage.addHttpContent(new DefaultHttpContent(Unpooled.wrappedBuffer(buffer)));
+                buffer = ByteBuffer.allocate(chunkSize);
             }
             fileChannel.close();
-            carbonMessage.setEndOfMsgAdded(true);
+            httpCarbonMessage.addHttpContent(new DefaultLastHttpContent());
         } catch (IOException e) {
             throw new RuntimeException("Error occurred while reading from file", e);
         }
