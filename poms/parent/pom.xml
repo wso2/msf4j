@@ -707,7 +707,22 @@
                 <version>${org.osgi.compendium.version}</version>
                 <scope>test</scope>
             </dependency>
-
+            <!-- gRPC support for microservice -->
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-netty</artifactId>
+                <version>${io.grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-protobuf</artifactId>
+                <version>${io.grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-stub</artifactId>
+                <version>${io.grpc.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -847,5 +862,10 @@
         <ow2.jta.spec.version>1.0.12</ow2.jta.spec.version>
         <org.jacoco.ant.version>0.7.5.201505241946</org.jacoco.ant.version>
         <org.osgi.compendium.version>4.3.1</org.osgi.compendium.version>
+
+        <!-- gRPC support for microservice -->
+        <io.grpc.version>1.7.0</io.grpc.version>
+        <os.maven.plugin.version>1.5.0.Final</os.maven.plugin.version>
+        <protobuf.maven.plugin.version>0.5.0</protobuf.maven.plugin.version>
     </properties>
 </project>

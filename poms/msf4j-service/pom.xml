@@ -376,6 +376,11 @@
                     <artifactId>really-executable-jar-maven-plugin</artifactId>
                     <version>${maven.reallyexecutablejarplugin.version}</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.xolstice.maven.plugins</groupId>
+                    <artifactId>protobuf-maven-plugin</artifactId>
+                    <version>${protobuf.maven.plugin.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -493,6 +498,11 @@
                 <artifactId>msf4j-client</artifactId>
                 <version>${msf4j.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.msf4j</groupId>
+                <artifactId>msf4j-grpc</artifactId>
+                <version>${msf4j.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <dependencies>
@@ -534,6 +544,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
     </dependencies>
 
     <properties>
@@ -592,5 +603,10 @@
         <bundle.docurl>https://docs.wso2.com</bundle.docurl>
         <bundle.name>${project.artifactId}</bundle.name>
         <import.package>*</import.package>
+
+        <!-- gRPC support for microservice -->
+        <io.grpc.version>1.7.0</io.grpc.version>
+        <os.maven.plugin.version>1.5.0.Final</os.maven.plugin.version>
+        <protobuf.maven.plugin.version>0.5.0</protobuf.maven.plugin.version>
     </properties>
 </project>

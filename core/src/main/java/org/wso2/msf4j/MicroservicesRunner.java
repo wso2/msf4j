@@ -17,6 +17,8 @@ package org.wso2.msf4j;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.msf4j.grpc.ServerBuilder;
+import org.wso2.msf4j.grpc.exception.GrpcServerException;
 import org.wso2.msf4j.interceptor.RequestInterceptor;
 import org.wso2.msf4j.interceptor.ResponseInterceptor;
 import org.wso2.msf4j.internal.DataHolder;
@@ -39,8 +41,11 @@ import org.wso2.transport.http.netty.message.HTTPConnectorUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.ServiceLoader;
 import javax.ws.rs.Path;
 import javax.ws.rs.ext.ExceptionMapper;
 
@@ -67,6 +72,14 @@ public class MicroservicesRunner {
     private boolean isStarted;
 
     /**
+     * gRPC Implementation.
+     */
+    private boolean isGrpcService = false;
+    private ServerBuilder grpcBuilder = null;
+    private static final String HTTP_SCHEMA_KEY = "http";
+    private static final int DEFAULT_GRPC_PORT = 8080;
+
+    /**
      * Creates a MicroservicesRunner instance which will be used for deploying microservices. Allows specifying
      * ports on which the microservices in this MicroservicesRunner are deployed.
      *
@@ -89,6 +102,62 @@ public class MicroservicesRunner {
     }
 
     /**
+     * Creates a MicroservicesRunner instance which will be used for deploying microservices as gRPC or REST.
+     * Allows specifying ports on which the microservices in this MicroservicesRunner are deployed.
+     *
+     * @param port The port on which the microservices are exposed
+     * @param isGrpcService flag to determine whether service is deployed as gRPC or REST
+     */
+    public MicroservicesRunner(int port, boolean isGrpcService) {
+        this.isGrpcService = isGrpcService;
+        if (isGrpcService) {
+            ServiceLoader<ServerBuilder> serverBuilders = ServiceLoader.load(ServerBuilder.class);
+            Iterator<ServerBuilder> iterator = serverBuilders.iterator();
+            grpcBuilder = iterator.next();
+            if (grpcBuilder == null) {
+                throw new RuntimeException("Error while registering gRPC server. Server builder service is not " +
+                        "registered");
+            }
+            grpcBuilder.init(port);
+        } else {
+            configureTransport(port);
+        }
+    }
+
+    /**
+     * Creates a MicroservicesRunner instance which will take care of initializing Netty transports in the file
+     * pointed to by the System property <code>transports.netty.conf</code>.
+     * <p>
+     * If that System property is not specified, it will start a single Netty transport on port 8080.
+     * <p>
+     * @param isGrpcService flag to determine whether service is deployed as gRPC or REST
+     */
+    public MicroservicesRunner(boolean isGrpcService) {
+        this.isGrpcService = isGrpcService;
+        int port = DEFAULT_GRPC_PORT;
+        if (isGrpcService) {
+            TransportsConfiguration transportsConfiguration = ConfigurationBuilder.getInstance().getConfiguration();
+            if (transportsConfiguration != null) {
+                Optional<ListenerConfiguration> configuration = transportsConfiguration.getListenerConfigurations()
+                        .stream().filter(listenerConfiguration -> HTTP_SCHEMA_KEY.equals(listenerConfiguration
+                                .getScheme())).findFirst();
+                port = configuration.isPresent() ? configuration.get().getPort() : port;
+            }
+
+            ServiceLoader<ServerBuilder> serverBuilders = ServiceLoader.load(ServerBuilder.class);
+            Iterator<ServerBuilder> iterator = serverBuilders.iterator();
+            grpcBuilder = iterator.next();
+            if (grpcBuilder == null) {
+                throw new RuntimeException("Error while registering gRPC server. Server builder service is not " +
+                        "registered");
+            }
+            grpcBuilder.init(port);
+        } else {
+            configureTransport();
+        }
+    }
+
+    /**
      * Deploy a microservice.
      *
      * @param microservice The microservice which is to be deployed
@@ -96,7 +165,11 @@ public class MicroservicesRunner {
      */
     public MicroservicesRunner deploy(Object... microservice) {
         checkState();
-        msRegistry.addService(microservice);
+        if (isGrpcService) {
+            grpcBuilder.addService(microservice);
+        } else {
+            msRegistry.addService(microservice);
+        }
         return this;
     }
 
@@ -108,6 +181,10 @@ public class MicroservicesRunner {
      * @return this MicroservicesRunner object
      */
     public MicroservicesRunner deploy(String basePath, Object microservice) {
+        if (isGrpcService) {
+            throw new UnsupportedOperationException("gRPC services cannot register with the base path. only support " +
+                    "in REST microservices");
+        }
         Map<String, Object> valuesMap = new HashMap<>();
         valuesMap.put("value", basePath);
         RuntimeAnnotations.putAnnotation(microservice.getClass(), Path.class, valuesMap);
@@ -122,6 +199,9 @@ public class MicroservicesRunner {
      * @return this MicroservicesRunner object.
      */
     public MicroservicesRunner deployWebSocketEndpoint(Object webSocketEndpoint) {
+        if (isGrpcService) {
+            throw new UnsupportedOperationException("gRPC streaming services is currently not supported");
+        }
         endpointsRegistry.addEndpoint(webSocketEndpoint);
         return this;
     }
@@ -143,6 +223,10 @@ public class MicroservicesRunner {
      * @param requestInterceptor interceptor instances
      */
     public MicroservicesRunner addGlobalRequestInterceptor(RequestInterceptor... requestInterceptor) {
+        if (isGrpcService) {
+            throw new UnsupportedOperationException("gRPC service request interceptor is currently not " +
+                    "supported");
+        }
         msRegistry.addGlobalRequestInterceptor(requestInterceptor);
         return this;
     }
@@ -153,6 +237,10 @@ public class MicroservicesRunner {
      * @param responseInterceptor interceptor instances
      */
     public MicroservicesRunner addGlobalResponseInterceptor(ResponseInterceptor... responseInterceptor) {
+        if (isGrpcService) {
+            throw new UnsupportedOperationException("gRPC service response interceptor is currently not " +
+                    "supported");
+        }
         msRegistry.addGlobalResponseInterceptor(responseInterceptor);
         return this;
     }
@@ -166,6 +254,10 @@ public class MicroservicesRunner {
      * @deprecated
      */
     public MicroservicesRunner addInterceptor(Interceptor... interceptor) {
+        if (isGrpcService) {
+            throw new UnsupportedOperationException("gRPC service interceptor is currently not " +
+                    "supported");
+        }
         msRegistry.addGlobalRequestInterceptor(interceptor);
         msRegistry.addGlobalResponseInterceptor(interceptor);
         return this;
@@ -178,6 +270,10 @@ public class MicroservicesRunner {
      * @return this MicroservicesRunner object
      */
     public MicroservicesRunner addExceptionMapper(ExceptionMapper... exceptionMapper) {
+        if (isGrpcService) {
+            throw new UnsupportedOperationException("gRPC service exception mapping is currently not " +
+                    "supported");
+        }
         checkState();
         msRegistry.addExceptionMapper(exceptionMapper);
         return this;
@@ -245,26 +341,42 @@ public class MicroservicesRunner {
      * Start this Microservices runner. This will startup all the HTTP transports.
      */
     public void start() {
-        msRegistry.getSessionManager().init();
-        handleServiceLifecycleMethods();
-        MSF4JHttpConnectorListener msf4JHttpConnectorListener = new MSF4JHttpConnectorListener();
-        MSF4JWSConnectorListener msf4JWSConnectorListener = new MSF4JWSConnectorListener();
-        serverConnectors.forEach(serverConnector -> {
-            ServerConnectorFuture serverConnectorFuture = serverConnector.start();
-            serverConnectorFuture.setHttpConnectorListener(msf4JHttpConnectorListener);
-            serverConnectorFuture.setWSConnectorListener(msf4JWSConnectorListener);
-            serverConnectorFuture.setPortBindingEventListener(new HttpConnectorPortBindingListener());
-            isStarted = true;
-            log.info("Microservices server started in " + (System.currentTimeMillis() - startTime) + "ms");
-        });
+        if (isGrpcService) {
+            try {
+                grpcBuilder.register();
+                grpcBuilder.start();
+                log.info("gRPC server server started in " + (System.currentTimeMillis() - startTime) + "ms");
+                grpcBuilder.blockUntilShutdown();
+            } catch (GrpcServerException | InterruptedException e) {
+                throw new RuntimeException("Error while starting the gRPC server.", e);
+            }
+        } else {
+            msRegistry.getSessionManager().init();
+            handleServiceLifecycleMethods();
+            MSF4JHttpConnectorListener msf4JHttpConnectorListener = new MSF4JHttpConnectorListener();
+            MSF4JWSConnectorListener msf4JWSConnectorListener = new MSF4JWSConnectorListener();
+            serverConnectors.forEach(serverConnector -> {
+                ServerConnectorFuture serverConnectorFuture = serverConnector.start();
+                serverConnectorFuture.setHttpConnectorListener(msf4JHttpConnectorListener);
+                serverConnectorFuture.setWSConnectorListener(msf4JWSConnectorListener);
+                serverConnectorFuture.setPortBindingEventListener(new HttpConnectorPortBindingListener());
+                isStarted = true;
+                log.info("Microservices server started in " + (System.currentTimeMillis() - startTime) + "ms");
+            });
+        }
     }
 
     /**
      * Stop this Microservices runner. This will stop all the HTTP Transports.
      */
     public void stop() {
-        serverConnectors.forEach(ServerConnector::stop);
-        log.info("Microservices server stopped");
+        if (isGrpcService) {
+            grpcBuilder.stop();
+            log.info("gRPC server stopped");
+        } else {
+            serverConnectors.forEach(ServerConnector::stop);
+            log.info("Microservices server stopped");
+        }
     }
 
     /**
