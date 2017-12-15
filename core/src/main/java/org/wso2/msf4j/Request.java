@@ -49,8 +49,7 @@ public class Request {
         // find accept types
         String acceptHeaderStr = httpCarbonMessage.getHeader(javax.ws.rs.core.HttpHeaders.ACCEPT);
         acceptTypes = (acceptHeaderStr != null) ?
-                Arrays.asList(acceptHeaderStr.split("\\s*,\\s*"))
-                        .stream()
+                Arrays.stream(acceptHeaderStr.split("\\s*,\\s*"))
                         .map(mediaType -> mediaType.split("\\s*;\\s*")[0])
                         .collect(Collectors.toList()) :
                 null;

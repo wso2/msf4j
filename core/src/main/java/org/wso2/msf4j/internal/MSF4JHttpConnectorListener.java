@@ -93,13 +93,11 @@ public class MSF4JHttpConnectorListener implements HttpConnectorListener {
             if (configProvider != null) {
                 msf4JConfig = DataHolder.getInstance().getConfigProvider().getConfigurationObject(MSF4JConfig.class);
             } else {
-                msf4JConfig = MSF4JConfig.class.newInstance();
+                msf4JConfig = new MSF4JConfig();
             }
         } catch (ConfigurationException e) {
             throw new RuntimeException("Error while loading " + MSF4JConfig.class.getName() + " from config provider",
                     e);
-        } catch (IllegalAccessException | InstantiationException e) {
-            throw new RuntimeException("Error while creating instance of the class " + MSF4JConfig.class.getName(), e);
         }
 
         executorService = Executors.newFixedThreadPool(msf4JConfig.getThreadCount(), new MSF4JThreadFactory(
