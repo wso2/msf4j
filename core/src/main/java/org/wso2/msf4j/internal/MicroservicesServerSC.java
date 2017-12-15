@@ -173,7 +173,7 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
                     transportsConfiguration.getListenerConfigurations();
             if (listenerConfigurations.isEmpty()) {
                 listenerConfigurations = new HashSet<>();
-                listenerConfigurations.add(ListenerConfiguration.getDefault());
+                listenerConfigurations.add(new ListenerConfiguration());
             }
 
             ServerBootstrapConfiguration serverBootstrapConfiguration =

@@ -16,7 +16,6 @@
 
 package org.wso2.msf4j.internal.entitywriter;
 
-import io.netty.handler.codec.http.DefaultLastHttpContent;
 import org.wso2.transport.http.netty.common.Constants;
 import org.wso2.transport.http.netty.contract.ServerConnectorException;
 import org.wso2.transport.http.netty.message.HTTPCarbonMessage;
@@ -58,7 +57,7 @@ public class StreamingOutputEntityWriter implements EntityWriter<StreamingOutput
             });
             OutputStream outputStream = new HttpMessageDataStreamer(carbonMessage).getOutputStream();
             output.write(outputStream);
-            carbonMessage.addHttpContent(new DefaultLastHttpContent());
+            outputStream.close();
         } catch (IOException e) {
             throw new RuntimeException("Error occurred while streaming output", e);
         }
