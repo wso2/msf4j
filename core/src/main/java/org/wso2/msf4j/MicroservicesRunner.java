@@ -212,7 +212,7 @@ public class MicroservicesRunner {
         String transportYaml = System.getProperty(TRANSPORTS_NETTY_CONF);
         if (transportYaml == null || transportYaml.isEmpty()) {
             ServerBootstrapConfiguration bootstrapConfiguration = ServerBootstrapConfiguration.getInstance();
-            ListenerConfiguration listenerConfiguration = ListenerConfiguration.getDefault();
+            ListenerConfiguration listenerConfiguration = new ListenerConfiguration();
             ServerConnector serverConnector =
                     connectorFactory.createServerConnector(bootstrapConfiguration, listenerConfiguration);
             DataHolder.getInstance().getMicroservicesRegistries()
