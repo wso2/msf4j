@@ -60,7 +60,7 @@ netty-common_4.1.16.Final.jar                                                   
 netty-handler_4.1.16.Final.jar                                                  jar            apache2
 netty-resolver_4.1.16.Final.jar                                                 jar            apache2
 netty-transport_4.1.16.Final.jar                                                jar            apache2
-org.wso2.carbon.config_2.1.2.jar                                                bundle         apache2
+org.wso2.carbon.config_2.1.5.jar                                                bundle         apache2
 org.wso2.carbon.core_5.2.0.jar                                                  bundle         apache2
 org.wso2.carbon.launcher_5.2.0.jar                                              jar            apache2
 org.wso2.carbon.databridge.agent_6.0.0.jar                                      bundle         apache2
@@ -75,7 +75,7 @@ org.wso2.carbon.metrics.das.reporter_2.3.2.jar                                  
 org.wso2.carbon.metrics.jdbc.core_2.3.2.jar                                     bundle         apache2
 org.wso2.carbon.metrics.jdbc.reporter_2.3.2.jar                                 bundle         apache2
 org.wso2.carbon.secvault_5.0.8.jar                                              bundle         apache2
-org.wso2.transport.http.netty_6.0.51.jar                                        bundle         apache2
+org.wso2.transport.http.netty_6.0.63.jar                                        bundle         apache2
 org.wso2.carbon.utils_2.0.2.jar                                                 bundle         apache2
 jaxrs-delegates_2.5.0.jar                                                       bundle         apache2
 msf4j-analytics_2.5.0.jar                                                       bundle         apache2
