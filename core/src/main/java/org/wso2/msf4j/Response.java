@@ -287,7 +287,9 @@ public class Response {
         if (session != null && session.isValid() && session.isNew()) {
             cookiesHeaderValue.add(MSF4JConstants.SESSION_ID + session.getId());
         }
-        httpCarbonMessage.getHeaders().set("Set-Cookie", cookiesHeaderValue);
+        for (String cookie : cookiesHeaderValue) {
+            httpCarbonMessage.getHeaders().add("Set-Cookie", cookie);
+        }
         processEntity();
     }
 
