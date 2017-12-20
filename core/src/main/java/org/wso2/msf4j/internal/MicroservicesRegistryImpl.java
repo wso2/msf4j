@@ -78,9 +78,9 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
             services.put(svc.getClass().getAnnotation(Path.class).value(), svc);
         }
         updateMetadata();
-        Arrays.stream(service).forEach(svc -> {
-            log.debug("Added microservice: {}.", svc);
-        });
+        if (log.isDebugEnabled()) {
+            Arrays.stream(service).forEach(svc -> log.debug("Added microservice: {}.", svc));
+        }
     }
 
     public void addService(String basePath, Object service) {
