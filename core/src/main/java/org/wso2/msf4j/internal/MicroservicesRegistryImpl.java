@@ -79,18 +79,14 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
         }
         updateMetadata();
         Arrays.stream(service).forEach(svc -> {
-            if (log.isDebugEnabled()) {
-                log.debug("Added microservice: " + svc);
-            }
+            log.debug("Added microservice: {}.", svc);
         });
     }
 
     public void addService(String basePath, Object service) {
         services.put(basePath, service);
         metadata.addMicroserviceMetadata(service, basePath);
-        if (log.isDebugEnabled()) {
-            log.debug("Added microservice: " + service);
-        }
+        log.debug("Added microservice: {}.", service);
     }
 
     public Optional<Map.Entry<String, Object>> getServiceWithBasePath(String path) {
