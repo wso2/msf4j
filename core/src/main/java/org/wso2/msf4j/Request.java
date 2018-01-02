@@ -191,7 +191,7 @@ public class Request {
         }
         String cookieHeader = getHeader("Cookie");
         if (cookieHeader != null) {
-            session = Arrays.stream(cookieHeader.split(";"))
+            session = Arrays.stream(cookieHeader.split(";")).map(String::trim)
                     .filter(cookie -> cookie.startsWith(MSF4JConstants.SESSION_ID))
                     .findFirst()
                     .map(jsession -> sessionManager.getSession(jsession.substring(MSF4JConstants.SESSION_ID.length())))
@@ -217,7 +217,7 @@ public class Request {
         }
         String cookieHeader = getHeader("Cookie");
         if (cookieHeader != null) {
-            session = Arrays.stream(cookieHeader.split(";"))
+            session = Arrays.stream(cookieHeader.split(";")).map(String::trim)
                     .filter(cookie -> cookie.startsWith(MSF4JConstants.SESSION_ID))
                     .findFirst()
                     .map(jsession -> sessionManager.getSession(jsession.substring(MSF4JConstants.SESSION_ID.length())))
