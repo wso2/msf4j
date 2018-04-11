@@ -32,11 +32,12 @@ import org.wso2.transport.http.netty.config.ListenerConfiguration;
 import org.wso2.transport.http.netty.config.Parameter;
 import org.wso2.transport.http.netty.contract.HttpWsConnectorFactory;
 import org.wso2.transport.http.netty.contract.ServerConnector;
-import org.wso2.transport.http.netty.contractimpl.HttpWsConnectorFactoryImpl;
+import org.wso2.transport.http.netty.contractimpl.DefaultHttpWsConnectorFactory;
 import org.wso2.transport.http.netty.listener.ServerBootstrapConfiguration;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.ws.rs.Path;
@@ -109,8 +110,8 @@ public class SpringMicroservicesRunner extends MicroservicesRunner implements Ap
             return;
 
         }
-        HttpWsConnectorFactory connectorFactory = new HttpWsConnectorFactoryImpl();
-        ServerBootstrapConfiguration bootstrapConfiguration = ServerBootstrapConfiguration.getInstance();
+        HttpWsConnectorFactory connectorFactory = new DefaultHttpWsConnectorFactory();
+        ServerBootstrapConfiguration bootstrapConfiguration = new ServerBootstrapConfiguration(new HashMap<>());
 
         //Add ListenerConfigurations if available on Spring Configuration
         listeners.forEach(listenerConfiguration -> {

@@ -18,6 +18,7 @@ package org.wso2.msf4j;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import io.netty.handler.codec.http.HttpHeaderNames;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.testng.annotations.AfterClass;
@@ -43,7 +44,6 @@ import static org.testng.AssertJUnit.assertEquals;
  */
 public class ExtendedServiceTest {
 
-    public static final String HEADER_KEY_CONNECTION = "CONNECTION";
     public static final String HEADER_VAL_CLOSE = "CLOSE";
     protected static final Type STRING_MAP_TYPE = new TypeToken<Map<String, String>>() {
     }.getType();
@@ -115,7 +115,7 @@ public class ExtendedServiceTest {
         }
         urlConn.setRequestMethod(method);
         if (!keepAlive) {
-            urlConn.setRequestProperty(HEADER_KEY_CONNECTION, HEADER_VAL_CLOSE);
+            urlConn.setRequestProperty(HttpHeaderNames.CONNECTION.toString(), HEADER_VAL_CLOSE);
         }
 
         return urlConn;

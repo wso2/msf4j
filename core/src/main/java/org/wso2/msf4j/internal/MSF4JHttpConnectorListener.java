@@ -18,6 +18,7 @@ package org.wso2.msf4j.internal;
 
 import io.netty.handler.codec.http.DefaultLastHttpContent;
 import io.netty.handler.codec.http.HttpContent;
+import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.LastHttpContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -150,7 +151,7 @@ public class MSF4JHttpConnectorListener implements HttpConnectorListener {
     private void setBaseUri(Request request) {
         StringBuilder builder = new StringBuilder();
         builder.append(request.getProperty(Constants.PROTOCOL).toString().toLowerCase(Locale.US)).append("://")
-               .append(request.getHeader(Constants.HOST));
+                .append(request.getHeader(HttpHeaderNames.HOST.toString()));
         if (builder.charAt(builder.length() - 1) != '/') {
             builder.append("/");
         }

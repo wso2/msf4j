@@ -17,6 +17,7 @@ package org.wso2.msf4j.client.test;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gson.Gson;
+import io.netty.handler.codec.http.HttpHeaderNames;
 import org.apache.commons.io.IOUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -42,7 +43,6 @@ import java.net.URL;
 import javax.ws.rs.HttpMethod;
 
 public class ClientTest {
-    private static final String HEADER_KEY_CONNECTION = "CONNECTION";
     private static final String HEADER_VAL_CLOSE = "CLOSE";
     private static final String HOSTNAME = "localhost";
     private static final int PORT = 8090;
@@ -122,7 +122,7 @@ public class ClientTest {
         }
         urlConn.setRequestMethod(method);
         if (!keepAlive) {
-            urlConn.setRequestProperty(HEADER_KEY_CONNECTION, HEADER_VAL_CLOSE);
+            urlConn.setRequestProperty(HttpHeaderNames.CONNECTION.toString(), HEADER_VAL_CLOSE);
         }
 
         return urlConn;

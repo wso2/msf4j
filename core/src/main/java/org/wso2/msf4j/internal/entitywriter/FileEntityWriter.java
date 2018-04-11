@@ -19,11 +19,11 @@ package org.wso2.msf4j.internal.entitywriter;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.DefaultHttpContent;
 import io.netty.handler.codec.http.DefaultLastHttpContent;
+import io.netty.handler.codec.http.HttpHeaderNames;
 import org.apache.commons.io.FilenameUtils;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.internal.mime.MimeMapper;
 import org.wso2.msf4j.internal.mime.MimeMappingException;
-import org.wso2.transport.http.netty.common.Constants;
 import org.wso2.transport.http.netty.contract.ServerConnectorException;
 import org.wso2.transport.http.netty.message.HTTPCarbonMessage;
 
@@ -67,8 +67,8 @@ public class FileEntityWriter implements EntityWriter<File> {
             if (chunkSize == Response.NO_CHUNK || chunkSize == Response.DEFAULT_CHUNK_SIZE) {
                 chunkSize = DEFAULT_CHUNK_SIZE;
             }
-            httpCarbonMessage.setHeader(Constants.HTTP_TRANSFER_ENCODING, CHUNKED);
-            httpCarbonMessage.setHeader(Constants.HTTP_CONTENT_TYPE, mediaType);
+            httpCarbonMessage.setHeader(HttpHeaderNames.TRANSFER_ENCODING.toString(), CHUNKED);
+            httpCarbonMessage.setHeader(HttpHeaderNames.CONTENT_TYPE.toString(), mediaType);
 
             try {
                 responder.respond(httpCarbonMessage);

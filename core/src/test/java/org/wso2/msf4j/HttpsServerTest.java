@@ -16,6 +16,7 @@
 
 package org.wso2.msf4j;
 
+import io.netty.handler.codec.http.HttpHeaderNames;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.wso2.msf4j.conf.Constants;
@@ -88,7 +89,7 @@ public class HttpsServerTest extends HttpServerTest {
         }
         urlConn.setRequestMethod(method);
         if (!keepAlive) {
-            urlConn.setRequestProperty(HEADER_KEY_CONNECTION, HEADER_VAL_CLOSE);
+            urlConn.setRequestProperty(HttpHeaderNames.CONNECTION.toString(), HEADER_VAL_CLOSE);
         }
         return urlConn;
     }

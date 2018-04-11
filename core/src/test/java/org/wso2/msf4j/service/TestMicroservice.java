@@ -40,9 +40,10 @@ import org.wso2.msf4j.pojo.Pet;
 import org.wso2.msf4j.pojo.TextBean;
 import org.wso2.msf4j.pojo.XmlBean;
 import org.wso2.msf4j.service.sub.Team;
-import org.wso2.msf4j.util.BufferUtil;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -268,7 +269,35 @@ public class TestMicroservice implements Microservice {
     }
 
     private String getStringContent(Request request) throws IOException {
-        return Charset.defaultCharset().decode(BufferUtil.merge(request.getFullMessageBody())).toString();
+        return getStringFromInputStream(request.getMessageContentStream());
+    }
+
+    /**
+     * Convert input stream to String.
+     *
+     * @param in Input stream to be converted to string
+     * @return Converted string
+     */
+    private static String getStringFromInputStream(InputStream in) {
+        BufferedInputStream bis = new BufferedInputStream(in);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        String result;
+        try {
+            int data;
+            while ((data = bis.read()) != -1) {
+                bos.write(data);
+            }
+            result = bos.toString();
+        } catch (IOException ioe) {
+            return "";
+        } finally {
+            try {
+                bos.close();
+            } catch (IOException ignored) {
+
+            }
+        }
+        return result;
     }
 
     @Path("/multi-match/**")
@@ -437,7 +466,8 @@ public class TestMicroservice implements Microservice {
     @Path("/aggregate/upload")
     @PUT
     public String aggregatedUpload(@Context Request request) {
-        ByteBuffer content = BufferUtil.merge(request.getFullMessageBody());
+        ByteBuffer content = ByteBuffer.wrap(getStringFromInputStream(request.getMessageContentStream()).
+                getBytes(Charset.defaultCharset()));
         int bytesUploaded = content.capacity();
         return "Uploaded:" + bytesUploaded;
     }

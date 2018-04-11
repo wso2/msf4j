@@ -19,8 +19,8 @@ package org.wso2.msf4j.internal.entitywriter;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.DefaultHttpContent;
 import io.netty.handler.codec.http.DefaultLastHttpContent;
+import io.netty.handler.codec.http.HttpHeaderNames;
 import org.wso2.msf4j.Response;
-import org.wso2.transport.http.netty.common.Constants;
 import org.wso2.transport.http.netty.contract.ServerConnectorException;
 import org.wso2.transport.http.netty.message.HTTPCarbonMessage;
 
@@ -54,8 +54,8 @@ public class InputStreamEntityWriter implements EntityWriter<InputStream> {
             if (chunkSize == Response.NO_CHUNK || chunkSize == Response.DEFAULT_CHUNK_SIZE) {
                 chunkSize = DEFAULT_CHUNK_SIZE;
             }
-            carbonMessage.setHeader(Constants.HTTP_TRANSFER_ENCODING, CHUNKED);
-            carbonMessage.setHeader(Constants.HTTP_CONTENT_TYPE, mediaType);
+            carbonMessage.setHeader(HttpHeaderNames.TRANSFER_ENCODING.toString(), CHUNKED);
+            carbonMessage.setHeader(HttpHeaderNames.CONTENT_TYPE.toString(), mediaType);
             Executors.newSingleThreadExecutor().execute(() -> {
                 try {
                     responder.respond(carbonMessage);

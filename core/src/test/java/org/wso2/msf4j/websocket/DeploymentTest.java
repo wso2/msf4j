@@ -43,7 +43,7 @@ public class DeploymentTest {
 
     private static final Logger log = LoggerFactory.getLogger(DeploymentTest.class);
     private final String host = "localhost";
-    private final String port = "8080";
+    private final String port = "9090";
     private final int sleepTime = 100;
 
     private String echoUrl = "ws://" + host + ":" + port + "/echo";

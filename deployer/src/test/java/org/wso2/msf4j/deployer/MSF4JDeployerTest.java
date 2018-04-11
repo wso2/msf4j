@@ -17,6 +17,7 @@ package org.wso2.msf4j.deployer;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import io.netty.handler.codec.http.HttpHeaderNames;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.shared.invoker.DefaultInvocationRequest;
@@ -61,7 +62,6 @@ public class MSF4JDeployerTest {
     private static final String HOSTNAME = "localhost";
     private static final int PORT = 8090;
     private MicroservicesDeployer deployer;
-    private static final String HEADER_KEY_CONNECTION = "CONNECTION";
     private static final String HEADER_VAL_CLOSE = "CLOSE";
     private static final Gson GSON = new Gson();
     private static final Type STRING_MAP_TYPE = new TypeToken<Map<String, String>>() {
@@ -162,7 +162,7 @@ public class MSF4JDeployerTest {
         }
         urlConn.setRequestMethod(method);
         if (!keepAlive) {
-            urlConn.setRequestProperty(HEADER_KEY_CONNECTION, HEADER_VAL_CLOSE);
+            urlConn.setRequestProperty(HttpHeaderNames.CONNECTION.toString(), HEADER_VAL_CLOSE);
         }
 
         return urlConn;
