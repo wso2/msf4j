@@ -24,8 +24,8 @@ java -jar target/basicauth-security-*.jar
 Use following cURL commands.
 
 ```
-curl --user sam:sam http://localhost:8080/hello/sam -v
+curl --user sam:sam http://localhost:9090/hello/sam -v
 
-curl --user sam:wrong http://localhost:8080/hello/sam -v
+curl --user sam:wrong http://localhost:9090/hello/sam -v
 
 ```

@@ -78,7 +78,7 @@ java -jar target/circuitbreaker-*.jar
 Now let's use cURL to repeatedly invoke the service. Run the following command;
 
 ```
-while true; do curl -v http://localhost:8080/stockquote/IBM ; done
+while true; do curl -v http://localhost:9090/stockquote/IBM ; done
 ```
 
 The above command will keep invoking the service. Observe the output of the service in the terminal. 

@@ -139,5 +139,5 @@ loaded and it's microservices that are there as OSGi services will be exposed as
 
 Use following cURL commands.
 ```
-curl http://localhost:8080/interceptor-service/service-name
+curl http://localhost:9090/interceptor-service/service-name
 ```

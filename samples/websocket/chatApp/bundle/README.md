@@ -22,7 +22,7 @@ public class ChatAppEndpoint implements WebSocketEndpoint {
 In this example we have used dynamic URI to take the name
 using **/{name}** in the @ServerEndpoint
 
-Ex : ws://localhost:8080/chat/**john**
+Ex : ws://localhost:9090/chat/**john**
 
 This indicates that the person who is joining the chat
 is john. 

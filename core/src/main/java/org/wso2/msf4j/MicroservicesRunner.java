@@ -25,6 +25,7 @@ import org.wso2.msf4j.internal.MSF4JHttpConnectorListener;
 import org.wso2.msf4j.internal.MSF4JWSConnectorListener;
 import org.wso2.msf4j.internal.MicroservicesRegistryImpl;
 import org.wso2.msf4j.internal.websocket.EndpointsRegistryImpl;
+import org.wso2.transport.http.netty.common.Constants;
 import org.wso2.transport.http.netty.common.Util;
 import org.wso2.transport.http.netty.config.ConfigurationBuilder;
 import org.wso2.transport.http.netty.config.ListenerConfiguration;
@@ -39,6 +40,7 @@ import org.wso2.transport.http.netty.message.HTTPConnectorUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.ws.rs.ext.ExceptionMapper;
 
 /**
@@ -219,7 +221,16 @@ public class MicroservicesRunner {
         } else {
             TransportsConfiguration transportsConfiguration =
                     ConfigurationBuilder.getInstance().getConfiguration(transportYaml);
-            HttpWsConnectorFactory connectorFactory = new DefaultHttpWsConnectorFactory();
+
+            Map<String, Object> transportProperties = HTTPConnectorUtil.getTransportProperties(transportsConfiguration);
+            int bossGroup = transportProperties.get(Constants.SERVER_BOOTSTRAP_BOSS_GROUP_SIZE) != null ? (Integer)
+                    transportProperties.get(Constants.SERVER_BOOTSTRAP_BOSS_GROUP_SIZE) : Runtime.getRuntime()
+                    .availableProcessors();
+            int workerGroup = transportProperties.get(Constants.SERVER_BOOTSTRAP_WORKER_GROUP_SIZE) != null ? (Integer)
+                    transportProperties.get(Constants.SERVER_BOOTSTRAP_WORKER_GROUP_SIZE) : Runtime.getRuntime()
+                    .availableProcessors() * 2;
+            HttpWsConnectorFactory connectorFactory = new DefaultHttpWsConnectorFactory(bossGroup, workerGroup,
+                    workerGroup);
             ServerBootstrapConfiguration serverBootstrapConfiguration =
                     HTTPConnectorUtil.getServerBootstrapConfiguration(transportsConfiguration.getTransportProperties());
 

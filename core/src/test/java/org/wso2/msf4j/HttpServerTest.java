@@ -322,16 +322,6 @@ public class HttpServerTest {
         urlConn.disconnect();
     }
 
-//    @Test
-//    public void testKeepAlive() throws IOException {
-//        HttpURLConnection urlConn = request("/test/v1/tweets/1", HttpMethod.PUT, true);
-//        writeContent(urlConn, "data");
-//        assertEquals(200, urlConn.getResponseCode());
-//
-//        assertEquals("keep-alive", urlConn.getHeaderField(HEADER_KEY_CONNECTION));
-//        urlConn.disconnect();
-//    }
-
     @Test
     public void testMultiplePathParameters() throws IOException {
         HttpURLConnection urlConn = request("/test/v1/user/sree/message/12", HttpMethod.GET);

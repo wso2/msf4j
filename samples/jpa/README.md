@@ -15,7 +15,7 @@ mvn clean package
 2. Run the application using following java commend 
 
 ```shell
-java -jar target/jpa.jar
+java -jar target/jpa-*.jar
 ```
 
 # How to test this sample 
@@ -23,19 +23,19 @@ Use following cURL commands
 
 Add a sample user 
 ```shell
-curl -v -X POST http://localhost:8080/users/fname/jhon/lname/snow 
+curl -v -X POST http://localhost:9090/users/fname/jhon/lname/snow 
 ```
 
 Get detailss of all the users 
 
 ```shell
-curl -v http://localhost:8080/users 
+curl -v http://localhost:9090/users 
 ```
 
 Get detailss of first user 
 
 ```shell
-curl -v http://localhost:8080/users/1 
+curl -v http://localhost:9090/users/1 
 ```
 
 

@@ -95,7 +95,7 @@ java -jar das-tracing-feign-client-*.jar
 We will use the cURL command line tool for testing. You can use your preferred HTTP or REST client too.
 
 ```
-curl http://localhost:8080/report/invoice/I001
+curl http://localhost:9090/report/invoice/I001
 ```
 
 You should get a response similar to the following:
