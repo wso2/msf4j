@@ -89,11 +89,11 @@ java -Dmetrics.config=<Metrics YAML configuration file path> -jar target/metrics
 
 You can use following cURL commands.
 ```
-curl -v http://localhost:8080/demo/rand/500
+curl -v http://localhost:9090/demo/rand/500
 
-curl -v http://localhost:8080/demo/count/10
+curl -v http://localhost:9090/demo/count/10
 
-curl -v http://localhost:8080/demo/echo/test
+curl -v http://localhost:9090/demo/echo/test
 ```
 
 **Metrics Reporters**

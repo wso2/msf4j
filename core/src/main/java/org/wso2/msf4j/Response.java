@@ -64,14 +64,6 @@ public class Response {
     }
 
     /**
-     * @return true if message is fully available in the response object
-     */
-    @Deprecated
-    public boolean isEomAdded() {
-        return httpCarbonMessage.isEndOfMsgAdded();
-    }
-
-    /**
      * @return returns true if the message body is empty
      */
     public boolean isEmpty() {
@@ -84,14 +76,6 @@ public class Response {
     @Deprecated
     public ByteBuf getMessageBody() {
         return httpCarbonMessage.getMessageBody();
-    }
-
-    /**
-     * @return complete content of the response object
-     */
-    @Deprecated
-    public List<ByteBuffer> getFullMessageBody() {
-        return httpCarbonMessage.getFullMessageBody();
     }
 
     /**

@@ -19,6 +19,7 @@ package org.wso2.msf4j.util;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.DefaultHttpResponse;
 import io.netty.handler.codec.http.DefaultLastHttpContent;
+import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
 import org.wso2.msf4j.Request;
@@ -76,11 +77,11 @@ public class HttpUtil {
      * @param response HTTP response object
      */
     public static void setConnectionHeader(Request request, Response response) {
-        String connection = request.getHeader(Constants.HTTP_CONNECTION);
+        String connection = request.getHeader(HttpHeaderNames.CONNECTION.toString());
         if (connection != null && CLOSE.equalsIgnoreCase(connection)) {
-            response.setHeader(Constants.HTTP_CONNECTION, CLOSE);
+            response.setHeader(HttpHeaderNames.CONNECTION.toString(), CLOSE);
         } else {
-            response.setHeader(Constants.HTTP_CONNECTION, KEEP_ALIVE);
+            response.setHeader(HttpHeaderNames.CONNECTION.toString(), KEEP_ALIVE);
         }
     }
 }

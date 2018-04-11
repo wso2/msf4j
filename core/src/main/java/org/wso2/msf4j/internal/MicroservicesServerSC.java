@@ -45,7 +45,7 @@ import org.wso2.transport.http.netty.contract.HttpConnectorListener;
 import org.wso2.transport.http.netty.contract.HttpWsConnectorFactory;
 import org.wso2.transport.http.netty.contract.ServerConnector;
 import org.wso2.transport.http.netty.contract.ServerConnectorFuture;
-import org.wso2.transport.http.netty.contractimpl.HttpWsConnectorFactoryImpl;
+import org.wso2.transport.http.netty.contractimpl.DefaultHttpWsConnectorFactory;
 import org.wso2.transport.http.netty.listener.ServerBootstrapConfiguration;
 import org.wso2.transport.http.netty.message.HTTPConnectorUtil;
 
@@ -178,7 +178,7 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
 
             ServerBootstrapConfiguration serverBootstrapConfiguration =
                     HTTPConnectorUtil.getServerBootstrapConfiguration(transportsConfiguration.getTransportProperties());
-            HttpWsConnectorFactory connectorFactory = new HttpWsConnectorFactoryImpl();
+            HttpWsConnectorFactory connectorFactory = new DefaultHttpWsConnectorFactory();
             listenerConfigurations.forEach(listenerConfiguration -> {
                 ServerConnector serverConnector =
                         connectorFactory.createServerConnector(serverBootstrapConfiguration, listenerConfiguration);
@@ -189,7 +189,7 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
                 properties.put(MSF4JConstants.CHANNEL_ID, serverConnector.getConnectorID());
                 microservicesRegistries.put(serverConnector.getConnectorID(), microservicesRegistry);
                 DataHolder.getInstance().getBundleContext()
-                          .registerService(MicroservicesRegistry.class, microservicesRegistry, properties);
+                        .registerService(MicroservicesRegistry.class, microservicesRegistry, properties);
                 listenerConfigurationMap.put(serverConnector.getConnectorID(), listenerConfiguration);
                 serverConnectors.add(serverConnector);
             });
@@ -317,7 +317,7 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
     public void onAllRequiredCapabilitiesAvailable() {
         try {
             ServiceReference[] serviceReferences = DataHolder.getInstance().getBundleContext()
-                                                             .getServiceReferences(Microservice.class.getName(), null);
+                    .getServiceReferences(Microservice.class.getName(), null);
             if (serviceReferences != null && serviceReferences.length > 0) {
                 Arrays.stream(serviceReferences).forEach(serviceReference -> {
                     Microservice service =
@@ -330,12 +330,12 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
 
             // Add request and response interceptors
             serviceReferences = DataHolder.getInstance().getBundleContext()
-                                          .getServiceReferences(OSGiInterceptorConfig.class.getName(), null);
+                    .getServiceReferences(OSGiInterceptorConfig.class.getName(), null);
             if (serviceReferences != null && serviceReferences.length > 0) {
                 Arrays.stream(serviceReferences).forEach(serviceReference -> {
                     OSGiInterceptorConfig interceptorConfig =
                             (OSGiInterceptorConfig) DataHolder.getInstance().getBundleContext()
-                                                              .getService(serviceReference);
+                                    .getService(serviceReference);
                     Object channelId = serviceReference.getProperty(MSF4JConstants.CHANNEL_ID);
                     addRequestResponseInterceptorsToRegistry(interceptorConfig, channelId);
                 });
@@ -353,7 +353,7 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             }
 
             serviceReferences = DataHolder.getInstance().getBundleContext()
-                                          .getServiceReferences(ExceptionMapper.class.getName(), null);
+                    .getServiceReferences(ExceptionMapper.class.getName(), null);
             if (serviceReferences != null && serviceReferences.length > 0) {
                 Arrays.stream(serviceReferences).forEach(serviceReference -> {
                     ExceptionMapper exceptionMapper =
@@ -364,7 +364,7 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             }
 
             serviceReferences = DataHolder.getInstance().getBundleContext()
-                                          .getServiceReferences(SessionManager.class.getName(), null);
+                    .getServiceReferences(SessionManager.class.getName(), null);
             if (serviceReferences != null && serviceReferences.length > 0) {
                 Arrays.stream(serviceReferences).forEach(serviceReference -> {
                     SessionManager sessionManager =
@@ -417,7 +417,7 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
                 microservicesRegistries.values().forEach(registry -> registry.addService(service));
             } else {
                 microservicesRegistries.values()
-                                       .forEach(registry -> registry.addService(contextPath.toString(), service));
+                        .forEach(registry -> registry.addService(contextPath.toString(), service));
             }
         }
     }
@@ -435,7 +435,7 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             MicroservicesRegistryImpl microservicesRegistry = microservicesRegistries.get(channelId.toString());
             if (microservicesRegistry == null) {
                 throw new OSGiDeclarativeServiceException("Couldn't find the registry for channel ID " +
-                                                          channelId);
+                        channelId);
             }
             microservicesRegistry.addGlobalRequestInterceptor(interceptorConfig.getGlobalRequestInterceptorArray());
             microservicesRegistry.addGlobalResponseInterceptor(interceptorConfig.getGlobalResponseInterceptorArray());

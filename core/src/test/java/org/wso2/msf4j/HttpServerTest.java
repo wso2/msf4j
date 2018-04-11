@@ -19,6 +19,7 @@ package org.wso2.msf4j;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import io.netty.handler.codec.http.HttpHeaderNames;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
@@ -87,7 +88,6 @@ import static org.testng.AssertJUnit.fail;
  * Test the HttpServer.
  */
 public class HttpServerTest {
-    public static final String HEADER_KEY_CONNECTION = "CONNECTION";
     public static final String HEADER_VAL_CLOSE = "CLOSE";
     protected static final Type STRING_MAP_TYPE = new TypeToken<Map<String, String>>() {
     }.getType();
@@ -323,16 +323,6 @@ public class HttpServerTest {
     }
 
     @Test
-    public void testKeepAlive() throws IOException {
-        HttpURLConnection urlConn = request("/test/v1/tweets/1", HttpMethod.PUT, true);
-        writeContent(urlConn, "data");
-        assertEquals(200, urlConn.getResponseCode());
-
-        assertEquals("keep-alive", urlConn.getHeaderField(HEADER_KEY_CONNECTION));
-        urlConn.disconnect();
-    }
-
-    @Test
     public void testMultiplePathParameters() throws IOException {
         HttpURLConnection urlConn = request("/test/v1/user/sree/message/12", HttpMethod.GET);
         assertEquals(200, urlConn.getResponseCode());
@@ -521,6 +511,7 @@ public class HttpServerTest {
             PrintStream printer = new PrintStream(socket.getOutputStream(), false, "UTF-8");
             printer.printf("GET %s HTTP/1.1\r\n", url.getPath());
             printer.printf("Host: %s:%d\r\n", url.getHost(), url.getPort());
+            printer.printf ("%s: close\r\n", HttpHeaderNames.CONNECTION.toString());
             printer.print("\r\n");
             printer.flush();
 
@@ -1385,7 +1376,7 @@ public class HttpServerTest {
         }
         urlConn.setRequestMethod(method);
         if (!keepAlive) {
-            urlConn.setRequestProperty(HEADER_KEY_CONNECTION, HEADER_VAL_CLOSE);
+            urlConn.setRequestProperty(HttpHeaderNames.CONNECTION.toString(), HEADER_VAL_CLOSE);
         }
 
         return urlConn;
@@ -1399,7 +1390,7 @@ public class HttpServerTest {
         }
         urlConn.setRequestMethod(method);
         if (!keepAlive) {
-            urlConn.setRequestProperty(HEADER_KEY_CONNECTION, HEADER_VAL_CLOSE);
+            urlConn.setRequestProperty(HttpHeaderNames.CONNECTION.toString(), HEADER_VAL_CLOSE);
         }
 
         return urlConn;

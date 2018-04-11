@@ -99,7 +99,7 @@ java -jar target/fileserver-*.jar
 
 Run the following curl command to upload file
 ```
-curl -v -X POST --data-binary @/testPng.png http://localhost:8080/filename.png
+curl -v -X POST --data-binary @/testPng.png http://localhost:9090/filename.png
 ```
 Here /testPng.png will be uploaded with the name filename.png
 
@@ -108,7 +108,7 @@ Here /testPng.png will be uploaded with the name filename.png
 Run the following curl command to download the file:
 
 ```
-curl -v -X GET http://localhost:8080/filename.png > result.png
+curl -v -X GET http://localhost:9090/filename.png > result.png
 ```
 
 Now the file will be downloaded as result.png to the current directory.
@@ -116,11 +116,11 @@ Now the file will be downloaded as result.png to the current directory.
 Alternatively, to see how streaming works with java.io.InputStream, run the following command:
 
 ```
-curl -v -X GET http://localhost:8080/ip/filename.png > result-ipstream.png
+curl -v -X GET http://localhost:9090/ip/filename.png > result-ipstream.png
 ```
 
 To see how streaming works with javax.ws.rs.core.StreamingOutput , run the following command:
 
 ```
-curl -v -X GET http://localhost:8080/op/filename.png > result-opstream.png
+curl -v -X GET http://localhost:9090/op/filename.png > result-opstream.png
 ```

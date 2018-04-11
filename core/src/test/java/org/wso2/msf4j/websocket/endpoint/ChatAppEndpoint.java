@@ -46,10 +46,10 @@ public class ChatAppEndpoint {
 
     @OnOpen
     public void onOpen(@PathParam("name") String name, Session session) {
-        sessions.add(session);
         String msg = name + " connected to chat";
-        log.info(msg);
         sendMessageToAll(msg);
+        sessions.add(session);
+        log.info(msg);
     }
 
     @OnMessage

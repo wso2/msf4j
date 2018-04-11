@@ -78,7 +78,7 @@ java -jar target/stockquote-fatjar-*.jar
 
 Use following cURL commands.
 ```
-curl http://localhost:8080/stockquote/IBM
+curl http://localhost:9090/stockquote/IBM
 ```
 
 You should get a successful response if everything worked fine.

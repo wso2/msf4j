@@ -69,10 +69,10 @@ java -DAUTH_SERVER_URL=http://localhost:9763/introspect -jar target/security-*.j
 Use following cURL commands.
 
 ```
-curl -v -H "Authorization: Bearer <access_token>" http://localhost:8080/hello/john
+curl -v -H "Authorization: Bearer <access_token>" http://localhost:9090/hello/john
 
 > GET /hello/john HTTP/1.1
-> Host: localhost:8080
+> Host: localhost:9090
 > User-Agent: curl/7.43.0
 > Accept: */*
 > Authorization: Bearer <access_token>

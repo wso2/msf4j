@@ -15,6 +15,7 @@
  */
 package org.wso2.msf4j.swagger;
 
+import io.netty.handler.codec.http.HttpHeaderNames;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -36,7 +37,6 @@ import static org.testng.AssertJUnit.assertEquals;
 
 public class SwaggerTest {
 
-    public static final String HEADER_KEY_CONNECTION = "CONNECTION";
     public static final String HEADER_VAL_CLOSE = "CLOSE";
     private final TestMicroservice testMicroservice = new TestMicroservice();
     private static final int port = Constants.PORT + 39;
@@ -96,7 +96,7 @@ public class SwaggerTest {
         }
         urlConn.setRequestMethod(method);
         if (!keepAlive) {
-            urlConn.setRequestProperty(HEADER_KEY_CONNECTION, HEADER_VAL_CLOSE);
+            urlConn.setRequestProperty(HttpHeaderNames.CONNECTION.toString(), HEADER_VAL_CLOSE);
         }
 
         return urlConn;

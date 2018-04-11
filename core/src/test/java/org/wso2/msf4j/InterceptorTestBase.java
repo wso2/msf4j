@@ -18,6 +18,7 @@
 package org.wso2.msf4j;
 
 import com.google.gson.Gson;
+import io.netty.handler.codec.http.HttpHeaderNames;
 import org.apache.commons.io.IOUtils;
 import org.wso2.msf4j.formparam.util.StreamUtil;
 
@@ -155,7 +156,7 @@ public abstract class InterceptorTestBase {
         }
         urlConn.setRequestMethod(method);
         if (!keepAlive) {
-            urlConn.setRequestProperty("CONNECTION", "CLOSE");
+            urlConn.setRequestProperty(HttpHeaderNames.CONNECTION.toString(), "CLOSE");
         }
         return urlConn;
     }

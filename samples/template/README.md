@@ -45,4 +45,4 @@ java -jar target/template-*.jar
 
 ## How to tests the sample
 
-After the service is started navigate to [http://localhost:8080/MSF4J](http://localhost:8080/MSF4J) using the browser.
+After the service is started navigate to [http://localhost:9090/MSF4J](http://localhost:9090/MSF4J) using the browser.

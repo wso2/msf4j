@@ -20,7 +20,7 @@ java -jar session-*.jar
 
 ## How to test the sample
 
-Point your Web browser to [http://localhost:8080](http://localhost:8080) & keep refreshing the page.
+Point your Web browser to [http://localhost:9090](http://localhost:9090) & keep refreshing the page.
 
 You will see the count being printed on the browser window, and everytime you refresh, the count will be incremented 
 and once the count reaches 100, it will be reset because the session is invalidated.
@@ -28,7 +28,7 @@ and once the count reaches 100, it will be reset because the session is invalida
 You can also use cURL or any other REST client to invoke your service.
 
 ```
-curl -v http://localhost:8080
+curl -v http://localhost:9090
 ```
 
 You should get a response similar to the following:
@@ -49,7 +49,7 @@ Next we will send the JSESSIONID cookie with the curl requests so that the same 
 end.
 
 ```
-curl --header "Cookie:  JSESSIONID=3508015E4EF0ECA8C4B761FCC4BC1718" http://localhost:8080
+curl --header "Cookie:  JSESSIONID=3508015E4EF0ECA8C4B761FCC4BC1718" http://localhost:9090
 ```
 
 Keep repeating the above command and you should see that the counter being incremented upto 100, and then being reset.

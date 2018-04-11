@@ -80,13 +80,13 @@ java -Dmsf4j.conf=<MSF4J Deployment YAML configuration path> -jar target/http-mo
 
 Use the following cURL commands.
 ```
-curl -v http://localhost:8080/student/910760234V
+curl -v http://localhost:9090/student/910760234V
 
 curl -v --data "{'nic':'860766123V','firstName':'Jack','lastName':'Black','age':29}" -H "Content-Type: application/json" http://localhost:8080/student
 
-curl -v http://localhost:8080/student/860766123V
+curl -v http://localhost:9090/student/860766123V
 
-curl -v http://localhost:8080/student
+curl -v http://localhost:9090/student
 
 ```
 

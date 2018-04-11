@@ -18,6 +18,7 @@
  */
 package org.wso2.msf4j.osgi.test;
 
+import io.netty.handler.codec.http.HttpHeaderNames;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.ops4j.pax.exam.ExamFactory;
@@ -55,7 +56,6 @@ import static org.testng.AssertJUnit.assertEquals;
 @ExamFactory(CarbonContainerFactory.class)
 public class MSF4JOSGiTest {
 
-    private static final String HEADER_KEY_CONNECTION = "CONNECTION";
     private static final String HEADER_VAL_CLOSE = "CLOSE";
 
     private static final String HOSTNAME = "localhost";
@@ -111,7 +111,7 @@ public class MSF4JOSGiTest {
         }
         urlConn.setRequestMethod(method);
         if (!keepAlive) {
-            urlConn.setRequestProperty(HEADER_KEY_CONNECTION, HEADER_VAL_CLOSE);
+            urlConn.setRequestProperty(HttpHeaderNames.CONNECTION.toString(), HEADER_VAL_CLOSE);
         }
 
         return urlConn;

@@ -18,9 +18,9 @@ package org.wso2.msf4j.internal.entitywriter;
 
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.DefaultLastHttpContent;
+import io.netty.handler.codec.http.HttpHeaderNames;
 import org.wso2.msf4j.Response;
 import org.wso2.msf4j.internal.beanconversion.BeanConverter;
-import org.wso2.transport.http.netty.common.Constants;
 import org.wso2.transport.http.netty.contract.ServerConnectorException;
 import org.wso2.transport.http.netty.message.HTTPCarbonMessage;
 
@@ -50,11 +50,11 @@ public class ObjectEntityWriter implements EntityWriter<Object> {
         ByteBuffer byteBuffer = BeanConverter.getConverter(mediaType).convertToMedia(entity);
         carbonMessage.addHttpContent(new DefaultLastHttpContent(Unpooled.wrappedBuffer(byteBuffer)));
         if (chunkSize == Response.NO_CHUNK) {
-            carbonMessage.setHeader(Constants.HTTP_CONTENT_LENGTH, String.valueOf(byteBuffer.remaining()));
+            carbonMessage.setHeader(HttpHeaderNames.CONTENT_LENGTH.toString(), String.valueOf(byteBuffer.remaining()));
         } else {
-            carbonMessage.setHeader(Constants.HTTP_TRANSFER_ENCODING, CHUNKED);
+            carbonMessage.setHeader(HttpHeaderNames.TRANSFER_ENCODING.toString(), CHUNKED);
         }
-        carbonMessage.setHeader(Constants.HTTP_CONTENT_TYPE, mediaType);
+        carbonMessage.setHeader(HttpHeaderNames.CONTENT_TYPE.toString(), mediaType);
         try {
             responder.respond(carbonMessage);
         } catch (ServerConnectorException e) {

@@ -22,7 +22,7 @@ java -jar helloworld-*.jar
 We will use the cURL command line tool for testing. You can use your preferred HTTP or REST client too.
 
 ```
-curl http://localhost:8080/hello/wso2
+curl http://localhost:9090/hello/wso2
 ```
 
 You should get a response similar to the following:

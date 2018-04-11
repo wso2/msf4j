@@ -152,21 +152,21 @@ Simple client is also available in the sample
 ## Sample CURL Commands 
 1. For simpleForm and simpleFormWithFormParam operations in the FormService. Change the url based on the operations you invoke
 ```
-curl -X POST -H "Content-Type: application/x-www-form-urlencoded" -d 'name=WSO2&age=10' "http://localhost:8080/formService/simpleFormWithFormParam"
-curl -X POST -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW" -F "name=WSO2" -F "age=10" "http://localhost:8080/formService/simpleFormWithFormParam"
+curl -X POST -H "Content-Type: application/x-www-form-urlencoded" -d 'name=WSO2&age=10' "http://localhost:9090/formService/simpleFormWithFormParam"
+curl -X POST -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW" -F "name=WSO2" -F "age=10" "http://localhost:9090/formService/simpleFormWithFormParam"
 ```
 2. For simpleFormWithFormParamAndList, simpleFormWithFormParamAndSet and simpleFormWithFormParamAndSortedSet operations in the FormService. Change the url based on the operations you invoke
 ```
-curl -X POST -H "Content-Type: application/x-www-form-urlencoded" -d 'name=WSO2&name=IBM' "http://localhost:8080/formService/simpleFormWithFormParamAndList"
-curl -X POST -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW" -F "name=WSO2" -F "name=IBM" -F "name=Oracle" "http://localhost:8080/formService/simpleFormWithFormParamAndList"
+curl -X POST -H "Content-Type: application/x-www-form-urlencoded" -d 'name=WSO2&name=IBM' "http://localhost:9090/formService/simpleFormWithFormParamAndList"
+curl -X POST -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW" -F "name=WSO2" -F "name=IBM" -F "name=Oracle" "http://localhost:9090/formService/simpleFormWithFormParamAndList"
 ```
 3. For simpleFormStreaming operation in the FormService
 ```
-curl -X POST -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW" -F "name=WSO2" -F "age=10" -F "image=@abc.png" "http://localhost:8080/formService/simpleFormStreaming"
+curl -X POST -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW" -F "name=WSO2" -F "age=10" -F "image=@abc.png" "http://localhost:9090/formService/simpleFormStreaming"
 ```
 You can also use a simple html form like below or a rest client e.g. Postman, Advanced RestClient
 ```html
-<form method="post" action="http://localhost:8080/formService/simpleFormStreaming">
+<form method="post" action="http://localhost:9090/formService/simpleFormStreaming">
     <table>
         <tr>
     	    <td>Name:</td>
@@ -189,10 +189,10 @@ You can also use a simple html form like below or a rest client e.g. Postman, Ad
 
 4. For multipleFiles operation in the FormService
 ```
-curl -X POST -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW" -F "files=@file1.txt" -F "files=@file2.jpg" "http://localhost:8080/formService/multipleFiles"
+curl -X POST -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW" -F "files=@file1.txt" -F "files=@file2.jpg" "http://localhost:9090/formService/multipleFiles"
 ```
 5. For streamFile operation in the FormService
 ```
-curl -X POST -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW" -F "file=@file1.txt" "http://localhost:8080/formService/streamFile"
+curl -X POST -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW" -F "file=@file1.txt" "http://localhost:9090/formService/streamFile"
 ```
 Please refer to the SampleClient code to invoke the complexForm operation

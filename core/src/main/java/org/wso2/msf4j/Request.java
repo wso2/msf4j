@@ -20,13 +20,12 @@ import io.netty.buffer.ByteBuf;
 import org.wso2.msf4j.internal.HttpHeadersImpl;
 import org.wso2.msf4j.internal.MSF4JConstants;
 import org.wso2.transport.http.netty.common.Constants;
+import org.wso2.transport.http.netty.contract.HttpResponseFuture;
 import org.wso2.transport.http.netty.contract.ServerConnectorException;
-import org.wso2.transport.http.netty.contractimpl.HttpResponseStatusFuture;
 import org.wso2.transport.http.netty.message.HTTPCarbonMessage;
 import org.wso2.transport.http.netty.message.HttpMessageDataStreamer;
 
 import java.io.InputStream;
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -64,14 +63,6 @@ public class Request {
     }
 
     /**
-     * @return returns true if the object contains the complete request body
-     */
-    @Deprecated
-    public boolean isEomAdded() {
-        return httpCarbonMessage.isEndOfMsgAdded();
-    }
-
-    /**
      * @return true if the request does not have body content
      */
     public boolean isEmpty() {
@@ -84,14 +75,6 @@ public class Request {
     @Deprecated
     public ByteBuf getMessageBody() {
         return httpCarbonMessage.getMessageBody();
-    }
-
-    /**
-     * @return full message body of the Request
-     */
-    @Deprecated
-    public List<ByteBuffer> getFullMessageBody() {
-        return httpCarbonMessage.getFullMessageBody();
     }
 
     /**
@@ -255,7 +238,7 @@ public class Request {
      * @throws ServerConnectorException server connector exception.
      */
     public boolean respond(HTTPCarbonMessage carbonMessage) throws ServerConnectorException {
-        HttpResponseStatusFuture statusFuture = httpCarbonMessage.respond(carbonMessage);
+        HttpResponseFuture statusFuture = httpCarbonMessage.respond(carbonMessage);
         return statusFuture.getStatus().getCause() == null;
     }
 

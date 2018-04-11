@@ -55,5 +55,5 @@ This will trigger the jar to be automatically deployed during the server runtime
 
 Use following cURL commands.
 ```
-curl http://localhost:8080/interceptor-service/service-name
+curl http://localhost:9090/interceptor-service/service-name
 ```

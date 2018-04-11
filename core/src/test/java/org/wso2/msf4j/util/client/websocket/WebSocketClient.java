@@ -168,36 +168,36 @@ public class WebSocketClient {
      * Send text to the server.
      * @param text text need to be sent.
      */
-    public void sendText(String text) {
+    public void sendText(String text) throws InterruptedException {
         if (channel == null) {
             logger.error("Channel is null. Cannot send text.");
             throw new IllegalArgumentException("Cannot find the channel to write");
         }
-        channel.writeAndFlush(new TextWebSocketFrame(text));
+        channel.writeAndFlush(new TextWebSocketFrame(text)).sync();
     }
 
     /**
      * Send binary data to server.
      * @param buf buffer containing the data need to be sent.
      */
-    public void sendBinary(ByteBuffer buf) throws IOException {
+    public void sendBinary(ByteBuffer buf) throws IOException, InterruptedException {
         if (channel == null) {
             logger.error("Channel is null. Cannot send text.");
             throw new IllegalArgumentException("Cannot find the channel to write");
         }
-        channel.writeAndFlush(new BinaryWebSocketFrame(Unpooled.wrappedBuffer(buf)));
+        channel.writeAndFlush(new BinaryWebSocketFrame(Unpooled.wrappedBuffer(buf))).sync();
     }
 
     /**
      * Send a ping message to the server.
      * @param buf content of the ping message to be sent.
      */
-    public void sendPing(ByteBuffer buf) throws IOException {
+    public void sendPing(ByteBuffer buf) throws IOException, InterruptedException {
         if (channel == null) {
             logger.error("Channel is null. Cannot send text.");
             throw new IllegalArgumentException("Cannot find the channel to write");
         }
-        channel.writeAndFlush(new PingWebSocketFrame(Unpooled.wrappedBuffer(buf)));
+        channel.writeAndFlush(new PingWebSocketFrame(Unpooled.wrappedBuffer(buf))).sync();
     }
 
     /**

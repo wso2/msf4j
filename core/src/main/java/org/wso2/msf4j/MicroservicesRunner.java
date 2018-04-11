@@ -33,11 +33,12 @@ import org.wso2.transport.http.netty.config.TransportsConfiguration;
 import org.wso2.transport.http.netty.contract.HttpWsConnectorFactory;
 import org.wso2.transport.http.netty.contract.ServerConnector;
 import org.wso2.transport.http.netty.contract.ServerConnectorFuture;
-import org.wso2.transport.http.netty.contractimpl.HttpWsConnectorFactoryImpl;
+import org.wso2.transport.http.netty.contractimpl.DefaultHttpWsConnectorFactory;
 import org.wso2.transport.http.netty.listener.ServerBootstrapConfiguration;
 import org.wso2.transport.http.netty.message.HTTPConnectorUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -105,7 +106,7 @@ public class MicroservicesRunner {
      * Deploy a microservice with dynamic path.
      *
      * @param microservice The microservice which is to be deployed
-     * @param basePath The context path for the service
+     * @param basePath     The context path for the service
      * @return this MicroservicesRunner object
      */
     public MicroservicesRunner deploy(String basePath, Object microservice) {
@@ -187,9 +188,8 @@ public class MicroservicesRunner {
      * @param ports The port on which the microservices are exposed
      */
     protected void configureTransport(int... ports) {
-        HttpWsConnectorFactory connectorFactory = new HttpWsConnectorFactoryImpl(Runtime.getRuntime()
-                .availableProcessors(), Runtime.getRuntime().availableProcessors() * 2);
-        ServerBootstrapConfiguration bootstrapConfiguration = ServerBootstrapConfiguration.getInstance();
+        HttpWsConnectorFactory connectorFactory = new DefaultHttpWsConnectorFactory();
+        ServerBootstrapConfiguration bootstrapConfiguration = new ServerBootstrapConfiguration(new HashMap<>());
         for (int port : ports) {
             ListenerConfiguration listenerConfiguration = new ListenerConfiguration("netty-" + port, System
                     .getProperty(MSF4J_HOST, DEFAULT_HOST), port);
@@ -209,19 +209,19 @@ public class MicroservicesRunner {
     protected void configureTransport() {
         String transportYaml = System.getProperty(TRANSPORTS_NETTY_CONF);
         if (transportYaml == null || transportYaml.isEmpty()) {
-            HttpWsConnectorFactory connectorFactory = new HttpWsConnectorFactoryImpl(Runtime.getRuntime()
-                    .availableProcessors(), Runtime.getRuntime().availableProcessors() * 2);
-            ServerBootstrapConfiguration bootstrapConfiguration = ServerBootstrapConfiguration.getInstance();
+            HttpWsConnectorFactory connectorFactory = new DefaultHttpWsConnectorFactory();
+            ServerBootstrapConfiguration bootstrapConfiguration = new ServerBootstrapConfiguration(new HashMap<>());
             ListenerConfiguration listenerConfiguration = new ListenerConfiguration();
             ServerConnector serverConnector =
                     connectorFactory.createServerConnector(bootstrapConfiguration, listenerConfiguration);
             DataHolder.getInstance().getMicroservicesRegistries()
-                      .put(Util.createServerConnectorID(listenerConfiguration.getHost(),
-                                                        listenerConfiguration.getPort()), msRegistry);
+                    .put(Util.createServerConnectorID(listenerConfiguration.getHost(),
+                            listenerConfiguration.getPort()), msRegistry);
             serverConnectors.add(serverConnector);
         } else {
             TransportsConfiguration transportsConfiguration =
                     ConfigurationBuilder.getInstance().getConfiguration(transportYaml);
+
             Map<String, Object> transportProperties = HTTPConnectorUtil.getTransportProperties(transportsConfiguration);
             int bossGroup = transportProperties.get(Constants.SERVER_BOOTSTRAP_BOSS_GROUP_SIZE) != null ? (Integer)
                     transportProperties.get(Constants.SERVER_BOOTSTRAP_BOSS_GROUP_SIZE) : Runtime.getRuntime()
@@ -229,7 +229,8 @@ public class MicroservicesRunner {
             int workerGroup = transportProperties.get(Constants.SERVER_BOOTSTRAP_WORKER_GROUP_SIZE) != null ? (Integer)
                     transportProperties.get(Constants.SERVER_BOOTSTRAP_WORKER_GROUP_SIZE) : Runtime.getRuntime()
                     .availableProcessors() * 2;
-            HttpWsConnectorFactory connectorFactory = new HttpWsConnectorFactoryImpl(bossGroup, workerGroup);
+            HttpWsConnectorFactory connectorFactory = new DefaultHttpWsConnectorFactory(bossGroup, workerGroup,
+                    workerGroup);
             ServerBootstrapConfiguration serverBootstrapConfiguration =
                     HTTPConnectorUtil.getServerBootstrapConfiguration(transportsConfiguration.getTransportProperties());
 
@@ -237,8 +238,8 @@ public class MicroservicesRunner {
                 ServerConnector serverConnector =
                         connectorFactory.createServerConnector(serverBootstrapConfiguration, listenerConfiguration);
                 DataHolder.getInstance().getMicroservicesRegistries()
-                          .put(Util.createServerConnectorID(listenerConfiguration.getHost(),
-                                                            listenerConfiguration.getPort()), msRegistry);
+                        .put(Util.createServerConnectorID(listenerConfiguration.getHost(),
+                                listenerConfiguration.getPort()), msRegistry);
                 serverConnectors.add(serverConnector);
             }
         }
