@@ -28,6 +28,7 @@ import org.wso2.transport.http.netty.contract.websocket.HandshakeFuture;
 import org.wso2.transport.http.netty.contract.websocket.HandshakeListener;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketBinaryMessage;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketCloseMessage;
+import org.wso2.transport.http.netty.contract.websocket.WebSocketConnection;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketConnectorListener;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketControlMessage;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketInitMessage;
@@ -66,8 +67,9 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
         HandshakeFuture handshakeFuture = webSocketInitMessage.handshake();
         handshakeFuture.setHandshakeListener(new HandshakeListener() {
             @Override
-            public void onSuccess(Session session) {
-                handleWebSocketHandshake(webSocketInitMessage, session);
+            public void onSuccess(WebSocketConnection webSocketConnection) {
+                handleWebSocketHandshake(webSocketInitMessage, webSocketConnection.getSession());
+                webSocketConnection.startReadingFrames();
             }
 
             @Override
@@ -82,7 +84,8 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
         EndpointsRegistryImpl endpointsRegistry = EndpointsRegistryImpl.getInstance();
         String uri = webSocketTextMessage.getTarget();
         PatternPathRouter.RoutableDestination<Object> routableEndpoint = endpointsRegistry.getRoutableEndpoint(uri);
-        handleTextWebSocketMessage(webSocketTextMessage, routableEndpoint, webSocketTextMessage.getChannelSession());
+        handleTextWebSocketMessage(webSocketTextMessage, routableEndpoint, webSocketTextMessage
+                .getWebSocketConnection().getSession());
     }
 
     @Override
@@ -91,7 +94,7 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
         String uri = webSocketBinaryMessage.getTarget();
         PatternPathRouter.RoutableDestination<Object> routableEndpoint = endpointsRegistry.getRoutableEndpoint(uri);
         handleBinaryWebSocketMessage(webSocketBinaryMessage, routableEndpoint,
-                webSocketBinaryMessage.getChannelSession());
+                webSocketBinaryMessage.getWebSocketConnection().getSession());
     }
 
     @Override
@@ -100,7 +103,7 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
         String uri = webSocketControlMessage.getTarget();
         PatternPathRouter.RoutableDestination<Object> routableEndpoint = endpointsRegistry.getRoutableEndpoint(uri);
         handleControlCarbonMessage(webSocketControlMessage, routableEndpoint,
-                webSocketControlMessage.getChannelSession());
+                webSocketControlMessage.getWebSocketConnection().getSession());
     }
 
     @Override
@@ -108,7 +111,8 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
         EndpointsRegistryImpl endpointsRegistry = EndpointsRegistryImpl.getInstance();
         String uri = webSocketCloseMessage.getTarget();
         PatternPathRouter.RoutableDestination<Object> routableEndpoint = endpointsRegistry.getRoutableEndpoint(uri);
-        handleCloseWebSocketMessage(webSocketCloseMessage, routableEndpoint, webSocketCloseMessage.getChannelSession());
+        handleCloseWebSocketMessage(webSocketCloseMessage, routableEndpoint, webSocketCloseMessage
+                .getWebSocketConnection().getSession());
     }
 
     @Override
@@ -270,7 +274,16 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
             });
         } catch (Throwable throwable) {
             handleError(throwable, routableEndpoint, session);
+        } finally {
+            // TODO: this is temp fix assuming websocket connection is blocking call.
+            if (session.isOpen()) {
+                try {
+                    session.close();
+                } catch (IOException ignore) {
+                }
+            }
         }
+
     }
 
     private void handleControlCarbonMessage(WebSocketControlMessage controlCarbonMessage, PatternPathRouter.
