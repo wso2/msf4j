@@ -75,7 +75,7 @@ org.wso2.carbon.metrics.das.reporter_2.3.2.jar                                  
 org.wso2.carbon.metrics.jdbc.core_2.3.2.jar                                     bundle         apache2
 org.wso2.carbon.metrics.jdbc.reporter_2.3.2.jar                                 bundle         apache2
 org.wso2.carbon.secvault_5.0.8.jar                                              bundle         apache2
-org.wso2.transport.http.netty_6.0.160.jar                                       bundle         apache2
+org.wso2.transport.http.netty_6.0.163.jar                                       bundle         apache2
 org.wso2.carbon.utils_2.0.2.jar                                                 bundle         apache2
 jaxrs-delegates_2.6.1.jar                                                       bundle         apache2
 msf4j-analytics_2.6.1.jar                                                       bundle         apache2
