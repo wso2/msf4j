@@ -29,8 +29,6 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Map;
 
-import static org.wso2.msf4j.internal.MSF4JConstants.CHANNEL_ID;
-
 /**
  * OSGi service component for SwaggerDefinitionService.
  */
@@ -38,6 +36,7 @@ import static org.wso2.msf4j.internal.MSF4JConstants.CHANNEL_ID;
         service = SwaggerDefinitionSC.class,
         immediate = true)
 public class SwaggerDefinitionSC {
+    private static final String CHANNEL_ID = "listener.interface.id";
     
     @Reference(
             name = "microserviceregsitry",
