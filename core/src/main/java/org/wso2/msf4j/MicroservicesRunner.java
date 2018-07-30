@@ -37,6 +37,7 @@ import org.wso2.transport.http.netty.contractimpl.DefaultHttpWsConnectorFactory;
 import org.wso2.transport.http.netty.listener.ServerBootstrapConfiguration;
 import org.wso2.transport.http.netty.message.HTTPConnectorUtil;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -135,7 +136,25 @@ public class MicroservicesRunner {
         msRegistry.setSessionManager(sessionManager);
         return this;
     }
-
+    
+    /**
+     * Register custom designator, this class should have a {@link HttpMethod} annotation.
+     *
+     * @param designator custom designator
+     */
+    public static void addGlobalDesignator(Class<? extends Annotation> designator) {
+        MicroservicesRegistryImpl.addCustomDesignator(designator);
+    }
+    
+    /**
+     * Unregister custom designator, this class should have a {@link HttpMethod} annotation.
+     *
+     * @param designator custom designator
+     */
+    public static void removeGlobalDesignator(Class<? extends Annotation> designator) {
+        MicroservicesRegistryImpl.removeCustomDesignator(designator);
+    }
+    
     /**
      * Register request interceptors.
      *

@@ -18,6 +18,7 @@ package org.wso2.msf4j.internal.router;
 
 import org.wso2.msf4j.HttpStreamer;
 import org.wso2.msf4j.formparam.FormDataParam;
+import org.wso2.msf4j.internal.MicroservicesRegistryImpl;
 import org.wso2.msf4j.util.Utils;
 
 import java.lang.annotation.Annotation;
@@ -30,6 +31,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Function;
 import javax.annotation.Nullable;
@@ -274,7 +276,7 @@ public final class HttpResourceModel {
      * @return String representation of HttpMethod from annotations or emptyString as a default.
      */
     private Set<String> getHttpMethods(Method method) {
-        Set<String> httpMethods = new HashSet();
+        Set<String> httpMethods = new HashSet<>();
         boolean isSubResourceLocator = true;
         if (method.isAnnotationPresent(GET.class)) {
             httpMethods.add(HttpMethod.GET);
@@ -300,6 +302,13 @@ public final class HttpResourceModel {
             httpMethods.add(HttpMethod.OPTIONS);
             isSubResourceLocator = false;
         }
+        for (Entry<Class<? extends Annotation>, HttpMethod> e : 
+            MicroservicesRegistryImpl.getCustomDesignators().entrySet()) {
+            if (method.isAnnotationPresent((Class<? extends Annotation>) e.getKey())) {
+                httpMethods.add(e.getValue().value());
+                isSubResourceLocator = false;
+            }
+        }
         // If this is a sub resource locator need to add all the method designator
         if (isSubResourceLocator) {
             httpMethods.add(HttpMethod.GET);
@@ -308,6 +317,7 @@ public final class HttpResourceModel {
             httpMethods.add(HttpMethod.DELETE);
             httpMethods.add(HttpMethod.HEAD);
             httpMethods.add(HttpMethod.OPTIONS);
+            MicroservicesRegistryImpl.getCustomDesignators().values().forEach(m -> httpMethods.add(m.value()));
         }
         return Collections.unmodifiableSet(httpMethods);
     }

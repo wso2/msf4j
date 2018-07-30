@@ -26,6 +26,7 @@ import org.wso2.msf4j.interceptor.RequestInterceptor;
 import org.wso2.msf4j.interceptor.ResponseInterceptor;
 import org.wso2.msf4j.internal.router.MicroserviceMetadata;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -43,6 +44,7 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.Path;
 import javax.ws.rs.ext.ExceptionMapper;
 
@@ -58,6 +60,7 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
     private volatile MicroserviceMetadata metadata = new MicroserviceMetadata(Collections.emptyMap());
     private Map<Class, ExceptionMapper> exceptionMappers = new TreeMap<>(new ClassComparator());
     private SessionManager sessionManager = new DefaultSessionManager();
+    private static Map<Class<? extends Annotation>, HttpMethod> designators = new HashMap<>();
 
     public MicroservicesRegistryImpl() {
         /* In non OSGi mode, if we can find the SwaggerDefinitionService, Deploy the Swagger definition service which
@@ -254,6 +257,23 @@ public class MicroservicesRegistryImpl implements MicroservicesRegistry {
         return sessionManager;
     }
 
+    public static void addCustomDesignator(Class<? extends Annotation> designator) {
+        HttpMethod method = designator.getAnnotation(HttpMethod.class);
+        if (method != null) {
+            designators.put(designator, method);
+        } else {
+            log.trace("Ignoring custom designator {} it does not have a HttpMethod annotation", designator.getName());
+        }
+    }
+    
+    public static void removeCustomDesignator(Class<? extends Annotation> designator) {
+        designators.remove(designator);
+    }
+    
+    public static Map<Class<? extends Annotation>, HttpMethod> getCustomDesignators() {
+        return Collections.unmodifiableMap(designators);
+    }
+    
     private void invokeLifecycleMethods(Class lcAnnotation) {
         services.values().stream().forEach(httpService -> invokeLifecycleMethod(httpService, lcAnnotation));
     }

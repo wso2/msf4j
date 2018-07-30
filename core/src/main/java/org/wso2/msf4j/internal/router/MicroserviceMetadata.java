@@ -31,12 +31,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.HEAD;
-import javax.ws.rs.OPTIONS;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
@@ -64,7 +58,7 @@ public final class MicroserviceMetadata {
                     continue;
                 }
 
-                if (Modifier.isPublic(method.getModifiers()) && isHttpMethodAvailable(method)) {
+                if (Modifier.isPublic(method.getModifiers()) && Util.isHttpMethodAvailable(method)) {
                     String relativePath = "";
                     if (method.getAnnotation(Path.class) != null) {
                         relativePath = method.getAnnotation(Path.class).value();
@@ -102,7 +96,7 @@ public final class MicroserviceMetadata {
                 continue;
             }
 
-            if (Modifier.isPublic(method.getModifiers()) && isHttpMethodAvailable(method)) {
+            if (Modifier.isPublic(method.getModifiers()) && Util.isHttpMethodAvailable(method)) {
                 String relativePath = "";
                 if (method.getAnnotation(Path.class) != null) {
                     relativePath = method.getAnnotation(Path.class).value();
@@ -115,15 +109,6 @@ public final class MicroserviceMetadata {
             }
         }
 
-    }
-
-    private boolean isHttpMethodAvailable(Method method) {
-        return method.isAnnotationPresent(GET.class) ||
-                method.isAnnotationPresent(PUT.class) ||
-                method.isAnnotationPresent(POST.class) ||
-                method.isAnnotationPresent(DELETE.class) ||
-                method.isAnnotationPresent(HEAD.class) ||
-                method.isAnnotationPresent(OPTIONS.class);
     }
 
     /**
