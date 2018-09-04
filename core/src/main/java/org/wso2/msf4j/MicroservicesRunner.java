@@ -91,6 +91,16 @@ public class MicroservicesRunner {
     }
 
     /**
+     * Creates a MicroservicesRunner instance which will be used for deploying microservices. Allows specifying
+     * transport configuration on which the microservices in this MicroservicesRunner are deployed.
+     *
+     * @param transportsConfiguration The transport configuration on which the microservices are exposed
+     */
+    public MicroservicesRunner(TransportsConfiguration transportsConfiguration) {
+        configureTransport(transportsConfiguration);
+    }
+
+    /**
      * Deploy a microservice.
      *
      * @param microservice The microservice which is to be deployed
@@ -242,6 +252,37 @@ public class MicroservicesRunner {
                                 listenerConfiguration.getPort()), msRegistry);
                 serverConnectors.add(serverConnector);
             }
+        }
+    }
+
+    /**
+     * Method to configure transports with external transport configuration
+     *
+     * @param transportsConfiguration the external transports configuration
+     */
+    protected void configureTransport(TransportsConfiguration transportsConfiguration) {
+        if (transportsConfiguration != null) {
+            Map<String, Object> transportProperties = HTTPConnectorUtil.getTransportProperties(transportsConfiguration);
+            int bossGroup = transportProperties.get(Constants.SERVER_BOOTSTRAP_BOSS_GROUP_SIZE) != null ? (Integer)
+                    transportProperties.get(Constants.SERVER_BOOTSTRAP_BOSS_GROUP_SIZE) : Runtime.getRuntime()
+                    .availableProcessors();
+            int workerGroup = transportProperties.get(Constants.SERVER_BOOTSTRAP_WORKER_GROUP_SIZE) != null ? (Integer)
+                    transportProperties.get(Constants.SERVER_BOOTSTRAP_WORKER_GROUP_SIZE) : Runtime.getRuntime()
+                    .availableProcessors() * 2;
+            HttpWsConnectorFactory connectorFactory = new DefaultHttpWsConnectorFactory(bossGroup, workerGroup,
+                    workerGroup);
+            ServerBootstrapConfiguration serverBootstrapConfiguration =
+                    HTTPConnectorUtil.getServerBootstrapConfiguration(transportsConfiguration.getTransportProperties());
+            for (ListenerConfiguration listenerConfiguration : transportsConfiguration.getListenerConfigurations()) {
+                ServerConnector serverConnector =
+                        connectorFactory.createServerConnector(serverBootstrapConfiguration, listenerConfiguration);
+                DataHolder.getInstance().getMicroservicesRegistries()
+                        .put(Util.createServerConnectorID(listenerConfiguration.getHost(),
+                                listenerConfiguration.getPort()), msRegistry);
+                serverConnectors.add(serverConnector);
+            }
+        } else {
+            configureTransport();
         }
     }
 
