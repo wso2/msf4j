@@ -21,9 +21,11 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.wso2.msf4j.conf.Constants;
 import org.wso2.msf4j.conf.SSLClientContext;
+import org.wso2.msf4j.designator.PATCH;
 import org.wso2.msf4j.exception.TestExceptionMapper;
 import org.wso2.msf4j.exception.TestExceptionMapper2;
 import org.wso2.msf4j.service.SecondService;
+import org.wso2.msf4j.service.TestMicroServiceWithCustomDesignator;
 import org.wso2.msf4j.service.TestMicroServiceWithDynamicPath;
 import org.wso2.msf4j.service.TestMicroservice;
 
@@ -57,6 +59,7 @@ public class HttpsServerTest extends HttpServerTest {
         System.setProperty("transports.netty.conf",
                            Thread.currentThread().getContextClassLoader().getResource("netty-transports-1.yml")
                                  .getPath());
+        MicroservicesRunner.addGlobalDesignator(PATCH.class);
         microservicesRunner = new MicroservicesRunner();
         sslClientContext = new SSLClientContext();
         microservicesRunner
@@ -67,12 +70,14 @@ public class HttpsServerTest extends HttpServerTest {
         secondMicroservicesRunner.deploy(secondService).start();
         microservicesRunner.deploy("/DynamicPath", new TestMicroServiceWithDynamicPath());
         microservicesRunner.deploy("/DynamicPath2", new TestMicroServiceWithDynamicPath());
+        microservicesRunner.deploy("/DynamicPath3", new TestMicroServiceWithCustomDesignator());
     }
 
     @AfterClass
     public void teardown() throws Exception {
         microservicesRunner.stop();
         secondMicroservicesRunner.stop();
+        MicroservicesRunner.removeGlobalDesignator(PATCH.class);
     }
 
     @Override

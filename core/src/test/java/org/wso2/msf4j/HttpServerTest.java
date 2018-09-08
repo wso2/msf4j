@@ -23,15 +23,25 @@ import io.netty.handler.codec.http.HttpHeaderNames;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPatch;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContextBuilder;
+import org.apache.http.util.EntityUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.msf4j.beanconversion.BeanConversionException;
 import org.wso2.msf4j.conf.Constants;
+import org.wso2.msf4j.designator.PATCH;
 import org.wso2.msf4j.exception.TestExceptionMapper;
 import org.wso2.msf4j.exception.TestExceptionMapper2;
 import org.wso2.msf4j.formparam.util.StreamUtil;
@@ -41,6 +51,7 @@ import org.wso2.msf4j.pojo.Pet;
 import org.wso2.msf4j.pojo.TextBean;
 import org.wso2.msf4j.pojo.XmlBean;
 import org.wso2.msf4j.service.SecondService;
+import org.wso2.msf4j.service.TestMicroServiceWithCustomDesignator;
 import org.wso2.msf4j.service.TestMicroServiceWithDynamicPath;
 import org.wso2.msf4j.service.TestMicroservice;
 import org.wso2.msf4j.service.sub.Player;
@@ -73,6 +84,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import javax.net.ssl.SSLContext;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -114,6 +126,8 @@ public class HttpServerTest {
     @BeforeClass
     public void setup() throws Exception {
         baseURI = URI.create(String.format("http://%s:%d", Constants.HOSTNAME, port));
+        
+        MicroservicesRunner.addGlobalDesignator(PATCH.class);
         microservicesRunner = new MicroservicesRunner(port);
         microservicesRunner
                 .addExceptionMapper(new TestExceptionMapper(), new TestExceptionMapper2())
@@ -121,6 +135,7 @@ public class HttpServerTest {
                 .start();
         microservicesRunner.deploy("/DynamicPath", new TestMicroServiceWithDynamicPath());
         microservicesRunner.deploy("/DynamicPath2", new TestMicroServiceWithDynamicPath());
+        microservicesRunner.deploy("/DynamicPath3", new TestMicroServiceWithCustomDesignator());
 
         secondMicroservicesRunner = new MicroservicesRunner(port + 1);
         secondMicroservicesRunner.deploy(secondService).start();
@@ -130,6 +145,7 @@ public class HttpServerTest {
     public void teardown() throws Exception {
         microservicesRunner.stop();
         secondMicroservicesRunner.stop();
+        MicroservicesRunner.removeGlobalDesignator(PATCH.class);
     }
 
     @Test
@@ -1348,9 +1364,34 @@ public class HttpServerTest {
         assertEquals("http://localhost:8080/products/entity/2", location);
         urlConn.disconnect();
     }
+    
+    @Test
+    public void testCustomDesignatorMicroserviceRegistration() throws Exception {
+    	try (CloseableHttpClient client = createAcceptSelfSignedCertificateClient())
+    	{
+    		URI url = baseURI.resolve("/DynamicPath3/hello/MSF4J");
+    		try (CloseableHttpResponse r = client.execute(new HttpPatch(url))) {
+    			 assertEquals(200, r.getStatusLine().getStatusCode());
+    		     String content = EntityUtils.toString(r.getEntity(), "UTF-8");
+    		     assertEquals("Hello MSF4J", content);
+    		}
+    	}
+    }
 
     protected Socket createRawSocket(URL url) throws IOException {
         return new Socket(url.getHost(), url.getPort());
+    }
+    
+    private CloseableHttpClient createAcceptSelfSignedCertificateClient() throws Exception {
+        SSLContext sslContext = SSLContextBuilder
+                .create()
+                .loadTrustMaterial(new TrustSelfSignedStrategy())
+                .build();
+        SSLConnectionSocketFactory connectionFactory = new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
+        return HttpClients
+                .custom()
+                .setSSLSocketFactory(connectionFactory)
+                .build();
     }
 
     protected void testContent(String path, String content) throws IOException {

@@ -19,9 +19,11 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.wso2.msf4j.conf.Constants;
 import org.wso2.msf4j.conf.SSLClientContext;
+import org.wso2.msf4j.designator.PATCH;
 import org.wso2.msf4j.exception.TestExceptionMapper;
 import org.wso2.msf4j.exception.TestExceptionMapper2;
 import org.wso2.msf4j.service.SecondService;
+import org.wso2.msf4j.service.TestMicroServiceWithCustomDesignator;
 import org.wso2.msf4j.service.TestMicroServiceWithDynamicPath;
 import org.wso2.msf4j.service.TestMicroservice;
 
@@ -57,6 +59,7 @@ public class MutualAuthServerTest extends HttpsServerTest {
         System.setProperty("transports.netty.conf",
                            Thread.currentThread().getContextClassLoader().getResource("netty-transports-2.yml")
                                  .getPath());
+        MicroservicesRunner.addGlobalDesignator(PATCH.class);
         microservicesRunner = new MicroservicesRunner();
         microservicesRunner.addExceptionMapper(new TestExceptionMapper(), new TestExceptionMapper2())
                            .deploy(testMicroservice).start();
@@ -64,6 +67,7 @@ public class MutualAuthServerTest extends HttpsServerTest {
         secondMicroservicesRunner.deploy(secondService).start();
         microservicesRunner.deploy("/DynamicPath", new TestMicroServiceWithDynamicPath());
         microservicesRunner.deploy("/DynamicPath2", new TestMicroServiceWithDynamicPath());
+        microservicesRunner.deploy("/DynamicPath3", new TestMicroServiceWithCustomDesignator());
     }
 
     @AfterClass
@@ -71,5 +75,6 @@ public class MutualAuthServerTest extends HttpsServerTest {
         microservicesRunner.stop();
         secondMicroservicesRunner.stop();
         trustKeyStore.delete();
+        MicroservicesRunner.removeGlobalDesignator(PATCH.class);
     }
 }

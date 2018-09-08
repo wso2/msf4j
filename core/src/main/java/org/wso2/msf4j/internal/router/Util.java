@@ -16,6 +16,8 @@
 
 package org.wso2.msf4j.internal.router;
 
+import org.wso2.msf4j.internal.MicroservicesRegistryImpl;
+
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -48,7 +50,13 @@ public class Util {
                method.isAnnotationPresent(POST.class) ||
                method.isAnnotationPresent(DELETE.class) ||
                method.isAnnotationPresent(HEAD.class) ||
-               method.isAnnotationPresent(OPTIONS.class);
+               method.isAnnotationPresent(OPTIONS.class) ||
+               isCustomHttpMethodAvailable(method);
+    }
+    
+    private static boolean isCustomHttpMethodAvailable(Method method) {
+        return MicroservicesRegistryImpl.getCustomDesignators().keySet().stream()
+                .filter(clazz ->  method.isAnnotationPresent(clazz)).findFirst().isPresent();
     }
 
     /**
