@@ -36,11 +36,11 @@ import org.wso2.msf4j.MicroservicesRegistry;
 import org.wso2.msf4j.MicroservicesServer;
 import org.wso2.msf4j.SessionManager;
 import org.wso2.msf4j.SwaggerService;
-import org.wso2.msf4j.config.ConfigurationAdopter;
 import org.wso2.msf4j.config.TransportsFileConfiguration;
 import org.wso2.msf4j.exception.OSGiDeclarativeServiceException;
 import org.wso2.msf4j.interceptor.OSGiInterceptorConfig;
 import org.wso2.msf4j.util.RuntimeAnnotations;
+import org.wso2.msf4j.util.Utils;
 import org.wso2.transport.http.netty.contract.HttpConnectorListener;
 import org.wso2.transport.http.netty.contract.HttpWsConnectorFactory;
 import org.wso2.transport.http.netty.contract.ServerConnector;
@@ -172,7 +172,7 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             final TransportsFileConfiguration transportsFileConfiguration = configProvider.getConfigurationObject
                     (MSF4JConstants.WSO2_TRANSPORT_HTTP_CONFIG_NAMESPACE, TransportsFileConfiguration.class);
             TransportsConfiguration transportsConfiguration =
-                    ConfigurationAdopter.getInstance().getTransportConfiguration(transportsFileConfiguration);
+                    Utils.transformTransportConfiguration(transportsFileConfiguration);
             Set<ListenerConfiguration> listenerConfigurations =
                     transportsConfiguration.getListenerConfigurations();
             if (listenerConfigurations.isEmpty()) {

@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.config.ConfigProviderFactory;
 import org.wso2.carbon.config.ConfigurationException;
-import org.wso2.msf4j.config.ConfigurationAdopter;
 import org.wso2.msf4j.config.TransportsFileConfiguration;
 import org.wso2.msf4j.interceptor.RequestInterceptor;
 import org.wso2.msf4j.interceptor.ResponseInterceptor;
@@ -29,6 +28,7 @@ import org.wso2.msf4j.internal.MSF4JHttpConnectorListener;
 import org.wso2.msf4j.internal.MSF4JWSConnectorListener;
 import org.wso2.msf4j.internal.MicroservicesRegistryImpl;
 import org.wso2.msf4j.internal.websocket.EndpointsRegistryImpl;
+import org.wso2.msf4j.util.Utils;
 import org.wso2.transport.http.netty.contract.Constants;
 import org.wso2.transport.http.netty.contract.HttpWsConnectorFactory;
 import org.wso2.transport.http.netty.contract.ServerConnector;
@@ -235,10 +235,10 @@ public class MicroservicesRunner {
         } else {
             try {
                 TransportsFileConfiguration transportsFileConfiguration =
-                        ConfigProviderFactory.getConfigProvider(Paths.get(transportYaml))
+                        ConfigProviderFactory.getConfigProvider(Paths.get(transportYaml), null)
                         .getConfigurationObject(TransportsFileConfiguration.class);
-                TransportsConfiguration transportsConfiguration = ConfigurationAdopter.getInstance()
-                        .getTransportConfiguration(transportsFileConfiguration);
+                TransportsConfiguration transportsConfiguration = Utils.
+                        transformTransportConfiguration(transportsFileConfiguration);
 
                 Map<String, Object> transportProperties = HttpConnectorUtil
                         .getTransportProperties(transportsConfiguration);
@@ -276,7 +276,7 @@ public class MicroservicesRunner {
     protected void configureTransport(TransportsFileConfiguration transportsFileConfiguration) {
         if (transportsFileConfiguration != null) {
             TransportsConfiguration transportsConfiguration =
-                    ConfigurationAdopter.getInstance().getTransportConfiguration(transportsFileConfiguration);
+                    Utils.transformTransportConfiguration(transportsFileConfiguration);
 
             Map<String, Object> transportProperties = HttpConnectorUtil.getTransportProperties(transportsConfiguration);
             int bossGroup = transportProperties.get(Constants.SERVER_BOOTSTRAP_BOSS_GROUP_SIZE) != null ? (Integer)
