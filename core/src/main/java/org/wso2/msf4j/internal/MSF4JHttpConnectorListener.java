@@ -37,10 +37,10 @@ import org.wso2.msf4j.internal.router.HttpResourceModel;
 import org.wso2.msf4j.internal.router.PatternPathRouter;
 import org.wso2.msf4j.internal.router.Util;
 import org.wso2.msf4j.util.HttpUtil;
-import org.wso2.transport.http.netty.common.Constants;
+import org.wso2.transport.http.netty.contract.Constants;
 import org.wso2.transport.http.netty.contract.HttpConnectorListener;
 import org.wso2.transport.http.netty.contract.ServerConnectorException;
-import org.wso2.transport.http.netty.message.HTTPCarbonMessage;
+import org.wso2.transport.http.netty.message.HttpCarbonMessage;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -113,7 +113,7 @@ public class MSF4JHttpConnectorListener implements HttpConnectorListener {
      * Carbon message handler.
      */
     @Override
-    public void onMessage(HTTPCarbonMessage httpCarbonMessage) {
+    public void onMessage(HttpCarbonMessage httpCarbonMessage) {
         // If we are running on OSGi mode need to get the registry based on the channel_id.
         executorService.execute(() -> {
             //Identify the protocol name before doing the processing
@@ -190,7 +190,7 @@ public class MSF4JHttpConnectorListener implements HttpConnectorListener {
                     // Execute method level request interceptors
                     && InterceptorExecutor.executeMethodLevelRequestInterceptors(request, response, method)) {
 
-                HTTPCarbonMessage carbonMessage = getHttpCarbonMessage(request);
+                HttpCarbonMessage carbonMessage = getHttpCarbonMessage(request);
                 HttpContent httpContent = carbonMessage.getHttpContent();
                 while (true) {
                     if (httpContent == null) {
@@ -219,12 +219,12 @@ public class MSF4JHttpConnectorListener implements HttpConnectorListener {
         }
     }
 
-    private HTTPCarbonMessage getHttpCarbonMessage(Request request) throws HandlerException {
+    private HttpCarbonMessage getHttpCarbonMessage(Request request) throws HandlerException {
         Class<?> clazz = request.getClass();
         try {
             Method retrieveCarbonMsg = clazz.getDeclaredMethod("getHttpCarbonMessage");
             retrieveCarbonMsg.setAccessible(true);
-            return (HTTPCarbonMessage) retrieveCarbonMsg.invoke(request);
+            return (HttpCarbonMessage) retrieveCarbonMsg.invoke(request);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             throw new HandlerException(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR,
                     String.format("Error in executing request: %s %s", request.getHttpMethod(),
@@ -242,7 +242,7 @@ public class MSF4JHttpConnectorListener implements HttpConnectorListener {
         } else {
             log.warn("Unmapped exception", throwable);
             try {
-                HTTPCarbonMessage response = HttpUtil.createTextResponse(
+                HttpCarbonMessage response = HttpUtil.createTextResponse(
                         javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
                         "Exception occurred :" + throwable.getMessage());
                 response.addHttpContent(new DefaultLastHttpContent());
@@ -255,7 +255,7 @@ public class MSF4JHttpConnectorListener implements HttpConnectorListener {
 
     private void handleHandlerException(HandlerException e, Request request) {
         try {
-            HTTPCarbonMessage failureResponse = e.getFailureResponse();
+            HttpCarbonMessage failureResponse = e.getFailureResponse();
             failureResponse.addHttpContent(new DefaultLastHttpContent());
             request.respond(failureResponse);
         } catch (ServerConnectorException e1) {

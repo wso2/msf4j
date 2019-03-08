@@ -21,13 +21,13 @@ package org.wso2.msf4j.internal.websocket;
 import org.wso2.msf4j.websocket.exception.WebSocketEndpointAnnotationException;
 import org.wso2.msf4j.websocket.exception.WebSocketEndpointMethodReturnTypeException;
 import org.wso2.msf4j.websocket.exception.WebSocketMethodParameterException;
+import org.wso2.transport.http.netty.contract.websocket.WebSocketConnection;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.nio.ByteBuffer;
 import javax.websocket.CloseReason;
 import javax.websocket.PongMessage;
-import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
@@ -85,7 +85,7 @@ public class EndpointValidator {
                     }
                     foundPrimaryString = true;
                 }
-            } else if (paraType != Session.class) {
+            } else if (paraType != WebSocketConnection.class) {
                 throw new WebSocketMethodParameterException("Invalid parameter found on text message method: " +
                                                                     paraType);
             }
@@ -128,7 +128,7 @@ public class EndpointValidator {
                                                                         "found more than one.");
                 }
                 foundIsFinal = true;
-            } else if (paraType != Session.class) {
+            } else if (paraType != WebSocketConnection.class) {
                 throw new WebSocketMethodParameterException("Invalid parameter found on binary message method: " +
                                                                     paraType);
             }
@@ -161,7 +161,7 @@ public class EndpointValidator {
                                                                         "only one PongMessage should be declared.");
                 }
                 foundPrimaryPong = true;
-            } else if (paraType != Session.class) {
+            } else if (paraType != WebSocketConnection.class) {
                 throw new WebSocketMethodParameterException("Invalid parameter found on pong message method: " +
                                                                     paraType);
             }
@@ -187,7 +187,7 @@ public class EndpointValidator {
                                                                         "string parameter without " +
                                                                         "@PathParam annotation.");
                 }
-            } else if (paraType != Session.class) {
+            } else if (paraType != WebSocketConnection.class) {
                 throw new WebSocketMethodParameterException("Invalid parameter found on open message method: " +
                                                                     paraType);
             }
@@ -213,7 +213,7 @@ public class EndpointValidator {
                                                                         "string parameter without " +
                                                                         "@PathParam annotation.");
                 }
-            } else if (paraType != CloseReason.class && paraType != Session.class) {
+            } else if (paraType != CloseReason.class && paraType != WebSocketConnection.class) {
                 throw new WebSocketMethodParameterException("Invalid parameter found on close message method: " +
                                                                     paraType);
             }
@@ -246,7 +246,7 @@ public class EndpointValidator {
                                                                         "only one Throwable should be declared.");
                 }
                 foundPrimaryThrowable = true;
-            } else if (paraType != Session.class) {
+            } else if (paraType != WebSocketConnection.class) {
                 throw new WebSocketMethodParameterException("Invalid parameter found on error message method: " +
                                                                     paraType);
             }

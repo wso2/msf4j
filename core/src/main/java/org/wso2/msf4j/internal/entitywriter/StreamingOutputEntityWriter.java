@@ -18,7 +18,7 @@ package org.wso2.msf4j.internal.entitywriter;
 
 import io.netty.handler.codec.http.HttpHeaderNames;
 import org.wso2.transport.http.netty.contract.ServerConnectorException;
-import org.wso2.transport.http.netty.message.HTTPCarbonMessage;
+import org.wso2.transport.http.netty.message.HttpCarbonMessage;
 import org.wso2.transport.http.netty.message.HttpMessageDataStreamer;
 
 import java.io.IOException;
@@ -43,8 +43,8 @@ public class StreamingOutputEntityWriter implements EntityWriter<StreamingOutput
      * Write the entity to the carbon message.
      */
     @Override
-    public void writeData(HTTPCarbonMessage carbonMessage, StreamingOutput output,
-                          String mediaType, int chunkSize, HTTPCarbonMessage responder) {
+    public void writeData(HttpCarbonMessage carbonMessage, StreamingOutput output,
+                          String mediaType, int chunkSize, HttpCarbonMessage responder) {
         try {
             carbonMessage.setHeader(HttpHeaderNames.CONTENT_TYPE.toString(), mediaType);
             carbonMessage.setHeader(HttpHeaderNames.TRANSFER_ENCODING.toString(), CHUNKED);

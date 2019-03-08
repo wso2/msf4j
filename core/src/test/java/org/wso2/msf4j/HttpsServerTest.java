@@ -55,7 +55,7 @@ public class HttpsServerTest extends HttpServerTest {
     public void setup() throws Exception {
         baseURI = URI.create(String.format("https://%s:%d", Constants.HOSTNAME, port));
         System.setProperty("transports.netty.conf",
-                           Thread.currentThread().getContextClassLoader().getResource("netty-transports-1.yml")
+                           Thread.currentThread().getContextClassLoader().getResource("netty-transports-1.yaml")
                                  .getPath());
         microservicesRunner = new MicroservicesRunner();
         sslClientContext = new SSLClientContext();

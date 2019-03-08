@@ -20,12 +20,12 @@ package org.wso2.msf4j.websocket.endpoint;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.transport.http.netty.contract.websocket.WebSocketConnection;
 
 import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
-import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
 @ServerEndpoint("/test")
@@ -33,17 +33,17 @@ public class TestEndpoint {
     Logger log = LoggerFactory.getLogger(TestEndpoint.class);
 
     @OnOpen
-    public void onOpen(Session session) {
-        log.info(session.getId());
+    public void onOpen(WebSocketConnection webSocketConnection) {
+        log.info(webSocketConnection.getChannelId());
     }
 
     @OnMessage
-    public String onStringMessage(String str, Session session) {
+    public String onStringMessage(String str, WebSocketConnection webSocketConnection) {
         log.info("Test str is : " + str);
         return str;
     }
 
     @OnClose
-    public void onClose(CloseReason closeReason, Session session) {
+    public void onClose(CloseReason closeReason, WebSocketConnection webSocketConnection) {
     }
 }

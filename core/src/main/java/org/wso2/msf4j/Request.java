@@ -19,10 +19,10 @@ package org.wso2.msf4j;
 import io.netty.buffer.ByteBuf;
 import org.wso2.msf4j.internal.HttpHeadersImpl;
 import org.wso2.msf4j.internal.MSF4JConstants;
-import org.wso2.transport.http.netty.common.Constants;
+import org.wso2.transport.http.netty.contract.Constants;
 import org.wso2.transport.http.netty.contract.HttpResponseFuture;
 import org.wso2.transport.http.netty.contract.ServerConnectorException;
-import org.wso2.transport.http.netty.message.HTTPCarbonMessage;
+import org.wso2.transport.http.netty.message.HttpCarbonMessage;
 import org.wso2.transport.http.netty.message.HttpMessageDataStreamer;
 
 import java.io.InputStream;
@@ -37,13 +37,13 @@ import javax.ws.rs.core.HttpHeaders;
  */
 public class Request {
 
-    private final HTTPCarbonMessage httpCarbonMessage;
+    private final HttpCarbonMessage httpCarbonMessage;
     private List<String> acceptTypes = null;
     private String contentType = null;
     private SessionManager sessionManager;
     private Session session;
 
-    public Request(HTTPCarbonMessage httpCarbonMessage) {
+    public Request(HttpCarbonMessage httpCarbonMessage) {
         this.httpCarbonMessage = httpCarbonMessage;
         // find accept types
         String acceptHeaderStr = httpCarbonMessage.getHeader(javax.ws.rs.core.HttpHeaders.ACCEPT);
@@ -142,7 +142,7 @@ public class Request {
      */
     public String getHttpMethod() {
         return (String) httpCarbonMessage
-                .getProperty(org.wso2.transport.http.netty.common.Constants.HTTP_METHOD);
+                .getProperty(org.wso2.transport.http.netty.contract.Constants.HTTP_METHOD);
     }
 
     /**
@@ -222,11 +222,11 @@ public class Request {
     }
 
     /**
-     * Get underlying HTTPCarbonMessage.
+     * Get underlying HttpCarbonMessage.
      *
-     * @return HTTPCarbonMessage instance of the Request
+     * @return HttpCarbonMessage instance of the Request
      */
-    HTTPCarbonMessage getHttpCarbonMessage() {
+    HttpCarbonMessage getHttpCarbonMessage() {
         return httpCarbonMessage;
     }
 
@@ -237,7 +237,7 @@ public class Request {
      * @return true if no errors found, else otherwise
      * @throws ServerConnectorException server connector exception.
      */
-    public boolean respond(HTTPCarbonMessage carbonMessage) throws ServerConnectorException {
+    public boolean respond(HttpCarbonMessage carbonMessage) throws ServerConnectorException {
         HttpResponseFuture statusFuture = httpCarbonMessage.respond(carbonMessage);
         return statusFuture.getStatus().getCause() == null;
     }

@@ -21,28 +21,24 @@ package org.wso2.msf4j;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.wso2.carbon.config.ConfigProviderFactory;
+import org.wso2.carbon.config.ConfigurationException;
 import org.wso2.msf4j.conf.Constants;
 import org.wso2.msf4j.conf.SSLClientContext;
+import org.wso2.msf4j.config.TransportsFileConfiguration;
 import org.wso2.msf4j.exception.TestExceptionMapper;
 import org.wso2.msf4j.exception.TestExceptionMapper2;
 import org.wso2.msf4j.service.SecondService;
 import org.wso2.msf4j.service.TestMicroServiceWithDynamicPath;
 import org.wso2.msf4j.service.TestMicroservice;
-import org.wso2.transport.http.netty.config.TransportsConfiguration;
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.CustomClassLoaderConstructor;
-import org.yaml.snakeyaml.introspector.BeanAccess;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.net.URI;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -66,9 +62,9 @@ public class TransportConfigurationTest extends HttpServerTest {
     @BeforeClass
     public void setup() throws Exception {
         baseURI = URI.create(String.format("https://%s:%d", Constants.HOSTNAME, port));
-        TransportsConfiguration transportsConfiguration = getConfiguration(Thread.currentThread().
-                getContextClassLoader().getResource("netty-transports-1.yml").getPath());
-        microservicesRunner = new MicroservicesRunner(transportsConfiguration);
+        TransportsFileConfiguration transportsFileConfiguration = getConfiguration(Thread.currentThread().
+                getContextClassLoader().getResource("netty-transports-1.yaml").getPath());
+        microservicesRunner = new MicroservicesRunner(transportsFileConfiguration);
         sslClientContext = new SSLClientContext();
         microservicesRunner
                 .addExceptionMapper(new TestExceptionMapper(), new TestExceptionMapper2())
@@ -86,25 +82,24 @@ public class TransportConfigurationTest extends HttpServerTest {
      * @param configFileLocation configuration file location
      * @return TransportsConfiguration represented by a particular configuration file
      */
-    public TransportsConfiguration getConfiguration(String configFileLocation) {
-        TransportsConfiguration transportsConfiguration;
+    public TransportsFileConfiguration getConfiguration(String configFileLocation) {
+        TransportsFileConfiguration transportsFileConfiguration;
 
         File file = new File(configFileLocation);
         if (file.exists()) {
-            try (Reader in = new InputStreamReader(new FileInputStream(file), StandardCharsets.ISO_8859_1)) {
-                Yaml yaml = new Yaml(new CustomClassLoaderConstructor
-                        (TransportsConfiguration.class, TransportsConfiguration.class.getClassLoader()));
-                yaml.setBeanAccess(BeanAccess.FIELD);
-                transportsConfiguration = yaml.loadAs(in, TransportsConfiguration.class);
-            } catch (IOException e) {
+            try {
+            transportsFileConfiguration =
+                    ConfigProviderFactory.getConfigProvider(Paths.get(configFileLocation), null)
+                    .getConfigurationObject(TransportsFileConfiguration.class);
+            } catch (ConfigurationException e) {
                 throw new RuntimeException(
                         "Error while loading " + configFileLocation + " configuration file", e);
             }
         } else { // return a default config
-            transportsConfiguration = new TransportsConfiguration();
+            transportsFileConfiguration = new TransportsFileConfiguration();
         }
 
-        return transportsConfiguration;
+        return transportsFileConfiguration;
     }
 
     @AfterClass

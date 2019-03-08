@@ -20,6 +20,7 @@ package org.wso2.msf4j.websocket.endpoint.error;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.transport.http.netty.contract.websocket.WebSocketConnection;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -29,7 +30,6 @@ import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
-import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
@@ -41,44 +41,40 @@ import javax.websocket.server.ServerEndpoint;
 @ServerEndpoint(value = "/chat/{name}")
 public class TestEndpointWithOnCloseError {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestEndpointWithOnCloseError.class);
-    private List<Session> sessions = new LinkedList<Session>();
+    private List<WebSocketConnection> webSocketConnections = new LinkedList<>();
 
     @OnOpen
-    public void onOpen(@PathParam("name") String name, Session session) {
-        sessions.add(session);
+    public void onOpen(@PathParam("name") String name, WebSocketConnection webSocketConnection) {
+        webSocketConnections.add(webSocketConnection);
         String msg = name + " connected to chat";
         LOGGER.info(msg);
         sendMessageToAll(msg);
     }
 
     @OnMessage
-    public void onTextMessage(@PathParam("name") String name, String text, Session session) throws IOException {
+    public void onTextMessage(@PathParam("name") String name, String text, WebSocketConnection webSocketConnection)
+            throws IOException {
         String msg = name + ":" + text;
-        LOGGER.info("Received Text: " + text + " from  " + name + session.getId());
+        LOGGER.info("Received Text: " + text + " from  " + name + webSocketConnection.getChannelId());
         sendMessageToAll(msg);
     }
 
     @OnClose
-    public void onClose(@PathParam("name") String name, CloseReason closeReason, Session session, String errorValue) {
-        sessions.remove(session);
+    public void onClose(@PathParam("name") String name, CloseReason closeReason,
+                        WebSocketConnection webSocketConnection, String errorValue) {
+        webSocketConnections.remove(webSocketConnection);
         String msg = name + errorValue;
         sendMessageToAll(msg);
     }
 
     @OnError
-    public void onError(Throwable throwable, Session session) {
+    public void onError(Throwable throwable, WebSocketConnection webSocketConnection) {
         LOGGER.error("Error found in method: " + throwable.toString());
     }
 
     private void sendMessageToAll(String message) {
-        sessions.forEach(
-                session -> {
-                    try {
-                        session.getBasicRemote().sendText(message);
-                    } catch (IOException e) {
-                        LOGGER.error(e.toString());
-                    }
-                }
+        webSocketConnections.forEach(
+                webSocketConnection -> webSocketConnection.pushText(message)
         );
     }
 }

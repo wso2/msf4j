@@ -62,7 +62,7 @@ for that purpose.
 ex:
 ```java
 @OnOpen
-public void onOpen(@PathParam("name") String name, Session session) {
+public void onOpen(@PathParam("name") String name, WebSocketConnection webSocketConnection) {
     System.out.println("New client connected");
 }
 ```
@@ -87,7 +87,7 @@ wants to receive.
 |parameter|description|mandatory/optional|
 |---------|-----------|------------------|
 |text|Text which receives from the client|mandatory|
-|session|Session of the client|optional|
+|webSocketConnection|Connection of the client|optional|
 |0 to n String parameters annotated with a @PathParam annotation|To retrieve path parameter|optional|
 
 ex: 
@@ -95,7 +95,7 @@ ex:
 @ServerEndpoint(value = "/chat/{name}")
 class exampleApp {
     @OnMessage
-    public void onTextMessage(@PathParam("name") String name, String text, Session session) {
+    public void onTextMessage(@PathParam("name") String name, String text, WebSocketConnection webSocketConnection) {
         // Your code goes here
     }
 }
@@ -106,7 +106,7 @@ class exampleApp {
 |---------|-----------|------------------|
 |bytes|This should be declared as a byte[] or ByteBuffer to receive the message from the client|mandatory|
 |isFinal|This is a boolean which says that if the received buffer is a final fragment of a whole message. If user knows that only full messages are received every time this should not be declared|optional|
-|session|Session of the client|optional|
+|webSocketConnection|Connection of the client|optional|
 |0 to n String parameters annotated with a @PathParam annotation|To retrieve path parameter|optional|
 
 ex: with ByteBuffer
@@ -114,7 +114,7 @@ ex: with ByteBuffer
 @ServerEndpoint(value = "/chat/{name}")
 class exampleApp { 
     @OnMessage
-    public void onBinaryMessage(byte[] bytes, Session session) {
+    public void onBinaryMessage(byte[] bytes, WebSocketConnection webSocketConnection) {
         // Your code goes here
     }
 }
@@ -125,7 +125,7 @@ ex: with byte array
 @ServerEndpoint(value = "/chat/{name}")
 class exampleApp { 
     @OnMessage
-    public void onBinaryMessage(ByteBuffer byteBuffer, boolean isFinalFragment, Session session) {
+    public void onBinaryMessage(ByteBuffer byteBuffer, boolean isFinalFragment, WebSocketConnection webSocketConnection) {
         // Your code goes here
     }
 }
@@ -137,7 +137,7 @@ This is received when server sends a ping message to check the connection.
 |parameter|description|mandatory/optional|
 |---------|-----------|------------------|
 |pongMessage|PongMessage which receives from the client|mandatory|
-|session|Session of the client|optional|
+|webSocketConnection|Connection of the client|optional|
 |0 to n String parameters annotated with a @PathParam annotation|To retrieve path parameter|optional|
 
 ex:
@@ -145,7 +145,7 @@ ex:
 @ServerEndpoint(value = "/chat/{name}")
 class exampleApp { 
     @OnMessage
-    public void onPongMessage(PongMessage pongMessage, Session session) {
+    public void onPongMessage(PongMessage pongMessage, WebSocketConnection webSocketConnection) {
        // Your code goes here
     }
 }
@@ -161,7 +161,7 @@ and the reason if exists for user to leave the server.
 |parameter|description|mandatory/optional|
 |---------|-----------|------------------|
 |pongMessage|PongMessage which receives from the client|mandatory|
-|session|Session of the client|optional|
+|webSocketConnection|Connection of the client|optional|
 |0 to n String parameters annotated with a @PathParam annotation|To retrieve path parameter|optional|
 
 ex: 
@@ -169,7 +169,7 @@ ex:
 @ServerEndpoint(value = "/chat/{name}")
 class exampleApp { 
     @OnClose
-    public void onClose(@PathParam("name") String name, CloseReason closeReason, Session session) {
+    public void onClose(@PathParam("name") String name, CloseReason closeReason, WebSocketConnection webSocketConnection) {
         // Your code goes here
     }
 }
@@ -181,7 +181,7 @@ This method is called when an error occurred in the server when reading or writi
 |parameter|description|mandatory/optional|
 |---------|-----------|------------------|
 |throwable|Throwable which is thrown during the reading or writing data|mandatory|
-|session|Session of the client|optional|
+|webSocketConnection|Connection of the client|optional|
 |0 to n String parameters annotated with a @PathParam annotation|To retrieve path parameter|optional|
 
 ex: 
@@ -189,7 +189,7 @@ ex:
 @ServerEndpoint(value = "/chat/{name}")
 class exampleApp { 
     @OnError
-    public void onError(Throwable throwable, Session session) {
+    public void onError(Throwable throwable, WebSocketConnection webSocketConnection) {
         // Your code goes here
     }
 }
@@ -203,15 +203,15 @@ methods like polling.
 There are 2 ways which you can do server push is MSf4J.
 * Using Session.getBasicRemote
     ```java
-    session.getBasicRemote().sendText(message);
-    session.getBasicRemote().sendBinary(message);
+    webSocketConnection.pushText(message);
+    webSocketConnection.pushBinary(message);
     ```
     This can be used in anywhere in the program to messages to the client.
     
 * Using return types of methods
     ```java
     @OnMessage
-    public String onTextMessage(String text, Session session) throws IOException {
+    public String onTextMessage(String text, WebSocketConnection webSocketConnection) throws IOException {
         String msg =  "You said : " + text;
         return msg;
     }

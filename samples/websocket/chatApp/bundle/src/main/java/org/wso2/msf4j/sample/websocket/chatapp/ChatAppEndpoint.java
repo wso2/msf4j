@@ -22,6 +22,7 @@ import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.websocket.WebSocketEndpoint;
+import org.wso2.transport.http.netty.contract.websocket.WebSocketConnection;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,7 +32,6 @@ import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
-import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
@@ -48,28 +48,30 @@ import javax.websocket.server.ServerEndpoint;
 public class ChatAppEndpoint implements WebSocketEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChatAppEndpoint.class);
     /* Stores all the active sessions in a list */
-    private List<Session> sessions = new ArrayList<>();
+    private List<WebSocketConnection> webSocketConnections = new ArrayList<>();
 
     @OnOpen
-    public void onOpen(@PathParam("name") String name, Session session) {
-        sessions.add(session);
+    public void onOpen(@PathParam("name") String name, WebSocketConnection webSocketConnection) {
+        webSocketConnections.add(webSocketConnection);
         String msg = name + " connected to chat";
         LOGGER.info(msg);
         sendMessageToAll(msg);
     }
 
     @OnMessage
-    public void onTextMessage(@PathParam("name") String name, String text, Session session) throws IOException {
+    public void onTextMessage(@PathParam("name") String name, String text, WebSocketConnection webSocketConnection)
+            throws IOException {
         String msg = name + " : " + text;
-        LOGGER.info("Received Text : " + text + " from  " + name + session.getId());
+        LOGGER.info("Received Text : " + text + " from  " + name + webSocketConnection.getChannelId());
         sendMessageToAll(msg);
     }
 
     @OnClose
-    public void onClose(@PathParam("name") String name, CloseReason closeReason, Session session) {
+    public void onClose(@PathParam("name") String name, CloseReason closeReason,
+                        WebSocketConnection webSocketConnection) {
         LOGGER.info("Connection is closed with status code : " + closeReason.getCloseCode().getCode()
                             + " On reason " + closeReason.getReasonPhrase());
-        sessions.remove(session);
+        webSocketConnections.remove(webSocketConnection);
         String msg = name + " left the chat";
         sendMessageToAll(msg);
     }
@@ -81,13 +83,9 @@ public class ChatAppEndpoint implements WebSocketEndpoint {
 
 
     private void sendMessageToAll(String message) {
-        sessions.forEach(
-                session -> {
-                    try {
-                        session.getBasicRemote().sendText(message);
-                    } catch (IOException e) {
-                        LOGGER.error(e.toString());
-                    }
+        webSocketConnections.forEach(
+                webSocketConnection -> {
+                    webSocketConnection.pushText(message);
                 }
         );
     }

@@ -21,6 +21,7 @@ package org.wso2.msf4j.websocket.endpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.websocket.WebSocketEndpoint;
+import org.wso2.transport.http.netty.contract.websocket.WebSocketConnection;
 
 import java.io.IOException;
 import javax.websocket.CloseReason;
@@ -28,7 +29,6 @@ import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.PongMessage;
-import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
@@ -40,16 +40,17 @@ public class EchoEndpoint implements WebSocketEndpoint {
     private static final Logger log = LoggerFactory.getLogger(EchoEndpoint.class);
 
     @OnOpen
-    public void onOpen(Session session) {
-        log.info(session.getId() + " connected to repeat-app");
+    public void onOpen(WebSocketConnection webSocketConnection) {
+        log.info(webSocketConnection.getChannelId() + " connected to repeat-app");
     }
 
     /**
      * Echo the same {@link String} to user.
      */
     @OnMessage
-    public String onTextMessage(@PathParam("name") String name, String text, Session session) throws IOException {
-        log.info("Received Text : " + text + " from  " + session.getId());
+    public String onTextMessage(@PathParam("name") String name, String text, WebSocketConnection webSocketConnection)
+            throws IOException {
+        log.info("Received Text : " + text + " from  " + webSocketConnection.getChannelId());
         return text;
     }
 
@@ -57,7 +58,7 @@ public class EchoEndpoint implements WebSocketEndpoint {
      * Echo the same ByteBuffer to user.
      */
     @OnMessage
-    public byte[] onBinaryMessage(byte[] buffer, Session session) {
+    public byte[] onBinaryMessage(byte[] buffer, WebSocketConnection webSocketConnection) {
         String values = "";
         int bufferLength = buffer.length;
         byte[] bytes = new byte[buffer.length];
@@ -65,19 +66,19 @@ public class EchoEndpoint implements WebSocketEndpoint {
             byte b = buffer[i];
             values = values.concat(" " + b);
         }
-        log.info("Binary message values from " + session.getId() + System.lineSeparator() +
-                         "buffer length: " + bufferLength + System.lineSeparator() + "values : " + values);
+        log.info("Binary message values received from " + webSocketConnection.getChannelId() + System.lineSeparator() +
+                "buffer length: " + bufferLength + System.lineSeparator() + "values : " + values);
         return buffer;
     }
 
     @OnMessage
-    public PongMessage onPongMessage(PongMessage pongMessage, Session session) {
+    public PongMessage onPongMessage(PongMessage pongMessage, WebSocketConnection webSocketConnection) {
         log.info("Received a pong message.");
         return pongMessage;
     }
 
     @OnClose
-    public void onClose(CloseReason closeReason, Session session) {
+    public void onClose(CloseReason closeReason, WebSocketConnection webSocketConnection) {
         log.info("Connection is closed with status code: " + closeReason.getCloseCode().getCode()
                             + " On reason " + closeReason.getReasonPhrase());
     }

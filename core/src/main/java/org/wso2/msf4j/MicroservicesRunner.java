@@ -17,6 +17,9 @@ package org.wso2.msf4j;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.config.ConfigProviderFactory;
+import org.wso2.carbon.config.ConfigurationException;
+import org.wso2.msf4j.config.TransportsFileConfiguration;
 import org.wso2.msf4j.interceptor.RequestInterceptor;
 import org.wso2.msf4j.interceptor.ResponseInterceptor;
 import org.wso2.msf4j.internal.DataHolder;
@@ -25,18 +28,19 @@ import org.wso2.msf4j.internal.MSF4JHttpConnectorListener;
 import org.wso2.msf4j.internal.MSF4JWSConnectorListener;
 import org.wso2.msf4j.internal.MicroservicesRegistryImpl;
 import org.wso2.msf4j.internal.websocket.EndpointsRegistryImpl;
-import org.wso2.transport.http.netty.common.Constants;
-import org.wso2.transport.http.netty.common.Util;
-import org.wso2.transport.http.netty.config.ConfigurationBuilder;
-import org.wso2.transport.http.netty.config.ListenerConfiguration;
-import org.wso2.transport.http.netty.config.TransportsConfiguration;
+import org.wso2.msf4j.util.Utils;
+import org.wso2.transport.http.netty.contract.Constants;
 import org.wso2.transport.http.netty.contract.HttpWsConnectorFactory;
 import org.wso2.transport.http.netty.contract.ServerConnector;
 import org.wso2.transport.http.netty.contract.ServerConnectorFuture;
+import org.wso2.transport.http.netty.contract.config.ListenerConfiguration;
+import org.wso2.transport.http.netty.contract.config.ServerBootstrapConfiguration;
+import org.wso2.transport.http.netty.contract.config.TransportsConfiguration;
 import org.wso2.transport.http.netty.contractimpl.DefaultHttpWsConnectorFactory;
-import org.wso2.transport.http.netty.listener.ServerBootstrapConfiguration;
-import org.wso2.transport.http.netty.message.HTTPConnectorUtil;
+import org.wso2.transport.http.netty.contractimpl.common.Util;
+import org.wso2.transport.http.netty.message.HttpConnectorUtil;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -94,10 +98,10 @@ public class MicroservicesRunner {
      * Creates a MicroservicesRunner instance which will be used for deploying microservices. Allows specifying
      * transport configuration on which the microservices in this MicroservicesRunner are deployed.
      *
-     * @param transportsConfiguration The transport configuration on which the microservices are exposed
+     * @param transportsFileConfiguration The transport configuration on which the microservices are exposed
      */
-    public MicroservicesRunner(TransportsConfiguration transportsConfiguration) {
-        configureTransport(transportsConfiguration);
+    public MicroservicesRunner(TransportsFileConfiguration transportsFileConfiguration) {
+        configureTransport(transportsFileConfiguration);
     }
 
     /**
@@ -229,28 +233,37 @@ public class MicroservicesRunner {
                             listenerConfiguration.getPort()), msRegistry);
             serverConnectors.add(serverConnector);
         } else {
-            TransportsConfiguration transportsConfiguration =
-                    ConfigurationBuilder.getInstance().getConfiguration(transportYaml);
+            try {
+                TransportsFileConfiguration transportsFileConfiguration =
+                        ConfigProviderFactory.getConfigProvider(Paths.get(transportYaml), null)
+                        .getConfigurationObject(TransportsFileConfiguration.class);
+                TransportsConfiguration transportsConfiguration = Utils.
+                        transformTransportConfiguration(transportsFileConfiguration);
 
-            Map<String, Object> transportProperties = HTTPConnectorUtil.getTransportProperties(transportsConfiguration);
-            int bossGroup = transportProperties.get(Constants.SERVER_BOOTSTRAP_BOSS_GROUP_SIZE) != null ? (Integer)
-                    transportProperties.get(Constants.SERVER_BOOTSTRAP_BOSS_GROUP_SIZE) : Runtime.getRuntime()
-                    .availableProcessors();
-            int workerGroup = transportProperties.get(Constants.SERVER_BOOTSTRAP_WORKER_GROUP_SIZE) != null ? (Integer)
-                    transportProperties.get(Constants.SERVER_BOOTSTRAP_WORKER_GROUP_SIZE) : Runtime.getRuntime()
-                    .availableProcessors() * 2;
-            HttpWsConnectorFactory connectorFactory = new DefaultHttpWsConnectorFactory(bossGroup, workerGroup,
-                    workerGroup);
-            ServerBootstrapConfiguration serverBootstrapConfiguration =
-                    HTTPConnectorUtil.getServerBootstrapConfiguration(transportsConfiguration.getTransportProperties());
+                Map<String, Object> transportProperties = HttpConnectorUtil
+                        .getTransportProperties(transportsConfiguration);
+                int bossGroup = transportProperties.get(Constants.SERVER_BOOTSTRAP_BOSS_GROUP_SIZE) != null ? (Integer)
+                        transportProperties.get(Constants.SERVER_BOOTSTRAP_BOSS_GROUP_SIZE) : Runtime.getRuntime()
+                        .availableProcessors();
+                int workerGroup = transportProperties.get(Constants.SERVER_BOOTSTRAP_WORKER_GROUP_SIZE) != null ?
+                        (Integer) transportProperties.get(Constants.SERVER_BOOTSTRAP_WORKER_GROUP_SIZE) :
+                        Runtime.getRuntime().availableProcessors() * 2;
+                HttpWsConnectorFactory connectorFactory = new DefaultHttpWsConnectorFactory(bossGroup, workerGroup,
+                        workerGroup);
+                ServerBootstrapConfiguration serverBootstrapConfiguration = HttpConnectorUtil
+                        .getServerBootstrapConfiguration(transportsConfiguration.getTransportProperties());
 
-            for (ListenerConfiguration listenerConfiguration : transportsConfiguration.getListenerConfigurations()) {
-                ServerConnector serverConnector =
-                        connectorFactory.createServerConnector(serverBootstrapConfiguration, listenerConfiguration);
-                DataHolder.getInstance().getMicroservicesRegistries()
-                        .put(Util.createServerConnectorID(listenerConfiguration.getHost(),
-                                listenerConfiguration.getPort()), msRegistry);
-                serverConnectors.add(serverConnector);
+                for (ListenerConfiguration listenerConfiguration :
+                        transportsConfiguration.getListenerConfigurations()) {
+                    ServerConnector serverConnector =
+                            connectorFactory.createServerConnector(serverBootstrapConfiguration, listenerConfiguration);
+                    DataHolder.getInstance().getMicroservicesRegistries()
+                            .put(Util.createServerConnectorID(listenerConfiguration.getHost(),
+                                    listenerConfiguration.getPort()), msRegistry);
+                    serverConnectors.add(serverConnector);
+                }
+            } catch (ConfigurationException e) {
+                throw new RuntimeException("Error loading yaml Configuration", e);
             }
         }
     }
@@ -258,11 +271,14 @@ public class MicroservicesRunner {
     /**
      * Method to configure transports with external transport configuration
      *
-     * @param transportsConfiguration the external transports configuration
+     * @param transportsFileConfiguration the external transports configuration
      */
-    protected void configureTransport(TransportsConfiguration transportsConfiguration) {
-        if (transportsConfiguration != null) {
-            Map<String, Object> transportProperties = HTTPConnectorUtil.getTransportProperties(transportsConfiguration);
+    protected void configureTransport(TransportsFileConfiguration transportsFileConfiguration) {
+        if (transportsFileConfiguration != null) {
+            TransportsConfiguration transportsConfiguration =
+                    Utils.transformTransportConfiguration(transportsFileConfiguration);
+
+            Map<String, Object> transportProperties = HttpConnectorUtil.getTransportProperties(transportsConfiguration);
             int bossGroup = transportProperties.get(Constants.SERVER_BOOTSTRAP_BOSS_GROUP_SIZE) != null ? (Integer)
                     transportProperties.get(Constants.SERVER_BOOTSTRAP_BOSS_GROUP_SIZE) : Runtime.getRuntime()
                     .availableProcessors();
@@ -272,7 +288,7 @@ public class MicroservicesRunner {
             HttpWsConnectorFactory connectorFactory = new DefaultHttpWsConnectorFactory(bossGroup, workerGroup,
                     workerGroup);
             ServerBootstrapConfiguration serverBootstrapConfiguration =
-                    HTTPConnectorUtil.getServerBootstrapConfiguration(transportsConfiguration.getTransportProperties());
+                    HttpConnectorUtil.getServerBootstrapConfiguration(transportsConfiguration.getTransportProperties());
             for (ListenerConfiguration listenerConfiguration : transportsConfiguration.getListenerConfigurations()) {
                 ServerConnector serverConnector =
                         connectorFactory.createServerConnector(serverBootstrapConfiguration, listenerConfiguration);
@@ -303,7 +319,7 @@ public class MicroservicesRunner {
         serverConnectors.forEach(serverConnector -> {
             ServerConnectorFuture serverConnectorFuture = serverConnector.start();
             serverConnectorFuture.setHttpConnectorListener(msf4JHttpConnectorListener);
-            serverConnectorFuture.setWSConnectorListener(msf4JWSConnectorListener);
+            serverConnectorFuture.setWebSocketConnectorListener(msf4JWSConnectorListener);
             serverConnectorFuture.setPortBindingEventListener(new HttpConnectorPortBindingListener());
             isStarted = true;
             log.info("Microservices server started in " + (System.currentTimeMillis() - startTime) + "ms");
