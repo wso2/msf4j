@@ -36,18 +36,20 @@ import org.wso2.msf4j.MicroservicesRegistry;
 import org.wso2.msf4j.MicroservicesServer;
 import org.wso2.msf4j.SessionManager;
 import org.wso2.msf4j.SwaggerService;
+import org.wso2.msf4j.config.ConfigurationAdopter;
+import org.wso2.msf4j.config.TransportsFileConfiguration;
 import org.wso2.msf4j.exception.OSGiDeclarativeServiceException;
 import org.wso2.msf4j.interceptor.OSGiInterceptorConfig;
 import org.wso2.msf4j.util.RuntimeAnnotations;
-import org.wso2.transport.http.netty.config.ListenerConfiguration;
-import org.wso2.transport.http.netty.config.TransportsConfiguration;
 import org.wso2.transport.http.netty.contract.HttpConnectorListener;
 import org.wso2.transport.http.netty.contract.HttpWsConnectorFactory;
 import org.wso2.transport.http.netty.contract.ServerConnector;
 import org.wso2.transport.http.netty.contract.ServerConnectorFuture;
+import org.wso2.transport.http.netty.contract.config.ListenerConfiguration;
+import org.wso2.transport.http.netty.contract.config.ServerBootstrapConfiguration;
+import org.wso2.transport.http.netty.contract.config.TransportsConfiguration;
 import org.wso2.transport.http.netty.contractimpl.DefaultHttpWsConnectorFactory;
-import org.wso2.transport.http.netty.listener.ServerBootstrapConfiguration;
-import org.wso2.transport.http.netty.message.HTTPConnectorUtil;
+import org.wso2.transport.http.netty.message.HttpConnectorUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -167,8 +169,10 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
     protected void registerConfigProvider(ConfigProvider configProvider) {
         DataHolder.getInstance().setConfigProvider(configProvider);
         try {
-            final TransportsConfiguration transportsConfiguration = configProvider.getConfigurationObject
-                    (MSF4JConstants.WSO2_TRANSPORT_HTTP_CONFIG_NAMESPACE, TransportsConfiguration.class);
+            final TransportsFileConfiguration transportsFileConfiguration = configProvider.getConfigurationObject
+                    (MSF4JConstants.WSO2_TRANSPORT_HTTP_CONFIG_NAMESPACE, TransportsFileConfiguration.class);
+            TransportsConfiguration transportsConfiguration =
+                    ConfigurationAdopter.getInstance().getTransportConfiguration(transportsFileConfiguration);
             Set<ListenerConfiguration> listenerConfigurations =
                     transportsConfiguration.getListenerConfigurations();
             if (listenerConfigurations.isEmpty()) {
@@ -177,7 +181,7 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
             }
 
             ServerBootstrapConfiguration serverBootstrapConfiguration =
-                    HTTPConnectorUtil.getServerBootstrapConfiguration(transportsConfiguration.getTransportProperties());
+                    HttpConnectorUtil.getServerBootstrapConfiguration(transportsConfiguration.getTransportProperties());
             HttpWsConnectorFactory connectorFactory = new DefaultHttpWsConnectorFactory();
             listenerConfigurations.forEach(listenerConfiguration -> {
                 ServerConnector serverConnector =
@@ -390,7 +394,7 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
         serverConnectors.forEach(serverConnector -> {
             final ServerConnectorFuture serverConnectorFuture = serverConnector.start();
             serverConnectorFuture.setHttpConnectorListener(msf4JHttpConnectorListener);
-            serverConnectorFuture.setWSConnectorListener(msf4JWSConnectorListener);
+            serverConnectorFuture.setWebSocketConnectorListener(msf4JWSConnectorListener);
         });
     }
 

@@ -16,7 +16,7 @@
 
 package org.wso2.msf4j.internal.entitywriter;
 
-import org.wso2.transport.http.netty.message.HTTPCarbonMessage;
+import org.wso2.transport.http.netty.message.HttpCarbonMessage;
 
 /**
  * Interface that provides the capability of writing an entity type to
@@ -45,9 +45,9 @@ public interface EntityWriter<T> {
      * @param chunkSize user defined chunk size
      *                  0 to signify none chunked response
      *                  -1 to signify default chunk size of the EntityWriter
-     * @param responder HTTPCarbonMessage that should be used to start sending the response payload
+     * @param responder HttpCarbonMessage that should be used to start sending the response payload
      */
-    void writeData(HTTPCarbonMessage carbonMessage, T entity, String mediaType, int chunkSize,
-                   HTTPCarbonMessage responder);
+    void writeData(HttpCarbonMessage carbonMessage, T entity, String mediaType, int chunkSize,
+                   HttpCarbonMessage responder);
 
 }

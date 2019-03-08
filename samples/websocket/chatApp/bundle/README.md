@@ -34,7 +34,7 @@ provided by javax.websocket.
 ex : 
 ```java
 @OnOpen
-public void onOpen(@PathParam("name") String name, Session session) {
+public void onOpen(@PathParam("name") String name, WebSocketConnection webSocketConnection session) {
     String msg = name + " connected to chat";
 }
 ```
@@ -43,15 +43,15 @@ before giving other parameters.
 
 ##Server Push
 There are 2 ways which you can do server pushes.
-* Using Session.getBasicRemote
+* Using WebSocketConnection webSocketConnection.getBasicRemote
     ```java
-    session.getBasicRemote().sendText(message);
-    session.getBasicRemote().sendBinary(message);
+    webSocketConnection.pushText(message);
+    webSocketConnection.pushBinary(message);
     ```
 * Using return types of methods
     ```java
     @OnMessage
-    public String onTextMessage(String text, Session session) throws IOException {
+    public String onTextMessage(String text, WebSocketConnection webSocketConnection) throws IOException {
         String msg =  "You said : " + text;
         return msg;
     }

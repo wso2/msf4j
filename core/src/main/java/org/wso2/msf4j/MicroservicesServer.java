@@ -18,7 +18,7 @@
  */
 package org.wso2.msf4j;
 
-import org.wso2.transport.http.netty.config.ListenerConfiguration;
+import org.wso2.transport.http.netty.contract.config.ListenerConfiguration;
 
 import java.util.Map;
 

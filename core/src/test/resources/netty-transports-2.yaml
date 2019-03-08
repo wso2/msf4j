@@ -13,29 +13,26 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 ################################################################################
-transportProperties:
- -
-  name: "latency.metrics.enabled"
-  value: true
- -
-  name: "server.bootstrap.boss.group.size"
-  value: 4
- -
-  name: "server.bootstrap.worker.group.size"
-  value: 8
-listenerConfigurations:
--
-  id: "msf4j-http"
-  host: "127.0.0.1"
-  port: 8080
--
-  id: "jaxrs-http"
-  host: "0.0.0.0"
-  port: 8094
-  scheme: https
-  keyStoreFile: "src/test/resources/cert.jks"
-  keyStorePassword: secret
-  certPass: secret
-senderConfigurations:
- -
-  id: "netty-gw"
+wso2.transport.http:
+  transportProperties:
+   -
+    name: "latency.metrics.enabled"
+    value: true
+   -
+    name: "server.bootstrap.boss.group.size"
+    value: 4
+   -
+    name: "server.bootstrap.worker.group.size"
+    value: 8
+  listenerConfigurations:
+  -
+    id: "jaxrs-http"
+    host: "0.0.0.0"
+    port: 8095
+    scheme: https
+    keyStoreFile: "src/test/resources/cert.jks"
+    keyStorePassword: secret
+    certPass: secret
+  senderConfigurations:
+   -
+    id: "netty-gw"

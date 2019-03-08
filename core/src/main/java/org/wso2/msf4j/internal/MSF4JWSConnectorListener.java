@@ -24,17 +24,16 @@ import org.wso2.msf4j.internal.websocket.EndpointDispatcher;
 import org.wso2.msf4j.internal.websocket.EndpointsRegistryImpl;
 import org.wso2.msf4j.internal.websocket.WebSocketPongMessage;
 import org.wso2.msf4j.websocket.exception.WebSocketEndpointMethodReturnTypeException;
-import org.wso2.transport.http.netty.contract.websocket.HandshakeFuture;
-import org.wso2.transport.http.netty.contract.websocket.HandshakeListener;
+import org.wso2.transport.http.netty.contract.websocket.ServerHandshakeFuture;
+import org.wso2.transport.http.netty.contract.websocket.ServerHandshakeListener;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketBinaryMessage;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketCloseMessage;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketConnection;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketConnectorListener;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketControlMessage;
-import org.wso2.transport.http.netty.contract.websocket.WebSocketInitMessage;
+import org.wso2.transport.http.netty.contract.websocket.WebSocketHandshaker;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketTextMessage;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
@@ -45,7 +44,6 @@ import java.util.Map;
 import java.util.Optional;
 import javax.websocket.CloseReason;
 import javax.websocket.PongMessage;
-import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 
 /**
@@ -63,12 +61,12 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
     private static final Logger log = LoggerFactory.getLogger(MSF4JWSConnectorListener.class);
 
     @Override
-    public void onMessage(WebSocketInitMessage webSocketInitMessage) {
-        HandshakeFuture handshakeFuture = webSocketInitMessage.handshake();
-        handshakeFuture.setHandshakeListener(new HandshakeListener() {
+    public void onHandshake(WebSocketHandshaker webSocketHandshaker) {
+        ServerHandshakeFuture handshakeFuture = webSocketHandshaker.handshake();
+        handshakeFuture.setHandshakeListener(new ServerHandshakeListener() {
             @Override
             public void onSuccess(WebSocketConnection webSocketConnection) {
-                handleWebSocketHandshake(webSocketInitMessage, webSocketConnection.getSession());
+                handleWebSocketHandshake(webSocketHandshaker, webSocketConnection);
                 webSocketConnection.startReadingFrames();
             }
 
@@ -85,7 +83,7 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
         String uri = webSocketTextMessage.getTarget();
         PatternPathRouter.RoutableDestination<Object> routableEndpoint = endpointsRegistry.getRoutableEndpoint(uri);
         handleTextWebSocketMessage(webSocketTextMessage, routableEndpoint, webSocketTextMessage
-                .getWebSocketConnection().getSession());
+                .getWebSocketConnection());
     }
 
     @Override
@@ -94,7 +92,7 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
         String uri = webSocketBinaryMessage.getTarget();
         PatternPathRouter.RoutableDestination<Object> routableEndpoint = endpointsRegistry.getRoutableEndpoint(uri);
         handleBinaryWebSocketMessage(webSocketBinaryMessage, routableEndpoint,
-                webSocketBinaryMessage.getWebSocketConnection().getSession());
+                webSocketBinaryMessage.getWebSocketConnection());
     }
 
     @Override
@@ -103,7 +101,7 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
         String uri = webSocketControlMessage.getTarget();
         PatternPathRouter.RoutableDestination<Object> routableEndpoint = endpointsRegistry.getRoutableEndpoint(uri);
         handleControlCarbonMessage(webSocketControlMessage, routableEndpoint,
-                webSocketControlMessage.getWebSocketConnection().getSession());
+                webSocketControlMessage.getWebSocketConnection());
     }
 
     @Override
@@ -112,11 +110,15 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
         String uri = webSocketCloseMessage.getTarget();
         PatternPathRouter.RoutableDestination<Object> routableEndpoint = endpointsRegistry.getRoutableEndpoint(uri);
         handleCloseWebSocketMessage(webSocketCloseMessage, routableEndpoint, webSocketCloseMessage
-                .getWebSocketConnection().getSession());
+                .getWebSocketConnection());
     }
 
     @Override
-    public void onError(Throwable throwable) {
+    public void onClose(WebSocketConnection webSocketConnection) {
+    }
+
+    @Override
+    public void onError(WebSocketConnection webSocketConnection, Throwable throwable) {
         log.error("Unexpected error occur.", throwable);
     }
 
@@ -125,7 +127,8 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
 
     }
 
-    private boolean handleWebSocketHandshake(WebSocketInitMessage carbonMessage, Session session) {
+    private boolean handleWebSocketHandshake(WebSocketHandshaker carbonMessage,
+                                             WebSocketConnection webSocketConnection) {
         EndpointsRegistryImpl endpointsRegistry = EndpointsRegistryImpl.getInstance();
         String requestUri = carbonMessage.getTarget();
         PatternPathRouter.RoutableDestination<Object> routableEndpoint =
@@ -140,8 +143,8 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
             List<Object> parameterList = new LinkedList<>();
             methodOptional.ifPresent(method -> {
                 Arrays.stream(method.getParameters()).forEach(parameter -> {
-                    if (parameter.getType() == Session.class) {
-                        parameterList.add(session);
+                    if (parameter.getType() == WebSocketConnection.class) {
+                        parameterList.add(webSocketConnection);
                     } else if (parameter.getType() == String.class) {
                         PathParam pathParam = parameter.getAnnotation(PathParam.class);
                         if (pathParam != null) {
@@ -151,18 +154,18 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
                         parameterList.add(null);
                     }
                 });
-                executeMethod(method, routableEndpoint.getDestination(), parameterList, session);
+                executeMethod(method, routableEndpoint.getDestination(), parameterList, webSocketConnection);
             });
             return true;
         } catch (Throwable throwable) {
-            handleError(throwable, routableEndpoint, session);
+            handleError(throwable, routableEndpoint, webSocketConnection);
             return false;
         }
     }
 
     private void handleTextWebSocketMessage(WebSocketTextMessage textCarbonMessage,
                                             PatternPathRouter.RoutableDestination<Object> routableEndpoint,
-                                            Session session) {
+                                            WebSocketConnection webSocketConnection) {
         if (routableEndpoint == null) {
             throw new RuntimeException("Error while handling the message. Routable endpoint is not registered for the" +
                     " request uri:" + textCarbonMessage.getTarget());
@@ -183,24 +186,24 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
                                         } else {
                                             parameterList.add(paramValues.get(pathParam.value()));
                                         }
-                                    } else if (parameter.getType() == Session.class) {
-                                        parameterList.add(session);
+                                    } else if (parameter.getType() == WebSocketConnection.class) {
+                                        parameterList.add(webSocketConnection);
                                     } else {
                                         parameterList.add(null);
                                     }
                                 }
                         );
-                        executeMethod(method, endpoint, parameterList, session);
+                        executeMethod(method, endpoint, parameterList, webSocketConnection);
                     }
             );
         } catch (Throwable throwable) {
-            handleError(throwable, routableEndpoint, session);
+            handleError(throwable, routableEndpoint, webSocketConnection);
         }
     }
 
     private void handleBinaryWebSocketMessage(WebSocketBinaryMessage binaryCarbonMessage,
                                               PatternPathRouter.RoutableDestination<Object> routableEndpoint,
-                                              Session session) {
+                                              WebSocketConnection webSocketConnection) {
         if (routableEndpoint == null) {
             throw new RuntimeException("Error while handling the message. Routable endpoint is not registered for the" +
                     " request uri:" + binaryCarbonMessage.getTarget());
@@ -223,8 +226,8 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
                         parameterList.add(bytes);
                     } else if (parameter.getType() == boolean.class) {
                         parameterList.add(binaryCarbonMessage.isFinalFragment());
-                    } else if (parameter.getType() == Session.class) {
-                        parameterList.add(session);
+                    } else if (parameter.getType() == WebSocketConnection.class) {
+                        parameterList.add(webSocketConnection);
                     } else if (parameter.getType() == String.class) {
                         PathParam pathParam = parameter.getAnnotation(PathParam.class);
                         if (pathParam != null) {
@@ -234,16 +237,16 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
                         parameterList.add(null);
                     }
                 });
-                executeMethod(method, webSocketEndpoint, parameterList, session);
+                executeMethod(method, webSocketEndpoint, parameterList, webSocketConnection);
             });
         } catch (Throwable throwable) {
-            handleError(throwable, routableEndpoint, session);
+            handleError(throwable, routableEndpoint, webSocketConnection);
         }
     }
 
     private void handleCloseWebSocketMessage(WebSocketCloseMessage closeCarbonMessage,
                                              PatternPathRouter.RoutableDestination<Object> routableEndpoint,
-                                             Session session) {
+                                             WebSocketConnection webSocketConnection) {
         if (routableEndpoint == null) {
             throw new RuntimeException("Error while handling the message. Routable endpoint is not registered for the" +
                     " request uri:" + closeCarbonMessage.getTarget());
@@ -259,8 +262,8 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
                         CloseReason.CloseCode closeCode = new CloseCodeImpl(closeCarbonMessage.getCloseCode());
                         CloseReason closeReason = new CloseReason(closeCode, closeCarbonMessage.getCloseReason());
                         parameterList.add(closeReason);
-                    } else if (parameter.getType() == Session.class) {
-                        parameterList.add(session);
+                    } else if (parameter.getType() == WebSocketConnection.class) {
+                        parameterList.add(webSocketConnection);
                     } else if (parameter.getType() == String.class) {
                         PathParam pathParam = parameter.getAnnotation(PathParam.class);
                         if (pathParam != null) {
@@ -270,24 +273,21 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
                         parameterList.add(null);
                     }
                 });
-                executeMethod(method, webSocketEndpoint, parameterList, session);
+                executeMethod(method, webSocketEndpoint, parameterList, webSocketConnection);
             });
         } catch (Throwable throwable) {
-            handleError(throwable, routableEndpoint, session);
+            handleError(throwable, routableEndpoint, webSocketConnection);
         } finally {
             // TODO: this is temp fix assuming websocket connection is blocking call.
-            if (session.isOpen()) {
-                try {
-                    session.close();
-                } catch (IOException ignore) {
-                }
+            if (webSocketConnection.isOpen()) {
+                webSocketConnection.terminateConnection();
             }
         }
 
     }
 
     private void handleControlCarbonMessage(WebSocketControlMessage controlCarbonMessage, PatternPathRouter.
-            RoutableDestination<Object> routableEndpoint, Session session) {
+            RoutableDestination<Object> routableEndpoint, WebSocketConnection webSocketConnection) {
         if (routableEndpoint == null) {
             throw new RuntimeException("Error while handling the message. Routable endpoint is not registered for the" +
                     " request uri:" + controlCarbonMessage.getTarget());
@@ -300,9 +300,9 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
                 List<Object> parameterList = new LinkedList<>();
                 Arrays.stream(method.getParameters()).forEach(parameter -> {
                     if (parameter.getType() == PongMessage.class) {
-                        parameterList.add(new WebSocketPongMessage(controlCarbonMessage.getPayload()));
-                    } else if (parameter.getType() == Session.class) {
-                        parameterList.add(session);
+                        parameterList.add(new WebSocketPongMessage(controlCarbonMessage.getByteBuffer()));
+                    } else if (parameter.getType() == WebSocketConnection.class) {
+                        parameterList.add(webSocketConnection);
                     } else if (parameter.getType() == String.class) {
                         PathParam pathParam = parameter.getAnnotation(PathParam.class);
                         if (pathParam != null) {
@@ -312,15 +312,15 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
                         parameterList.add(null);
                     }
                 });
-                executeMethod(method, webSocketEndpoint, parameterList, session);
+                executeMethod(method, webSocketEndpoint, parameterList, webSocketConnection);
             });
         } catch (Throwable throwable) {
-            handleError(throwable, routableEndpoint, session);
+            handleError(throwable, routableEndpoint, webSocketConnection);
         }
     }
 
     private void handleError(Throwable throwable, PatternPathRouter.RoutableDestination<Object> routableEndpoint,
-                             Session session) {
+                             WebSocketConnection webSocketConnection) {
         Object webSocketEndpoint = routableEndpoint.getDestination();
         Map<String, String> paramValues = routableEndpoint.getGroupNameValues();
         Optional<Method> methodOptional = new EndpointDispatcher().getOnErrorMethod(webSocketEndpoint);
@@ -329,8 +329,8 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
             Arrays.stream(method.getParameters()).forEach(parameter -> {
                 if (parameter.getType() == Throwable.class) {
                     parameterList.add(throwable);
-                } else if (parameter.getType() == Session.class) {
-                    parameterList.add(session);
+                } else if (parameter.getType() == WebSocketConnection.class) {
+                    parameterList.add(webSocketConnection);
                 } else if (parameter.getType() == String.class) {
                     PathParam pathParam = parameter.getAnnotation(PathParam.class);
                     if (pathParam != null) {
@@ -340,26 +340,27 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
                     parameterList.add(null);
                 }
             });
-            executeMethod(method, webSocketEndpoint, parameterList, session);
+            executeMethod(method, webSocketEndpoint, parameterList, webSocketConnection);
         });
     }
 
-    private void executeMethod(Method method, Object webSocketEndpoint, List<Object> parameterList, Session session) {
+    private void executeMethod(Method method, Object webSocketEndpoint, List<Object> parameterList,
+                               WebSocketConnection webSocketConnection) {
         try {
             if (method.getReturnType() == String.class) {
                 String returnStr = (String) method.invoke(webSocketEndpoint, parameterList.toArray());
-                session.getBasicRemote().sendText(returnStr);
+                webSocketConnection.pushText(returnStr);
             } else if (method.getReturnType() == ByteBuffer.class) {
                 ByteBuffer buffer = (ByteBuffer) method.invoke(webSocketEndpoint, parameterList.toArray());
-                session.getBasicRemote().sendBinary(buffer);
+                webSocketConnection.pushBinary(buffer);
             } else if (method.getReturnType() == byte[].class) {
                 byte[] bytes = (byte[]) method.invoke(webSocketEndpoint, parameterList.toArray());
-                session.getBasicRemote().sendBinary(ByteBuffer.wrap(bytes));
+                webSocketConnection.pushBinary(ByteBuffer.wrap(bytes));
             } else if (method.getReturnType() == void.class) {
                 method.invoke(webSocketEndpoint, parameterList.toArray());
             } else if (method.getReturnType() == PongMessage.class) {
                 PongMessage pongMessage = (PongMessage) method.invoke(webSocketEndpoint, parameterList.toArray());
-                session.getBasicRemote().sendPong(pongMessage.getApplicationData());
+                webSocketConnection.pong(pongMessage.getApplicationData());
             } else {
                 throw new WebSocketEndpointMethodReturnTypeException("Unknown return type.");
             }
@@ -367,8 +368,6 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
             log.error("Illegal access exception occurred: " + e.toString());
         } catch (InvocationTargetException e) {
             log.error("Method invocation failed: " + e.toString());
-        } catch (IOException e) {
-            log.error("IOException occurred: " + e.toString());
         } catch (WebSocketEndpointMethodReturnTypeException e) {
             log.error("WebSocket method return type exception occurred: " + e.toString());
         }

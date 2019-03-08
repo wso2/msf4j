@@ -21,22 +21,22 @@ package org.wso2.msf4j.websocket.endpoint.error;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.websocket.WebSocketEndpoint;
+import org.wso2.transport.http.netty.contract.websocket.WebSocketConnection;
 
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
-import javax.websocket.Session;
 
 public class TestEndpointWithServerEndpointError implements WebSocketEndpoint {
     Logger log = LoggerFactory.getLogger(TestEndpointWithServerEndpointError.class);
 
     @OnOpen
-    public void onOpen(Session session) {
-        log.info(session.getId());
+    public void onOpen(WebSocketConnection webSocketConnection) {
+        log.info(webSocketConnection.getChannelId());
     }
 
     @OnMessage
-    public String onStringMessage(String str, Session session) {
+    public String onStringMessage(String str, WebSocketConnection webSocketConnection) {
         log.info("Test str is: " + str);
         return str;
     }

@@ -19,7 +19,7 @@ import io.netty.handler.codec.http.DefaultHttpRequest;
 import io.netty.handler.codec.http.HttpVersion;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.wso2.transport.http.netty.message.HTTPCarbonMessage;
+import org.wso2.transport.http.netty.message.HttpCarbonMessage;
 
 import java.util.Date;
 import java.util.List;
@@ -40,7 +40,7 @@ public class HttpHeadersImplTest {
 
     @BeforeMethod
     public void setUp() throws Exception {
-        HTTPCarbonMessage httpCarbonMessage = new HTTPCarbonMessage(
+        HttpCarbonMessage httpCarbonMessage = new HttpCarbonMessage(
                 new DefaultHttpRequest(HttpVersion.HTTP_1_1, io.netty.handler.codec.http.HttpMethod.GET, "msf4j"));
         httpCarbonMessage.getHeaders().add("testA", "test1");
         httpCarbonMessage.getHeaders().add("testA", "test2");
@@ -55,7 +55,7 @@ public class HttpHeadersImplTest {
         httpCarbonMessage.getHeaders().add("Cookie", "JSESSIONID=3508015E4EF0ECA8C4B761FCC4BC1718");
         httpHeaders1 = new HttpHeadersImpl(httpCarbonMessage.getHeaders());
 
-        HTTPCarbonMessage httpCarbonMessage2 = new HTTPCarbonMessage(
+        HttpCarbonMessage httpCarbonMessage2 = new HttpCarbonMessage(
                 new DefaultHttpRequest(HttpVersion.HTTP_1_1, io.netty.handler.codec.http.HttpMethod.GET, "msf4j"));
         httpHeaders2 = new HttpHeadersImpl(httpCarbonMessage2.getHeaders());
     }

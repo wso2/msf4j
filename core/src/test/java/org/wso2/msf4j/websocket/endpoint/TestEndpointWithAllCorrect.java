@@ -18,6 +18,8 @@
 
 package org.wso2.msf4j.websocket.endpoint;
 
+import org.wso2.transport.http.netty.contract.websocket.WebSocketConnection;
+
 import java.nio.ByteBuffer;
 import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
@@ -25,7 +27,6 @@ import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.PongMessage;
-import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
@@ -37,35 +38,36 @@ import javax.websocket.server.ServerEndpoint;
 public class TestEndpointWithAllCorrect {
 
     @OnOpen
-    public void onOpen(@PathParam("param1") String param1, @PathParam("param2") String param2, Session session) {
+    public void onOpen(@PathParam("param1") String param1, @PathParam("param2") String param2,
+                       WebSocketConnection webSocketConnection) {
     }
 
     @OnMessage
     public byte[] onString(@PathParam("param1") String param1, @PathParam("param2") String param2, String text,
-                         Session session) {
+                           WebSocketConnection webSocketConnection) {
         return new byte[4];
     }
 
     @OnMessage
     public String onBinary(@PathParam("param1") String param1, @PathParam("param2") String param2, ByteBuffer buffer,
-                           Session session) {
+                           WebSocketConnection webSocketConnection) {
         return "test";
     }
 
     @OnMessage
     public PongMessage onPong(@PathParam("param1") String param1, @PathParam("param2") String param2,
-                              PongMessage pongMessage, Session session) {
+                              PongMessage pongMessage, WebSocketConnection webSocketConnection) {
         return pongMessage;
     }
 
     @OnClose
     public void onClose(@PathParam("param1") String param1, @PathParam("param2") String param2, CloseReason closeReason,
-                        Session session) {
+                        WebSocketConnection webSocketConnection) {
 
     }
 
     @OnError
     public void onError(@PathParam("param1") String param1, @PathParam("param2") String param2, Throwable throwable,
-                        Session session) {
+                        WebSocketConnection webSocketConnection) {
     }
 }

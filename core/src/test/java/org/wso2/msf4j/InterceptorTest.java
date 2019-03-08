@@ -63,9 +63,9 @@ public class InterceptorTest extends InterceptorTestBase {
 
     @BeforeClass
     public void setup() throws Exception {
-        URL resource = Thread.currentThread().getContextClassLoader().getResource("netty-transports-3.yml");
+        URL resource = Thread.currentThread().getContextClassLoader().getResource("netty-transports-3.yaml");
         if (resource == null) {
-            Assert.fail("netty-transports-3.yml not found");
+            Assert.fail("netty-transports-3.yaml not found");
         }
         System.setProperty("transports.netty.conf", resource.getPath());
         microservicesRunner = new MicroservicesRunner(port);

@@ -83,11 +83,11 @@ public class EndpointsRegistryImpl implements WebSocketEndpointsRegistry {
                                           ": server endpoint not defined." + System.lineSeparator() + e.toString());
                     } catch (WebSocketMethodParameterException e) {
                         endpointsWithError.add(endpoint);
-                        log.error("Cannot deploy endpoint " + webSocketEndpoints.getClass().getName() +
+                        log.error("Cannot deploy endpoint " + endpoint.getClass().getName() +
                                           ": error method definition." + System.lineSeparator() + e.toString());
                     } catch (WebSocketEndpointMethodReturnTypeException e) {
                         endpointsWithError.add(endpoint);
-                        log.error("Cannot deploy endpoint " + webSocketEndpoints.getClass().getName() +
+                        log.error("Cannot deploy endpoint " + endpoint.getClass().getName() +
                                           ": invalid method return type." + System.lineSeparator() + e.toString());
                     }
 

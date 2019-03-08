@@ -19,7 +19,7 @@
 package org.wso2.msf4j.internal;
 
 import org.wso2.msf4j.MicroservicesServer;
-import org.wso2.transport.http.netty.config.ListenerConfiguration;
+import org.wso2.transport.http.netty.contract.config.ListenerConfiguration;
 
 import java.util.Collections;
 import java.util.Map;

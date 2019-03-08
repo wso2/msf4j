@@ -25,7 +25,7 @@ import org.wso2.msf4j.Response;
 import org.wso2.msf4j.internal.mime.MimeMapper;
 import org.wso2.msf4j.internal.mime.MimeMappingException;
 import org.wso2.transport.http.netty.contract.ServerConnectorException;
-import org.wso2.transport.http.netty.message.HTTPCarbonMessage;
+import org.wso2.transport.http.netty.message.HttpCarbonMessage;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -53,8 +53,8 @@ public class FileEntityWriter implements EntityWriter<File> {
      * Write the entity to the carbon message.
      */
     @Override
-    public void writeData(HTTPCarbonMessage httpCarbonMessage, File file, String mediaType, int chunkSize,
-                          HTTPCarbonMessage responder) {
+    public void writeData(HttpCarbonMessage httpCarbonMessage, File file, String mediaType, int chunkSize,
+                          HttpCarbonMessage responder) {
         if (mediaType == null || mediaType.equals(MediaType.WILDCARD)) {
             try {
                 mediaType = MimeMapper.getMimeType(FilenameUtils.getExtension(file.getName()));

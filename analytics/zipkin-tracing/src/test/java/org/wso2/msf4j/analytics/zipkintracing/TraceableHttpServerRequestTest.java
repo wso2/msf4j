@@ -23,7 +23,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.msf4j.Request;
-import org.wso2.transport.http.netty.message.HTTPCarbonMessage;
+import org.wso2.transport.http.netty.message.HttpCarbonMessage;
 
 import java.io.IOException;
 import java.net.URI;
@@ -39,7 +39,7 @@ public class TraceableHttpServerRequestTest extends Assert {
 
     @BeforeClass
     public void setUp() throws IOException {
-        HTTPCarbonMessage httpCarbonMessage = new HTTPCarbonMessage(
+        HttpCarbonMessage httpCarbonMessage = new HttpCarbonMessage(
                 new DefaultHttpRequest(HttpVersion.HTTP_1_1, io.netty.handler.codec.http.HttpMethod.GET, "msf4j"));
         httpCarbonMessage.setHeader("testK", "testV");
         request = new Request(httpCarbonMessage);

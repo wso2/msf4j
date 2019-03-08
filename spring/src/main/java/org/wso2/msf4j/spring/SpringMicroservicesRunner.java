@@ -27,13 +27,13 @@ import org.wso2.msf4j.MicroservicesRunner;
 import org.wso2.msf4j.internal.DataHolder;
 import org.wso2.msf4j.spring.transport.HTTPSTransportConfig;
 import org.wso2.msf4j.spring.transport.TransportConfig;
-import org.wso2.transport.http.netty.common.Util;
-import org.wso2.transport.http.netty.config.ListenerConfiguration;
-import org.wso2.transport.http.netty.config.Parameter;
 import org.wso2.transport.http.netty.contract.HttpWsConnectorFactory;
 import org.wso2.transport.http.netty.contract.ServerConnector;
+import org.wso2.transport.http.netty.contract.config.ListenerConfiguration;
+import org.wso2.transport.http.netty.contract.config.Parameter;
+import org.wso2.transport.http.netty.contract.config.ServerBootstrapConfiguration;
 import org.wso2.transport.http.netty.contractimpl.DefaultHttpWsConnectorFactory;
-import org.wso2.transport.http.netty.listener.ServerBootstrapConfiguration;
+import org.wso2.transport.http.netty.contractimpl.common.Util;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -139,7 +139,7 @@ public class SpringMicroservicesRunner extends MicroservicesRunner implements Ap
 
         ListenerConfiguration listenerConfig =
                 new ListenerConfiguration(transportConfig.getId(), transportConfig.getHost(),
-                                          transportConfig.getPort());
+                        transportConfig.getPort());
         listenerConfig.setScheme(transportConfig.getScheme());
         List<Parameter> parameters = new ArrayList<>();
         for (Map.Entry<String, String> entry : transportConfig.getParameters().entrySet()) {
@@ -151,7 +151,6 @@ public class SpringMicroservicesRunner extends MicroservicesRunner implements Ap
             HTTPSTransportConfig httpsTransportConfig = (HTTPSTransportConfig) transportConfig;
             listenerConfig.setKeyStoreFile(httpsTransportConfig.getKeyStoreFile());
             listenerConfig.setKeyStorePass(httpsTransportConfig.getKeyStorePass());
-            listenerConfig.setCertPass(httpsTransportConfig.getCertPass());
         }
 
         return listenerConfig;

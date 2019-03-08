@@ -22,7 +22,7 @@ import io.netty.handler.codec.http.DefaultLastHttpContent;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import org.wso2.msf4j.Response;
 import org.wso2.transport.http.netty.contract.ServerConnectorException;
-import org.wso2.transport.http.netty.message.HTTPCarbonMessage;
+import org.wso2.transport.http.netty.message.HttpCarbonMessage;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,8 +48,8 @@ public class InputStreamEntityWriter implements EntityWriter<InputStream> {
      * Write the entity to the carbon message.
      */
     @Override
-    public void writeData(HTTPCarbonMessage carbonMessage, InputStream ipStream,
-                          String mediaType, int chunkSize, HTTPCarbonMessage responder) {
+    public void writeData(HttpCarbonMessage carbonMessage, InputStream ipStream,
+                          String mediaType, int chunkSize, HttpCarbonMessage responder) {
         try {
             if (chunkSize == Response.NO_CHUNK || chunkSize == Response.DEFAULT_CHUNK_SIZE) {
                 chunkSize = DEFAULT_CHUNK_SIZE;

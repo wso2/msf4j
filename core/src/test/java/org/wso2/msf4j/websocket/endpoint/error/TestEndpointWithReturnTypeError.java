@@ -18,8 +18,9 @@
 
 package org.wso2.msf4j.websocket.endpoint.error;
 
+import org.wso2.transport.http.netty.contract.websocket.WebSocketConnection;
+
 import javax.websocket.OnMessage;
-import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
 /**
@@ -29,7 +30,7 @@ import javax.websocket.server.ServerEndpoint;
 public class TestEndpointWithReturnTypeError {
 
     @OnMessage
-    public int onText(String text, Session session) {
+    public int onText(String text, WebSocketConnection webSocketConnection) {
         return 0;
     }
 }

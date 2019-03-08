@@ -24,9 +24,9 @@ import org.wso2.msf4j.internal.HttpHeadersImpl;
 import org.wso2.msf4j.internal.MSF4JConstants;
 import org.wso2.msf4j.internal.entitywriter.EntityWriter;
 import org.wso2.msf4j.internal.entitywriter.EntityWriterRegistry;
-import org.wso2.transport.http.netty.common.Constants;
+import org.wso2.transport.http.netty.contract.Constants;
 import org.wso2.transport.http.netty.contract.ServerConnectorException;
-import org.wso2.transport.http.netty.message.HTTPCarbonMessage;
+import org.wso2.transport.http.netty.message.HttpCarbonMessage;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public class Response {
     public static final int NO_CHUNK = 0;
     public static final int DEFAULT_CHUNK_SIZE = -1;
 
-    private final HTTPCarbonMessage httpCarbonMessage;
+    private final HttpCarbonMessage httpCarbonMessage;
     private int statusCode = NULL_STATUS_CODE;
     private String mediaType = null;
     private Object entity;
@@ -54,7 +54,7 @@ public class Response {
     private Request request;
     private javax.ws.rs.core.Response jaxrsResponse;
 
-    public Response(HTTPCarbonMessage responder) {
+    public Response(HttpCarbonMessage responder) {
         this.httpCarbonMessage = responder;
     }
 
@@ -162,7 +162,7 @@ public class Response {
     /**
      * @return the underlining CarbonMessage object
      */
-    HTTPCarbonMessage getHttpCarbonMessage() {
+    HttpCarbonMessage getHttpCarbonMessage() {
         return httpCarbonMessage;
     }
 
