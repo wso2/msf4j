@@ -235,7 +235,7 @@ public class MicroservicesRunner {
         } else {
             try {
                 TransportsFileConfiguration transportsFileConfiguration =
-                        ConfigProviderFactory.getConfigProvider(Paths.get(transportYaml), null)
+                        ConfigProviderFactory.getConfigProvider(Paths.get(transportYaml))
                         .getConfigurationObject(TransportsFileConfiguration.class);
                 TransportsConfiguration transportsConfiguration = ConfigurationAdopter.getInstance()
                         .getTransportConfiguration(transportsFileConfiguration);
