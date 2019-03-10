@@ -65,6 +65,7 @@ public class ExtendedServiceTest {
                 .start();
         microservicesRunner.deploy("/DynamicPath", new TestMicroServiceWithDynamicPath());
         microservicesRunner.deploy("/DynamicPath2", new TestMicroServiceWithDynamicPath());
+        Thread.sleep(1000);
     }
 
     @AfterClass

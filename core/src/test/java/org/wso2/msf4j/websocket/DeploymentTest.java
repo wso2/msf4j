@@ -99,13 +99,15 @@ public class DeploymentTest {
         String textReceived;
         String client1Name = "abc";
         String client2Name = "xyz";
-        WebSocketClient chatClient1 = new WebSocketClient(chatUrl + client1Name);
-        WebSocketClient chatClient2 = new WebSocketClient(chatUrl + client2Name);
 
-        //Check the handshake
+        WebSocketClient chatClient1 = new WebSocketClient(chatUrl + client1Name);
         Assert.assertTrue(chatClient1.handhshake());
+        Thread.sleep(sleepTime);
+
+        WebSocketClient chatClient2 = new WebSocketClient(chatUrl + client2Name);
         Assert.assertTrue(chatClient2.handhshake());
         Thread.sleep(sleepTime);
+
         textReceived = chatClient1.getTextReceived();
         Assert.assertEquals(textReceived, client2Name + " connected to chat");
 

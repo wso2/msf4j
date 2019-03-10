@@ -82,6 +82,7 @@ public class InterceptorTest extends InterceptorTestBase {
                         new MediumPriorityGlobalResponseInterceptor(), new LowPriorityGlobalResponseInterceptor())
                 .start();
         baseURI = URI.create("http://" + Constants.HOSTNAME + ":" + port);
+        Thread.sleep(1000);
     }
 
     @AfterClass
