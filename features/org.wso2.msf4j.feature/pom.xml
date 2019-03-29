@@ -65,8 +65,22 @@
             <artifactId>guava</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-annotations</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-databind</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>io.swagger</groupId>
@@ -75,6 +89,10 @@
                 <exclusion>
                     <groupId>javax.ws.rs</groupId>
                     <artifactId>jsr311-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-annotations</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -85,10 +103,22 @@
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-models</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-annotations</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-annotations</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -238,6 +268,10 @@
                                 <bundle>
                                     <symbolicName>com.google.gson</symbolicName>
                                     <version>${gson.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>org.yaml.snakeyaml</symbolicName>
+                                    <version>${org.snakeyaml.version}</version>
                                 </bundle>
                                 <bundle>
                                     <symbolicName>org.apache.servicemix.bundles.commons-beanutils</symbolicName>
