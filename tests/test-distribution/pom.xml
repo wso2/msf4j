@@ -124,10 +124,6 @@
             <version>${carbon.touchpoint.version}</version>
             <type>zip</type>
         </dependency>
-        <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-        </dependency>
     </dependencies>
 
     <build>

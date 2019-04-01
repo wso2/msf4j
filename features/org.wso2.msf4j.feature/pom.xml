@@ -65,10 +65,6 @@
             <artifactId>guava</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-        </dependency>
-        <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-core</artifactId>
             <exclusions>
@@ -268,10 +264,6 @@
                                 <bundle>
                                     <symbolicName>com.google.gson</symbolicName>
                                     <version>${gson.version}</version>
-                                </bundle>
-                                <bundle>
-                                    <symbolicName>org.yaml.snakeyaml</symbolicName>
-                                    <version>${org.snakeyaml.version}</version>
                                 </bundle>
                                 <bundle>
                                     <symbolicName>org.apache.servicemix.bundles.commons-beanutils</symbolicName>
