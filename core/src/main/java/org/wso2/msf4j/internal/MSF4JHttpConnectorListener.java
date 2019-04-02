@@ -265,6 +265,9 @@ public class MSF4JHttpConnectorListener implements HttpConnectorListener {
 
     @Override
     public void onError(Throwable throwable) {
-        log.error("Error in http connector listener", throwable);
+        // Adding stacktrace for debug level for better usability
+        log.warn("Error in http connector listener : '" + throwable.getMessage() + "'");
+        log.debug("Error in http connector listener", throwable);
+
     }
 }
