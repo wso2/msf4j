@@ -268,6 +268,5 @@ public class MSF4JHttpConnectorListener implements HttpConnectorListener {
         // Adding stacktrace for debug level for better usability
         log.warn("Error in http connector listener : '" + throwable.getMessage() + "'");
         log.debug("Error in http connector listener", throwable);
-
     }
 }
