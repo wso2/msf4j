@@ -785,8 +785,8 @@
         <zipkin.brave.version>3.9.1</zipkin.brave.version>
         <carbon.metrics.version>2.3.2</carbon.metrics.version>
         <carbon.metrics.version.range>[2.0,3)</carbon.metrics.version.range>
-        <carbon.analytics.common.version>5.0.6</carbon.analytics.common.version>
-        <carbon.analytics.common.version.range>[5.0,6)</carbon.analytics.common.version.range>
+        <carbon.analytics.common.version>6.1.30</carbon.analytics.common.version>
+        <carbon.analytics.common.version.range>[6.0,7)</carbon.analytics.common.version.range>
         <disruptor.orbit.version>3.3.2.wso2v2</disruptor.orbit.version>
         <metrics.version>3.1.2</metrics.version>
         <commons-io.wso2.version>2.4.0.wso2v1</commons-io.wso2.version>

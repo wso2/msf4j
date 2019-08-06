@@ -63,6 +63,8 @@ import java.util.Set;
 import javax.ws.rs.Path;
 import javax.ws.rs.ext.ExceptionMapper;
 
+import static org.wso2.msf4j.internal.MSF4JConstants.STREAMLINED_TRANSPORT_NAMESPACE;
+
 /**
  * OSGi service component for MicroServicesServer.
  */
@@ -169,8 +171,15 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
     protected void registerConfigProvider(ConfigProvider configProvider) {
         DataHolder.getInstance().setConfigProvider(configProvider);
         try {
-            final TransportsFileConfiguration transportsFileConfiguration = configProvider.getConfigurationObject
-                    (MSF4JConstants.WSO2_TRANSPORT_HTTP_CONFIG_NAMESPACE, TransportsFileConfiguration.class);
+            final TransportsFileConfiguration transportsFileConfiguration;
+            Object transportConf = configProvider.getConfigurationObject(STREAMLINED_TRANSPORT_NAMESPACE);
+            if (transportConf != null) {
+                transportsFileConfiguration = Utils.resolveTransportsNSConfiguration(transportConf);
+            } else {
+                transportsFileConfiguration = configProvider.getConfigurationObject
+                        (MSF4JConstants.WSO2_TRANSPORT_HTTP_CONFIG_NAMESPACE, TransportsFileConfiguration.class);
+            }
+
             TransportsConfiguration transportsConfiguration =
                     Utils.transformTransportConfiguration(transportsFileConfiguration);
             Set<ListenerConfiguration> listenerConfigurations =

@@ -19,11 +19,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.config.ConfigProviderFactory;
 import org.wso2.carbon.config.ConfigurationException;
+import org.wso2.carbon.config.provider.ConfigProvider;
 import org.wso2.msf4j.config.TransportsFileConfiguration;
 import org.wso2.msf4j.interceptor.RequestInterceptor;
 import org.wso2.msf4j.interceptor.ResponseInterceptor;
 import org.wso2.msf4j.internal.DataHolder;
 import org.wso2.msf4j.internal.HttpConnectorPortBindingListener;
+import org.wso2.msf4j.internal.MSF4JConstants;
 import org.wso2.msf4j.internal.MSF4JHttpConnectorListener;
 import org.wso2.msf4j.internal.MSF4JWSConnectorListener;
 import org.wso2.msf4j.internal.MicroservicesRegistryImpl;
@@ -46,6 +48,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.ws.rs.ext.ExceptionMapper;
+
+import static org.wso2.msf4j.internal.MSF4JConstants.STREAMLINED_TRANSPORT_NAMESPACE;
 
 /**
  * This runner initializes the microservices runtime, deploys the microservices and service interceptors,
@@ -234,9 +238,16 @@ public class MicroservicesRunner {
             serverConnectors.add(serverConnector);
         } else {
             try {
-                TransportsFileConfiguration transportsFileConfiguration =
-                        ConfigProviderFactory.getConfigProvider(Paths.get(transportYaml), null)
-                        .getConfigurationObject(TransportsFileConfiguration.class);
+                ConfigProvider configProvider = ConfigProviderFactory.getConfigProvider(Paths.get(transportYaml), null);
+                TransportsFileConfiguration transportsFileConfiguration;
+                Object transportConf = configProvider.getConfigurationObject(STREAMLINED_TRANSPORT_NAMESPACE);
+                if (transportConf != null) {
+                    transportsFileConfiguration = Utils.resolveTransportsNSConfiguration(transportConf);
+                } else {
+                    transportsFileConfiguration = configProvider.getConfigurationObject
+                            (MSF4JConstants.WSO2_TRANSPORT_HTTP_CONFIG_NAMESPACE, TransportsFileConfiguration.class);
+                }
+
                 TransportsConfiguration transportsConfiguration = Utils.
                         transformTransportConfiguration(transportsFileConfiguration);
 

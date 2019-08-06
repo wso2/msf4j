@@ -15,16 +15,22 @@
  */
 package org.wso2.msf4j.util;
 
+import org.wso2.carbon.config.ConfigurationException;
 import org.wso2.msf4j.config.TransportsFileConfiguration;
 import org.wso2.transport.http.netty.contract.config.ListenerConfiguration;
 import org.wso2.transport.http.netty.contract.config.TransportsConfiguration;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.CustomClassLoaderConstructor;
+import org.yaml.snakeyaml.introspector.BeanAccess;
 
 import java.lang.reflect.Field;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -157,5 +163,29 @@ public class Utils {
                 }).collect(Collectors.toSet());
         transportsConfiguration.setListenerConfigurations(listenerConfigurations);
         return transportsConfiguration;
+    }
+
+    public static TransportsFileConfiguration resolveTransportsNSConfiguration(Object transportsConfig)
+            throws ConfigurationException {
+
+        TransportsFileConfiguration transportsFileConfiguration;
+
+        if (transportsConfig instanceof Map) {
+            LinkedHashMap httpConfig = ((LinkedHashMap) ((Map) transportsConfig).get("http"));
+            if (httpConfig != null) {
+                String configYaml = new Yaml().dump(httpConfig);
+                Yaml yaml = new Yaml(new CustomClassLoaderConstructor(TransportsFileConfiguration.class,
+                        TransportsFileConfiguration.class.getClassLoader()));
+                yaml.setBeanAccess(BeanAccess.FIELD);
+                transportsFileConfiguration = yaml.loadAs(configYaml, TransportsFileConfiguration.class);
+
+            } else {
+                transportsFileConfiguration = new TransportsFileConfiguration();
+            }
+        } else {
+            throw new ConfigurationException("The first level config under 'transports' namespace should be " +
+                    "a map.");
+        }
+        return transportsFileConfiguration;
     }
 }
