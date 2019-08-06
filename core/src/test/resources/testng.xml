@@ -96,4 +96,11 @@ limitations under the License.
         </classes>
     </test>
 
+    <test name="configurations-test" preserve-order="true" parallel="false">
+        <classes>
+            <class name="org.wso2.msf4j.TransportConfigurationTest"/>
+            <class name="org.wso2.msf4j.TransportConfigurationTest2"/>
+        </classes>
+    </test>
+
 </suite>
