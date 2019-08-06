@@ -365,7 +365,8 @@
             org.wso2.carbon.kernel.startupresolver.*;version="${carbon.kernel.version.range}",
             org.wso2.carbon.config.*;version="${carbon.config.package.import.version.range}",
             org.wso2.transport.*;version="${org.wso2.transport.http.version.range}",
-            io.netty.*;version="${netty.version.range}"
+            io.netty.*;version="${netty.version.range}",
+            org.yaml.snakeyaml.*;version="${org.snakeyaml.version}"
         </import.package>
         <carbon.component>
             startup.listener;componentName="wso2-microservices-server";requiredService="org.wso2.msf4j.Microservice,org.wso2.msf4j.Interceptor,
