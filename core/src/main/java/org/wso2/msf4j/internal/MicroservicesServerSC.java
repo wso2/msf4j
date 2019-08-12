@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.config.ConfigurationException;
 import org.wso2.carbon.config.provider.ConfigProvider;
+import org.wso2.carbon.kernel.config.model.CarbonConfiguration;
 import org.wso2.carbon.kernel.startupresolver.RequiredCapabilityListener;
 import org.wso2.carbon.kernel.startupresolver.StartupServiceUtils;
 import org.wso2.msf4j.DefaultSessionManager;
@@ -182,6 +183,12 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
 
             TransportsConfiguration transportsConfiguration =
                     Utils.transformTransportConfiguration(transportsFileConfiguration);
+
+            CarbonConfiguration carbonConfig = configProvider.getConfigurationObject(CarbonConfiguration.class);
+            transportsConfiguration.getListenerConfigurations().forEach(
+                    listenerConfiguration -> listenerConfiguration.setPort(
+                            listenerConfiguration.getPort() + carbonConfig.getPortsConfig().getOffset()));
+
             Set<ListenerConfiguration> listenerConfigurations =
                     transportsConfiguration.getListenerConfigurations();
             if (listenerConfigurations.isEmpty()) {
