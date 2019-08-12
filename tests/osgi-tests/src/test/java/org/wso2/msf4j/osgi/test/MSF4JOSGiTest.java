@@ -59,7 +59,7 @@ public class MSF4JOSGiTest {
     private static final String HEADER_VAL_CLOSE = "CLOSE";
 
     private static final String HOSTNAME = "localhost";
-    private static final int PORT = 8080;
+    private static final int PORT = 8079;
 
     @Inject
     private CarbonServerInfo carbonServerInfo;

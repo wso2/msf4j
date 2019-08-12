@@ -21,7 +21,7 @@ wso2.carbon:
     # ports used by this server
   ports:
       # port offset
-    offset: 0
+    offset: -1
 
 wso2.securevault:
   secretRepository:
