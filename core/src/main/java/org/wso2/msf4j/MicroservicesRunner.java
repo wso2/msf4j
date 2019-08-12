@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.wso2.carbon.config.ConfigProviderFactory;
 import org.wso2.carbon.config.ConfigurationException;
 import org.wso2.carbon.config.provider.ConfigProvider;
+import org.wso2.carbon.kernel.config.model.CarbonConfiguration;
 import org.wso2.msf4j.config.TransportsFileConfiguration;
 import org.wso2.msf4j.interceptor.RequestInterceptor;
 import org.wso2.msf4j.interceptor.ResponseInterceptor;
@@ -250,6 +251,11 @@ public class MicroservicesRunner {
 
                 TransportsConfiguration transportsConfiguration = Utils.
                         transformTransportConfiguration(transportsFileConfiguration);
+
+                CarbonConfiguration carbonConfig = configProvider.getConfigurationObject(CarbonConfiguration.class);
+                transportsConfiguration.getListenerConfigurations().forEach(
+                        listenerConfiguration -> listenerConfiguration.setPort(
+                                listenerConfiguration.getPort() + carbonConfig.getPortsConfig().getOffset()));
 
                 Map<String, Object> transportProperties = HttpConnectorUtil
                         .getTransportProperties(transportsConfiguration);

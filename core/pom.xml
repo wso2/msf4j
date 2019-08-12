@@ -363,6 +363,7 @@
             org.osgi.framework.*;version="${osgi.framework.import.version.range}",
             org.osgi.util.tracker; version="${osgi.service.tracker.import.version.range}",
             org.wso2.carbon.kernel.startupresolver.*;version="${carbon.kernel.version.range}",
+            org.wso2.carbon.kernel.config.model.*;version="${carbon.kernel.version.range}",
             org.wso2.carbon.config.*;version="${carbon.config.package.import.version.range}",
             org.wso2.transport.*;version="${org.wso2.transport.http.version.range}",
             io.netty.*;version="${netty.version.range}",
