@@ -42,9 +42,9 @@ public class TraceableHttpServerRequestTest extends Assert {
         HttpCarbonMessage httpCarbonMessage = new HttpCarbonMessage(
                 new DefaultHttpRequest(HttpVersion.HTTP_1_1, io.netty.handler.codec.http.HttpMethod.GET, "msf4j"));
         httpCarbonMessage.setHeader("testK", "testV");
+        httpCarbonMessage.setHttpMethod(HttpMethod.GET);
         request = new Request(httpCarbonMessage);
         request.setProperty("TO", "msf4j");
-        request.setProperty("HTTP_METHOD", HttpMethod.GET);
         httpServerRequest = new TraceableHttpServerRequest(request);
     }
 

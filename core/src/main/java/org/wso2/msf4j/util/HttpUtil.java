@@ -24,7 +24,6 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
-import org.wso2.transport.http.netty.contract.Constants;
 import org.wso2.transport.http.netty.message.HttpCarbonMessage;
 
 import java.io.UnsupportedEncodingException;
@@ -50,7 +49,7 @@ public class HttpUtil {
     public static HttpCarbonMessage createTextResponse(int status, String msg) {
         HttpCarbonMessage response = new HttpCarbonMessage(
                 new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.valueOf(status)));
-        response.setProperty(Constants.HTTP_STATUS_CODE, status);
+        response.setHttpStatusCode(status);
         if (msg != null) {
             response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(msg.length()));
             byte[] msgArray = null;

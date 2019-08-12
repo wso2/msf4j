@@ -39,7 +39,7 @@ import org.wso2.msf4j.internal.router.Util;
 import org.wso2.msf4j.util.HttpUtil;
 import org.wso2.transport.http.netty.contract.Constants;
 import org.wso2.transport.http.netty.contract.HttpConnectorListener;
-import org.wso2.transport.http.netty.contract.ServerConnectorException;
+import org.wso2.transport.http.netty.contract.exceptions.ServerConnectorException;
 import org.wso2.transport.http.netty.message.HttpCarbonMessage;
 
 import java.lang.reflect.InvocationTargetException;

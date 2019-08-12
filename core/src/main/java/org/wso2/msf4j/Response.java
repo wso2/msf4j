@@ -24,8 +24,7 @@ import org.wso2.msf4j.internal.HttpHeadersImpl;
 import org.wso2.msf4j.internal.MSF4JConstants;
 import org.wso2.msf4j.internal.entitywriter.EntityWriter;
 import org.wso2.msf4j.internal.entitywriter.EntityWriterRegistry;
-import org.wso2.transport.http.netty.contract.Constants;
-import org.wso2.transport.http.netty.contract.ServerConnectorException;
+import org.wso2.transport.http.netty.contract.exceptions.ServerConnectorException;
 import org.wso2.transport.http.netty.message.HttpCarbonMessage;
 
 import java.nio.ByteBuffer;
@@ -247,7 +246,7 @@ public class Response {
      * Send the HTTP response using the content in this object.
      */
     public void send() {
-        httpCarbonMessage.setProperty(Constants.HTTP_STATUS_CODE, getStatusCode());
+        httpCarbonMessage.setHttpStatusCode(getStatusCode());
 
         List<String> cookiesHeaderValue = new ArrayList<>();
 
