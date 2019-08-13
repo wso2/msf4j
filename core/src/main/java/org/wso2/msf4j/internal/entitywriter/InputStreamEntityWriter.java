@@ -21,7 +21,7 @@ import io.netty.handler.codec.http.DefaultHttpContent;
 import io.netty.handler.codec.http.DefaultLastHttpContent;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import org.wso2.msf4j.Response;
-import org.wso2.transport.http.netty.contract.ServerConnectorException;
+import org.wso2.transport.http.netty.contract.exceptions.ServerConnectorException;
 import org.wso2.transport.http.netty.message.HttpCarbonMessage;
 
 import java.io.IOException;

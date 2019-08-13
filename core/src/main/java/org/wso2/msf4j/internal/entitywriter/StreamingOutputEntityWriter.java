@@ -17,7 +17,7 @@
 package org.wso2.msf4j.internal.entitywriter;
 
 import io.netty.handler.codec.http.HttpHeaderNames;
-import org.wso2.transport.http.netty.contract.ServerConnectorException;
+import org.wso2.transport.http.netty.contract.exceptions.ServerConnectorException;
 import org.wso2.transport.http.netty.message.HttpCarbonMessage;
 import org.wso2.transport.http.netty.message.HttpMessageDataStreamer;
 

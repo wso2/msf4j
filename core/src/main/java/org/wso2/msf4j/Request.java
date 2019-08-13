@@ -21,7 +21,7 @@ import org.wso2.msf4j.internal.HttpHeadersImpl;
 import org.wso2.msf4j.internal.MSF4JConstants;
 import org.wso2.transport.http.netty.contract.Constants;
 import org.wso2.transport.http.netty.contract.HttpResponseFuture;
-import org.wso2.transport.http.netty.contract.ServerConnectorException;
+import org.wso2.transport.http.netty.contract.exceptions.ServerConnectorException;
 import org.wso2.transport.http.netty.message.HttpCarbonMessage;
 import org.wso2.transport.http.netty.message.HttpMessageDataStreamer;
 
@@ -141,8 +141,7 @@ public class Request {
      * @return HTTP method of the request.
      */
     public String getHttpMethod() {
-        return (String) httpCarbonMessage
-                .getProperty(org.wso2.transport.http.netty.contract.Constants.HTTP_METHOD);
+        return httpCarbonMessage.getHttpMethod();
     }
 
     /**
