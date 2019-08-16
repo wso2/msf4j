@@ -37,7 +37,6 @@ import org.wso2.msf4j.MicroservicesRegistry;
 import org.wso2.msf4j.MicroservicesServer;
 import org.wso2.msf4j.SessionManager;
 import org.wso2.msf4j.SwaggerService;
-import org.wso2.msf4j.config.TransportsFileConfiguration;
 import org.wso2.msf4j.exception.OSGiDeclarativeServiceException;
 import org.wso2.msf4j.interceptor.OSGiInterceptorConfig;
 import org.wso2.msf4j.util.RuntimeAnnotations;
@@ -172,17 +171,14 @@ public class MicroservicesServerSC implements RequiredCapabilityListener {
     protected void registerConfigProvider(ConfigProvider configProvider) {
         DataHolder.getInstance().setConfigProvider(configProvider);
         try {
-            final TransportsFileConfiguration transportsFileConfiguration;
+            final TransportsConfiguration transportsConfiguration;
             Object transportConf = configProvider.getConfigurationObject(STREAMLINED_TRANSPORT_NAMESPACE);
             if (transportConf != null) {
-                transportsFileConfiguration = Utils.resolveTransportsNSConfiguration(transportConf);
+                transportsConfiguration = Utils.resolveTransportsNSConfiguration(transportConf);
             } else {
-                transportsFileConfiguration = configProvider.getConfigurationObject
-                        (MSF4JConstants.WSO2_TRANSPORT_HTTP_CONFIG_NAMESPACE, TransportsFileConfiguration.class);
+                transportsConfiguration = configProvider.getConfigurationObject
+                        (MSF4JConstants.WSO2_TRANSPORT_HTTP_CONFIG_NAMESPACE, TransportsConfiguration.class);
             }
-
-            TransportsConfiguration transportsConfiguration =
-                    Utils.transformTransportConfiguration(transportsFileConfiguration);
 
             CarbonConfiguration carbonConfig = configProvider.getConfigurationObject(CarbonConfiguration.class);
             transportsConfiguration.getListenerConfigurations().forEach(

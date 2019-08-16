@@ -16,8 +16,6 @@
 package org.wso2.msf4j.util;
 
 import org.wso2.carbon.config.ConfigurationException;
-import org.wso2.msf4j.config.TransportsFileConfiguration;
-import org.wso2.transport.http.netty.contract.config.ListenerConfiguration;
 import org.wso2.transport.http.netty.contract.config.TransportsConfiguration;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.CustomClassLoaderConstructor;
@@ -125,67 +123,27 @@ public class Utils {
         return cloneSet2.size();
     }
 
-    /**
-     * Transform Configuration bean class to http-transport bean class
-     *
-     * @param transportsFileConfiguration Configuration bean class to be transformed.
-     * @return TransportsConfiguration Bean in http-transport
-     */
-    public static TransportsConfiguration transformTransportConfiguration(
-            TransportsFileConfiguration transportsFileConfiguration) {
-        TransportsConfiguration transportsConfiguration = new TransportsConfiguration();
-        transportsConfiguration.setTransportProperties(transportsFileConfiguration.getTransportProperties());
-        transportsConfiguration.setSenderConfigurations(transportsFileConfiguration.getSenderConfigurations());
-
-        Set<ListenerConfiguration> listenerConfigurations = transportsFileConfiguration.getListenerConfigurations()
-                .stream().map(listenerFileConfiguration -> {
-                    ListenerConfiguration listenerConfiguration = new ListenerConfiguration();
-                    listenerConfiguration.setId(listenerFileConfiguration.getId());
-                    listenerConfiguration.setScheme(listenerFileConfiguration.getScheme());
-                    listenerConfiguration.setHost(listenerFileConfiguration.getHost());
-                    listenerConfiguration.setPort(listenerFileConfiguration.getPort());
-                    if (listenerFileConfiguration.getKeyStoreFile() != null) {
-                        listenerConfiguration.setKeyStoreFile(listenerFileConfiguration.getKeyStoreFile());
-                    }
-                    listenerConfiguration.setKeyStorePass(listenerFileConfiguration.getKeyStorePass());
-                    listenerConfiguration.setBindOnStartup(listenerFileConfiguration.isBindOnStartup());
-                    listenerConfiguration.setVersion(listenerFileConfiguration.getVersion());
-                    listenerConfiguration.setMessageProcessorId(listenerFileConfiguration.getMessageProcessorId());
-                    listenerConfiguration.setSocketIdleTimeout(listenerFileConfiguration.getSocketIdleTimeout(0));
-                    listenerConfiguration.setHttpTraceLogEnabled(listenerFileConfiguration.isHttpTraceLogEnabled());
-                    listenerConfiguration.setHttpAccessLogEnabled(listenerFileConfiguration.isHttpAccessLogEnabled());
-                    listenerConfiguration.setRequestSizeValidationConfig(
-                            listenerFileConfiguration.getRequestSizeValidationConfig());
-                    listenerConfiguration.setChunkConfig(listenerFileConfiguration.getChunkConfig());
-                    listenerConfiguration.setKeepAliveConfig(listenerFileConfiguration.getKeepAliveConfig());
-                    listenerConfiguration.setServerHeader(listenerFileConfiguration.getServerHeader());
-                    return listenerConfiguration;
-                }).collect(Collectors.toSet());
-        transportsConfiguration.setListenerConfigurations(listenerConfigurations);
-        return transportsConfiguration;
-    }
-
-    public static TransportsFileConfiguration resolveTransportsNSConfiguration(Object transportsConfig)
+    public static TransportsConfiguration resolveTransportsNSConfiguration(Object transportsConfig)
             throws ConfigurationException {
 
-        TransportsFileConfiguration transportsFileConfiguration;
+        TransportsConfiguration transportsConfiguration;
 
         if (transportsConfig instanceof Map) {
             LinkedHashMap httpConfig = ((LinkedHashMap) ((Map) transportsConfig).get("http"));
             if (httpConfig != null) {
                 String configYaml = new Yaml().dump(httpConfig);
-                Yaml yaml = new Yaml(new CustomClassLoaderConstructor(TransportsFileConfiguration.class,
-                        TransportsFileConfiguration.class.getClassLoader()));
+                Yaml yaml = new Yaml(new CustomClassLoaderConstructor(TransportsConfiguration.class,
+                        TransportsConfiguration.class.getClassLoader()));
                 yaml.setBeanAccess(BeanAccess.FIELD);
-                transportsFileConfiguration = yaml.loadAs(configYaml, TransportsFileConfiguration.class);
+                transportsConfiguration = yaml.loadAs(configYaml, TransportsConfiguration.class);
 
             } else {
-                transportsFileConfiguration = new TransportsFileConfiguration();
+                transportsConfiguration = new TransportsConfiguration();
             }
         } else {
             throw new ConfigurationException("The first level config under 'transports' namespace should be " +
                     "a map.");
         }
-        return transportsFileConfiguration;
+        return transportsConfiguration;
     }
 }

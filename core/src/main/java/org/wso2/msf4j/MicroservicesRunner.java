@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.wso2.carbon.config.ConfigProviderFactory;
 import org.wso2.carbon.config.ConfigurationException;
 import org.wso2.carbon.config.provider.ConfigProvider;
-import org.wso2.msf4j.config.TransportsFileConfiguration;
 import org.wso2.msf4j.interceptor.RequestInterceptor;
 import org.wso2.msf4j.interceptor.ResponseInterceptor;
 import org.wso2.msf4j.internal.DataHolder;
@@ -102,10 +101,10 @@ public class MicroservicesRunner {
      * Creates a MicroservicesRunner instance which will be used for deploying microservices. Allows specifying
      * transport configuration on which the microservices in this MicroservicesRunner are deployed.
      *
-     * @param transportsFileConfiguration The transport configuration on which the microservices are exposed
+     * @param transportsConfiguration The transport configuration on which the microservices are exposed
      */
-    public MicroservicesRunner(TransportsFileConfiguration transportsFileConfiguration) {
-        configureTransport(transportsFileConfiguration);
+    public MicroservicesRunner(TransportsConfiguration transportsConfiguration) {
+        configureTransport(transportsConfiguration);
     }
 
     /**
@@ -239,17 +238,14 @@ public class MicroservicesRunner {
         } else {
             try {
                 ConfigProvider configProvider = ConfigProviderFactory.getConfigProvider(Paths.get(transportYaml), null);
-                TransportsFileConfiguration transportsFileConfiguration;
+                TransportsConfiguration transportsConfiguration;
                 Object transportConf = configProvider.getConfigurationObject(STREAMLINED_TRANSPORT_NAMESPACE);
                 if (transportConf != null) {
-                    transportsFileConfiguration = Utils.resolveTransportsNSConfiguration(transportConf);
+                    transportsConfiguration = Utils.resolveTransportsNSConfiguration(transportConf);
                 } else {
-                    transportsFileConfiguration = configProvider.getConfigurationObject
-                            (MSF4JConstants.WSO2_TRANSPORT_HTTP_CONFIG_NAMESPACE, TransportsFileConfiguration.class);
+                    transportsConfiguration = configProvider.getConfigurationObject
+                            (MSF4JConstants.WSO2_TRANSPORT_HTTP_CONFIG_NAMESPACE, TransportsConfiguration.class);
                 }
-
-                TransportsConfiguration transportsConfiguration = Utils.
-                        transformTransportConfiguration(transportsFileConfiguration);
 
                 Map<String, Object> transportProperties = HttpConnectorUtil
                         .getTransportProperties(transportsConfiguration);
@@ -282,13 +278,10 @@ public class MicroservicesRunner {
     /**
      * Method to configure transports with external transport configuration
      *
-     * @param transportsFileConfiguration the external transports configuration
+     * @param transportsConfiguration the external transports configuration
      */
-    protected void configureTransport(TransportsFileConfiguration transportsFileConfiguration) {
-        if (transportsFileConfiguration != null) {
-            TransportsConfiguration transportsConfiguration =
-                    Utils.transformTransportConfiguration(transportsFileConfiguration);
-
+    protected void configureTransport(TransportsConfiguration transportsConfiguration) {
+        if (transportsConfiguration != null) {
             Map<String, Object> transportProperties = HttpConnectorUtil.getTransportProperties(transportsConfiguration);
             int bossGroup = transportProperties.get(Constants.SERVER_BOOTSTRAP_BOSS_GROUP_SIZE) != null ? (Integer)
                     transportProperties.get(Constants.SERVER_BOOTSTRAP_BOSS_GROUP_SIZE) : Runtime.getRuntime()

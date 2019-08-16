@@ -19,8 +19,9 @@ wso2.transport.http:
       certPass: secret
       host: "0.0.0.0"
       id: jaxrs-http
-      keyStoreFile: src/test/resources/cert.jks
-      keyStorePass: secret
+      sslConfig:
+        keyStore: "src/test/resources/cert.jks"
+        keyStorePass: secret
       port: 8096
       scheme: https
   senderConfigurations:
