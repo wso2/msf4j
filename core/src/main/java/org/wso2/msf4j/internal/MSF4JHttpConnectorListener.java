@@ -245,6 +245,7 @@ public class MSF4JHttpConnectorListener implements HttpConnectorListener {
                 HttpCarbonMessage response = HttpUtil.createTextResponse(
                         javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
                         "Exception occurred :" + throwable.getMessage());
+                response.setHeader("Content-type", "text/plain");
                 response.addHttpContent(new DefaultLastHttpContent());
                 request.respond(response);
             } catch (ServerConnectorException e) {
