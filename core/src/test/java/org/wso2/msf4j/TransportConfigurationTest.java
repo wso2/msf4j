@@ -25,12 +25,12 @@ import org.wso2.carbon.config.ConfigProviderFactory;
 import org.wso2.carbon.config.ConfigurationException;
 import org.wso2.msf4j.conf.Constants;
 import org.wso2.msf4j.conf.SSLClientContext;
-import org.wso2.msf4j.config.TransportsFileConfiguration;
 import org.wso2.msf4j.exception.TestExceptionMapper;
 import org.wso2.msf4j.exception.TestExceptionMapper2;
 import org.wso2.msf4j.service.SecondService;
 import org.wso2.msf4j.service.TestMicroServiceWithDynamicPath;
 import org.wso2.msf4j.service.TestMicroservice;
+import org.wso2.transport.http.netty.contract.config.TransportsConfiguration;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,6 +43,8 @@ import java.nio.file.Paths;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.ws.rs.HttpMethod;
+
+import static org.wso2.msf4j.internal.MSF4JConstants.WSO2_TRANSPORT_HTTP_CONFIG_NAMESPACE;
 
 /**
  * Test the HttpsServer.
@@ -62,9 +64,9 @@ public class TransportConfigurationTest extends HttpServerTest {
     @BeforeClass
     public void setup() throws Exception {
         baseURI = URI.create(String.format("https://%s:%d", Constants.HOSTNAME, port));
-        TransportsFileConfiguration transportsFileConfiguration = getConfiguration(Thread.currentThread().
+        TransportsConfiguration transportsConfiguration = getConfiguration(Thread.currentThread().
                 getContextClassLoader().getResource("netty-transports-1.yaml").getPath());
-        microservicesRunner = new MicroservicesRunner(transportsFileConfiguration);
+        microservicesRunner = new MicroservicesRunner(transportsConfiguration);
         sslClientContext = new SSLClientContext();
         microservicesRunner
                 .addExceptionMapper(new TestExceptionMapper(), new TestExceptionMapper2())
@@ -82,24 +84,24 @@ public class TransportConfigurationTest extends HttpServerTest {
      * @param configFileLocation configuration file location
      * @return TransportsConfiguration represented by a particular configuration file
      */
-    public TransportsFileConfiguration getConfiguration(String configFileLocation) {
-        TransportsFileConfiguration transportsFileConfiguration;
+    public TransportsConfiguration getConfiguration(String configFileLocation) {
+        TransportsConfiguration transportsConfiguration;
 
         File file = new File(configFileLocation);
         if (file.exists()) {
             try {
-            transportsFileConfiguration =
+            transportsConfiguration =
                     ConfigProviderFactory.getConfigProvider(Paths.get(configFileLocation), null)
-                    .getConfigurationObject(TransportsFileConfiguration.class);
+                    .getConfigurationObject(WSO2_TRANSPORT_HTTP_CONFIG_NAMESPACE, TransportsConfiguration.class);
             } catch (ConfigurationException e) {
                 throw new RuntimeException(
                         "Error while loading " + configFileLocation + " configuration file", e);
             }
         } else { // return a default config
-            transportsFileConfiguration = new TransportsFileConfiguration();
+            transportsConfiguration = new TransportsConfiguration();
         }
 
-        return transportsFileConfiguration;
+        return transportsConfiguration;
     }
 
     @AfterClass

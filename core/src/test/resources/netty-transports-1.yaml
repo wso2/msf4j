@@ -34,9 +34,9 @@ wso2.transport.http:
     host: "0.0.0.0"
     port: 8094
     scheme: https
-    keyStoreFile: "src/test/resources/cert.jks"
-    keyStorePassword: secret
-    certPass: secret
+    sslConfig:
+      keyStore: "src/test/resources/cert.jks"
+      keyStorePass: secret
   senderConfigurations:
    -
     id: "netty-gw"

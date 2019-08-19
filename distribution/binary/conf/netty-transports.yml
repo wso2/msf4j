@@ -33,9 +33,9 @@ listenerConfigurations:
   host: "0.0.0.0"
   port: 8443
   scheme: https
-  keyStoreFile: "conf/wso2carbon.jks"
-  keyStorePassword: wso2carbon
-  certPass: wso2carbon
+  sslConfig:
+    keyStore: "src/test/resources/cert.jks"
+    keyStorePass: secret
 senderConfigurations:
  -
   id: "netty-gw"
