@@ -204,6 +204,10 @@
             <groupId>org.wso2.carbon.messaging</groupId>
             <artifactId>org.wso2.carbon.messaging</artifactId>
         </dependency>
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -248,6 +252,10 @@
                                 <bundle>
                                     <symbolicName>jaxrs-delegates</symbolicName>
                                     <version>${msf4j.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>javax.annotation-api</symbolicName>
+                                    <version>${javax.annotation.version}</version>
                                 </bundle>
                                 <bundle>
                                     <symbolicName>msf4j-swagger</symbolicName>
