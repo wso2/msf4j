@@ -540,6 +540,11 @@
                 <version>${javax.validation.version}</version>
             </dependency>
             <dependency>
+                <groupId>javax.annotation</groupId>
+                <artifactId>javax.annotation-api</artifactId>
+                <version>${javax.annotation.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${apache.commons.lang3.version}</version>
@@ -798,6 +803,7 @@
         <httpclient.version>4.5.2</httpclient.version>
         <httpcore.version>4.4.5</httpcore.version>
         <javax.websocket.version>1.1</javax.websocket.version>
+        <javax.annotation.version>1.3.2</javax.annotation.version>
 
         <osgi.api.version>6.0.0</osgi.api.version>
         <equinox.osgi.version>3.10.2.v20150203-1939</equinox.osgi.version>
