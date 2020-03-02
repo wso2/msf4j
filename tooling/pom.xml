@@ -39,7 +39,7 @@
                 <checksumPolicy>ignore</checksumPolicy>
             </releases>
             <id>Eclipse-p2-repo</id>
-            <url>http://download.eclipse.org/releases/mars/</url>
+            <url>https://download.eclipse.org/releases/mars/</url>
             <layout>p2</layout>
         </repository>
         <repository>
@@ -49,7 +49,7 @@
                 <checksumPolicy>ignore</checksumPolicy>
             </releases>
             <id>Eclipse-kernel-p2</id>
-            <url>http://product-dist.wso2.com/p2/developer-studio-kernel/4.1.0/kernel/releases/</url>
+            <url>https://product-dist.wso2.com/p2/developer-studio-kernel/4.1.0/kernel/releases/</url>
             <layout>p2</layout>
         </repository>
         <repository>
@@ -59,7 +59,7 @@
                 <checksumPolicy>ignore</checksumPolicy>
             </releases>
             <id>DevS-Platform-p2-releases-Repository</id>
-            <url>http://builder1.us1.wso2.org/~developerstudio/developer-studio-kernel/4.1.0/platform-bundles/releases/</url>
+            <url>https://builder1.us1.wso2.org/~developerstudio/developer-studio-kernel/4.1.0/platform-bundles/releases/</url>
             <layout>p2</layout>
         </repository>
     </repositories>
