@@ -94,13 +94,13 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>findbugs-maven-plugin</artifactId>
-                    <version>${maven.findbugsplugin.version}</version>
-                    <configuration>
+                    <configuration combine.self="override">
                         <effort>Max</effort>
                         <threshold>Low</threshold>
                         <xmlOutput>true</xmlOutput>
                         <findbugsXmlOutputDirectory>${project.build.directory}/findbugs</findbugsXmlOutputDirectory>
                     </configuration>
+                    <version>${maven.findbugsplugin.version}</version>
                     <executions>
                         <execution>
                             <id>analyze-compile</id>
