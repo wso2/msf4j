@@ -147,6 +147,10 @@ public class Utils {
                     if (listenerFileConfiguration.getKeyStoreFile() != null) {
                         listenerConfiguration.setKeyStoreFile(listenerFileConfiguration.getKeyStoreFile());
                     }
+                    if (listenerFileConfiguration.getParameters() != null
+                            && listenerFileConfiguration.getParameters().size() > 0) {
+                        listenerConfiguration.setParameters(listenerFileConfiguration.getParameters());
+                    }
                     listenerConfiguration.setKeyStorePass(listenerFileConfiguration.getKeyStorePass());
                     listenerConfiguration.setBindOnStartup(listenerFileConfiguration.isBindOnStartup());
                     listenerConfiguration.setVersion(listenerFileConfiguration.getVersion());
