@@ -33,6 +33,7 @@ import org.wso2.transport.http.netty.contract.websocket.WebSocketConnectorListen
 import org.wso2.transport.http.netty.contract.websocket.WebSocketControlMessage;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketHandshaker;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketTextMessage;
+import org.wso2.transport.http.netty.message.HttpCarbonRequest;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -150,6 +151,8 @@ public class MSF4JWSConnectorListener implements WebSocketConnectorListener {
                         if (pathParam != null) {
                             parameterList.add(paramValues.get(pathParam.value()));
                         }
+                    } else if (parameter.getType() == HttpCarbonRequest.class) {
+                        parameterList.add(carbonMessage.getHttpCarbonRequest());
                     } else {
                         parameterList.add(null);
                     }
