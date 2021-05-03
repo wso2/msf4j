@@ -22,6 +22,7 @@ import org.wso2.msf4j.websocket.exception.WebSocketEndpointAnnotationException;
 import org.wso2.msf4j.websocket.exception.WebSocketEndpointMethodReturnTypeException;
 import org.wso2.msf4j.websocket.exception.WebSocketMethodParameterException;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketConnection;
+import org.wso2.transport.http.netty.message.HttpCarbonRequest;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -187,7 +188,7 @@ public class EndpointValidator {
                                                                         "string parameter without " +
                                                                         "@PathParam annotation.");
                 }
-            } else if (paraType != WebSocketConnection.class) {
+            } else if (paraType != WebSocketConnection.class && paraType != HttpCarbonRequest.class) {
                 throw new WebSocketMethodParameterException("Invalid parameter found on open message method: " +
                                                                     paraType);
             }
