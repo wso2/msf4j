@@ -59,6 +59,7 @@ public class Response {
 
     public Response(Request request) {
         this(request.getHttpCarbonMessage().cloneCarbonMessageWithOutData());
+        this.httpCarbonMessage.getHeaders().clear();
         this.request = request;
     }
 
