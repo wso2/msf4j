@@ -787,6 +787,7 @@
         <javax.websocket.version.range>[1.1, 1.2)</javax.websocket.version.range>
         <org.apache.httpcomponents.httpclient.version>4.5.2</org.apache.httpcomponents.httpclient.version>
         <msf4j.version>2.8.4-SNAPSHOT</msf4j.version>
+        <msf4j.version.range>[2.6.0,3.0.0)</msf4j.version.range>
         <zipkin.brave.version>3.9.1</zipkin.brave.version>
         <carbon.metrics.version>2.3.2</carbon.metrics.version>
         <carbon.metrics.version.range>[2.0,3)</carbon.metrics.version.range>
