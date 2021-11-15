@@ -53,7 +53,7 @@
         <repository>
             <id>wso2.releases</id>
             <name>WSO2 Releases Repository</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/releases/</url>
+            <url>https://maven.wso2.org/nexus/content/repositories/releases/</url>
             <releases>
                 <enabled>true</enabled>
                 <updatePolicy>daily</updatePolicy>
@@ -65,7 +65,7 @@
         <repository>
             <id>wso2.snapshots</id>
             <name>WSO2 Snapshot Repository</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/snapshots/</url>
+            <url>https://maven.wso2.org/nexus/content/repositories/snapshots/</url>
             <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>daily</updatePolicy>
@@ -78,7 +78,7 @@
         <repository>
             <id>wso2-nexus</id>
             <name>WSO2 internal Repository</name>
-            <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
+            <url>https://maven.wso2.org/nexus/content/groups/wso2-public/</url>
             <releases>
                 <enabled>true</enabled>
                 <updatePolicy>daily</updatePolicy>
@@ -91,7 +91,7 @@
         <pluginRepository>
             <id>wso2.releases</id>
             <name>WSO2 Releases Repository</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/releases/</url>
+            <url>https://maven.wso2.org/nexus/content/repositories/releases/</url>
             <releases>
                 <enabled>true</enabled>
                 <updatePolicy>daily</updatePolicy>
@@ -102,7 +102,7 @@
         <pluginRepository>
             <id>wso2.snapshots</id>
             <name>WSO2 Snapshot Repository</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/snapshots/</url>
+            <url>https://maven.wso2.org/nexus/content/repositories/snapshots/</url>
             <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>daily</updatePolicy>
@@ -115,7 +115,7 @@
         <pluginRepository>
             <id>wso2-nexus</id>
             <name>WSO2 internal Repository</name>
-            <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
+            <url>https://maven.wso2.org/nexus/content/groups/wso2-public/</url>
             <releases>
                 <enabled>true</enabled>
                 <updatePolicy>daily</updatePolicy>
@@ -128,12 +128,12 @@
         <repository>
             <id>nexus-releases</id>
             <name>WSO2 Nexus Release Repository</name>
-            <url>http://maven.wso2.org/nexus/service/local/staging/deploy/maven2/</url>
+            <url>https://maven.wso2.org/nexus/service/local/staging/deploy/maven2/</url>
         </repository>
         <snapshotRepository>
             <id>wso2.snapshots</id>
             <name>WSO2 Snapshot Repository</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/snapshots/</url>
+            <url>https://maven.wso2.org/nexus/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 
