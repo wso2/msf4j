@@ -355,6 +355,10 @@
                                     <version>${netty.version}</version>
                                 </bundle>
                                 <bundle>
+                                    <symbolicName>io.netty.tcnative</symbolicName>
+                                    <version>${netty-tcnative.version}</version>
+                                </bundle>
+                                <bundle>
                                     <symbolicName>io.netty.handler</symbolicName>
                                     <version>${netty.version}</version>
                                 </bundle>
