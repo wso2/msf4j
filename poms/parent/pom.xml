@@ -316,7 +316,7 @@
             </dependency>
             <dependency>
                 <groupId>io.netty</groupId>
-                <artifactId>netty-tcnative</artifactId>
+                <artifactId>netty-tcnative-boringssl-static</artifactId>
                 <version>${netty-tcnative.version}</version>
             </dependency>
             <!--Test Distribution-->
@@ -767,8 +767,8 @@
         <maven.archetype.version>2.4</maven.archetype.version>
 
         <!-- Dependencies -->
-        <netty.version>4.1.71.Final</netty.version>
-        <netty-tcnative.version>2.0.20.Final</netty-tcnative.version>
+        <netty.version>4.1.74.Final</netty.version>
+        <netty-tcnative.version>2.0.45.Final</netty-tcnative.version>
         <netty.version.range>(4,5]</netty.version.range>
         <commons.pool.version>1.5.6.wso2v1</commons.pool.version>
         <carbon.kernel.version>5.2.0</carbon.kernel.version>

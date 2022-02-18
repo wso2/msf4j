@@ -355,7 +355,7 @@
                                     <version>${netty.version}</version>
                                 </bundle>
                                 <bundle>
-                                    <symbolicName>io.netty.tcnative</symbolicName>
+                                    <symbolicName>io.netty.tcnative-boringssl-static</symbolicName>
                                     <version>${netty-tcnative.version}</version>
                                 </bundle>
                                 <bundle>
