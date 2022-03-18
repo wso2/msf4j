@@ -295,7 +295,7 @@
                                 </bundle>
                                 <bundle>
                                     <symbolicName>com.fasterxml.jackson.core.jackson-databind</symbolicName>
-                                    <version>${com.fasterxml.jackson.version}</version>
+                                    <version>${com.fasterxml.jackson.databind.version}</version>
                                 </bundle>
                                 <bundle>
                                     <symbolicName>com.fasterxml.jackson.core.jackson-annotations</symbolicName>
