@@ -201,6 +201,10 @@
             <artifactId>netty-codec-socks</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-transport-native-unix-common</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.carbon.messaging</groupId>
             <artifactId>org.wso2.carbon.messaging</artifactId>
         </dependency>
@@ -359,6 +363,10 @@
                                     <version>${netty-tcnative.version}</version>
                                 </bundle>
                                 <bundle>
+                                    <symbolicName>io.netty.tcnative-classes</symbolicName>
+                                    <version>${netty-tcnative.version}</version>
+                                </bundle>
+                                <bundle>
                                     <symbolicName>io.netty.handler</symbolicName>
                                     <version>${netty.version}</version>
                                 </bundle>
@@ -372,6 +380,10 @@
                                 </bundle>
                                 <bundle>
                                     <symbolicName>io.netty.resolver</symbolicName>
+                                    <version>${netty.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>io.netty.transport-native-unix-common</symbolicName>
                                     <version>${netty.version}</version>
                                 </bundle>
 
