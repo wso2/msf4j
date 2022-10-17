@@ -65,6 +65,10 @@
             <artifactId>guava</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>failureaccess</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-core</artifactId>
             <exclusions>
@@ -267,7 +271,11 @@
                                 </bundle>
                                 <bundle>
                                     <symbolicName>com.google.guava</symbolicName>
-                                    <version>${guava.version}.0</version>
+                                    <version>${guava.bundle.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>com.google.guava.failureaccess</symbolicName>
+                                    <version>${guava.failureaccess.version}</version>
                                 </bundle>
                                 <bundle>
                                     <symbolicName>javax.ws.rs-api</symbolicName>
@@ -313,6 +321,10 @@
                                     <symbolicName>com.fasterxml.jackson.dataformat.jackson-dataformat-yaml
                                     </symbolicName>
                                     <version>${com.fasterxml.jackson.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>org.yaml.snakeyaml</symbolicName>
+                                    <version>${org.snakeyaml.version}</version>
                                 </bundle>
                                 <bundle>
                                     <symbolicName>javax.validation.api</symbolicName>
