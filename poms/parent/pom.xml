@@ -816,8 +816,8 @@
         <carbon.analytics.common.version.range>[5.0,6)</carbon.analytics.common.version.range>
         <disruptor.orbit.version>3.3.2.wso2v2</disruptor.orbit.version>
         <metrics.version>3.1.2</metrics.version>
-        <commons-io.wso2.version>2.4.0.wso2v1</commons-io.wso2.version>
-        <commons-io.version.range>[2.4.0, 2.5)</commons-io.version.range>
+        <commons-io.wso2.version>2.11.0.wso2v1</commons-io.wso2.version>
+        <commons-io.version.range>[2.7.0, 2.12)</commons-io.version.range>
         <libthrift.wso2.version>0.8.0.wso2v1</libthrift.wso2.version>
         <commons.pool.version>1.5.6.wso2v1</commons.pool.version>
         <javax.ws.rs-api.fragment.version>1.0.0.wso2v1</javax.ws.rs-api.fragment.version>
