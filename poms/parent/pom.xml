@@ -814,7 +814,7 @@
         <carbon.metrics.version.range>[2.0,3)</carbon.metrics.version.range>
         <carbon.analytics.common.version>5.0.6</carbon.analytics.common.version>
         <carbon.analytics.common.version.range>[5.0,6)</carbon.analytics.common.version.range>
-        <disruptor.orbit.version>3.3.2.wso2v2</disruptor.orbit.version>
+        <disruptor.orbit.version>3.4.2.wso2v1</disruptor.orbit.version>
         <metrics.version>3.1.2</metrics.version>
         <commons-io.wso2.version>2.11.0.wso2v1</commons-io.wso2.version>
         <commons-io.version.range>[2.7.0, 2.12)</commons-io.version.range>
@@ -854,7 +854,7 @@
         <javax.validation.version>1.1.0.Final</javax.validation.version>
         <apache.commons.lang3.version>3.4</apache.commons.lang3.version>
         <javax.servlet-api.version>3.1.0</javax.servlet-api.version>
-        <reflections.orbit.version>0.9.11.wso2v2</reflections.orbit.version>
+        <reflections.orbit.version>0.9.11.wso2v3</reflections.orbit.version>
         <javassist.version>3.19.0-GA</javassist.version>
 
         <osgi.framework.import.version.range>[1.8.0, 2.0.0)</osgi.framework.import.version.range>
