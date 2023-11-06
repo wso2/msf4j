@@ -292,7 +292,7 @@
         <import.package>
             javax.annotation.*,
             javax.ws.rs.*,
-            org.wso2.msf4j.*;version="${msf4j.version}",
+            org.wso2.msf4j.*;version="${msf4j.version.range}",
             com.google.common.*;version="${guava.version.range}",
             org.slf4j.*;version="${slf4j.version.range}",
             io.swagger.jaxrs.config.*;version="${io.swagger.version.range}",
