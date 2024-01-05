@@ -69,7 +69,7 @@
             <artifactId>failureaccess</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.swagger</groupId>
+            <groupId>org.wso2.orbit.io.swagger.core</groupId>
             <artifactId>swagger-core</artifactId>
             <exclusions>
                 <exclusion>
@@ -83,7 +83,7 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>io.swagger</groupId>
+            <groupId>org.wso2.orbit.io.swagger.jaxrs</groupId>
             <artifactId>swagger-jaxrs</artifactId>
             <exclusions>
                 <exclusion>
@@ -99,16 +99,6 @@
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-annotations</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-models</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.fasterxml.jackson.core</groupId>
-                    <artifactId>jackson-annotations</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -290,20 +280,16 @@
                                     <version>${beanutils.osgi.version}</version>
                                 </bundle>
                                 <bundle>
-                                    <symbolicName>io.swagger.core</symbolicName>
-                                    <version>${io.swagger.version}</version>
+                                    <symbolicName>swagger-core</symbolicName>
+                                    <version>${swagger.orbit.version}</version>
                                 </bundle>
                                 <bundle>
                                     <symbolicName>io.swagger.annotations</symbolicName>
                                     <version>${io.swagger.version}</version>
                                 </bundle>
                                 <bundle>
-                                    <symbolicName>io.swagger.jaxrs</symbolicName>
-                                    <version>${io.swagger.version}</version>
-                                </bundle>
-                                <bundle>
-                                    <symbolicName>io.swagger.models</symbolicName>
-                                    <version>${io.swagger.version}</version>
+                                    <symbolicName>swagger-jaxrs</symbolicName>
+                                    <version>${swagger.orbit.version}</version>
                                 </bundle>
                                 <bundle>
                                     <symbolicName>com.fasterxml.jackson.core.jackson-databind</symbolicName>
