@@ -186,6 +186,9 @@ public final class MicroserviceMetadata {
         } catch (NoSuchElementException ex) {
             throw new HandlerException(Response.Status.UNSUPPORTED_MEDIA_TYPE,
                     String.format("Problem accessing: %s. Reason: Unsupported Media Type", uri), ex);
+        } catch (IllegalArgumentException ex) {
+            throw new HandlerException(Response.Status.BAD_REQUEST,
+                    String.format("Problem accessing: %s. Reason: Bad Request", uri), ex);
         }
     }
 
