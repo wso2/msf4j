@@ -40,7 +40,7 @@
             <artifactId>javax.ws.rs-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.swagger</groupId>
+            <groupId>org.wso2.orbit.io.swagger.core</groupId>
             <artifactId>swagger-core</artifactId>
             <exclusions>
                 <exclusion>
@@ -70,7 +70,7 @@
             <artifactId>jackson-dataformat-yaml</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.swagger</groupId>
+            <groupId>org.wso2.orbit.io.swagger.jaxrs</groupId>
             <artifactId>swagger-jaxrs</artifactId>
             <exclusions>
                 <exclusion>
@@ -292,7 +292,7 @@
         <import.package>
             javax.annotation.*,
             javax.ws.rs.*,
-            org.wso2.msf4j.*;version="${msf4j.version}",
+            org.wso2.msf4j.*;version="${msf4j.version.range}",
             com.google.common.*;version="${guava.version.range}",
             org.slf4j.*;version="${slf4j.version.range}",
             io.swagger.jaxrs.config.*;version="${io.swagger.version.range}",
