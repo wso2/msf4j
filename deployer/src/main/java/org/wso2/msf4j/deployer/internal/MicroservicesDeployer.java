@@ -90,7 +90,7 @@ public class MicroservicesDeployer implements Deployer {
             boolean deployed = resourcesList.stream()
                     .filter(resource -> resource instanceof Microservice)
                     .map(resource -> addService((Microservice) resource))
-                    .anyMatch(result -> result == Boolean.FALSE);
+                    .anyMatch(Boolean.FALSE::equals);
 
             if (!deployed) {
                 // If one service not deployed correctly, process should retry later.

@@ -58,7 +58,7 @@ public class PersistentSessionManager extends AbstractSessionManager {
 
             // Delete expired session files
             if (System.currentTimeMillis() - session.getLastAccessedTime() >=
-                    session.getMaxInactiveInterval() * 60 * 1000 && !file.delete()) {
+                    (long) session.getMaxInactiveInterval() * 60 * 1000 && !file.delete()) {
                 log.warn("Couldn't delete expired session file " + file.getAbsolutePath());
             } else {
                 sessions.put(session.getId(), session);
