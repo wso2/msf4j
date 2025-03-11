@@ -37,6 +37,19 @@
         <maven>3.0.0</maven>
     </prerequisites>
 
+    <pluginRepositories>
+        <pluginRepository>
+            <id>wso2-nexus</id>
+            <name>WSO2 internal Repository</name>
+            <url>https://maven.wso2.org/nexus/content/groups/wso2-public/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+
     <build>
         <extensions>
             <extension>
