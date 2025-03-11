@@ -63,7 +63,7 @@ public abstract class AbstractSessionManager implements SessionManager {
                         sessions.values().parallelStream()
                                 .filter(session ->
                                         (System.currentTimeMillis() - session.getLastAccessedTime() >=
-                                                session.getMaxInactiveInterval() * 60 * 1000))
+                                                (long) session.getMaxInactiveInterval() * 60 * 1000))
                                 .forEach(Session::invalidate),
                 30, 30, TimeUnit.SECONDS);
     }
