@@ -825,8 +825,8 @@
         <carbon.analytics.common.version.range>[5.0,6)</carbon.analytics.common.version.range>
         <disruptor.orbit.version>3.4.2.wso2v1</disruptor.orbit.version>
         <metrics.version>3.1.2</metrics.version>
-        <commons-io.wso2.version>2.11.0.wso2v1</commons-io.wso2.version>
-        <commons-io.version.range>[2.7.0, 2.12)</commons-io.version.range>
+        <commons-io.wso2.version>2.17.0.wso2v1</commons-io.wso2.version>
+        <commons-io.version.range>[2.7.0, 2.20)</commons-io.version.range>
         <libthrift.wso2.version>0.8.0.wso2v1</libthrift.wso2.version>
         <commons.pool.version>1.5.6.wso2v1</commons.pool.version>
         <javax.ws.rs-api.fragment.version>1.0.0.wso2v1</javax.ws.rs-api.fragment.version>
@@ -869,7 +869,7 @@
 
         <osgi.framework.import.version.range>[1.8.0, 2.0.0)</osgi.framework.import.version.range>
         <osgi.service.tracker.import.version.range>[1.5.1, 2.0.0)</osgi.service.tracker.import.version.range>
-        <carbon.feature.plugin.version>2.0.1</carbon.feature.plugin.version>
+        <carbon.feature.plugin.version>3.1.5</carbon.feature.plugin.version>
 
         <!-- Dependencies for OSGi PAX exam tests -->
         <!--PAX Logging related dependency versions-->
