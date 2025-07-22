@@ -800,7 +800,7 @@
         <carbon.touchpoint.version>1.1.0</carbon.touchpoint.version>
         <carbon.utils.version>2.0.2</carbon.utils.version>
         <carbon.utils.package.import.version.range>[2.0.0, 3.0.0)</carbon.utils.package.import.version.range>
-        <carbon.config.version>2.1.10</carbon.config.version>
+        <carbon.config.version>2.1.17</carbon.config.version>
         <carbon.config.package.import.version.range>[2.1.5, 3.0.0)</carbon.config.package.import.version.range>
         <carbon.secvault.version>5.0.13</carbon.secvault.version>
         <carbon.secvault.version.range>[5.0.0, 6.0.0)</carbon.secvault.version.range>
