@@ -17,6 +17,7 @@ package org.wso2.msf4j.util;
 
 import org.wso2.carbon.config.ConfigurationException;
 import org.wso2.transport.http.netty.contract.config.TransportsConfiguration;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.CustomClassLoaderConstructor;
 import org.yaml.snakeyaml.introspector.BeanAccess;
@@ -133,7 +134,7 @@ public class Utils {
             if (httpConfig != null) {
                 String configYaml = new Yaml().dump(httpConfig);
                 Yaml yaml = new Yaml(new CustomClassLoaderConstructor(TransportsConfiguration.class,
-                        TransportsConfiguration.class.getClassLoader()));
+                        TransportsConfiguration.class.getClassLoader(), new LoaderOptions()));
                 yaml.setBeanAccess(BeanAccess.FIELD);
                 transportsConfiguration = yaml.loadAs(configYaml, TransportsConfiguration.class);
 
