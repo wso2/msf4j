@@ -21,6 +21,7 @@ import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 
@@ -55,7 +56,7 @@ public class YamlFileApplicationContextInitializer
             List<Properties> applicationYmlProperties = new ArrayList<>();
             String[] activeProfileNames = null;
             try (InputStream input = resource.getInputStream()) {
-                Yaml yml = new Yaml(new SafeConstructor());
+                Yaml yml = new Yaml(new SafeConstructor(new LoaderOptions()));
                 Iterable<Object> objects = yml.loadAll(input);
                 for (Object obj : objects) {
                     Map<String, Object> flattenedMap = getFlattenedMap(asMap(obj));
