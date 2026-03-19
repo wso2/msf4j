@@ -211,10 +211,36 @@
     <build>
         <resources>
             <resource>
+                <directory>${project.build.directory}/lib/</directory>
+            </resource>
+            <resource>
                 <directory>resources</directory>
             </resource>
         </resources>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.apache.commons</groupId>
+                                    <artifactId>commons-lang3</artifactId>
+                                    <version>${apache.commons.lang3.version}</version>
+                                    <outputDirectory>${project.build.directory}/lib/launcher</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.wso2.carbon.maven</groupId>
                 <artifactId>carbon-feature-plugin</artifactId>
@@ -316,10 +342,10 @@
                                     <symbolicName>javax.validation.api</symbolicName>
                                     <version>${javax.validation.version}</version>
                                 </bundle>
-                                <bundle>
-                                    <symbolicName>org.apache.commons.lang3</symbolicName>
-                                    <version>${apache.commons.lang3.version}</version>
-                                </bundle>
+                                <!-- commons-lang3 3.18.0 is a Multi-Release JAR which P2/Equinox
+                                     cannot index. It is shipped via lib/launcher/ instead (see
+                                     maven-dependency-plugin copy above), making it available on
+                                     the system classpath. -->
                                 <bundle>
                                     <symbolicName>javax.servlet-api</symbolicName>
                                     <version>${javax.servlet-api.version}</version>
