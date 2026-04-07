@@ -477,6 +477,17 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-log4j12</artifactId>
                 <version>${slf4j.log4j.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>log4j</groupId>
+                        <artifactId>log4j</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>log4j-over-slf4j</artifactId>
+                <version>${slf4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.code.gson</groupId>
@@ -772,6 +783,63 @@
                 <scope>test</scope>
             </dependency>
 
+            <!-- Security: BouncyCastle version overrides -->
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk15on</artifactId>
+                <version>1.78</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcpkix-jdk15on</artifactId>
+                <version>1.78</version>
+            </dependency>
+            <!-- Security: pax-logging-log4j2 version override (Log4Shell) -->
+            <dependency>
+                <groupId>org.ops4j.pax.logging</groupId>
+                <artifactId>pax-logging-log4j2</artifactId>
+                <version>${pax.logging.log4j2.version}</version>
+            </dependency>
+            <!-- Security: Global log4j:log4j suppression — runtime replaced by log4j-over-slf4j -->
+            <dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>1.2.17</version>
+                <scope>provided</scope>
+            </dependency>
+            <!-- Security: transitive dependency version overrides -->
+            <dependency>
+                <groupId>commons-fileupload</groupId>
+                <artifactId>commons-fileupload</artifactId>
+                <version>1.6.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dom4j</groupId>
+                <artifactId>dom4j</artifactId>
+                <version>2.1.4</version>
+            </dependency>
+            <dependency>
+                <groupId>org.json</groupId>
+                <artifactId>json</artifactId>
+                <version>20240303</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>3.2.2</version>
+            </dependency>
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>2.2.224</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-compress</artifactId>
+                <version>1.27.1</version>
+            </dependency>
+            <!-- Security: transitive dependency version overrides - End -->
+
         </dependencies>
     </dependencyManagement>
 
@@ -791,7 +859,7 @@
         <maven.archetype.version>2.4</maven.archetype.version>
 
         <!-- Dependencies -->
-        <netty.version>4.1.118.Final</netty.version>
+        <netty.version>4.1.132.Final</netty.version>
         <netty-tcnative.version>2.0.54.Final</netty-tcnative.version>
         <netty.version.range>(4,5]</netty.version.range>
         <commons.pool.version>1.5.6.wso2v1</commons.pool.version>
@@ -815,7 +883,7 @@
         <org.wso2.carbon.transport.http.netty.version>5.0.1</org.wso2.carbon.transport.http.netty.version>
         <javax.websocket.version>1.1</javax.websocket.version>
         <javax.websocket.version.range>[1.1, 1.2)</javax.websocket.version.range>
-        <org.apache.httpcomponents.httpclient.version>4.5.2</org.apache.httpcomponents.httpclient.version>
+        <org.apache.httpcomponents.httpclient.version>4.5.13</org.apache.httpcomponents.httpclient.version>
         <msf4j.version>2.8.14-SNAPSHOT</msf4j.version>
         <msf4j.version.range>[2.6.0,3.0.0)</msf4j.version.range>
         <zipkin.brave.version>3.9.1</zipkin.brave.version>
@@ -831,7 +899,7 @@
         <commons.pool.version>1.5.6.wso2v1</commons.pool.version>
         <javax.ws.rs-api.fragment.version>1.0.0.wso2v1</javax.ws.rs-api.fragment.version>
         <feign.version>9.3.1</feign.version>
-        <httpclient.version>4.5.2</httpclient.version>
+        <httpclient.version>4.5.13</httpclient.version>
         <httpcore.version>4.4.5</httpcore.version>
         <javax.websocket.version>1.1</javax.websocket.version>
         <javax.annotation.version>1.3.2</javax.annotation.version>
@@ -842,8 +910,8 @@
         <rs-api.version>2.0</rs-api.version>
         <slf4j.version>1.7.35</slf4j.version>
         <slf4j.version.range>[1.7,2)</slf4j.version.range>
-        <slf4j.log4j.version>1.6.0</slf4j.log4j.version>
-        <gson.version>2.9.1</gson.version>
+        <slf4j.log4j.version>1.7.35</slf4j.log4j.version>
+        <gson.version>2.10.1</gson.version>
         <gson.version.range>[2.2,3)</gson.version.range>
         <guava.version>32.1.3-jre</guava.version>
         <guava.bundle.version>32.1.3.jre</guava.bundle.version>
@@ -853,16 +921,16 @@
         <beanutils.version>1.8.3_2</beanutils.version>
         <beanutils.version.range>[1.8,2)</beanutils.version.range>
         <beanutils.osgi.version>1.8.3.2</beanutils.osgi.version>
-        <logback.version>1.0.9</logback.version>
-        <nimbus.jose.jwt.version>2.25</nimbus.jose.jwt.version>
+        <logback.version>1.2.13</logback.version>
+        <nimbus.jose.jwt.version>9.37.4</nimbus.jose.jwt.version>
         <io.swagger.version>1.6.9</io.swagger.version>
         <swagger.orbit.version>1.6.9.wso2v2</swagger.orbit.version>
         <io.swagger.version.range>[1.5.16,1.7.0)</io.swagger.version.range>
         <com.fasterxml.jackson.version>2.18.6</com.fasterxml.jackson.version>
         <com.fasterxml.jackson.databind.version>2.18.6</com.fasterxml.jackson.databind.version>
-        <com.fasterxml.jackson.version.range>[2.15.0,2.18.6]</com.fasterxml.jackson.version.range>
+        <com.fasterxml.jackson.version.range>[2.15.0,2.20.0)</com.fasterxml.jackson.version.range>
         <javax.validation.version>1.1.0.Final</javax.validation.version>
-        <apache.commons.lang3.version>3.4</apache.commons.lang3.version>
+        <apache.commons.lang3.version>3.18.0</apache.commons.lang3.version>
         <javax.servlet-api.version>3.1.0</javax.servlet-api.version>
         <reflections.orbit.version>0.9.11.wso2v4</reflections.orbit.version>
         <javassist.version>3.19.0-GA</javassist.version>
@@ -874,7 +942,7 @@
         <!-- Dependencies for OSGi PAX exam tests -->
         <!--PAX Logging related dependency versions-->
         <pax.logging.api.version>1.8.4</pax.logging.api.version>
-        <pax.logging.log4j2.version>1.8.4</pax.logging.log4j2.version>
+        <pax.logging.log4j2.version>1.11.17</pax.logging.log4j2.version>
         <org.eclipse.equinox.cm.version>1.1.0.v20131021-1936</org.eclipse.equinox.cm.version>
 
         <!--Pax Exam Versions-->
@@ -902,12 +970,12 @@
         <equinox.simpleconfigurator.manipulator.version>2.0.0.v20131217-1203
         </equinox.simpleconfigurator.manipulator.version>
         <equinox.util.version>1.0.500.v20130404-1337</equinox.util.version>
-        <org.snakeyaml.version>2.3</org.snakeyaml.version>
+        <org.snakeyaml.version>2.4</org.snakeyaml.version>
         <equinox.simpleconfigurator.version>1.1.0.v20131217-1203</equinox.simpleconfigurator.version>
         <testng.version>6.9.4</testng.version>
         <maven.paxexam.plugin.version>1.2.4</maven.paxexam.plugin.version>
         <org.jacoco.ant.version>0.7.5.201505241946</org.jacoco.ant.version>
-        <org.springframework.version>4.2.0.RELEASE</org.springframework.version>
+        <org.springframework.version>5.3.39</org.springframework.version>
 
         <!--Pax Exam Versions-->
         <pax.exam.version>4.8.0</pax.exam.version>
