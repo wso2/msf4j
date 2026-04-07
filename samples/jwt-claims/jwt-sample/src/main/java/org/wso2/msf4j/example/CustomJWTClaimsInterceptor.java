@@ -16,7 +16,7 @@
 
 package org.wso2.msf4j.example;
 
-import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
+import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
@@ -39,7 +39,7 @@ public class CustomJWTClaimsInterceptor implements RequestInterceptor {
             String jwtHeader = headers.getHeaderString(JWT_HEADER);
             if (jwtHeader != null) {
                 SignedJWT signedJWT = SignedJWT.parse(jwtHeader);
-                ReadOnlyJWTClaimsSet readOnlyJWTClaimsSet = signedJWT.getJWTClaimsSet();
+                JWTClaimsSet readOnlyJWTClaimsSet = signedJWT.getJWTClaimsSet();
                 if (readOnlyJWTClaimsSet != null) {
                     // Do something with claims
                     return true;

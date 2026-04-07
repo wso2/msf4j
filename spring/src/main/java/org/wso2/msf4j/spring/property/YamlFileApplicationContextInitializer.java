@@ -84,9 +84,9 @@ public class YamlFileApplicationContextInitializer
                 if (profile == null) {
                     propertySource = new MapPropertySource(YAML_CONFIG_FILE_NAME, new HashMap(properties));
                     applicationContext.getEnvironment().getPropertySources().addLast(propertySource);
-                } else if (activeProfileNames != null && ("default".equals(profile) ||
+                } else if ("default".equals(profile) ||
                                                           (activeProfileNames.length == 1 &&
-                                                           activeProfileNames[0].equals(profile)))) {
+                                                           activeProfileNames[0].equals(profile))) {
                     propertySource =
                             new MapPropertySource(YAML_CONFIG_FILE_NAME + "[" + profile + "]", new HashMap(properties));
                     applicationContext.getEnvironment().getPropertySources()
