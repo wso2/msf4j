@@ -127,7 +127,7 @@
             <artifactId>validation-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
+            <groupId>org.wso2.orbit.org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
         <dependency>
@@ -297,7 +297,7 @@
                                 </bundle>
                                 <bundle>
                                     <symbolicName>com.fasterxml.jackson.core.jackson-annotations</symbolicName>
-                                    <version>${com.fasterxml.jackson.version}</version>
+                                    <version>${com.fasterxml.jackson.annotations.version}</version>
                                 </bundle>
                                 <bundle>
                                     <symbolicName>com.fasterxml.jackson.core.jackson-core</symbolicName>
@@ -317,7 +317,7 @@
                                     <version>${javax.validation.version}</version>
                                 </bundle>
                                 <bundle>
-                                    <symbolicName>org.apache.commons.lang3</symbolicName>
+                                    <symbolicName>commons-lang3</symbolicName>
                                     <version>${apache.commons.lang3.version}</version>
                                 </bundle>
                                 <bundle>
