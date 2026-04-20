@@ -197,7 +197,7 @@ public class MSF4JDeployerTest {
      * @throws IOException
      */
     private Optional<Path> getSampleJarFile(Path targetDirectory) throws IOException {
-        try (Stream<Path> paths = Files.walk(targetDirectory)) {
+        try (Stream<Path> paths = Files.walk(targetDirectory, 1)) {
             return paths.filter(filePath -> Files.isRegularFile(filePath) && filePath.toString().endsWith(".jar"))
                     .findFirst();
         }
