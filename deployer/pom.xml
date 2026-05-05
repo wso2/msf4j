@@ -91,6 +91,7 @@
                     <systemPropertyVariables>
                         <maven.home>${maven.home}</maven.home>
                         <project.filepath>${project.basedir}</project.filepath>
+                        <maven.repo.local>${settings.localRepository}</maven.repo.local>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>

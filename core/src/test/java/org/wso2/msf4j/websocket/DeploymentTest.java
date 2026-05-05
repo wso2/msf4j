@@ -31,6 +31,7 @@ import org.wso2.msf4j.websocket.endpoint.EchoEndpoint;
 import org.wso2.msf4j.websocket.exception.WebSocketEndpointAnnotationException;
 
 import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import javax.net.ssl.SSLException;
@@ -43,13 +44,22 @@ public class DeploymentTest {
 
     private static final Logger log = LoggerFactory.getLogger(DeploymentTest.class);
     private final String host = "localhost";
-    private final String port = "9090";
+    private final int port = findFreePort();
     private final int sleepTime = 1000;
 
     private String echoUrl = "ws://" + host + ":" + port + "/echo";
     private String chatUrl = "ws://" + host + ":" + port + "/chat/";
 
-    private MicroservicesRunner microservicesRunner = new MicroservicesRunner();
+    private MicroservicesRunner microservicesRunner = new MicroservicesRunner(port);
+
+    private static int findFreePort() {
+        try (ServerSocket socket = new ServerSocket(0)) {
+            socket.setReuseAddress(true);
+            return socket.getLocalPort();
+        } catch (IOException e) {
+            throw new RuntimeException("No free port available", e);
+        }
+    }
 
     @BeforeClass
     public void setup() throws WebSocketEndpointAnnotationException {

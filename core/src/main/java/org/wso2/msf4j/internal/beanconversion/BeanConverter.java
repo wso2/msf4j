@@ -36,7 +36,11 @@ public class BeanConverter {
 
     static {
         addMediaTypeConverter(new JsonConverter());
-        addMediaTypeConverter(new XmlConverter());
+        try {
+            addMediaTypeConverter(new XmlConverter());
+        } catch (NoClassDefFoundError e) {
+            // javax.xml.bind is optional; skip XML conversion if JAXB is unavailable
+        }
     }
 
     /**

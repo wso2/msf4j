@@ -127,7 +127,7 @@
             <artifactId>validation-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
+            <groupId>org.wso2.orbit.org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
         <dependency>
@@ -323,7 +323,7 @@
                                 </bundle>
                                 <bundle>
                                     <symbolicName>com.fasterxml.jackson.core.jackson-annotations</symbolicName>
-                                    <version>${com.fasterxml.jackson.version}</version>
+                                    <version>${com.fasterxml.jackson.annotations.version}</version>
                                 </bundle>
                                 <bundle>
                                     <symbolicName>com.fasterxml.jackson.core.jackson-core</symbolicName>
@@ -342,10 +342,10 @@
                                     <symbolicName>javax.validation.api</symbolicName>
                                     <version>${javax.validation.version}</version>
                                 </bundle>
-                                <!-- commons-lang3 3.18.0 is a Multi-Release JAR which P2/Equinox
-                                     cannot index. It is shipped via lib/launcher/ instead (see
-                                     maven-dependency-plugin copy above), making it available on
-                                     the system classpath. -->
+                                <bundle>
+                                    <symbolicName>commons-lang3</symbolicName>
+                                    <version>${apache.commons.lang3.version}</version>
+                                </bundle>
                                 <bundle>
                                     <symbolicName>javax.servlet-api</symbolicName>
                                     <version>${javax.servlet-api.version}</version>

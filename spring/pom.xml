@@ -277,7 +277,7 @@
         <import.package>
             javax.annotation.*,
             javax.ws.rs.*,
-            javax.xml.bind;resolution:=optional,
+            javax.xml.bind;resolution:=optional;version="0.0.0",
             org.springframework.*;resolution:=optional,
             org.slf4j.*,
         </import.package>

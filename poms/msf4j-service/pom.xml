@@ -521,6 +521,11 @@
                 <artifactId>msf4j-client</artifactId>
                 <version>${msf4j.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.msf4j</groupId>
+                <artifactId>msf4j-spring</artifactId>
+                <version>${msf4j.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <dependencies>
