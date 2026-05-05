@@ -1,10 +1,10 @@
 # Trivy ignore file for MSF4J
 # Only CVE IDs are recognized; file paths must go in trivy.yaml
 
-# --- BouncyCastle (Java 8 constraint, cannot use jdk18on) ---
-# bcpkix-jdk15on: fixed only in 1.79 which requires jdk18on/Java 11+
+# --- BouncyCastle ---
+# bcpkix-jdk18on 1.78: CVE-2025-8916 fixed only in 1.79
 CVE-2025-8916
-# bcprov-jdk15on: no fix available in any version (status: affected)
+# bcprov-jdk18on: no fix available in any version (status: affected)
 CVE-2023-33201
 
 # --- Spring Framework 5.3.39 (EOL; all fixes require Spring 6 / Java 17) ---
