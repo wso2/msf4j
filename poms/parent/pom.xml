@@ -186,6 +186,12 @@
                     <version>${maven.gpgplugin.version}</version>
                 </plugin>
                 <plugin>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>maven-bundle-plugin</artifactId>
+                    <version>${maven.bundleplugin.version}</version>
+                    <extensions>true</extensions>
+                </plugin>
+                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-archetype-plugin</artifactId>
                     <version>${maven.archetype.version}</version>
@@ -574,6 +580,16 @@
                 <version>${javax.annotation.version}</version>
             </dependency>
             <dependency>
+                <groupId>javax.xml.bind</groupId>
+                <artifactId>jaxb-api</artifactId>
+                <version>${jaxb.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jaxb</groupId>
+                <artifactId>jaxb-runtime</artifactId>
+                <version>${jaxb.api.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.orbit.org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${apache.commons.lang3.version}</version>
@@ -780,12 +796,13 @@
         <!-- Maven plugins -->
         <maven.checkstyleplugin.version>2.17</maven.checkstyleplugin.version>
         <maven.findbugsplugin.version>3.0.2</maven.findbugsplugin.version>
-        <maven.compilerplugin.version>3.3</maven.compilerplugin.version>
-        <maven.wagon.ssh.version>2.1</maven.wagon.ssh.version>
+        <maven.compilerplugin.version>3.8.1</maven.compilerplugin.version>
+        <maven.bundleplugin.version>3.2.0</maven.bundleplugin.version>
+        <maven.wagon.ssh.version>3.5.3</maven.wagon.ssh.version>
         <maven.javadocplugin.version>2.10.3</maven.javadocplugin.version>
-        <maven.shadeplugin.version>2.4.1</maven.shadeplugin.version>
-        <maven.surefireplugin.version>2.14.1</maven.surefireplugin.version>
-        <maven.jacocoplugin.version>0.7.1.201405082137</maven.jacocoplugin.version>
+        <maven.shadeplugin.version>3.2.4</maven.shadeplugin.version>
+        <maven.surefireplugin.version>2.22.2</maven.surefireplugin.version>
+        <maven.jacocoplugin.version>0.8.8</maven.jacocoplugin.version>
         <maven.sourceplugin.version>2.2.1</maven.sourceplugin.version>
         <maven.gpgplugin.version>1.5</maven.gpgplugin.version>
         <maven.archetype.version>2.4</maven.archetype.version>
@@ -835,6 +852,7 @@
         <httpcore.version>4.4.5</httpcore.version>
         <javax.websocket.version>1.1</javax.websocket.version>
         <javax.annotation.version>1.3.2</javax.annotation.version>
+        <jaxb.api.version>2.3.1</jaxb.api.version>
 
         <osgi.api.version>6.0.0</osgi.api.version>
         <equinox.osgi.version>3.10.2.v20150203-1939</equinox.osgi.version>
@@ -885,7 +903,7 @@
         <javax.inject.version>1</javax.inject.version>
 
         <!--Other dependency versions -->
-        <jacoco.version>0.7.5.201505241946</jacoco.version>
+        <jacoco.version>0.8.8</jacoco.version>
         <javax.inject.version>1</javax.inject.version>
         <apache.felix.gogo.command.version>0.10.0.v201209301215</apache.felix.gogo.command.version>
         <apache.felix.gogo.shell.version>0.10.0.v201212101605</apache.felix.gogo.shell.version>
@@ -907,7 +925,7 @@
         <equinox.simpleconfigurator.version>1.1.0.v20131217-1203</equinox.simpleconfigurator.version>
         <testng.version>6.9.4</testng.version>
         <maven.paxexam.plugin.version>1.2.4</maven.paxexam.plugin.version>
-        <org.jacoco.ant.version>0.7.5.201505241946</org.jacoco.ant.version>
+        <org.jacoco.ant.version>0.8.8</org.jacoco.ant.version>
         <org.springframework.version>4.2.0.RELEASE</org.springframework.version>
 
         <!--Pax Exam Versions-->
@@ -919,7 +937,7 @@
         <osgi.compendium.version>4.3.1</osgi.compendium.version>
         <geronimo.atinject.spec.version>1.0</geronimo.atinject.spec.version>
         <ow2.jta.spec.version>1.0.12</ow2.jta.spec.version>
-        <org.jacoco.ant.version>0.7.5.201505241946</org.jacoco.ant.version>
+        <org.jacoco.ant.version>0.8.8</org.jacoco.ant.version>
         <org.osgi.compendium.version>4.3.1</org.osgi.compendium.version>
     </properties>
 </project>
