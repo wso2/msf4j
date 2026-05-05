@@ -231,7 +231,7 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.apache.commons</groupId>
+                                    <groupId>org.wso2.orbit.org.apache.commons</groupId>
                                     <artifactId>commons-lang3</artifactId>
                                     <version>${apache.commons.lang3.version}</version>
                                     <outputDirectory>${project.build.directory}/lib/launcher</outputDirectory>
