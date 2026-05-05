@@ -182,6 +182,12 @@ public class MSF4JDeployerTest {
         request.setPomFile(projectFile);
         request.setGoals(Collections.singletonList("install"));
 
+        File invokerSettings = new File(System.getProperty("project.filepath"),
+                "target/test-classes/invoker-settings.xml");
+        if (invokerSettings.exists()) {
+            request.setUserSettingsFile(invokerSettings);
+        }
+
         Invoker invoker = new DefaultInvoker();
         String mavenLocalRepo = System.getProperty("maven.repo.local");
         if (mavenLocalRepo != null && !mavenLocalRepo.isEmpty()) {

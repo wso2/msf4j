@@ -1,0 +1,29 @@
+# Trivy ignore file for MSF4J
+# Only CVE IDs are recognized; file paths must go in trivy.yaml
+
+# --- BouncyCastle ---
+# bcpkix-jdk18on 1.78: CVE-2025-8916 fixed only in 1.79
+CVE-2025-8916
+# bcprov-jdk18on: no fix available in any version (status: affected)
+CVE-2023-33201
+
+# --- Spring Framework 5.3.39 (EOL; all fixes require Spring 6 / Java 17) ---
+# spring-web HttpInvokerServiceExporter deserialization — MSF4J does NOT use this class
+CVE-2016-1000027
+# spring-core Annotation Detection — fixed only in 6.2.11
+CVE-2025-41249
+# spring-context/web DataBinder pattern bypass — fixed only in 6.1.14
+CVE-2024-38820
+# spring-context locale bypass — fixed only in 6.1.20
+CVE-2025-22233
+
+# --- Apache Thrift (transitive from Carbon analytics, not directly upgradable) ---
+CVE-2018-1320
+CVE-2019-0205
+CVE-2018-11798
+
+# --- Hystrix/Archaius transitives (EOL libraries, no fix available) ---
+# commons-configuration 1.x — no fix; only 2.x (different artifact) has fix
+CVE-2025-46392
+# commons-lang 2.x — no fix for 2.x; production code uses commons-lang3 3.18.0
+CVE-2025-48924

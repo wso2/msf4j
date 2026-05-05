@@ -211,10 +211,36 @@
     <build>
         <resources>
             <resource>
+                <directory>${project.build.directory}/lib/</directory>
+            </resource>
+            <resource>
                 <directory>resources</directory>
             </resource>
         </resources>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.apache.commons</groupId>
+                                    <artifactId>commons-lang3</artifactId>
+                                    <version>${apache.commons.lang3.version}</version>
+                                    <outputDirectory>${project.build.directory}/lib/launcher</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.wso2.carbon.maven</groupId>
                 <artifactId>carbon-feature-plugin</artifactId>

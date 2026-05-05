@@ -299,7 +299,7 @@
             io.swagger.util.*;version="${io.swagger.version.range}",
             io.swagger.jaxrs;version="${io.swagger.version.range}",
             com.fasterxml.jackson.*;version="${com.fasterxml.jackson.version.range}",
-            javax.xml.bind;resolution:=optional,
+            javax.xml.bind;resolution:=optional;version="0.0.0",
         </import.package>
         <carbon.component>
             osgi.service;objectClass="org.wso2.msf4j.SwaggerService"
