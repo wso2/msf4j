@@ -8,6 +8,9 @@
 *.war
 *.ear
 
+# Allow pre-compiled test-resource JARs that are required at test runtime
+!tests/osgi-tests/src/test/resources/**/*.jar
+
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
