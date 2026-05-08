@@ -223,10 +223,7 @@
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-javadoc-plugin</artifactId>
                             <configuration>
-                                <detectJavaApiLink>true</detectJavaApiLink>
-                                <links>
-                                    <link>http://docs.oracle.com/javaee/6/api/</link>
-                                </links>
+                                <detectJavaApiLink>false</detectJavaApiLink>
                                 <excludePackageNames>*.internal.*</excludePackageNames>
                                 <bottom>
                                     <![CDATA[Copyright {currentYear} WSO2, Inc. <a href="http://www.apache.org/licenses/LICENSE-2.0">Licensed under the Apache License, Version 2.0</a>]]>
