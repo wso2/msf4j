@@ -207,6 +207,29 @@
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>rbc-host-fix</id>
+                                <phase>process-test-classes</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <classesDirectory>${project.build.testOutputDirectory}</classesDirectory>
+                                    <outputDirectory>
+                                        ${project.build.directory}/carbon-home/bin/bootstrap
+                                    </outputDirectory>
+                                    <finalName>rbc-host-fix</finalName>
+                                    <includes>
+                                        <include>org/wso2/msf4j/test/RBCHostFixListener.class</include>
+                                    </includes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-dependency-plugin</artifactId>
                         <executions>
                             <execution>
