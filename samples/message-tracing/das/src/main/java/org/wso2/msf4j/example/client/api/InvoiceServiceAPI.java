@@ -21,6 +21,9 @@ import feign.RequestLine;
 import org.wso2.msf4j.example.client.exception.InvoiceNotFoundRestServiceException;
 import org.wso2.msf4j.example.model.Invoice;
 
+/**
+ * Feign client interface for the invoice microservice.
+ */
 public interface InvoiceServiceAPI {
     // Invoice service
     @RequestLine("GET /invoice/{id}")

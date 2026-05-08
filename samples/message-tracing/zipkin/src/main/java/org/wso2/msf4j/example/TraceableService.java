@@ -30,7 +30,7 @@ import javax.ws.rs.Path;
 @Path("/service")
 public class TraceableService {
 
-    final private Random random = new Random();
+    private final Random random = new Random();
 
     private MSF4JClient<TraceableServiceInterface> client = new MSF4JClient.Builder<TraceableServiceInterface>()
             .apiClass(TraceableServiceInterface.class)

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <!--
+        Java 11 generates a null check on the OutputStream before close() in try-with-resources bytecode.
+        SpotBugs 4.1.4 incorrectly flags this as RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE.
+    -->
+    <Match>
+        <Class name="org.wso2.msf4j.example.SampleClient"/>
+        <Method name="main"/>
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
+    </Match>
+    <!--
+        These private methods are intentional sample alternatives shown as commented-out code in main().
+        They are not dead code — they exist for users to uncomment and try different request types.
+    -->
+    <Match>
+        <Class name="org.wso2.msf4j.example.SampleClient"/>
+        <Bug pattern="UPM_UNCALLED_PRIVATE_METHOD"/>
+    </Match>
+</FindBugsFilter>

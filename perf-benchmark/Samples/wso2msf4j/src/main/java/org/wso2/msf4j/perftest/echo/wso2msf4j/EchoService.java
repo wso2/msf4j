@@ -28,8 +28,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
-/*
- * EchoService resource class
+/**
+ * EchoService resource class.
  */
 @Path("/EchoService")
 public class EchoService {

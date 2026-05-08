@@ -50,12 +50,13 @@ public class JWTGenerator {
         JWSSigner signer = new RSASSASigner(privateKey);
 
         // Prepare JWT with claims set
-        JWTClaimsSet claimsSet = new JWTClaimsSet();
-        claimsSet.setSubject(user.getName());
-        claimsSet.setClaim("email", user.getEmail());
-        claimsSet.setClaim("roles", user.getRoles());
-        claimsSet.setIssuer("wso2.org/products/msf4j");
-        claimsSet.setExpirationTime(new Date(new Date().getTime() + 60 * 60 * 1000)); //60 min
+        JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+                .subject(user.getName())
+                .claim("email", user.getEmail())
+                .claim("roles", user.getRoles())
+                .issuer("wso2.org/products/msf4j")
+                .expirationTime(new Date(new Date().getTime() + 60 * 60 * 1000)) //60 min
+                .build();
 
         SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.RS256), claimsSet);
 

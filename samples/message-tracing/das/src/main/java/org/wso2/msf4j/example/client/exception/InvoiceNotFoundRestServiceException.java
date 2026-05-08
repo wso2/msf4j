@@ -17,6 +17,9 @@ package org.wso2.msf4j.example.client.exception;
 
 import org.wso2.msf4j.client.exception.RestServiceException;
 
+/**
+ * Exception thrown when an invoice is not found via the REST client.
+ */
 public class InvoiceNotFoundRestServiceException extends RestServiceException {
 
     public InvoiceNotFoundRestServiceException(String message) {

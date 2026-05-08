@@ -111,14 +111,14 @@ public class FileServer {
             File file = Paths.get(MOUNT_PATH.toString(), fileName).toFile();
             int chunkSize = 4096;
             byte[] buf = new byte[chunkSize];
-            InputStream is = new FileInputStream(file);
-            int c = 0;
-            while ((c = is.read(buf, 0, buf.length)) > 0) {
-                os.write(buf, 0, c);
-                os.flush();
+            try (InputStream is = new FileInputStream(file)) {
+                int c;
+                while ((c = is.read(buf, 0, buf.length)) > 0) {
+                    os.write(buf, 0, c);
+                    os.flush();
+                }
             }
             os.close();
-            is.close();
         };
         String mimeType = MimeMapper.getMimeType(FilenameUtils.getExtension(fileName));
         return Response.ok(stream).type(mimeType).build();

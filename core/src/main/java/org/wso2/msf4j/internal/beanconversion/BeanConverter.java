@@ -16,6 +16,8 @@
 
 package org.wso2.msf4j.internal.beanconversion;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.beanconversion.MediaTypeConverter;
 
 import java.util.HashMap;
@@ -28,6 +30,7 @@ import java.util.Map;
  */
 public class BeanConverter {
 
+    private static final Logger log = LoggerFactory.getLogger(BeanConverter.class);
     private static final MediaTypeConverter DEFAULT_CONVERTER = new TextPlainConverter();
     private static final Map<String, MediaTypeConverter> converterMap = new HashMap<>();
 
@@ -36,7 +39,11 @@ public class BeanConverter {
 
     static {
         addMediaTypeConverter(new JsonConverter());
-        addMediaTypeConverter(new XmlConverter());
+        try {
+            addMediaTypeConverter(new XmlConverter());
+        } catch (NoClassDefFoundError e) {
+            log.info("JAXB not available; XML conversion disabled ({})", e.getMessage());
+        }
     }
 
     /**

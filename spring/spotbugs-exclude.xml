@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <!--
+        Java 11 generates a null check on the InputStream before close() in try-with-resources bytecode.
+        SpotBugs 4.1.4 incorrectly flags this as RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE.
+    -->
+    <Match>
+        <Class name="org.wso2.msf4j.spring.property.YamlFileApplicationContextInitializer"/>
+        <Method name="initialize"/>
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
+    </Match>
+</FindBugsFilter>

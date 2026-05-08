@@ -42,11 +42,26 @@ import javax.ws.rs.core.Response;
 @Path("/category")
 public class PetCategoryService {
     private static final Logger log = LoggerFactory.getLogger(PetCategoryService.class);
-    private static String REDIS_MASTER_HOST = System.getenv("REDIS_MASTER_HOST");
-    private static int REDIS_MASTER_PORT = Integer.parseInt(System.getenv("REDIS_MASTER_PORT"));
+    private static final String REDIS_MASTER_HOST;
+    private static final int REDIS_MASTER_PORT;
 
     static {
-        log.info("Using Redis master:" + REDIS_MASTER_HOST + ":" + REDIS_MASTER_PORT);
+        String host = System.getenv("REDIS_MASTER_HOST");
+        if (host == null || host.isEmpty()) {
+            throw new IllegalStateException("Environment variable REDIS_MASTER_HOST is not set");
+        }
+        String portStr = System.getenv("REDIS_MASTER_PORT");
+        if (portStr == null || portStr.isEmpty()) {
+            throw new IllegalStateException("Environment variable REDIS_MASTER_PORT is not set");
+        }
+        try {
+            REDIS_MASTER_PORT = Integer.parseInt(portStr);
+        } catch (NumberFormatException e) {
+            throw new IllegalStateException(
+                    "Environment variable REDIS_MASTER_PORT must be a valid integer, got: '" + portStr + "'", e);
+        }
+        REDIS_MASTER_HOST = host;
+        log.info("Using Redis master:{}:{}", REDIS_MASTER_HOST, REDIS_MASTER_PORT);
     }
 
     private static final JedisPool pool =
@@ -57,7 +72,7 @@ public class PetCategoryService {
     @Timed
     public Response addCategory(Category category) {
         String name = category.getName();
-        log.info("Using Redis master:" + REDIS_MASTER_HOST + ":" + REDIS_MASTER_PORT);
+        log.info("Using Redis master:{}:{}", REDIS_MASTER_HOST, REDIS_MASTER_PORT);
         try (Jedis jedis = pool.getResource()) {
             jedis.sadd(org.wso2.msf4j.examples.petstore.pet.PetConstants.CATEGORIES_KEY, name);
             log.info("Added category");

@@ -21,7 +21,9 @@ package org.wso2.msf4j.osgi.test;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
+import org.ops4j.pax.exam.Configuration;
 import org.ops4j.pax.exam.ExamFactory;
+import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
 import org.ops4j.pax.exam.testng.listener.PaxExam;
@@ -30,6 +32,7 @@ import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import org.wso2.carbon.container.CarbonContainerFactory;
+import org.wso2.carbon.container.options.CarbonDistributionOption;
 import org.wso2.carbon.kernel.CarbonServerInfo;
 import org.wso2.msf4j.Microservice;
 import org.wso2.msf4j.osgi.test.service.SecondService;
@@ -39,6 +42,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import javax.inject.Inject;
@@ -60,6 +64,18 @@ public class MSF4JOSGiTest {
 
     private static final String HOSTNAME = "localhost";
     private static final int PORT = 8079;
+
+    @Configuration
+    public Option[] configuration() {
+        return new Option[]{
+                CarbonDistributionOption.copyFile(
+                        Paths.get("target/carbon-home/bin/bootstrap/rbc-host-fix.jar"),
+                        Paths.get("bin/bootstrap/rbc-host-fix.jar")),
+                CarbonDistributionOption.copyFile(
+                        Paths.get("target/test-classes/launch-rbc-fix.properties"),
+                        Paths.get("conf/default/osgi/launch.properties"))
+        };
+    }
 
     @Inject
     private CarbonServerInfo carbonServerInfo;

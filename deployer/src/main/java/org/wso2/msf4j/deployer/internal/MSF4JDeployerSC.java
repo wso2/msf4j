@@ -29,6 +29,7 @@ import org.wso2.carbon.deployment.engine.Deployer;
 import org.wso2.carbon.kernel.startupresolver.RequiredCapabilityListener;
 import org.wso2.carbon.kernel.startupresolver.StartupServiceUtils;
 import org.wso2.msf4j.MicroservicesRegistry;
+import org.wso2.msf4j.internal.MSF4JConstants;
 
 import java.util.Map;
 
@@ -47,7 +48,6 @@ import java.util.Map;
 public class MSF4JDeployerSC implements RequiredCapabilityListener {
 
     private static final Logger log = LoggerFactory.getLogger(MSF4JDeployerSC.class);
-    private static final String CHANNEL_ID = "LISTENER_INTERFACE_ID";
 
     @Activate
     protected void start(BundleContext bundleContext) {
@@ -80,12 +80,24 @@ public class MSF4JDeployerSC implements RequiredCapabilityListener {
     )
     protected void addMicroservicesRegitry(MicroservicesRegistry registry, Map properties) {
         log.debug("MicroservicesRegistry get registered successfully.");
-        DataHolder.getInstance().addMicroserviceRegistry(properties.get(CHANNEL_ID).toString(), registry);
+        Object channelObj = properties.get(MSF4JConstants.CHANNEL_ID);
+        if (channelObj == null) {
+            log.warn("MicroservicesRegistry bound without '{}' property; skipping registry addition",
+                    MSF4JConstants.CHANNEL_ID);
+            return;
+        }
+        DataHolder.getInstance().addMicroserviceRegistry(channelObj.toString(), registry);
         StartupServiceUtils.updateServiceCache("wso2-microservices-deployer", MicroservicesRegistry.class);
     }
 
     protected void removeMicroservicesRegistry(MicroservicesRegistry microservicesRegistry, Map properties) {
         log.debug("MicroservicesRegistry get unregistered successfully.");
-        DataHolder.getInstance().getMicroserviceRegistries().remove(properties.get(CHANNEL_ID).toString());
+        Object channelObj = properties.get(MSF4JConstants.CHANNEL_ID);
+        if (channelObj == null) {
+            log.warn("MicroservicesRegistry unbound without '{}' property; skipping registry removal",
+                    MSF4JConstants.CHANNEL_ID);
+            return;
+        }
+        DataHolder.getInstance().getMicroserviceRegistries().remove(channelObj.toString());
     }
 }

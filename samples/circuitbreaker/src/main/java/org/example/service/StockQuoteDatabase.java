@@ -18,6 +18,9 @@
  */
 package org.example.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -26,6 +29,8 @@ import java.util.Random;
  * Retrieves stockquotes
  */
 public class StockQuoteDatabase {
+
+    private static final Logger log = LoggerFactory.getLogger(StockQuoteDatabase.class);
     private Random random = new Random();
 
     // Map that stores stocks (symbol -> stock).
@@ -47,13 +52,13 @@ public class StockQuoteDatabase {
 
         int rand = random.nextInt(3);
         if (rand == 0) { // Simulate a timeout
-            System.out.println("Failed. Timeout!");
+            log.info("Failed. Timeout!");
             delay(50);
         } else if (rand == 1) {  // Simulate a failure
-            System.out.println("Failed. Exception!");
+            log.info("Failed. Exception!");
             throw new RuntimeException("Failed. Exception!");
         }
-        System.out.println("No failure");
+        log.info("No failure");
         Stock stock = stockQuotes.get(symbol);
         stockQuotesCache.put(symbol, stock);
         return stock;

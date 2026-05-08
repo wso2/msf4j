@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketConnection;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
 import javax.websocket.CloseReason;
@@ -52,7 +53,8 @@ public class ChatAppEndpoint {
     }
 
     @OnMessage
-    public void onTextMessage(@PathParam("name") String name, String text, WebSocketConnection webSocketConnection) throws IOException {
+    public void onTextMessage(@PathParam("name") String name, String text,
+                              WebSocketConnection webSocketConnection) throws IOException {
         String msg = name + " : " + text;
         LOGGER.info("Received Text : " + text + " from  " + name + webSocketConnection.getChannelId());
         sendMessageToAll(msg);
@@ -61,11 +63,12 @@ public class ChatAppEndpoint {
     @OnMessage
     public void onBinaryMessage(byte[] bytes, WebSocketConnection webSocketConnection) {
         LOGGER.info("Reading binary Message");
-        LOGGER.info(bytes.toString());
+        LOGGER.info(new String(bytes, StandardCharsets.UTF_8));
     }
 
     @OnClose
-    public void onClose(@PathParam("name") String name, CloseReason closeReason, WebSocketConnection webSocketConnection) {
+    public void onClose(@PathParam("name") String name, CloseReason closeReason,
+                        WebSocketConnection webSocketConnection) {
         LOGGER.info("Connection is closed with status code : " + closeReason.getCloseCode().getCode()
                             + " On reason " + closeReason.getReasonPhrase());
         webSocketConnections.remove(webSocketConnection);

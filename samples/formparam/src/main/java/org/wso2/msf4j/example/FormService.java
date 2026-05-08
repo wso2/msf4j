@@ -106,7 +106,7 @@ public class FormService {
             try {
                 inputStream = item.openStream();
                 if (item.isFormField()) {
-                    System.out.println(item.getFieldName() + " - " + StreamUtil.asString(inputStream));
+                    log.info("{} - {}", item.getFieldName(), StreamUtil.asString(inputStream));
                 } else {
                     Files.copy(inputStream, Paths.get(System.getProperty("java.io.tmpdir"), item.getName()));
                 }
@@ -133,9 +133,9 @@ public class FormService {
                                 @FormDataParam("id") int id,
                                 @FormDataParam("people") List<Person> personList,
                                 @FormDataParam("company") Company company) {
-        System.out.println("First Person in List " + personList.get(0).getName());
-        System.out.println("Id " + id);
-        System.out.println("Company " + company.getType());
+        log.info("First Person in List {}", personList.get(0).getName());
+        log.info("Id {}", id);
+        log.info("Company {}", company.getType());
         try {
             Files.copy(file.toPath(), Paths.get(System.getProperty("java.io.tmpdir"), file.getName()));
         } catch (IOException e) {

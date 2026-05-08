@@ -23,8 +23,15 @@ import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandKey;
 import com.netflix.hystrix.HystrixCommandMetrics;
 import com.netflix.hystrix.HystrixCommandProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * Hystrix command that fetches a stock quote with circuit breaker and timeout support.
+ */
 public class CircuitBreakerCommand extends HystrixCommand<Stock> {
+
+    private static final Logger log = LoggerFactory.getLogger(CircuitBreakerCommand.class);
 
     private StockQuoteDatabase db;
     private final String symbol;
@@ -51,7 +58,7 @@ public class CircuitBreakerCommand extends HystrixCommand<Stock> {
     @Override
     protected Stock getFallback() {
         if (isCircuitBreakerOpen()) {
-            System.out.println("Circuit is open");
+            log.info("Circuit is open");
         }
         printMetrics();
         return db.getCachedStock(symbol);
@@ -72,6 +79,6 @@ public class CircuitBreakerCommand extends HystrixCommand<Stock> {
             m.append("90th: ").append(metrics.getExecutionTimePercentile(90)).append(" ");
             m.append("99th: ").append(metrics.getExecutionTimePercentile(99)).append(" ");
         }
-        System.out.println(m);
+        log.info("{}", m);
     }
 }

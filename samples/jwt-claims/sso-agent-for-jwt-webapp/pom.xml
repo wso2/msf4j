@@ -20,7 +20,7 @@
 
     <groupId>org.wso2.msf4j</groupId>
     <artifactId>sso-agent-sample-webapp</artifactId>
-    <version>2.8.14-SNAPSHOT</version>
+    <version>2.9.0-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>Travelocity.COM ServiceProvider / RelyingParty Webapp</name>
 
@@ -72,9 +72,9 @@
             <version>1.2.11-wso2v6</version>
         </dependency>
         <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.6</version>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.18.0</version>
         </dependency>
         <dependency>
             <groupId>commons-collections</groupId>
@@ -121,7 +121,7 @@
             <releases>
                 <enabled>true</enabled>
                 <updatePolicy>daily</updatePolicy>
-                <checksumPolicy>ignore</checksumPolicy>
+                <checksumPolicy>fail</checksumPolicy>
             </releases>
         </repository>
         <repository>
@@ -137,6 +137,31 @@
             </releases>
         </repository>
     </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>wso2-nexus</id>
+            <name>WSO2 internal Repository</name>
+            <url>https://maven.wso2.org/nexus/content/groups/wso2-public/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>fail</checksumPolicy>
+            </releases>
+        </pluginRepository>
+        <pluginRepository>
+            <id>wso2.snapshots</id>
+            <name>WSO2 Snapshot Repository</name>
+            <url>https://maven.wso2.org/nexus/content/repositories/snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
 
     <distributionManagement>
         <repository>

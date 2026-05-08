@@ -18,6 +18,9 @@ package org.wso2.msf4j.example;
 import org.wso2.msf4j.MicroservicesRunner;
 import org.wso2.msf4j.analytics.zipkintracing.MSF4JZipkinTracingInterceptor;
 
+/**
+ * Entry point for the Zipkin distributed tracing sample.
+ */
 public class Application {
     public static void main(String[] args) {
         new MicroservicesRunner().addInterceptor(new MSF4JZipkinTracingInterceptor("message-tracing"))

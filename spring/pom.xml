@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.wso2.msf4j</groupId>
         <artifactId>msf4j-parent</artifactId>
-        <version>2.8.14-SNAPSHOT</version>
+        <version>2.9.0-SNAPSHOT</version>
         <relativePath>../poms/parent/pom.xml</relativePath>
     </parent>
 
@@ -134,6 +134,17 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <configuration combine.self="override">
+                    <effort>Max</effort>
+                    <threshold>Low</threshold>
+                    <xmlOutput>true</xmlOutput>
+                    <spotbugsXmlOutputDirectory>${project.build.directory}/findbugs</spotbugsXmlOutputDirectory>
+                    <excludeFilterFile>spotbugs-exclude.xml</excludeFilterFile>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -277,7 +288,7 @@
         <import.package>
             javax.annotation.*,
             javax.ws.rs.*,
-            javax.xml.bind;resolution:=optional,
+            javax.xml.bind;resolution:=optional;version="0.0.0",
             org.springframework.*;resolution:=optional,
             org.slf4j.*,
         </import.package>
