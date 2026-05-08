@@ -24,6 +24,8 @@ import io.swagger.annotations.Contact;
 import io.swagger.annotations.Info;
 import io.swagger.annotations.License;
 import io.swagger.annotations.SwaggerDefinition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.example.exception.DuplicateSymbolException;
 import org.wso2.msf4j.example.exception.SymbolNotFoundException;
@@ -62,6 +64,8 @@ import javax.ws.rs.core.Response;
 @Path("/stockquote")
 public class StockQuoteService {
 
+    private static final Logger log = LoggerFactory.getLogger(StockQuoteService.class);
+
     // Map that stores stocks (symbol -> stock).
     private Map<String, Stock> stockQuotes = new HashMap<>();
 
@@ -92,7 +96,7 @@ public class StockQuoteService {
             @ApiResponse(code = 404, message = "Stock item not found")})
     public Response getQuote(@ApiParam(value = "Symbol", required = true)
                              @PathParam("symbol") String symbol) throws SymbolNotFoundException {
-        System.out.println("Getting symbol using PathParam...");
+        log.info("Getting symbol using PathParam...");
         Stock stock = stockQuotes.get(symbol);
         if (stock == null) {
             throw new SymbolNotFoundException("Symbol " + symbol + " not found");
@@ -140,7 +144,7 @@ public class StockQuoteService {
             @ApiResponse(code = 404, message = "Stock item not found")})
     public Response getQuoteUsingCookieParam(@ApiParam(value = "Symbol", required = true)
                                              @CookieParam("symbol") String symbol) throws SymbolNotFoundException {
-        System.out.println("Getting symbol using CookieParam...");
+        log.info("Getting symbol using CookieParam...");
         Stock stock = stockQuotes.get(symbol);
         if (stock == null) {
             throw new SymbolNotFoundException("Symbol " + symbol + " not found");
@@ -188,8 +192,8 @@ public class StockQuoteService {
             response = Stocks.class,
             responseContainer = "List")
     public Stocks getAllStocks(@Context Request request) {
-        request.getHeaders().getRequestHeaders().entrySet().forEach(entry -> System.out.println(entry.getKey() + "=" + entry
-                .getValue()));
+        request.getHeaders().getRequestHeaders().entrySet()
+               .forEach(entry -> log.info("{} = {}", entry.getKey(), entry.getValue()));
         return new Stocks(stockQuotes.values());
     }
 
@@ -204,7 +208,7 @@ public class StockQuoteService {
     @ApiOperation(
             value = "Get supported reuest methods",
             notes = "Return a response with headers that show the supported HTTP Requests on the Request-URI")
-    public Response getCommunicationInformationForRequestURI(){
-        return Response.ok().header("Access-Control-Allow-Methods","GET,OPTIONS").build();
+    public Response getCommunicationInformationForRequestURI() {
+        return Response.ok().header("Access-Control-Allow-Methods", "GET,OPTIONS").build();
     }
 }

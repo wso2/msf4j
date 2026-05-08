@@ -21,14 +21,14 @@ import org.slf4j.LoggerFactory;
 import org.wso2.msf4j.example.exception.InvoiceNotFoundException;
 import org.wso2.msf4j.example.model.Invoice;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * CustomerService resource class.

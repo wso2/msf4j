@@ -64,17 +64,21 @@ public class SampleClient {
         String response = StreamUtil.asString(inputStream);
         IOUtils.closeQuietly(inputStream);
         connection.disconnect();
-        System.out.println(response);
+        log.info("{}", response);
 
     }
 
     private static HttpEntity createMessageForSimpleFormStreaming() {
         HttpEntity reqEntity = null;
         try {
-            reqEntity = MultipartEntityBuilder.create().addTextBody("name", "WSO2").addTextBody("age", "10")
-                                              .addBinaryBody("file",
-                                                             new File(Thread.currentThread().getContextClassLoader().getResource("sample.txt").toURI()),
-                                                             ContentType.DEFAULT_BINARY, "sample.txt").build();
+            ClassLoader cl = Thread.currentThread().getContextClassLoader();
+            File sampleTxt = new File(cl.getResource("sample.txt").toURI());
+            reqEntity = MultipartEntityBuilder.create()
+                                              .addTextBody("name", "WSO2")
+                                              .addTextBody("age", "10")
+                                              .addBinaryBody("file", sampleTxt,
+                                                             ContentType.DEFAULT_BINARY, "sample.txt")
+                                              .build();
         } catch (URISyntaxException e) {
             log.error("Error while getting the file from resource." + e.getMessage(), e);
         }
@@ -84,14 +88,18 @@ public class SampleClient {
     private static HttpEntity createMessageForComplexForm() {
         HttpEntity reqEntity = null;
         try {
+            ClassLoader cl = Thread.currentThread().getContextClassLoader();
+            File sampleTxt = new File(cl.getResource("sample.txt").toURI());
             StringBody companyText = new StringBody("{\"type\": \"Open Source\"}", ContentType.APPLICATION_JSON);
             StringBody personList = new StringBody(
                     "[{\"name\":\"Richard Stallman\",\"age\":63}, {\"name\":\"Linus Torvalds\",\"age\":46}]",
                     ContentType.APPLICATION_JSON);
-            reqEntity = MultipartEntityBuilder.create().addTextBody("id", "1")
+            reqEntity = MultipartEntityBuilder.create()
+                                              .addTextBody("id", "1")
                                               .addPart("company", companyText)
-                                              .addPart("people", personList).addBinaryBody("file", new File(
-                            Thread.currentThread().getContextClassLoader().getResource("sample.txt").toURI()), ContentType.DEFAULT_BINARY, "sample.txt")
+                                              .addPart("people", personList)
+                                              .addBinaryBody("file", sampleTxt,
+                                                             ContentType.DEFAULT_BINARY, "sample.txt")
                                               .build();
         } catch (URISyntaxException e) {
             log.error("Error while getting the file from resource." + e.getMessage(), e);
@@ -102,11 +110,15 @@ public class SampleClient {
     private static HttpEntity createMessageForMultipleFiles() {
         HttpEntity reqEntity = null;
         try {
-            reqEntity = MultipartEntityBuilder.create().addBinaryBody("files", new File(
-                    Thread.currentThread().getContextClassLoader().getResource("sample.txt").toURI()), ContentType.DEFAULT_BINARY, "sample.txt")
-                                              .addBinaryBody("files",
-                                                             new File(Thread.currentThread().getContextClassLoader().getResource("sample.jpg").toURI()),
-                                                             ContentType.DEFAULT_BINARY, "sample.jpg").build();
+            ClassLoader cl = Thread.currentThread().getContextClassLoader();
+            File sampleTxt = new File(cl.getResource("sample.txt").toURI());
+            File sampleJpg = new File(cl.getResource("sample.jpg").toURI());
+            reqEntity = MultipartEntityBuilder.create()
+                                              .addBinaryBody("files", sampleTxt,
+                                                             ContentType.DEFAULT_BINARY, "sample.txt")
+                                              .addBinaryBody("files", sampleJpg,
+                                                             ContentType.DEFAULT_BINARY, "sample.jpg")
+                                              .build();
         } catch (URISyntaxException e) {
             log.error("Error while getting the file from resource." + e.getMessage(), e);
         }

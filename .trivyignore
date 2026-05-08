@@ -25,5 +25,7 @@ CVE-2018-11798
 # --- Hystrix/Archaius transitives (EOL libraries, no fix available) ---
 # commons-configuration 1.x — no fix; only 2.x (different artifact) has fix
 CVE-2025-46392
-# commons-lang 2.x — no fix for 2.x; production code uses commons-lang3 3.18.0
+# commons-lang 2.x — no upstream fix; safe replacement is org.apache.commons:commons-lang3.
+# Direct dep in sso-agent-for-jwt-webapp migrated to commons-lang3 3.18.0. This entry remains
+# because old SSO/SAML libs (sso.agent 5.1.0, opensaml 2.4.1) still pull in 2.x transitively.
 CVE-2025-48924

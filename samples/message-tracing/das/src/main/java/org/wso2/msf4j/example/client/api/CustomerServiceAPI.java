@@ -22,6 +22,9 @@ import org.wso2.msf4j.client.exception.RestServiceException;
 import org.wso2.msf4j.example.client.exception.CustomerNotFoundRestServiceException;
 import org.wso2.msf4j.example.model.Customer;
 
+/**
+ * Feign client interface for the customer microservice.
+ */
 public interface CustomerServiceAPI {
     // Customer service
     @RequestLine("GET /customer/{id}")

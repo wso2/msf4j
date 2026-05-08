@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <!--
+        FileInputStream is passed directly to Response.ok() as a JAX-RS entity body.
+        The JAX-RS runtime is responsible for closing the stream after writing the response.
+        SpotBugs cannot see the framework contract, so this is a false positive.
+    -->
+    <Match>
+        <Class name="org.wso2.msf4j.example.FileServer"/>
+        <Method name="getFileFromInputStream"/>
+        <Bug pattern="OBL_UNSATISFIED_OBLIGATION"/>
+    </Match>
+</FindBugsFilter>

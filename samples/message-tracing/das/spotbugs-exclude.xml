@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <!--
+        Invoice and InvoiceReport are simple data transfer objects used in this sample.
+        The java.util.Date fields are shared by reference intentionally — defensive copying
+        would add noise to a demo without any security benefit in this context.
+    -->
+    <Match>
+        <Class name="org.wso2.msf4j.example.model.Invoice"/>
+        <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="org.wso2.msf4j.example.model.InvoiceReport"/>
+        <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
+    </Match>
+</FindBugsFilter>

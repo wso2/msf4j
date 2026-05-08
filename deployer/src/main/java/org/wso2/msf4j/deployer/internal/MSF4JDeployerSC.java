@@ -80,14 +80,24 @@ public class MSF4JDeployerSC implements RequiredCapabilityListener {
     )
     protected void addMicroservicesRegitry(MicroservicesRegistry registry, Map properties) {
         log.debug("MicroservicesRegistry get registered successfully.");
-        String channelId = properties.get(MSF4JConstants.CHANNEL_ID).toString();
-        DataHolder.getInstance().addMicroserviceRegistry(channelId, registry);
+        Object channelObj = properties.get(MSF4JConstants.CHANNEL_ID);
+        if (channelObj == null) {
+            log.warn("MicroservicesRegistry bound without '{}' property; skipping registry addition",
+                    MSF4JConstants.CHANNEL_ID);
+            return;
+        }
+        DataHolder.getInstance().addMicroserviceRegistry(channelObj.toString(), registry);
         StartupServiceUtils.updateServiceCache("wso2-microservices-deployer", MicroservicesRegistry.class);
     }
 
     protected void removeMicroservicesRegistry(MicroservicesRegistry microservicesRegistry, Map properties) {
         log.debug("MicroservicesRegistry get unregistered successfully.");
-        String channelId = properties.get(MSF4JConstants.CHANNEL_ID).toString();
-        DataHolder.getInstance().getMicroserviceRegistries().remove(channelId);
+        Object channelObj = properties.get(MSF4JConstants.CHANNEL_ID);
+        if (channelObj == null) {
+            log.warn("MicroservicesRegistry unbound without '{}' property; skipping registry removal",
+                    MSF4JConstants.CHANNEL_ID);
+            return;
+        }
+        DataHolder.getInstance().getMicroserviceRegistries().remove(channelObj.toString());
     }
 }

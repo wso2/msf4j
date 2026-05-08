@@ -44,13 +44,20 @@ public class DeploymentTest {
 
     private static final Logger log = LoggerFactory.getLogger(DeploymentTest.class);
     private final String host = "localhost";
-    private final int port = findFreePort();
     private final int sleepTime = 1000;
 
-    private String echoUrl = "ws://" + host + ":" + port + "/echo";
-    private String chatUrl = "ws://" + host + ":" + port + "/chat/";
+    private int port;
+    private String echoUrl;
+    private String chatUrl;
+    private MicroservicesRunner microservicesRunner;
 
-    private MicroservicesRunner microservicesRunner = new MicroservicesRunner(port);
+    private static boolean isPortFree(int checkPort) {
+        try (ServerSocket ignored = new ServerSocket(checkPort)) {
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
 
     private static int findFreePort() {
         try (ServerSocket socket = new ServerSocket(0)) {
@@ -65,9 +72,21 @@ public class DeploymentTest {
     public void setup() throws WebSocketEndpointAnnotationException {
         log.info(System.lineSeparator() +
                          "--------------------------------WebSocket Deployment Test--------------------------------");
-        microservicesRunner.deployWebSocketEndpoint(new EchoEndpoint());
-        microservicesRunner.deployWebSocketEndpoint(new ChatAppEndpoint());
-        microservicesRunner.start();
+        for (int attempt = 1; attempt <= 5; attempt++) {
+            port = (attempt == 1) ? 9090 : findFreePort();
+            if (!isPortFree(port)) {
+                log.warn("Port {} already in use (attempt {}); retrying", port, attempt);
+                continue;
+            }
+            microservicesRunner = new MicroservicesRunner(port);
+            microservicesRunner.deployWebSocketEndpoint(new EchoEndpoint());
+            microservicesRunner.deployWebSocketEndpoint(new ChatAppEndpoint());
+            microservicesRunner.start();
+            echoUrl = "ws://" + host + ":" + port + "/echo";
+            chatUrl = "ws://" + host + ":" + port + "/chat/";
+            return;
+        }
+        throw new RuntimeException("Failed to start WebSocket server after 5 attempts");
     }
 
     @Test(description = "Testing the echoing the message sent by client for text, binary and pong messages.")

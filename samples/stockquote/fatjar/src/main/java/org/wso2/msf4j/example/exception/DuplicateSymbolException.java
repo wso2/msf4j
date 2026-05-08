@@ -21,7 +21,7 @@ package org.wso2.msf4j.example.exception;
 /**
  * DuplicateSymbolException.
  */
-public class DuplicateSymbolException extends Throwable {
+public class DuplicateSymbolException extends Exception {
     public DuplicateSymbolException(String msg) {
         super(msg);
     }

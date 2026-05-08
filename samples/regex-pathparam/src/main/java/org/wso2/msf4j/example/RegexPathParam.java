@@ -21,6 +21,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
+/**
+ * Sample microservice demonstrating path parameters with regex constraints.
+ */
 @Path("/PathParamWithRegex")
 public class RegexPathParam {
 

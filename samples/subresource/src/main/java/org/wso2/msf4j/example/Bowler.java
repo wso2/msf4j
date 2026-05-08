@@ -15,12 +15,20 @@
 */
 package org.wso2.msf4j.example;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
+/**
+ * Sub-resource class representing a bowler, extending the Player sub-resource.
+ */
 @Path("/")
 public class Bowler extends Player {
+
+    private static final Logger log = LoggerFactory.getLogger(Bowler.class);
 
     private String bowlerType;
 
@@ -38,7 +46,7 @@ public class Bowler extends Player {
                 Bowler.class.getName() + "Inside getPlayerProfileFiled - playerId : " + playerId + " for countryId : " +
                 countryId +
                 " with filed " + field;
-        System.out.println(msg);
+        log.info("{}", msg);
         return new Bowler(countryId, playerId);
     }
 
@@ -47,7 +55,7 @@ public class Bowler extends Player {
     public String getBowlerType(@PathParam("countryId") String countryId, @PathParam("playerId") int playerId) {
         String msg = Bowler.class.getName() + " Inside getBowlerType - playerId : " + playerId + " for countryId : " +
                      countryId;
-        System.out.println(msg);
+        log.info("{}", msg);
         return "Fast Bowler";
     }
 

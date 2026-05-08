@@ -19,6 +19,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.wso2.msf4j.spring.transport.HTTPTransportConfig;
 
+/**
+ * Spring configuration class that registers the HTTP transport for the spring-profile sample.
+ */
 @Configuration
 public class TransportConfig {
     

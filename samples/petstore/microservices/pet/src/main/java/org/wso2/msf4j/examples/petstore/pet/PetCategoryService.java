@@ -42,8 +42,8 @@ import javax.ws.rs.core.Response;
 @Path("/category")
 public class PetCategoryService {
     private static final Logger log = LoggerFactory.getLogger(PetCategoryService.class);
-    private static String REDIS_MASTER_HOST = System.getenv("REDIS_MASTER_HOST");
-    private static int REDIS_MASTER_PORT = Integer.parseInt(System.getenv("REDIS_MASTER_PORT"));
+    private static final String REDIS_MASTER_HOST = System.getenv("REDIS_MASTER_HOST");
+    private static final int REDIS_MASTER_PORT = Integer.parseInt(System.getenv("REDIS_MASTER_PORT"));
 
     static {
         log.info("Using Redis master:" + REDIS_MASTER_HOST + ":" + REDIS_MASTER_PORT);

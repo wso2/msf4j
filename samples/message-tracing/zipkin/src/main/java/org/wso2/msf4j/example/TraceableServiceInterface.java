@@ -18,6 +18,9 @@ package org.wso2.msf4j.example;
 
 import feign.RequestLine;
 
+/**
+ * Feign client interface for the traceable service endpoints.
+ */
 public interface TraceableServiceInterface {
 
     @RequestLine("GET /service/aaaa")

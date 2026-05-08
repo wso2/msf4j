@@ -46,8 +46,8 @@ import javax.ws.rs.core.Response;
 public class PetService {
     private static final Logger log = LoggerFactory.getLogger(PetService.class);
 
-    private static String REDIS_MASTER_HOST = System.getenv("REDIS_MASTER_HOST");
-    private static int REDIS_MASTER_PORT = Integer.parseInt(System.getenv("REDIS_MASTER_PORT"));
+    private static final String REDIS_MASTER_HOST = System.getenv("REDIS_MASTER_HOST");
+    private static final int REDIS_MASTER_PORT = Integer.parseInt(System.getenv("REDIS_MASTER_PORT"));
 
     static {
         log.info("Using Redis master:" + REDIS_MASTER_HOST + ":" + REDIS_MASTER_PORT);
@@ -113,7 +113,8 @@ public class PetService {
             } else {
                 jedis.set(petKey, new Gson().toJson(pet));
                 log.info("Updated pet");
-                return Response.status(Response.Status.OK).entity("Pet with ID " + id + " successfully updated").build();
+                return Response.status(Response.Status.OK)
+                               .entity("Pet with ID " + id + " successfully updated").build();
             }
         }
     }

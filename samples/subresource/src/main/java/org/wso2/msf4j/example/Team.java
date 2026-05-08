@@ -21,6 +21,9 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
+/**
+ * Sub-resource class representing a country's cricket team.
+ */
 @Path("/")
 public class Team {
 

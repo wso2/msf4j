@@ -16,6 +16,9 @@
 
 package org.wso2.msf4j.example;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -26,10 +29,12 @@ import javax.ws.rs.PathParam;
 @Path("/hello")
 public class HelloService {
 
+    private static final Logger log = LoggerFactory.getLogger(HelloService.class);
+
     @GET
     @Path("/{name}")
     public String hello(@PathParam("name") String name) {
-        System.out.println("Hello");
+        log.info("Hello");
         return "Hello " + name;
     }
 }

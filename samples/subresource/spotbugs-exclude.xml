@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <!--
+        Country.name and Country.id are serialized by Jackson via reflection.
+        SpotBugs cannot see the reflective read, so URF_UNREAD_FIELD is a false positive.
+    -->
+    <Match>
+        <Class name="org.wso2.msf4j.example.Country"/>
+        <Bug pattern="URF_UNREAD_FIELD"/>
+    </Match>
+</FindBugsFilter>
