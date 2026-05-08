@@ -38,7 +38,7 @@
         <dependency>
             <groupId>org.wso2.msf4j</groupId>
             <artifactId>msf4j-mustache-template</artifactId>
-            <version>${msf4j.version}</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
