@@ -239,9 +239,7 @@
                             <suiteXmlFiles>
                                 <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
                             </suiteXmlFiles>
-                            <environmentVariables>
-                                <JAVA_OPTS>${jcoverage.command} --add-opens java.base/java.net=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/sun.reflect.annotation=ALL-UNNAMED -Djava.rmi.server.hostname=127.0.0.1</JAVA_OPTS>
-                            </environmentVariables>
+                            <argLine>${jcoverage.command} --add-opens java.base/java.net=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/sun.reflect.annotation=ALL-UNNAMED -Djava.rmi.server.hostname=127.0.0.1</argLine>
                         </configuration>
                     </plugin>
                     <plugin>

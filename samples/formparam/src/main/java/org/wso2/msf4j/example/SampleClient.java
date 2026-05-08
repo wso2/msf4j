@@ -69,59 +69,69 @@ public class SampleClient {
     }
 
     private static HttpEntity createMessageForSimpleFormStreaming() {
-        HttpEntity reqEntity = null;
         try {
             ClassLoader cl = Thread.currentThread().getContextClassLoader();
-            File sampleTxt = new File(cl.getResource("sample.txt").toURI());
-            reqEntity = MultipartEntityBuilder.create()
-                                              .addTextBody("name", "WSO2")
-                                              .addTextBody("age", "10")
-                                              .addBinaryBody("file", sampleTxt,
-                                                             ContentType.DEFAULT_BINARY, "sample.txt")
-                                              .build();
+            URL sampleTxtUrl = cl.getResource("sample.txt");
+            if (sampleTxtUrl == null) {
+                throw new IllegalStateException("Resource 'sample.txt' not found on classpath");
+            }
+            File sampleTxt = new File(sampleTxtUrl.toURI());
+            return MultipartEntityBuilder.create()
+                                         .addTextBody("name", "WSO2")
+                                         .addTextBody("age", "10")
+                                         .addBinaryBody("file", sampleTxt,
+                                                        ContentType.DEFAULT_BINARY, "sample.txt")
+                                         .build();
         } catch (URISyntaxException e) {
-            log.error("Error while getting the file from resource." + e.getMessage(), e);
+            throw new IllegalStateException("Error while getting the file from resource: " + e.getMessage(), e);
         }
-        return reqEntity;
     }
 
     private static HttpEntity createMessageForComplexForm() {
-        HttpEntity reqEntity = null;
         try {
             ClassLoader cl = Thread.currentThread().getContextClassLoader();
-            File sampleTxt = new File(cl.getResource("sample.txt").toURI());
+            URL sampleTxtUrl = cl.getResource("sample.txt");
+            if (sampleTxtUrl == null) {
+                throw new IllegalStateException("Resource 'sample.txt' not found on classpath");
+            }
+            File sampleTxt = new File(sampleTxtUrl.toURI());
             StringBody companyText = new StringBody("{\"type\": \"Open Source\"}", ContentType.APPLICATION_JSON);
             StringBody personList = new StringBody(
                     "[{\"name\":\"Richard Stallman\",\"age\":63}, {\"name\":\"Linus Torvalds\",\"age\":46}]",
                     ContentType.APPLICATION_JSON);
-            reqEntity = MultipartEntityBuilder.create()
-                                              .addTextBody("id", "1")
-                                              .addPart("company", companyText)
-                                              .addPart("people", personList)
-                                              .addBinaryBody("file", sampleTxt,
-                                                             ContentType.DEFAULT_BINARY, "sample.txt")
-                                              .build();
+            return MultipartEntityBuilder.create()
+                                         .addTextBody("id", "1")
+                                         .addPart("company", companyText)
+                                         .addPart("people", personList)
+                                         .addBinaryBody("file", sampleTxt,
+                                                        ContentType.DEFAULT_BINARY, "sample.txt")
+                                         .build();
         } catch (URISyntaxException e) {
-            log.error("Error while getting the file from resource." + e.getMessage(), e);
+            throw new IllegalStateException("Error while getting the file from resource: " + e.getMessage(), e);
         }
-        return reqEntity;
     }
 
     private static HttpEntity createMessageForMultipleFiles() {
-        HttpEntity reqEntity = null;
         try {
             ClassLoader cl = Thread.currentThread().getContextClassLoader();
-            File sampleTxt = new File(cl.getResource("sample.txt").toURI());
-            File sampleJpg = new File(cl.getResource("sample.jpg").toURI());
-            reqEntity = MultipartEntityBuilder.create()
-                                              .addBinaryBody("files", sampleTxt,
-                                                             ContentType.DEFAULT_BINARY, "sample.txt")
-                                              .addBinaryBody("files", sampleJpg,
-                                                             ContentType.DEFAULT_BINARY, "sample.jpg")
-                                              .build();
+            URL sampleTxtUrl = cl.getResource("sample.txt");
+            if (sampleTxtUrl == null) {
+                throw new IllegalStateException("Resource 'sample.txt' not found on classpath");
+            }
+            URL sampleJpgUrl = cl.getResource("sample.jpg");
+            if (sampleJpgUrl == null) {
+                throw new IllegalStateException("Resource 'sample.jpg' not found on classpath");
+            }
+            File sampleTxt = new File(sampleTxtUrl.toURI());
+            File sampleJpg = new File(sampleJpgUrl.toURI());
+            return MultipartEntityBuilder.create()
+                                         .addBinaryBody("files", sampleTxt,
+                                                        ContentType.DEFAULT_BINARY, "sample.txt")
+                                         .addBinaryBody("files", sampleJpg,
+                                                        ContentType.DEFAULT_BINARY, "sample.jpg")
+                                         .build();
         } catch (URISyntaxException e) {
-            log.error("Error while getting the file from resource." + e.getMessage(), e);
+            throw new IllegalStateException("Error while getting the file from resource: " + e.getMessage(), e);
         }
-        return reqEntity;
     }
 }

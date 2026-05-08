@@ -419,6 +419,7 @@
                         <Service-Component>${service.component}</Service-Component>
                         <Microservices>${microservices}</Microservices>
                         <_dsannotations>${dsannotations}</_dsannotations>
+                        <_noee>true</_noee>
                         <Startup-Component>${startup.component}</Startup-Component>
                         <_include>${_include}</_include>
                         <SCM-Revision>${buildNumber}</SCM-Revision>
@@ -589,8 +590,8 @@
 
         <msf4j.version>2.9.0-SNAPSHOT</msf4j.version>
 
-        <wso2.maven.compiler.source>1.8</wso2.maven.compiler.source>
-        <wso2.maven.compiler.target>1.8</wso2.maven.compiler.target>
+        <wso2.maven.compiler.source>11</wso2.maven.compiler.source>
+        <wso2.maven.compiler.target>11</wso2.maven.compiler.target>
         <sourceReleaseAssemblyDescriptor>source-release</sourceReleaseAssemblyDescriptor>
         <project.scm.id>my-scm-server</project.scm.id>
 

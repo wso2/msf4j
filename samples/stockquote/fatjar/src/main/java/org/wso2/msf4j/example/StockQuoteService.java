@@ -30,8 +30,12 @@ import org.wso2.msf4j.Request;
 import org.wso2.msf4j.example.exception.DuplicateSymbolException;
 import org.wso2.msf4j.example.exception.SymbolNotFoundException;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.GET;
@@ -65,6 +69,8 @@ import javax.ws.rs.core.Response;
 public class StockQuoteService {
 
     private static final Logger log = LoggerFactory.getLogger(StockQuoteService.class);
+    private static final Set<String> LOGGABLE_HEADERS =
+            new HashSet<>(Arrays.asList("content-type", "accept", "user-agent"));
 
     // Map that stores stocks (symbol -> stock).
     private Map<String, Stock> stockQuotes = new HashMap<>();
@@ -192,8 +198,9 @@ public class StockQuoteService {
             response = Stocks.class,
             responseContainer = "List")
     public Stocks getAllStocks(@Context Request request) {
-        request.getHeaders().getRequestHeaders().entrySet()
-               .forEach(entry -> log.info("{} = {}", entry.getKey(), entry.getValue()));
+        request.getHeaders().getRequestHeaders().entrySet().stream()
+               .filter(entry -> LOGGABLE_HEADERS.contains(entry.getKey().toLowerCase(Locale.ROOT)))
+               .forEach(entry -> log.debug("{} = {}", entry.getKey(), entry.getValue()));
         return new Stocks(stockQuotes.values());
     }
 

@@ -121,7 +121,7 @@
             <releases>
                 <enabled>true</enabled>
                 <updatePolicy>daily</updatePolicy>
-                <checksumPolicy>ignore</checksumPolicy>
+                <checksumPolicy>fail</checksumPolicy>
             </releases>
         </repository>
         <repository>
@@ -146,7 +146,7 @@
             <releases>
                 <enabled>true</enabled>
                 <updatePolicy>daily</updatePolicy>
-                <checksumPolicy>ignore</checksumPolicy>
+                <checksumPolicy>fail</checksumPolicy>
             </releases>
         </pluginRepository>
         <pluginRepository>
