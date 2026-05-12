@@ -858,6 +858,13 @@
             </dependency>
             <!-- Security: transitive dependency version overrides - End -->
 
+            <!-- Security: libthrift transitive override (CVE-2018-1320, CVE-2019-0205, CVE-2018-11798) -->
+            <dependency>
+                <groupId>libthrift.wso2</groupId>
+                <artifactId>libthrift</artifactId>
+                <version>${libthrift.wso2.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -914,7 +921,7 @@
         <metrics.version>3.1.2</metrics.version>
         <commons-io.wso2.version>2.17.0.wso2v1</commons-io.wso2.version>
         <commons-io.version.range>[2.7.0, 2.20)</commons-io.version.range>
-        <libthrift.wso2.version>0.8.0.wso2v1</libthrift.wso2.version>
+        <libthrift.wso2.version>0.23.0.wso2v1</libthrift.wso2.version>
         <commons.pool.version>1.5.6.wso2v1</commons.pool.version>
         <javax.ws.rs-api.fragment.version>1.0.0.wso2v1</javax.ws.rs-api.fragment.version>
         <feign.version>9.3.1</feign.version>
