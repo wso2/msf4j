@@ -856,14 +856,12 @@
                 <artifactId>commons-compress</artifactId>
                 <version>1.27.1</version>
             </dependency>
-            <!-- Security: transitive dependency version overrides - End -->
-
-            <!-- Security: libthrift transitive override (CVE-2018-1320, CVE-2019-0205, CVE-2018-11798) -->
             <dependency>
                 <groupId>libthrift.wso2</groupId>
                 <artifactId>libthrift</artifactId>
                 <version>${libthrift.wso2.version}</version>
             </dependency>
+            <!-- Security: transitive dependency version overrides - End -->
 
         </dependencies>
     </dependencyManagement>
