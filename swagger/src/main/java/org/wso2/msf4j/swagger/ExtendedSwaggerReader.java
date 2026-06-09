@@ -684,7 +684,7 @@ class ExtendedSwaggerReader extends io.swagger.jaxrs.Reader {
             b.append(parentPath);
         }
         if (classLevelPath != null) {
-            b.append(classLevelPath);
+            b.append(classLevelPath.value());
         }
         if (methodLevelPath != null && !"/".equals(methodLevelPath.value())) {
             String methodPath = methodLevelPath.value();
