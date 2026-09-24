@@ -883,8 +883,8 @@
         <maven.archetype.version>2.4</maven.archetype.version>
 
         <!-- Dependencies -->
-        <netty.version>4.1.133.Final</netty.version>
-        <netty-tcnative.version>2.0.75.Final</netty-tcnative.version>
+        <netty.version>4.1.138.Final</netty.version>
+        <netty-tcnative.version>2.0.84.Final</netty-tcnative.version>
         <netty.version.range>(4,5]</netty.version.range>
         <commons.pool.version>1.5.6.wso2v1</commons.pool.version>
         <carbon.kernel.version>5.2.0</carbon.kernel.version>
@@ -951,10 +951,10 @@
         <io.swagger.version>1.6.9</io.swagger.version>
         <swagger.orbit.version>1.6.9.wso2v2</swagger.orbit.version>
         <io.swagger.version.range>[1.5.16,1.7.0)</io.swagger.version.range>
-        <com.fasterxml.jackson.version>2.21.2</com.fasterxml.jackson.version>
+        <com.fasterxml.jackson.version>2.21.7</com.fasterxml.jackson.version>
         <com.fasterxml.jackson.annotations.version>2.21</com.fasterxml.jackson.annotations.version>
-        <com.fasterxml.jackson.databind.version>2.21.2</com.fasterxml.jackson.databind.version>
-        <com.fasterxml.jackson.version.range>[2.15.0,2.21.2]</com.fasterxml.jackson.version.range>
+        <com.fasterxml.jackson.databind.version>2.21.7</com.fasterxml.jackson.databind.version>
+        <com.fasterxml.jackson.version.range>[2.15.0,3.0.0)</com.fasterxml.jackson.version.range>
         <javax.validation.version>1.1.0.Final</javax.validation.version>
         <apache.commons.lang3.version>3.20.0.wso2v1</apache.commons.lang3.version>
         <javax.servlet-api.version>3.1.0</javax.servlet-api.version>
