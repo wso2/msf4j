@@ -19,6 +19,7 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 public class ParamConvertUtilsTest {
@@ -33,6 +34,10 @@ public class ParamConvertUtilsTest {
                 {boolean.class, "true", true},
                 {Boolean.class, "false", false},
                 {String.class, "app-1", "app-1"},
+                {Object.class, "app-1", "app-1"},
+                {CharSequence.class, "app-1", "app-1"},
+                {Serializable.class, "app-1", "app-1"},
+                {Comparable.class, "app-1", "app-1"},
                 {int.class, "abc", 0},
                 {Integer.class, "abc", 0},
                 {boolean.class, "abc", false},
