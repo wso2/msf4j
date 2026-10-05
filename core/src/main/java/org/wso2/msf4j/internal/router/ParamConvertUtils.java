@@ -75,7 +75,7 @@ public final class ParamConvertUtils {
         if (!(resultType instanceof Class)) {
             throw new IllegalArgumentException("Unsupported @PathParam type " + resultType);
         }
-        return value -> ConvertUtils.convert(value, (Class<?>) resultType);
+        return value -> convertString(value, (Class<?>) resultType);
     }
 
     /**
@@ -103,7 +103,7 @@ public final class ParamConvertUtils {
      * @return Function the function
      */
     public static Function<String, Object> createCookieParamConverter(Type resultType) {
-        return value -> ConvertUtils.convert(value, (Class<?>) resultType);
+        return value -> convertString(value, (Class<?>) resultType);
     }
 
     /**
@@ -160,6 +160,16 @@ public final class ParamConvertUtils {
             // Ignore the exceptions since from the logic we will handle the beans and Files
         }
         return listConverter;
+    }
+
+    /**
+     * Converts a single string value with commons-beanutils, passing it through unchanged for String-assignable types.
+     */
+    private static Object convertString(String value, Class<?> resultClass) {
+        if (resultClass.isAssignableFrom(String.class)) {
+            return value;
+        }
+        return ConvertUtils.convert(value, resultClass);
     }
 
     /**

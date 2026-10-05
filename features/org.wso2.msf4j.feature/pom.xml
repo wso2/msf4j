@@ -41,8 +41,12 @@
             <artifactId>gson</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.servicemix.bundles</groupId>
-            <artifactId>org.apache.servicemix.bundles.commons-beanutils</artifactId>
+            <groupId>org.wso2.orbit.commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.msf4j</groupId>
@@ -302,8 +306,12 @@
                                     <version>${gson.version}</version>
                                 </bundle>
                                 <bundle>
-                                    <symbolicName>org.apache.servicemix.bundles.commons-beanutils</symbolicName>
+                                    <symbolicName>commons-beanutils</symbolicName>
                                     <version>${beanutils.osgi.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>org.apache.commons.collections</symbolicName>
+                                    <version>${commons-collections.version}</version>
                                 </bundle>
                                 <bundle>
                                     <symbolicName>swagger-core</symbolicName>

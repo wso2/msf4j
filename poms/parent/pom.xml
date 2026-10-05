@@ -508,9 +508,14 @@
                 <version>${jsr305.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.servicemix.bundles</groupId>
-                <artifactId>org.apache.servicemix.bundles.commons-beanutils</artifactId>
+                <groupId>commons-beanutils</groupId>
+                <artifactId>commons-beanutils</artifactId>
                 <version>${beanutils.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.orbit.commons-beanutils</groupId>
+                <artifactId>commons-beanutils</artifactId>
+                <version>${beanutils.osgi.version}</version>
             </dependency>
 
             <dependency>
@@ -844,7 +849,7 @@
             <dependency>
                 <groupId>commons-collections</groupId>
                 <artifactId>commons-collections</artifactId>
-                <version>3.2.2</version>
+                <version>${commons-collections.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.h2database</groupId>
@@ -943,9 +948,10 @@
         <guava.version.range>[20.0,34.0)</guava.version.range>
         <guava.failureaccess.version>1.0.1</guava.failureaccess.version>
         <jsr305.version>2.0.1</jsr305.version>
-        <beanutils.version>1.8.3_2</beanutils.version>
+        <beanutils.version>1.11.0</beanutils.version>
         <beanutils.version.range>[1.8,2)</beanutils.version.range>
-        <beanutils.osgi.version>1.8.3.2</beanutils.osgi.version>
+        <beanutils.osgi.version>1.11.0.wso2v1</beanutils.osgi.version>
+        <commons-collections.version>3.2.2</commons-collections.version>
         <logback.version>1.2.13</logback.version>
         <nimbus.jose.jwt.version>9.37.4</nimbus.jose.jwt.version>
         <io.swagger.version>1.6.9</io.swagger.version>
