@@ -15,6 +15,7 @@
  */
 package org.wso2.msf4j.internal.router;
 
+import org.apache.commons.beanutils.ConversionException;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -54,9 +55,8 @@ public class ParamConvertUtilsTest {
         Assert.assertEquals(ParamConvertUtils.createCookieParamConverter(type).apply(raw), expected);
     }
 
-    @Test
-    public void testUnregisteredTypeFallsBackToString() {
-        String raw = "3f2504e0-4f89-11d3-9a0c-0305e82c3301";
-        Assert.assertEquals(ParamConvertUtils.createPathParamConverter(UUID.class).apply(raw), raw);
+    @Test(expectedExceptions = ConversionException.class)
+    public void testUnregisteredTypeIsRejected() {
+        ParamConvertUtils.createPathParamConverter(UUID.class).apply("3f2504e0-4f89-11d3-9a0c-0305e82c3301");
     }
 }
